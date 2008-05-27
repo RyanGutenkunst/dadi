@@ -45,8 +45,6 @@ def project_sfs_3D(sfs, n1, n2, n3):
             temp = proj1[:,nuax,nuax] * proj2[nuax,:,nuax]
             for hits3 in range(from3+1):
                 least3, most3 = max(n3 - (from3 - hits3), 0), min(hits3,n3)
-                current_mask = projected_sfs.mask[least1:most1+1,least2:most2+1,
-                                                  least3:most3+1]
                 if do_masking:
                     if  sfs.mask[hits1,hits2,hits3]:
                         projected_sfs.mask[least1:most1+1,least2:most2+1,
@@ -113,7 +111,6 @@ def project_sfs_1D(sfs, n):
         # These are the least and most possible hits we could have in the
         #  projstrapped sfs.
         least, most = max(n - (proj_from - hits), 0), min(hits,n)
-        current_mask = projected_sfs.mask[least:most+1]
         if do_masking:
             if  sfs.mask[hits]:
                 projected_sfs.mask[least:most+1] = True
