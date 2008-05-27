@@ -14,8 +14,10 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/tridiag.c'])
 
 try:
-    os.system("svnversion > dadi/svnversion.py")
+    os.system("svnversion > dadi/svnversion")
 except:
+    os.sys.stderr.write("Call to svnversion failed. Cannot automatically "
+                        "include version information.")
     pass
 
 core.setup(name='dadi',
@@ -23,7 +25,8 @@ core.setup(name='dadi',
            author='Ryan Gutenkunst',
            author_email='rng7@cornell.edu',
            url='http://dadi.googlecode.com',
-           packages=['dadi'], 
+           ext_modules = [tridiag, int_c],
            scripts=['scripts/ms_jsfs'],
-           ext_modules = [tridiag, int_c]
+           packages=['dadi'], 
+           package_data = {'dadi':['svnversion']},
            )

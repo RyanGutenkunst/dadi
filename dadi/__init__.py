@@ -11,6 +11,7 @@ import ms
 try:
     import os
     __DIRECTORY__ = os.path.dirname(IO.__file__)
-    __SVNVERSION__ = file(os.path.join(__DIRECTORY__, 'svnversion.py')).read().strip()
+    __svn_file__ = os.path.join(__DIRECTORY__, 'svnversion')
+    __SVNVERSION__ = file(__svn_file__).read().strip()
 except:
     __SVNVERSION__ = 'Unknown'
