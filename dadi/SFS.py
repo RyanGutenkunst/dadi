@@ -310,8 +310,8 @@ def ll_per_bin(model, data):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
     """
-    model = numpy.asarray(model)
-    data = numpy.asarray(data)
+    model = numpy.ma.asarray(model)
+    data = numpy.ma.asarray(data)
     return -model + data*numpy.log(model) - gammaln_m(data + 1)
 
 def ll_multinom_per_bin(model, data):
