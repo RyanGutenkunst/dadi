@@ -172,3 +172,68 @@ def trapz(yy, xx=None, dx=None, axis=-1):
     sliceX[axis] = slice(None)
 
     return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)
+
+def make_extrap_func(func):
+    """
+    Generate a version of func that extrapolates to infinitely many gridpoints.
+
+    func: A function whose last argument is the number of Numerics.other_grid 
+          points to use in calculation and that returns a single scalar or 
+          array.
+
+    Returns a new function whose last argument is a list of numbers of grid
+    points and that returns a result extrapolated to infinitely many grid
+    points.
+    """
+    def extrap_func(*args):
+        other_args, pts_l = args[:-1], args[-1]
+
+        x_l, result_l = [],[]
+        for pts in pts_l:
+            # We extrapolate based on the first grid spacing. This seems to
+            # give better results than, for example, the average spacing.
+            x = other_grid(pts)[1]
+            x_l.append(x)
+            # Some python vodoo here to call the original function with the
+            # proper arguments.
+            result = func(*(other_args + (pts,)))
+            result_l.append(result)
+
+        # Extrapolate
+        if len(pts_l) == 1:
+            ex_result = numpy.log(result_l[0])
+        elif len(pts_l) == 2:
+            ex_result = linear_extrap(result_l, x_l)
+        elif len(pts_l) == 3:
+            ex_result = quadratic_extrap(result_l, x_l)
+        elif len(pts_l) == 4:
+            ex_result = cubic_extrap(result_l, x_l)
+        else:
+            raise ValueError('Number of calculations to use for extrapolation '
+                             'must be between 1 and 4')
+        return ex_result
+
+    return extrap_func
+
+def make_extrap_log_func(func):
+    """
+    Generate a version of func that extrapolates to infinitely many gridpoints.
+
+    Note that extrapolation here is done on the *log* of the function result,
+    so this will fail if any returned values are < 0. It does seem to be better
+    behaved for SFS calculation.
+
+    func: A function whose last argument is the number of Numerics.other_grid 
+          points to use in calculation and that returns a single scalar or 
+          array.
+
+    Returns a new function whose last argument is a list of numbers of grid
+    points and that returns a result extrapolated to infinitely many grid
+    points.
+    """
+    def logfunc(*args):
+        return numpy.log(func(*args))
+    exlog_func = make_extrap_func(logfunc)
+    def ex_func(*args):
+        return numpy.exp(exlog_func(*args))
+    return ex_func
