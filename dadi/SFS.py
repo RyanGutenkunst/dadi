@@ -263,9 +263,17 @@ def fold_sfs(sfs):
 
     return folded
 
+def optimally_scaled_sfs(model, data):
+    """
+    Optimially scale model sfs to data sfs.
+
+    Returns a new scaled model sfs.
+    """
+    return optimal_sfs_scaling(model,data) * model
+
 def optimal_sfs_scaling(model, data):
     """
-    Optimial multiplicative scaling factor between model and data.
+    Optimal multiplicative scaling factor between model and data.
 
     This scaling is based on only those entries that are masked in neither
     model nor data.
