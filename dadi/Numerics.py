@@ -128,6 +128,21 @@ def reverse_array(arr):
     reverse_slice = [slice(None, None, -1) for ii in arr.shape]
     return arr[reverse_slice]
 
+def intersect_masks(m1, m2):
+    """
+    Versions of m1 and m2 that are masked where either m1 or m2 were masked.
+
+    If neither m1 or m2 is masked, just returns m1 or m2. Otherwise returns
+    m1 and m2 wrapped as masked_arrays with identical masks.
+    """
+    ma = numpy.ma
+    if ma.isMaskedArray(m1) or ma.isMaskedArray(m2):
+        joint_mask = ma.mask_or(ma.getmask(m1), ma.getmask(m2))
+
+        m1 = ma.masked_array(m1, mask=joint_mask.copy())
+        m2 = ma.masked_array(m2, mask=joint_mask.copy())
+    return m1,m2
+
 def trapz(yy, xx=None, dx=None, axis=-1):
     """
     Integrate yy(xx) along the given axis using the composite trapezoidal rule.
