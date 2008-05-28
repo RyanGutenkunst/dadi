@@ -4,6 +4,7 @@ from numpy import newaxis as nuax
 from scipy import comb
 from scipy.special import gammaln
 
+import Numerics
 from Numerics import reverse_array, trapz
 from scipy.integrate import trapz
 
@@ -262,6 +263,16 @@ def fold_sfs(sfs):
 
     return folded
 
+def optimal_sfs_scaling(model, data):
+    """
+    Optimial multiplicative scaling factor between model and data.
+
+    This scaling is based on only those entries that are masked in neither
+    model nor data.
+    """
+    model, data = Numerics.intersect_masks(model, data)
+    return data.sum()/model.sum()
+
 # Create a version of the gamma function that will work with masked arrays.
 gammaln_m = numpy.ma.masked_unary_operation(gammaln)
 def minus_ll(model, data):
@@ -269,14 +280,6 @@ def minus_ll(model, data):
     The negative of the log-likelihood of the data given the model sfs.
 
     Return a double that is -(log-likelihood)
-
-    Evaluate the log-likelihood of the data given the model. This is based on
-    Poisson statistics, where the probability of observing k entries in a cell
-    given that the mean number is given by the model is 
-    P(k) = exp(-model) * model**k / k!
-
-    Note: If either the model or the data is a masked array, the return ll will
-          ignore any elements that are masked in *either* the model or the data.
     """
     return -ll(model, data)
 
@@ -297,9 +300,43 @@ def ll(model, data):
 
 def ll_per_bin(model, data):
     """
-    The log-likelihood of each entry in the data given the model sfs.
+    The Poisson log-likelihood of each entry in the data given the model sfs.
     """
     return -model + data*numpy.log(model) - gammaln_m(data + 1)
+
+def ll_multinom_per_bin(model, data):
+    """
+    Mutlinomial log-likelihood of each entry in the data given the model.
+
+    Scales the model sfs to have the optimal theta for comparison with the data.
+    """
+    theta_opt = optimal_sfs_scaling(model, data)
+    return ll_per_bin(theta_opt*model, data)
+
+def ll_multinom(model, data):
+    """
+    Log-likelihood of the data given the model, with optimal rescaling.
+
+    Evaluate the log-likelihood of the data given the model. This is based on
+    Poisson statistics, where the probability of observing k entries in a cell
+    given that the mean number is given by the model is 
+    P(k) = exp(-model) * model**k / k!
+
+    model is optimally scaled to maximize ll before calculation.
+
+    Note: If either the model or the data is a masked array, the return ll will
+          ignore any elements that are masked in *either* the model or the data.
+    """
+    ll_arr = ll_multinom_per_bin(model, data)
+    return ll_arr.sum()
+
+def minus_ll_multinom(model, data):
+    """
+    The negative of the log-likelihood of the data given the model sfs.
+
+    Return a double that is -(log-likelihood)
+    """
+    return -ll_multinom(model, data)
 
 def linear_Poisson_residual(model, data, mask=0):
     """
