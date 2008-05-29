@@ -27,7 +27,7 @@ def project_sfs_3D(sfs, n1, n2, n3):
                          % (tuple(numpy.asarray(sfs.shape)-1), (n1,n2,n3)))
     projected_sfs = numpy.zeros((n1+1, n2+1, n3+1))
 
-    do_masking = numpy.ma.isMaskedArray(sfs)
+    do_masking = numpy.ma.isMaskedArray(sfs) and sfs.mask is not False
     if do_masking:
         mask = numpy.zeros(projected_sfs.shape)
         projected_sfs = numpy.ma.masked_array(projected_sfs, mask=mask)
@@ -67,7 +67,7 @@ def project_sfs_3D(sfs, n1, n2, n3):
 def project_sfs_2D(sfs, n1, n2):
     projected_sfs = numpy.zeros((n1+1, n2+1))
 
-    do_masking = numpy.ma.isMaskedArray(sfs)
+    do_masking = numpy.ma.isMaskedArray(sfs) and sfs.mask is not False
     if do_masking:
         mask = numpy.zeros(projected_sfs.shape)
         projected_sfs = numpy.ma.masked_array(projected_sfs, mask=mask)
@@ -101,7 +101,7 @@ def project_sfs_2D(sfs, n1, n2):
 def project_sfs_1D(sfs, n):
     projected_sfs = numpy.zeros(n+1)
 
-    do_masking = numpy.ma.isMaskedArray(sfs)
+    do_masking = numpy.ma.isMaskedArray(sfs) and sfs.mask is not False
     if do_masking:
         mask = numpy.zeros(projected_sfs.shape)
         projected_sfs = numpy.ma.masked_array(projected_sfs, mask=mask)
