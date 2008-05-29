@@ -125,20 +125,25 @@ def project_sfs_1D(sfs, n):
 
     return projected_sfs
 
-def project_sfs(sfs, ns):
+def project_sfs(sfs, ns, mask_corners=False):
     if len(sfs.shape) != len(ns):
         raise ValueError('Requested projection ns and sfs have different '
                          'numbers of dimensions. (%i vs. %i)'
                          % (len(ns), len(sfs.shape)))
     if len(sfs.shape) == 1:
-        return project_sfs_1D(sfs, ns[0])
+        sfs = project_sfs_1D(sfs, ns[0])
     elif len(sfs.shape) == 2:
-        return project_sfs_2D(sfs, ns[0], ns[1])
+        sfs = project_sfs_2D(sfs, ns[0], ns[1])
     elif len(sfs.shape) == 3:
-        return project_sfs_3D(sfs, ns[0], ns[1], ns[2])
+        sfs = project_sfs_3D(sfs, ns[0], ns[1], ns[2])
     else:
         raise ValueError('Projection only supported for spectra of dimension '
                          '3 or fewer at this time.')
+    if mask_corners:
+        sfs = numpy.ma.masked_array(sfs)
+        sfs.mask.flat[0] = sfs.mask.flat[-1] = True
+
+    return sfs
 
 def sfs_from_phi_1D(n, xx, phi):
     sfs = numpy.zeros(n+1)
