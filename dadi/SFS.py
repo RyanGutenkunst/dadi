@@ -29,7 +29,7 @@ def project_sfs_3D(sfs, n1, n2, n3):
 
     do_masking = numpy.ma.isMaskedArray(sfs) and sfs.mask is not False
     if do_masking:
-        mask = numpy.zeros(projected_sfs.shape)
+        mask = numpy.ma.make_mask_none(projected_sfs.shape)
         projected_sfs = numpy.ma.masked_array(projected_sfs, mask=mask)
 
     from1, from2, from3 = numpy.asarray(sfs.shape) - 1
@@ -69,7 +69,7 @@ def project_sfs_2D(sfs, n1, n2):
 
     do_masking = numpy.ma.isMaskedArray(sfs) and sfs.mask is not False
     if do_masking:
-        mask = numpy.zeros(projected_sfs.shape)
+        mask = numpy.ma.make_mask_none(projected_sfs.shape)
         projected_sfs = numpy.ma.masked_array(projected_sfs, mask=mask)
 
     from1, from2 = numpy.asarray(sfs.shape) - 1
@@ -103,7 +103,7 @@ def project_sfs_1D(sfs, n):
 
     do_masking = numpy.ma.isMaskedArray(sfs) and sfs.mask is not False
     if do_masking:
-        mask = numpy.zeros(projected_sfs.shape)
+        mask = numpy.ma.make_mask_none(projected_sfs.shape)
         projected_sfs = numpy.ma.masked_array(projected_sfs, mask=mask)
 
     proj_from = sfs.shape[0] - 1
@@ -250,7 +250,7 @@ def fold_sfs(sfs):
                                       reverse_array(original_mask))
         sfs = sfs.data
     else:
-        final_mask = numpy.zeros(sfs.shape, numpy.bool_)
+        final_mask = numpy.ma.make_mask_none(sfs.shape, numpy.bool_)
     
     # To do the actual folding, we take those entries that would be folded out,
     # reverse the array along all axes, and add them back to the original sfs.

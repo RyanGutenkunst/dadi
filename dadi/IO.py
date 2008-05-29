@@ -66,7 +66,7 @@ def sfs_from_file(fid, mask_corners=True):
         fid.close()
 
     if mask_corners:
-        mask = numpy.zeros(sfs.shape, numpy.bool_)
+        mask = numpy.ma.make_mask_none(sfs.shape)
         mask.flat[0] = mask.flat[-1] = True
         sfs = numpy.ma.masked_array(sfs, mask=mask)
                                    
