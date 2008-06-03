@@ -15,7 +15,7 @@ def snm(n1,n2, pts):
     sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
     return sfs
 
-def bottlegrowth((nuB, nuF, T), n1, n2, pts):
+def bottlegrowth((nuB, nuF, T), n1,n2, pts):
     """
     Instantanous size change followed by exponential growth with no population
     split.
@@ -28,16 +28,7 @@ def bottlegrowth((nuB, nuF, T), n1, n2, pts):
     n1,n2: Shape of resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
-    phi = PhiManip.phi_1D(xx)
-
-    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
-    phi = Integration.one_pop(phi, xx, T, nu_func)
-
-    phi = PhiManip.phi_1D_to_2D(xx, phi)
-
-    sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
-    return sfs
+    return bottlegrowth_split_mig((nuB,nuF,0,T,0), n1,n2, pts)
 
 def bottlegrowth_split((nuB, nuF, T, Ts), n1, n2, pts):
     """
@@ -52,21 +43,9 @@ def bottlegrowth_split((nuB, nuF, T, Ts), n1, n2, pts):
     n1,n2: Shape of resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
-    phi = PhiManip.phi_1D(xx)
+    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts), n1,n2, pts)
 
-    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
-    phi = Integration.one_pop(phi, xx, T-Ts, nu_func)
-
-    phi = PhiManip.phi_1D_to_2D(xx, phi)
-    nu0 = nu_func(T-Ts)
-    nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
-    phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func)
-
-    sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
-    return sfs
-
-def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), n1, n2, pts):
+def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), n1,n2, pts):
     """
     Instantanous size change followed by exponential growth then split with
     migration.
