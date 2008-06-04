@@ -1,1 +1,3 @@
 include dadi/svnversion
+include epydoc.config
+include LICENSE.txt
