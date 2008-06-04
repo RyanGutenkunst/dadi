@@ -131,7 +131,7 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
     ax.set_ylim(0, resid.shape[0])
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
-                          resid_range=3, fig=None_num,
+                          resid_range=3, fig=None,
                           pop1_label = 'pop1', pop2_label='pop2'):
     """
     Mulitnomial comparison between 2d model and data.
