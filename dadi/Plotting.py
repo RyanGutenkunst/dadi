@@ -131,7 +131,7 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
     ax.set_ylim(0, resid.shape[0])
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
-                          resid_range=3, fig=None,
+                          resid_range=3, fig_num=None,
                           pop1_label = 'pop1', pop2_label='pop2'):
     """
     Mulitnomial comparison between 2d model and data.
@@ -162,9 +162,9 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
 
     if vmax is None:
-        vmax = log10_m(max(model.max(), data.max()))
+        vmax = numpy.log10(max(model.max(), data.max()))
     if vmin is None:
-        vmin = log10_m(min(model.min(), data.min()))
+        vmin = numpy.log10(min(model.min(), data.min()))
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(log10_m(masked_data), vmin=vmin, vmax=vmax,
@@ -184,5 +184,4 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), resid.flat)
     ax.hist(flatresid, bins=20, normed=True)
     ax.set_yticks([])
-
-    return resid
+    pylab.show()
