@@ -152,7 +152,9 @@ def project_sfs(sfs, ns, mask_corners=False):
         raise ValueError('Projection only supported for spectra of dimension '
                          '3 or fewer at this time.')
     if mask_corners:
-        sfs = numpy.ma.masked_array(sfs)
+        if not numpy.ma.isMaskedArray(sfs):
+            mask = numpy.ma.make_mask_none(sfs.shape)
+            sfs = numpy.ma.masked_array(sfs, mask=mask)
         sfs.mask.flat[0] = sfs.mask.flat[-1] = True
 
     return sfs
