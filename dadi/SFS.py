@@ -9,16 +9,28 @@ from Numerics import reverse_array, trapz
 from scipy.integrate import trapz
 
 projection_cache = {}
+def lncomb(N,k):
+    return gammaln(N+1) - gammaln(k+1) - gammaln(N-k+1)
+
 def cached_projection(proj_to, proj_from, hits):
     key = (proj_to, proj_from, hits)
     try:
         return projection_cache[key]
     except KeyError:
-        proj_hits = numpy.arange(proj_to+1)
-        contrib = comb(proj_to,proj_hits)*comb(proj_from-proj_to,hits-proj_hits)
-        contrib /= comb(proj_from, hits)
-        projection_cache[key] = contrib
-        return contrib
+        pass
+
+    proj_hits = numpy.arange(proj_to+1)
+    contrib = comb(proj_to,proj_hits)*comb(proj_from-proj_to,hits-proj_hits)
+    contrib /= comb(proj_from, hits)
+
+    if numpy.any(numpy.isnan(contrib)):
+        lncontrib = lncomb(proj_to,proj_hits)
+        lncontrib += lncomb(proj_from-proj_to,hits-proj_hits)
+        lncontrib -= lncomb(proj_from, hits)
+        contrib = numpy.exp(lncontrib)
+
+    projection_cache[key] = contrib
+    return contrib
 
 def project_sfs_3D(sfs, n1, n2, n3):
     if (n1 > sfs.shape[0]-1) or (n2 > sfs.shape[1]-1) or (n3 > sfs.shape[2]-1):
