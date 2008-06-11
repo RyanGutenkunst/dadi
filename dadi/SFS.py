@@ -262,7 +262,7 @@ def fold_sfs(sfs):
                                       reverse_array(original_mask))
         sfs = sfs.data
     else:
-        final_mask = numpy.ma.make_mask_none(sfs.shape, numpy.bool_)
+        final_mask = numpy.ma.make_mask_none(sfs.shape)
     
     # To do the actual folding, we take those entries that would be folded out,
     # reverse the array along all axes, and add them back to the original sfs.
