@@ -66,15 +66,14 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
         vmax = sfs.max()
 
     mappable=ax.pcolor(numpy.ma.masked_where(sfs<vmin, sfs), 
-           cmap=pylab.cm.hsv, vmax=vmax, vmin=vmin, shading='flat')
-    cbticks = [numpy.round(vmin+0.05,1), numpy.round(vmax-0.05, 1)]
-    if vmin == -vmax:
-        cbticks.append(0)
+                       cmap=pylab.cm.hsv, vmax=vmax, vmin=vmin, shading='flat',
+                       norm = matplotlib.colors.LogNorm())
+    #cbticks = [numpy.round(vmin+0.05,1), numpy.round(vmax-0.05, 1)]
 
     # This can be passed to colorbar (format=format) to make ticks be 10^blah.
     # But I don't think it looks particularly nice.
     format = matplotlib.ticker.FormatStrFormatter('$10^{%.1f}$')
-    ax.figure.colorbar(mappable, ticks=cbticks)
+    ax.figure.colorbar(mappable)
 
     ax.plot([0,sfs.shape[1]],[0, sfs.shape[0]], '-k', lw=0.2)
 
@@ -110,8 +109,7 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
     mappable=ax.pcolor(resid, cmap=pylab.cm.RdBu_r, vmin=-resid_range, 
                        vmax=resid_range, shading='flat')
 
-    cbticks = [numpy.round(-resid_range+0.05,1), 0,
-               numpy.round(resid_range-0.05, 1)]
+    cbticks = [-resid_range, 0, resid_range]
     # This can be passed to colorbar (format=format) to make ticks be 10^blah.
     # But I don't think it looks particularly nice.
     format = matplotlib.ticker.FormatStrFormatter('$10^{%.1f}$')
@@ -162,20 +160,20 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
 
     if vmax is None:
-        vmax = numpy.log10(max(model.max(), data.max()))
+        vmax = max(model.max(), data.max())
     if vmin is None:
-        vmin = numpy.log10(min(model.min(), data.min()))
+        vmin = min(model.min(), data.min())
 
     ax = pylab.subplot(2,2,1)
-    plot_single_2d_sfs(log10_m(masked_data), vmin=vmin, vmax=vmax,
+    plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
                        pop1_label=pop1_label, pop2_label=pop2_label)
 
     pylab.subplot(2,2,2, sharex=ax, sharey=ax)
-    plot_single_2d_sfs(log10_m(masked_model), vmin=vmin, vmax=vmax,
+    plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
                        pop1_label=pop1_label, pop2_label=pop2_label)
 
     resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
-                                          mask=10**vmin)
+                                          mask=vmin)
     pylab.subplot(2,2,3, sharex=ax, sharey=ax)
     plot_2d_resid(resid, resid_range, 
                   pop1_label=pop1_label, pop2_label=pop2_label)
