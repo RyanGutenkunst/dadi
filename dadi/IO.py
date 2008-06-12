@@ -32,7 +32,7 @@ def sfs_to_file(sfs, fid, precision=16, comment_lines = []):
     if newfile:
         fid.close()
 
-def sfs_from_file(fid, mask_corners=True):
+def sfs_from_file(fid, mask_corners=True, return_comments=False):
     """
     Read a site-frequency-spectrum from a file.
 
@@ -55,7 +55,9 @@ def sfs_from_file(fid, mask_corners=True):
         fid = file(fid, 'r')
 
     line = fid.readline()
+    comments = []
     while line.startswith('#'):
+        comments.append(line[1:].strip())
         line = fid.readline()
     shape = tuple([int(d) for d in line.split()])
 
@@ -70,7 +72,10 @@ def sfs_from_file(fid, mask_corners=True):
         mask.flat[0] = mask.flat[-1] = True
         sfs = numpy.ma.masked_array(sfs, mask=mask)
                                    
-    return sfs
+    if not return_comments:
+        return sfs
+    else:
+        return sfs,comments
 
 def sfs_from_ms_file(input, average=False, report_sum=False, 
                      return_header=False):
