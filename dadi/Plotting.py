@@ -46,13 +46,13 @@ def plot_1d_comp_multinom(model, data, fig_num=None):
     pylab.show()
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
-                       pop1_label = 'pop1', pop2_label='pop2'):
+                       pop1_label='pop1', pop2_label='pop2'):
     """
     Logarithmic heatmap of single 2d SFS.
 
     sfs: SFS to plot
-    vmin: Values in sfs below 10**vmin are masked in plot.
-    vmax: Values in sfs above 10**vmin saturate the color spectrum.
+    vmin: Values in sfs below vmin are masked in plot.
+    vmax: Values in sfs above vmin saturate the color spectrum.
     ax: Axes object to plot into. If None, the result of pylab.gca() is used.
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
@@ -135,10 +135,10 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     Mulitnomial comparison between 2d model and data.
 
 
-    model: 1-dimensional model SFS
-    data: 1-dimensional data SFS
-    vmin, vmax: Minimum and maximum values plotted for sfs are 10**vmin and
-                10**vmax respectively.
+    model: 2-dimensional model SFS
+    data: 2-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
@@ -162,10 +162,10 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     Poisson comparison between 2d model and data.
 
 
-    model: 1-dimensional model SFS
-    data: 1-dimensional data SFS
-    vmin, vmax: Minimum and maximum values plotted for sfs are 10**vmin and
-                10**vmax respectively.
+    model: 2-dimensional model SFS
+    data: 2-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
