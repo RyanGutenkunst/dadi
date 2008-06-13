@@ -46,7 +46,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None):
     pylab.show()
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
-                       pop1_label='pop1', pop2_label='pop2'):
+                       pop1_label= 'pop1', pop2_label='pop2'):
     """
     Logarithmic heatmap of single 2d SFS.
 
@@ -206,4 +206,102 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), resid.flat)
     ax.hist(flatresid, bins=20, normed=True)
     ax.set_yticks([])
+    pylab.show()
+
+def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
+                          resid_range=3, fig_num=None,
+                          pop1_label='pop1', pop2_label='pop2',
+                          pop3_label='pop3'):
+    """
+    Multinomial comparison between 3d model and data.
+
+
+    model: 3-dimensional model SFS
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop1_label: Label for population 1.
+    pop2_label: Label for population 2.
+    pop3_label: Label for population 3.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    """
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+
+    plot_3d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
+                         resid_range=resid_range, fig_num=fig_num,
+                         pop1_label=pop1_label, pop2_label=pop2_label,
+                         pop3_label=pop3_label)
+
+def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
+                         resid_range=3, fig_num=None,
+                         pop1_label='pop1', pop2_label='pop2',
+                         pop3_label='pop3'):
+    """
+    Poisson comparison between 3d model and data.
+
+
+    model: 3-dimensional model SFS
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop1_label: Label for population 1.
+    pop2_label: Label for population 2.
+    pop3_label: Label for population 3.
+    """
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(8,10))
+
+    pylab.clf()
+    pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+
+    if vmax is None:
+        modelmax = max(model.sum(axis=sax).max() for sax in range(3))
+        datamax = max(data.sum(axis=sax).max() for sax in range(3))
+        vmax = max(modelmax, datamax)
+    if vmin is None:
+        modelmin = min(model.sum(axis=sax).min() for sax in range(3))
+        datamin = min(data.sum(axis=sax).min() for sax in range(3))
+        vmin = min(modelmin, datamin)
+
+    pop_labels = [pop1_label, pop2_label, pop3_label]
+
+    for sax in range(3):
+        marg_data = masked_data.sum(axis=2-sax)
+        marg_model = masked_model.sum(axis=2-sax)
+
+        labels = pop_labels[:]
+        del labels[2-sax]
+
+        ax = pylab.subplot(4,3,sax+1)
+        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax,
+                           pop1_label=labels[0], pop2_label=labels[1])
+
+        pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
+        plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax,
+                           pop1_label=labels[0], pop2_label=labels[1])
+
+        resid = SFS.Anscombe_Poisson_residual(marg_model, marg_data,
+                                              mask=vmin)
+        pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
+        plot_2d_resid(resid, resid_range, 
+                      pop1_label=labels[0], pop2_label=labels[1])
+
+        ax = pylab.subplot(4,3,sax+10)
+        flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), 
+                                   resid.flat)
+        ax.hist(flatresid, bins=20, normed=True)
+        ax.set_yticks([])
     pylab.show()
