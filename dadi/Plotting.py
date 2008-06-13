@@ -173,7 +173,6 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     pop2_label: Label for population 2.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
 
     if fig_num is None:
         f = pylab.gcf()
