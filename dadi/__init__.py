@@ -7,6 +7,7 @@ import Integration
 import PhiManip
 import SFS
 import ms
+import Plotting
 
 try:
     import os
