@@ -130,7 +130,7 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=3, fig_num=None,
-                          pop1_label = 'pop1', pop2_label='pop2'):
+                          pop1_label='pop1', pop2_label='pop2'):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -148,6 +148,33 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
     """
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+
+    plot_2d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
+                         resid_range=resid_range, fig_num=fig_num,
+                         pop1_label=pop1_label, pop2_label=pop2_label)
+    
+def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
+                         resid_range=3, fig_num=None,
+                         pop1_label='pop1', pop2_label='pop2'):
+    """
+    Poisson comparison between 2d model and data.
+
+
+    model: 1-dimensional model SFS
+    data: 1-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are 10**vmin and
+                10**vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop1_label: Label for population 1.
+    pop2_label: Label for population 2.
+    """
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+
     if fig_num is None:
         f = pylab.gcf()
     else:
@@ -155,9 +182,6 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 
     pylab.clf()
     pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
-
-    masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
 
     if vmax is None:
         vmax = max(model.max(), data.max())
