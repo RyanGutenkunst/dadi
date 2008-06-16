@@ -12,7 +12,7 @@ log10_m = numpy.ma.masked_unary_operation(numpy.log10)
 
 import Numerics, SFS
 
-def plot_1d_comp_multinom(model, data, fig_num=None):
+def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
     """
     Mulitnomial comparison between 1d model and data.
 
@@ -21,6 +21,9 @@ def plot_1d_comp_multinom(model, data, fig_num=None):
     data: 1-dimensional data SFS
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
+    residual: 'Anscombe' for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. 'linear' for the linear
+              residuals, which can be less biased.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -39,7 +42,14 @@ def plot_1d_comp_multinom(model, data, fig_num=None):
     pylab.semilogy(masked_model, '-or')
 
     pylab.subplot(2,1,2, sharex = ax)
-    resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data)
+    if residual == 'Anscombe':
+        resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
+                                              mask=vmin)
+    elif residual == 'linear':
+        resid = SFS.linear_Poisson_residual(masked_model, masked_data,
+                                            mask=vmin)
+    else:
+        raise ValueError("Unknown class of residual '%s'." % residual)
     pylab.plot(resid, '-og')
 
     ax.set_xlim(0, data.shape[0]-1)
@@ -130,7 +140,8 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=3, fig_num=None,
-                          pop1_label='pop1', pop2_label='pop2'):
+                          pop1_label='pop1', pop2_label='pop2',
+                          residual='Anscombe'):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -144,6 +155,9 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
              window is created.
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
+    residual: 'Anscombe' for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. 'linear' for the linear
+              residuals, which can be less biased.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -157,7 +171,8 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=3, fig_num=None,
-                         pop1_label='pop1', pop2_label='pop2'):
+                         pop1_label='pop1', pop2_label='pop2',
+                         residual='Anscombe'):
     """
     Poisson comparison between 2d model and data.
 
@@ -171,6 +186,9 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
              window is created.
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
+    residual: 'Anscombe' for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. 'linear' for the linear
+              residuals, which can be less biased.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
@@ -195,8 +213,15 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
                        pop1_label=pop1_label, pop2_label=pop2_label)
 
-    resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
-                                          mask=vmin)
+    if residual == 'Anscombe':
+        resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
+                                              mask=vmin)
+    elif residual == 'linear':
+        resid = SFS.linear_Poisson_residual(masked_model, masked_data,
+                                            mask=vmin)
+    else:
+        raise ValueError("Unknown class of residual '%s'." % residual)
+
     pylab.subplot(2,2,3, sharex=ax, sharey=ax)
     plot_2d_resid(resid, resid_range, 
                   pop1_label=pop1_label, pop2_label=pop2_label)
@@ -210,7 +235,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=3, fig_num=None,
                           pop1_label='pop1', pop2_label='pop2',
-                          pop3_label='pop3'):
+                          pop3_label='pop3', residual='Anscombe'):
     """
     Multinomial comparison between 3d model and data.
 
@@ -225,6 +250,9 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
     pop3_label: Label for population 3.
+    residual: 'Anscombe' for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. 'linear' for the linear
+              residuals, which can be less biased.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -240,7 +268,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=3, fig_num=None,
                          pop1_label='pop1', pop2_label='pop2',
-                         pop3_label='pop3'):
+                         pop3_label='pop3', residual='Anscombe'):
     """
     Poisson comparison between 3d model and data.
 
@@ -255,6 +283,9 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
     pop3_label: Label for population 3.
+    residual: 'Anscombe' for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. 'linear' for the linear
+              residuals, which can be less biased.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
@@ -292,8 +323,14 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax,
                            pop1_label=labels[0], pop2_label=labels[1])
 
-        resid = SFS.Anscombe_Poisson_residual(marg_model, marg_data,
-                                              mask=vmin)
+        if residual == 'Anscombe':
+            resid = SFS.Anscombe_Poisson_residual(marg_model, marg_data,
+                                                  mask=vmin)
+        elif residual == 'linear':
+            resid = SFS.linear_Poisson_residual(marg_model, marg_data,
+                                                mask=vmin)
+        else:
+            raise ValueError("Unknown class of residual '%s'." % residual)
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
         plot_2d_resid(resid, resid_range, 
                       pop1_label=labels[0], pop2_label=labels[1])
