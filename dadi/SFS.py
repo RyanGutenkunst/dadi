@@ -369,7 +369,7 @@ def minus_ll_multinom(model, data):
 
 def linear_Poisson_residual(model, data, mask=0):
     """
-    Return the Poisson residuals, (data - model)/sqrt(model), of model and data.
+    Return the Poisson residuals, (model - data)/sqrt(model), of model and data.
 
     mask sets the level in model below which the returned residual array is
     masked. The default of 0 excludes values where the residuals are not 
@@ -379,7 +379,7 @@ def linear_Poisson_residual(model, data, mask=0):
     residuals are normally distributed. (If the mean is small, the Anscombe
     residuals are better.)
     """
-    resid = (data - model)/numpy.sqrt(model)
+    resid = (model - data)/numpy.sqrt(model)
     if numpy.isscalar(mask):
         resid = numpy.ma.masked_where(model <= mask, resid)
     return resid
