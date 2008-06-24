@@ -28,6 +28,23 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
     """
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+    plot_1d_comp_Poisson(masked_model, masked_data, fig_num, residual)
+
+def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe'):
+    """
+    Poisson comparison between 1d model and data.
+
+
+    model: 1-dimensional model SFS
+    data: 1-dimensional data SFS
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    residual: 'Anscombe' for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. 'linear' for the linear
+              residuals, which can be less biased.
+    """
     if fig_num is None:
         f = pylab.gcf()
     else:
@@ -35,7 +52,6 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
     pylab.clf()
 
     masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
 
     ax = pylab.subplot(2,1,1)
     pylab.semilogy(masked_data, '-ob')
@@ -43,11 +59,9 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
 
     pylab.subplot(2,1,2, sharex = ax)
     if residual == 'Anscombe':
-        resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
-                                              mask=vmin)
+        resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data)
     elif residual == 'linear':
-        resid = SFS.linear_Poisson_residual(masked_model, masked_data,
-                                            mask=vmin)
+        resid = SFS.linear_Poisson_residual(masked_model, masked_data)
     else:
         raise ValueError("Unknown class of residual '%s'." % residual)
     pylab.plot(resid, '-og')
