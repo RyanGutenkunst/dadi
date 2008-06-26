@@ -385,7 +385,7 @@ def linear_Poisson_residual(model, data, mask=0):
         resid = numpy.ma.masked_where(tomask, resid)
     return resid
 
-def Anscombe_Poisson_residual(model, data, mask=1e-2):
+def Anscombe_Poisson_residual(model, data, mask=0):
     """
     Return the Anscombe Poisson residuals between model and data.
 
@@ -403,12 +403,18 @@ def Anscombe_Poisson_residual(model, data, mask=1e-2):
     Note that I tried implementing the "adjusted deviance" residuals, but they
     always looked like crap for the cases where the data was 0.
     """
-    resid = 1.5*(data**(2./3) - (model**(2./3)-model**(-1./3)/9))/model**(1./6)
+    # Because my data have often been projected downward or averaged over many
+    # iterations, it appears better to apply the same transformation to the data
+    # and the model.
+    datatrans = data**(2./3)-data**(-1./3)/9
+    modeltrans = model**(2./3)-model**(-1./3)/9
+    resid = 1.5*(datatrans - modeltrans)/model**(1./6)
     if numpy.isscalar(mask):
         tomask = numpy.logical_and(model <= mask, data <= mask)
         resid = numpy.ma.masked_where(tomask, resid)
-    # XXX... It makes more sense to me to have a minus sign here... So when the
-    # model is high, the residual is positive.
+    # It makes more sense to me to have a minus sign here... So when the
+    # model is high, the residual is positive. This is opposite of the
+    # Pierce and Schafner convention.
     return -resid
 
 def Fst(sfs):
