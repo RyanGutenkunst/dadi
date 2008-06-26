@@ -132,7 +132,7 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     ax.set_ylim(0, sfs.shape[0])
 
 
-def plot_2d_resid(resid, resid_range=3, ax=None, 
+def plot_2d_resid(resid, resid_range=None, ax=None, 
                   pop1_label = 'pop1', pop2_label='pop2'):
     """
     Linear heatmap of 2d residual array.
@@ -154,10 +154,8 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
                        vmax=resid_range, shading='flat')
 
     cbticks = [-resid_range, 0, resid_range]
-    # This can be passed to colorbar (format=format) to make ticks be 10^blah.
-    # But I don't think it looks particularly nice.
-    format = matplotlib.ticker.FormatStrFormatter('$10^{%.1f}$')
-    ax.figure.colorbar(mappable, ticks=cbticks)
+    format = matplotlib.ticker.FormatStrFormatter('%.2g')
+    ax.figure.colorbar(mappable, ticks=cbticks, format=format)
 
     ax.plot([0,resid.shape[1]],[0, resid.shape[0]], '-k', lw=0.2)
 
@@ -176,7 +174,7 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
 
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
-                          resid_range=3, fig_num=None,
+                          resid_range=None, fig_num=None,
                           pop1_label='pop1', pop2_label='pop2',
                           residual='Anscombe'):
     """
@@ -207,7 +205,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                          pop1_label=pop1_label, pop2_label=pop2_label)
     
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
-                         resid_range=3, fig_num=None,
+                         resid_range=None, fig_num=None,
                          pop1_label='pop1', pop2_label='pop2',
                          residual='Anscombe'):
     """
@@ -270,7 +268,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     pylab.show()
 
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
-                          resid_range=3, fig_num=None,
+                          resid_range=None, fig_num=None,
                           pop1_label='pop1', pop2_label='pop2',
                           pop3_label='pop3', residual='Anscombe'):
     """
@@ -303,7 +301,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                          pop3_label=pop3_label)
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
-                         resid_range=3, fig_num=None,
+                         resid_range=None, fig_num=None,
                          pop1_label='pop1', pop2_label='pop2',
                          pop3_label='pop3', residual='Anscombe'):
     """
