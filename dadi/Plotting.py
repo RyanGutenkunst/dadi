@@ -238,9 +238,9 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
 
     if vmax is None:
-        vmax = max(model.max(), data.max())
+        vmax = max(masked_model.max(), masked_data.max())
     if vmin is None:
-        vmin = min(model.min(), data.min())
+        vmin = min(masked_model.min(), masked_data.min())
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
@@ -335,12 +335,12 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
 
     if vmax is None:
-        modelmax = max(model.sum(axis=sax).max() for sax in range(3))
-        datamax = max(data.sum(axis=sax).max() for sax in range(3))
+        modelmax = max(masked_model.sum(axis=sax).max() for sax in range(3))
+        datamax = max(masked_data.sum(axis=sax).max() for sax in range(3))
         vmax = max(modelmax, datamax)
     if vmin is None:
-        modelmin = min(model.sum(axis=sax).min() for sax in range(3))
-        datamin = min(data.sum(axis=sax).min() for sax in range(3))
+        modelmin = min(masked_model.sum(axis=sax).min() for sax in range(3))
+        datamin = min(masked_data.sum(axis=sax).min() for sax in range(3))
         vmin = min(modelmin, datamin)
 
     pop_labels = [pop1_label, pop2_label, pop3_label]
