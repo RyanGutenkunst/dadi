@@ -410,3 +410,53 @@ def Anscombe_Poisson_residual(model, data, mask=1e-2):
     # XXX... It makes more sense to me to have a minus sign here... So when the
     # model is high, the residual is positive.
     return -resid
+
+def Fst(sfs):
+    """
+    Return Wright's Fst between the populations represented in the sfs.
+
+    This estimate of Fst assumes random mating, because we don't have
+    heterozygote frequencies in the sfs.
+
+    Calculation is by the method of Weir and Cockerham _Evolution_ 38:1358. For
+    a single SNP, the relevant formula is at the top of page 1363. To combine
+    results between SNPs, we use the weighted average indicated by equation 10.
+    """
+    # This gets a little obscure because we want to be able to work with spectra
+    # of arbitrary dimension.
+
+    # First quantities from page 1360
+    r = sfs.ndim
+    ns = numpy.asarray(sfs.shape) - 1
+    nbar = numpy.mean(ns)
+    nsum = numpy.sum(ns)
+    nc = (nsum - numpy.sum(ns**2)/nsum)/(r-1)
+
+    # counts_per_pop is an r+1 dimensional array, where the last axis simply
+    # records the indices of the entry. 
+    # For example, counts_per_pop[4,19,8] = [4,19,8]
+    counts_per_pop = numpy.indices(sfs.shape)
+    counts_per_pop = numpy.transpose(counts_per_pop, axes=range(1,r+1)+[0])
+
+    # The last axis of ptwiddle is now the relative frequency of SNPs in that
+    # bin in each of the populations.
+    ptwiddle = 1.*counts_per_pop/ns
+
+    # Note that pbar is of the same shape as sfs...
+    pbar = numpy.sum(ns*ptwiddle, axis=-1)/nsum
+
+    # We need to use 'this_slice' to get the proper aligment between ptwiddle
+    # and pbar.
+    this_slice = [slice(None)]*r + [numpy.newaxis]
+    s2 = numpy.sum(ns * (ptwiddle - pbar[this_slice])**2, axis=-1)/((r-1)*nbar)
+
+    # Note that this 'a' differs from equation 2, because we've used equation 3
+    # and b = 0 to solve for hbar.
+    a = nbar/nc * (s2 - 1/(2*nbar-1) * (pbar*(1-pbar) - (r-1)/r*s2))
+    d = 2*nbar/(2*nbar-1) * (pbar*(1-pbar) - (r-1)/r*s2)
+
+    # The weighted sum over loci.
+    asum = (sfs * a).sum()
+    dsum = (sfs * d).sum()
+
+    return asum/(asum+dsum)
