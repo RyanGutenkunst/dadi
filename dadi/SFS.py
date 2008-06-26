@@ -381,7 +381,8 @@ def linear_Poisson_residual(model, data, mask=0):
     """
     resid = (model - data)/numpy.sqrt(model)
     if numpy.isscalar(mask):
-        resid = numpy.ma.masked_where(model <= mask, resid)
+        tomask = numpy.logical_and(model <= mask, data <= mask)
+        resid = numpy.ma.masked_where(tomask, resid)
     return resid
 
 def Anscombe_Poisson_residual(model, data, mask=1e-2):
@@ -404,7 +405,8 @@ def Anscombe_Poisson_residual(model, data, mask=1e-2):
     """
     resid = 1.5*(data**(2./3) - (model**(2./3)-model**(-1./3)/9))/model**(1./6)
     if numpy.isscalar(mask):
-        resid = numpy.ma.masked_where(model <= mask, resid)
+        tomask = numpy.logical_and(model <= mask, data <= mask)
+        resid = numpy.ma.masked_where(tomask, resid)
     # XXX... It makes more sense to me to have a minus sign here... So when the
     # model is high, the residual is positive.
     return -resid
