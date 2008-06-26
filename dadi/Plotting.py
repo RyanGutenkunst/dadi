@@ -10,6 +10,23 @@ import numpy
 
 log10_m = numpy.ma.masked_unary_operation(numpy.log10)
 
+# Together these define a custom set of ticks that labels only the lowest and
+# highest bins visible in an SFS plot. These adjust nicely when zooming around. 
+class sfsTickLocator(matplotlib.ticker.Locator):
+    def __call__(self):
+        'Return the locations of the ticks'
+
+        self.verify_intervals()
+        vmin, vmax = self.viewInterval.get_bounds()
+        dmin, dmax = self.dataInterval.get_bounds()
+
+        tmin = max(vmin, dmin)
+        tmax = min(vmax, dmax)
+
+        return numpy.array([round(tmin)+0.5, round(tmax)-0.5])
+ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
+
+
 import Numerics, SFS
 
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
@@ -103,14 +120,17 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     ax.set_ylabel(pop1_label, horizontalalignment='left')
     ax.set_xlabel(pop2_label, verticalalignment='bottom')
-    ax.set_xticks([0.5, sfs.shape[1]-0.5])
-    ax.set_xticklabels([str(0), str(sfs.shape[1]-1)])
-    ax.set_yticks([0.5, sfs.shape[0]-0.5])
-    ax.set_yticklabels([str(0), str(sfs.shape[0]-1)])
+
+    ax.xaxis.set_major_formatter(ctf)
+    ax.xaxis.set_major_locator(sfsTickLocator())
+    ax.yaxis.set_major_formatter(ctf)
+    ax.yaxis.set_major_locator(sfsTickLocator())
     for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
         tick.set_visible(False)
+
     ax.set_xlim(0, sfs.shape[1])
     ax.set_ylim(0, sfs.shape[0])
+
 
 def plot_2d_resid(resid, resid_range=3, ax=None, 
                   pop1_label = 'pop1', pop2_label='pop2'):
@@ -143,14 +163,17 @@ def plot_2d_resid(resid, resid_range=3, ax=None,
 
     ax.set_ylabel(pop1_label, horizontalalignment='left')
     ax.set_xlabel(pop2_label, verticalalignment='bottom')
-    ax.set_xticks([0.5, resid.shape[1]-0.5])
-    ax.set_xticklabels([str(0), str(resid.shape[1]-1)])
-    ax.set_yticks([0.5, resid.shape[0]-0.5])
-    ax.set_yticklabels([str(0), str(resid.shape[0]-1)])
+
+    ax.xaxis.set_major_formatter(ctf)
+    ax.xaxis.set_major_locator(sfsTickLocator())
+    ax.yaxis.set_major_formatter(ctf)
+    ax.yaxis.set_major_locator(sfsTickLocator())
     for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
         tick.set_visible(False)
+
     ax.set_xlim(0, resid.shape[1])
     ax.set_ylim(0, resid.shape[0])
+
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=3, fig_num=None,
