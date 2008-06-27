@@ -29,7 +29,7 @@ ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 import Numerics, SFS
 
-def plot_1d_comp_multinom(model, data, fig_num=None, residual='linear'):
+def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
     """
     Mulitnomial comparison between 1d model and data.
 
@@ -49,7 +49,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='linear'):
     masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
     plot_1d_comp_Poisson(masked_model, masked_data, fig_num, residual)
 
-def plot_1d_comp_Poisson(model, data, fig_num=None, residual='linear'):
+def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe'):
     """
     Poisson comparison between 1d model and data.
 
@@ -176,7 +176,7 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
                           pop1_label='pop1', pop2_label='pop2',
-                          residual='linear'):
+                          residual='Anscombe'):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -207,7 +207,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
                          pop1_label='pop1', pop2_label='pop2',
-                         residual='linear'):
+                         residual='Anscombe'):
     """
     Poisson comparison between 2d model and data.
 
@@ -270,7 +270,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
                           pop1_label='pop1', pop2_label='pop2',
-                          pop3_label='pop3', residual='linear'):
+                          pop3_label='pop3', residual='Anscombe'):
     """
     Multinomial comparison between 3d model and data.
 
@@ -303,7 +303,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
                          pop1_label='pop1', pop2_label='pop2',
-                         pop3_label='pop3', residual='linear'):
+                         pop3_label='pop3', residual='Anscombe'):
     """
     Poisson comparison between 3d model and data.
 
