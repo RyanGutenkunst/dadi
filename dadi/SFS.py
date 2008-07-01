@@ -367,7 +367,7 @@ def minus_ll_multinom(model, data):
     """
     return -ll_multinom(model, data)
 
-def linear_Poisson_residual(model, data, mask=0):
+def linear_Poisson_residual(model, data, mask=None):
     """
     Return the Poisson residuals, (model - data)/sqrt(model), of model and data.
 
@@ -380,12 +380,12 @@ def linear_Poisson_residual(model, data, mask=0):
     residuals are better.)
     """
     resid = (model - data)/numpy.sqrt(model)
-    if numpy.isscalar(mask):
+    if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
         resid = numpy.ma.masked_where(tomask, resid)
     return resid
 
-def Anscombe_Poisson_residual(model, data, mask=0):
+def Anscombe_Poisson_residual(model, data, mask=None):
     """
     Return the Anscombe Poisson residuals between model and data.
 
@@ -409,8 +409,9 @@ def Anscombe_Poisson_residual(model, data, mask=0):
     datatrans = data**(2./3)-data**(-1./3)/9
     modeltrans = model**(2./3)-model**(-1./3)/9
     resid = 1.5*(datatrans - modeltrans)/model**(1./6)
-    if numpy.isscalar(mask):
+    if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
+        tomask = numpy.logical_or(tomask, data == 0)
         resid = numpy.ma.masked_where(tomask, resid)
     # It makes more sense to me to have a minus sign here... So when the
     # model is high, the residual is positive. This is opposite of the
