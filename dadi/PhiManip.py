@@ -93,6 +93,9 @@ def _admixture_intermediates(phi, ad_z, zz):
     # Find where those z values map to in the zz array.
     # Note that zz[upper_z[ii,jj]] >= ad_z[ii,jj]
     upper_z_index = numpy.searchsorted(zz, ad_z)
+    # I occasionally seem to get values > 1 (floating pt error) in ad_z. This
+    # corrects them.
+    upper_z_index = numpy.minimum(upper_z_index, len(zz)-1)
     lower_z_index = upper_z_index - 1
     upper_z = zz[upper_z_index]
     lower_z = zz[lower_z_index]
