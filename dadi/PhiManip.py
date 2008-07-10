@@ -137,8 +137,11 @@ def _three_pop_admixture_intermediates(phi_3D, f1,f2, xx,yy,zz,ww):
 
     ww: frequency mapping for the new population.
     """
-    # For each point x,y,z in phi, this is the corresponding frequency w that SNPs
-    # with frequency x,y,z in populations 1,2,3 would map to.
+    # For each point x,y,z in phi, this is the corresponding frequency w that
+    # SNPs with frequency x,y,z in populations 1,2,3 would map to.
+    if f1 + f2 > 1:
+        raise ValueError('Admixture proportions (f1=%f, f2 = %f) are '
+                         'non-sensible.' % (f1, f2))
     ad_w = f1*xx[:,nuax,nuax] + f2*yy[nuax,:,nuax] + (1-f1-f2)*zz[nuax,nuax,:]
 
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -165,8 +168,8 @@ def phi_2D_to_3D_admix(phi, f, xx,yy,zz):
     phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
     for ii in xrange(len(xx)):
         for jj in xrange(len(yy)):
-            phi_3D[ii,jj, upper_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
-            phi_3D[ii,jj, lower_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
+            phi_3D[ii,jj, upper_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
+            phi_3D[ii,jj, lower_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
 
     return phi_3D
 
