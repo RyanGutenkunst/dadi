@@ -8,7 +8,10 @@ import PhiManip
 import Numerics
 import SFS
 import ms
-import Plotting
+try:
+    import Plotting
+except ImportError:
+    pass
 
 try:
     import os
