@@ -169,10 +169,13 @@ def phi_2D_to_3D_admix(phi, f, xx,yy,zz):
 
     # Assemble our result. We would like to do this without explicit loops
     phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
-    for ii in xrange(len(xx)):
-        for jj in xrange(len(yy)):
-            phi_3D[ii,jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
-            phi_3D[ii,jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
+
+    # This uses numpy's fancy indexing. It is much, much faster than an
+    # explicit loop.
+    idx_i = numpy.arange(len(xx))[:,numpy.newaxis]
+    idx_j = numpy.arange(len(yy))[numpy.newaxis,:]
+    phi_3D[idx_i, idx_j, lower_z_index] += frac_lower*norm
+    phi_3D[idx_i, idx_j, upper_z_index] += frac_upper*norm
 
     return phi_3D
 
