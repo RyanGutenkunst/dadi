@@ -112,12 +112,12 @@ def _admixture_intermediates(phi, ad_z, zz):
     delz2 = zz[(upper_z_index+1)%len(zz)] - zz[upper_z_index]
     delz2 = numpy.where(upper_z_index == len(zz)-1, 0, delz2)
     
-    # frac_upper is the fraction that gets assigned to the lower z index
-    frac_upper = (upper_z - ad_z)/(upper_z - lower_z)
-    # frac_lower is the fraction that gets assigned to the upper z index
-    frac_lower = (ad_z-lower_z)/(upper_z - lower_z)
+    # frac_lower is the fraction that gets assigned to the lower z index
+    frac_lower = (upper_z - ad_z)/(upper_z - lower_z)
+    # frac_upper is the fraction that gets assigned to the upper z index
+    frac_upper = (ad_z-lower_z)/(upper_z - lower_z)
     # This is the overall normalization for the entry
-    norm = 2*phi/(frac_upper*delz0 + delz1 + frac_lower*delz2)
+    norm = 2*phi/(frac_lower*delz0 + delz1 + frac_upper*delz2)
 
     return lower_z_index, upper_z_index, frac_lower, frac_upper, norm
 
@@ -171,8 +171,8 @@ def phi_2D_to_3D_admix(phi, f, xx,yy,zz):
     phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
     for ii in xrange(len(xx)):
         for jj in xrange(len(yy)):
-            phi_3D[ii,jj, upper_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
-            phi_3D[ii,jj, lower_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
+            phi_3D[ii,jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
+            phi_3D[ii,jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
 
     return phi_3D
 
@@ -199,8 +199,8 @@ def phi_2D_admix_1_into_2(phi, f, xx,yy):
     for ii in xrange(len(xx)):
         phi_int = numpy.zeros((len(yy), len(yy)))
         for jj in xrange(len(yy)):
-            phi_int[jj, upper_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
-            phi_int[jj, lower_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
+            phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
+            phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
         phi[ii] = Numerics.trapz(phi_int, yy, axis=0)
 
     return phi
@@ -224,8 +224,8 @@ def phi_2D_admix_2_into_1(phi, f, xx,yy):
     for jj in xrange(len(yy)):
         phi_int = numpy.zeros((len(xx), len(xx)))
         for ii in xrange(len(xx)):
-            phi_int[ii, upper_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
-            phi_int[ii, lower_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
+            phi_int[ii, upper_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
+            phi_int[ii, lower_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
         phi[:,jj] = Numerics.trapz(phi_int, xx, axis=0)
 
     return phi
@@ -254,8 +254,8 @@ def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
         for jj in xrange(phi.shape[1]):
             phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
             for kk in xrange(phi.shape[2]):
-                phi_int[kk, upper_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
-                phi_int[kk, lower_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
+                phi_int[kk, upper_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
+                phi_int[kk, lower_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
             phi[ii,jj] = Numerics.trapz(phi_int, zz, axis=0)
 
     return phi
@@ -284,8 +284,8 @@ def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
         for kk in xrange(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
             for jj in xrange(phi.shape[1]):
-                phi_int[jj, upper_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
-                phi_int[jj, lower_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
+                phi_int[jj, upper_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
+                phi_int[jj, lower_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
             phi[ii,:,kk] = Numerics.trapz(phi_int, yy, axis=0)
 
     return phi
@@ -314,8 +314,8 @@ def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
         for kk in xrange(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
             for ii in xrange(phi.shape[0]):
-                phi_int[ii, upper_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
-                phi_int[ii, lower_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
+                phi_int[ii, upper_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
+                phi_int[ii, lower_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
             phi[:,jj,kk] = Numerics.trapz(phi_int, xx, axis=0)
 
     return phi
