@@ -167,14 +167,18 @@ def phi_2D_to_3D_admix(phi, f, xx,yy,zz):
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _two_pop_admixture_intermediates(phi, f, xx,yy,zz)
 
-    # Assemble our result. We would like to do this without explicit loops
-    phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
 
+    # Assemble our result.
     # This uses numpy's fancy indexing. It is much, much faster than an
     # explicit loop.
+    # See the numpy-discussion post "Numpy Advanced Indexing Question" by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
     idx_i = numpy.arange(len(xx))[:,numpy.newaxis]
     idx_j = numpy.arange(len(yy))[numpy.newaxis,:]
-    phi_3D[idx_i, idx_j, lower_z_index] += frac_lower*norm
+
+    phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
+    phi_3D[idx_i, idx_j, lower_z_index] = frac_lower*norm
     phi_3D[idx_i, idx_j, upper_z_index] += frac_upper*norm
 
     return phi_3D
@@ -199,11 +203,17 @@ def phi_2D_admix_1_into_2(phi, f, xx,yy):
 
     # Basically, we're splitting into a third zz population, then integrating
     # over yy to be left with the two populations we care about.
-    for ii in xrange(len(xx)):
-        phi_int = numpy.zeros((len(yy), len(yy)))
-        for jj in xrange(len(yy)):
-            phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
-            phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
+    lower_cont = frac_lower*norm
+    upper_cont = frac_upper*norm
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+        # Use fancy indexing to avoid the commented out loop.
+        #for jj in xrange(len(yy)):
+        #    phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
+        #    phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
+        phi_int[idx_j, lower_z_index[ii]] = lower_cont[ii]
+        phi_int[idx_j, upper_z_index[ii]] += upper_cont[ii]
         phi[ii] = Numerics.trapz(phi_int, yy, axis=0)
 
     return phi
@@ -224,11 +234,13 @@ def phi_2D_admix_2_into_1(phi, f, xx,yy):
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _two_pop_admixture_intermediates(phi, 1-f, xx,yy,xx)
 
+    idx_i = numpy.arange(phi.shape[0])
+    lower_cont = frac_lower*norm
+    upper_cont = frac_upper*norm
     for jj in xrange(len(yy)):
         phi_int = numpy.zeros((len(xx), len(xx)))
-        for ii in xrange(len(xx)):
-            phi_int[ii, upper_z_index[ii,jj]] += frac_upper[ii,jj] * norm[ii,jj]
-            phi_int[ii, lower_z_index[ii,jj]] += frac_lower[ii,jj] * norm[ii,jj]
+        phi_int[idx_i, lower_z_index[:,jj]] = lower_cont[:,jj]
+        phi_int[idx_i, upper_z_index[:,jj]] = upper_cont[:,jj]
         phi[:,jj] = Numerics.trapz(phi_int, xx, axis=0)
 
     return phi
@@ -253,12 +265,12 @@ def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
 
     # Basically, we're splitting into a fourth ww population, then integrating
     # over zz to be left with the two populations we care about.
+    idx_k = numpy.arange(phi.shape[2])
     for ii in xrange(phi.shape[0]):
         for jj in xrange(phi.shape[1]):
             phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
-            for kk in xrange(phi.shape[2]):
-                phi_int[kk, upper_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
-                phi_int[kk, lower_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
+            phi_int[idx_k, lower_w_index[ii,jj]] = lower_cont[ii,jj]
+            phi_int[idx_k, upper_w_index[ii,jj]] = upper_cont[ii,jj]
             phi[ii,jj] = Numerics.trapz(phi_int, zz, axis=0)
 
     return phi
@@ -283,12 +295,12 @@ def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
 
     # Basically, we're splitting into a fourth ww population, then integrating
     # over yy to be left with the two populations we care about.
+    idx_j = numpy.arange(phi.shape[1])
     for ii in xrange(phi.shape[0]):
         for kk in xrange(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
-            for jj in xrange(phi.shape[1]):
-                phi_int[jj, upper_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
-                phi_int[jj, lower_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
+            phi_int[idx_j, lower_w_index[ii,:,kk]] = lower_cont[ii,:,kk]
+            phi_int[idx_j, upper_w_index[ii,:,kk]] = upper_cont[ii,:,kk]
             phi[ii,:,kk] = Numerics.trapz(phi_int, yy, axis=0)
 
     return phi
@@ -313,12 +325,12 @@ def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
 
     # Basically, we're splitting into a fourth ww population, then integrating
     # over yy to be left with the two populations we care about.
+    idx_i = numpy.arange(phi.shape[0])
     for jj in xrange(phi.shape[1]):
         for kk in xrange(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
-            for ii in xrange(phi.shape[0]):
-                phi_int[ii, upper_w_index[ii,jj,kk]] += upper_cont[ii,jj,kk]
-                phi_int[ii, lower_w_index[ii,jj,kk]] += lower_cont[ii,jj,kk]
+            phi_int[idx_i, lower_w_index[:,jj,kk]] = lower_cont[:,jj,kk]
+            phi_int[idx_i, upper_w_index[:,jj,kk]] = upper_cont[:,jj,kk]
             phi[:,jj,kk] = Numerics.trapz(phi_int, xx, axis=0)
 
     return phi
