@@ -96,6 +96,8 @@ def _admixture_intermediates(phi, ad_z, zz):
     # I occasionally seem to get values > 1 (floating pt error) in ad_z. This
     # corrects them.
     upper_z_index = numpy.minimum(upper_z_index, len(zz)-1)
+    # Also ensure that upper_z_index >= 1, so lower_z_index is never < 0.
+    upper_z_index = numpy.maximum(upper_z_index, 1)
     lower_z_index = upper_z_index - 1
     upper_z = zz[upper_z_index]
     lower_z = zz[lower_z_index]
