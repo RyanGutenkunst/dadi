@@ -301,7 +301,10 @@ def optimal_sfs_scaling(model, data):
     return data.sum()/model.sum()
 
 # Create a version of the gamma function that will work with masked arrays.
-gammaln_m = numpy.ma.masked_unary_operation(gammaln)
+if hasattr(numpy.ma, 'masked_unary_operation'):
+    gammaln_m = numpy.ma.masked_unary_operation(gammaln)
+else:
+    gammaln_m = gammaln
 def minus_ll(model, data):
     """
     The negative of the log-likelihood of the data given the model sfs.

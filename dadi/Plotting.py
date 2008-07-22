@@ -8,7 +8,10 @@ import matplotlib
 import pylab
 import numpy
 
-log10_m = numpy.ma.masked_unary_operation(numpy.log10)
+if hasattr(numpy.ma, 'masked_unary_operation'):
+    log10_m = numpy.ma.masked_unary_operation(numpy.log10)
+else:
+    log10_m = numpy.log10
 
 # Together these define a custom set of ticks that labels only the lowest and
 # highest bins visible in an SFS plot. These adjust nicely when zooming around. 
