@@ -356,10 +356,14 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         ax = pylab.subplot(4,3,sax+1)
         plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax,
                            pop1_label=labels[0], pop2_label=labels[1])
+        if not sax == 2:
+            pylab.gcf().axes[-1].set_visible(False)
 
         pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
         plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax,
                            pop1_label=labels[0], pop2_label=labels[1])
+        if not sax == 2:
+            pylab.gcf().axes[-1].set_visible(False)
 
         if residual == 'Anscombe':
             resid = SFS.Anscombe_Poisson_residual(marg_model, marg_data,
@@ -372,6 +376,8 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
         plot_2d_resid(resid, resid_range, 
                       pop1_label=labels[0], pop2_label=labels[1])
+        if resid_range and not sax == 2:
+            pylab.gcf().axes[-1].set_visible(False)
 
         ax = pylab.subplot(4,3,sax+10)
         flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), 
