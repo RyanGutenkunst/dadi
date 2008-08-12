@@ -380,8 +380,8 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
             pylab.gcf().axes[-1].set_visible(False)
 
         ax = pylab.subplot(4,3,sax+10)
-        flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), 
-                                   resid.flat)
+        flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                                   resid.ravel())
         ax.hist(flatresid, bins=20, normed=True)
         ax.set_yticks([])
     pylab.show()
