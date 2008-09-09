@@ -178,8 +178,7 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop1_label='pop1', pop2_label='pop2',
-                          residual='Anscombe'):
+                          pop_labels=['pop1', 'pop2'], residual='Anscombe'):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -191,8 +190,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop1_label: Label for population 1.
-    pop2_label: Label for population 2.
+    pop_labels: List of labels for populations 1 and 2.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -205,12 +203,11 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 
     plot_2d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
-                         pop1_label=pop1_label, pop2_label=pop2_label)
+                         pop_labels=pop_labels, residual=residual)
     
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
-                         pop1_label='pop1', pop2_label='pop2',
-                         residual='Anscombe'):
+                         pop_labels=['pop1', 'pop2'], residual='Anscombe'):
     """
     Poisson comparison between 2d model and data.
 
@@ -222,8 +219,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop1_label: Label for population 1.
-    pop2_label: Label for population 2.
+    pop_labels: List of labels for populations 1 and 2.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -245,11 +241,11 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
-                       pop1_label=pop1_label, pop2_label=pop2_label)
+                       pop1_label=pop_labels[0], pop2_label=pop_labels[1])
 
     pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
-                       pop1_label=pop1_label, pop2_label=pop2_label)
+                       pop1_label=pop_labels[0], pop2_label=pop_labels[1])
 
     if residual == 'Anscombe':
         resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
@@ -262,7 +258,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     pylab.subplot(2,2,3, sharex=ax, sharey=ax)
     plot_2d_resid(resid, resid_range, 
-                  pop1_label=pop1_label, pop2_label=pop2_label)
+                  pop1_label=pop_labels[0], pop2_label=pop_labels[1])
 
     ax = pylab.subplot(2,2,4)
     flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), resid.flat)
@@ -272,8 +268,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop1_label='pop1', pop2_label='pop2',
-                          pop3_label='pop3', residual='Anscombe'):
+                          pop_labels=['pop1', 'pop2', 'pop3'], 
+                          residual='Anscombe'):
     """
     Multinomial comparison between 3d model and data.
 
@@ -285,9 +281,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop1_label: Label for population 1.
-    pop2_label: Label for population 2.
-    pop3_label: Label for population 3.
+    pop_labels: List of labels for populations 1, 2, and 3.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -300,13 +294,12 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 
     plot_3d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
-                         pop1_label=pop1_label, pop2_label=pop2_label,
-                         pop3_label=pop3_label)
+                         pop_labels=pop_labels, residual=residual)
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
-                         pop1_label='pop1', pop2_label='pop2',
-                         pop3_label='pop3', residual='Anscombe'):
+                         pop_labels=['pop1', 'pop2', 'pop3'], 
+                         residual='Anscombe'):
     """
     Poisson comparison between 3d model and data.
 
@@ -318,9 +311,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop1_label: Label for population 1.
-    pop2_label: Label for population 2.
-    pop3_label: Label for population 3.
+    pop_labels: List of labels for populations 1, 2, and 3.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -343,8 +334,6 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         modelmin = min(masked_model.sum(axis=sax).min() for sax in range(3))
         datamin = min(masked_data.sum(axis=sax).min() for sax in range(3))
         vmin = min(modelmin, datamin)
-
-    pop_labels = [pop1_label, pop2_label, pop3_label]
 
     for sax in range(3):
         marg_data = masked_data.sum(axis=2-sax)
