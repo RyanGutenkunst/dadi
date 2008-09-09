@@ -19,9 +19,13 @@ class sfsTickLocator(matplotlib.ticker.Locator):
     def __call__(self):
         'Return the locations of the ticks'
 
-        self.verify_intervals()
-        vmin, vmax = self.viewInterval.get_bounds()
-        dmin, dmax = self.dataInterval.get_bounds()
+        try:
+            vmin, vmax = self.axis.get_view_interval()
+            dmin, dmax = self.axis.get_data_interval()
+        except AttributeError:
+            self.verify_intervals()
+            vmin, vmax = self.viewInterval.get_bounds()
+            dmin, dmax = self.dataInterval.get_bounds()
 
         tmin = max(vmin, dmin)
         tmax = min(vmax, dmax)
