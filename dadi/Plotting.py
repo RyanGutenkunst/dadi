@@ -265,7 +265,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                   pop1_label=pop_labels[0], pop2_label=pop_labels[1])
 
     ax = pylab.subplot(2,2,4)
-    flatresid = numpy.compress(numpy.logical_not(resid.mask.flat), resid.flat)
+    flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                               resid.ravel())
     ax.hist(flatresid, bins=20, normed=True)
     ax.set_yticks([])
     pylab.show()
