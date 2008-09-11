@@ -26,6 +26,9 @@ def sfs_to_file(sfs, fid, precision=16, comment_lines = []):
         fid.write('%i ' % elem)
     fid.write(os.linesep)
 
+    # Masked entries in the sfs will go in as 'nan'
+    if numpy.ma.isMaskedArray(sfs):
+        sfs = numpy.where(sfs.mask, numpy.nan, sfs.data)
     sfs.tofile(fid, ' ', '%%.%ig' % precision)
     fid.write(os.linesep)
 
