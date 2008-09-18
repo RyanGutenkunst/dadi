@@ -344,7 +344,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         marg_data = masked_data.sum(axis=2-sax)
         marg_model = masked_model.sum(axis=2-sax)
 
-        labels = pop_labels[:]
+        labels = list(pop_labels[:])
         del labels[2-sax]
 
         ax = pylab.subplot(4,3,sax+1)
