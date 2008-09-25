@@ -36,7 +36,8 @@ ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 import Numerics, SFS
 
-def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
+def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
+                          plot_masked=False):
     """
     Mulitnomial comparison between 1d model and data.
 
@@ -48,15 +49,19 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe'):
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
+    plot_masked: Additionally plots (in open circles) results for points in the 
+                 model or data that were masked.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
     masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
-    plot_1d_comp_Poisson(masked_model, masked_data, fig_num, residual)
+    plot_1d_comp_Poisson(masked_model, masked_data, fig_num, residual,
+                         plot_masked)
 
-def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe'):
+def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
+                         plot_masked=False):
     """
     Poisson comparison between 1d model and data.
 
@@ -68,6 +73,8 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe'):
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
+    plot_masked: Additionally plots (in open circles) results for points in the 
+                 model or data that were masked.
     """
     if fig_num is None:
         f = pylab.gcf()
@@ -81,6 +88,10 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe'):
     pylab.semilogy(masked_data, '-ob')
     pylab.semilogy(masked_model, '-or')
 
+    if plot_masked:
+        pylab.semilogy(masked_data.data, '--ob', mfc='w', zorder=-100)
+        pylab.semilogy(masked_model.data, '--or', mfc='w', zorder=-100)
+
     pylab.subplot(2,1,2, sharex = ax)
     if residual == 'Anscombe':
         resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data)
@@ -89,6 +100,8 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe'):
     else:
         raise ValueError("Unknown class of residual '%s'." % residual)
     pylab.plot(resid, '-og')
+    if plot_masked:
+        pylab.plot(resid.data, '--og', mfc='w', zorder=-100)
 
     ax.set_xlim(0, data.shape[0]-1)
     pylab.show()
