@@ -107,7 +107,8 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
     pylab.show()
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
-                       pop1_label= 'pop1', pop2_label='pop2'):
+                       pop1_label= 'pop1', pop2_label='pop2',
+                       extend='neither', colorbar=True):
     """
     Logarithmic heatmap of single 2d SFS.
 
@@ -117,6 +118,9 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     ax: Axes object to plot into. If None, the result of pylab.gca() is used.
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
+    extend: Whether the colorbar should have 'extension' arrows. See
+            help(pylab.colorbar) for more details.
+    colorbar: Should we plot a colorbar?
     """
     if ax is None:
         ax = pylab.gca()
@@ -126,15 +130,19 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     if vmax is None:
         vmax = sfs.max()
 
+    pylab.cm.hsv.set_under('w')
     mappable=ax.pcolor(numpy.ma.masked_where(sfs<vmin, sfs), 
-                       cmap=pylab.cm.hsv, vmax=vmax, vmin=vmin, shading='flat',
-                       norm = matplotlib.colors.LogNorm())
+                       cmap=pylab.cm.hsv, shading='flat',
+                       norm = matplotlib.colors.LogNorm(vmin=vmin*(1-1e-3),
+                                                        vmax=vmax))
     #cbticks = [numpy.round(vmin+0.05,1), numpy.round(vmax-0.05, 1)]
 
     # This can be passed to colorbar (format=format) to make ticks be 10^blah.
     # But I don't think it looks particularly nice.
     format = matplotlib.ticker.FormatStrFormatter('$10^{%.1f}$')
-    ax.figure.colorbar(mappable)
+    ax.figure.colorbar(mappable, extend=extend)
+    if not colorbar:
+        del ax.figure.axes[-1]
 
     ax.plot([0,sfs.shape[1]],[0, sfs.shape[0]], '-k', lw=0.2)
 
@@ -153,7 +161,8 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
 
 def plot_2d_resid(resid, resid_range=None, ax=None, 
-                  pop1_label = 'pop1', pop2_label='pop2'):
+                  pop1_label = 'pop1', pop2_label='pop2', extend='neither',
+                  colorbar=True):
     """
     Linear heatmap of 2d residual array.
 
@@ -163,6 +172,9 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
     ax: Axes object to plot into. If None, the result of pylab.gca() is used.
     pop1_label: Label for population 1.
     pop2_label: Label for population 2.
+    extend: Whether the colorbar should have 'extension' arrows. See
+            help(pylab.colorbar) for more details.
+    colorbar: Should we plot a colorbar?
     """
     if ax is None:
         ax = pylab.gca()
@@ -175,7 +187,10 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
 
     cbticks = [-resid_range, 0, resid_range]
     format = matplotlib.ticker.FormatStrFormatter('%.2g')
-    ax.figure.colorbar(mappable, ticks=cbticks, format=format)
+    ax.figure.colorbar(mappable, ticks=cbticks, format=format,
+                       extend=extend)
+    if not colorbar:
+        del ax.figure.axes[-1]
 
     ax.plot([0,resid.shape[1]],[0, resid.shape[0]], '-k', lw=0.2)
 
@@ -192,6 +207,11 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
     ax.set_xlim(0, resid.shape[1])
     ax.set_ylim(0, resid.shape[0])
 
+# Used to determine whether colorbars should have 'extended' arrows
+_extend_mapping = {(True, True): 'neither',
+                   (False, True): 'min',
+                   (True, False): 'max',
+                   (False, False): 'both'}
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
@@ -258,7 +278,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
-                       pop1_label=pop_labels[0], pop2_label=pop_labels[1])
+                       pop1_label=pop_labels[0], pop2_label=pop_labels[1],
+                       colorbar=False)
 
     pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
@@ -287,7 +308,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
                           pop_labels=['pop1', 'pop2', 'pop3'], 
-                          residual='Anscombe'):
+                          residual='Anscombe', adjust=False):
     """
     Multinomial comparison between 3d model and data.
 
@@ -303,6 +324,8 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
+    adjust: Should method use automatic 'subplots_adjust'? For advanced
+            manipulation of plots, it may be useful to make this False.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -312,12 +335,13 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 
     plot_3d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
-                         pop_labels=pop_labels, residual=residual)
+                         pop_labels=pop_labels, residual=residual,
+                         adjust=adjust)
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
                          pop_labels=['pop1', 'pop2', 'pop3'], 
-                         residual='Anscombe'):
+                         residual='Anscombe', adjust=True):
     """
     Poisson comparison between 3d model and data.
 
@@ -333,6 +357,8 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
+    adjust: Should method use automatic 'subplots_adjust'? For advanced
+            manipulation of plots, it may be useful to make this False.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
@@ -342,16 +368,41 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         f = pylab.figure(fig_num, figsize=(8,10))
 
     pylab.clf()
-    pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+
+    modelmax = max(masked_model.sum(axis=sax).max() for sax in range(3))
+    datamax = max(masked_data.sum(axis=sax).max() for sax in range(3))
+    modelmin = min(masked_model.sum(axis=sax).min() for sax in range(3))
+    datamin = min(masked_data.sum(axis=sax).min() for sax in range(3))
+    max_toplot = max(modelmax, datamax)
+    min_toplot = min(modelmin, datamin)
 
     if vmax is None:
-        modelmax = max(masked_model.sum(axis=sax).max() for sax in range(3))
-        datamax = max(masked_data.sum(axis=sax).max() for sax in range(3))
-        vmax = max(modelmax, datamax)
+        vmax = max_toplot
     if vmin is None:
-        modelmin = min(masked_model.sum(axis=sax).min() for sax in range(3))
-        datamin = min(masked_data.sum(axis=sax).min() for sax in range(3))
-        vmin = min(modelmin, datamin)
+        vmin = min_toplot
+    extend = _extend_mapping[vmin <= min_toplot, vmax >= max_toplot]
+
+    # Calculate the residuals
+    if residual == 'Anscombe':
+        resids = [SFS.Anscombe_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                                masked_data.sum(axis=2-sax), 
+                                                mask=vmin) for sax in range(3)]
+    elif residual == 'linear':
+        resids = [SFS.linear_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                                masked_data.sum(axis=2-sax), 
+                                                mask=vmin) for sax in range(3)]
+    else:
+        raise ValueError("Unknown class of residual '%s'." % residual)
+
+
+    min_resid = min([r.min() for r in resids])
+    max_resid = max([r.max() for r in resids])
+    if resid_range is None:
+        resid_range = max((abs(max_resid), abs(min_resid)))
+    resid_extend = _extend_mapping[-resid_range <= min_resid, 
+                                   resid_range >= max_resid]
 
     for sax in range(3):
         marg_data = masked_data.sum(axis=2-sax)
@@ -361,30 +412,24 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         del labels[2-sax]
 
         ax = pylab.subplot(4,3,sax+1)
-        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax,
-                           pop1_label=labels[0], pop2_label=labels[1])
         if not sax == 2:
-            pylab.gcf().axes[-1].set_visible(False)
+            plot_colorbar=False
+        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax,
+                           pop1_label=labels[0], pop2_label=labels[1],
+                           extend=extend, colorbar=plot_colorbar)
 
         pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
         plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax,
-                           pop1_label=labels[0], pop2_label=labels[1])
-        if not sax == 2:
-            pylab.gcf().axes[-1].set_visible(False)
+                           pop1_label=labels[0], pop2_label=labels[1],
+                           extend=extend, colorbar=plot_colorbar)
 
-        if residual == 'Anscombe':
-            resid = SFS.Anscombe_Poisson_residual(marg_model, marg_data,
-                                                  mask=vmin)
-        elif residual == 'linear':
-            resid = SFS.linear_Poisson_residual(marg_model, marg_data,
-                                                mask=vmin)
-        else:
-            raise ValueError("Unknown class of residual '%s'." % residual)
+        if resid_range and not sax == 2:
+            plot_colorbar=False
+        resid = resids[sax]
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
         plot_2d_resid(resid, resid_range, 
-                      pop1_label=labels[0], pop2_label=labels[1])
-        if resid_range and not sax == 2:
-            pylab.gcf().axes[-1].set_visible(False)
+                      pop1_label=labels[0], pop2_label=labels[1],
+                      extend=resid_extend, colorbar=plot_colorbar)
 
         ax = pylab.subplot(4,3,sax+10)
         flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
