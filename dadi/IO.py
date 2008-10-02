@@ -134,6 +134,9 @@ def sfs_from_ms_file(input, average=False, report_sum=False,
     if dimension > 2:
         bottom2 = bottom_l[2]
         top2 = top_l[2]
+    if dimension > 3:
+        bottom3 = bottom_l[3]
+        top3 = top_l[3]
     
     #output.writelines([ms_command, seeds, '\n'])
     
@@ -167,6 +170,11 @@ def sfs_from_ms_file(input, average=False, report_sum=False,
                 sfs[this_snp[bottom0:top0].count('1'), 
                     this_snp[bottom1:top1].count('1'),
                     this_snp[bottom2:top2].count('1')] += 1
+            elif dimension == 4:
+                sfs[this_snp[bottom0:top0].count('1'), 
+                    this_snp[bottom1:top1].count('1'),
+                    this_snp[bottom2:top2].count('1'),
+                    this_snp[bottom3:top3].count('1')] += 1
             else:
                 for ii in range(dimension):
                     bottom = bottom_l[ii]
