@@ -1,6 +1,8 @@
 import os
 import numpy
 
+import dadi.SFS
+
 def sfs_to_file(sfs, fid, precision=16, comment_lines = []):
     """
     Write a site-frequency spectrum to a file.
@@ -71,9 +73,7 @@ def sfs_from_file(fid, mask_corners=True, return_comments=False):
         fid.close()
 
     if mask_corners:
-        mask = numpy.ma.make_mask_none(sfs.shape)
-        mask.flat[0] = mask.flat[-1] = True
-        sfs = numpy.ma.masked_array(sfs, mask=mask)
+        sfs = dadi.SFS.mask_corners(sfs)
                                    
     if not return_comments:
         return sfs

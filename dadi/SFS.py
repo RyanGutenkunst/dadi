@@ -505,3 +505,14 @@ def randomly_resampled_2D(sfs):
             if prob > 0:
                 sfs_resamp[derived1, derived2] += prob*num_snps
     return sfs_resamp
+
+def mask_corners(sfs):
+    """ 
+    Return a masked SFS in which the 'absent in all pops' and 'fixed in all
+    pops' entries are masked. These entries are often unobservable.
+    """
+    mask = numpy.ma.make_mask_none(sfs.shape)
+    mask.flat[0] = mask.flat[-1] = True
+    sfs = numpy.ma.masked_array(sfs, mask=mask)
+
+    return sfs
