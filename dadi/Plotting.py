@@ -215,7 +215,8 @@ _extend_mapping = {(True, True): 'neither',
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop_labels=['pop1', 'pop2'], residual='Anscombe'):
+                          pop_labels=['pop1', 'pop2'], residual='Anscombe',
+                          adjust=True):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -231,6 +232,8 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
+    adjust: Should method use automatic 'subplots_adjust'? For advanced
+            manipulation of plots, it may be useful to make this False.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -240,11 +243,13 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 
     plot_2d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
-                         pop_labels=pop_labels, residual=residual)
+                         pop_labels=pop_labels, residual=residual,
+                         adjust=adjust)
     
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
-                         pop_labels=['pop1', 'pop2'], residual='Anscombe'):
+                         pop_labels=['pop1', 'pop2'], residual='Anscombe',
+                         adjust=True):
     """
     Poisson comparison between 2d model and data.
 
@@ -260,6 +265,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
+    adjust: Should method use automatic 'subplots_adjust'? For advanced
+            manipulation of plots, it may be useful to make this False.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
@@ -269,12 +276,16 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
         f = pylab.figure(fig_num, figsize=(7,7))
 
     pylab.clf()
-    pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
 
+    max_toplot = max(masked_model.max(), masked_data.max())
+    min_toplot = min(masked_model.min(), masked_data.min())
     if vmax is None:
-        vmax = max(masked_model.max(), masked_data.max())
+        vmax = max_toplot
     if vmin is None:
-        vmin = min(masked_model.min(), masked_data.min())
+        vmin = min_toplot
+    extend = _extend_mapping[vmin <= min_toplot, vmax >= max_toplot]
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
@@ -283,7 +294,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
-                       pop1_label=pop_labels[0], pop2_label=pop_labels[1])
+                       pop1_label=pop_labels[0], pop2_label=pop_labels[1],
+                       extend=extend )
 
     if residual == 'Anscombe':
         resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
@@ -294,9 +306,15 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     else:
         raise ValueError("Unknown class of residual '%s'." % residual)
 
+    if resid_range is None:
+        resid_range = max((abs(resid.max()), abs(resid.min())))
+    resid_extend = _extend_mapping[-resid_range <= resid.min(), 
+                                   resid_range >= resid.max()]
+
     pylab.subplot(2,2,3, sharex=ax, sharey=ax)
     plot_2d_resid(resid, resid_range, 
-                  pop1_label=pop_labels[0], pop2_label=pop_labels[1])
+                  pop1_label=pop_labels[0], pop2_label=pop_labels[1],
+                  extend=resid_extend)
 
     ax = pylab.subplot(2,2,4)
     flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
@@ -308,7 +326,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
                           pop_labels=['pop1', 'pop2', 'pop3'], 
-                          residual='Anscombe', adjust=False):
+                          residual='Anscombe', adjust=True):
     """
     Multinomial comparison between 3d model and data.
 
@@ -412,8 +430,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         del labels[2-sax]
 
         ax = pylab.subplot(4,3,sax+1)
-        if not sax == 2:
-            plot_colorbar=False
+        plot_colorbar = (sax == 2)
         plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax,
                            pop1_label=labels[0], pop2_label=labels[1],
                            extend=extend, colorbar=plot_colorbar)
@@ -421,10 +438,8 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
         plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax,
                            pop1_label=labels[0], pop2_label=labels[1],
-                           extend=extend, colorbar=plot_colorbar)
+                           extend=extend, colorbar=False)
 
-        if resid_range and not sax == 2:
-            plot_colorbar=False
         resid = resids[sax]
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
         plot_2d_resid(resid, resid_range, 
