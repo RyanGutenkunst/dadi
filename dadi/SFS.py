@@ -516,3 +516,58 @@ def mask_corners(sfs):
     sfs = numpy.ma.masked_array(sfs, mask=mask)
 
     return sfs
+
+def Watterson_theta(sfs):
+    """
+    Watterson's estimator of theta.
+
+    Note that is only sensible for 1-dimensional spectra.
+    """
+    if sfs.ndim != 1:
+        raise ValueError("Only defined on a one-dimensional SFS.")
+
+    n = sfs.shape[0]-1
+    S = mask_corners(sfs).sum()
+    denom = numpy.sum(1./numpy.arange(1,n))
+
+    return S/denom
+
+def pi(sfs):
+    """
+    Estimated expected heterozygosity.
+
+    Note that this estimate assumes a randomly mating population.
+    """
+    if sfs.ndim != 1:
+        raise ValueError("Only defined on a one-dimensional SFS.")
+
+    n = sfs.shape[0]-1
+    # sample frequencies p 
+    p = 1.*numpy.arange(0,n+1)/n
+    return n/(n-1) * 2*numpy.ma.sum(sfs*p*(1-p))
+
+def Tajima_D(sfs):
+    """
+    Tajima's D.
+
+    Following Gillespie "Population Genetics: A Concise Guide" pg. 45
+    """
+    if not sfs.ndim == 1:
+        raise ValueError("Only defined on a one-dimensional SFS.")
+
+    S = mask_corners(sfs).sum()
+
+    n = sfs.shape[0]-1.
+    pihat = pi(sfs)
+    theta = WattersonTheta(sfs)
+
+    a1 = numpy.sum(1./numpy.arange(1,n))
+    a2 = numpy.sum(1./numpy.arange(1,n)**2)
+    b1 = (n+1)/(3*(n-1))
+    b2 = 2*(n**2 + n + 3)/(9*n * (n-1))
+    c1 = b1 - 1./a1
+    c2 = b2 - (n+2)/(a1*n) + a2/a1**2
+
+    C = numpy.sqrt((c1/a1)*S + c2/(a1**2 + a2) * S*(S-1))
+
+    return (pihat - theta)/C
