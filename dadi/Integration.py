@@ -34,17 +34,17 @@ def compute_time_steps(T, xx):
         time_steps.append(T - steps_sum)
     return numpy.array(time_steps)
 
-def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0):
+def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0, initial_t=0):
     vars_to_check = (nu, gamma, theta0)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        return one_pop_const_params(phi, xx, T, nu, gamma, theta0)
+        return one_pop_const_params(phi, xx, T, nu, gamma, theta0, initial_t)
 
     nu_f = Misc.ensure_1arg_func(nu)
     gamma_f = Misc.ensure_1arg_func(gamma)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    next_t = 0
-    time_steps = compute_time_steps(T, xx)
+    next_t = initial_t
+    time_steps = compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
         next_t += this_dt
 
@@ -55,11 +55,11 @@ def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0):
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
-             theta0=1):
+             theta0=1, initial_t=0):
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         return two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21, 
-                                     gamma1, gamma2, theta0)
+                                     gamma1, gamma2, theta0, initial_t)
     yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -70,8 +70,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     gamma2_f = Misc.ensure_1arg_func(gamma2)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    next_t = 0
-    time_steps = compute_time_steps(T, xx)
+    next_t = initial_t
+    time_steps = compute_time_steps(T-initial_t, xx)
     for ii, this_dt in enumerate(time_steps):
         next_t += this_dt
 
@@ -91,13 +91,15 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
-               gamma1=0, gamma2=0, gamma3=0, theta0=1):
+               gamma1=0, gamma2=0, gamma3=0, theta0=1,
+               initial_t=0):
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         return three_pops_const_params(phi, xx, T, nu1, nu2, nu3, 
                                        m12, m13, m21, m23, m31, m32, 
-                                       gamma1, gamma2, gamma3, theta0)
+                                       gamma1, gamma2, gamma3, theta0,
+                                       initial_t)
     zz = yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -114,8 +116,8 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     gamma3_f = Misc.ensure_1arg_func(gamma3)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    next_t = 0
-    time_steps = compute_time_steps(T, xx)
+    next_t = initial_t
+    time_steps = compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
         next_t += this_dt
 
@@ -177,7 +179,7 @@ def compute_delj(dx, MInt, VInt, axis=0):
         delj = 0.5
     return delj
 
-def one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1):
+def one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1, initial_t=0):
     M = Mfunc1D(xx, gamma)
     MInt = Mfunc1D((xx[:-1] + xx[1:])/2, gamma)
     V = Vfunc(xx, nu)
@@ -202,7 +204,7 @@ def one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1):
     if(M[-1] >= 0):
         b[-1] += -(-0.5/nu - M[-1])*2/dx[-1]
 
-    time_steps = compute_time_steps(T, xx)
+    time_steps = compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
         inject_mutations_1D(phi, this_dt, xx, theta0)
         r = phi/this_dt
@@ -211,7 +213,7 @@ def one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1):
     return phi
 
 def two_pops_const_params(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0,
-                          gamma1=0, gamma2=0, theta0=1):
+                          gamma1=0, gamma2=0, theta0=1, initial_t=0):
     yy = xx
 
     # The use of nuax (= numpy.newaxis) here is for memory conservation. We
@@ -259,7 +261,7 @@ def two_pops_const_params(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0,
     if My[-1,-1] >= 0:
         by[-1,-1] += -(-0.5/nu2 - My[-1,-1])*2/dy[-1]
 
-    time_steps = compute_time_steps(T, xx)
+    time_steps = compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
         inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
         phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
@@ -270,7 +272,8 @@ def two_pops_const_params(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0,
 
 def three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1, 
                             m12=0, m13=0, m21=0, m23=0, m31=0, m32=0, 
-                            gamma1=0, gamma2=0, gamma3=0, theta0=1):
+                            gamma1=0, gamma2=0, gamma3=0, theta0=1,
+                            initial_t=0):
     zz = yy = xx
 
     Vx = Vfunc(xx, nu1)
@@ -353,7 +356,7 @@ def three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if Mz[-1,-1,-1] >= 0:
         bz[-1,-1,-1] += -(-0.5/nu3 - Mz[-1,-1,-1])*2/dz[-1]
 
-    time_steps = compute_time_steps(T, xx)
+    time_steps = compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
         inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
