@@ -13,9 +13,8 @@ def ms_simple(theta, ns, core, iter, recomb=None, rsites=None):
 
     return ms_command % sub_dict
 
-def ms_simulate(params, ns, core, scanned_length_file, tbs_filename, 
+def ms_simulate(theta, ns, core, scanned_length_file, tbs_filename, 
                 recomb_factor=0.5):
-    theta = params[0]
     sl = file(scanned_length_file, 'r').readlines()
     iter = len(sl)
 
@@ -27,8 +26,8 @@ def ms_simulate(params, ns, core, scanned_length_file, tbs_filename,
     sl = file(scanned_length_file, 'r').readlines()
     total_scanned = numpy.sum([int(s.split()[1]) for s in sl])
     tbs_out = []
-    for scanned in sl:
-        scanned = int(scanned.split()[1])
+    for line in sl:
+        scanned = int(line.split()[1])
         # Note factor of 2 here that makes per site recombination rate = 1/2 of
         # the per-site mutation rate.
         tbs_out.append('%f %f %i' % (theta*scanned/total_scanned, 
