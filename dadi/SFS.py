@@ -559,7 +559,7 @@ def Tajima_D(sfs):
 
     n = sfs.shape[0]-1.
     pihat = pi(sfs)
-    theta = WattersonTheta(sfs)
+    theta = Watterson_theta(sfs)
 
     a1 = numpy.sum(1./numpy.arange(1,n))
     a2 = numpy.sum(1./numpy.arange(1,n)**2)
