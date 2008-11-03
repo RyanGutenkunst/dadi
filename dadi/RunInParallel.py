@@ -1,3 +1,8 @@
+"""
+For evaluation of gradients by parallel finite-difference calculation.
+
+This code has not been tested thoroughly.
+"""
 import logging
 logging.basicConfig()
 logger = logging.getLogger('RunInParallel')
