@@ -1,3 +1,7 @@
+"""
+Manipulating population frequency spectra phi. e.g. population splittings and
+admixture
+"""
 import numpy
 from numpy import newaxis as nuax
 
@@ -64,13 +68,7 @@ def phi_2D_to_3D_split_2(xx, phi_2D):
 
     Returns a new three-dimensional phi array.
     """
-    pts = len(xx)
-    phi_3D = numpy.zeros((pts, pts, pts))
-    for jj in range(1,pts-1):
-        phi_3D[:,jj,jj] = phi_2D[:,jj]*2/(xx[jj+1]-xx[jj-1])
-    phi_3D[:,0,0] = phi_2D[:,0]*2/(xx[1] - xx[0])
-    phi_3D[:,-1,-1] = phi_2D[:,-1]*2/(xx[-1] - xx[-2])
-    return phi_3D
+    return phi_2D_to_3D_admix(phi_2D,0,xx,xx,xx)
 
 def phi_2D_to_3D_split_1(xx, phi_2D):
     """
@@ -81,13 +79,7 @@ def phi_2D_to_3D_split_1(xx, phi_2D):
 
     Returns a new three-dimensional phi array.
     """
-    pts = len(xx)
-    phi_3D = numpy.zeros((pts, pts, pts))
-    for jj in range(1,pts-1):
-        phi_3D[jj,:,jj] = phi_2D[jj,:]*2/(xx[jj+1]-xx[jj-1])
-    phi_3D[0,:,0] = phi_2D[0,:]*2/(xx[1] - xx[0])
-    phi_3D[-1,:,-1] = phi_2D[-1,:]*2/(xx[-1] - xx[-2])
-    return phi_3D
+    return phi_2D_to_3D_admix(phi_2D,1,xx,xx,xx)
 
 def _admixture_intermediates(phi, ad_z, zz):
     # Find where those z values map to in the zz array.
