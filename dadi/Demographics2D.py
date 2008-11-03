@@ -73,3 +73,36 @@ def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), n1,n2, pts):
 
     sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
     return sfs
+
+def split_mig((nu1, nu2, T, m), n1,n2, pts):
+    """
+    Split into two populations of specifed size, with migration.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m: Migration rate between populations (2*Na*m)
+    n1,n2: Shape of resulting SFS
+    pts: Number of grid points to use in integration.
+    """
+    xx = Numerics.other_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m, m21=m)
+
+    sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
+    return sfs
+
+def split_mig_mscore((nu1, nu2, T, m)):
+    """
+    ms core command for split_mig.
+    """
+    command = "-n 1 %(nu1)f -n 2 %(nu2)f "\
+            "-ma x %(m12)f %(m21)f x "\
+            "-ej %(T)f 2 1 -en %(T)f 1 1"
+
+    sub_dict = {'nu1':nu1, 'nu2':nu2, 'm12':2*m, 'm21':2*m, 'T': T/2}
+
+    return command % sub_dict
