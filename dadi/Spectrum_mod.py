@@ -629,7 +629,7 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def from_phi(phi, ns, xxs, mask_corners=mask_corners):
+    def from_phi(phi, ns, xxs, mask_corners=True):
         if not phi.ndim == len(ns) == len(xxs):
             raise ValueError('Dimensionality of phi and lengths of ns and xxs '
                              'do not all agree.')
