@@ -2,70 +2,10 @@ import numpy
 from numpy import newaxis as nuax
 
 from scipy import comb
-from scipy.special import gammaln
 
 import Numerics
 from Numerics import reverse_array, trapz
 from scipy.integrate import trapz
-
-def sfs_from_phi_1D(n, xx, phi):
-    sfs = numpy.zeros(n+1)
-    for ii in range(0,n+1):
-        factorx = comb(n,ii) * xx**ii * (1-xx)**(n-ii)
-        sfs[ii] = trapz(factorx * phi, xx)
-
-    return sfs
-
-def sfs_from_phi_2D(nx, ny, xx, yy, phi):
-    # Calculate the 2D sfs from phi using the trapezoid rule for integration.
-    sfs = numpy.zeros((nx+1, ny+1))
-    
-    # Cache to avoid duplicated work.
-    factorx_cache = {}
-    for ii in range(0, nx+1):
-        factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
-        factorx_cache[nx,ii] = factorx
-
-    dx, dy = numpy.diff(xx), numpy.diff(yy)
-    for jj in range(0,ny+1):
-        factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
-        integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
-        for ii in range(0, nx+1):
-            factorx = factorx_cache[nx,ii]
-            sfs[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
-
-    return sfs
-
-def sfs_from_phi_3D(nx, ny, nz, xx, yy, zz, phi):
-    sfs = numpy.zeros((nx+1, ny+1, nz+1))
-
-    dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
-    half_dx = dx/2.0
-
-    # We cache these calculations...
-    factorx_cache, factory_cache = {}, {}
-    for ii in range(0, nx+1):
-        factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
-        factorx_cache[nx,ii] = factorx
-    for jj in range(0, ny+1):
-        factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
-        factory_cache[ny,jj] = factory[nuax,:]
-
-    for kk in range(0, nz+1):
-        factorz = comb(nz, kk) * zz**kk * (1-zz)**(nz-kk)
-        over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
-        for jj in range(0, ny+1):
-            factory = factory_cache[ny,jj]
-            over_y = trapz(factory * over_z, dx=dy)
-            for ii in range(0, nx+1):
-                factorx = factorx_cache[nx,ii]
-                # It's faster here to do the trapezoid rule explicitly rather
-                #  than using SciPy's more general routine.
-                integrand = factorx * over_y
-                ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
-                sfs[ii,jj,kk] = ans
-
-    return sfs
 
 def optimally_scaled_sfs(model, data):
     """
@@ -119,14 +59,3 @@ def randomly_resampled_2D(sfs):
             if prob > 0:
                 sfs_resamp[derived1, derived2] += prob*num_snps
     return sfs_resamp
-
-def mask_corners(sfs):
-    """ 
-    Return a masked SFS in which the 'absent in all pops' and 'fixed in all
-    pops' entries are masked. These entries are often unobservable.
-    """
-    mask = numpy.ma.make_mask_none(sfs.shape)
-    mask.flat[0] = mask.flat[-1] = True
-    sfs = numpy.ma.masked_array(sfs, mask=mask)
-
-    return sfs
