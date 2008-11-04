@@ -231,3 +231,37 @@ def make_extrap_log_func(func):
     def ex_func(*args):
         return numpy.exp(exlog_func(*args))
     return ex_func
+
+_projection_cache = {}
+def _lncomb(N,k):
+    """
+    Log of N choose k.
+    """
+    return gammaln(N+1) - gammaln(k+1) - gammaln(N-k+1)
+
+def _cached_projection(proj_to, proj_from, hits):
+    """
+    Coefficients for projection from a different fs size.
+
+    proj_to: Numper of samples to project down to.
+    proj_from: Numper of samples to project from.
+    hits: Number of derived alleles projecting from.
+    """
+    key = (proj_to, proj_from, hits)
+    try:
+        return _projection_cache[key]
+    except KeyError:
+        pass
+
+    proj_hits = numpy.arange(proj_to+1)
+    contrib = comb(proj_to,proj_hits)*comb(proj_from-proj_to,hits-proj_hits)
+    contrib /= comb(proj_from, hits)
+
+    if numpy.any(numpy.isnan(contrib)):
+        lncontrib = _lncomb(proj_to,proj_hits)
+        lncontrib += _lncomb(proj_from-proj_to,hits-proj_hits)
+        lncontrib -= _lncomb(proj_from, hits)
+        contrib = numpy.exp(lncontrib)
+
+    _projection_cache[key] = contrib
+    return contrib

@@ -6,8 +6,7 @@ import os
 import numpy
 from numpy import newaxis as nuax
 
-from dadi.SFS import cached_projection
-from dadi.Numerics import reverse_array
+from dadi.Numerics import reverse_array, _cached_projection
 
 class Spectrum(numpy.ma.masked_array):
     """
@@ -214,7 +213,7 @@ class Spectrum(numpy.ma.masked_array):
             least, most = max(n - (proj_from - hits), 0), min(hits,n)
             to_slice[axis] = slice(least, most+1)
             # The projection weights.
-            proj = cached_projection(n, proj_from, hits)
+            proj = _cached_projection(n, proj_from, hits)
             proj_slice[axis] = slice(least, most+1)
             # Warning: There are some subtleties (which may be numpy bugs) in
             # how multiplication of masked arrays works in this rather

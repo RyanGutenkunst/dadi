@@ -8,30 +8,6 @@ import Numerics
 from Numerics import reverse_array, trapz
 from scipy.integrate import trapz
 
-projection_cache = {}
-def lncomb(N,k):
-    return gammaln(N+1) - gammaln(k+1) - gammaln(N-k+1)
-
-def cached_projection(proj_to, proj_from, hits):
-    key = (proj_to, proj_from, hits)
-    try:
-        return projection_cache[key]
-    except KeyError:
-        pass
-
-    proj_hits = numpy.arange(proj_to+1)
-    contrib = comb(proj_to,proj_hits)*comb(proj_from-proj_to,hits-proj_hits)
-    contrib /= comb(proj_from, hits)
-
-    if numpy.any(numpy.isnan(contrib)):
-        lncontrib = lncomb(proj_to,proj_hits)
-        lncontrib += lncomb(proj_from-proj_to,hits-proj_hits)
-        lncontrib -= lncomb(proj_from, hits)
-        contrib = numpy.exp(lncontrib)
-
-    projection_cache[key] = contrib
-    return contrib
-
 def sfs_from_phi_1D(n, xx, phi):
     sfs = numpy.zeros(n+1)
     for ii in range(0,n+1):
