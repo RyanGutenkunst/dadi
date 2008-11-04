@@ -1,3 +1,4 @@
+from Spectrum_mod import Spectrum
 import Integration
 import PhiManip
 import Numerics
