@@ -14,7 +14,9 @@ def default_grid(num_pts):
     """
     Returns a nonuniform grid of points on [0,1].
 
-    The grid is weighted to be denser near 0 and 1, which is useful for population genetic simulations.
+    The grid is weighted to be denser near 0 and 1, which is useful for
+    population genetic simulations. In between, it smoothly increases and
+    then decreases the step size.
     """
     # Rounds down...
     small_pts = int(num_pts / 10)
@@ -43,8 +45,6 @@ def default_grid(num_pts):
     grid = numpy.concatenate((grid[:-1], a*q**3 + b*q**2 + c*q + d))
 
     return grid
-
-other_grid = default_grid
 
 def end_point_first_derivs(xx):
     """
@@ -177,7 +177,7 @@ def make_extrap_func(func):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
-    func: A function whose last argument is the number of Numerics.other_grid 
+    func: A function whose last argument is the number of default_grid
           points to use in calculation and that returns a single scalar or 
           array.
 
@@ -192,7 +192,7 @@ def make_extrap_func(func):
         for pts in pts_l:
             # We extrapolate based on the first grid spacing. This seems to
             # give better results than, for example, the average spacing.
-            x = other_grid(pts)[1]
+            x = default_grid(pts)[1]
             x_l.append(x)
             # Some python vodoo here to call the original function with the
             # proper arguments.
@@ -223,7 +223,7 @@ def make_extrap_log_func(func):
     so this will fail if any returned values are < 0. It does seem to be better
     behaved for SFS calculation.
 
-    func: A function whose last argument is the number of Numerics.other_grid 
+    func: A function whose last argument is the number of Numerics.default_grid 
           points to use in calculation and that returns a single scalar or 
           array.
 
