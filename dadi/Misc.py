@@ -2,10 +2,9 @@ import sys,time
 
 import numpy
 
-# Storage for times at which each stream was flushed.
+#: Storage for times at which each stream was flushed.
 __times_last_flushed = {}
-default_flush_delay = 30./60
-def delayed_flush(stream=sys.stdout):
+def delayed_flush(stream=sys.stdout, delay=1):
     """
     Flush a stream, ensuring that it is only flushed every 'delay' *minutes*.
     Note that upon the first call to this method, the stream is not flushed.
@@ -17,8 +16,6 @@ def delayed_flush(stream=sys.stdout):
     This function is useful to prevent I/O overload on the cluster.
     """
     global __times_last_flushed
-
-    delay = default_flush_delay
 
     curr_time = time.time()
     # If this is the first time this method has been called with this stream,

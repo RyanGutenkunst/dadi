@@ -11,7 +11,7 @@ _counter = 0
 _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
                 lower_bound=None, upper_bound=None, fold=False,
-                verbose=0, multinom=True):
+                verbose=0, multinom=True, flush_delay=0):
     """
     Objective function for optimization.
     """
@@ -38,7 +38,7 @@ def _object_func(params, data, model_func, pts,
     if (verbose > 0) and (_counter % verbose == 0):
         param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
         print '%-8i, %-12g, %s' % (_counter, ll, param_str)
-        Misc.delayed_flush()
+        Misc.delayed_flush(flush_delay)
 
     return -ll
 
@@ -81,11 +81,8 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     """
     import scipy.optimize
 
-    old_flush_delay = Misc.default_flush_delay
-    Misc.default_flush_delay = flush_delay
-
     args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
-            multinom)
+            multinom, flush_delay)
 
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
                                        numpy.log(p0), epsilon=epsilon,
@@ -94,8 +91,6 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                                        disp=False,
                                        maxiter=maxiter)
     xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
-
-    Misc.default_flush_delay = old_flush_delay
 
     if not full_output:
         return numpy.exp(xopt)
