@@ -15,7 +15,7 @@ else:
 
 # Together these define a custom set of ticks that labels only the lowest and
 # highest bins visible in an SFS plot. These adjust nicely when zooming around. 
-class sfsTickLocator(matplotlib.ticker.Locator):
+class _sfsTickLocator(matplotlib.ticker.Locator):
     def __call__(self):
         'Return the locations of the ticks'
 
@@ -150,9 +150,9 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     ax.set_xlabel(pop2_label, verticalalignment='bottom')
 
     ax.xaxis.set_major_formatter(ctf)
-    ax.xaxis.set_major_locator(sfsTickLocator())
+    ax.xaxis.set_major_locator(_sfsTickLocator())
     ax.yaxis.set_major_formatter(ctf)
-    ax.yaxis.set_major_locator(sfsTickLocator())
+    ax.yaxis.set_major_locator(_sfsTickLocator())
     for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
         tick.set_visible(False)
 
@@ -198,9 +198,9 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
     ax.set_xlabel(pop2_label, verticalalignment='bottom')
 
     ax.xaxis.set_major_formatter(ctf)
-    ax.xaxis.set_major_locator(sfsTickLocator())
+    ax.xaxis.set_major_locator(_sfsTickLocator())
     ax.yaxis.set_major_formatter(ctf)
-    ax.yaxis.set_major_locator(sfsTickLocator())
+    ax.yaxis.set_major_locator(_sfsTickLocator())
     for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
         tick.set_visible(False)
 
