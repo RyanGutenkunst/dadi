@@ -1,8 +1,12 @@
+"""
+Numerically useful functions, including extrapolation and default grid.
+"""
+
 import numpy
 
 def default_grid(num_pts):
     """
-    Returns a nonuniform grid of points on [0,1].
+    A nonuniform grid of points on [0,1].
 
     The grid is weighted to be denser near 0 and 1, which is useful for
     population genetic simulations. In between, it smoothly increases and
@@ -113,7 +117,7 @@ def cubic_extrap((y1, y2, y3, y4), (x1, x2, x3, x4)):
 
 def reverse_array(arr):
     """
-    Reverse an N-dimensional array along all axes, so e.g. arr[i,j] -> arr[-(i+1),-(j+1)].
+    Reverse an array along all axes, so arr[i,j] -> arr[-(i+1),-(j+1)].
     """
     reverse_slice = [slice(None, None, -1) for ii in arr.shape]
     return arr[reverse_slice]
