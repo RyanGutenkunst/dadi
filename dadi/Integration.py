@@ -17,8 +17,6 @@ use_delj_trick = False
 import numpy
 from numpy import newaxis as nuax
 
-__all__ = ['one_pop', 'two_pops', 'three_pops']
-
 import Misc, tridiag
 import integration_c as int_c
 
