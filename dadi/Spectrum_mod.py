@@ -17,10 +17,13 @@ class Spectrum(numpy.ma.masked_array):
     categories.
     """
     def __new__(cls, data, *args, **kwargs):
+        """
+        Overrides array.__new__ to set nicer defaults.
+        """
         # We need to do this in __new__ rather than waiting for __init__ because
         # otherwise the masked_array __new__ will be used.
         return numpy.ma.masked_array.__new__(cls, data, copy=True, 
-                                             dtype=float)
+                                             dtype=float, fill_value=numpy.nan)
     def __init__(self, data, mask=None, mask_corners=True):
         """
         Construct a spectrum.
@@ -34,7 +37,6 @@ class Spectrum(numpy.ma.masked_array):
         if mask is None:
             mask = numpy.ma.make_mask_none(self.data.shape)
         self.mask = mask
-        self.set_fill_value(numpy.nan)
 
         if mask_corners:
             self.mask_corners()
