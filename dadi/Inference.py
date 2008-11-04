@@ -25,9 +25,9 @@ def object_func(params, data, model_func, pts,
             sfs = SFS.fold_sfs(sfs)
             data = SFS.fold_sfs(data)
         if multinom:
-            ll = SFS.ll_multinom(sfs, data)
+            ll = ll_multinom(sfs, data)
         else:
-            ll = SFS.ll(sfs, data)
+            ll = ll(sfs, data)
 
     if numpy.isnan(ll):
         ll = out_of_bounds_val
@@ -70,6 +70,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                 warnflag
 
 # Create a version of the gamma function that will work with masked arrays.
+from scipy.special import gammaln
 if hasattr(numpy.ma, 'masked_unary_operation'):
     _gammaln_m = numpy.ma.masked_unary_operation(gammaln)
 else:
