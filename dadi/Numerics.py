@@ -1,7 +1,5 @@
 import numpy
 
-import scipy
-
 # This sets the timestep for the integrations:
 #     delt = timescale_factor * min(delx)
 timescale_factor = 0.1
