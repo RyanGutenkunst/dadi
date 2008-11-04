@@ -441,3 +441,119 @@ class Spectrum(numpy.ma.masked_array):
             return fs
         else:
             return fs, (command,seeds)
+
+    def Fst(self):
+        """
+        Wright's Fst between the populations represented in the fs.
+    
+        This estimate of Fst assumes random mating, because we don't have
+        heterozygote frequencies in the fs.
+    
+        Calculation is by the method of Weir and Cockerham _Evolution_ 38:1358.
+        For a single SNP, the relevant formula is at the top of page 1363. To
+        combine results between SNPs, we use the weighted average indicated by
+        equation 10.
+        """
+        # This gets a little obscure because we want to be able to work with
+        # spectra of arbitrary dimension.
+    
+        # First quantities from page 1360
+        r = self.Npop
+        ns = self.sample_sizes
+        nbar = numpy.mean(ns)
+        nsum = numpy.sum(ns)
+        nc = (nsum - numpy.sum(ns**2)/nsum)/(r-1)
+    
+        # counts_per_pop is an r+1 dimensional array, where the last axis simply
+        # records the indices of the entry. 
+        # For example, counts_per_pop[4,19,8] = [4,19,8]
+        counts_per_pop = numpy.indices(self.shape)
+        counts_per_pop = numpy.transpose(counts_per_pop, axes=range(1,r+1)+[0])
+    
+        # The last axis of ptwiddle is now the relative frequency of SNPs in
+        # that bin in each of the populations.
+        ptwiddle = 1.*counts_per_pop/ns
+    
+        # Note that pbar is of the same shape as fs...
+        pbar = numpy.sum(ns*ptwiddle, axis=-1)/nsum
+    
+        # We need to use 'this_slice' to get the proper aligment between
+        # ptwiddle and pbar.
+        this_slice = [slice(None)]*r + [numpy.newaxis]
+        s2 = numpy.sum(ns * (ptwiddle - pbar[this_slice])**2, axis=-1)/((r-1)*nbar)
+    
+        # Note that this 'a' differs from equation 2, because we've used
+        # equation 3 and b = 0 to solve for hbar.
+        a = nbar/nc * (s2 - 1/(2*nbar-1) * (pbar*(1-pbar) - (r-1)/r*s2))
+        d = 2*nbar/(2*nbar-1) * (pbar*(1-pbar) - (r-1)/r*s2)
+    
+        # The weighted sum over loci.
+        asum = (self * a).sum()
+        dsum = (self * d).sum()
+    
+        return asum/(asum+dsum)
+
+    def S(self):
+        """
+        Segregating sites.
+        """
+        oldmask = self.mask.copy()
+        self.mask_corners()
+        S = self.sum()
+        self.mask = oldmask
+        return S
+    
+    def Watterson_theta(self):
+        """
+        Watterson's estimator of theta.
+    
+        Note that is only sensible for 1-dimensional spectra.
+        """
+        if self.Npop != 1:
+            raise ValueError("Only defined on a one-dimensional fs.")
+    
+        n = self.sample_sizes[0]
+        S = self.S()
+        denom = numpy.sum(1./numpy.arange(1,n))
+    
+        return S/denom
+    
+    def pi(self):
+        """
+        Estimated expected heterozygosity.
+    
+        Note that this estimate assumes a randomly mating population.
+        """
+        if self.ndim != 1:
+            raise ValueError("Only defined on a one-dimensional SFS.")
+    
+        n = self.sample_sizes[0]
+        # sample frequencies p 
+        p = 1.*numpy.arange(0,n+1)/n
+        return n/(n-1) * 2*numpy.ma.sum(self*p*(1-p))
+    
+    def Tajima_D(self):
+        """
+        Tajima's D.
+    
+        Following Gillespie "Population Genetics: A Concise Guide" pg. 45
+        """
+        if not self.Npop == 1:
+            raise ValueError("Only defined on a one-dimensional SFS.")
+    
+        S = self.S()
+    
+        n = 1.*self.sample_sizes[0]
+        pihat = self.pi()
+        theta = self.Watterson_theta()
+    
+        a1 = numpy.sum(1./numpy.arange(1,n))
+        a2 = numpy.sum(1./numpy.arange(1,n)**2)
+        b1 = (n+1)/(3*(n-1))
+        b2 = 2*(n**2 + n + 3)/(9*n * (n-1))
+        c1 = b1 - 1./a1
+        c2 = b2 - (n+2)/(a1*n) + a2/a1**2
+    
+        C = numpy.sqrt((c1/a1)*S + c2/(a1**2 + a2) * S*(S-1))
+    
+        return (pihat - theta)/C
