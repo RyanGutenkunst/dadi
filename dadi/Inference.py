@@ -5,9 +5,11 @@ import numpy
 
 import SFS, Misc
 
+#: Counts calls to object_func
 _counter = 0
-out_of_bounds_val = -1e8
-def object_func(params, data, model_func, pts, 
+#: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
+_out_of_bounds_val = -1e8
+def _object_func(params, data, model_func, pts, 
                 lower_bound=None, upper_bound=None, fold=False,
                 verbose=0, multinom=True):
     global _counter
@@ -17,7 +19,7 @@ def object_func(params, data, model_func, pts,
 
     if (lower_bound is not None and numpy.any(params < lower_bound)) or\
        (upper_bound is not None and numpy.any(params > upper_bound)):
-        ll = out_of_bounds_val
+        ll = _out_of_bounds_val
     else:
         ns = list(numpy.asarray(data.shape) - 1)
         sfs = model_func(*([params] + [ns] + [pts]))
@@ -30,7 +32,7 @@ def object_func(params, data, model_func, pts,
             ll = ll(sfs, data)
 
     if numpy.isnan(ll):
-        ll = out_of_bounds_val
+        ll = _out_of_bounds_val
 
     if (verbose > 0) and (_counter % verbose == 0):
         param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
@@ -39,8 +41,8 @@ def object_func(params, data, model_func, pts,
 
     return -ll
 
-def object_func_log(log_params, *args, **kwargs):
-    return object_func(numpy.exp(log_params), *args, **kwargs)
+def _object_func_log(log_params, *args, **kwargs):
+    return _object_func(numpy.exp(log_params), *args, **kwargs)
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  fold=False, verbose=0, flush_delay=0.5, epsilon=1e-4, 
@@ -53,7 +55,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
             multinom)
 
-    outputs = scipy.optimize.fmin_bfgs(object_func_log, 
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
                                        numpy.log(p0), epsilon=epsilon,
                                        args = args, gtol=gtol, 
                                        full_output=True,
