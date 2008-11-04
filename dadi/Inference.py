@@ -5,13 +5,13 @@ import numpy
 
 import SFS, Misc
 
-counter = 0
+_counter = 0
 out_of_bounds_val = -1e8
 def object_func(params, data, model_func, pts, 
                 lower_bound=None, upper_bound=None, fold=False,
                 verbose=0, multinom=True):
-    global counter
-    counter += 1
+    global _counter
+    _counter += 1
 
     data = numpy.ma.asarray(data)
 
@@ -22,8 +22,8 @@ def object_func(params, data, model_func, pts,
         ns = list(numpy.asarray(data.shape) - 1)
         sfs = model_func(*([params] + [ns] + [pts]))
         if fold:
-            sfs = SFS.fold_sfs(sfs)
-            data = SFS.fold_sfs(data)
+            sfs = sfs.fold()
+            data = data.fold()
         if multinom:
             ll = ll_multinom(sfs, data)
         else:
@@ -32,9 +32,9 @@ def object_func(params, data, model_func, pts,
     if numpy.isnan(ll):
         ll = out_of_bounds_val
 
-    if (verbose > 0) and (counter % verbose == 0):
+    if (verbose > 0) and (_counter % verbose == 0):
         param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
-        print '%-8i, %-12g, %s' % (counter, ll, param_str)
+        print '%-8i, %-12g, %s' % (_counter, ll, param_str)
         Misc.delayed_flush()
 
     return -ll
