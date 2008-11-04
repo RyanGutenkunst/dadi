@@ -5,6 +5,7 @@ import os
 
 import numpy
 from numpy import newaxis as nuax
+from scipy import comb
 from scipy.integrate import trapz
 
 from dadi.Numerics import reverse_array, _cached_projection, _lncomb
@@ -634,12 +635,14 @@ class Spectrum(numpy.ma.masked_array):
             raise ValueError('Dimensionality of phi and lengths of ns and xxs '
                              'do not all agree.')
         if phi.ndim == 1:
-            return _from_phi_1D(ns[0], xxs[0], phi, mask_corners)
+            return Spectrum._from_phi_1D(ns[0], xxs[0], phi, mask_corners)
         elif phi.ndim == 2:
-            return _from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], phi, mask_corners)
+            return Spectrum._from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], 
+                                         phi, mask_corners)
         elif phi.ndim == 3:
-            return _from_phi_3D(ns[0], ns[1], ns[2], xxs[0], xxs[1], xxs[2], 
-                                phi, mask_corners)
+            return Spectrum._from_phi_3D(ns[0], ns[1], ns[2], 
+                                         xxs[0], xxs[1], xxs[2], 
+                                         phi, mask_corners)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
 
