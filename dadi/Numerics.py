@@ -3,6 +3,7 @@ Numerically useful functions, including extrapolation and default grid.
 """
 
 import numpy
+from scipy import comb
 
 def default_grid(num_pts):
     """
