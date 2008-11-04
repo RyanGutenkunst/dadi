@@ -5,14 +5,15 @@ import os
 
 import numpy
 from numpy import newaxis as nuax
+from scipy.integrate import trapz
 
-from dadi.Numerics import reverse_array, _cached_projection
+from dadi.Numerics import reverse_array, _cached_projection, _lncomb
 
 class Spectrum(numpy.ma.masked_array):
     """
     Represents a frequency spectrum.
 
-    Spectra a represented by masked arrays. The masking allows us to ignore
+    Spectra are represented by masked arrays. The masking allows us to ignore
     specific entries in the spectrum. Most often, these are the absent and fixed
     categories.
     """
@@ -246,6 +247,21 @@ class Spectrum(numpy.ma.masked_array):
             output.mask_corners()
         return output
 
+    def _counts_per_entry(self):
+        """
+        Counts per population for each entry in the fs.
+        """
+        ind = numpy.indices(self.shape)
+        # Transpose the first access to the last, so ind[ii,jj,kk] = [ii,jj,kk]
+        ind = ind.transpose(range(1,self.Npop+1)+[0])
+        return ind
+
+    def _total_per_entry(self):
+        """
+        Total derived alleles for each entry in the fs.
+        """
+        return numpy.sum(self._counts_per_entry(), axis=-1)
+
     def fold(self):
         """
         Folded frequency spectrum
@@ -260,22 +276,11 @@ class Spectrum(numpy.ma.masked_array):
         # How many samples total do we have? The folded fs can only contain
         # entries up to total_samples/2 (rounded down).
         total_samples = numpy.sum(self.sample_sizes)
-    
-        # This next chunk of vodoo creates an array 'total_per_cell' in which
-        # each element is just the total number of segregating alleles in that
-        # cell. This is used to indicate which entries we need to 'fold out'.
-        # It looks like voodoo so it can handle arrays of any dimension.
-        indices = [range(ni) for ni in self.shape]
-        new_shapes = [[1] for ni in self.shape]
-        for ii,ni in enumerate(self.shape):
-            new_shape = numpy.ones(self.ndim)
-            new_shape[ii] = ni
-            indices[ii] = numpy.reshape(indices[ii], new_shape)
-        import operator
-        total_per_cell = reduce(operator.add, indices)
+
+        total_per_entry = self._total_per_entry()
     
         # Here's where we calculate which entries are nonsense in the folded fs.
-        where_folded_out = total_per_cell > int(total_samples/2)
+        where_folded_out = total_per_entry > int(total_samples/2)
     
         original_mask = self.mask
         # Here we create a mask that masks any values that were masked in
@@ -290,7 +295,7 @@ class Spectrum(numpy.ma.masked_array):
         folded = self + reversed
     
         # Here's where we calculate which entries are nonsense in the folded fs.
-        where_ambiguous = total_per_cell == int(total_samples/2)
+        where_ambiguous = total_per_entry == int(total_samples/2)
         ambiguous = numpy.where(where_ambiguous, self, 0)
         folded += -0.5*ambiguous + 0.5*reverse_array(ambiguous)
     
@@ -559,3 +564,120 @@ class Spectrum(numpy.ma.masked_array):
         C = numpy.sqrt((c1/a1)*S + c2/(a1**2 + a2) * S*(S-1))
     
         return (pihat - theta)/C
+
+    @staticmethod
+    def _from_phi_1D(n, xx, phi, mask_corners=True):
+        data = numpy.zeros(n+1)
+        for ii in range(0,n+1):
+            factorx = comb(n,ii) * xx**ii * (1-xx)**(n-ii)
+            data[ii] = trapz(factorx * phi, xx)
+    
+        return Spectrum(data, mask_corners=mask_corners)
+    
+    @staticmethod
+    def _from_phi_2D(nx, ny, xx, yy, phi, mask_corners=True):
+        # Calculate the 2D sfs from phi using the trapezoid rule for
+        # integration.
+        data = numpy.zeros((nx+1, ny+1))
+        
+        # Cache to avoid duplicated work.
+        factorx_cache = {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            factorx_cache[nx,ii] = factorx
+    
+        dx, dy = numpy.diff(xx), numpy.diff(yy)
+        for jj in range(0,ny+1):
+            factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
+            for ii in range(0, nx+1):
+                factorx = factorx_cache[nx,ii]
+                data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
+    
+        return Spectrum(data, mask_corners=mask_corners)
+    
+    @staticmethod
+    def _from_phi_3D(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+        data = numpy.zeros((nx+1, ny+1, nz+1))
+    
+        dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
+        half_dx = dx/2.0
+    
+        # We cache these calculations...
+        factorx_cache, factory_cache = {}, {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            factorx_cache[nx,ii] = factorx
+        for jj in range(0, ny+1):
+            factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            factory_cache[ny,jj] = factory[nuax,:]
+    
+        for kk in range(0, nz+1):
+            factorz = comb(nz, kk) * zz**kk * (1-zz)**(nz-kk)
+            over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
+            for jj in range(0, ny+1):
+                factory = factory_cache[ny,jj]
+                over_y = trapz(factory * over_z, dx=dy)
+                for ii in range(0, nx+1):
+                    factorx = factorx_cache[nx,ii]
+                    # It's faster here to do the trapezoid rule explicitly
+                    # rather than using SciPy's more general routine.
+                    integrand = factorx * over_y
+                    ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
+                    data[ii,jj,kk] = ans
+    
+        return Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def from_phi(phi, ns, xxs, mask_corners=mask_corners):
+        if not phi.ndim == len(ns) == len(xxs):
+            raise ValueError('Dimensionality of phi and lengths of ns and xxs '
+                             'do not all agree.')
+        if phi.ndim == 1:
+            return _from_phi_1D(ns[0], xxs[0], phi, mask_corners)
+        elif phi.ndim == 2:
+            return _from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], phi, mask_corners)
+        elif phi.ndim == 3:
+            return _from_phi_3D(ns[0], ns[1], ns[2], xxs[0], xxs[1], xxs[2], 
+                                phi, mask_corners)
+        else:
+            raise ValueError('Only implemented for dimensions 1,2 or 3.')
+
+    def scramble_pop_ids(self, mask_corners=True):
+        """
+        Spectrum corresponding to scrambling individuals among populations.
+        
+        This is useful for assessing how diverged populations are.
+        Essentially, it pools all the individuals represented in the fs and
+        generates new populations of random individuals (without replacement)
+        from that pool. If this fs is significantly different from the
+        original, that implies population structure.
+        """
+        total_samp = numpy.sum(self.sample_sizes)
+    
+        # First generate a 1d sfs for the pooled population.
+        combined = numpy.zeros(total_samp+1)
+        # For each entry in the fs, this is the total number of derived alleles
+        total_per_entry = self._total_per_entry()
+        # Sum up to generate the equivalent 1-d spectrum.
+        for derived,counts in zip(total_per_entry.ravel(), self.ravel()):
+            combined[derived] += counts
+    
+        # Now resample back into a n-d spectrum
+        # For each entry, this is the counts per popuation. 
+        #  e.g. counts_per_entry[3,4,5] = [3,4,5]
+        counts_per_entry = self._counts_per_entry()
+        # Reshape it to be 1-d, so we can iterate over it easily.
+        counts_per_entry = counts_per_entry.reshape(numpy.prod(self.shape), 
+                                                    self.ndim)
+        resamp = numpy.zeros(self.shape)
+        for counts, derived in zip(counts_per_entry, total_per_entry.ravel()):
+            # The probability here is 
+            # (t1 choose d1)*(t2 choose d2)/(ntot choose derived)
+            lnprob = sum(_lncomb(t,d) for t,d in zip(self.sample_sizes,counts))
+            lnprob -= _lncomb(total_samp, derived)
+            prob = numpy.exp(lnprob)
+            # Assign result using the appropriate weighting
+            resamp[tuple(counts)] += prob*combined[derived]
+
+        return Spectrum(resamp, mask_corners=mask_corners)
