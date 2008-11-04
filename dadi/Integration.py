@@ -9,12 +9,17 @@ Functions for integrating population frequency spectra.
 # do so if the grids differ.g
 #
 
+#: Sets the timestep for integrations: delt = timescale_factor * min(delx)
+timescale_factor = 0.1
+#: Controls use of Chang and Cooper's delj trick, which seems to lower accuracy.
+use_delj_trick = False
+
 import numpy
 from numpy import newaxis as nuax
 
 __all__ = ['one_pop', 'two_pops', 'three_pops']
 
-import Numerics, Misc, tridiag
+import Misc, tridiag
 import integration_c as int_c
 
 def _inject_mutations_1D(phi, dt, xx, theta0):
@@ -51,7 +56,7 @@ def _compute_time_steps(T, xx):
     Time steps to use in integration over T, based on minimum diff(xx).
     """
     # This is a little tricky due to the possibility of rounding error.
-    dt = Numerics.timescale_factor*min(numpy.diff(xx))
+    dt = timescale_factor*min(numpy.diff(xx))
     time_steps = [dt]*int(T//dt)
     steps_sum = numpy.sum(time_steps)
     if steps_sum < T:
@@ -92,7 +97,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0, initial_t=0):
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
         phi = int_c.implicit_1Dx(phi, xx, nu, gamma, this_dt, 
-                                 use_delj_trick=Numerics.use_delj_trick)
+                                 use_delj_trick=use_delj_trick)
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
@@ -144,11 +149,11 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
         _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
         phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1,
-                                 this_dt, Numerics.use_delj_trick)
+                                 this_dt, use_delj_trick)
 
         _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
         phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, 
-                                 this_dt, Numerics.use_delj_trick)
+                                 this_dt, use_delj_trick)
     return phi
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
@@ -215,13 +220,13 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
         _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
-                                 gamma1, this_dt, Numerics.use_delj_trick)
+                                 gamma1, this_dt, use_delj_trick)
         _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
-                                 gamma2, this_dt, Numerics.use_delj_trick)
+                                 gamma2, this_dt, use_delj_trick)
         _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
-                                 gamma3, this_dt, Numerics.use_delj_trick)
+                                 gamma3, this_dt, use_delj_trick)
     return phi                                                      
 
 #
@@ -254,7 +259,7 @@ def _compute_delj(dx, MInt, VInt, axis=0):
     Chang an Cooper's \delta_j term. Typically we set this to 0.5.
     """
     # Chang and Cooper's fancy delta j trick...
-    if Numerics.use_delj_trick:
+    if use_delj_trick:
         # upslice will raise the dimensionality of dx and VInt to be appropriate
         # for functioning with MInt.
         upslice = [nuax for ii in range(MInt.ndim)]

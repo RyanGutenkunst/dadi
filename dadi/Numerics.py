@@ -1,13 +1,5 @@
 import numpy
 
-# This sets the timestep for the integrations:
-#     delt = timescale_factor * min(delx)
-timescale_factor = 0.1
-# This controls whether or not we use Chang and Cooper's delj trick for ensuring
-# that integrations don't go negative. It doesn't make a huge difference, and
-# it lowers accuracy.
-use_delj_trick = False
-
 def default_grid(num_pts):
     """
     Returns a nonuniform grid of points on [0,1].
