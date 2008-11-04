@@ -1,4 +1,5 @@
 from Spectrum_mod import Spectrum
+import Inference
 import Integration
 import PhiManip
 import Numerics
