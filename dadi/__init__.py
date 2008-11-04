@@ -2,7 +2,6 @@ from Spectrum_mod import Spectrum
 import Integration
 import PhiManip
 import Numerics
-import SFS
 import ms
 try:
     import Plotting

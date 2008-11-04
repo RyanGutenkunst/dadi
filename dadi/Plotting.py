@@ -29,7 +29,7 @@ class _sfsTickLocator(matplotlib.ticker.Locator):
 _ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 
-import Numerics, SFS
+import Numerics
 
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
                           plot_masked=False):

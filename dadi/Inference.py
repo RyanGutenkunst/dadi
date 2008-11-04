@@ -3,7 +3,7 @@ Comparison and optimization of model spectra to data.
 """
 import numpy
 
-import SFS, Misc
+import Misc
 
 #: Counts calls to object_func
 _counter = 0
