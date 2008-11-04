@@ -18,7 +18,6 @@ try:
 except:
     os.sys.stderr.write("Call to svnversion failed. Cannot automatically "
                         "include version information.")
-    pass
 
 core.setup(name='dadi',
            version='devel',
