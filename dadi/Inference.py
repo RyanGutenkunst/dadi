@@ -12,17 +12,18 @@ _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
                 lower_bound=None, upper_bound=None, fold=False,
                 verbose=0, multinom=True):
+    """
+    Objective function for optimization.
+    """
     global _counter
     _counter += 1
-
-    data = numpy.ma.asarray(data)
 
     if (lower_bound is not None and numpy.any(params < lower_bound)) or\
        (upper_bound is not None and numpy.any(params > upper_bound)):
         ll = _out_of_bounds_val
     else:
-        ns = list(numpy.asarray(data.shape) - 1)
-        sfs = model_func(*([params] + [ns] + [pts]))
+        ns = data.sample_sizes 
+        sfs = model_func(params,ns,pts)
         if fold:
             sfs = sfs.fold()
             data = data.fold()
@@ -42,11 +43,42 @@ def _object_func(params, data, model_func, pts,
     return -ll
 
 def _object_func_log(log_params, *args, **kwargs):
+    """
+    Objective function for optimization in log(params).
+    """
     return _object_func(numpy.exp(log_params), *args, **kwargs)
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  fold=False, verbose=0, flush_delay=0.5, epsilon=1e-4, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False):
+    """
+    Optimize parameters to fit model to data. Works in log(params) space.
+
+    Because this works in log(params), it cannot explore values of params < 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    fold: If True, base inference on the folded spectrum.
+    verbose: If True, print optimization status every <verbose> steps.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    """
     import scipy.optimize
 
     old_flush_delay = Misc.default_flush_delay
