@@ -10,6 +10,9 @@ except ImportError:
     pass
 
 try:
+    # This is to try and ensure we have a nice __SVNVERSION__ attribute, so
+    # when we get bug reports, we know what version they were using. The
+    # svnversion file is created by setup.py.
     import os
     __DIRECTORY__ = os.path.dirname(Integration.__file__)
     __svn_file__ = os.path.join(__DIRECTORY__, 'svnversion')
