@@ -29,7 +29,7 @@ class _sfsTickLocator(matplotlib.ticker.Locator):
 _ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 
-import Numerics
+from dadi import Numerics, Inference
 
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
                           plot_masked=False):
@@ -51,7 +51,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
     fit the data.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+    masked_model = Inference.optimally_scaled_sfs(masked_model, masked_data)
     plot_1d_comp_Poisson(masked_model, masked_data, fig_num, residual,
                          plot_masked)
 
@@ -89,9 +89,9 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
 
     pylab.subplot(2,1,2, sharex = ax)
     if residual == 'Anscombe':
-        resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data)
+        resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data)
     elif residual == 'linear':
-        resid = SFS.linear_Poisson_residual(masked_model, masked_data)
+        resid = Inference.linear_Poisson_residual(masked_model, masked_data)
     else:
         raise ValueError("Unknown class of residual '%s'." % residual)
     pylab.plot(resid, '-og')
@@ -234,7 +234,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     fit the data.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+    masked_model = Inference.optimally_scaled_sfs(masked_model, masked_data)
 
     plot_2d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
@@ -293,10 +293,10 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                        extend=extend )
 
     if residual == 'Anscombe':
-        resid = SFS.Anscombe_Poisson_residual(masked_model, masked_data,
+        resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data,
                                               mask=vmin)
     elif residual == 'linear':
-        resid = SFS.linear_Poisson_residual(masked_model, masked_data,
+        resid = Inference.linear_Poisson_residual(masked_model, masked_data,
                                             mask=vmin)
     else:
         raise ValueError("Unknown class of residual '%s'." % residual)
@@ -344,7 +344,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     fit the data.
     """
     masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = SFS.optimally_scaled_sfs(masked_model, masked_data)
+    masked_model = Inference.optimally_scaled_sfs(masked_model, masked_data)
 
     plot_3d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
@@ -399,13 +399,15 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     # Calculate the residuals
     if residual == 'Anscombe':
-        resids = [SFS.Anscombe_Poisson_residual(masked_model.sum(axis=2-sax), 
-                                                masked_data.sum(axis=2-sax), 
-                                                mask=vmin) for sax in range(3)]
+        resids = [Inference.\
+                  Anscombe_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                            masked_data.sum(axis=2-sax), 
+                                            mask=vmin) for sax in range(3)]
     elif residual == 'linear':
-        resids = [SFS.linear_Poisson_residual(masked_model.sum(axis=2-sax), 
-                                                masked_data.sum(axis=2-sax), 
-                                                mask=vmin) for sax in range(3)]
+        resids =[Inference.\
+                 linear_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                         masked_data.sum(axis=2-sax), 
+                                         mask=vmin) for sax in range(3)]
     else:
         raise ValueError("Unknown class of residual '%s'." % residual)
 
