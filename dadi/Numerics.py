@@ -4,6 +4,7 @@ Numerically useful functions, including extrapolation and default grid.
 
 import numpy
 from scipy import comb
+from scipy.special import gammaln
 
 def default_grid(num_pts):
     """
