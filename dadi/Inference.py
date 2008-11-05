@@ -20,7 +20,7 @@ def _object_func(params, data, model_func, pts,
 
     if (lower_bound is not None and numpy.any(params < lower_bound)) or\
        (upper_bound is not None and numpy.any(params > upper_bound)):
-        ll = _out_of_bounds_val
+        result = _out_of_bounds_val
     else:
         ns = data.sample_sizes 
         sfs = model_func(params,ns,pts)
@@ -28,19 +28,19 @@ def _object_func(params, data, model_func, pts,
             sfs = sfs.fold()
             data = data.fold()
         if multinom:
-            ll = ll_multinom(sfs, data)
+            result = ll_multinom(sfs, data)
         else:
-            ll = ll(sfs, data)
+            result = ll(sfs, data)
 
-    if numpy.isnan(ll):
-        ll = _out_of_bounds_val
+    if numpy.isnan(result):
+        result = _out_of_bounds_val
 
     if (verbose > 0) and (_counter % verbose == 0):
         param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
-        print '%-8i, %-12g, %s' % (_counter, ll, param_str)
+        print '%-8i, %-12g, %s' % (_counter, result, param_str)
         Misc.delayed_flush(flush_delay)
 
-    return -ll
+    return -result
 
 def _object_func_log(log_params, *args, **kwargs):
     """
