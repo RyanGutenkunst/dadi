@@ -38,7 +38,7 @@ def _object_func(params, data, model_func, pts,
     if (verbose > 0) and (_counter % verbose == 0):
         param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
         print '%-8i, %-12g, %s' % (_counter, result, param_str)
-        Misc.delayed_flush(flush_delay)
+        Misc.delayed_flush(delay=flush_delay)
 
     return -result
 
