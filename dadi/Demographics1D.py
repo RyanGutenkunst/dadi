@@ -5,7 +5,7 @@ import numpy
 
 from dadi import Numerics, PhiManip, Spectrum, Integration
 
-def snm(None, (n1,), pts):
+def snm(notused, (n1,), pts):
     """
     Standard neutral model.
 
