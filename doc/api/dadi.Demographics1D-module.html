@@ -3,7 +3,7 @@
           "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>dadi.Misc</title>
+  <title>dadi.Demographics1D</title>
   <link rel="stylesheet" href="epydoc.css" type="text/css" />
   <script type="text/javascript" src="epydoc.js"></script>
 </head>
@@ -40,7 +40,7 @@
     <td width="100%">
       <span class="breadcrumbs">
         <a href="dadi-module.html">Package&nbsp;dadi</a> ::
-        Module&nbsp;Misc
+        Module&nbsp;Demographics1D
       </span>
     </td>
     <td>
@@ -50,17 +50,17 @@
     onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
         <tr><td align="right"><span class="options"
             >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="dadi.Misc-module.html"
+            >]&nbsp;|&nbsp;<a href="dadi.Demographics1D-module.html"
             target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
 </table>
 <!-- ==================== MODULE DESCRIPTION ==================== -->
-<h1 class="epydoc">Module Misc</h1><p class="nomargin-top"><span class="codelink"><a href="dadi.Misc-pysrc.html">source&nbsp;code</a></span></p>
+<h1 class="epydoc">Module Demographics1D</h1><p class="nomargin-top"><span class="codelink"><a href="dadi.Demographics1D-pysrc.html">source&nbsp;code</a></span></p>
 <pre class="literalblock">
 
-Miscellaneous utility functions. Including ms simulation.
+Single population demographic models.
 
 </pre>
 
@@ -87,11 +87,12 @@ Miscellaneous utility functions. Including ms simulation.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Misc-module.html#delayed_flush" class="summary-sig-name">delayed_flush</a>(<span class="summary-sig-arg">stream</span>=<span class="summary-sig-default">sys.stdout</span>,
-        <span class="summary-sig-arg">delay</span>=<span class="summary-sig-default">1</span>)</span><br />
-      Flush a stream, ensuring that it is only flushed every 'delay' *minutes*.</td>
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#snm" class="summary-sig-name">snm</a>(<span class="summary-sig-arg">notused</span>,
+        <span class="summary-sig-arg">(n1,)</span>,
+        <span class="summary-sig-arg">pts</span>)</span><br />
+      Standard neutral model.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Misc-pysrc.html#delayed_flush">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Demographics1D-pysrc.html#snm">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -105,10 +106,12 @@ Miscellaneous utility functions. Including ms simulation.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Misc-module.html#ensure_1arg_func" class="summary-sig-name">ensure_1arg_func</a>(<span class="summary-sig-arg">var</span>)</span><br />
-      Ensure that var is actually a one-argument function.</td>
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#two_epoch" class="summary-sig-name">two_epoch</a>(<span class="summary-sig-arg">(nu, T)</span>,
+        <span class="summary-sig-arg">(n1,)</span>,
+        <span class="summary-sig-arg">pts</span>)</span><br />
+      Instantaneous size change some time ago.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Misc-pysrc.html#ensure_1arg_func">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Demographics1D-pysrc.html#two_epoch">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -122,15 +125,12 @@ Miscellaneous utility functions. Including ms simulation.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Misc-module.html#ms_command" class="summary-sig-name">ms_command</a>(<span class="summary-sig-arg">theta</span>,
-        <span class="summary-sig-arg">ns</span>,
-        <span class="summary-sig-arg">core</span>,
-        <span class="summary-sig-arg">iter</span>,
-        <span class="summary-sig-arg">recomb</span>=<span class="summary-sig-default">0</span>,
-        <span class="summary-sig-arg">rsites</span>=<span class="summary-sig-default">None</span>)</span><br />
-      Generate ms command for simulation from core.</td>
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#growth" class="summary-sig-name">growth</a>(<span class="summary-sig-arg">((n1,), xx)</span>,
+        <span class="summary-sig-arg">(phi,)</span>,
+        <span class="summary-sig-arg">pts</span>)</span><br />
+      Exponential growth beginning some time ago.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Misc-pysrc.html#ms_command">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Demographics1D-pysrc.html#growth">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -138,30 +138,23 @@ Miscellaneous utility functions. Including ms simulation.
       
     </td>
   </tr>
-</table>
-<!-- ==================== VARIABLES ==================== -->
-<a name="section-Variables"></a>
-<table class="summary" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Variables</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Variables"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
-</tr>
-<tr class="private">
+<tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a name="__times_last_flushed"></a><span class="summary-name">__times_last_flushed</span> = <code title="{}"><code class="variable-group">{</code><code class="variable-group">}</code></code><br />
-      Storage for times at which each stream was flushed.
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#bottlegrowth" class="summary-sig-name">bottlegrowth</a>(<span class="summary-sig-arg">((n1,), xx, phi)</span>,
+        <span class="summary-sig-arg">(nu_func,)</span>,
+        <span class="summary-sig-arg">pts</span>)</span><br />
+      Instantanous size change followed by exponential growth.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Demographics1D-pysrc.html#bottlegrowth">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
     </td>
   </tr>
 </table>
@@ -183,93 +176,123 @@ Miscellaneous utility functions. Including ms simulation.
   </td>
 </tr>
 </table>
-<a name="delayed_flush"></a>
+<a name="snm"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">delayed_flush</span>(<span class="sig-arg">stream</span>=<span class="sig-default">sys.stdout</span>,
-        <span class="sig-arg">delay</span>=<span class="sig-default">1</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">snm</span>(<span class="sig-arg">notused</span>,
+        <span class="sig-arg">(n1,)</span>,
+        <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Misc-pysrc.html#delayed_flush">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Demographics1D-pysrc.html#snm">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
   <pre class="literalblock">
 
-Flush a stream, ensuring that it is only flushed every 'delay' *minutes*.
-Note that upon the first call to this method, the stream is not flushed.
+Standard neutral model.
 
-stream: The stream to flush. For this to work with simple 'print'
-        statements, the stream should be sys.stdout.
-delay: Minimum time *in minutes* between flushes.
-
-This function is useful to prevent I/O overload on the cluster.
+n1: Number of samples in resulting SFS
+pts: Number of grid points to use in integration.
 
 </pre>
   <dl class="fields">
   </dl>
 </td></tr></table>
 </div>
-<a name="ensure_1arg_func"></a>
+<a name="two_epoch"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">ensure_1arg_func</span>(<span class="sig-arg">var</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">two_epoch</span>(<span class="sig-arg">(nu, T)</span>,
+        <span class="sig-arg">(n1,)</span>,
+        <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Misc-pysrc.html#ensure_1arg_func">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Demographics1D-pysrc.html#two_epoch">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
   <pre class="literalblock">
 
-Ensure that var is actually a one-argument function.
+Instantaneous size change some time ago.
 
-This is primarily used to convert arguments that are constants into
-trivial functions of time for use in integrations where parameters are
-allowed to change over time.
+nu: Ratio of contemporary to ancient population size
+T: Time in the past at which size change happened (in units of 2*Na 
+   generations) 
+n1: Number of samples in resulting SFS
+pts: Number of grid points to use in integration.
 
 </pre>
   <dl class="fields">
   </dl>
 </td></tr></table>
 </div>
-<a name="ms_command"></a>
+<a name="growth"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">ms_command</span>(<span class="sig-arg">theta</span>,
-        <span class="sig-arg">ns</span>,
-        <span class="sig-arg">core</span>,
-        <span class="sig-arg">iter</span>,
-        <span class="sig-arg">recomb</span>=<span class="sig-default">0</span>,
-        <span class="sig-arg">rsites</span>=<span class="sig-default">None</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">growth</span>(<span class="sig-arg">((n1,), xx)</span>,
+        <span class="sig-arg">(phi,)</span>,
+        <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Misc-pysrc.html#ms_command">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Demographics1D-pysrc.html#growth">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
   <pre class="literalblock">
 
-Generate ms command for simulation from core.
+Exponential growth beginning some time ago.
 
-theta: Assumed theta
-ns: Sample sizes
-core: Core of ms command that specifies demography.
-iter: Iterations to run ms
-recomb: Assumed recombination rate
-rsites: Sites for recombination. If None, default is 10*theta.
+nu: Ratio of contemporary to ancient population size
+T: Time in the past at which growth began (in units of 2*Na 
+   generations) 
+n1: Number of samples in resulting SFS
+pts: Number of grid points to use in integration.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="bottlegrowth"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth</span>(<span class="sig-arg">((n1,), xx, phi)</span>,
+        <span class="sig-arg">(nu_func,)</span>,
+        <span class="sig-arg">pts</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Demographics1D-pysrc.html#bottlegrowth">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Instantanous size change followed by exponential growth.
+
+nuB: Ratio of population size after instantanous change to ancient
+     population size
+nuF: Ratio of contempoary to ancient population size
+T: Time in the past at which instantaneous change happened and growth began
+   (in units of 2*Na generations) 
+n1: Number of samples in resulting SFS
+pts: Number of grid points to use in integration.
 
 </pre>
   <dl class="fields">
