@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 """
-Convert the output of ms to an N-dimensional frequency spectrum.
-"""
-import sys
+Convert ms output to a frequency spectrum.
 
-import dadi
+Reads the ms results from stdin and outputs to stdout.
+
+If the '-av' flag is passed, the output is the average spectrum of the ms
+iterations. Otherwise it is the sum.
+
+For example: 'ms <details> | ms_jsfs.py -av > output.fs'
+"""
 
 if __name__ == '__main__':
+    import sys
+    import dadi
+
     average = ('-av' in sys.argv)
     
     input = sys.stdin
@@ -14,4 +21,4 @@ if __name__ == '__main__':
     sfs,header = dadi.Spectrum.from_ms_file(input, average, mask_corners=True,
                                             return_header=True)
     
-    dadi.IO.sfs_to_file(sfs, output, comment_lines=header)
+    sfs.to_file(output, comment_lines=header)
