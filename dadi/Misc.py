@@ -1,3 +1,7 @@
+"""
+Miscellaneous utility functions. Including ms simulation.
+"""
+
 import sys,time
 
 import numpy
@@ -52,3 +56,26 @@ def ensure_1arg_func(var):
         raise ValueError('Argument is not a constant or a one-argument '
                          'function.')
     return var_f
+
+def ms_command(theta, ns, core, iter, recomb=0, rsites=None):
+    """
+    Generate ms command for simulation from core.
+
+    theta: Assumed theta
+    ns: Sample sizes
+    core: Core of ms command that specifies demography.
+    iter: Iterations to run ms
+    recomb: Assumed recombination rate
+    rsites: Sites for recombination. If None, default is 10*theta.
+    """
+    ms_command = "ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i "\
+            "%(sample_sizes)s %(core)s"
+    if recomb:
+        ms_command = ms_command + " -r %(recomb)f %(rsites)i"
+        if not rsites:
+            rsites = theta*10
+    sub_dict = {'total_chrom': numpy.sum(ns), 'iter': iter, 'theta': theta,
+                'numpops': len(ns), 'sample_sizes': ' '.join(map(str, ns)),
+                'core': core, 'recomb': recomb, 'rsites': rsites}
+
+    return ms_command % sub_dict
