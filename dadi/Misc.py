@@ -52,15 +52,3 @@ def ensure_1arg_func(var):
         raise ValueError('Argument is not a constant or a one-argument '
                          'function.')
     return var_f
-
-if __name__ == '__main__':
-    # Testing code. To test, run 'python misc.py >& test.out &' and monitor
-    #  test.out using 'cat'. It should only change once every 10 seconds.
-    secs_to_run = 60
-    sleep_interval = 1.0
-    start_time = curr_time = time.time()
-    while curr_time - start_time < secs_to_run:
-        time.sleep(sleep_interval)
-        curr_time = time.time()
-        print int(curr_time-start_time),
-        delayed_flush(sys.stdout, 10/60.)
