@@ -1,21 +1,17 @@
 #!/usr/bin/env python
 """
-Convert the output of ms to an N-dimensional site frequency spectrum.
+Convert the output of ms to an N-dimensional frequency spectrum.
 """
-import cPickle
 import sys
 
-import numpy
-
-import dadi.IO
+import dadi
 
 if __name__ == '__main__':
     average = ('-av' in sys.argv)
-    report_sum = ('-sum' in sys.argv)
     
     input = sys.stdin
     output = sys.stdout
-    sfs,header = dadi.IO.sfs_from_ms_file(input, average, sum, 
-                                           return_header=True)
+    sfs,header = dadi.Spectrum.from_ms_file(input, average, mask_corners=True,
+                                            return_header=True)
     
     dadi.IO.sfs_to_file(sfs, output, comment_lines=header)
