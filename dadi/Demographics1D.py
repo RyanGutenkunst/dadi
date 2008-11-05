@@ -3,9 +3,9 @@ Single population demographic models.
 """
 import numpy
 
-from dadi import Numerics, PhiManip, SFS, Integration
+from dadi import Numerics, PhiManip, Spectrum, Integration
 
-def snm(n1, pts):
+def snm(None, (n1,), pts):
     """
     Standard neutral model.
 
@@ -15,10 +15,10 @@ def snm(n1, pts):
     xx = Numerics.other_grid(pts)
     phi = PhiManip.phi_1D(xx)
 
-    sfs = SFS.sfs_from_phi_1D(n1, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,), (xx,))
     return sfs
 
-def two_epoch((nu, T), n1, pts):
+def two_epoch((nu, T), (n1,), pts):
     """
     Instantaneous size change some time ago.
 
@@ -33,10 +33,10 @@ def two_epoch((nu, T), n1, pts):
     
     phi = Integration.one_pop(phi, xx, T, nu)
 
-    sfs = SFS.sfs_from_phi_1D(n1, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,), (xx,))
     return sfs
 
-def growth((nu, T), n1, pts):
+def growth((nu, T), (n1,), pts):
     """
     Exponential growth beginning some time ago.
 
@@ -52,10 +52,10 @@ def growth((nu, T), n1, pts):
     nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
     phi = Integration.one_pop(phi, xx, T, nu_func)
 
-    sfs = SFS.sfs_from_phi_1D(n1, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,), (xx,))
     return sfs
 
-def bottlegrowth((nuB, nuF, T), n1, pts):
+def bottlegrowth((nuB, nuF, T), (n1,), pts):
     """
     Instantanous size change followed by exponential growth.
 
@@ -73,5 +73,5 @@ def bottlegrowth((nuB, nuF, T), n1, pts):
     nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
     phi = Integration.one_pop(phi, xx, T, nu_func)
 
-    sfs = SFS.sfs_from_phi_1D(n1, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,), (xx,))
     return sfs

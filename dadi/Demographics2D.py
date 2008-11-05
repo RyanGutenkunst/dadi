@@ -3,19 +3,19 @@ Two population demographic models.
 """
 import numpy
 
-from dadi import Numerics, PhiManip, SFS, Integration
+from dadi import Numerics, PhiManip, Integration, Spectrum
 
-def snm(n1,n2, pts):
+def snm(notused, (n1,n2), pts):
     """
     Standard neutral model, populations never diverge.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
-    sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,n2), (xx,xx))
     return sfs
 
-def bottlegrowth((nuB, nuF, T), n1,n2, pts):
+def bottlegrowth((nuB, nuF, T), (n1,n2), pts):
     """
     Instantanous size change followed by exponential growth with no population
     split.
@@ -28,9 +28,9 @@ def bottlegrowth((nuB, nuF, T), n1,n2, pts):
     n1,n2: Shape of resulting SFS
     pts: Number of grid points to use in integration.
     """
-    return bottlegrowth_split_mig((nuB,nuF,0,T,0), n1,n2, pts)
+    return bottlegrowth_split_mig((nuB,nuF,0,T,0), (n1,n2), pts)
 
-def bottlegrowth_split((nuB, nuF, T, Ts), n1, n2, pts):
+def bottlegrowth_split((nuB, nuF, T, Ts), (n1,n2), pts):
     """
     Instantanous size change followed by exponential growth then split.
 
@@ -43,9 +43,9 @@ def bottlegrowth_split((nuB, nuF, T, Ts), n1, n2, pts):
     n1,n2: Shape of resulting SFS
     pts: Number of grid points to use in integration.
     """
-    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts), n1,n2, pts)
+    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts), (n1,n2), pts)
 
-def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), n1,n2, pts):
+def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), (n1,n2), pts):
     """
     Instantanous size change followed by exponential growth then split with
     migration.
@@ -60,7 +60,7 @@ def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), n1,n2, pts):
     n1,n2: Shape of resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
 
     nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
@@ -71,10 +71,10 @@ def bottlegrowth_split_mig((nuB, nuF, m, T, Ts), n1,n2, pts):
     nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
     phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func, m12=m, m21=m)
 
-    sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,n2), (xx,xx))
     return sfs
 
-def split_mig((nu1, nu2, T, m), n1,n2, pts):
+def split_mig((nu1, nu2, T, m), (n1,n2), pts):
     """
     Split into two populations of specifed size, with migration.
 
@@ -85,14 +85,14 @@ def split_mig((nu1, nu2, T, m), n1,n2, pts):
     n1,n2: Shape of resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
 
     phi = PhiManip.phi_1D(xx)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
 
     phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m, m21=m)
 
-    sfs = SFS.sfs_from_phi_2D(n1, n2, xx, xx, phi)
+    sfs = Spectrum.from_phi(phi, (n1,n2), (xx,xx))
     return sfs
 
 def split_mig_mscore((nu1, nu2, T, m)):
