@@ -3,7 +3,7 @@ import Inference
 import Integration
 import PhiManip
 import Numerics
-import ms
+# Protect import of Plotting in case matplotlib not installed.
 try:
     import Plotting
 except ImportError:
@@ -14,8 +14,8 @@ try:
     # when we get bug reports, we know what version they were using. The
     # svnversion file is created by setup.py.
     import os
-    __DIRECTORY__ = os.path.dirname(Integration.__file__)
-    __svn_file__ = os.path.join(__DIRECTORY__, 'svnversion')
-    __SVNVERSION__ = file(__svn_file__).read().strip()
+    _directory = os.path.dirname(Integration.__file__)
+    _svn_file = os.path.join(_directory, 'svnversion')
+    __SVNVERSION__ = file(_svn_file).read().strip()
 except:
     __SVNVERSION__ = 'Unknown'
