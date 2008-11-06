@@ -457,10 +457,10 @@ class Spectrum(numpy.ma.masked_array):
         This estimate of Fst assumes random mating, because we don't have
         heterozygote frequencies in the fs.
     
-        Calculation is by the method of Weir and Cockerham _Evolution_ 38:1358.
-        For a single SNP, the relevant formula is at the top of page 1363. To
-        combine results between SNPs, we use the weighted average indicated by
-        equation 10.
+        Calculation is by the method of Weir and Cockerham _Evolution_ 38:1358
+        (1984).  For a single SNP, the relevant formula is at the top of page
+        1363. To combine results between SNPs, we use the weighted average
+        indicated by equation 10.
         """
         # This gets a little obscure because we want to be able to work with
         # spectra of arbitrary dimension.
