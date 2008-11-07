@@ -3,7 +3,8 @@ Two population demographic models.
 """
 import numpy
 
-from dadi import Numerics, PhiManip, Integration, Spectrum
+from dadi import Numerics, PhiManip, Integration
+from dadi.Spectrum_mod import Spectrum
 
 def snm(notused, (n1,n2), pts):
     """

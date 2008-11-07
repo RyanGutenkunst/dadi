@@ -1,13 +1,16 @@
-from Spectrum_mod import Spectrum
+import Demographics1D
+import Demographics2D
 import Inference
 import Integration
-import PhiManip
 import Numerics
+import PhiManip
 # Protect import of Plotting in case matplotlib not installed.
 try:
     import Plotting
 except ImportError:
     pass
+
+from Spectrum_mod import Spectrum
 
 try:
     # This is to try and ensure we have a nice __SVNVERSION__ attribute, so
