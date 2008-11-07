@@ -49,7 +49,7 @@ def _object_func_log(log_params, *args, **kwargs):
     return _object_func(numpy.exp(log_params), *args, **kwargs)
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
-                 fold=False, verbose=0, flush_delay=0.5, epsilon=1e-4, 
+                 fold=False, verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False):
     """
     Optimize parameters to fit model to data. Works in log(params) space.
