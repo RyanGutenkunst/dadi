@@ -79,3 +79,21 @@ def ms_command(theta, ns, core, iter, recomb=0, rsites=None):
                 'core': core, 'recomb': recomb, 'rsites': rsites}
 
     return ms_command % sub_dict
+
+def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
+    """
+    Generate a perturbed set of parameters.
+
+    Each element of params is radomly perturbed <fold> factors of 2 up or down.
+    fold: Number of factors of 2 to perturb by
+    lower_bound: If not None, the resulting parameter set is adjusted to have 
+                 all value greater than lower_bound.
+    upper_bound: If not None, the resulting parameter set is adjusted to have 
+                 all value less than upper_bound.
+    """
+    pnew = params * 2**(fold * 2*numpy.random.random(len(params))-1)
+    if lower_bound:
+        pnew = numpy.maximum(pnew, 1.01*numpy.asarray(lower_bound))
+    if upper_bound:
+        pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
+    return pnew
