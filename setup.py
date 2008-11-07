@@ -14,6 +14,7 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/tridiag.c'])
 
 try:
+    os.system("svn up")
     os.system("svnversion > dadi/svnversion")
 except:
     os.sys.stderr.write("Call to svnversion failed. Cannot automatically "
