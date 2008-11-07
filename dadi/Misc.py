@@ -52,7 +52,7 @@ def ensure_1arg_func(var):
         raise ValueError('Argument is not a constant or a function.')
     try:
         var_f(0.0)
-    except:
+    except TypeError:
         raise ValueError('Argument is not a constant or a one-argument '
                          'function.')
     return var_f
