@@ -10,9 +10,6 @@ import matplotlib
 import pylab
 import numpy
 
-# Give easy access to all pylab commands.
-from pylab import *
-
 #: Custom ticks that label only the lowest and highest bins in an FS plot.
 class _sfsTickLocator(matplotlib.ticker.Locator):
     def __call__(self):
