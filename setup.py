@@ -25,7 +25,7 @@ core.setup(name='dadi',
            author_email='rng7@cornell.edu',
            url='http://dadi.googlecode.com',
            ext_modules = [tridiag, int_c],
-           scripts=['scripts/ms_jsfs'],
+           scripts=['scripts/ms_jsfs.py'],
            packages=['dadi'], 
            package_data = {'dadi':['svnversion']},
            )
