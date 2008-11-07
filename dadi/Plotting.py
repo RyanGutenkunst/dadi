@@ -2,6 +2,8 @@
 Routines for Plotting comparisons between model and data.
 
 These can serve as inspiration for custom routines for one's own purposes.
+Note that all the plotting is done with pylab. To see additional pylab methods:
+"import pylab; help(pylab)"
 """
 
 import matplotlib
