@@ -1,3 +1,11 @@
+# Importing these adds a 'bdist_mpkg' option that allows building binary
+# packages on OS X.
+try:
+    import setuptools
+    import bdist_mpkg
+except ImportError:
+    pass
+
 import os
 
 import numpy.distutils.core as core
