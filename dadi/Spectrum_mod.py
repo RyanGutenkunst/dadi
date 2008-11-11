@@ -1,6 +1,7 @@
 """
 Contains Spectrum object, which represents frequency spectra.
 """
+import operator
 import os
 
 import numpy
@@ -684,3 +685,215 @@ class Spectrum(numpy.ma.masked_array):
             resamp[tuple(counts)] += prob*combined[derived]
 
         return Spectrum(resamp, mask_corners=mask_corners)
+
+    @staticmethod
+    def from_data_dict(data_dict, pop_ids, projections):
+        """
+        Spectrum from a dictionary of polymorphisms.
+
+        pop_ids: list of which populations to make fs for.
+        projections: list of sample sizes to project down to for each
+                     population.
+
+        The data dictionary should be organized as:
+            {snp_id:{'segregating': ['A','T'],
+                     'calls': {'YRI': (23,3),
+                                'CEU': (7,3)
+                                },
+                     'outgroup_allele': 'T'
+                    }
+            }
+        The 'outgroup_allele' is optional. If it is unavailable, it is assumed
+        that the polymorphisms are unpolarized. You should then *fold* the
+        resulting Spectrum.
+        The 'calls' entry gives the successful calls in each population, in the
+        order that the alleles are specified in 'segregating'.
+        Non-diallelic polymorphisms are skipped.
+        """
+        Npops = len(pop_ids)
+        fs = numpy.zeros(numpy.asarray(projections)+1)
+        for snp, snp_info in data_dict.items():
+            # Skip SNPs that aren't triallelic.
+            if len(snp_info['segregating']) != 2:
+                continue
+
+            allele1,allele2 = snp_info['segregating']
+            if 'outgroup_allele' in snp_info:
+                outgroup_allele = snp_info['outgroup_allele']
+            else:
+                # If we don't have an aligned base, we can choose which is
+                # derived arbitrarily since we'll need to fold anyways.
+                outgroup_allele = allele1
+    
+            # Extract the allele counts for each population.
+            allele1_counts = numpy.asarray([snp_info['counts'][pop][0]
+                                            for pop in pop_ids])
+            allele2_counts = numpy.asarray([snp_info['counts'][pop][1]
+                                            for pop in pop_ids])
+            # How many chromosomes did we call successfully in each population?
+            successful_calls = allele1_counts + allele2_counts
+    
+            # Which allele is derived (different from outgroup)?
+            if allele1 == outgroup_allele:
+                derived_counts = allele2_counts
+            elif allele2 == outgroup_allele:
+                derived_counts = allele1_counts
+    
+            # To handle arbitrary numbers of populations in the fs, we need
+            # to do some tricky slicing.
+            slices = [[numpy.newaxis] * len(pop_ids) for ii in range(Npops)]
+            for ii in range(len(pop_ids)):
+                slices[ii][ii] = slice(None,None,None)
+        
+            # Do the projection for this SNP.
+            pop_contribs = []
+            iter = zip(projections, successful_calls, derived_counts)
+            for pop_ii, (p_to, p_from, hits) in enumerate(iter):
+                contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
+                pop_contribs.append(contrib)
+            fs += reduce(operator.mul, pop_contribs)
+        return fs
+    
+    @staticmethod
+    def _data_by_tri(data_dict):
+        """
+        Nest the data by derived context and outgroup base.
+
+        The resulting dictionary contains only SNPs which are appropriate for
+        use of Hernandez's ancestral misidentification correction. It is
+        organized as {(derived_tri, outgroup_base): {snp_id: data,...}}
+        """
+        result = {}
+        genetic_bases = 'ACTG'
+        for snp, snp_info in data_dict.items():
+            # Skip non-diallelic polymorphisms
+            if len(snp_info['segregating']) != 2:
+                continue
+            allele1, allele2 = snp_info['segregating']
+            ingroup_tri = snp_info['context']
+            outgroup_tri = snp_info['outgroup_context']
+            if not outgroup_tri[1] == snp_info['outgroup_allele']:
+                raise ValueError('Outgroup context and allele are inconsistent '
+                                 'for polymorphism: %s.' % snp)
+            outgroup_allele = outgroup_tri[1]
+    
+            # These are all the requirements to apply the ancestral correction.
+            # First 2 are constant context.
+            # Next 2 are sensible context.
+            # Next 1 is that outgroup allele is one of the segregating.
+            # Next 2 are that segregating alleles are sensible.
+            if outgroup_tri[0] != ingroup_tri[0]\
+               or outgroup_tri[2] != ingroup_tri[2]\
+               or ingroup_tri[0] not in genetic_bases\
+               or ingroup_tri[2] not in genetic_bases\
+               or outgroup_allele not in [allele1, allele2]\
+               or allele1 not in genetic_bases\
+               or allele2 not in genetic_bases:
+                continue
+    
+            if allele1 == outgroup_allele:
+                derived_allele = allele2
+            elif allele2 == outgroup_allele:
+                # In this case, the second allele is non_outgroup
+                derived_allele = allele1
+            derived_tri = ingroup_tri[0] + derived_allele + ingroup_tri[2]
+            result.setdefault((derived_tri, outgroup_allele), {})
+            result[derived_tri, outgroup_allele][snp] = snp_info
+        return result
+    
+    @staticmethod
+    def from_data_dict_corrected(data_dict, pop_ids, projections,
+                                 p_anc_mis_filename, force_pos=True,
+                                 mask_corners=True):
+        """
+        Spectrum from a dictionary of polymorphisms, corrected for ancestral
+        misidentification.
+
+        The correction is based upon:
+            Hernandez, Williamson & Bustamante _Mol_Biol_Evol_ 24:1792 (2007)
+
+        force_pos: If the correction is too agressive, it may leave some small
+                   entries in the fs less than zero. If force_pos is true,
+                   these entries will be set to zero, in such a way that the
+                   total number of segregating SNPs is conserved.
+        p_anc_mis_filename: The name of the file containing the 
+                   misidentification probabilities.
+                   The file is of the form:
+                       # Any number of comments lines beginning with #
+                       AAA T 0.001
+                       AAA G 0.02
+                       ...
+                   Where every combination of three + one bases is considered
+                   (order is not important).  The triplet is the context and
+                   putatively derived allele in the reference species. The
+                   single base is the base in the outgroup. The numerical value
+                   is the probability that the ancestral state was
+                   misidentified: (1-f_{ux}) in the notation of the paper.
+
+        The data dictionary should be organized as:
+            {snp_id:{'segregating': ['A','T'],
+                     'calls': {'YRI': (23,3),
+                                'CEU': (7,3)
+                                },
+                     'outgroup_allele': 'T',
+                     'context': 'CAT',
+                     'outgroup_context': 'CAT'
+                    }
+            }
+        The additional entries are 'context', which includes the two flanking
+        bases in the species of interest, and 'outgroup_context', which
+        includes the aligned bases in the outgroup.
+
+        This method skips entries for which the correction cannot be applied.
+        Most commonly this is because of missing or non-constant context.
+        """
+        # Read the fux file into a dictionary.
+        fux_dict = {}
+        f = file(p_anc_mis_filename)
+        for line in f.readlines():
+            if line.startswith('#'):
+                continue
+            sp = line.split()
+            fux_dict[(sp[0], sp[1])] = 1 - float(sp[2])
+        f.close()
+    
+        # Divide the data into classes based on ('context', 'outgroup_allele')
+        by_context = Spectrum._data_by_tri(data_dict)
+    
+        fs = numpy.zeros(numpy.asarray(projections)+1)
+        while by_context:
+            # Each time through this loop, we eliminate two entries from the 
+            # data dictionary. These correspond to one class and its
+            # corresponding misidentified class.
+            (derived_tri, out_base), nomis_data = by_context.popitem()
+
+            # The corresponding bases if the ancestral state had been
+            # misidentifed.
+            mis_out_base = derived_tri[1]
+            mis_derived_tri = derived_tri[0] + out_base + derived_tri[2]
+            # Get the data for that case. Note that we default to an empty
+            # dictionary if we don't have data for that class.
+            mis_data = by_context.pop((mis_derived_tri, mis_out_base), {})
+    
+            fux = fux_dict[(derived_tri, out_base)]
+            fxu = fux_dict[(mis_derived_tri, mis_out_base)]
+    
+            # Get the spectra for these two cases
+            Nux = Spectrum.from_data_dict(nomis_data, pop_ids, projections)
+            Nxu = Spectrum.from_data_dict(mis_data, pop_ids, projections)
+    
+            # Equations 5 & 6 from the paper.
+            Nxu_rev = reverse_array(Nxu)
+            Rux = (fxu*Nux - (1-fxu)*Nxu_rev)/(fux+fxu-1)
+            Rxu = reverse_array((fux*Nxu_rev - (1-fux)*Nux)/(fux+fxu-1))
+    
+            fs += Rux + Rxu
+    
+        # Here we take the negative entries, and flip them back, so they end up
+        # zero and the total number of SNPs is conserved.
+        if force_pos:
+            negative_entries = numpy.minimum(0, fs)
+            fs -= negative_entries
+            fs += reverse_array(negative_entries)
+    
+        return Spectrum(fs, mask_corners=mask_corners)
