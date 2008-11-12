@@ -29,7 +29,7 @@ except:
                         "include version information.")
 
 core.setup(name='dadi',
-           version='devel',
+           version='1.0.0',
            author='Ryan Gutenkunst',
            author_email='rng7@cornell.edu',
            url='http://dadi.googlecode.com',
