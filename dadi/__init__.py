@@ -1,3 +1,10 @@
+"""
+For examples of dadi's usage, see the examples directory in the source
+distribution.
+
+Documentation of all methods can be found in doc/api/index.html of the source
+distribution.
+"""
 import Demographics1D
 import Demographics2D
 import Inference
@@ -10,7 +17,9 @@ try:
 except ImportError:
     pass
 
-from Spectrum_mod import Spectrum
+# We do it this way so it's easier to reload.
+import Spectrum_mod 
+Spectrum = Spectrum_mod.Spectrum
 
 try:
     # This is to try and ensure we have a nice __SVNVERSION__ attribute, so
