@@ -37,4 +37,5 @@ core.setup(name='dadi',
            scripts=['scripts/ms_jsfs.py'],
            packages=['dadi'], 
            package_data = {'dadi':['svnversion']},
+           license='BSD'
            )
