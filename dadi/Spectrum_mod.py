@@ -725,19 +725,19 @@ class Spectrum(numpy.ma.masked_array):
                 # derived arbitrarily since we'll need to fold anyways.
                 outgroup_allele = allele1
     
-            # Extract the allele counts for each population.
-            allele1_counts = numpy.asarray([snp_info['counts'][pop][0]
+            # Extract the allele calls for each population.
+            allele1_calls = numpy.asarray([snp_info['calls'][pop][0]
                                             for pop in pop_ids])
-            allele2_counts = numpy.asarray([snp_info['counts'][pop][1]
+            allele2_calls = numpy.asarray([snp_info['calls'][pop][1]
                                             for pop in pop_ids])
             # How many chromosomes did we call successfully in each population?
-            successful_calls = allele1_counts + allele2_counts
+            successful_calls = allele1_calls + allele2_calls
     
             # Which allele is derived (different from outgroup)?
             if allele1 == outgroup_allele:
-                derived_counts = allele2_counts
+                derived_calls = allele2_calls
             elif allele2 == outgroup_allele:
-                derived_counts = allele1_counts
+                derived_calls = allele1_calls
     
             # To handle arbitrary numbers of populations in the fs, we need
             # to do some tricky slicing.
@@ -747,7 +747,7 @@ class Spectrum(numpy.ma.masked_array):
         
             # Do the projection for this SNP.
             pop_contribs = []
-            iter = zip(projections, successful_calls, derived_counts)
+            iter = zip(projections, successful_calls, derived_calls)
             for pop_ii, (p_to, p_from, hits) in enumerate(iter):
                 contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
                 pop_contribs.append(contrib)
