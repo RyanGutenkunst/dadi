@@ -827,6 +827,65 @@ a new object with type S, a subtype of T
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#from_data_dict" class="summary-sig-name">from_data_dict</a>(<span class="summary-sig-arg">data_dict</span>,
+        <span class="summary-sig-arg">pop_ids</span>,
+        <span class="summary-sig-arg">projections</span>)</span><br />
+      Spectrum from a dictionary of polymorphisms.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_data_dict">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_data_by_tri" class="summary-sig-name" onclick="show_private();">_data_by_tri</a>(<span class="summary-sig-arg">data_dict</span>)</span><br />
+      Nest the data by derived context and outgroup base.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._data_by_tri">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#from_data_dict_corrected" class="summary-sig-name">from_data_dict_corrected</a>(<span class="summary-sig-arg">data_dict</span>,
+        <span class="summary-sig-arg">pop_ids</span>,
+        <span class="summary-sig-arg">projections</span>,
+        <span class="summary-sig-arg">p_anc_mis_filename</span>,
+        <span class="summary-sig-arg">force_pos</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Spectrum from a dictionary of polymorphisms, corrected for ancestral
+misidentification.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_data_dict_corrected">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 </table>
 <!-- ==================== CLASS VARIABLES ==================== -->
 <a name="section-ClassVariables"></a>
@@ -1402,6 +1461,147 @@ original, that implies population structure.
   </dl>
 </td></tr></table>
 </div>
+<a name="from_data_dict"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">from_data_dict</span>(<span class="sig-arg">data_dict</span>,
+        <span class="sig-arg">pop_ids</span>,
+        <span class="sig-arg">projections</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_data_dict">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Spectrum from a dictionary of polymorphisms.
+
+pop_ids: list of which populations to make fs for.
+projections: list of sample sizes to project down to for each
+             population.
+
+The data dictionary should be organized as:
+    {snp_id:{'segregating': ['A','T'],
+             'calls': {'YRI': (23,3),
+                        'CEU': (7,3)
+                        },
+             'outgroup_allele': 'T'
+            }
+    }
+The 'outgroup_allele' is optional. If it is unavailable, it is assumed
+that the polymorphisms are unpolarized. You should then *fold* the
+resulting Spectrum.
+The 'calls' entry gives the successful calls in each population, in the
+order that the alleles are specified in 'segregating'.
+Non-diallelic polymorphisms are skipped.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_data_by_tri"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_data_by_tri</span>(<span class="sig-arg">data_dict</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._data_by_tri">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Nest the data by derived context and outgroup base.
+
+The resulting dictionary contains only SNPs which are appropriate for
+use of Hernandez's ancestral misidentification correction. It is
+organized as {(derived_tri, outgroup_base): {snp_id: data,...}}
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="from_data_dict_corrected"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">from_data_dict_corrected</span>(<span class="sig-arg">data_dict</span>,
+        <span class="sig-arg">pop_ids</span>,
+        <span class="sig-arg">projections</span>,
+        <span class="sig-arg">p_anc_mis_filename</span>,
+        <span class="sig-arg">force_pos</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_data_dict_corrected">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Spectrum from a dictionary of polymorphisms, corrected for ancestral
+misidentification.
+
+The correction is based upon:
+    Hernandez, Williamson &amp; Bustamante _Mol_Biol_Evol_ 24:1792 (2007)
+
+force_pos: If the correction is too agressive, it may leave some small
+           entries in the fs less than zero. If force_pos is true,
+           these entries will be set to zero, in such a way that the
+           total number of segregating SNPs is conserved.
+p_anc_mis_filename: The name of the file containing the 
+           misidentification probabilities.
+           The file is of the form:
+               # Any number of comments lines beginning with #
+               AAA T 0.001
+               AAA G 0.02
+               ...
+           Where every combination of three + one bases is considered
+           (order is not important).  The triplet is the context and
+           putatively derived allele in the reference species. The
+           single base is the base in the outgroup. The numerical value
+           is the probability that the ancestral state was
+           misidentified: (1-f_{ux}) in the notation of the paper.
+
+The data dictionary should be organized as:
+    {snp_id:{'segregating': ['A','T'],
+             'calls': {'YRI': (23,3),
+                        'CEU': (7,3)
+                        },
+             'outgroup_allele': 'T',
+             'context': 'CAT',
+             'outgroup_context': 'CAT'
+            }
+    }
+The additional entries are 'context', which includes the two flanking
+bases in the species of interest, and 'outgroup_context', which
+includes the aligned bases in the outgroup.
+
+This method skips entries for which the correction cannot be applied.
+Most commonly this is because of missing or non-constant context.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== PROPERTY DETAILS ==================== -->
 <a name="section-PropertyDetails"></a>
@@ -1479,7 +1679,7 @@ original, that implies population structure.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Nov  7 14:13:06 2008</a>
+    3.0.1 on Tue Nov 11 16:07:00 2008</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
