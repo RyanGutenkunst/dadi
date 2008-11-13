@@ -197,7 +197,7 @@ def make_extrap_func(func):
 
         # Extrapolate
         if len(pts_l) == 1:
-            ex_result = numpy.log(result_l[0])
+            ex_result = result_l[0]
         elif len(pts_l) == 2:
             ex_result = linear_extrap(result_l, x_l)
         elif len(pts_l) == 3:
