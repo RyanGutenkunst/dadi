@@ -2,9 +2,10 @@
 Miscellaneous utility functions. Including ms simulation.
 """
 
-import sys,time
+import os,sys,time
 
 import numpy
+import scipy.linalg
 
 #: Storage for times at which each stream was flushed.
 __times_last_flushed = {}
@@ -97,3 +98,68 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     if upper_bound:
         pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
     return pnew
+
+def make_fux_table(fid, ts, Q, tri_freq):
+    """
+    Make file of 1-fux for use in ancestral misidentification correction.
+
+    fid: Filename to output to.
+    ts: Expected number of substitutions per site between ingroup and outgroup.
+    Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
+       which entries are ordered using the code CGTA -> 0,1,2,3. For example, 
+       ACT -> 3*16+0*4+3*1=51. The transition rate from ACT to AGT is then 
+       entry 51,55.
+    tri_freq: Dictionary in which each entry maps a trinucleotide to its 
+              stationary frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
+    """
+    code = 'CGTA'
+    # Ensure that the rows of Q sum to zero.
+    for ii,row in enumerate(Q):
+        s = row.sum() - row[ii]
+        row[ii] = -s
+
+    eQhalf = scipy.linalg.matfuncs.expm(Q * ts/2.)
+    if not hasattr(fid, 'write'):
+        newfile = True
+        fid = file(fid, 'w')
+
+    outlines = []
+    for ii,first in enumerate(code):
+        for jj,second in enumerate(code):
+            for kk,third in enumerate(code):
+                for ll,outgroup in enumerate(code):
+                    # These are the indices into Q and eQ
+                    uind = 16*ii+4*jj+1*kk
+                    xind = 16*ii+4*ll+1*kk
+
+                    ## Note that the Q terms factor out in our final
+                    ## calculation.
+                    #Qux = Q[uind,xind]
+                    #denomu = Q[uind].sum() - Q[uind,uind]
+
+                    PMuUu, PMuUx = 0,0
+                    # Equation 2 in HWB. We have to generalize slightly to
+                    # calculate PMuUx.
+                    for aa,alpha in enumerate(code):
+                        aind = 16*ii+4*aa+1*kk
+
+                        pia = tri_freq[first+alpha+third]
+                        Pau = eQhalf[aind,uind]
+                        Pax = eQhalf[aind,xind]
+
+                        PMuUu += pia * Pau*Pau
+                        PMuUx += pia * Pau*Pax
+
+                    # This is fux. For a given SNP with actual ancestral state
+                    # u, this is the probability that the outgroup will have u.
+                    # Eqn 3 in HWB.
+                    res = PMuUx/(PMuUu + PMuUx)
+                    if outgroup == second:
+                        res = 0
+                    
+                    outlines.append('%c%c%c %c %.6f' % (first,second,third,
+                                                        outgroup, res))
+
+    fid.write(os.linesep.join(outlines))
+    if newfile:
+        fid.close()
