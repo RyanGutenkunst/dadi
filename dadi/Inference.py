@@ -201,13 +201,16 @@ def Anscombe_Poisson_residual(model, data, mask=None):
     (1986).
 
     Note that I tried implementing the "adjusted deviance" residuals, but they
-    always looked like crap for the cases where the data was 0.
+    always looked very biased for the cases where the data was 0.
     """
     # Because my data have often been projected downward or averaged over many
     # iterations, it appears better to apply the same transformation to the data
     # and the model.
-    datatrans = data**(2./3)-data**(-1./3)/9
-    modeltrans = model**(2./3)-model**(-1./3)/9
+    # For some reason data**(-1./3) results in entries in data that are zero
+    # becoming mask. Not just the result, but the data array itself. We use the
+    # power call to get around that.
+    datatrans = data**(2./3) - numpy.power(data,-1./3)/9
+    modeltrans = model**(2./3) - numpy.power(model,-1./3)/9
     resid = 1.5*(datatrans - modeltrans)/model**(1./6)
     if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
