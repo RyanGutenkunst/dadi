@@ -803,7 +803,7 @@ class Spectrum(numpy.ma.masked_array):
     
     @staticmethod
     def from_data_dict_corrected(data_dict, pop_ids, projections,
-                                 p_anc_mis_filename, force_pos=True,
+                                 fux_filename, force_pos=True,
                                  mask_corners=True):
         """
         Spectrum from a dictionary of polymorphisms, corrected for ancestral
@@ -816,7 +816,7 @@ class Spectrum(numpy.ma.masked_array):
                    entries in the fs less than zero. If force_pos is true,
                    these entries will be set to zero, in such a way that the
                    total number of segregating SNPs is conserved.
-        p_anc_mis_filename: The name of the file containing the 
+        fux_filename: The name of the file containing the 
                    misidentification probabilities.
                    The file is of the form:
                        # Any number of comments lines beginning with #
@@ -827,8 +827,7 @@ class Spectrum(numpy.ma.masked_array):
                    (order is not important).  The triplet is the context and
                    putatively derived allele in the reference species. The
                    single base is the base in the outgroup. The numerical value
-                   is the probability that the ancestral state was
-                   misidentified: (1-f_{ux}) in the notation of the paper.
+                   is 1-f_{ux} in the notation of the paper.
 
         The data dictionary should be organized as:
             {snp_id:{'segregating': ['A','T'],
@@ -849,12 +848,12 @@ class Spectrum(numpy.ma.masked_array):
         """
         # Read the fux file into a dictionary.
         fux_dict = {}
-        f = file(p_anc_mis_filename)
+        f = file(fux_filename)
         for line in f.readlines():
             if line.startswith('#'):
                 continue
             sp = line.split()
-            fux_dict[(sp[0], sp[1])] = 1 - float(sp[2])
+            fux_dict[(sp[0], sp[1])] = 1-float(sp[2])
         f.close()
     
         # Divide the data into classes based on ('context', 'outgroup_allele')
