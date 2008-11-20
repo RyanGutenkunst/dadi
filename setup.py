@@ -21,12 +21,12 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/integration_shared.c',
                                   'dadi/tridiag.c'])
 
-try:
-    os.system("svn up")
-    os.system("svnversion > dadi/svnversion")
-except:
-    os.sys.stderr.write("Call to svnversion failed. Cannot automatically "
-                        "include version information.")
+# If we're building a distribution, try to update svnversion. Note that this
+# fails silently.
+for arg in os.sys.argv:    
+    if arg.count('sdist') or arg.count('bdist'):
+        os.system("svn up")
+        os.system("svnversion > dadi/svnversion")
 
 core.setup(name='dadi',
            version='1.0.0',
