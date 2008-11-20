@@ -5,7 +5,8 @@
 
 void implicit_1Dx(int L;
         double phi[L], double xx[L],
-        double nu, double gamma, double dt, int L, int use_delj_trick){
+        double nu, double gamma, double h, double dt, int L, 
+        int use_delj_trick){
     int ii;
     
     double dx[L-1], dfactor[L], xInt[L-1];
@@ -15,12 +16,12 @@ void implicit_1Dx(int L;
 
     double Mfirst, Mlast;
     double MInt[L-1], V[L], VInt[L-1];
-    Mfirst = Mfunc1D(xx[0], gamma);
-    Mlast = Mfunc1D(xx[L-1], gamma);
+    Mfirst = Mfunc1D(xx[0], gamma, h);
+    Mlast = Mfunc1D(xx[L-1], gamma, h);
     for(ii=0; ii < L; ii++)
         V[ii] = Vfunc(xx[ii], nu);
     for(ii=0; ii < L-1; ii++){
-        MInt[ii] = Mfunc1D(xInt[ii], gamma);
+        MInt[ii] = Mfunc1D(xInt[ii], gamma, h);
         VInt[ii] = Vfunc(xInt[ii], nu);
     }
 

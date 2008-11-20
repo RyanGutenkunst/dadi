@@ -61,7 +61,7 @@ def _compute_time_steps(T, xx):
         time_steps.append(T - steps_sum)
     return numpy.array(time_steps)
 
-def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0, initial_t=0):
+def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     """
     Integtrate a 1-dimensional phi foward.
 
@@ -71,18 +71,20 @@ def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0, initial_t=0):
     nu, gamma, and theta0 may be functions of time.
     nu: Population size
     gamma: Selection coefficient on *all* segregating alleles
+    h: Dominance coefficient. h = 0.5 corresponds to genic selection.
     theta0: Propotional to ancestral size. Typically constant.
 
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
     """
-    vars_to_check = (nu, gamma, theta0)
+    vars_to_check = (nu, gamma, h, theta0)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        return _one_pop_const_params(phi, xx, T, nu, gamma, theta0, initial_t)
+        return _one_pop_const_params(phi, xx, T, nu, gamma,h, theta0, initial_t)
 
     nu_f = Misc.ensure_1arg_func(nu)
     gamma_f = Misc.ensure_1arg_func(gamma)
+    h_f = Misc.ensure_1arg_func(h)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
     next_t = initial_t
@@ -90,16 +92,17 @@ def one_pop(phi, xx, T, nu=1, gamma=0, theta0=1.0, initial_t=0):
     for this_dt in time_steps:
         next_t += this_dt
 
-        nu, gamma, theta0 = nu_f(next_t), gamma_f(next_t), theta0_f(next_t)
+        nu, gamma, h = nu_f(next_t), gamma_f(next_t), h_f(next_t)
+        theta0 = theta0_f(next_t)
         _inject_mutations_1D(phi, this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
-        phi = int_c.implicit_1Dx(phi, xx, nu, gamma, this_dt, 
+        phi = int_c.implicit_1Dx(phi, xx, nu, gamma, h, this_dt, 
                                  use_delj_trick=use_delj_trick)
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
-             theta0=1, initial_t=0):
+             h1=0.5, h2=0.5, theta0=1, initial_t=0):
     """
     Integtrate a 2-dimensional phi foward.
 
@@ -110,6 +113,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     nu's, gamma's, m's, and theta0 may be functions of time.
     nu1,nu2: Population sizes
     gamma1,gamma2: Selection coefficients on *all* segregating alleles
+    h1,h2: Dominance coefficients. h = 0.5 corresponds to genic selection.
     m12,m21: Migration rates. Note that m12 is the rate *into 1 from 2*.
     theta0: Propotional to ancestral size. Typically constant.
 
@@ -121,10 +125,10 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
     """
-    vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,theta0]
+    vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21, 
-                                      gamma1, gamma2, theta0, initial_t)
+                                      gamma1, gamma2, h1, h2, theta0, initial_t)
     yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -133,6 +137,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     m21_f = Misc.ensure_1arg_func(m21)
     gamma1_f = Misc.ensure_1arg_func(gamma1)
     gamma2_f = Misc.ensure_1arg_func(gamma2)
+    h1_f = Misc.ensure_1arg_func(h1)
+    h2_f = Misc.ensure_1arg_func(h2)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
     next_t = initial_t
@@ -143,21 +149,22 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
         nu1,nu2 = nu1_f(next_t), nu2_f(next_t)
         m12,m21 = m12_f(next_t), m21_f(next_t)
         gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
+        h1,h2 = h1_f(next_t), h2_f(next_t)
         theta0 = theta0_f(next_t)
 
         _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
-        phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1,
+        phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
                                  this_dt, use_delj_trick)
 
         _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
-        phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, 
+        phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
                                  this_dt, use_delj_trick)
     return phi
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
-               gamma1=0, gamma2=0, gamma3=0, theta0=1,
-               initial_t=0):
+               gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
+               theta0=1, initial_t=0):
     """
     Integtrate a 3-dimensional phi foward.
 
@@ -168,6 +175,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     nu's, gamma's, m's, and theta0 may be functions of time.
     nu1,nu2,nu3: Population sizes
     gamma1,gamma2,gamma3: Selection coefficients on *all* segregating alleles
+    h1,h2,h3: Dominance coefficients. h = 0.5 corresponds to genic selection.
     m12,m13,m21,m23,m31,m32: Migration rates. Note that m12 is the rate 
                              *into 1 from 2*.
     theta0: Propotional to ancestral size. Typically constant.
@@ -181,12 +189,12 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
           correctly.
     """
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
-                     gamma3,theta0]
+                     gamma3,h1,h2,h3,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3, 
                                         m12, m13, m21, m23, m31, m32, 
-                                        gamma1, gamma2, gamma3, theta0,
-                                        initial_t)
+                                        gamma1, gamma2, gamma3, h1, h2, h3,
+                                        theta0, initial_t)
     zz = yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -201,6 +209,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     gamma1_f = Misc.ensure_1arg_func(gamma1)
     gamma2_f = Misc.ensure_1arg_func(gamma2)
     gamma3_f = Misc.ensure_1arg_func(gamma3)
+    h1_f = Misc.ensure_1arg_func(h1)
+    h2_f = Misc.ensure_1arg_func(h2)
+    h3_f = Misc.ensure_1arg_func(h3)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
     next_t = initial_t
@@ -214,17 +225,18 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         m31,m32 = m31_f(next_t), m32_f(next_t)
         gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
         gamma3 = gamma3_f(next_t)
+        h1,h2,h3 = h1_f(next_t), h2_f(next_t), h3_f(next_t)
         theta0 = theta0_f(next_t)
 
         _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
-                                 gamma1, this_dt, use_delj_trick)
+                                 gamma1, h1, this_dt, use_delj_trick)
         _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
-                                 gamma2, this_dt, use_delj_trick)
+                                 gamma2, h2, this_dt, use_delj_trick)
         _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
-                                 gamma3, this_dt, use_delj_trick)
+                                 gamma3, h3, this_dt, use_delj_trick)
     return phi                                                      
 
 #
@@ -232,12 +244,12 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 #
 def _Vfunc(x, nu):
     return 1./nu * x*(1-x)
-def _Mfunc1D(x, gamma):
-    return gamma * x*(1-x)
-def _Mfunc2D(x,y,mxy,gammax):
-    return mxy * (y-x) + gammax * x*(1-x)
-def _Mfunc3D(x,y,z,mxy,mxz,gammax):
-    return mxy * (y-x) + mxz * (z-x) + gammax * x*(1-x)
+def _Mfunc1D(x, gamma, h):
+    return gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+def _Mfunc2D(x,y, mxy, gamma, h):
+    return mxy * (y-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
+    return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
 
 def _compute_dfactor(dx):
     r"""
@@ -273,7 +285,8 @@ def _compute_delj(dx, MInt, VInt, axis=0):
         delj = 0.5
     return delj
 
-def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1, initial_t=0):
+def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1, 
+                          initial_t=0):
     """
     Integrate one population with constant parameters.
 
@@ -281,8 +294,8 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1, initial_t=0):
     we need to evolve. This we can efficiently do in Python, rather than 
     relying on C. The nice thing is that the Python is much faster to debug.
     """
-    M = _Mfunc1D(xx, gamma)
-    MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, gamma)
+    M = _Mfunc1D(xx, gamma, h)
+    MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, gamma, h)
     V = _Vfunc(xx, nu)
     VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
 
@@ -313,8 +326,9 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, theta0=1, initial_t=0):
 
     return phi
 
-def _two_pops_const_params(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0,
-                           gamma1=0, gamma2=0, theta0=1, initial_t=0):
+def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
+                           gamma1=0, gamma2=0, h1=0.5, h2=0.5, theta0=1, 
+                           initial_t=0):
     """
     Integrate two populations with constant parameters.
     """
@@ -325,13 +339,13 @@ def _two_pops_const_params(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0,
     # but that would be wasteful.
     Vx = _Vfunc(xx, nu1)
     VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
-    Mx = _Mfunc2D(xx[:,nuax], yy[nuax,:], m12, gamma1)
-    MxInt = _Mfunc2D((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, gamma1)
+    Mx = _Mfunc2D(xx[:,nuax], yy[nuax,:], m12, gamma1, h1)
+    MxInt = _Mfunc2D((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, gamma1, h1)
 
     Vy = _Vfunc(yy, nu2)
     VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
-    My = _Mfunc2D(yy[nuax,:], xx[:,nuax], m21, gamma2)
-    MyInt = _Mfunc2D((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, gamma2)
+    My = _Mfunc2D(yy[nuax,:], xx[:,nuax], m21, gamma2, h2)
+    MyInt = _Mfunc2D((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, gamma2,h2)
 
     dx = numpy.diff(xx)
     dfact_x = _compute_dfactor(dx)
@@ -376,8 +390,8 @@ def _two_pops_const_params(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0,
 
 def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1, 
                              m12=0, m13=0, m21=0, m23=0, m31=0, m32=0, 
-                             gamma1=0, gamma2=0, gamma3=0, theta0=1,
-                             initial_t=0):
+                             gamma1=0, gamma2=0, gamma3=0, 
+                             h1=0.5, h2=0.5, h3=0.5, theta0=1, initial_t=0):
     """
     Integrate three population with constant parameters.
     """
@@ -386,9 +400,9 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     Vx = _Vfunc(xx, nu1)
     VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
     Mx = _Mfunc3D(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
-                 m12, m13, gamma1)
+                 m12, m13, gamma1, h1)
     MxInt = _Mfunc3D((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
-                    zz[nuax,nuax,:], m12, m13, gamma1)
+                    zz[nuax,nuax,:], m12, m13, gamma1, h1)
 
     dx = numpy.diff(xx)
     dfact_x = _compute_dfactor(dx)
@@ -416,9 +430,9 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     Vy = _Vfunc(yy, nu2)
     VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
     My = _Mfunc3D(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
-                 m21, m23, gamma2)
-    MyInt = _Mfunc3D((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
-                    zz[nuax,nuax,:], m21, m23, gamma2)
+                 m21, m23, gamma2, h2)
+    MyInt = _Mfunc3D((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax],
+                    zz[nuax,nuax,:], m21, m23, gamma2, h2)
 
     dy = numpy.diff(yy)
     dfact_y = _compute_dfactor(dy)
@@ -444,9 +458,9 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     Vz = _Vfunc(zz, nu3)
     VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
     Mz = _Mfunc3D(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
-                 m31, m32, gamma3)
-    MzInt = _Mfunc3D((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax], 
-                    yy[nuax,:,nuax], m31, m32, gamma3)
+                 m31, m32, gamma3, h3)
+    MzInt = _Mfunc3D((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                    yy[nuax,:,nuax], m31, m32, gamma3, h3)
 
     dz = numpy.diff(zz)
     dfact_z = _compute_dfactor(dz)

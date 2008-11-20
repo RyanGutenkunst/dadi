@@ -5,15 +5,15 @@ double Vfunc(double x, double nu){
     return 1./nu * x*(1.-x);
 }
 
-double Mfunc1D(double x, double gamma){
-    return gamma * x*(1.-x);
+double Mfunc1D(double x, double gamma, double h){
+    return gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
 }
-double Mfunc2D(double x, double y, double m, double gamma){
-    return m * (y-x) + gamma * x*(1.-x);
+double Mfunc2D(double x, double y, double m, double gamma, double h){
+    return m * (y-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
 }
 double Mfunc3D(double x, double y, double z, double mxy, double mxz,
-        double gamma){
-    return mxy * (y-x) + mxz * (z-x) + gamma * x*(1.-x);
+        double gamma, double h){
+    return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
 }
 
 

@@ -3,7 +3,7 @@
 
 void implicit_2Dx(int L, int M; // gcc's 'forward declarations'
         double phi[L][M], double xx[L], double yy[M],
-        double nu1, double m12, double gamma1, 
+        double nu1, double m12, double gamma1, double h1,
         double dt, int L, int M, int use_delj_trick){
     int ii, jj;
 
@@ -25,10 +25,10 @@ void implicit_2Dx(int L, int M; // gcc's 'forward declarations'
     for(jj=0; jj < M; jj++){
         y = yy[jj];
 
-        Mfirst = Mfunc2D(xx[0], y, m12, gamma1);
-        Mlast = Mfunc2D(xx[L-1], y, m12, gamma1);
+        Mfirst = Mfunc2D(xx[0], y, m12, gamma1, h1);
+        Mlast = Mfunc2D(xx[L-1], y, m12, gamma1, h1);
         for(ii=0; ii < L-1; ii++)
-            MInt[ii] = Mfunc2D(xInt[ii], y, m12, gamma1);
+            MInt[ii] = Mfunc2D(xInt[ii], y, m12, gamma1, h1);
 
         compute_delj(dx, MInt, VInt, L, delj, use_delj_trick);
         compute_abc_nobc(dx, dfactor, delj, MInt, V, dt, L, a, b, c);
@@ -48,7 +48,7 @@ void implicit_2Dx(int L, int M; // gcc's 'forward declarations'
 
 void implicit_2Dy(int L, int M;
         double phi[L][M], double xx[L], double yy[M],
-        double nu2, double m21, double gamma2, 
+        double nu2, double m21, double gamma2, double h2,
         double dt, int L, int M, int use_delj_trick){
     int ii, jj;
 
@@ -70,10 +70,10 @@ void implicit_2Dy(int L, int M;
     for(ii=0; ii < L; ii++){
         x = xx[ii];
 
-        Mfirst = Mfunc2D(yy[0], x, m21, gamma2);
-        Mlast = Mfunc2D(yy[M-1], x, m21, gamma2);
+        Mfirst = Mfunc2D(yy[0], x, m21, gamma2, h2);
+        Mlast = Mfunc2D(yy[M-1], x, m21, gamma2, h2);
         for(jj=0; jj < M-1; jj++)
-            MInt[jj] = Mfunc2D(yInt[jj], x, m21, gamma2);
+            MInt[jj] = Mfunc2D(yInt[jj], x, m21, gamma2, h2);
 
         compute_delj(dy, MInt, VInt, M, delj, use_delj_trick);
         compute_abc_nobc(dy, dfactor, delj, MInt, V, dt, M, a, b, c);

@@ -4,7 +4,7 @@
 void implicit_3Dx(int L, int M, int N;
         double phi[L][M][N], 
         double xx[L], double yy[M], double zz[N],
-        double nu1, double m12, double m13, double gamma1,
+        double nu1, double m12, double m13, double gamma1, double h1,
         double dt, int L, int M, int N, int use_delj_trick){
     int ii,jj,kk;
 
@@ -28,10 +28,10 @@ void implicit_3Dx(int L, int M, int N;
             y = yy[jj];
             z = zz[kk];
 
-            Mfirst = Mfunc3D(xx[0], y, z, m12, m13, gamma1);
-            Mlast = Mfunc3D(xx[L-1], y, z, m12, m13, gamma1);
+            Mfirst = Mfunc3D(xx[0], y, z, m12, m13, gamma1, h1);
+            Mlast = Mfunc3D(xx[L-1], y, z, m12, m13, gamma1, h1);
             for(ii=0; ii < L-1; ii++)
-                MInt[ii] = Mfunc3D(xInt[ii], y, z, m12, m13, gamma1);
+                MInt[ii] = Mfunc3D(xInt[ii], y, z, m12, m13, gamma1, h1);
 
             compute_delj(dx, MInt, VInt, L, delj, use_delj_trick);
             compute_abc_nobc(dx, dfactor, delj, MInt, V, dt, L, a, b, c);
@@ -53,7 +53,7 @@ void implicit_3Dx(int L, int M, int N;
 void implicit_3Dy(int L, int M, int N;
         double phi[L][M][N], 
         double xx[L], double yy[M], double zz[N],
-        double nu2, double m21, double m23, double gamma2,
+        double nu2, double m21, double m23, double gamma2, double h2,
         double dt, int L, int M, int N, int use_delj_trick){
     int ii,jj,kk;
 
@@ -77,10 +77,10 @@ void implicit_3Dy(int L, int M, int N;
             x = xx[ii];
             z = zz[kk];
 
-            Mfirst = Mfunc3D(yy[0], x, z, m21, m23, gamma2);
-            Mlast = Mfunc3D(yy[M-1], x, z, m21, m23, gamma2);
+            Mfirst = Mfunc3D(yy[0], x, z, m21, m23, gamma2, h2);
+            Mlast = Mfunc3D(yy[M-1], x, z, m21, m23, gamma2, h2);
             for(jj=0; jj < M-1; jj++)
-                MInt[jj] = Mfunc3D(yInt[jj], x, z, m21, m23, gamma2);
+                MInt[jj] = Mfunc3D(yInt[jj], x, z, m21, m23, gamma2, h2);
 
             compute_delj(dy, MInt, VInt, M, delj, use_delj_trick);
             compute_abc_nobc(dy, dfactor, delj, MInt, V, dt, M, a, b, c);
@@ -102,7 +102,7 @@ void implicit_3Dy(int L, int M, int N;
 void implicit_3Dz(int L, int M, int N;
         double phi[L][M][N], 
         double xx[L], double yy[M], double zz[N],
-        double nu3, double m31, double m32, double gamma3,
+        double nu3, double m31, double m32, double gamma3, double h3,
         double dt, int L, int M, int N, int use_delj_trick){
     int ii,jj,kk;
 
@@ -126,10 +126,10 @@ void implicit_3Dz(int L, int M, int N;
             x = xx[ii];
             y = yy[jj];
 
-            Mfirst = Mfunc3D(zz[0], x, y, m31, m32, gamma3);
-            Mlast = Mfunc3D(zz[N-1], x, y, m31, m32, gamma3);
+            Mfirst = Mfunc3D(zz[0], x, y, m31, m32, gamma3, h3);
+            Mlast = Mfunc3D(zz[N-1], x, y, m31, m32, gamma3, h3);
             for(kk=0; kk < N-1; kk++)
-                MInt[kk] = Mfunc3D(zInt[kk], x, y, m31, m32, gamma3);
+                MInt[kk] = Mfunc3D(zInt[kk], x, y, m31, m32, gamma3, h3);
 
             compute_delj(dz, MInt, VInt, N, delj, use_delj_trick);
             compute_abc_nobc(dz, dfactor, delj, MInt, V, dt, N, a, b, c);

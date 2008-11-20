@@ -3,10 +3,10 @@
  * in Python.
  */
 double Vfunc(double x, double nu);
-double Mfunc1D(double x, double gamma);
-double Mfunc2D(double x, double y, double m, double gamma);
+double Mfunc1D(double x, double gamma, double h);
+double Mfunc2D(double x, double y, double m, double gamma, double h);
 double Mfunc3D(double x, double y, double z, double mxy, double mxz,
-        double gamma);
+        double gamma, double h);
 
 // Differences between x values.
 void compute_dx(int N; double xx[N], int N, double dx[N-1]);
