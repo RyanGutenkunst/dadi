@@ -141,7 +141,7 @@ def intersect_masks(m1, m2):
 
 def trapz(yy, xx=None, dx=None, axis=-1):
     """
-    Integrate yy(xx) along the given axis using the composite trapezoidal rule.
+    Integrate yy(xx) along given axis using the composite trapezoidal rule.
     
     xx must be one-dimensional and len(xx) must equal yy.shape[axis].
 
