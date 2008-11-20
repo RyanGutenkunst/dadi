@@ -4,16 +4,58 @@ admixture
 """
 import numpy
 from numpy import newaxis as nuax
+import scipy.integrate
 
 from dadi import Numerics
 
-def phi_1D(xx, theta=1.0, gamma=0):
+def phi_1D(xx, theta=1.0, gamma=0, h=0.5):
     """
-    One-dimensional phi for a constant-sized population with selection.
+    One-dimensional phi for a constant-sized population with genic selection.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
     theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
            event rate per generation for the simulated locus.
+    gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
+           selective advantage.
+    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+       aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
+       genic selection.
+
+    Returns a new phi array.
+    """
+    if h == 0.5:
+        return phi_1D_genic(xx, theta, gamma)
+
+    # Eqn 1 from Williamson, Fledel-Alon, Bustamante _Genetics_ 168:463 (2004).
+    # First we evaluate the relevant integrals.
+    ints = numpy.empty(len(xx))
+    integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2)
+    val, eps = scipy.integrate.quad(integrand, 0, 1)
+    int0 = val
+    for ii,q in enumerate(xx):
+        val, eps = scipy.integrate.quad(integrand, q, 1)
+        ints[ii] = val
+
+    phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
+    phi *= 1./(xx*(1-xx))
+    if xx[0] == 0:
+        # Technically, phi diverges at 0. This fixes lets us do numerics
+        # sensibly.
+        phi[0] = phi[1]
+    if xx[-1] == 1:
+        # I used Mathematica to check that this was the proper limit.
+        phi[-1] = 1./int0
+    return phi*theta
+
+def phi_1D_genic(xx, theta=1.0, gamma=0):
+    """
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
+           event rate per generation for the simulated locus.
+    gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
+           selective advantage.
 
     Returns a new phi array.
     """
@@ -21,13 +63,13 @@ def phi_1D(xx, theta=1.0, gamma=0):
         return phi_1D_snm(xx, theta)
 
     exp = numpy.exp
-    phi = theta/(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+    phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
     if xx[0] == 0:
         phi[0] = phi[1]
     if xx[-1] == 1:
         limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
         phi[-1] = limit
-    return phi
+    return phi * theta
 
 def phi_1D_snm(xx, theta=1.0):
     """
