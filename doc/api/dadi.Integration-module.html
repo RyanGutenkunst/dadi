@@ -173,6 +173,7 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
       Integtrate a 1-dimensional phi foward.</td>
@@ -200,6 +201,8 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">m21</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma1</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma2</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h1</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
       Integtrate a 2-dimensional phi foward.</td>
@@ -233,6 +236,9 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">gamma1</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma2</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma3</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h1</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">h3</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
       Integtrate a 3-dimensional phi foward.</td>
@@ -269,7 +275,8 @@ Functions for integrating population frequency spectra.
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a name="_Mfunc1D"></a><span class="summary-sig-name">_Mfunc1D</span>(<span class="summary-sig-arg">x</span>,
-        <span class="summary-sig-arg">gamma</span>)</span></td>
+        <span class="summary-sig-arg">gamma</span>,
+        <span class="summary-sig-arg">h</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_Mfunc1D">source&nbsp;code</a></span>
             
@@ -288,7 +295,8 @@ Functions for integrating population frequency spectra.
           <td><span class="summary-sig"><a name="_Mfunc2D"></a><span class="summary-sig-name">_Mfunc2D</span>(<span class="summary-sig-arg">x</span>,
         <span class="summary-sig-arg">y</span>,
         <span class="summary-sig-arg">mxy</span>,
-        <span class="summary-sig-arg">gammax</span>)</span></td>
+        <span class="summary-sig-arg">gamma</span>,
+        <span class="summary-sig-arg">h</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_Mfunc2D">source&nbsp;code</a></span>
             
@@ -309,7 +317,8 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">z</span>,
         <span class="summary-sig-arg">mxy</span>,
         <span class="summary-sig-arg">mxz</span>,
-        <span class="summary-sig-arg">gammax</span>)</span></td>
+        <span class="summary-sig-arg">gamma</span>,
+        <span class="summary-sig-arg">h</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_Mfunc3D">source&nbsp;code</a></span>
             
@@ -367,6 +376,7 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
       Integrate one population with constant parameters.</td>
@@ -394,6 +404,8 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">m21</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma1</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma2</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h1</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
       Integrate two populations with constant parameters.</td>
@@ -427,6 +439,9 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">gamma1</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma2</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">gamma3</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h1</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">h3</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
       Integrate three population with constant parameters.</td>
@@ -504,6 +519,7 @@ Functions for integrating population frequency spectra.
         <span class="sig-arg">T</span>,
         <span class="sig-arg">nu</span>=<span class="sig-default">1</span>,
         <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
         <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
   </h3>
@@ -522,6 +538,7 @@ xx: Grid upon (0,1) overwhich phi is defined.
 nu, gamma, and theta0 may be functions of time.
 nu: Population size
 gamma: Selection coefficient on *all* segregating alleles
+h: Dominance coefficient. h = 0.5 corresponds to genic selection.
 theta0: Propotional to ancestral size. Typically constant.
 
 T: Time at which to halt integration
@@ -549,6 +566,8 @@ initial_t: Time at which to start integration. (Note that this only matters
         <span class="sig-arg">m21</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">gamma1</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">gamma2</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">h1</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">h2</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
         <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
   </h3>
@@ -568,6 +587,7 @@ xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
 nu's, gamma's, m's, and theta0 may be functions of time.
 nu1,nu2: Population sizes
 gamma1,gamma2: Selection coefficients on *all* segregating alleles
+h1,h2: Dominance coefficients. h = 0.5 corresponds to genic selection.
 m12,m21: Migration rates. Note that m12 is the rate *into 1 from 2*.
 theta0: Propotional to ancestral size. Typically constant.
 
@@ -606,6 +626,9 @@ Note: Generalizing to different grids in different phi directions is
         <span class="sig-arg">gamma1</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">gamma2</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">gamma3</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">h1</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">h2</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">h3</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
         <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
   </h3>
@@ -625,6 +648,7 @@ xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
 nu's, gamma's, m's, and theta0 may be functions of time.
 nu1,nu2,nu3: Population sizes
 gamma1,gamma2,gamma3: Selection coefficients on *all* segregating alleles
+h1,h2,h3: Dominance coefficients. h = 0.5 corresponds to genic selection.
 m12,m13,m21,m23,m31,m32: Migration rates. Note that m12 is the rate 
                          *into 1 from 2*.
 theta0: Propotional to ancestral size. Typically constant.
@@ -680,6 +704,7 @@ Chang an Cooper's \delta_j term. Typically we set this to 0.5.
         <span class="sig-arg">T</span>,
         <span class="sig-arg">nu</span>=<span class="sig-default">1</span>,
         <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
         <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
   </h3>
@@ -731,7 +756,7 @@ relying on C. The nice thing is that the Python is much faster to debug.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Nov 11 16:07:00 2008</a>
+    3.0.1 on Thu Nov 20 13:57:09 2008</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

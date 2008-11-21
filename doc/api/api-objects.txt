@@ -51,6 +51,7 @@ dadi.Integration._Mfunc1D	dadi.Integration-module.html#_Mfunc1D
 dadi.Integration.timescale_factor	dadi.Integration-module.html#timescale_factor
 dadi.Integration._compute_delj	dadi.Integration-module.html#_compute_delj
 dadi.Misc	dadi.Misc-module.html
+dadi.Misc.make_fux_table	dadi.Misc-module.html#make_fux_table
 dadi.Misc.ms_command	dadi.Misc-module.html#ms_command
 dadi.Misc.delayed_flush	dadi.Misc-module.html#delayed_flush
 dadi.Misc.ensure_1arg_func	dadi.Misc-module.html#ensure_1arg_func
@@ -77,6 +78,7 @@ dadi.PhiManip._three_pop_admixture_intermediates	dadi.PhiManip-module.html#_thre
 dadi.PhiManip.phi_2D_admix_2_into_1	dadi.PhiManip-module.html#phi_2D_admix_2_into_1
 dadi.PhiManip.phi_2D_to_3D_split_1	dadi.PhiManip-module.html#phi_2D_to_3D_split_1
 dadi.PhiManip.phi_3D_admix_2_and_3_into_1	dadi.PhiManip-module.html#phi_3D_admix_2_and_3_into_1
+dadi.PhiManip.phi_1D_genic	dadi.PhiManip-module.html#phi_1D_genic
 dadi.PhiManip.phi_1D	dadi.PhiManip-module.html#phi_1D
 dadi.PhiManip.phi_1D_to_2D	dadi.PhiManip-module.html#phi_1D_to_2D
 dadi.PhiManip.phi_2D_to_3D_admix	dadi.PhiManip-module.html#phi_2D_to_3D_admix

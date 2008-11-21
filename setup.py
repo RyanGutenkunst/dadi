@@ -29,7 +29,7 @@ for arg in os.sys.argv:
         os.system("svnversion > dadi/svnversion")
 
 core.setup(name='dadi',
-           version='1.0.0',
+           version='1.1.0',
            author='Ryan Gutenkunst',
            author_email='rng7@cornell.edu',
            url='http://dadi.googlecode.com',
