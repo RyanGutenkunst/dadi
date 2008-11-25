@@ -295,17 +295,17 @@ class Spectrum(numpy.ma.masked_array):
         # original fs.
         reversed = reverse_array(numpy.where(where_folded_out, self, 0))
         folded = self + reversed
+        folded.data[where_folded_out] = 0
     
-        # Here's where we calculate which entries are nonsense in the folded fs.
-        where_ambiguous = total_per_entry == int(total_samples/2)
+        # Deal with those entries where assignment of the minor allele is
+        # ambiguous.
+        where_ambiguous = (total_per_entry == total_samples/2.)
         ambiguous = numpy.where(where_ambiguous, self, 0)
         folded += -0.5*ambiguous + 0.5*reverse_array(ambiguous)
     
         # Mask out the remains of the folding operation.
         final_mask = numpy.logical_or(final_mask, where_folded_out)
-        folded = numpy.ma.masked_array(folded, mask=final_mask)
-    
-        return folded
+        return Spectrum(folded, mask=final_mask)
 
     def sample(self):
         """
