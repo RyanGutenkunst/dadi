@@ -687,7 +687,7 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(resamp, mask_corners=mask_corners)
 
     @staticmethod
-    def from_data_dict(data_dict, pop_ids, projections):
+    def from_data_dict(data_dict, pop_ids, projections,mask_corners=True):
         """
         Spectrum from a dictionary of polymorphisms.
 
@@ -752,7 +752,7 @@ class Spectrum(numpy.ma.masked_array):
                 contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
                 pop_contribs.append(contrib)
             fs += reduce(operator.mul, pop_contribs)
-        return fs
+        return Spectrum(fs, mask_corners=mask_corners)
     
     @staticmethod
     def _data_by_tri(data_dict):
