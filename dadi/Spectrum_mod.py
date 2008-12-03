@@ -568,16 +568,29 @@ class Spectrum(numpy.ma.masked_array):
         return (pihat - theta)/C
 
     @staticmethod
-    def _from_phi_1D(n, xx, phi, mask_corners=True):
+    def _from_phi_1D(n, xx, phi, mask_corners=True, het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        """
         data = numpy.zeros(n+1)
         for ii in range(0,n+1):
             factorx = comb(n,ii) * xx**ii * (1-xx)**(n-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
             data[ii] = trapz(factorx * phi, xx)
     
         return Spectrum(data, mask_corners=mask_corners)
-    
+
     @staticmethod
-    def _from_phi_2D(nx, ny, xx, yy, phi, mask_corners=True):
+    def _from_phi_2D(nx, ny, xx, yy, phi, mask_corners=True, 
+                     het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        """
         # Calculate the 2D sfs from phi using the trapezoid rule for
         # integration.
         data = numpy.zeros((nx+1, ny+1))
@@ -586,11 +599,15 @@ class Spectrum(numpy.ma.masked_array):
         factorx_cache = {}
         for ii in range(0, nx+1):
             factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
             factorx_cache[nx,ii] = factorx
     
         dx, dy = numpy.diff(xx), numpy.diff(yy)
         for jj in range(0,ny+1):
             factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
             integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
             for ii in range(0, nx+1):
                 factorx = factorx_cache[nx,ii]
@@ -599,7 +616,13 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
     
     @staticmethod
-    def _from_phi_3D(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+    def _from_phi_3D(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
+                     het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        """
         data = numpy.zeros((nx+1, ny+1, nz+1))
     
         dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
@@ -609,13 +632,19 @@ class Spectrum(numpy.ma.masked_array):
         factorx_cache, factory_cache = {}, {}
         for ii in range(0, nx+1):
             factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
             factorx_cache[nx,ii] = factorx
         for jj in range(0, ny+1):
             factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
             factory_cache[ny,jj] = factory[nuax,:]
     
         for kk in range(0, nz+1):
             factorz = comb(nz, kk) * zz**kk * (1-zz)**(nz-kk)
+            if het_ascertained == 'zz':
+                factorz *= zz*(1-zz)
             over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
             for jj in range(0, ny+1):
                 factory = factory_cache[ny,jj]
@@ -631,19 +660,36 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def from_phi(phi, ns, xxs, mask_corners=True):
+    def from_phi(phi, ns, xxs, mask_corners=True,
+                 het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        phi: P-dimensional population frequency distribution.
+        ns: Sequence of P sample sizes for each population.
+        xxs: Sequence of P one-dimesional grids on which phi is defined.
+        mask_corners: If True, resulting FS is masked in 'absent' and 'fixed'
+                      entries.
+        het_ascertained: If 'xx', then FS is derived assuming that SNPs have
+                         been ascertained by being heterozygous in one
+                         individual from population 1. (This individual is
+                         *not* in the current sample.) If 'yy' or 'zz', it
+                         assumed that the ascertainment individual came from
+                         population 2 or 3, respectively.
+        """
         if not phi.ndim == len(ns) == len(xxs):
             raise ValueError('Dimensionality of phi and lengths of ns and xxs '
                              'do not all agree.')
         if phi.ndim == 1:
-            return Spectrum._from_phi_1D(ns[0], xxs[0], phi, mask_corners)
+            return Spectrum._from_phi_1D(ns[0], xxs[0], phi, mask_corners,
+                                         het_ascertained)
         elif phi.ndim == 2:
             return Spectrum._from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], 
-                                         phi, mask_corners)
+                                         phi, mask_corners, het_ascertained)
         elif phi.ndim == 3:
             return Spectrum._from_phi_3D(ns[0], ns[1], ns[2], 
                                          xxs[0], xxs[1], xxs[2], 
-                                         phi, mask_corners)
+                                         phi, mask_corners, het_ascertained)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
 
