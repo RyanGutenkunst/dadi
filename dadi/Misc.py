@@ -92,7 +92,7 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     upper_bound: If not None, the resulting parameter set is adjusted to have 
                  all value less than upper_bound.
     """
-    pnew = params * 2**(fold * 2*numpy.random.random(len(params))-1)
+    pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
     if lower_bound:
         pnew = numpy.maximum(pnew, 1.01*numpy.asarray(lower_bound))
     if upper_bound:
