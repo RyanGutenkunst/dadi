@@ -31,9 +31,9 @@ def _inject_mutations_2D(phi, dt, xx, yy, theta0):
     Inject novel mutations for a timestep.
     """
     # Population 1
-    phi[1,0] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+    phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
     # Population 2
-    phi[0,1] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
+    phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
     return phi
 def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0):
     """
