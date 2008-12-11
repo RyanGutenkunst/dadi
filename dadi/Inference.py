@@ -4,6 +4,7 @@ Comparison and optimization of model spectra to data.
 import numpy
 
 from dadi import Misc, Numerics
+from scipy.special import gammaln
 
 #: Counts calls to object_func
 _counter = 0
@@ -98,12 +99,6 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
         return numpy.exp(xopt), fopt, gopt, Bopt, func_calls, grad_calls,\
                 warnflag
 
-# Create a version of the gamma function that will work with masked arrays.
-from scipy.special import gammaln
-if hasattr(numpy.ma, 'masked_unary_operation'):
-    _gammaln_m = numpy.ma.masked_unary_operation(gammaln)
-else:
-    _gammaln_m = gammaln
 def minus_ll(model, data):
     """
     The negative of the log-likelihood of the data given the model sfs.
@@ -129,9 +124,7 @@ def ll_per_bin(model, data):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
     """
-    model = numpy.ma.asarray(model)
-    data = numpy.ma.asarray(data)
-    return -model + data*numpy.log(model) - _gammaln_m(data + 1)
+    return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
 
 def ll_multinom_per_bin(model, data):
     """
@@ -179,7 +172,7 @@ def linear_Poisson_residual(model, data, mask=None):
     residuals are normally distributed. (If the mean is small, the Anscombe
     residuals are better.)
     """
-    resid = (model - data)/numpy.sqrt(model)
+    resid = (model - data)/numpy.ma.sqrt(model)
     if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
         resid = numpy.ma.masked_where(tomask, resid)
@@ -207,10 +200,14 @@ def Anscombe_Poisson_residual(model, data, mask=None):
     # iterations, it appears better to apply the same transformation to the data
     # and the model.
     # For some reason data**(-1./3) results in entries in data that are zero
-    # becoming mask. Not just the result, but the data array itself. We use the
-    # power call to get around that.
-    datatrans = data**(2./3) - numpy.power(data,-1./3)/9
-    modeltrans = model**(2./3) - numpy.power(model,-1./3)/9
+    # becoming masked. Not just the result, but the data array itself. We use
+    # the power call to get around that.
+    # This seems to be a common problem, that we want to use numpy.ma functions
+    # on masked arrays, because otherwise the mask on the input itself can be
+    # changed. Subtle and annoying. If we need to create our own functions, we
+    # can use numpy.ma.core._MaskedUnaryOperation.
+    datatrans = data**(2./3) - numpy.ma.power(data,-1./3)/9
+    modeltrans = model**(2./3) - numpy.ma.power(model,-1./3)/9
     resid = 1.5*(datatrans - modeltrans)/model**(1./6)
     if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
