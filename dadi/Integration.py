@@ -152,11 +152,9 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
         h1,h2 = h1_f(next_t), h2_f(next_t)
         theta0 = theta0_f(next_t)
 
-        _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0)
         phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
                                  this_dt, use_delj_trick)
-
-        _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
         phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
                                  this_dt, use_delj_trick)
     return phi
@@ -228,13 +226,11 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         h1,h2,h3 = h1_f(next_t), h2_f(next_t), h3_f(next_t)
         theta0 = theta0_f(next_t)
 
-        _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
                                  gamma1, h1, this_dt, use_delj_trick)
-        _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
                                  gamma2, h2, this_dt, use_delj_trick)
-        _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
                                  gamma3, h3, this_dt, use_delj_trick)
     return phi                                                      
@@ -381,9 +377,8 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
 
     time_steps = _compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
-        _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0)
         phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
-        _inject_mutations_2D(phi, this_dt/2, xx, yy, theta0)
         phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
 
     return phi
@@ -479,12 +474,8 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
     time_steps = _compute_time_steps(T-initial_t, xx)
     for this_dt in time_steps:
-        _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0)
         phi = int_c.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
-
-        _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
-
-        _inject_mutations_3D(phi, this_dt/3, xx, yy, zz, theta0)
         phi = int_c.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
     return phi
