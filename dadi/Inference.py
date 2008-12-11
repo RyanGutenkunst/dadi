@@ -53,7 +53,10 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  fold=False, verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False):
     """
-    Optimize parameters to fit model to data. Works in log(params) space.
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
 
     Because this works in log(params), it cannot explore values of params < 0.
     It should also perform better when parameters range over scales.
@@ -235,3 +238,51 @@ def optimal_sfs_scaling(model, data):
     """
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
+
+def optimize_log_fmin(p0, data, model_func, pts, 
+                      lower_bound=None, upper_bound=None,
+                      fold=False, verbose=0, flush_delay=0.5, 
+                      multinom=True, maxiter=None, 
+                      full_output=False):
+    """
+    Optimize log(params) to fit model to data using Nelder-Mead. 
+
+    This optimization method make work better than BFGS when far from a
+    minimum. It is much slower, but more robust, because it doesn't use
+    gradient information.
+
+    Because this works in log(params), it cannot explore values of params < 0.
+    It should also perform better when parameters range over large scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    fold: If True, base inference on the folded spectrum.
+    verbose: If True, print optimization status every <verbose> steps.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    """
+    import scipy.optimize
+
+    args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
+            multinom, flush_delay)
+
+    outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    xopt, fopt, iter, funcalls, warnflag = outputs
+
+    if not full_output:
+        return numpy.exp(xopt)
+    else:
+        return numpy.exp(xopt), fopt, iter, funcalls, warnflag 
