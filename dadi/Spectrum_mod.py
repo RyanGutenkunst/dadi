@@ -44,6 +44,11 @@ class Spectrum(numpy.ma.masked_array):
         if mask_corners:
             self.mask_corners()
 
+        if numpy.any(numpy.logical_and(self < 0, numpy.logical_not(self.mask))):
+            logger.warn('Some entries of new FS are < 0 and unmasked. If this '
+                        'FS resulted from an integration, you may want to '
+                        'increase grid size or shorten timestep.')
+
     def mask_corners(self):
         """
         Mask the 'seen in 0 samples' and 'seen in all samples' entries.
