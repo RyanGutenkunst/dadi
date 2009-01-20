@@ -1,7 +1,11 @@
 """
 Comparison and optimization of model spectra to data.
 """
+import logging
+logger = logging.getLogger('Inference')
+
 import numpy
+from numpy import logical_and, logical_not
 
 from dadi import Misc, Numerics
 from scipy.special import gammaln
@@ -127,6 +131,16 @@ def ll_per_bin(model, data):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
     """
+    if numpy.any(logical_and(model < 0, logical_not(data.mask))):
+        logger.warn('Model is < 0 where data is not masked.')
+    # If the data is 0, it's okay for the model to be 0. In that case the ll
+    # contribution is 0, which is fine.
+    if numpy.any(logical_and(model == 0, 
+                             logical_and(data > 0, logical_not(data.mask)))):
+        logger.warn('Model is 0 where data is neither masked nor 0.')
+    if numpy.any(numpy.logical_and(model.mask, numpy.logical_not(data.mask))):
+        logger.warn('Model is masked in some entries where data is not.')
+
     return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
 
 def ll_multinom_per_bin(model, data):

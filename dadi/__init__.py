@@ -5,6 +5,9 @@ distribution.
 Documentation of all methods can be found in doc/api/index.html of the source
 distribution.
 """
+import logging
+logging.basicConfig()
+
 import Demographics1D
 import Demographics2D
 import Inference
