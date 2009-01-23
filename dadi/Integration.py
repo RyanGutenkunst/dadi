@@ -6,19 +6,39 @@ Functions for integrating population frequency spectra.
 # Note that these functions have all be written for xx=yy=zz, so the grids are
 # identical in each direction. That's not essential here, though. The reason we
 # do it is because later we'll want to extrapolate, and it's not obvious how to
-# do so if the grids differ.g
+# do so if the grids differ.
 #
 
-#: Sets the timestep for integrations: delt = timescale_factor * min(delx)
-timescale_factor = 0.1
 #: Controls use of Chang and Cooper's delj trick, which seems to lower accuracy.
 use_delj_trick = False
 
 import numpy
 from numpy import newaxis as nuax
 
-import Misc, tridiag
+import Misc, Numerics, tridiag
 import integration_c as int_c
+
+#: Controls timestep for integrations. This is a reasonable default for
+#: gridsizes of ~60. See set_timescale_factor for better control.
+timescale_factor = 1e-3
+
+def set_timescale_factor(pts, factor=10):
+    """
+    Controls the fineness of timesteps during integration.
+
+    The timestep will be proportional to Numerics.default_grid(pts)[1]/factor.
+    Typically, pts should be set to the *largest* number of grid points used in
+    extrapolation. 
+    
+    An adjustment factor of 10 typically results in acceptable accuracy. It may
+    be desirable to increase this factor, particularly when population sizes
+    are changing continously and rapidly.
+    """
+    # Implementation note: This cannot be easily be set automatically, because
+    # the integration doesn't know whether its results will be used in an
+    # extrapolation.
+    global timescale_factor
+    timescale_factor = Numerics.default_grid(pts)[1]/factor
 
 def _inject_mutations_1D(phi, dt, xx, theta0):
     """
@@ -49,21 +69,30 @@ def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0):
     phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
     return phi
 
-def _compute_time_steps(T, xx):
+def _compute_dt(dx, nu, ms, gamma, h):
     """
-    Time steps to use in integration over T, based on minimum diff(xx).
+    Compute the appropriate timestep given the current demographic params.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
     """
-    # This is a little tricky due to the possibility of rounding error.
-    dt = timescale_factor*min(numpy.diff(xx))
-    time_steps = [dt]*int(T//dt)
-    steps_sum = numpy.sum(time_steps)
-    if steps_sum < T:
-        time_steps.append(T - steps_sum)
-    return numpy.array(time_steps)
+    # These are the maxima for V_func and M_func over the domain
+    # For h != 0.5, the maximum of M_func is not easy analytically. It is close
+    # to the 0.5 or 0.25 value, though, so we use those as an approximation.
+
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+    maxVM = max(0.25/nu, sum(ms),\
+                gamma * 2 * max(numpy.abs(h + (1-2*h)*0.5) * 0.5*(1-0.5),
+                                numpy.abs(h + (1-2*h)*0.25) * 0.25*(1-0.25)))
+    return timescale_factor / maxVM
 
 def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     """
-    Integtrate a 1-dimensional phi foward.
+    Integrate a 1-dimensional phi foward.
 
     phi: Initial 1-dimensional phi
     xx: Grid upon (0,1) overwhich phi is defined.
@@ -87,24 +116,32 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     h_f = Misc.ensure_1arg_func(h)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    next_t = initial_t
-    time_steps = _compute_time_steps(T-initial_t, xx)
-    for this_dt in time_steps:
-        next_t += this_dt
+    current_t = initial_t
+    nu, gamma, h = nu_f(current_t), gamma_f(current_t), h_f(current_t)
+    dx = numpy.diff(xx)
+    while current_t < T:
+        dt = _compute_dt(dx,nu,[0],gamma,h)
+        this_dt = min(dt, T - current_t)
 
+        # Because this is an implicit method, I need the *next* time's params.
+        # So there's a little inconsistency here, in that I'm estimating dt
+        # using the last timepoints nu,gamma,h.
+        next_t = current_t + this_dt
         nu, gamma, h = nu_f(next_t), gamma_f(next_t), h_f(next_t)
         theta0 = theta0_f(next_t)
+
         _inject_mutations_1D(phi, this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
         phi = int_c.implicit_1Dx(phi, xx, nu, gamma, h, this_dt, 
                                  use_delj_trick=use_delj_trick)
+        current_t = next_t
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
              h1=0.5, h2=0.5, theta0=1, initial_t=0):
     """
-    Integtrate a 2-dimensional phi foward.
+    Integrate a 2-dimensional phi foward.
 
     phi: Initial 2-dimensional phi
     xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
@@ -141,10 +178,18 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     h2_f = Misc.ensure_1arg_func(h2)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    next_t = initial_t
-    time_steps = _compute_time_steps(T-initial_t, xx)
-    for ii, this_dt in enumerate(time_steps):
-        next_t += this_dt
+    current_t = initial_t
+    nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
+    m12,m21 = m12_f(current_t), m21_f(current_t)
+    gamma1,gamma2 = gamma1_f(current_t), gamma2_f(current_t)
+    h1,h2 = h1_f(current_t), h2_f(current_t)
+    dx,dy = numpy.diff(xx),numpy.diff(yy)
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
+                 _compute_dt(dy,nu2,[m21],gamma2,h2))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
 
         nu1,nu2 = nu1_f(next_t), nu2_f(next_t)
         m12,m21 = m12_f(next_t), m21_f(next_t)
@@ -157,6 +202,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
                                  this_dt, use_delj_trick)
         phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
                                  this_dt, use_delj_trick)
+
+        current_t = next_t
     return phi
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
@@ -164,7 +211,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
                theta0=1, initial_t=0):
     """
-    Integtrate a 3-dimensional phi foward.
+    Integrate a 3-dimensional phi foward.
 
     phi: Initial 3-dimensional phi
     xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
@@ -186,6 +233,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
     """
+    if initial_t == T:
+        return phi
+
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
@@ -212,10 +262,27 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     h3_f = Misc.ensure_1arg_func(h3)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    next_t = initial_t
-    time_steps = _compute_time_steps(T-initial_t, xx)
-    for this_dt in time_steps:
-        next_t += this_dt
+    current_t = initial_t
+    nu1,nu2,nu3 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t)
+    m12,m13 = m12_f(current_t), m13_f(current_t)
+    m21,m23 = m21_f(current_t), m23_f(current_t)
+    m31,m32 = m31_f(current_t), m32_f(current_t)
+    gamma1,gamma2 = gamma1_f(current_t), gamma2_f(current_t)
+    gamma3 = gamma3_f(current_t)
+    h1,h2,h3 = h1_f(current_t), h2_f(current_t), h3_f(current_t)
+    dx,dy,dz = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz)
+    dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
+             _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
+             _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
+    steps = 0
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
+                 _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
+                 _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+        steps += 1
 
         nu1,nu2,nu3 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t)
         m12,m13 = m12_f(next_t), m13_f(next_t)
@@ -233,7 +300,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                                  gamma2, h2, this_dt, use_delj_trick)
         phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
                                  gamma3, h3, this_dt, use_delj_trick)
-    return phi                                                      
+
+        current_t = next_t
+    return phi
 
 #
 # Here are the python versions of the population genetic functions.
@@ -314,12 +383,14 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1,
     if(M[-1] >= 0):
         b[-1] += -(-0.5/nu - M[-1])*2/dx[-1]
 
-    time_steps = _compute_time_steps(T-initial_t, xx)
-    for this_dt in time_steps:
+    dt = _compute_dt(dx,nu,[0],gamma,h)
+    current_t = initial_t
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
         _inject_mutations_1D(phi, this_dt, xx, theta0)
         r = phi/this_dt
         phi = tridiag.tridiag(a, b+1/this_dt, c, r)
-
+        current_t += this_dt
     return phi
 
 def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
@@ -375,11 +446,15 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     if My[-1,-1] >= 0:
         by[-1,-1] += -(-0.5/nu2 - My[-1,-1])*2/dy[-1]
 
-    time_steps = _compute_time_steps(T-initial_t, xx)
-    for this_dt in time_steps:
+    dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
+             _compute_dt(dy,nu2,[m21],gamma2,h2))
+    current_t = initial_t
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0)
         phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
         phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
+        current_t += this_dt
 
     return phi
 
@@ -472,10 +547,15 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if Mz[-1,-1,-1] >= 0:
         bz[-1,-1,-1] += -(-0.5/nu3 - Mz[-1,-1,-1])*2/dz[-1]
 
-    time_steps = _compute_time_steps(T-initial_t, xx)
-    for this_dt in time_steps:
+    dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
+             _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
+             _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
+    current_t = initial_t
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0)
         phi = int_c.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
         phi = int_c.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
         phi = int_c.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
+        current_t += this_dt
     return phi
