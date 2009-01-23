@@ -13,6 +13,9 @@ ns = data.sample_sizes
 
 # These are the grid point settings will use for extrapolation.
 pts_l = [40,50,60]
+# This ensures that the integration takes timesteps properly sized for the grids
+# we are using.
+dadi.Integration.set_timescale_factor(pts_l[-1], factor=10)
 
 # The Demographics1D and Demographics2D modules contain a few simple models,
 # mostly as examples. We could use one of those.
@@ -60,6 +63,8 @@ import pylab
 pylab.figure()
 dadi.Plotting.plot_2d_comp_multinom(model, data, vmin=1, resid_range=3,
                                     pop_labels=('YRI','CEU'))
+# This ensures that the figure pops up. It may be unecessary if you are using
+# ipython.
 pylab.show()
 pylab.savefig('YRI_CEU.png', dpi=50)
 
