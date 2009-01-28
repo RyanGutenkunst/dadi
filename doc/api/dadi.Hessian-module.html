@@ -3,7 +3,7 @@
           "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>dadi.RunInParallel</title>
+  <title>dadi.Hessian</title>
   <link rel="stylesheet" href="epydoc.css" type="text/css" />
   <script type="text/javascript" src="epydoc.js"></script>
 </head>
@@ -40,7 +40,7 @@
     <td width="100%">
       <span class="breadcrumbs">
         <a href="dadi-module.html">Package&nbsp;dadi</a> ::
-        Module&nbsp;RunInParallel
+        Module&nbsp;Hessian
       </span>
     </td>
     <td>
@@ -50,48 +50,14 @@
     onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
         <tr><td align="right"><span class="options"
             >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="dadi.RunInParallel-module.html"
+            >]&nbsp;|&nbsp;<a href="dadi.Hessian-module.html"
             target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
 </table>
 <!-- ==================== MODULE DESCRIPTION ==================== -->
-<h1 class="epydoc">Module RunInParallel</h1><p class="nomargin-top"><span class="codelink"><a href="dadi.RunInParallel-pysrc.html">source&nbsp;code</a></span></p>
-<pre class="literalblock">
-
-For evaluation of gradients by parallel finite-difference calculation.
-
-This code has not been tested thoroughly.
-
-</pre>
-
-<!-- ==================== CLASSES ==================== -->
-<a name="section-Classes"></a>
-<table class="summary" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Classes</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Classes"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
-</tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a href="dadi.RunInParallel.Statement-class.html" class="summary-name">Statement</a><br />
-      Class for sending Python statements to workers.
-    </td>
-  </tr>
-</table>
+<h1 class="epydoc">Module Hessian</h1><p class="nomargin-top"><span class="codelink"><a href="dadi.Hessian-pysrc.html">source&nbsp;code</a></span></p>
 <!-- ==================== FUNCTIONS ==================== -->
 <a name="section-Functions"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -115,11 +81,17 @@ This code has not been tested thoroughly.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="eval_func_over_list"></a><span class="summary-sig-name">eval_func_over_list</span>(<span class="summary-sig-arg">func_str</span>,
-        <span class="summary-sig-arg">x_todo</span>,
-        <span class="summary-sig-arg">*args</span>)</span></td>
+          <td><span class="summary-sig"><a href="dadi.Hessian-module.html#hessian_elem" class="summary-sig-name">hessian_elem</a>(<span class="summary-sig-arg">func</span>,
+        <span class="summary-sig-arg">f0</span>,
+        <span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">i</span>,
+        <span class="summary-sig-arg">j</span>,
+        <span class="summary-sig-arg">hi</span>,
+        <span class="summary-sig-arg">hj</span>,
+        <span class="summary-sig-arg">args</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>)</span><br />
+      Second partial derivative of func w.r.t.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.RunInParallel-pysrc.html#eval_func_over_list">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Hessian-pysrc.html#hessian_elem">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -133,46 +105,13 @@ This code has not been tested thoroughly.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="stop_workers"></a><span class="summary-sig-name">stop_workers</span>()</span><br />
-      Send all workers the command to exit the program.</td>
+          <td><span class="summary-sig"><a href="dadi.Hessian-module.html#hessian" class="summary-sig-name">hessian</a>(<span class="summary-sig-arg">func</span>,
+        <span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">eps</span>,
+        <span class="summary-sig-arg">args</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>)</span><br />
+      Matrix of second partial derivatives of func.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.RunInParallel-pysrc.html#stop_workers">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="statement_to_all_workers"></a><span class="summary-sig-name">statement_to_all_workers</span>(<span class="summary-sig-arg">statement</span>,
-        <span class="summary-sig-arg">locals</span>=<span class="summary-sig-default">{}</span>)</span><br />
-      Send a Python statement to all workers for execution.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.RunInParallel-pysrc.html#statement_to_all_workers">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="make_parallel_gradient_func"></a><span class="summary-sig-name">make_parallel_gradient_func</span>(<span class="summary-sig-arg">func_str</span>,
-        <span class="summary-sig-arg">epsilon</span>=<span class="summary-sig-default">1e-8</span>,
-        <span class="summary-sig-arg">send_grad_args</span>=<span class="summary-sig-default">True</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.RunInParallel-pysrc.html#make_parallel_gradient_func">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Hessian-pysrc.html#hessian">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -202,45 +141,95 @@ This code has not been tested thoroughly.
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger('RunInParallel')">logging.getLogger('RunInParallel')</code>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="currdir"></a><span class="summary-name">currdir</span> = <code title="os.getcwd()">os.getcwd()</code>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="HAVE_PYPAR"></a><span class="summary-name">HAVE_PYPAR</span> = <code title="False">False</code>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="num_procs"></a><span class="summary-name">num_procs</span> = <code title="1">1</code>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="my_rank"></a><span class="summary-name">my_rank</span> = <code title="0">0</code>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="my_host"></a><span class="summary-name">my_host</span> = <code title="socket.gethostname()">socket.gethostname()</code>
+        <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger('Hessian')">logging.getLogger('Hessian')</code>
     </td>
   </tr>
 </table>
+<!-- ==================== FUNCTION DETAILS ==================== -->
+<a name="section-FunctionDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Function Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-FunctionDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="hessian_elem"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">hessian_elem</span>(<span class="sig-arg">func</span>,
+        <span class="sig-arg">f0</span>,
+        <span class="sig-arg">params</span>,
+        <span class="sig-arg">i</span>,
+        <span class="sig-arg">j</span>,
+        <span class="sig-arg">hi</span>,
+        <span class="sig-arg">hj</span>,
+        <span class="sig-arg">args</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Hessian-pysrc.html#hessian_elem">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Second partial derivative of func w.r.t. parameters i and j
+
+f0: Value of the function at params
+eps: Stepsize to use
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="hessian"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">hessian</span>(<span class="sig-arg">func</span>,
+        <span class="sig-arg">params</span>,
+        <span class="sig-arg">eps</span>,
+        <span class="sig-arg">args</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Hessian-pysrc.html#hessian">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Matrix of second partial derivatives of func. Hij = dfunc/(dp_i dp_j).
+
+func: Function to work with. This function should take params as its first
+      argument, and then any number of *args. It will often be convenient
+      to use lambda to define the appropriate function.
+params: Parameter values to take derivatives about.
+eps: Stepsize to use. This can be a vector, giving the size for each param.
+args: Optional additional arguments to pass to func.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
        bgcolor="#a0c0ff" cellspacing="0">

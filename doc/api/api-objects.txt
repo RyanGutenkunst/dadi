@@ -14,6 +14,10 @@ dadi.Demographics2D.bottlegrowth_split	dadi.Demographics2D-module.html#bottlegro
 dadi.Demographics2D.split_mig	dadi.Demographics2D-module.html#split_mig
 dadi.Demographics2D.bottlegrowth_split_mig	dadi.Demographics2D-module.html#bottlegrowth_split_mig
 dadi.Demographics2D.split_mig_mscore	dadi.Demographics2D-module.html#split_mig_mscore
+dadi.Hessian	dadi.Hessian-module.html
+dadi.Hessian.hessian_elem	dadi.Hessian-module.html#hessian_elem
+dadi.Hessian.logger	dadi.Hessian-module.html#logger
+dadi.Hessian.hessian	dadi.Hessian-module.html#hessian
 dadi.Inference	dadi.Inference-module.html
 dadi.Inference.optimize_log	dadi.Inference-module.html#optimize_log
 dadi.Inference._object_func_log	dadi.Inference-module.html#_object_func_log
@@ -37,8 +41,10 @@ dadi.Integration._compute_dfactor	dadi.Integration-module.html#_compute_dfactor
 dadi.Integration.three_pops	dadi.Integration-module.html#three_pops
 dadi.Integration._Mfunc2D	dadi.Integration-module.html#_Mfunc2D
 dadi.Integration._one_pop_const_params	dadi.Integration-module.html#_one_pop_const_params
+dadi.Integration.old_timescale_factor	dadi.Integration-module.html#old_timescale_factor
 dadi.Integration._inject_mutations_1D	dadi.Integration-module.html#_inject_mutations_1D
 dadi.Integration._inject_mutations_3D	dadi.Integration-module.html#_inject_mutations_3D
+dadi.Integration.use_old_timestep	dadi.Integration-module.html#use_old_timestep
 dadi.Integration.one_pop	dadi.Integration-module.html#one_pop
 dadi.Integration._three_pops_const_params	dadi.Integration-module.html#_three_pops_const_params
 dadi.Integration._two_pops_const_params	dadi.Integration-module.html#_two_pops_const_params

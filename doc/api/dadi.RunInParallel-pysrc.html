@@ -65,7 +65,8 @@
 <a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
 <a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
 <a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">basicConfig</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable dadi.Inference.logger=dadi.Inference-module.html#logger,Variable dadi.RunInParallel.logger=dadi.RunInParallel-module.html#logger"><a title="dadi.Inference.logger
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable dadi.Hessian.logger=dadi.Hessian-module.html#logger,Variable dadi.Inference.logger=dadi.Inference-module.html#logger,Variable dadi.RunInParallel.logger=dadi.RunInParallel-module.html#logger"><a title="dadi.Hessian.logger
+dadi.Inference.logger
 dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('link-0', 'logger', 'link-0');">logger</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-string">'RunInParallel'</tt><tt class="py-op">)</tt> </tt>
 <a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"> </tt>
 <a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">cPickle</tt><tt class="py-op">,</tt> <tt class="py-name">os</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">traceback</tt> </tt>
@@ -88,7 +89,8 @@ dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('lin
 <a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">    <tt class="py-keyword">import</tt> <tt class="py-name">socket</tt> </tt>
 <a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt id="link-9" class="py-name"><a title="dadi.RunInParallel.my_host" class="py-name" href="#" onclick="return doclink('link-9', 'my_host', 'link-5');">my_host</a></tt> <tt class="py-op">=</tt> <tt class="py-name">socket</tt><tt class="py-op">.</tt><tt class="py-name">gethostname</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
 <a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">chdir</tt><tt class="py-op">(</tt><tt id="link-10" class="py-name"><a title="dadi.RunInParallel.currdir" class="py-name" href="#" onclick="return doclink('link-10', 'currdir', 'link-1');">currdir</a></tt><tt class="py-op">)</tt> </tt>
-<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt id="link-11" class="py-name"><a title="dadi.Inference.logger
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt id="link-11" class="py-name"><a title="dadi.Hessian.logger
+dadi.Inference.logger
 dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('link-11', 'logger', 'link-0');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">'Node %i is on host %s.'</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-12" class="py-name"><a title="dadi.RunInParallel.my_rank" class="py-name" href="#" onclick="return doclink('link-12', 'my_rank', 'link-4');">my_rank</a></tt><tt class="py-op">,</tt> <tt id="link-13" class="py-name"><a title="dadi.RunInParallel.my_host" class="py-name" href="#" onclick="return doclink('link-13', 'my_host', 'link-5');">my_host</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
 <a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"> </tt>
 <a name="Statement"></a><div id="Statement-def"><a name="L32"></a><tt class="py-lineno"> 32</tt> <a class="py-toggle" href="#" id="Statement-toggle" onclick="return toggle('Statement');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="dadi.RunInParallel.Statement-class.html">Statement</a><tt class="py-op">:</tt> </tt>
@@ -127,18 +129,22 @@ dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('lin
 <a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-comment"># Assemble and print a nice traceback</tt> </tt>
 <a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">tb</tt> <tt class="py-op">=</tt> <tt class="py-name">traceback</tt><tt class="py-op">.</tt><tt class="py-name">format_exception</tt><tt class="py-op">(</tt><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exc_type</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exc_value</tt><tt class="py-op">,</tt>  </tt>
 <a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">                                        <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exc_traceback</tt><tt class="py-op">)</tt> </tt>
-<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt id="link-16" class="py-name"><a title="dadi.Inference.logger
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt id="link-16" class="py-name"><a title="dadi.Hessian.logger
+dadi.Inference.logger
 dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('link-16', 'logger', 'link-0');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">critical</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">getcwd</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
-<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt id="link-17" class="py-name"><a title="dadi.Inference.logger
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt id="link-17" class="py-name"><a title="dadi.Hessian.logger
+dadi.Inference.logger
 dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('link-17', 'logger', 'link-0');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">critical</tt><tt class="py-op">(</tt><tt class="py-op">(</tt><tt class="py-string">'node %i:'</tt><tt class="py-op">%</tt><tt id="link-18" class="py-name"><a title="dadi.RunInParallel.my_rank" class="py-name" href="#" onclick="return doclink('link-18', 'my_rank', 'link-4');">my_rank</a></tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">tb</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
 <a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">        <tt class="py-name">save_to</tt> <tt class="py-op">=</tt> <tt class="py-string">'node_%i_crash.bp'</tt> <tt class="py-op">%</tt> <tt id="link-19" class="py-name"><a title="dadi.RunInParallel.my_rank" class="py-name" href="#" onclick="return doclink('link-19', 'my_rank', 'link-4');">my_rank</a></tt> </tt>
-<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt id="link-20" class="py-name"><a title="dadi.Inference.logger
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt id="link-20" class="py-name"><a title="dadi.Hessian.logger
+dadi.Inference.logger
 dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('link-20', 'logger', 'link-0');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">critical</tt><tt class="py-op">(</tt><tt class="py-string">"node %i: Command being run was: %s."</tt> </tt>
 <a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">                        <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-21" class="py-name"><a title="dadi.RunInParallel.my_rank" class="py-name" href="#" onclick="return doclink('link-21', 'my_rank', 'link-4');">my_rank</a></tt><tt class="py-op">,</tt> <tt class="py-name">command</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
 <a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-name">dump_file</tt> <tt class="py-op">=</tt> <tt class="py-name">file</tt><tt class="py-op">(</tt><tt class="py-name">save_to</tt><tt class="py-op">,</tt> <tt class="py-string">'w'</tt><tt class="py-op">)</tt> </tt>
 <a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">cPickle</tt><tt class="py-op">.</tt><tt class="py-name">dump</tt><tt class="py-op">(</tt><tt class="py-name">msg_locals</tt><tt class="py-op">,</tt> <tt class="py-name">dump_file</tt><tt class="py-op">)</tt> </tt>
 <a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-name">dump_file</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt id="link-22" class="py-name"><a title="dadi.Inference.logger
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt id="link-22" class="py-name"><a title="dadi.Hessian.logger
+dadi.Inference.logger
 dadi.RunInParallel.logger" class="py-name" href="#" onclick="return doclink('link-22', 'logger', 'link-0');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">critical</tt><tt class="py-op">(</tt><tt class="py-string">"node %i: Corresponding locals saved to %s."</tt> </tt>
 <a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">                        <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-23" class="py-name"><a title="dadi.RunInParallel.my_rank" class="py-name" href="#" onclick="return doclink('link-23', 'my_rank', 'link-4');">my_rank</a></tt><tt class="py-op">,</tt> <tt class="py-name">save_to</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
 <a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
@@ -253,7 +259,7 @@ expandto(location.href);
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Jan 23 09:23:12 2009</a>
+    3.0.1 on Wed Jan 28 10:04:28 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
