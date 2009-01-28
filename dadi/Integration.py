@@ -22,6 +22,11 @@ import integration_c as int_c
 #: gridsizes of ~60. See set_timescale_factor for better control.
 timescale_factor = 1e-3
 
+#: Whether to use old timestep method, which is old_timescale_factor * dx[0].
+use_old_timestep = False
+#: Factor for told timestep method.
+old_timescale_factor = 0.1
+
 def set_timescale_factor(pts, factor=10):
     """
     Controls the fineness of timesteps during integration.
@@ -78,6 +83,9 @@ def _compute_dt(dx, nu, ms, gamma, h):
     constant, the exact same integration happens. (This is equivalent to
     multiplying the eqn through by some other 2N...)
     """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
     # These are the maxima for V_func and M_func over the domain
     # For h != 0.5, the maximum of M_func is not easy analytically. It is close
     # to the 0.5 or 0.25 value, though, so we use those as an approximation.
