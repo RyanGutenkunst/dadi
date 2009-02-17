@@ -3,6 +3,7 @@ Numerically useful functions, including extrapolation and default grid.
 """
 
 import numpy
+import os
 from scipy import comb
 from scipy.special import gammaln
 
@@ -382,7 +383,7 @@ def array_to_file(data, fid, precision=16, comment_lines = []):
     fid.write(os.linesep)
 
     # Masked entries in the fs will go in as 'nan'
-    filled = self.filled()
+    filled = data.filled()
     # Write to file
     filled.tofile(fid, ' ', '%%.%ig' % precision)
     fid.write(os.linesep)
