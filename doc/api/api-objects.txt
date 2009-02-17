@@ -151,7 +151,6 @@ dadi.Spectrum_mod.Spectrum	dadi.Spectrum_mod.Spectrum-class.html
 numpy.ndarray.shape	numpy.ndarray-class.html#shape
 numpy.ndarray.__irshift__	numpy.ndarray-class.html#__irshift__
 numpy.ndarray.__rdiv__	numpy.ndarray-class.html#__rdiv__
-numpy.ndarray.__rmul__	numpy.ndarray-class.html#__rmul__
 numpy.ndarray.__lt__	numpy.ndarray-class.html#__lt__
 dadi.Spectrum_mod.Spectrum._from_phi_2D	dadi.Spectrum_mod.Spectrum-class.html#_from_phi_2D
 numpy.ndarray.__rshift__	numpy.ndarray-class.html#__rshift__
@@ -162,7 +161,6 @@ dadi.Spectrum_mod.Spectrum.Tajima_D	dadi.Spectrum_mod.Spectrum-class.html#Tajima
 numpy.ndarray.dtype	numpy.ndarray-class.html#dtype
 dadi.Spectrum_mod.Spectrum._total_per_entry	dadi.Spectrum_mod.Spectrum-class.html#_total_per_entry
 numpy.ndarray.setfield	numpy.ndarray-class.html#setfield
-numpy.ndarray.__deepcopy__	numpy.ndarray-class.html#__deepcopy__
 dadi.Spectrum_mod.Spectrum._counts_per_entry	dadi.Spectrum_mod.Spectrum-class.html#_counts_per_entry
 numpy.ndarray.__gt__	numpy.ndarray-class.html#__gt__
 numpy.ndarray.__oct__	numpy.ndarray-class.html#__oct__
@@ -188,11 +186,9 @@ numpy.ndarray.__rmod__	numpy.ndarray-class.html#__rmod__
 numpy.ndarray.__rand__	numpy.ndarray-class.html#__rand__
 numpy.ndarray.__iand__	numpy.ndarray-class.html#__iand__
 numpy.ndarray.__contains__	numpy.ndarray-class.html#__contains__
-numpy.ndarray.size	numpy.ndarray-class.html#size
 dadi.Spectrum_mod.Spectrum.from_data_dict	dadi.Spectrum_mod.Spectrum-class.html#from_data_dict
 numpy.ndarray.__ne__	numpy.ndarray-class.html#__ne__
 numpy.ndarray.__ifloordiv__	numpy.ndarray-class.html#__ifloordiv__
-numpy.ndarray.view	numpy.ndarray-class.html#view
 numpy.ndarray.strides	numpy.ndarray-class.html#strides
 dadi.Spectrum_mod.Spectrum.S	dadi.Spectrum_mod.Spectrum-class.html#S
 numpy.ndarray.base	numpy.ndarray-class.html#base
@@ -208,9 +204,9 @@ dadi.Spectrum_mod.Spectrum.scramble_pop_ids	dadi.Spectrum_mod.Spectrum-class.htm
 dadi.Spectrum_mod.Spectrum._get_sample_sizes	dadi.Spectrum_mod.Spectrum-class.html#_get_sample_sizes
 dadi.Spectrum_mod.Spectrum.Watterson_theta	dadi.Spectrum_mod.Spectrum-class.html#Watterson_theta
 numpy.ndarray.__rtruediv__	numpy.ndarray-class.html#__rtruediv__
-numpy.ndarray.__rsub__	numpy.ndarray-class.html#__rsub__
 numpy.ndarray.__and__	numpy.ndarray-class.html#__and__
 numpy.ndarray.__rpow__	numpy.ndarray-class.html#__rpow__
+numpy.ndarray.size	numpy.ndarray-class.html#size
 numpy.ndarray.__abs__	numpy.ndarray-class.html#__abs__
 dadi.Spectrum_mod.Spectrum.to_file	dadi.Spectrum_mod.Spectrum-class.html#to_file
 numpy.ndarray.__ixor__	numpy.ndarray-class.html#__ixor__
@@ -238,7 +234,6 @@ dadi.Spectrum_mod.Spectrum.unmask_all	dadi.Spectrum_mod.Spectrum-class.html#unma
 numpy.ndarray.getfield	numpy.ndarray-class.html#getfield
 dadi.Spectrum_mod.Spectrum.from_phi	dadi.Spectrum_mod.Spectrum-class.html#from_phi
 numpy.ndarray.__rdivmod__	numpy.ndarray-class.html#__rdivmod__
-numpy.ndarray.__radd__	numpy.ndarray-class.html#__radd__
 dadi.Spectrum_mod.Spectrum.sample	dadi.Spectrum_mod.Spectrum-class.html#sample
 numpy.ndarray.__rrshift__	numpy.ndarray-class.html#__rrshift__
 numpy.ndarray.conjugate	numpy.ndarray-class.html#conjugate

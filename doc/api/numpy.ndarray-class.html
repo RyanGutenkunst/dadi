@@ -1579,7 +1579,7 @@ a new object with type S, a subtype of T
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#all" class="summary-sig-name">all</a>(<span class="summary-sig-arg">a</span>,
         <span class="summary-sig-arg">axis</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">out</span>=<span class="summary-sig-default">None</span>)</span><br />
-      Check if all of the elements of `a` are true.</td>
+      Returns True if all elements evaluate to True.</td>
           <td align="right" valign="top">
             
             
@@ -1686,16 +1686,13 @@ a new object with type S, a subtype of T
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type"><pre class="literalblock">
-View or copy
-
-</pre></span>
+      <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#byteswap" class="summary-sig-name">byteswap</a>(<span class="summary-sig-arg">a</span>,
-        <span class="summary-sig-arg">False</span>)</span><br />
-      Swap the bytes in the array.</td>
+        <span class="summary-sig-arg">inplace</span>)</span><br />
+      Swap the bytes of the array elements</td>
           <td align="right" valign="top">
             
             
@@ -1806,7 +1803,7 @@ View or copy
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#copy" class="summary-sig-name">copy</a>(<span class="summary-sig-arg">a</span>,
-        <span class="summary-sig-arg">order</span>=<span class="summary-sig-default">...</span>)</span><br />
+        <span class="summary-sig-arg">order</span>=<span class="summary-sig-default">'C'</span>)</span><br />
       Return a copy of the array.</td>
           <td align="right" valign="top">
             
@@ -2084,7 +2081,7 @@ it.</td>
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#nonzero" class="summary-sig-name">nonzero</a>(<span class="summary-sig-arg">a</span>)</span><br />
-      Return the indices of the elements of a which are not zero.</td>
+      Return the indices of the elements that are non-zero.</td>
           <td align="right" valign="top">
             
             
@@ -2199,7 +2196,7 @@ it.</td>
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#reshape" class="summary-sig-name">reshape</a>(<span class="summary-sig-arg">a</span>,
         <span class="summary-sig-arg">shape</span>,
         <span class="summary-sig-arg">order</span>=<span class="summary-sig-default">'C'</span>)</span><br />
-      Returns an array containing the data of a, but with a new shape.</td>
+      Returns an array containing the same data with a new shape.</td>
           <td align="right" valign="top">
             
             
@@ -2437,7 +2434,7 @@ None
         <span class="summary-sig-arg">fid</span>,
         <span class="summary-sig-arg">sep</span>=<span class="summary-sig-default">&quot;&quot;</span>,
         <span class="summary-sig-arg">format</span>=<span class="summary-sig-default">&quot;%s&quot;</span>)</span><br />
-      Write the data to a file.</td>
+      Write array to a file as text or binary.</td>
           <td align="right" valign="top">
             
             
@@ -2454,7 +2451,7 @@ None
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#tolist" class="summary-sig-name">tolist</a>(<span class="summary-sig-arg">a</span>)</span><br />
-      Return the array as a list or nested lists.</td>
+      Return the array as a possibly nested list.</td>
           <td align="right" valign="top">
             
             
@@ -2668,8 +2665,8 @@ None
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a name="flags"></a><span class="summary-name">flags</span><br />
-      Special object providing array flags.
+        <a href="numpy.ndarray-class.html#flags" class="summary-name">flags</a><br />
+      Information about the memory layout of the array.
     </td>
   </tr>
 <tr>
@@ -2685,7 +2682,7 @@ None
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="numpy.ndarray-class.html#imag" class="summary-name">imag</a><br />
-      Imaginary part of the array.
+      The imaginary part of the array.
     </td>
   </tr>
 <tr>
@@ -2717,7 +2714,7 @@ None
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="numpy.ndarray-class.html#real" class="summary-name">real</a><br />
-      Real part of the array.
+      The real part of the array.
     </td>
   </tr>
 <tr>
@@ -3071,7 +3068,7 @@ str(x)
   </tr></table>
   
   <pre class="literalblock">
-Check if all of the elements of `a` are true.
+Returns True if all elements evaluate to True.
 
 Refer to `numpy.all` for full documentation.
 
@@ -3143,7 +3140,7 @@ out : ndarray, optional
 
 Returns
 -------
-index_array : {ndarray, int}
+index_array : ndarray
     An array of indices or single index value, or a reference to `out`
     if it was specified.
 
@@ -3264,7 +3261,7 @@ array([1, 2, 2])
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">byteswap</span>(<span class="sig-arg">a</span>,
-        <span class="sig-arg">False</span>)</span>
+        <span class="sig-arg">inplace</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     >&nbsp;
@@ -3272,17 +3269,41 @@ array([1, 2, 2])
   </tr></table>
   
   <pre class="literalblock">
-Swap the bytes in the array.
+Swap the bytes of the array elements
 
-Swap the bytes in the array.  Return the byteswapped array.  If the first
-argument is True, byteswap in-place and return a reference to self.
+Toggle between low-endian and big-endian data representation by
+returning a byteswapped array, optionally swapped in-place.
+
+Parameters
+----------
+inplace: bool, optional
+    If ``True``, swap bytes in-place, default is ``False``.
+
+Returns
+-------
+out: ndarray
+    The byteswapped array. If `inplace` is ``True``, this is
+    a view to self.
+
+Examples
+--------
+&gt;&gt;&gt; A = np.array([1, 256, 8755], dtype=np.int16)
+&gt;&gt;&gt; map(hex, A)
+['0x1', '0x100', '0x2233']
+&gt;&gt;&gt; A.byteswap(True)
+array([  256,     1, 13090], dtype=int16)
+&gt;&gt;&gt; map(hex, A)
+['0x100', '0x1', '0x3322']
+
+Arrays of strings are not swapped
+
+&gt;&gt;&gt; A = np.array(['ceg', 'fac'])
+&gt;&gt;&gt; A.byteswap()
+array(['ceg', 'fac'],
+      dtype='|S3')
 
 </pre>
   <dl class="fields">
-    <dt>Returns: <pre class="literalblock">
-View or copy
-
-</pre></dt>
   </dl>
 </td></tr></table>
 </div>
@@ -3387,7 +3408,7 @@ numpy.compress : equivalent function
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">copy</span>(<span class="sig-arg">a</span>,
-        <span class="sig-arg">order</span>=<span class="sig-default">...</span>)</span>
+        <span class="sig-arg">order</span>=<span class="sig-default">'C'</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     >&nbsp;
@@ -3598,10 +3619,6 @@ a : ndarray
     Input array
 value : scalar
     All elements of `a` will be assigned this value.
-
-Returns
--------
-None
 
 Examples
 --------
@@ -3816,7 +3833,7 @@ numpy.amin : equivalent function
   </tr></table>
   
   <pre class="literalblock">
-Return the indices of the elements of a which are not zero.
+Return the indices of the elements that are non-zero.
 
 Refer to `numpy.nonzero` for full documentation.
 
@@ -3997,7 +4014,7 @@ numpy.repeat : equivalent function
   </tr></table>
   
   <pre class="literalblock">
-Returns an array containing the data of a, but with a new shape.
+Returns an array containing the same data with a new shape.
 
 Refer to `numpy.reshape` for full documentation.
 
@@ -4163,41 +4180,47 @@ Sort an array, in-place.
 
 Parameters
 ----------
-axis : integer
-    Axis to be sorted along. None indicates that the flattened array
-    should be used. Default is -1.
-kind : string
-    Sorting algorithm to use. Possible values are 'quicksort',
-    'mergesort', or 'heapsort'. Default is 'quicksort'.
-order : list type or None
-    When a is an array with fields defined, this argument specifies
+axis : int, optional
+    Axis along which to sort. Default is -1, which means sort along the
+    last axis.
+kind : {'quicksort', 'mergesort', 'heapsort'}, optional
+    Sorting algorithm. Default is 'quicksort'.
+order : list, optional
+    When `a` is an array with fields defined, this argument specifies
     which fields to compare first, second, etc.  Not all fields need be
     specified.
 
 See Also
 --------
-argsort : indirect sort
-lexsort : indirect stable sort on multiple keys
-searchsorted : find keys in sorted array
+numpy.sort : Return a sorted copy of an array.
+argsort : Indirect sort.
+lexsort : Indirect stable sort on multiple keys.
+searchsorted : Find elements in sorted array.
 
 Notes
 -----
-The various sorts are characterized by average speed, worst case
-performance, need for work space, and whether they are stable. A stable
-sort keeps items with the same key in the same relative order. The three
-available algorithms have the following properties:
+See ``sort`` for notes on the different sorting algorithms.
 
-=========== ======= ============= ============ =======
-   kind      speed   worst case    work space  stable
-=========== ======= ============= ============ =======
-'quicksort'    1     O(n^2)            0          no
-'mergesort'    2     O(n*log(n))      ~n/2        yes
-'heapsort'     3     O(n*log(n))       0          no
-=========== ======= ============= ============ =======
+Examples
+--------
+&gt;&gt;&gt; a = np.array([[1,4], [3,1]])
+&gt;&gt;&gt; a.sort(axis=1)
+&gt;&gt;&gt; a
+array([[1, 4],
+       [1, 3]])
+&gt;&gt;&gt; a.sort(axis=0)
+&gt;&gt;&gt; a
+array([[1, 3],
+       [1, 4]])
 
-All the sort algorithms make temporary copies of the data when the sort is
-not along the last axis. Consequently, sorts along the last axis are faster
-and use less space than sorts along other axis.
+Use the `order` keyword to specify a field to use when sorting a
+structured array:
+
+&gt;&gt;&gt; a = np.array([('a', 2), ('c', 1)], dtype=[('x', 'S1'), ('y', int)])
+&gt;&gt;&gt; a.sort(order='y')
+&gt;&gt;&gt; a
+array([('c', 1), ('a', 2)],
+      dtype=[('x', '|S1'), ('y', '&lt;i4')])
 
 </pre>
   <dl class="fields">
@@ -4375,7 +4398,7 @@ numpy.take : equivalent function
   </tr></table>
   
   <pre class="literalblock">
-Write the data to a file.
+Write array to a file as text or binary.
 
 Data is always written in 'C' order, independently of the order of `a`.
 The data produced by this method can be recovered by using the function
@@ -4420,19 +4443,23 @@ format : string
   </tr></table>
   
   <pre class="literalblock">
-Return the array as a list or nested lists.
+Return the array as a possibly nested list.
+
+Return a copy of the array data as a hierarchical Python list.
+Data items are converted to the nearest compatible Python type.
 
 Parameters
 ----------
-a : ndarray
-    Input array.
+none
 
 Returns
 -------
 y : list
-    Copy the data portion of the array to a hierarchical Python list and
-    return that list. Data items are converted to the nearest compatible
-    Python type.
+    The possibly nested list of array elements.
+
+Notes
+-----
+The array may be recreated, ``a = np.array(a.tolist())``.
 
 Examples
 --------
@@ -4440,6 +4467,8 @@ Examples
 &gt;&gt;&gt; a.tolist()
 [1, 2]
 &gt;&gt;&gt; a = np.array([[1, 2], [3, 4]])
+&gt;&gt;&gt; list(a)
+[array([1, 2]), array([3, 4])]
 &gt;&gt;&gt; a.tolist()
 [[1, 2], [3, 4]]
 
@@ -4709,6 +4738,64 @@ True
   </dl>
 </td></tr></table>
 </div>
+<a name="flags"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">flags</h3>
+  <pre class="literalblock">
+Information about the memory layout of the array.
+
+Attributes
+----------
+C_CONTIGUOUS (C)
+    The data is in a single, C-style contiguous segment.
+F_CONTIGUOUS (F)
+    The data is in a single, Fortran-style contiguous segment.
+OWNDATA (O)
+    The array owns the memory it uses or borrows it from another object.
+WRITEABLE (W)
+    The data area can be written to.
+ALIGNED (A)
+    The data and strides are aligned appropriately for the hardware.
+UPDATEIFCOPY (U)
+    This array is a copy of some other array. When this array is
+    deallocated, the base array will be updated with the contents of
+    this array.
+
+FNC
+    F_CONTIGUOUS and not C_CONTIGUOUS.
+FORC
+    F_CONTIGUOUS or C_CONTIGUOUS (one-segment test).
+BEHAVED (B)
+    ALIGNED and WRITEABLE.
+CARRAY (CA)
+    BEHAVED and C_CONTIGUOUS.
+FARRAY (FA)
+    BEHAVED and F_CONTIGUOUS and not C_CONTIGUOUS.
+
+Notes
+-----
+The `flags` object can be also accessed dictionary-like, and using
+lowercased attribute names. Short flag names are only supported in
+dictionary access.
+
+Only the UPDATEIFCOPY, WRITEABLE, and ALIGNED flags can be changed by
+the user, via assigning to ``flags['FLAGNAME']`` or `ndarray.setflags`.
+The array flags cannot be set arbitrarily:
+
+- UPDATEIFCOPY can only be set ``False``.
+- ALIGNED can only be set ``True`` if the data is truly aligned.
+- WRITEABLE can only be set ``True`` if the array owns its own memory
+  or the ultimate owner of the memory exposes a writeable buffer
+  interface or is a string.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="flat"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -4739,7 +4826,7 @@ Examples
 <tr><td>
   <h3 class="epydoc">imag</h3>
   <pre class="literalblock">
-Imaginary part of the array.
+The imaginary part of the array.
 
 Examples
 --------
@@ -4830,7 +4917,7 @@ Examples
 <tr><td>
   <h3 class="epydoc">real</h3>
   <pre class="literalblock">
-Real part of the array.
+The real part of the array.
 
 Examples
 --------
@@ -4952,7 +5039,7 @@ Examples
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Wed Jan 28 10:04:27 2009</a>
+    3.0.1 on Tue Feb 17 16:13:15 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
