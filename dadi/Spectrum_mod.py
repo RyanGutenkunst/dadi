@@ -312,6 +312,7 @@ class Spectrum(numpy.ma.masked_array):
             newfile = True
             fid = file(fid, 'r')
 
+        # Parse the commandline
         command = line = fid.readline()
         command_terms = line.split()
         
@@ -352,6 +353,12 @@ class Spectrum(numpy.ma.masked_array):
         if dimension > 3:
             bottom3 = bottom_l[3]
             top3 = top_l[3]
+        if dimension > 4:
+            bottom4 = bottom_l[4]
+            top4 = top_l[4]
+        if dimension > 5:
+            bottom5 = bottom_l[5]
+            top5 = top_l[5]
         
         data = numpy.zeros(fs_shape, numpy.int_)
         for ii in range(runs):
@@ -378,16 +385,29 @@ class Spectrum(numpy.ma.masked_array):
                     data[this_snp.count('1')] += 1
                 elif dimension == 2:
                     data[this_snp[bottom0:top0].count('1'), 
-                        this_snp[bottom1:top1].count('1')] += 1
+                         this_snp[bottom1:top1].count('1')] += 1
                 elif dimension == 3:
                     data[this_snp[bottom0:top0].count('1'), 
-                        this_snp[bottom1:top1].count('1'),
-                        this_snp[bottom2:top2].count('1')] += 1
+                         this_snp[bottom1:top1].count('1'),
+                         this_snp[bottom2:top2].count('1')] += 1
                 elif dimension == 4:
                     data[this_snp[bottom0:top0].count('1'), 
-                        this_snp[bottom1:top1].count('1'),
-                        this_snp[bottom2:top2].count('1'),
-                        this_snp[bottom3:top3].count('1')] += 1
+                         this_snp[bottom1:top1].count('1'),
+                         this_snp[bottom2:top2].count('1'),
+                         this_snp[bottom3:top3].count('1')] += 1
+                elif dimension == 5:
+                    data[this_snp[bottom0:top0].count('1'), 
+                         this_snp[bottom1:top1].count('1'),
+                         this_snp[bottom2:top2].count('1'),
+                         this_snp[bottom3:top3].count('1'),
+                         this_snp[bottom4:top4].count('1')] += 1
+                elif dimension == 6:
+                    data[this_snp[bottom0:top0].count('1'), 
+                         this_snp[bottom1:top1].count('1'),
+                         this_snp[bottom2:top2].count('1'),
+                         this_snp[bottom3:top3].count('1'),
+                         this_snp[bottom4:top4].count('1'),
+                         this_snp[bottom5:top5].count('1')] += 1
                 else:
                     # This is noticably slower, so we special case the cases
                     # above.
@@ -694,7 +714,7 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(resamp, mask_corners=mask_corners)
 
     @staticmethod
-    def from_data_dict(data_dict, pop_ids, projections,mask_corners=True):
+    def from_data_dict(data_dict, pop_ids, projections, mask_corners=True):
         """
         Spectrum from a dictionary of polymorphisms.
 
