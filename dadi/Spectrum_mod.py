@@ -432,6 +432,149 @@ class Spectrum(numpy.ma.masked_array):
         else:
             return fs, (command,seeds)
 
+    @staticmethod
+    def from_sfscode_file(fid, sites='all', average=True, mask_corners=True, 
+                          return_header=False):
+        """
+        Read frequency spectrum from file of sfs_code output.
+
+        fid: string with file name to read from or an open file object.
+        sites: If sites=='all', return the fs of all sites. If sites == 'syn',
+               use only synonymous mutations. If sites == 'nonsyn', use
+               only non-synonymous mutations.
+        average: If True, the returned fs is the average over the runs in the 
+                 file. If False, the returned fs is the sum.
+        mask_corners: If True, mask the 'absent in all samples' and 'fixed in
+                      all samples' entries.
+        return_header: If true, the return value is (fs, (command,seeds), where
+                       command and seeds are strings containing the ms
+                       commandline and the seeds used.
+        """
+        newfile = False
+        # Try to read from fid. If we can't, assume it's something that we can
+        # use to open a file.
+        if not hasattr(fid, 'read'):
+            newfile = True
+            fid = file(fid, 'r')
+
+        if sites == 'all':
+            only_nonsyn, only_syn = False, False
+        elif sites == 'syn':
+            only_nonsyn, only_syn = False, True
+        elif sites == 'nonsyn':
+            only_nonsyn, only_syn = True, False
+        else:
+            raise ValueError("'sites' argument must be one of ('all', 'syn', "
+                             "'nonsyn').")
+        
+        command = fid.readline()
+        command_terms = command.split()
+        
+        runs = int(command_terms[2])
+        num_pops = int(command_terms[1])
+        
+        # sfs_code default is 6 individuals, and I assume diploid pop
+        pop_samples = [12] *  num_pops
+        if '--sampSize' in command_terms or '-n' in command_terms:
+            try:
+                pop_flag = command_terms.index('--sampSize')
+                pop_flag = command_terms.index('-n')
+            except ValueError:
+                pass
+            pop_samples = [2*int(command_terms[pop_flag+ii])
+                           for ii in range(1, 1+num_pops)]
+        
+        pop_samples = numpy.asarray(pop_samples)
+        pop_digits = [str(i) for i in range(num_pops)]
+        pop_fixed_str = [',%s.-1' % i for i in range(num_pops)]
+        pop_count_str = [',%s.' % i for i in range(num_pops)]
+        
+        seeds = fid.readline()
+        line = fid.readline()
+        
+        data = numpy.zeros(numpy.asarray(pop_samples)+1, numpy.int_)
+        
+        # line = //iteration...
+        line = fid.readline()
+        for iter_ii in range(runs):
+            for ii in range(5):
+                line = fid.readline()
+        
+            # It is possible for a mutation to be listed several times in the
+            # output.  To accomodate this, I keep a dictionary of identities
+            # for those mutations, and hold off processing them until I've seen
+            # all mutations listed for the iteration.
+            mut_dict = {}
+            
+            # Loop until this iteration ends.
+            while not line.startswith('//') and line != '':
+                split_line = line.split(';')
+                if split_line[-1] == '\n':
+                    split_line = split_line[:-1]
+        
+                # Loop over mutations on this line.
+                for mut_ii, mutation in enumerate(split_line):
+                    counts_this_mut = numpy.zeros(num_pops, numpy.int_)
+        
+                    split_mut = mutation.split(',')
+        
+                    # Exclude synonymous mutations
+                    if only_nonsyn and split_mut[7] == '0':
+                        continue
+                    # Exclude nonsynonymous mutations
+                    if only_syn and split_mut[7] == '1':
+                        continue
+        
+                    ind_start = len(','.join(split_mut[:12]))
+                    by_individual = mutation[ind_start:]
+        
+                    mut_id = ','.join(split_mut[:4] + split_mut[5:11])
+        
+                    # Count mutations in each population
+                    for pop_ii,fixed_str,count_str\
+                            in zip(range(num_pops), pop_fixed_str, 
+                                   pop_count_str):
+                        if fixed_str in by_individual:
+                            counts_this_mut[pop_ii] = pop_samples[pop_ii]
+                        else:
+                            counts_this_mut[pop_ii] =\
+                                    by_individual.count(count_str)
+        
+                    # Initialize the list that will track the counts for this
+                    # mutation. Using setdefault means that it won't overwrite
+                    # if there's already a list stored there.
+                    mut_dict.setdefault(mut_id, [0]*num_pops)
+                    for ii in range(num_pops):
+                        if counts_this_mut[ii] > 0 and mut_dict[mut_id][ii] > 0:
+                            sys.stderr.write('Contradicting counts between '
+                                             'listings for mutation %s in '
+                                             'population %i.' 
+                                             % (mut_id, ii))
+                        mut_dict[mut_id][ii] = max(counts_this_mut[ii], 
+                                                   mut_dict[mut_id][ii])
+        
+                line = fid.readline()
+        
+            # Now apply all the mutations with fixations that we deffered.
+            for mut_id, counts in mut_dict.items():
+                if numpy.any(numpy.asarray(counts) > pop_samples):
+                    sys.stderr.write('counts_this_mut > pop_samples: %s > '
+                                     '%s\n%s\n' % (counts, pop_samples, mut_id))
+                    counts = numpy.minimum(counts, pop_samples)
+                data[tuple(counts)] += 1
+        
+        if newfile:
+            fid.close()
+        
+        fs = Spectrum(data, mask_corners=mask_corners)
+        if average:
+            fs /= runs
+
+        if not return_header:
+            return fs
+        else:
+            return fs, (command,seeds)
+
     def Fst(self):
         """
         Wright's Fst between the populations represented in the fs.
