@@ -940,8 +940,13 @@ class Spectrum(numpy.ma.masked_array):
             if len(snp_info['segregating']) != 2:
                 continue
             allele1, allele2 = snp_info['segregating']
-            ingroup_tri = snp_info['context']
-            outgroup_tri = snp_info['outgroup_context']
+            # Filter out SNPs where we either non-constant ingroup or outgroup
+            # context.
+            try:
+                ingroup_tri = snp_info['context']
+                outgroup_tri = snp_info['outgroup_context']
+            except KeyError:
+                continue
             if not outgroup_tri[1] == snp_info['outgroup_allele']:
                 raise ValueError('Outgroup context and allele are inconsistent '
                                  'for polymorphism: %s.' % snp)
