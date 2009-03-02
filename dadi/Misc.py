@@ -93,9 +93,9 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
                  all value less than upper_bound.
     """
     pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
-    if lower_bound:
+    if lower_bound is not None:
         pnew = numpy.maximum(pnew, 1.01*numpy.asarray(lower_bound))
-    if upper_bound:
+    if upper_bound is not None:
         pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
     return pnew
 
