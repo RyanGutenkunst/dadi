@@ -1,6 +1,10 @@
 """
 Contains Spectrum object, which represents frequency spectra.
 """
+import logging
+logging.basicConfig()
+logger = logging.getLogger('Spectrum_mod')
+
 import operator
 import os
 
