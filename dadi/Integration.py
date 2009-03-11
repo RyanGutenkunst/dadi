@@ -96,7 +96,11 @@ def _compute_dt(dx, nu, ms, gamma, h):
     maxVM = max(0.25/nu, sum(ms),\
                 gamma * 2 * max(numpy.abs(h + (1-2*h)*0.5) * 0.5*(1-0.5),
                                 numpy.abs(h + (1-2*h)*0.25) * 0.25*(1-0.25)))
-    return timescale_factor / maxVM
+    dt = timescale_factor / maxVM
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma=%f, h=%f.' % (nu, str(ms), gamma, h))
+    return dt
 
 def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     """
