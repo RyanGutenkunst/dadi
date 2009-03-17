@@ -133,3 +133,19 @@ def IM((s, nu1, nu2, T, m12, m21), (n1,n2), pts):
 
     sfs = Spectrum.from_phi(phi, (n1,n2), (xx,xx))
     return sfs
+
+def IM_mscore((s, nu1, nu2, T, m12, m21)):
+    """
+    ms core command for IM.
+    """
+    alpha1 = numpy.log(nu1/s)/T
+    alpha2 = numpy.log(nu2/(1-s))/T
+    command = "-n 1 %(nu1)f -n 2 %(nu2)f "\
+            "-eg 0 1 %(alpha1)f -eg 0 2 %(alpha2)f "\
+            "-ma x %(m12)f %(m21)f x "\
+            "-ej %(T)f 2 1 -en %(T)f 1 1"
+
+    sub_dict = {'nu1':nu1, 'nu2':nu2, 'alpha1':2*alpha1, 'alpha2':2*alpha2,
+                'm12':2*m12, 'm21':2*m21, 'T': T/2}
+
+    return command % sub_dict
