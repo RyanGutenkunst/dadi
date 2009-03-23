@@ -74,7 +74,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     upper_bound: Upper bound on parameter values. If not None, must be of same
                  length as p0.
     fold: If True, base inference on the folded spectrum.
-    verbose: If True, print optimization status every <verbose> steps.
+    verbose: If > 0, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
