@@ -200,15 +200,18 @@ def make_extrap_func(func):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
-    func: A function whose last argument is the number of default_grid
-          points to use in calculation and that returns a single scalar or 
-          array.
+    func: A function whose last argument with no default value is the number of
+          default_grid points to use in calculation and that returns a single
+          scalar or array.
+          The function can take further keyword arguments. Note that those
+          arguments must *always* be passed by keyword into the extrapolated
+          function.
 
     Returns a new function whose last argument is a list of numbers of grid
     points and that returns a result extrapolated to infinitely many grid
     points.
     """
-    def extrap_func(*args):
+    def extrap_func(*args, **kwargs):
         other_args, pts_l = args[:-1], args[-1]
 
         x_l, result_l = [],[]
@@ -219,7 +222,7 @@ def make_extrap_func(func):
             x_l.append(x)
             # Some python vodoo here to call the original function with the
             # proper arguments.
-            result = func(*(other_args + (pts,)))
+            result = func(*(other_args + (pts,)), **kwargs)
             result_l.append(result)
 
         # Extrapolate
@@ -258,11 +261,11 @@ def make_extrap_log_func(func):
     points and that returns a result extrapolated to infinitely many grid
     points.
     """
-    def logfunc(*args):
-        return numpy.log(func(*args))
+    def logfunc(*args, **kwargs):
+        return numpy.log(func(*args, **kwargs))
     exlog_func = make_extrap_func(logfunc)
-    def ex_func(*args):
-        return numpy.exp(exlog_func(*args))
+    def ex_func(*args, **kwargs):
+        return numpy.exp(exlog_func(*args, **kwargs))
     return ex_func
 
 _projection_cache = {}
