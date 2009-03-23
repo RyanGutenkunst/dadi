@@ -10,8 +10,10 @@ dadi.Demographics1D.two_epoch	dadi.Demographics1D-module.html#two_epoch
 dadi.Demographics2D	dadi.Demographics2D-module.html
 dadi.Demographics2D.bottlegrowth	dadi.Demographics2D-module.html#bottlegrowth
 dadi.Demographics2D.snm	dadi.Demographics2D-module.html#snm
+dadi.Demographics2D.IM_mscore	dadi.Demographics2D-module.html#IM_mscore
 dadi.Demographics2D.bottlegrowth_split	dadi.Demographics2D-module.html#bottlegrowth_split
 dadi.Demographics2D.split_mig	dadi.Demographics2D-module.html#split_mig
+dadi.Demographics2D.IM	dadi.Demographics2D-module.html#IM
 dadi.Demographics2D.bottlegrowth_split_mig	dadi.Demographics2D-module.html#bottlegrowth_split_mig
 dadi.Demographics2D.split_mig_mscore	dadi.Demographics2D-module.html#split_mig_mscore
 dadi.Hessian	dadi.Hessian-module.html
@@ -124,6 +126,7 @@ dadi.RunInParallel.make_parallel_gradient_func	dadi.RunInParallel-module.html#ma
 dadi.Spectrum_mod	dadi.Spectrum_mod-module.html
 dadi.Spectrum_mod._cached_projection	dadi.Numerics-module.html#_cached_projection
 dadi.Spectrum_mod._lncomb	dadi.Numerics-module.html#_lncomb
+dadi.Spectrum_mod.logger	dadi.Spectrum_mod-module.html#logger
 dadi.Spectrum_mod.reverse_array	dadi.Numerics-module.html#reverse_array
 dadi.integration_c	dadi.integration_c-module.html
 dadi.integration_c.implicit_3Dz	dadi.integration_c-module.html#implicit_3Dz
@@ -159,6 +162,7 @@ numpy.ndarray.__ior__	numpy.ndarray-class.html#__ior__
 numpy.ndarray.__rfloordiv__	numpy.ndarray-class.html#__rfloordiv__
 dadi.Spectrum_mod.Spectrum.Tajima_D	dadi.Spectrum_mod.Spectrum-class.html#Tajima_D
 numpy.ndarray.dtype	numpy.ndarray-class.html#dtype
+numpy.ndarray.__eq__	numpy.ndarray-class.html#__eq__
 dadi.Spectrum_mod.Spectrum._total_per_entry	dadi.Spectrum_mod.Spectrum-class.html#_total_per_entry
 numpy.ndarray.setfield	numpy.ndarray-class.html#setfield
 dadi.Spectrum_mod.Spectrum._counts_per_entry	dadi.Spectrum_mod.Spectrum-class.html#_counts_per_entry
@@ -219,7 +223,7 @@ numpy.ndarray.__iter__	numpy.ndarray-class.html#__iter__
 dadi.Spectrum_mod.Spectrum._from_phi_1D	dadi.Spectrum_mod.Spectrum-class.html#_from_phi_1D
 numpy.ndarray.__lshift__	numpy.ndarray-class.html#__lshift__
 dadi.Spectrum_mod.Spectrum.Npop	dadi.Spectrum_mod.Spectrum-class.html#Npop
-numpy.ndarray.__eq__	numpy.ndarray-class.html#__eq__
+dadi.Spectrum_mod.Spectrum.from_sfscode_file	dadi.Spectrum_mod.Spectrum-class.html#from_sfscode_file
 dadi.Spectrum_mod.Spectrum.pi	dadi.Spectrum_mod.Spectrum-class.html#pi
 dadi.Spectrum_mod.Spectrum.fold	dadi.Spectrum_mod.Spectrum-class.html#fold
 numpy.ndarray.newbyteorder	numpy.ndarray-class.html#newbyteorder
