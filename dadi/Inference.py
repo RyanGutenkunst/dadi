@@ -300,3 +300,55 @@ def optimize_log_fmin(p0, data, model_func, pts,
         return numpy.exp(xopt)
     else:
         return numpy.exp(xopt), fopt, iter, funcalls, warnflag 
+
+def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+             fold=False, verbose=0, flush_delay=0.5, epsilon=1e-3, 
+             gtol=1e-5, multinom=True, maxiter=None, full_output=False):
+    """
+    Optimize params to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in params, it cannot explore values of params < 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    fold: If True, base inference on the folded spectrum.
+    verbose: If > 0, print optimization status every <verbose> steps.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    """
+    import scipy.optimize
+
+    args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
+            multinom, flush_delay)
+
+    outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
+                                       epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
