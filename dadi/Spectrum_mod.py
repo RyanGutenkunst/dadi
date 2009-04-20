@@ -296,7 +296,8 @@ class Spectrum(numpy.ma.masked_array):
         return samp
 
     @staticmethod
-    def from_ms_file(fid, average=True, mask_corners=True, return_header=False):
+    def from_ms_file(fid, average=True, mask_corners=True, return_header=False,
+                     pop_assignments=None):
         """
         Read frequency spectrum from file of ms output.
 
@@ -305,9 +306,15 @@ class Spectrum(numpy.ma.masked_array):
                  file. If False, the returned fs is the sum.
         mask_corners: If True, mask the 'absent in all samples' and 'fixed in
                       all samples' entries.
-        return_header: If true, the return value is (fs, (command,seeds), where
+        return_header: If True, the return value is (fs, (command,seeds), where
                        command and seeds are strings containing the ms
                        commandline and the seeds used.
+        pop_assignments: If None, the assignments of samples to populations is
+                         done automatically, using the assignment in the ms
+                         command line. To manually assign populations, pass a
+                         list of the from [6,8]. This example places
+                         the first 6 samples into population 1, and the next 8
+                         into population 2.
         """
         newfile = False
         # Try to read from fid. If we can't, assume it's something that we can
@@ -334,6 +341,10 @@ class Spectrum(numpy.ma.masked_array):
             raise ValueError('Unrecognized command string: %s.' % command)
         
         total_samples = numpy.sum(pop_samples)
+        if pop_assignments:
+            num_pops = len(pop_assignments)
+            pop_samples = pop_assignments
+
         sample_indices = numpy.cumsum([0] + pop_samples)
         bottom_l = sample_indices[:-1]
         top_l = sample_indices[1:]
