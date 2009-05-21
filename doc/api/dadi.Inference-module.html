@@ -366,6 +366,36 @@ Comparison and optimization of model spectra to data.
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Inference-module.html#optimize" class="summary-sig-name">optimize</a>(<span class="summary-sig-arg">p0</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">model_func</span>,
+        <span class="summary-sig-arg">pts</span>,
+        <span class="summary-sig-arg">lower_bound</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">upper_bound</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">fold</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">epsilon</span>=<span class="summary-sig-default">0.001</span>,
+        <span class="summary-sig-arg">gtol</span>=<span class="summary-sig-default">1e-05</span>,
+        <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Optimize params to fit model to data using the BFGS method.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 </table>
 <!-- ==================== VARIABLES ==================== -->
 <a name="section-Variables"></a>
@@ -793,6 +823,70 @@ full_output: If True, return full outputs as in described in
   </dl>
 </td></tr></table>
 </div>
+<a name="optimize"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">optimize</span>(<span class="sig-arg">p0</span>,
+        <span class="sig-arg">data</span>,
+        <span class="sig-arg">model_func</span>,
+        <span class="sig-arg">pts</span>,
+        <span class="sig-arg">lower_bound</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">upper_bound</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">fold</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">verbose</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">epsilon</span>=<span class="sig-default">0.001</span>,
+        <span class="sig-arg">gtol</span>=<span class="sig-default">1e-05</span>,
+        <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Optimize params to fit model to data using the BFGS method.
+
+This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum.
+
+Because this works in params, it cannot explore values of params &lt; 0.
+It should also perform better when parameters range over scales.
+
+p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+                (params, (n1,n2...), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+             length as p0.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+             length as p0.
+fold: If True, base inference on the folded spectrum.
+verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+             minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+gtol: Convergence criterion for optimization. For more info, 
+      see help(scipy.optimize.fmin_bfgs)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+          data at each step. If False, assume theta is a parameter and do
+          no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in 
+             help(scipy.optimize.fmin_bfgs)
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -823,7 +917,7 @@ full_output: If True, return full outputs as in described in
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Mar 23 13:23:48 2009</a>
+    3.0.1 on Thu May 21 14:31:03 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

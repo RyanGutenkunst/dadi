@@ -501,6 +501,7 @@ categories.
       <code>__array_wrap__</code>,
       <code>__deepcopy__</code>,
       <code>__div__</code>,
+      <code>__eq__</code>,
       <code>__float__</code>,
       <code>__floordiv__</code>,
       <code>__getitem__</code>,
@@ -513,6 +514,7 @@ categories.
       <code>__ipow__</code>,
       <code>__isub__</code>,
       <code>__mul__</code>,
+      <code>__ne__</code>,
       <code>__pow__</code>,
       <code>__radd__</code>,
       <code>__reduce__</code>,
@@ -573,6 +575,7 @@ categories.
       <code>sum</code>,
       <code>swapaxes</code>,
       <code>take</code>,
+      <code>toflex</code>,
       <code>tolist</code>,
       <code>torecords</code>,
       <code>tostring</code>,
@@ -586,10 +589,10 @@ categories.
       <code>_get_data</code>,
       <code>_get_flat</code>,
       <code>_get_mask</code>,
-      <code>_getrecordmask</code>,
+      <code>_get_recordmask</code>,
       <code>_set_flat</code>,
       <code>_set_mask</code>,
-      <code>_setrecordmask</code>,
+      <code>_set_recordmask</code>,
       <code>_update_from</code>
       </p></div>
     <p class="indent-wrapped-lines"><b>Inherited from <code><a href="numpy.ndarray-class.html">numpy.ndarray</a></code></b>:
@@ -601,7 +604,6 @@ categories.
       <code><a href="numpy.ndarray-class.html#__delitem__">__delitem__</a></code>,
       <code><a href="numpy.ndarray-class.html#__delslice__">__delslice__</a></code>,
       <code><a href="numpy.ndarray-class.html#__divmod__">__divmod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__eq__">__eq__</a></code>,
       <code><a href="numpy.ndarray-class.html#__ge__">__ge__</a></code>,
       <code><a href="numpy.ndarray-class.html#__gt__">__gt__</a></code>,
       <code><a href="numpy.ndarray-class.html#__hex__">__hex__</a></code>,
@@ -622,7 +624,6 @@ categories.
       <code><a href="numpy.ndarray-class.html#__lshift__">__lshift__</a></code>,
       <code><a href="numpy.ndarray-class.html#__lt__">__lt__</a></code>,
       <code><a href="numpy.ndarray-class.html#__mod__">__mod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__ne__">__ne__</a></code>,
       <code><a href="numpy.ndarray-class.html#__neg__">__neg__</a></code>,
       <code><a href="numpy.ndarray-class.html#__nonzero__">__nonzero__</a></code>,
       <code><a href="numpy.ndarray-class.html#__oct__">__oct__</a></code>,
@@ -734,7 +735,8 @@ a new object with type S, a subtype of T
           <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#from_ms_file" class="summary-sig-name">from_ms_file</a>(<span class="summary-sig-arg">fid</span>,
         <span class="summary-sig-arg">average</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">pop_assignments</span>=<span class="summary-sig-default">None</span>)</span><br />
       Read frequency spectrum from file of ms output.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_ms_file">source&nbsp;code</a></span>
@@ -981,13 +983,16 @@ misidentification.</td>
     <td colspan="2" class="summary">
     <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b>:
       <code>T</code>,
+      <code>baseclass</code>,
       <code>data</code>,
       <code>fill_value</code>,
       <code>flat</code>,
+      <code>hardmask</code>,
       <code>imag</code>,
       <code>mask</code>,
       <code>real</code>,
-      <code>recordmask</code>
+      <code>recordmask</code>,
+      <code>sharedmask</code>
       </p>
     <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b> (private):
       <code>_data</code>
@@ -1337,7 +1342,8 @@ Note: Entries where the current fs is masked or 0 will be masked in the
   <h3 class="epydoc"><span class="sig"><span class="sig-name">from_ms_file</span>(<span class="sig-arg">fid</span>,
         <span class="sig-arg">average</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">pop_assignments</span>=<span class="sig-default">None</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -1354,9 +1360,15 @@ average: If True, the returned fs is the average over the runs in the ms
          file. If False, the returned fs is the sum.
 mask_corners: If True, mask the 'absent in all samples' and 'fixed in
               all samples' entries.
-return_header: If true, the return value is (fs, (command,seeds), where
+return_header: If True, the return value is (fs, (command,seeds), where
                command and seeds are strings containing the ms
                commandline and the seeds used.
+pop_assignments: If None, the assignments of samples to populations is
+                 done automatically, using the assignment in the ms
+                 command line. To manually assign populations, pass a
+                 list of the from [6,8]. This example places
+                 the first 6 samples into population 1, and the next 8
+                 into population 2.
 
 </pre>
   <dl class="fields">
@@ -1893,7 +1905,7 @@ Most commonly this is because of missing or non-constant context.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Mar 23 13:23:48 2009</a>
+    3.0.1 on Thu May 21 14:31:03 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

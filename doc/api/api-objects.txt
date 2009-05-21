@@ -7,14 +7,17 @@ dadi.Demographics1D.bottlegrowth	dadi.Demographics1D-module.html#bottlegrowth
 dadi.Demographics1D.snm	dadi.Demographics1D-module.html#snm
 dadi.Demographics1D.growth	dadi.Demographics1D-module.html#growth
 dadi.Demographics1D.two_epoch	dadi.Demographics1D-module.html#two_epoch
+dadi.Demographics1D.three_epoch	dadi.Demographics1D-module.html#three_epoch
 dadi.Demographics2D	dadi.Demographics2D-module.html
-dadi.Demographics2D.bottlegrowth	dadi.Demographics2D-module.html#bottlegrowth
 dadi.Demographics2D.snm	dadi.Demographics2D-module.html#snm
+dadi.Demographics2D.bottlegrowth	dadi.Demographics2D-module.html#bottlegrowth
 dadi.Demographics2D.IM_mscore	dadi.Demographics2D-module.html#IM_mscore
 dadi.Demographics2D.bottlegrowth_split	dadi.Demographics2D-module.html#bottlegrowth_split
-dadi.Demographics2D.split_mig	dadi.Demographics2D-module.html#split_mig
 dadi.Demographics2D.IM	dadi.Demographics2D-module.html#IM
+dadi.Demographics2D.split_mig	dadi.Demographics2D-module.html#split_mig
+dadi.Demographics2D.IM_pre	dadi.Demographics2D-module.html#IM_pre
 dadi.Demographics2D.bottlegrowth_split_mig	dadi.Demographics2D-module.html#bottlegrowth_split_mig
+dadi.Demographics2D.IM_pre_mscore	dadi.Demographics2D-module.html#IM_pre_mscore
 dadi.Demographics2D.split_mig_mscore	dadi.Demographics2D-module.html#split_mig_mscore
 dadi.Hessian	dadi.Hessian-module.html
 dadi.Hessian.hessian_elem	dadi.Hessian-module.html#hessian_elem
@@ -31,6 +34,7 @@ dadi.Inference.minus_ll	dadi.Inference-module.html#minus_ll
 dadi.Inference.ll_multinom_per_bin	dadi.Inference-module.html#ll_multinom_per_bin
 dadi.Inference.optimal_sfs_scaling	dadi.Inference-module.html#optimal_sfs_scaling
 dadi.Inference.optimize_log_fmin	dadi.Inference-module.html#optimize_log_fmin
+dadi.Inference.optimize	dadi.Inference-module.html#optimize
 dadi.Inference._counter	dadi.Inference-module.html#_counter
 dadi.Inference._out_of_bounds_val	dadi.Inference-module.html#_out_of_bounds_val
 dadi.Inference.linear_Poisson_residual	dadi.Inference-module.html#linear_Poisson_residual
@@ -162,7 +166,6 @@ numpy.ndarray.__ior__	numpy.ndarray-class.html#__ior__
 numpy.ndarray.__rfloordiv__	numpy.ndarray-class.html#__rfloordiv__
 dadi.Spectrum_mod.Spectrum.Tajima_D	dadi.Spectrum_mod.Spectrum-class.html#Tajima_D
 numpy.ndarray.dtype	numpy.ndarray-class.html#dtype
-numpy.ndarray.__eq__	numpy.ndarray-class.html#__eq__
 dadi.Spectrum_mod.Spectrum._total_per_entry	dadi.Spectrum_mod.Spectrum-class.html#_total_per_entry
 numpy.ndarray.setfield	numpy.ndarray-class.html#setfield
 dadi.Spectrum_mod.Spectrum._counts_per_entry	dadi.Spectrum_mod.Spectrum-class.html#_counts_per_entry
@@ -191,7 +194,6 @@ numpy.ndarray.__rand__	numpy.ndarray-class.html#__rand__
 numpy.ndarray.__iand__	numpy.ndarray-class.html#__iand__
 numpy.ndarray.__contains__	numpy.ndarray-class.html#__contains__
 dadi.Spectrum_mod.Spectrum.from_data_dict	dadi.Spectrum_mod.Spectrum-class.html#from_data_dict
-numpy.ndarray.__ne__	numpy.ndarray-class.html#__ne__
 numpy.ndarray.__ifloordiv__	numpy.ndarray-class.html#__ifloordiv__
 numpy.ndarray.strides	numpy.ndarray-class.html#strides
 dadi.Spectrum_mod.Spectrum.S	dadi.Spectrum_mod.Spectrum-class.html#S

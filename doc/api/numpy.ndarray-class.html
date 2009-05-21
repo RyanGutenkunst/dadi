@@ -114,6 +114,8 @@ itemsize : int
 nbytes : int
     The total number of bytes required to store the array data,
     i.e., ``itemsize * size``.
+ndim : int
+    The number of dimensions that the array has.
 shape : tuple of ints
     Shape of the array.
 strides : tuple of ints
@@ -1935,7 +1937,7 @@ a new object with type S, a subtype of T
         <tr>
           <td><span class="summary-sig"><a href="numpy.ndarray-class.html#flatten" class="summary-sig-name">flatten</a>(<span class="summary-sig-arg">a</span>,
         <span class="summary-sig-arg">order</span>=<span class="summary-sig-default">'C'</span>)</span><br />
-      Collapse an array into one dimension.</td>
+      Return a copy of the array collapsed into one dimension.</td>
           <td align="right" valign="top">
             
             
@@ -2062,9 +2064,9 @@ it.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="newbyteorder"></a><span class="summary-sig-name">newbyteorder</span>(<span class="summary-sig-arg">a</span>,
-        <span class="summary-sig-arg">byteorder</span>)</span><br />
-      Equivalent to a.view(a.dtype.newbytorder(byteorder))</td>
+          <td><span class="summary-sig"><a href="numpy.ndarray-class.html#newbyteorder" class="summary-sig-name">newbyteorder</a>(<span class="summary-sig-arg">arr</span>,
+        <span class="summary-sig-arg">new_order</span>=<span class="summary-sig-default">'S'</span>)</span><br />
+      Return the array with the same data viewed with a different byte order.</td>
           <td align="right" valign="top">
             
             
@@ -2674,7 +2676,7 @@ None
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="numpy.ndarray-class.html#flat" class="summary-name">flat</a><br />
-      A 1-d flat iterator.
+      A 1-D flat iterator over the array.
     </td>
   </tr>
 <tr>
@@ -3652,7 +3654,7 @@ array([ 1.,  1.])
   </tr></table>
   
   <pre class="literalblock">
-Collapse an array into one dimension.
+Return a copy of the array collapsed into one dimension.
 
 Parameters
 ----------
@@ -3664,6 +3666,11 @@ Returns
 -------
 y : ndarray
     A copy of the input array, flattened to one dimension.
+
+See Also
+--------
+ravel : Return a flattened array.
+flat : A 1-D flat iterator over the array.
 
 Examples
 --------
@@ -3818,6 +3825,62 @@ numpy.amin : equivalent function
   </dl>
 </td></tr></table>
 </div>
+<a name="newbyteorder"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">newbyteorder</span>(<span class="sig-arg">arr</span>,
+        <span class="sig-arg">new_order</span>=<span class="sig-default">'S'</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Return the array with the same data viewed with a different byte order.
+
+Equivalent to::
+
+    arr.view(arr.dtype.newbytorder(new_order))
+
+Changes are also made in all fields and sub-arrays of the array data
+type.
+
+
+
+Parameters
+----------
+new_order : string, optional
+    Byte order to force; a value from the byte order specifications
+    above. `new_order` codes can be any of::
+
+     * 'S' - swap dtype from current to opposite endian
+     * {'&lt;', 'L'} - little endian
+     * {'&gt;', 'B'} - big endian
+     * {'=', 'N'} - native order
+     * {'|', 'I'} - ignore (no change to byte order)
+
+    The default value ('S') results in swapping the current
+    byte order. The code does a case-insensitive check on the first
+    letter of `new_order` for the alternatives above.  For example,
+    any of 'B' or 'b' or 'biggish' are valid to specify big-endian.
+
+
+Returns
+-------
+new_arr : array
+    New array object with the dtype reflecting given change to the
+    byte order.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="nonzero"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -3961,6 +4024,8 @@ Refer to `numpy.ravel` for full documentation.
 See Also
 --------
 numpy.ravel : equivalent function
+
+ndarray.flat : a flat iterator on the array.
 
 </pre>
   <dl class="fields">
@@ -4445,7 +4510,7 @@ format : string
   <pre class="literalblock">
 Return the array as a possibly nested list.
 
-Return a copy of the array data as a hierarchical Python list.
+Return a copy of the array data as a (nested) Python list.
 Data items are converted to the nearest compatible Python type.
 
 Parameters
@@ -4559,6 +4624,11 @@ Returns a view of 'a' with axes transposed. If no axes are given,
 or None is passed, switches the order of the axes. For a 2-d
 array, this is the usual matrix transpose. If axes are given,
 they describe how the axes are permuted.
+
+See Also
+--------
+ndarray.T : array property returning the array transposed
+
 
 Examples
 --------
@@ -4803,16 +4873,32 @@ The array flags cannot be set arbitrarily:
 <tr><td>
   <h3 class="epydoc">flat</h3>
   <pre class="literalblock">
-A 1-d flat iterator.
+A 1-D flat iterator over the array.
+
+This is a `flatiter` instance, which acts similarly to a Python iterator.
+
+See Also
+--------
+flatten : Return a copy of the array collapsed into one dimension.
+flatiter
 
 Examples
 --------
-&gt;&gt;&gt; x = np.arange(3*4*5)
-&gt;&gt;&gt; x.shape = (3,4,5)
-&gt;&gt;&gt; x.flat[19]
-19
-&gt;&gt;&gt; x.T.flat[19]
-31
+&gt;&gt;&gt; x = np.arange(1, 7).reshape(2, 3)
+&gt;&gt;&gt; x
+array([[1, 2, 3],
+       [4, 5, 6]])
+&gt;&gt;&gt; x.flat[3]
+4
+&gt;&gt;&gt; x.T
+array([[1, 4],
+       [2, 5],
+       [3, 6]])
+&gt;&gt;&gt; x.T.flat[3]
+5
+
+&gt;&gt;&gt; type(x.flat)
+&lt;type 'numpy.flatiter'&gt;
 
 </pre>
   <dl class="fields">
@@ -4927,6 +5013,10 @@ array([ 1.        ,  0.70710678])
 &gt;&gt;&gt; x.real.dtype
 dtype('float64')
 
+See Also
+--------
+numpy.real : equivalent function
+
 </pre>
   <dl class="fields">
   </dl>
@@ -5039,7 +5129,7 @@ Examples
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Mar 23 13:23:48 2009</a>
+    3.0.1 on Thu May 21 14:31:03 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
