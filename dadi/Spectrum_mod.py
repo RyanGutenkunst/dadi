@@ -259,7 +259,7 @@ class Spectrum(numpy.ma.masked_array):
         # out, reverse the array along all axes, and add them back to the
         # original fs.
         reversed = reverse_array(numpy.where(where_folded_out, self, 0))
-        folded = self + reversed
+        folded = numpy.ma.masked_array(self.data + reversed)
         folded.data[where_folded_out] = 0
     
         # Deal with those entries where assignment of the minor allele is
