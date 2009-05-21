@@ -94,8 +94,8 @@ def _compute_dt(dx, nu, ms, gamma, h):
     # shown that extrapolation is much more reliable when the same timesteps
     # are used in evaluations at different grid sizes.
     maxVM = max(0.25/nu, sum(ms),\
-                gamma * 2 * max(numpy.abs(h + (1-2*h)*0.5) * 0.5*(1-0.5),
-                                numpy.abs(h + (1-2*h)*0.25) * 0.25*(1-0.25)))
+                abs(gamma) * 2*max(numpy.abs(h + (1-2*h)*0.5) * 0.5*(1-0.5),
+                                   numpy.abs(h + (1-2*h)*0.25) * 0.25*(1-0.25)))
     dt = timescale_factor / maxVM
     if dt == 0:
         raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
