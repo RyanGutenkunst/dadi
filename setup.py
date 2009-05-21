@@ -26,10 +26,10 @@ int_c = core.Extension(name = 'dadi.integration_c',
 for arg in os.sys.argv:    
     if arg.count('sdist') or arg.count('bdist'):
         os.system("svn up")
-        os.system("svnversion > dadi/svnversion")
+        os.system("svn info > dadi/svnversion")
 
 core.setup(name='dadi',
-           version='1.2.2',
+           version='1.2.3',
            author='Ryan Gutenkunst',
            author_email='rng7@cornell.edu',
            url='http://dadi.googlecode.com',
