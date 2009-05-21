@@ -13,7 +13,7 @@ def snm(notused, (n1,), pts):
     n1: Number of samples in resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
 
     sfs = Spectrum.from_phi(phi, (n1,), (xx,))
@@ -29,7 +29,7 @@ def two_epoch((nu, T), (n1,), pts):
     n1: Number of samples in resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
     
     phi = Integration.one_pop(phi, xx, T, nu)
@@ -47,7 +47,7 @@ def growth((nu, T), (n1,), pts):
     n1: Number of samples in resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
 
     nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
@@ -68,7 +68,7 @@ def bottlegrowth((nuB, nuF, T), (n1,), pts):
     n1: Number of samples in resulting SFS
     pts: Number of grid points to use in integration.
     """
-    xx = Numerics.other_grid(pts)
+    xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
 
     nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
