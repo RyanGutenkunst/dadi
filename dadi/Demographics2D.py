@@ -150,3 +150,56 @@ def IM_mscore((s, nu1, nu2, T, m12, m21)):
                 'm12':2*m12, 'm21':2*m21, 'T': T/2}
 
     return command % sub_dict
+
+def IM_pre((nuPre, TPre, s, nu1, nu2, T, m12, m21), (n1,n2), pts):
+    """
+    Isolation-with-migration model with exponential pop growth and a size change
+    prior to split.
+
+    nuPre: Size after first size change
+    TPre: Time before split of first size change.
+    s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
+    nu1: Final size of pop 1.
+    nu2: Final size of pop 2.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+    n1,n2: Shape of resulting SFS
+    pts: Number of grid points to use in integration.
+    """
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    if TPre > 0:
+        phi = Integration.one_pop(phi, xx, TPre, nu=nuPre)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    if T > 0:
+        nu1_0 = nuPre*s
+        nu2_0 = nuPre*(1-s)
+        nu1_func = lambda t: nu1_0 * (nu1/nu1_0)**(t/T)
+        nu2_func = lambda t: nu2_0 * (nu2/nu2_0)**(t/T)
+        phi = Integration.two_pops(phi, xx, T, nu1_func, nu2_func,
+                                   m12=m12, m21=m21)
+
+    sfs = Spectrum.from_phi(phi, (n1,n2), (xx,xx))
+    return sfs
+
+def IM_pre_mscore((nuPre, TPre, s, nu1, nu2, T, m12, m21)):
+    """
+    ms core command for IM_pre.
+    """
+    nu1_0 = nuPre*s
+    nu2_0 = nuPre*(1-s)
+    alpha1 = numpy.log(nu1/nu1_0)/T
+    alpha2 = numpy.log(nu2/nu2_0)/T
+    command = "-n 1 %(nu1)f -n 2 %(nu2)f "\
+            "-eg 0 1 %(alpha1)f -eg 0 2 %(alpha2)f "\
+            "-ma x %(m12)f %(m21)f x "\
+            "-ej %(T)f 2 1 -en %(T)f 1 %(nuP)f "\
+            "-en %(TP)f 1 1"
+
+    sub_dict = {'nu1':nu1, 'nu2':nu2, 'alpha1':2*alpha1, 'alpha2':2*alpha2,
+                'm12':2*m12, 'm21':2*m21, 'T': T/2, 'nuP':nuPre, 'TP':TPre/2}
+
+    return command % sub_dict
