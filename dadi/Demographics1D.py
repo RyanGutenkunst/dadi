@@ -76,3 +76,17 @@ def bottlegrowth((nuB, nuF, T), (n1,), pts):
 
     sfs = Spectrum.from_phi(phi, (n1,), (xx,))
     return sfs
+
+def three_epoch((nuB, nuF, TB, TF), (n1,), pts):
+    """
+    n1: Number of samples in resulting SFS
+    pts: Number of grid points to use in integration.
+    """
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB)
+    phi = Integration.one_pop(phi, xx, TF, nuF)
+
+    sfs = Spectrum.from_phi(phi, (n1,), (xx,))
+    return sfs
