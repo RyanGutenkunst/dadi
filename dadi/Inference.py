@@ -131,6 +131,9 @@ def ll_per_bin(model, data):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
     """
+    model = numpy.ma.asarray(model)
+    data = numpy.ma.asarray(data)
+
     if numpy.any(logical_and(model < 0, logical_not(data.mask))):
         logger.warn('Model is < 0 where data is not masked.')
     # If the data is 0, it's okay for the model to be 0. In that case the ll
@@ -189,6 +192,8 @@ def linear_Poisson_residual(model, data, mask=None):
     residuals are normally distributed. (If the mean is small, the Anscombe
     residuals are better.)
     """
+    model = numpy.ma.asarray(model)
+    data = numpy.ma.asarray(data)
     resid = (model - data)/numpy.ma.sqrt(model)
     if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
@@ -213,6 +218,8 @@ def Anscombe_Poisson_residual(model, data, mask=None):
     Note that I tried implementing the "adjusted deviance" residuals, but they
     always looked very biased for the cases where the data was 0.
     """
+    model = numpy.ma.asarray(model)
+    data = numpy.ma.asarray(data)
     # Because my data have often been projected downward or averaged over many
     # iterations, it appears better to apply the same transformation to the data
     # and the model.
