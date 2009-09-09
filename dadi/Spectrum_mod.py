@@ -903,7 +903,8 @@ class Spectrum(numpy.ma.masked_array):
                 continue
 
             allele1,allele2 = snp_info['segregating']
-            if 'outgroup_allele' in snp_info:
+            if 'outgroup_allele' in snp_info\
+               and snp_info['outgroup_allele'] != '-':
                 outgroup_allele = snp_info['outgroup_allele']
             else:
                 # If we don't have an aligned base, we can choose which is
