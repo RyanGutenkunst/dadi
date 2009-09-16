@@ -91,7 +91,8 @@ mscommand = dadi.Misc.ms_command(1., ns, mscore, int(1e6))
 # informative, however, to compare the two methods.
 
 ## These are the optimal parameters when the spectrum is folded. They can be
-## found simply by passing fold=True to the above call to optimize_log.
+## found simply by passing data.fold() and folded_data=True to the above call
+## to optimize_log.
 #pfold =  array([1.907,  0.073,  1.830,  0.899,  0.425,  0.113])
 #
 ## The interface to hessian computation is designed for general functions, so we
