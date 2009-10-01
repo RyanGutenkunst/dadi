@@ -239,6 +239,9 @@ class Spectrum(numpy.ma.masked_array):
     
         Note that if a masked cell is folded into non-masked cell, the
         destination cell is masked as well.
+
+        Note also that folding is not done in-place. The return value is a new
+        Spectrum object.
         """
         # How many samples total do we have? The folded fs can only contain
         # entries up to total_samples/2 (rounded down).
@@ -872,13 +875,20 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(resamp, mask_corners=mask_corners)
 
     @staticmethod
-    def from_data_dict(data_dict, pop_ids, projections, mask_corners=True):
+    def from_data_dict(data_dict, pop_ids, projections, mask_corners=True,
+                       polarized=True):
         """
         Spectrum from a dictionary of polymorphisms.
 
         pop_ids: list of which populations to make fs for.
         projections: list of sample sizes to project down to for each
                      population.
+        polarized: If True, the data are assumed to be correctly polarized by 
+                   `outgroup_allele'. SNPs in which the 'outgroup_allele'
+                   information is missing or '-' or not concordant with the
+                   segregating alleles will be ignored.
+                   If False, any 'outgroup_allele' info present is ignored,
+                   and the returned spectrum is folded.
 
         The data dictionary should be organized as:
             {snp_id:{'segregating': ['A','T'],
@@ -888,9 +898,6 @@ class Spectrum(numpy.ma.masked_array):
                      'outgroup_allele': 'T'
                     }
             }
-        The 'outgroup_allele' is optional. If it is unavailable, it is assumed
-        that the polymorphisms are unpolarized. You should then *fold* the
-        resulting Spectrum.
         The 'calls' entry gives the successful calls in each population, in the
         order that the alleles are specified in 'segregating'.
         Non-diallelic polymorphisms are skipped.
@@ -903,13 +910,19 @@ class Spectrum(numpy.ma.masked_array):
                 continue
 
             allele1,allele2 = snp_info['segregating']
-            if 'outgroup_allele' in snp_info\
-               and snp_info['outgroup_allele'] != '-':
-                outgroup_allele = snp_info['outgroup_allele']
-            else:
-                # If we don't have an aligned base, we can choose which is
-                # derived arbitrarily since we'll need to fold anyways.
+            if not polarized:
+                # If we don't want to polarize, we can choose which allele is
+                # derived arbitrarily since we'll fold anyways.
                 outgroup_allele = allele1
+            elif 'outgroup_allele' in snp_info\
+               and snp_info['outgroup_allele'] != '-'\
+               and snp_info['outgroup_allele'] in snp_info['segregating']:
+                # Otherwise we need to check that it's a useful outgroup
+                outgroup_allele = snp_info['outgroup_allele']
+            else: 
+                # If we're polarized and we didn't have good outgroup info, skip
+                # this SNP.
+                continue
     
             # Extract the allele calls for each population.
             allele1_calls = numpy.asarray([snp_info['calls'][pop][0]
@@ -938,7 +951,11 @@ class Spectrum(numpy.ma.masked_array):
                 contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
                 pop_contribs.append(contrib)
             fs += reduce(operator.mul, pop_contribs)
-        return Spectrum(fs, mask_corners=mask_corners)
+        fsout = Spectrum(fs, mask_corners=mask_corners)
+        if polarized:
+            return fsout
+        else:
+            return fsout.fold()
     
     @staticmethod
     def _data_by_tri(data_dict):

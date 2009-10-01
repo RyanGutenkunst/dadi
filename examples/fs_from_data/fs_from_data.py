@@ -17,7 +17,8 @@ pylab.show()
 
 # If we didn't have outgroup information, we could use the folded  version 
 # of the fs.
-folded = fs.fold()
+folded = dadi.Spectrum.from_data_dict(dd, ['YRI','CEU'], [20,20],
+                                      polarized=False)
 
 # We may also want to apply a statistical correction for ancestral state
 # misidentification.
