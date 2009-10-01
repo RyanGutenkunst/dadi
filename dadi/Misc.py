@@ -163,3 +163,53 @@ def make_fux_table(fid, ts, Q, tri_freq):
     fid.write(os.linesep.join(outlines))
     if newfile:
         fid.close()
+
+def make_data_dict(filename):
+    """
+    Parse SNP file and store info in a properly formatted dictionary.
+
+    filename: Name of file to work with.
+
+    This is specific to the particular data format described on the wiki. 
+    Modification for other formats should be straightforward.
+    """
+    f = file(filename)
+
+    # Skip to the header
+    while True:
+        header = f.readline()
+        if not header.startswith('#'):
+            break
+
+    allele2_index = header.split().index('Allele2')
+
+    # Pull out our pop ids
+    pops = header.split()[3:allele2_index]
+
+    # The empty data dictionary
+    data_dict = {}
+
+    # Now walk down the file
+    for line in f:
+        if line.startswith('#'):
+            continue
+        # Split the into fields by whitespace
+        spl = line.split()
+
+        data_this_snp = {}
+        data_this_snp['context'] = spl[0]
+        data_this_snp['outgroup_context'] = spl[1]
+        data_this_snp['outgroup_allele'] = spl[1][1]
+        data_this_snp['segregating'] = spl[2],spl[allele2_index] 
+
+        calls_dict = {}
+        for ii,pop in enumerate(pops):
+            calls_dict[pop] = int(spl[3+ii]), int(spl[allele2_index+1+ii])
+        data_this_snp['calls'] = calls_dict
+
+        # We name our SNPs using the final columns
+        snp_id = '_'.join(spl[allele2_index+1+len(pops):])
+
+        data_dict[snp_id] = data_this_snp
+
+    return data_dict
