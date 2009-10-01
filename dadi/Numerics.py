@@ -240,7 +240,7 @@ def make_extrap_func(func):
             ex_result = quintic_extrap(result_l, x_l)
         else:
             raise ValueError('Number of calculations to use for extrapolation '
-                             'must be between 1 and 4')
+                             'must be between 1 and 6')
         return ex_result
 
     return extrap_func
