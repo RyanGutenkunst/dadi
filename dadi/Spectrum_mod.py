@@ -162,12 +162,24 @@ class Spectrum(numpy.ma.masked_array):
                              'original. Original size is %s and requested size '
                              'is %s.' % (self.sample_sizes, ns))
 
-        output = self.copy()
+        original_folded = self.folded
+        # If we started with an folded Spectrum, we need to unfold before
+        # projecting.
+        if original_folded:
+            output = self.unfold()
+        else:
+            output = self.copy()
+
         # Iterate over each axis, applying the projection.
         for axis,proj in enumerate(ns):
             if proj != self.sample_sizes[axis]:
                 output = output._project_one_axis(proj, axis)
-        return output
+
+        # Return folded or unfolded as original.
+        if original_folded:
+            return output.fold()
+        else:
+            return output
 
     def _project_one_axis(self, n, axis=0):
         """
@@ -203,16 +215,10 @@ class Spectrum(numpy.ma.masked_array):
             # The projection weights.
             proj = _cached_projection(n, proj_from, hits)
             proj_slice[axis] = slice(least, most+1)
-            # Warning: There are some subtleties (which may be numpy bugs) in
-            # how multiplication of masked arrays works in this rather
-            # complicated slicing scheme.
-            # The commented line below does not work...
-            #  pfs[to_slice] += self[from_slice] * proj[proj_slice]
-            # A more step-by-step way to do this would be:
-            #  pfs.data[to_slice] += self.data[from_slice] * proj[proj_slice]
-            #  pfs.mask[to_slice] = numpy.logical_or(pfs.mask[to_slice],
-            #                                        self.mask[from_slice])
-            pfs[to_slice] += proj[proj_slice] * self[from_slice]
+            # Do the multiplications
+            pfs.data[to_slice] += self.data[from_slice] * proj[proj_slice]
+            pfs.mask[to_slice] = numpy.logical_or(pfs.mask[to_slice],
+                                                  self.mask[from_slice])
     
         return pfs
 

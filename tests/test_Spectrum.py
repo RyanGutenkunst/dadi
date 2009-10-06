@@ -248,4 +248,54 @@ class SpectrumTestCase(unittest.TestCase):
         mf2 = folded.marginalize([1])
         self.assert_(numpy.allclose(mf1,mf2))
 
+    def test_projection(self):
+        # Test that projecting a multi-dimensional Spectrum succeeds
+        ns = (7,8,6)
+        fs = dadi.Spectrum(numpy.random.uniform(size=ns))
+        p = fs.project([3,4,5])
+        # Also that we don't lose any data
+        self.assertAlmostEqual(fs.data.sum(), p.data.sum())
+
+        # Check that when I project an equilibrium spectrum, I get back an
+        # equilibrium spectrum
+        fs = dadi.Spectrum(1./numpy.arange(100))
+        p = fs.project([17])
+        self.assert_(numpy.allclose(p[1:-1], 1./numpy.arange(1,len(p)-1)))
+
+        # Check that masked values are propagated correctly.
+        fs = dadi.Spectrum(1./numpy.arange(20))
+        # All values with 3 or fewer observed should be masked.
+        fs.mask[3] = True
+        p = fs.project([10])
+        self.assert_(numpy.all(p.mask[:4]))
+
+        # Check that masked values are propagated correctly.
+        fs = dadi.Spectrum(1./numpy.arange(20))
+        fs.mask[-3] = True
+        # All values with 3 or fewer observed should be masked.
+        p = fs.project([10])
+        self.assert_(numpy.all(p.mask[-3:]))
+
+        # A more complicated two dimensional projection problem...
+        fs = dadi.Spectrum(numpy.random.uniform(size=(9,7)))
+        fs.mask[2,3] = True
+        p = fs.project([4,4])
+        self.assert_(numpy.all(p.mask[:3,1:4]))
+
+        # Test that projecting a folded multi-dimensional Spectrum succeeds
+        # Should get the same result if I fold then project as if I project
+        # then fold.
+        ns = (7,8,6)
+        fs = dadi.Spectrum(numpy.random.uniform(size=ns))
+        fs.mask[2,3,1] = True
+        folded = fs.fold()
+
+        p = fs.project([3,4,5])
+        pf1 = p.fold()
+        pf2 = folded.project([3,4,5])
+
+        # Check equality
+        self.assert_(numpy.all(pf1.mask == pf2.mask))
+        self.assert_(numpy.allclose(pf1.data, pf2.data))
+
 suite = unittest.TestLoader().loadTestsFromTestCase(SpectrumTestCase)
