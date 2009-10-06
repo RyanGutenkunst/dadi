@@ -1128,3 +1128,58 @@ class Spectrum(numpy.ma.masked_array):
             fs += reverse_array(negative_entries)
     
         return Spectrum(fs, mask_corners=mask_corners)
+
+    # The code below ensures that when I do arithmetic with Spectrum objects,
+    # it is not done between a folded and an unfolded array. If it is, I raise
+    # a ValueError.
+
+    # While I'm at it, I'm also fixing the annoying behavior that if a1 and a2
+    # are masked arrays, and a3 = a1 + a2. Then wherever a1 or a2 was masked,
+    # a3.data ends up with the a1.data values, rather than a1.data + a2.data.
+    # Note that this fix doesn't work for operation by numpy.ma.exp and 
+    # numpy.ma.log. Guess I can't have everything.
+
+    # I'm using exec here to avoid copy-pasting a dozen boiler-plate functions.
+    # The calls to check_folding_equal ensure that we don't try to combine
+    # folded and unfolded Spectrum objects.
+
+    # This is pretty advanced Python voodoo, so don't fret if you don't
+    # understand it at first glance. :-)
+    for method in ['__add__','__radd__','__sub__','__rsub__','__mul__',
+                   '__rmul__','__div__','__rdiv__','__truediv__','__rtruediv__',
+                   '__floordiv__','__rfloordiv__','__rpow__','__pow__']:
+        exec("""
+def %(method)s(self, other):
+    self._check_other_folding(other)
+    if isinstance(other, numpy.ma.masked_array):
+        newdata = self.data.%(method)s (other.data)
+        newmask = numpy.ma.mask_or(self.mask, other.mask)
+    else:
+        newdata = self.data.%(method)s (other)
+        newmask = self.mask
+    outfs = self.__class__.__new__(self.__class__, newdata, newmask, 
+                                   mask_corners=False, data_folded=self.folded)
+    return outfs
+""" % {'method':method})
+
+    # Methods that modify the Spectrum in-place.
+    for method in ['__iadd__','__isub__','__imul__','__idiv__',
+                   '__itruediv__','__ifloordiv__','__ipow__']:
+        exec("""
+def %(method)s(self, other):
+    self._check_other_folding(other)
+    if isinstance(other, numpy.ma.masked_array):
+        self.data.%(method)s (other.data)
+        self.mask = numpy.ma.mask_or(self.mask, other.mask)
+    else:
+        self.data.%(method)s (other)
+""" % {'method':method})
+
+    def _check_other_folding(self, other):
+        """
+        Ensure other Spectrum has same .folded status
+        """
+        if isinstance(other, self.__class__)\
+           and other.folded != self.folded:
+            raise ValueError('Cannot operate with a folded Spectrum and an '
+                             'unfolded one.')

@@ -161,6 +161,11 @@ class SpectrumTestCase(unittest.TestCase):
             result = op(marr,folded2)
             self.assert_(result.folded == True)
 
+            # Check that exceptions are properly raised when folding status 
+            # differs
+            self.assertRaises(ValueError, op, fs1, folded2)
+            self.assertRaises(ValueError, op, folded1, fs2)
+
         for op in [abs,pos,neg,numpy.ma.log,numpy.ma.exp,numpy.ma.sqrt,
                    scipy.special.gammaln]:
             # Check that unary operations propogate folding status.
@@ -188,6 +193,10 @@ class SpectrumTestCase(unittest.TestCase):
             self.assert_(folded1.folded == True)
             op(folded1,marr)
             self.assert_(folded1.folded == True)
+
+            # Check that exceptions are properly raised.
+            self.assertRaises(ValueError, op, fs1, folded2)
+            self.assertRaises(ValueError, op, folded1, fs2)
 
         # Restore logging of warnings
         dadi.Spectrum_mod.logger.setLevel(logging.WARNING)
