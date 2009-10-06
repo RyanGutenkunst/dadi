@@ -228,4 +228,24 @@ class SpectrumTestCase(unittest.TestCase):
         self.assertTrue(unfolded.mask[1,1])
         self.assertTrue(unfolded.mask[(ns[0]-1)-1,(ns[1]-1)-1])
 
+    def test_marginalize(self):
+        ns = (7,8,6)
+
+        fs = dadi.Spectrum(numpy.random.uniform(size=ns))
+        folded = fs.fold()
+
+        marg1 = fs.marginalize([1])
+        # Do manual marginalization.
+        manual = dadi.Spectrum(fs.data.sum(axis=1))
+
+        # Check that these are equal in the unmasked entries.
+        self.assert_(numpy.allclose(numpy.where(marg1.mask, 0, marg1.data),
+                                    numpy.where(manual.mask, 0, manual.data)))
+
+        # Check folded Spectrum objects. I should get the same result if I
+        # marginalize then fold, as if I fold then marginalize.
+        mf1 = marg1.fold()
+        mf2 = folded.marginalize([1])
+        self.assert_(numpy.allclose(mf1,mf2))
+
 suite = unittest.TestLoader().loadTestsFromTestCase(SpectrumTestCase)

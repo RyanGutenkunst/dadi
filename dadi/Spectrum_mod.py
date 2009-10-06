@@ -225,12 +225,33 @@ class Spectrum(numpy.ma.masked_array):
         mask_corners: If True, the typical corners of the resulting fs will be
                       masked
         """
-        output = self.copy()
+        original_folded = self.folded
+        # If we started with an folded Spectrum, we need to unfold before
+        # marginalizing.
+        if original_folded:
+            output = self.unfold()
+        else:
+            output = self.copy()
+
+        orig_mask = output.mask.copy()
+        orig_mask.flat[0] = orig_mask.flat[-1] = False
+        if numpy.any(orig_mask):
+            logger.warn('Marginalizing a Spectrum with internal masked values. '
+                        'This may not be a well-defined operation.')
+
+        # Do the marginalization
         for axis in sorted(over)[::-1]:
             output = output.sum(axis=axis)
+        output.folded = False
+
         if mask_corners:
             output.mask_corners()
-        return output
+
+        # Return folded or unfolded as original.
+        if original_folded:
+            return output.fold()
+        else:
+            return output
 
     def _counts_per_entry(self):
         """
