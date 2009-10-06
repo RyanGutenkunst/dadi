@@ -262,7 +262,7 @@ class Spectrum(numpy.ma.masked_array):
         Spectrum object.
         """
         if self.folded:
-            raise ValueError('Spectrum is already folded.')
+            raise ValueError('Input Spectrum is already folded.')
 
         # How many samples total do we have? The folded fs can only contain
         # entries up to total_samples/2 (rounded down).
@@ -295,8 +295,38 @@ class Spectrum(numpy.ma.masked_array):
         # Mask out the remains of the folding operation.
         final_mask = numpy.logical_or(final_mask, where_folded_out)
 
-        outfs = Spectrum(folded, mask=final_mask)
-        outfs.folded = True
+        outfs = Spectrum(folded, mask=final_mask, data_folded=True)
+        return outfs
+
+    def unfold(self):
+        """
+        Unfolded frequency spectrum
+    
+        It is assumed that each state of a SNP is equally likely to be
+        ancestral.
+
+        Note also that unfolding is not done in-place. The return value is a new
+        Spectrum object.
+        """
+        if not self.folded:
+            raise ValueError('Input Spectrum is not folded.')
+
+        # Unfolding the data is easy.
+        reversed_data = reverse_array(self.data)
+        newdata = (self.data + reversed_data)/2.
+
+        # Unfolding the mask is trickier. We want to preserve masking of entries
+        # that were masked in the original Spectrum.
+        # Which entries in the original Spectrum were masked solely because
+        # they are incompatible with a folded Spectrum?
+        total_samples = numpy.sum(self.sample_sizes)
+        total_per_entry = self._total_per_entry()
+        where_folded_out = total_per_entry > int(total_samples/2)
+
+        newmask = numpy.logical_xor(self.mask, where_folded_out)
+        newmask = numpy.logical_or(newmask, reverse_array(newmask))
+    
+        outfs = Spectrum(newdata, mask=newmask, data_folded=False)
         return outfs
 
     def sample(self):

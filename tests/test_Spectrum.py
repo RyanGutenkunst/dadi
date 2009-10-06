@@ -132,34 +132,34 @@ class SpectrumTestCase(unittest.TestCase):
             # or status. I'm not sure how to fix this.
 
             result = op(fs1,fs2)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(fs1,2.0)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(2.0,fs2)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(fs1,arr)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(arr,fs2)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(fs1,marr)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(marr,fs2)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
 
             result = op(folded1,folded2)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
             result = op(folded1,2.0)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
             result = op(2.0,folded2)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
             result = op(folded1,arr)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
             result = op(arr,folded2)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
             result = op(folded1,marr)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
             result = op(marr,folded2)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
 
             # Check that exceptions are properly raised when folding status 
             # differs
@@ -170,29 +170,29 @@ class SpectrumTestCase(unittest.TestCase):
                    scipy.special.gammaln]:
             # Check that unary operations propogate folding status.
             result = op(fs1)
-            self.assert_(result.folded == False)
+            self.assertFalse(result.folded)
             result = op(folded1)
-            self.assert_(result.folded == True)
+            self.assertTrue(result.folded)
 
         for op in [iadd,isub,imul,idiv,itruediv,ifloordiv,ipow]:
             # Check that in-place operations preserve folding status.
             op(fs1,fs2)
-            self.assert_(fs1.folded == False)
+            self.assertFalse(fs1.folded)
             op(fs1,2.0)
-            self.assert_(fs1.folded == False)
+            self.assertFalse(fs1.folded)
             op(fs1,arr)
-            self.assert_(fs1.folded == False)
+            self.assertFalse(fs1.folded)
             op(fs1,marr)
-            self.assert_(fs1.folded == False)
+            self.assertFalse(fs1.folded)
 
             op(folded1,folded2)
-            self.assert_(folded1.folded == True)
+            self.assertTrue(folded1.folded)
             op(folded1,2.0)
-            self.assert_(folded1.folded == True)
+            self.assertTrue(folded1.folded)
             op(folded1,arr)
-            self.assert_(folded1.folded == True)
+            self.assertTrue(folded1.folded)
             op(folded1,marr)
-            self.assert_(folded1.folded == True)
+            self.assertTrue(folded1.folded)
 
             # Check that exceptions are properly raised.
             self.assertRaises(ValueError, op, fs1, folded2)
@@ -200,5 +200,32 @@ class SpectrumTestCase(unittest.TestCase):
 
         # Restore logging of warnings
         dadi.Spectrum_mod.logger.setLevel(logging.WARNING)
+    
+    def test_unfolding(self):
+        ns = (3,4)
+
+        # We add some unusual masking.
+        fs = dadi.Spectrum(numpy.random.uniform(size=ns))
+        fs.mask[0,1] = fs.mask[1,1] = True
+
+        folded = fs.fold()
+        unfolded = folded.unfold()
+
+        # Check that it was properly recorded
+        self.assertFalse(unfolded.folded)
+
+        # Check that no data was lost
+        self.assertAlmostEqual(fs.data.sum(), folded.data.sum())
+        self.assertAlmostEqual(fs.data.sum(), unfolded.data.sum())
+
+        # Note that fs.sum() need not be equal to folded.sum(), if fs had
+        # some masked values.
+        self.assertAlmostEqual(folded.sum(), unfolded.sum())
+
+        # Check that the proper entries are masked.
+        self.assertTrue(unfolded.mask[0,1])
+        self.assertTrue(unfolded.mask[(ns[0]-1),(ns[1]-1)-1])
+        self.assertTrue(unfolded.mask[1,1])
+        self.assertTrue(unfolded.mask[(ns[0]-1)-1,(ns[1]-1)-1])
 
 suite = unittest.TestLoader().loadTestsFromTestCase(SpectrumTestCase)
