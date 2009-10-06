@@ -1,12 +1,11 @@
+import os
 import unittest
 
-import os
-
 import numpy
+import scipy.special
 import dadi
 
 class SpectrumTestCase(unittest.TestCase):
-
     comments = ['comment 1', 'comment 2']
     filename = 'test.fs'
     data = numpy.random.rand(3,3)
@@ -86,5 +85,111 @@ class SpectrumTestCase(unittest.TestCase):
         # Ensure that all those are masked.
         for entry in [(1,2), (3,4), (1,1)]:
             self.assert_(ff.mask[entry])
+
+    def test_folded_slices(self):
+        ns = (3,4)
+        fs1 = dadi.Spectrum(numpy.random.rand(*ns))
+        folded1 = fs1.fold()
+
+        self.assert_(fs1[:].folded == False)
+        self.assert_(folded1[:].folded == True)
+
+        self.assert_(fs1[0].folded == False)
+        self.assert_(folded1[1].folded == True)
+
+        self.assert_(fs1[:,0].folded == False)
+        self.assert_(folded1[:,1].folded == True)
+
+    def test_folded_arithmetic(self):
+        """
+        Test that arithmetic operations respect and propogate .folded attribute.
+        """
+        # Disable logging of warnings because arithmetic may generate Spectra
+        # with entries < 0, but we don't care at this point.
+        import logging
+        dadi.Spectrum_mod.logger.setLevel(logging.ERROR)
+
+        ns = (3,4)
+        fs1 = dadi.Spectrum(numpy.random.uniform(size=ns))
+        fs2 = dadi.Spectrum(numpy.random.uniform(size=ns))
+
+        folded1 = fs1.fold()
+        folded2 = fs2.fold()
+
+        # We'll iterate through each of these arithmetic functions.
+        from operator import add,sub,mul,div,truediv,floordiv,pow,abs,pos,neg,\
+                iadd,isub,imul,idiv,itruediv,ifloordiv,ipow
+
+        arr = numpy.random.uniform(size=ns)
+        marr = numpy.random.uniform(size=ns)
+
+        for op in [add,sub,mul,div,truediv,floordiv,pow]:
+            # Check that binary operations propogate folding status.
+            # Need to check cases both on right-hand-side of operator and
+            # left-hand-side
+
+            # Note that numpy.power(2.0,fs2) does not properly propagate type
+            # or status. I'm not sure how to fix this.
+
+            result = op(fs1,fs2)
+            self.assert_(result.folded == False)
+            result = op(fs1,2.0)
+            self.assert_(result.folded == False)
+            result = op(2.0,fs2)
+            self.assert_(result.folded == False)
+            result = op(fs1,arr)
+            self.assert_(result.folded == False)
+            result = op(arr,fs2)
+            self.assert_(result.folded == False)
+            result = op(fs1,marr)
+            self.assert_(result.folded == False)
+            result = op(marr,fs2)
+            self.assert_(result.folded == False)
+
+            result = op(folded1,folded2)
+            self.assert_(result.folded == True)
+            result = op(folded1,2.0)
+            self.assert_(result.folded == True)
+            result = op(2.0,folded2)
+            self.assert_(result.folded == True)
+            result = op(folded1,arr)
+            self.assert_(result.folded == True)
+            result = op(arr,folded2)
+            self.assert_(result.folded == True)
+            result = op(folded1,marr)
+            self.assert_(result.folded == True)
+            result = op(marr,folded2)
+            self.assert_(result.folded == True)
+
+        for op in [abs,pos,neg,numpy.ma.log,numpy.ma.exp,numpy.ma.sqrt,
+                   scipy.special.gammaln]:
+            # Check that unary operations propogate folding status.
+            result = op(fs1)
+            self.assert_(result.folded == False)
+            result = op(folded1)
+            self.assert_(result.folded == True)
+
+        for op in [iadd,isub,imul,idiv,itruediv,ifloordiv,ipow]:
+            # Check that in-place operations preserve folding status.
+            op(fs1,fs2)
+            self.assert_(fs1.folded == False)
+            op(fs1,2.0)
+            self.assert_(fs1.folded == False)
+            op(fs1,arr)
+            self.assert_(fs1.folded == False)
+            op(fs1,marr)
+            self.assert_(fs1.folded == False)
+
+            op(folded1,folded2)
+            self.assert_(folded1.folded == True)
+            op(folded1,2.0)
+            self.assert_(folded1.folded == True)
+            op(folded1,arr)
+            self.assert_(folded1.folded == True)
+            op(folded1,marr)
+            self.assert_(folded1.folded == True)
+
+        # Restore logging of warnings
+        dadi.Spectrum_mod.logger.setLevel(logging.WARNING)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(SpectrumTestCase)

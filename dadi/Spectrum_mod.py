@@ -24,35 +24,53 @@ class Spectrum(numpy.ma.masked_array):
     specific entries in the spectrum. Most often, these are the absent and fixed
     categories.
     """
-    def __new__(cls, data, *args, **kwargs):
-        """
-        Overrides array.__new__ to set nicer defaults.
-        """
-        # We need to do this in __new__ rather than waiting for __init__ because
-        # otherwise the masked_array __new__ will be used.
-        return numpy.ma.masked_array.__new__(cls, data, copy=True, 
-                                             dtype=float, fill_value=numpy.nan)
-    def __init__(self, data, mask=None, mask_corners=True):
-        """
-        Construct a spectrum.
+    def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
+                data_folded=None, dtype=float, copy=True, 
+                fill_value=numpy.nan, keep_mask=True, shrink=True):
+        if mask is numpy.ma.nomask:
+            mask = numpy.ma.make_mask_none(data.shape)
 
-        data: Data for spectrum
-        mask: Mask to use. If None, an empty mask is created.
-        mask_corners: If True, the 'absent in all pops' and 'fixed in all pops'
-                      entries are masked.
-        """
-        # Set the mask and the fill value
-        if mask is None:
-            mask = numpy.ma.make_mask_none(self.data.shape)
-        self.mask = mask
+        subarr = numpy.ma.masked_array(data, mask=mask, dtype=dtype, copy=copy,
+                                       fill_value=numpy.nan, keep_mask=True, 
+                                       shrink=True)
+        subarr = subarr.view(subtype)
+
+        if hasattr(data, 'folded'):
+            if data_folded is None or data_folded == data.folded:
+                subarr.folded = data.folded
+            elif data_folded != data.folded:
+                raise ValueError('Data does not have same folding status as '
+                                 'was called for in Spectrum constructor.')
+        elif data_folded is not None:
+            subarr.folded = data_folded
+        else:
+            subarr.folded = False
 
         if mask_corners:
-            self.mask_corners()
+            subarr.mask_corners()
 
-        if numpy.any(numpy.logical_and(self < 0, numpy.logical_not(self.mask))):
-            logger.warn('Some entries of new FS are < 0 and unmasked. If this '
-                        'FS resulted from an integration, you may want to '
-                        'increase grid size or shorten timestep.')
+        return subarr
+
+    # See http://www.scipy.org/Subclasses for information on the
+    # __array_finalize__ and __array_wrap__ methods. I had to do some debugging
+    # myself to discover that I also needed _update_from.
+    # Also, see http://docs.scipy.org/doc/numpy/reference/arrays.classes.html
+    # Also, see http://docs.scipy.org/doc/numpy/user/basics.subclassing.html
+    def __array_finalize__(self, obj):
+        if obj is None: 
+            return
+        numpy.ma.masked_array.__array_finalize__(self, obj)
+        self.folded = getattr(obj, 'folded', 'unspecified')
+    def __array_wrap__(self, obj, context=None):
+        result = obj.view(type(self))
+        result.folded = self.folded
+        return result
+    def _update_from(self, obj):
+        numpy.ma.masked_array._update_from(self, obj)
+        if hasattr(obj, 'folded'):
+            self.folded = obj.folded
+    # masked_array has priority 15.
+    __array_priority__ = 20
 
     def mask_corners(self):
         """
@@ -243,6 +261,9 @@ class Spectrum(numpy.ma.masked_array):
         Note also that folding is not done in-place. The return value is a new
         Spectrum object.
         """
+        if self.folded:
+            raise ValueError('Spectrum is already folded.')
+
         # How many samples total do we have? The folded fs can only contain
         # entries up to total_samples/2 (rounded down).
         total_samples = numpy.sum(self.sample_sizes)
@@ -273,7 +294,10 @@ class Spectrum(numpy.ma.masked_array):
     
         # Mask out the remains of the folding operation.
         final_mask = numpy.logical_or(final_mask, where_folded_out)
-        return Spectrum(folded, mask=final_mask)
+
+        outfs = Spectrum(folded, mask=final_mask)
+        outfs.folded = True
+        return outfs
 
     def sample(self):
         """
