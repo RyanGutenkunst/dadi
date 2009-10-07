@@ -155,7 +155,7 @@ def intersect_masks(m1, m2):
     """
     Versions of m1 and m2 that are masked where either m1 or m2 were masked.
 
-    If neither m1 or m2 is masked, just returns m1 or m2. Otherwise returns
+    If neither m1 or m2 is masked, just returns m1 and m2. Otherwise returns
     m1 and m2 wrapped as masked_arrays with identical masks.
     """
     ma = numpy.ma
