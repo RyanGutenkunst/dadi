@@ -53,9 +53,9 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
     """
-    masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = Inference.optimally_scaled_sfs(masked_model, masked_data)
-    plot_1d_comp_Poisson(masked_model, masked_data, fig_num, residual,
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_1d_comp_Poisson(model, data, fig_num, residual,
                          plot_masked)
 
 def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
@@ -79,6 +79,9 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
     else:
         f = pylab.figure(fig_num, figsize=(7,7))
     pylab.clf()
+
+    if data.folded and not model.folded:
+        model = model.fold()
 
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
@@ -236,10 +239,9 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
     """
-    masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = Inference.optimally_scaled_sfs(masked_model, masked_data)
+    model = Inference.optimally_scaled_sfs(model, data)
 
-    plot_2d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
+    plot_2d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
                          pop_labels=pop_labels, residual=residual,
                          adjust=adjust)
@@ -266,6 +268,9 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     adjust: Should method use automatic 'subplots_adjust'? For advanced
             manipulation of plots, it may be useful to make this False.
     """
+    if data.folded and not model.folded:
+        model = model.fold()
+
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
     if fig_num is None:
@@ -346,10 +351,9 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
     """
-    masked_model, masked_data = Numerics.intersect_masks(model, data)
-    masked_model = Inference.optimally_scaled_sfs(masked_model, masked_data)
+    model = Inference.optimally_scaled_sfs(model, data)
 
-    plot_3d_comp_Poisson(masked_model, masked_data, vmin=vmin, vmax=vmax,
+    plot_3d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
                          pop_labels=pop_labels, residual=residual,
                          adjust=adjust)
@@ -376,6 +380,9 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     adjust: Should method use automatic 'subplots_adjust'? For advanced
             manipulation of plots, it may be useful to make this False.
     """
+    if data.folded and not model.folded:
+        model = model.fold()
+
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
     if fig_num is None:
