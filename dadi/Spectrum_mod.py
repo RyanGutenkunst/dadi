@@ -63,6 +63,8 @@ class Spectrum(numpy.ma.masked_array):
         self.folded = getattr(obj, 'folded', 'unspecified')
     def __array_wrap__(self, obj, context=None):
         result = obj.view(type(self))
+        result = numpy.ma.masked_array.__array_wrap__(self, obj, 
+                                                      context=context)
         result.folded = self.folded
         return result
     def _update_from(self, obj):

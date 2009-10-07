@@ -123,6 +123,10 @@ class SpectrumTestCase(unittest.TestCase):
         arr = numpy.random.uniform(size=ns)
         marr = numpy.random.uniform(size=ns)
 
+        # I found some difficulties with multiplication by numpy.float64, so I
+        # want to explicitly test this case.
+        numpyfloat = numpy.float64(2.0)
+
         for op in [add,sub,mul,div,truediv,floordiv,pow]:
             # Check that binary operations propogate folding status.
             # Need to check cases both on right-hand-side of operator and
@@ -133,33 +137,77 @@ class SpectrumTestCase(unittest.TestCase):
 
             result = op(fs1,fs2)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs1.mask))
+
             result = op(fs1,2.0)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs1.mask))
+
             result = op(2.0,fs2)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs2.mask))
+
+            result = op(fs1,numpyfloat)
+            self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs1.mask))
+
+            result = op(numpyfloat,fs2)
+            self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs2.mask))
+
             result = op(fs1,arr)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs1.mask))
+
             result = op(arr,fs2)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs2.mask))
+
             result = op(fs1,marr)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs1.mask))
+
             result = op(marr,fs2)
             self.assertFalse(result.folded)
+            self.assert_(numpy.all(result.mask == fs2.mask))
+
+            # Now with folded Spectra
 
             result = op(folded1,folded2)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded1.mask))
+
             result = op(folded1,2.0)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded1.mask))
+
             result = op(2.0,folded2)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded2.mask))
+
+            result = op(folded1,numpyfloat)
+            self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded1.mask))
+
+            result = op(numpyfloat,folded2)
+            self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded2.mask))
+
             result = op(folded1,arr)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded1.mask))
+
             result = op(arr,folded2)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded2.mask))
+
             result = op(folded1,marr)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded1.mask))
+
             result = op(marr,folded2)
             self.assertTrue(result.folded)
+            self.assert_(numpy.all(result.mask == folded2.mask))
 
             # Check that exceptions are properly raised when folding status 
             # differs
@@ -175,24 +223,51 @@ class SpectrumTestCase(unittest.TestCase):
             self.assertTrue(result.folded)
 
         for op in [iadd,isub,imul,idiv,itruediv,ifloordiv,ipow]:
+            fs1origmask = fs1.mask.copy()
+
             # Check that in-place operations preserve folding status.
             op(fs1,fs2)
             self.assertFalse(fs1.folded)
+            self.assert_(numpy.all(fs1.mask == fs1origmask))
+
             op(fs1,2.0)
             self.assertFalse(fs1.folded)
+            self.assert_(numpy.all(fs1.mask == fs1origmask))
+
+            op(fs1,numpyfloat)
+            self.assertFalse(fs1.folded)
+            self.assert_(numpy.all(fs1.mask == fs1origmask))
+
             op(fs1,arr)
             self.assertFalse(fs1.folded)
+            self.assert_(numpy.all(fs1.mask == fs1origmask))
+
             op(fs1,marr)
             self.assertFalse(fs1.folded)
+            self.assert_(numpy.all(fs1.mask == fs1origmask))
+
+            # Now folded Spectra
+            folded1origmask = folded1.mask.copy()
 
             op(folded1,folded2)
             self.assertTrue(folded1.folded)
+            self.assert_(numpy.all(folded1.mask == folded1origmask))
+
             op(folded1,2.0)
             self.assertTrue(folded1.folded)
+            self.assert_(numpy.all(folded1.mask == folded1origmask))
+
+            op(folded1,numpyfloat)
+            self.assertTrue(folded1.folded)
+            self.assert_(numpy.all(folded1.mask == folded1origmask))
+
             op(folded1,arr)
             self.assertTrue(folded1.folded)
+            self.assert_(numpy.all(folded1.mask == folded1origmask))
+
             op(folded1,marr)
             self.assertTrue(folded1.folded)
+            self.assert_(numpy.all(folded1.mask == folded1origmask))
 
             # Check that exceptions are properly raised.
             self.assertRaises(ValueError, op, fs1, folded2)
