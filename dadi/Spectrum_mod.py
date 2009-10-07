@@ -71,13 +71,13 @@ class Spectrum(numpy.ma.masked_array):
             # Which entries are nonsense in the folded fs.
             where_folded_out = total_per_entry > int(total_samples/2)
             if not numpy.all(subarr.data[where_folded_out] == 0):
-                raise ValueError('Creating Spectrum with data_folded = True, '
-                                 'but data has non-zero values in entries '
-                                 'which are nonsensical for a folded Spectrum.')
+                logger.warn('Creating Spectrum with data_folded = True, but '
+                            'data has non-zero values in entries which are '
+                            'nonsensical for a folded Spectrum.')
             if not numpy.all(subarr.mask[where_folded_out]):
-                raise ValueError('Creating Spectrum with data_folded = True, '
-                                 'but mask is not True for all entries '
-                                 'which are nonsensical for a folded Spectrum.')
+                logger.warn('Creating Spectrum with data_folded = True, but '
+                            'mask is not True for all entries which are '
+                            'nonsensical for a folded Spectrum.')
 
         if mask_corners:
             subarr.mask_corners()
