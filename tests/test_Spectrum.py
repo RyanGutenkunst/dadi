@@ -6,35 +6,74 @@ import scipy.special
 import dadi
 
 class SpectrumTestCase(unittest.TestCase):
-    comments = ['comment 1', 'comment 2']
-    filename = 'test.fs'
-    data = numpy.random.rand(3,3)
-    def test_to_file(self, remove=True):
+    def test_to_file(self):
         """
         Saving spectrum to file.
         """
-        fs = dadi.Spectrum(self.data)
-        fs.to_file(self.filename, comment_lines=self.comments)
-        if remove:
-            os.remove(self.filename)
+        comments = ['comment 1', 'comment 2']
+        filename = 'test.fs'
+        data = numpy.random.rand(3,3)
+
+        fs = dadi.Spectrum(data)
+
+        fs.to_file(filename, comment_lines=comments)
+        os.remove(filename)
+
+        fs.to_file(filename, comment_lines=comments, foldmaskinfo=False)
+        os.remove(filename)
 
     def test_from_file(self):
         """
         Loading spectrum from file.
         """
-        # Make sure we have a file to read.
-        self.test_to_file(remove=False)
+        commentsin = ['comment 1', 'comment 2']
+        filename = 'test.fs'
+        data = numpy.random.rand(3,3)
+
+        fsin = dadi.Spectrum(data)
+        fsin.to_file(filename, comment_lines=commentsin)
+
         # Read the file.
-        fs,comments = dadi.Spectrum.from_file(self.filename, 
-                                              return_comments=True)
+        fsout,commentsout = dadi.Spectrum.from_file(filename, 
+                                                    return_comments=True)
+        os.remove(filename)
         # Ensure that fs was read correctly.
-        orig = dadi.Spectrum(self.data)
-        # We have to use filled here because we can't compare the masked values.
-        self.assert_(numpy.allclose(fs.filled(0), orig.filled(0)))
-        self.assert_(numpy.all(fs.mask == orig.mask))
+        self.assert_(numpy.allclose(fsout.data, fsin.data))
+        self.assert_(numpy.all(fsout.mask == fsin.mask))
+        self.assertEqual(fsout.folded, fsin.folded)
         # Ensure comments were read correctly.
-        for ii,line in enumerate(comments):
-            self.assertEqual(line, self.comments[ii])
+        for ii,line in enumerate(commentsin):
+            self.assertEqual(line, commentsout[ii])
+
+        # Test using old file format
+        fsin.to_file(filename, comment_lines=commentsin, foldmaskinfo=False)
+
+        # Read the file.
+        fsout,commentsout = dadi.Spectrum.from_file(filename, 
+                                                    return_comments=True)
+        os.remove(filename)
+        # Ensure that fs was read correctly.
+        self.assert_(numpy.allclose(fsout.data, fsin.data))
+        self.assert_(numpy.all(fsout.mask == fsin.mask))
+        self.assertEqual(fsout.folded, fsin.folded)
+        # Ensure comments were read correctly.
+        for ii,line in enumerate(commentsin):
+            self.assertEqual(line, commentsout[ii])
+        
+        #
+        # Now test a file with folding and masking
+        #
+        fsin = dadi.Spectrum(data).fold()
+        fsin.mask[0,1] = True
+        fsin.to_file(filename)
+
+        fsout = dadi.Spectrum.from_file(filename)
+        os.remove(filename)
+
+        # Ensure that fs was read correctly.
+        self.assert_(numpy.allclose(fsout.data, fsin.data))
+        self.assert_(numpy.all(fsout.mask == fsin.mask))
+        self.assertEqual(fsout.folded, fsin.folded)
 
     def test_folding(self):
         """

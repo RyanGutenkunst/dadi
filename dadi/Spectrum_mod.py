@@ -113,21 +113,64 @@ class Spectrum(numpy.ma.masked_array):
         return_comments: If true, the return value is (fs, comments), where
                          comments is a list of strings containing the comments
                          from the file (without #'s).
+
+        See to_file method for details on the file format.
         """
-        ret = dadi.Numerics.array_from_file(fid, return_comments)
-        if return_comments:
-            data,comments = ret
+        newfile = False
+        # Try to read from fid. If we can't, assume it's something that we can
+        # use to open a file.
+        if not hasattr(fid, 'read'):
+            newfile = True
+            fid = file(fid, 'r')
+
+        line = fid.readline()
+        # Strip out the comments
+        comments = []
+        while line.startswith('#'):
+            comments.append(line[1:].strip())
+            line = fid.readline()
+
+        # Read the shape of the data
+        shape_spl = line.split()
+        if shape_spl[-1] not in ['folded','unfolded']:
+            # This case handles the old file format
+            shape = tuple([int(d) for d in shape_spl])
+            folded = False
         else:
-            data = ret
-        # Convert to a fs object
-        fs = Spectrum(data, mask_corners=mask_corners)
-                                       
+            # This case handles the new file format
+            shape = tuple([int(d) for d in shape_spl[:-1]])
+            folded = (shape_spl[-1] == 'folded')
+
+        data = numpy.fromstring(fid.readline().strip(), 
+                                count=numpy.product(shape), sep=' ')
+        # fromfile returns a 1-d array. Reshape it to the proper form.
+        data = data.reshape(*shape)
+
+        maskline = fid.readline().strip()
+        if not maskline:
+            # The old file format didn't have a line for the mask
+            mask = None
+        else:
+            # This case handles the new file format
+            mask = numpy.fromstring(maskline, 
+                                    count=numpy.product(shape), sep=' ')
+            mask = mask.reshape(*shape)
+
+        # If we opened a new file, clean it up.
+        if newfile:
+            fid.close()
+
+        fs = Spectrum(data, mask, mask_corners, data_folded=folded) 
+
         if not return_comments:
             return fs
         else:
             return fs,comments
 
-    def to_file(self, fid, precision=16, comment_lines = []):
+    fromfile = from_file
+
+    def to_file(self, fid, precision=16, comment_lines = [], 
+                foldmaskinfo=True):
         """
         Write frequency spectrum to file.
     
@@ -136,18 +179,63 @@ class Spectrum(numpy.ma.masked_array):
                    are formated via %.<p>g, where <p> is the precision.)
         comment lines: list of strings to be used as comment lines in the header
                        of the output file.
+        foldmaskinfo: If False, foldinging and mask information will not be
+                      saved. This conforms to the file format for dadi versions
+                      prior to 1.3.0.
 
         The file format is:
             # Any number of comment lines beginning with a '#'
             A single line containing N integers giving the dimensions of the fs
               array. So this line would be '5 5 3' for an SFS that was 5x5x3.
               (That would be 4x4x2 *samples*.)
+            On the *same line*, the string 'folded' or 'unfolded' denoting the
+              folding status of the array
             A single line giving the array elements. The order of elements is 
               e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+            A single line giving the elements of the mask in the same order as
+              the data line. '1' indicates masked, '0' indicates unmasked.
         """
-        dadi.Numerics.array_to_file(self, fid, precision, comment_lines)
-    # Overide the (perhaps confusing) original numpy tofile method.
+        # Open the file object.
+        newfile = False
+        if not hasattr(fid, 'write'):
+            newfile = True
+            fid = file(fid, 'w')
+
+        # Write comments
+        for line in comment_lines:
+            fid.write('# ')
+            fid.write(line.strip())
+            fid.write(os.linesep)
+
+        # Write out the shape of the fs
+        for elem in self.data.shape:
+            fid.write('%i ' % elem)
+
+        if foldmaskinfo:
+            if not self.folded:
+                fid.write('unfolded')
+            else:
+                fid.write('folded')
+        fid.write(os.linesep)
+
+        # Write the data to the file
+        self.data.tofile(fid, ' ', '%%.%ig' % precision)
+        fid.write(os.linesep)
+
+        if foldmaskinfo:
+            # Write the mask to the file
+            numpy.asarray(self.mask,int).tofile(fid, ' ')
+            fid.write(os.linesep)
+
+        # Close file
+        if newfile:
+            fid.close()
+
     tofile = to_file
+
+    ## Overide the (perhaps confusing) original numpy tofile method.
+    #def tofile(self, *args,**kwargs):
+    #    self.to_file(*args, **kwargs)
 
     def project(self, ns):
         """
