@@ -15,7 +15,7 @@ _counter = 0
 #: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
 _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
-                lower_bound=None, upper_bound=None, fold=False,
+                lower_bound=None, upper_bound=None, 
                 verbose=0, multinom=True, flush_delay=0):
     """
     Objective function for optimization.
@@ -29,9 +29,6 @@ def _object_func(params, data, model_func, pts,
     else:
         ns = data.sample_sizes 
         sfs = model_func(params,ns,pts)
-        if fold:
-            sfs = sfs.fold()
-            data = data.fold()
         if multinom:
             result = ll_multinom(sfs, data)
         else:
@@ -54,7 +51,7 @@ def _object_func_log(log_params, *args, **kwargs):
     return _object_func(numpy.exp(log_params), *args, **kwargs)
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
-                 fold=False, verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                 verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False):
     """
     Optimize log(params) to fit model to data using the BFGS method.
@@ -73,7 +70,6 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  length as p0.
     upper_bound: Upper bound on parameter values. If not None, must be of same
                  length as p0.
-    fold: If True, base inference on the folded spectrum.
     verbose: If > 0, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
@@ -89,7 +85,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     """
     import scipy.optimize
 
-    args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay)
 
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -131,8 +127,8 @@ def ll_per_bin(model, data):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
     """
-    model = numpy.ma.asanyarray(model)
-    data = numpy.ma.asanyarray(data)
+    if data.folded and not model.folded:
+        model = model.fold()
 
     if numpy.any(logical_and(model < 0, logical_not(data.mask))):
         logger.warn('Model is < 0 where data is not masked.')
@@ -192,8 +188,9 @@ def linear_Poisson_residual(model, data, mask=None):
     residuals are normally distributed. (If the mean is small, the Anscombe
     residuals are better.)
     """
-    model = numpy.ma.asanyarray(model)
-    data = numpy.ma.asanyarray(data)
+    if data.folded and not model.folded:
+        model = model.fold()
+
     resid = (model - data)/numpy.ma.sqrt(model)
     if mask is not None:
         tomask = numpy.logical_and(model <= mask, data <= mask)
@@ -218,8 +215,8 @@ def Anscombe_Poisson_residual(model, data, mask=None):
     Note that I tried implementing the "adjusted deviance" residuals, but they
     always looked very biased for the cases where the data was 0.
     """
-    model = numpy.ma.asanyarray(model)
-    data = numpy.ma.asanyarray(data)
+    if data.folded and not model.folded:
+        model = model.fold()
     # Because my data have often been projected downward or averaged over many
     # iterations, it appears better to apply the same transformation to the data
     # and the model.
@@ -257,12 +254,15 @@ def optimal_sfs_scaling(model, data):
     This scaling is based on only those entries that are masked in neither
     model nor data.
     """
+    if data.folded and not model.folded:
+        model = model.fold()
+
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
 
 def optimize_log_fmin(p0, data, model_func, pts, 
                       lower_bound=None, upper_bound=None,
-                      fold=False, verbose=0, flush_delay=0.5, 
+                      verbose=0, flush_delay=0.5, 
                       multinom=True, maxiter=None, 
                       full_output=False):
     """
@@ -283,7 +283,6 @@ def optimize_log_fmin(p0, data, model_func, pts,
                  length as p0.
     upper_bound: Upper bound on parameter values. If not None, must be of same
                  length as p0.
-    fold: If True, base inference on the folded spectrum.
     verbose: If True, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
@@ -296,7 +295,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
     """
     import scipy.optimize
 
-    args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay)
 
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
@@ -309,7 +308,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
         return numpy.exp(xopt), fopt, iter, funcalls, warnflag 
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
-             fold=False, verbose=0, flush_delay=0.5, epsilon=1e-3, 
+             verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False):
     """
     Optimize params to fit model to data using the BFGS method.
@@ -328,7 +327,6 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  length as p0.
     upper_bound: Upper bound on parameter values. If not None, must be of same
                  length as p0.
-    fold: If True, base inference on the folded spectrum.
     verbose: If > 0, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
@@ -344,7 +342,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     """
     import scipy.optimize
 
-    args = (data, model_func, pts, lower_bound, upper_bound, fold, verbose,
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay)
 
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
