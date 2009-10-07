@@ -23,6 +23,21 @@ class Spectrum(numpy.ma.masked_array):
     Spectra are represented by masked arrays. The masking allows us to ignore
     specific entries in the spectrum. Most often, these are the absent and fixed
     categories.
+
+    The constructor has the format:
+        fs = dadi.Spectrum(data, mask, mask_corners, data_folded)
+        
+        data: The frequency spectrum data
+        mask: An optional array of the same size as data. 'True' entires in
+              this array are masked in the Spectrum. These represent missing
+              data categories. (For example, you may not trust your singleton
+              SNP calling.)
+        mask_corners: If True (default), the 'observed in none' and 'observed 
+                      in all' entries of the FS will be masked. Typically these
+                      entries are unobservable, and dadi cannot reliably
+                      calculate them, so you will almost always want
+                      mask_corners=True.g
+        data_folded: If True, it is assumed that the input data is folded.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
                 data_folded=None, dtype=float, copy=True, 
