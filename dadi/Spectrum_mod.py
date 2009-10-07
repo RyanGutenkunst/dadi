@@ -37,7 +37,9 @@ class Spectrum(numpy.ma.masked_array):
                       entries are unobservable, and dadi cannot reliably
                       calculate them, so you will almost always want
                       mask_corners=True.g
-        data_folded: If True, it is assumed that the input data is folded.
+        data_folded: If True, it is assumed that the input data is folded. An
+                     error will be raised if the input data and mask are not
+                     consistent with a folded Spectrum.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
                 data_folded=None, dtype=float, copy=True, 
@@ -60,6 +62,22 @@ class Spectrum(numpy.ma.masked_array):
             subarr.folded = data_folded
         else:
             subarr.folded = False
+
+        # Check that if we're declaring that the input data is folded, it
+        # actually is, and the mask reflects this.
+        if data_folded:
+            total_samples = numpy.sum(subarr.sample_sizes)
+            total_per_entry = subarr._total_per_entry()
+            # Which entries are nonsense in the folded fs.
+            where_folded_out = total_per_entry > int(total_samples/2)
+            if not numpy.all(subarr.data[where_folded_out] == 0):
+                raise ValueError('Creating Spectrum with data_folded = True, '
+                                 'but data has non-zero values in entries '
+                                 'which are nonsensical for a folded Spectrum.')
+            if not numpy.all(subarr.mask[where_folded_out]):
+                raise ValueError('Creating Spectrum with data_folded = True, '
+                                 'but mask is not True for all entries '
+                                 'which are nonsensical for a folded Spectrum.')
 
         if mask_corners:
             subarr.mask_corners()
