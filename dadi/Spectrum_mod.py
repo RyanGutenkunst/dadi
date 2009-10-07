@@ -1018,6 +1018,12 @@ class Spectrum(numpy.ma.masked_array):
         from that pool. If this fs is significantly different from the
         original, that implies population structure.
         """
+        original_folded = self.folded
+        # If we started with an folded Spectrum, we need to unfold before
+        # projecting.
+        if original_folded:
+            self = self.unfold()
+
         total_samp = numpy.sum(self.sample_sizes)
     
         # First generate a 1d sfs for the pooled population.
@@ -1045,7 +1051,11 @@ class Spectrum(numpy.ma.masked_array):
             # Assign result using the appropriate weighting
             resamp[tuple(counts)] += prob*combined[derived]
 
-        return Spectrum(resamp, mask_corners=mask_corners)
+        resamp = Spectrum(resamp, mask_corners=mask_corners)
+        if not original_folded:
+            return resamp
+        else:
+            return resamp.fold()
 
     @staticmethod
     def from_data_dict(data_dict, pop_ids, projections, mask_corners=True,
