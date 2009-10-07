@@ -463,10 +463,12 @@ class Spectrum(numpy.ma.masked_array):
         means[bad_entries.ravel()] = 1
         # Sample
         samp = scipy.stats.distributions.poisson.rvs(means, size=len(means))
+        # Replace bad entries...
+        samp[bad_entries.ravel()] = 0
         # Convert back to a properly shaped array
         samp = samp.reshape(self.shape)
         # Convert to a fs and mask the bad entries
-        samp = Spectrum(samp, mask=bad_entries)
+        samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded)
         return samp
 
     @staticmethod
