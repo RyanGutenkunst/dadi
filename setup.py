@@ -36,6 +36,7 @@ core.setup(name='dadi',
            ext_modules = [tridiag, int_c],
            scripts=['scripts/ms_jsfs.py'],
            packages=['dadi'], 
-           package_data = {'dadi':['svnversion']},
+           package_data = {'dadi':['svnversion'],
+                           'tests':['IM.fs']},
            license='BSD'
            )
