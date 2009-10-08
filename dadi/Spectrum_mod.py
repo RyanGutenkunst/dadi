@@ -646,7 +646,7 @@ class Spectrum(numpy.ma.masked_array):
 
         if newfile:
             fid.close()
-        
+
         fs = Spectrum(data, mask_corners=mask_corners)
         if average:
             fs /= runs
@@ -1365,6 +1365,7 @@ def %(method)s(self, other):
         self.mask = numpy.ma.mask_or(self.mask, other.mask)
     else:
         self.data.%(method)s (other)
+    return self
 """ % {'method':method})
 
     def _check_other_folding(self, other):
