@@ -25,7 +25,7 @@ class Spectrum(numpy.ma.masked_array):
     categories.
 
     The constructor has the format:
-        fs = dadi.Spectrum(data, mask, mask_corners, data_folded)
+        fs = dadi.Spectrum(data, mask, mask_corners, data_folded, check_folding)
         
         data: The frequency spectrum data
         mask: An optional array of the same size as data. 'True' entires in
@@ -40,9 +40,12 @@ class Spectrum(numpy.ma.masked_array):
         data_folded: If True, it is assumed that the input data is folded. An
                      error will be raised if the input data and mask are not
                      consistent with a folded Spectrum.
+        check_folding: If True and data_folded=True, the data and mask will be
+                       checked to ensure they are consistent with a folded
+                       Spectrum. If they are not, a warning will be printed.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
-                data_folded=None, dtype=float, copy=True, 
+                data_folded=None, check_folding=True, dtype=float, copy=True, 
                 fill_value=numpy.nan, keep_mask=True, shrink=True):
         if mask is numpy.ma.nomask:
             mask = numpy.ma.make_mask_none(data.shape)
@@ -70,11 +73,13 @@ class Spectrum(numpy.ma.masked_array):
             total_per_entry = subarr._total_per_entry()
             # Which entries are nonsense in the folded fs.
             where_folded_out = total_per_entry > int(total_samples/2)
-            if not numpy.all(subarr.data[where_folded_out] == 0):
+            if check_folding\
+               and not numpy.all(subarr.data[where_folded_out] == 0):
                 logger.warn('Creating Spectrum with data_folded = True, but '
                             'data has non-zero values in entries which are '
                             'nonsensical for a folded Spectrum.')
-            if not numpy.all(subarr.mask[where_folded_out]):
+            if check_folding\
+               and not numpy.all(subarr.mask[where_folded_out]):
                 logger.warn('Creating Spectrum with data_folded = True, but '
                             'mask is not True for all entries which are '
                             'nonsensical for a folded Spectrum.')
@@ -1335,6 +1340,9 @@ class Spectrum(numpy.ma.masked_array):
     # The calls to check_folding_equal ensure that we don't try to combine
     # folded and unfolded Spectrum objects.
 
+    # I set check_folding = False in the constructor because it raises useless
+    # warnings when, for example, I do (model + 1). 
+
     # This is pretty advanced Python voodoo, so don't fret if you don't
     # understand it at first glance. :-)
     for method in ['__add__','__radd__','__sub__','__rsub__','__mul__',
@@ -1350,7 +1358,8 @@ def %(method)s(self, other):
         newdata = self.data.%(method)s (other)
         newmask = self.mask
     outfs = self.__class__.__new__(self.__class__, newdata, newmask, 
-                                   mask_corners=False, data_folded=self.folded)
+                                   mask_corners=False, data_folded=self.folded,
+                                   check_folding=False)
     return outfs
 """ % {'method':method})
 
