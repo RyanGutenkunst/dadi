@@ -47,6 +47,8 @@ class Spectrum(numpy.ma.masked_array):
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
                 data_folded=None, check_folding=True, dtype=float, copy=True, 
                 fill_value=numpy.nan, keep_mask=True, shrink=True):
+        data = numpy.asanyarray(data)
+
         if mask is numpy.ma.nomask:
             mask = numpy.ma.make_mask_none(data.shape)
 
