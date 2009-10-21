@@ -114,6 +114,9 @@ class Spectrum(numpy.ma.masked_array):
     # masked_array has priority 15.
     __array_priority__ = 20
 
+    def __repr__(self):
+        return 'Spectrum(%s, folded=%s)' % (str(self), str(self.folded))
+
     def mask_corners(self):
         """
         Mask the 'seen in 0 samples' and 'seen in all samples' entries.
