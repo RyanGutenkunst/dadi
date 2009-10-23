@@ -12,6 +12,7 @@ import Demographics1D
 import Demographics2D
 import Inference
 import Integration
+import Misc
 import Numerics
 import PhiManip
 # Protect import of Plotting in case matplotlib not installed.
