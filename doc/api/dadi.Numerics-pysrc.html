@@ -215,7 +215,7 @@
 </div><div id="intersect_masks-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="intersect_masks-expanded"><a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
 <a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line"><tt class="py-docstring">    Versions of m1 and m2 that are masked where either m1 or m2 were masked.</tt> </tt>
 <a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"><tt class="py-docstring">    If neither m1 or m2 is masked, just returns m1 or m2. Otherwise returns</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"><tt class="py-docstring">    If neither m1 or m2 is masked, just returns m1 and m2. Otherwise returns</tt> </tt>
 <a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line"><tt class="py-docstring">    m1 and m2 wrapped as masked_arrays with identical masks.</tt> </tt>
 <a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
 <a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">    <tt class="py-name">ma</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">ma</tt> </tt>
@@ -300,7 +300,7 @@
 <a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line">            <tt class="py-name">ex_result</tt> <tt class="py-op">=</tt> <tt id="link-5" class="py-name" targets="Function dadi.Numerics.quintic_extrap()=dadi.Numerics-module.html#quintic_extrap"><a title="dadi.Numerics.quintic_extrap" class="py-name" href="#" onclick="return doclink('link-5', 'quintic_extrap', 'link-5');">quintic_extrap</a></tt><tt class="py-op">(</tt><tt class="py-name">result_l</tt><tt class="py-op">,</tt> <tt class="py-name">x_l</tt><tt class="py-op">)</tt> </tt>
 <a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
 <a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt class="py-name">ValueError</tt><tt class="py-op">(</tt><tt class="py-string">'Number of calculations to use for extrapolation '</tt> </tt>
-<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">                             <tt class="py-string">'must be between 1 and 4'</tt><tt class="py-op">)</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">                             <tt class="py-string">'must be between 1 and 6'</tt><tt class="py-op">)</tt> </tt>
 <a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">ex_result</tt> </tt>
 </div><a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line"> </tt>
 <a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">extrap_func</tt> </tt>
@@ -361,100 +361,7 @@
 <a name="L301"></a><tt class="py-lineno">301</tt>  <tt class="py-line"> </tt>
 <a name="L302"></a><tt class="py-lineno">302</tt>  <tt class="py-line">    <tt id="link-12" class="py-name"><a title="dadi.Numerics._projection_cache" class="py-name" href="#" onclick="return doclink('link-12', '_projection_cache', 'link-7');">_projection_cache</a></tt><tt class="py-op">[</tt><tt class="py-name">key</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">contrib</tt> </tt>
 <a name="L303"></a><tt class="py-lineno">303</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">contrib</tt> </tt>
-</div><a name="L304"></a><tt class="py-lineno">304</tt>  <tt class="py-line"> </tt>
-<a name="array_from_file"></a><div id="array_from_file-def"><a name="L305"></a><tt class="py-lineno">305</tt> <a class="py-toggle" href="#" id="array_from_file-toggle" onclick="return toggle('array_from_file');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="dadi.Numerics-module.html#array_from_file">array_from_file</a><tt class="py-op">(</tt><tt class="py-param">fid</tt><tt class="py-op">,</tt> <tt class="py-param">return_comments</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="array_from_file-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="array_from_file-expanded"><a name="L306"></a><tt class="py-lineno">306</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
-<a name="L307"></a><tt class="py-lineno">307</tt>  <tt class="py-line"><tt class="py-docstring">    Read array from file.</tt> </tt>
-<a name="L308"></a><tt class="py-lineno">308</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L309"></a><tt class="py-lineno">309</tt>  <tt class="py-line"><tt class="py-docstring">    fid: string with file name to read from or an open file object.</tt> </tt>
-<a name="L310"></a><tt class="py-lineno">310</tt>  <tt class="py-line"><tt class="py-docstring">    return_comments: If True, the return value is (fs, comments), where</tt> </tt>
-<a name="L311"></a><tt class="py-lineno">311</tt>  <tt class="py-line"><tt class="py-docstring">                     comments is a list of strings containing the comments</tt> </tt>
-<a name="L312"></a><tt class="py-lineno">312</tt>  <tt class="py-line"><tt class="py-docstring">                     from the file (without #'s).</tt> </tt>
-<a name="L313"></a><tt class="py-lineno">313</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L314"></a><tt class="py-lineno">314</tt>  <tt class="py-line"><tt class="py-docstring">    The file format is:</tt> </tt>
-<a name="L315"></a><tt class="py-lineno">315</tt>  <tt class="py-line"><tt class="py-docstring">        # Any number of comment lines beginning with a '#'</tt> </tt>
-<a name="L316"></a><tt class="py-lineno">316</tt>  <tt class="py-line"><tt class="py-docstring">        A single line containing N integers giving the dimensions of the fs</tt> </tt>
-<a name="L317"></a><tt class="py-lineno">317</tt>  <tt class="py-line"><tt class="py-docstring">          array. So this line would be '5 5 3' for an SFS that was 5x5x3.</tt> </tt>
-<a name="L318"></a><tt class="py-lineno">318</tt>  <tt class="py-line"><tt class="py-docstring">          (That would be 4x4x2 *samples*.)</tt> </tt>
-<a name="L319"></a><tt class="py-lineno">319</tt>  <tt class="py-line"><tt class="py-docstring">        A single line giving the array elements. The order of elements is </tt> </tt>
-<a name="L320"></a><tt class="py-lineno">320</tt>  <tt class="py-line"><tt class="py-docstring">          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...</tt> </tt>
-<a name="L321"></a><tt class="py-lineno">321</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
-<a name="L322"></a><tt class="py-lineno">322</tt>  <tt class="py-line">    <tt class="py-name">newfile</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
-<a name="L323"></a><tt class="py-lineno">323</tt>  <tt class="py-line">    <tt class="py-comment"># Try to read from fid. If we can't, assume it's something that we can</tt> </tt>
-<a name="L324"></a><tt class="py-lineno">324</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-comment"># use to open a file.</tt> </tt>
-<a name="L325"></a><tt class="py-lineno">325</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">hasattr</tt><tt class="py-op">(</tt><tt class="py-name">fid</tt><tt class="py-op">,</tt> <tt class="py-string">'read'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-<a name="L326"></a><tt class="py-lineno">326</tt>  <tt class="py-line">        <tt class="py-name">newfile</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L327"></a><tt class="py-lineno">327</tt>  <tt class="py-line">        <tt class="py-name">fid</tt> <tt class="py-op">=</tt> <tt class="py-name">file</tt><tt class="py-op">(</tt><tt class="py-name">fid</tt><tt class="py-op">,</tt> <tt class="py-string">'r'</tt><tt class="py-op">)</tt> </tt>
-<a name="L328"></a><tt class="py-lineno">328</tt>  <tt class="py-line"> </tt>
-<a name="L329"></a><tt class="py-lineno">329</tt>  <tt class="py-line">    <tt class="py-name">line</tt> <tt class="py-op">=</tt> <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">readline</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L330"></a><tt class="py-lineno">330</tt>  <tt class="py-line">    <tt class="py-comment"># Strip out the comments</tt> </tt>
-<a name="L331"></a><tt class="py-lineno">331</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">comments</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
-<a name="L332"></a><tt class="py-lineno">332</tt>  <tt class="py-line">    <tt class="py-keyword">while</tt> <tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">startswith</tt><tt class="py-op">(</tt><tt class="py-string">'#'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-<a name="L333"></a><tt class="py-lineno">333</tt>  <tt class="py-line">        <tt class="py-name">comments</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">line</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
-<a name="L334"></a><tt class="py-lineno">334</tt>  <tt class="py-line">        <tt class="py-name">line</tt> <tt class="py-op">=</tt> <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">readline</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L335"></a><tt class="py-lineno">335</tt>  <tt class="py-line"> </tt>
-<a name="L336"></a><tt class="py-lineno">336</tt>  <tt class="py-line">    <tt class="py-comment"># Read the shape of the data</tt> </tt>
-<a name="L337"></a><tt class="py-lineno">337</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">shape</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">d</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">d</tt> <tt class="py-keyword">in</tt> <tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
-<a name="L338"></a><tt class="py-lineno">338</tt>  <tt class="py-line"> </tt>
-<a name="L339"></a><tt class="py-lineno">339</tt>  <tt class="py-line">    <tt class="py-name">data</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">fromfile</tt><tt class="py-op">(</tt><tt class="py-name">fid</tt><tt class="py-op">,</tt> <tt class="py-name">count</tt><tt class="py-op">=</tt><tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">product</tt><tt class="py-op">(</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">sep</tt><tt class="py-op">=</tt><tt class="py-string">' '</tt><tt class="py-op">)</tt> </tt>
-<a name="L340"></a><tt class="py-lineno">340</tt>  <tt class="py-line">    <tt class="py-comment"># fromfile returns a 1-d array. Reshape it to the proper form.</tt> </tt>
-<a name="L341"></a><tt class="py-lineno">341</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">data</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">.</tt><tt class="py-name">reshape</tt><tt class="py-op">(</tt><tt class="py-op">*</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt> </tt>
-<a name="L342"></a><tt class="py-lineno">342</tt>  <tt class="py-line"> </tt>
-<a name="L343"></a><tt class="py-lineno">343</tt>  <tt class="py-line">    <tt class="py-comment"># If we opened a new file, clean it up.</tt> </tt>
-<a name="L344"></a><tt class="py-lineno">344</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">if</tt> <tt class="py-name">newfile</tt><tt class="py-op">:</tt> </tt>
-<a name="L345"></a><tt class="py-lineno">345</tt>  <tt class="py-line">        <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L346"></a><tt class="py-lineno">346</tt>  <tt class="py-line"> </tt>
-<a name="L347"></a><tt class="py-lineno">347</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">return_comments</tt><tt class="py-op">:</tt> </tt>
-<a name="L348"></a><tt class="py-lineno">348</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">data</tt> </tt>
-<a name="L349"></a><tt class="py-lineno">349</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
-<a name="L350"></a><tt class="py-lineno">350</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">data</tt><tt class="py-op">,</tt><tt class="py-name">comments</tt> </tt>
-</div><a name="L351"></a><tt class="py-lineno">351</tt>  <tt class="py-line"> </tt>
-<a name="array_to_file"></a><div id="array_to_file-def"><a name="L352"></a><tt class="py-lineno">352</tt> <a class="py-toggle" href="#" id="array_to_file-toggle" onclick="return toggle('array_to_file');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="dadi.Numerics-module.html#array_to_file">array_to_file</a><tt class="py-op">(</tt><tt class="py-param">data</tt><tt class="py-op">,</tt> <tt class="py-param">fid</tt><tt class="py-op">,</tt> <tt class="py-param">precision</tt><tt class="py-op">=</tt><tt class="py-number">16</tt><tt class="py-op">,</tt> <tt class="py-param">comment_lines</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="array_to_file-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="array_to_file-expanded"><a name="L353"></a><tt class="py-lineno">353</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
-<a name="L354"></a><tt class="py-lineno">354</tt>  <tt class="py-line"><tt class="py-docstring">    Write array to file.</tt> </tt>
-<a name="L355"></a><tt class="py-lineno">355</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L356"></a><tt class="py-lineno">356</tt>  <tt class="py-line"><tt class="py-docstring">    data: array to write</tt> </tt>
-<a name="L357"></a><tt class="py-lineno">357</tt>  <tt class="py-line"><tt class="py-docstring">    fid: string with file name to write to or an open file object.</tt> </tt>
-<a name="L358"></a><tt class="py-lineno">358</tt>  <tt class="py-line"><tt class="py-docstring">    precision: precision with which to write out entries of the SFS. (They </tt> </tt>
-<a name="L359"></a><tt class="py-lineno">359</tt>  <tt class="py-line"><tt class="py-docstring">               are formated via %.&lt;p&gt;g, where &lt;p&gt; is the precision.)</tt> </tt>
-<a name="L360"></a><tt class="py-lineno">360</tt>  <tt class="py-line"><tt class="py-docstring">    comment lines: list of strings to be used as comment lines in the header</tt> </tt>
-<a name="L361"></a><tt class="py-lineno">361</tt>  <tt class="py-line"><tt class="py-docstring">                   of the output file.</tt> </tt>
-<a name="L362"></a><tt class="py-lineno">362</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L363"></a><tt class="py-lineno">363</tt>  <tt class="py-line"><tt class="py-docstring">    The file format is:</tt> </tt>
-<a name="L364"></a><tt class="py-lineno">364</tt>  <tt class="py-line"><tt class="py-docstring">        # Any number of comment lines beginning with a '#'</tt> </tt>
-<a name="L365"></a><tt class="py-lineno">365</tt>  <tt class="py-line"><tt class="py-docstring">        A single line containing N integers giving the dimensions of the fs</tt> </tt>
-<a name="L366"></a><tt class="py-lineno">366</tt>  <tt class="py-line"><tt class="py-docstring">          array. So this line would be '5 5 3' for an SFS that was 5x5x3.</tt> </tt>
-<a name="L367"></a><tt class="py-lineno">367</tt>  <tt class="py-line"><tt class="py-docstring">          (That would be 4x4x2 *samples*.)</tt> </tt>
-<a name="L368"></a><tt class="py-lineno">368</tt>  <tt class="py-line"><tt class="py-docstring">        A single line giving the array elements. The order of elements is </tt> </tt>
-<a name="L369"></a><tt class="py-lineno">369</tt>  <tt class="py-line"><tt class="py-docstring">          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...</tt> </tt>
-<a name="L370"></a><tt class="py-lineno">370</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
-<a name="L371"></a><tt class="py-lineno">371</tt>  <tt class="py-line">    <tt class="py-comment"># Open the file object.</tt> </tt>
-<a name="L372"></a><tt class="py-lineno">372</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">newfile</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
-<a name="L373"></a><tt class="py-lineno">373</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">hasattr</tt><tt class="py-op">(</tt><tt class="py-name">fid</tt><tt class="py-op">,</tt> <tt class="py-string">'write'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-<a name="L374"></a><tt class="py-lineno">374</tt>  <tt class="py-line">        <tt class="py-name">newfile</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
-<a name="L375"></a><tt class="py-lineno">375</tt>  <tt class="py-line">        <tt class="py-name">fid</tt> <tt class="py-op">=</tt> <tt class="py-name">file</tt><tt class="py-op">(</tt><tt class="py-name">fid</tt><tt class="py-op">,</tt> <tt class="py-string">'w'</tt><tt class="py-op">)</tt> </tt>
-<a name="L376"></a><tt class="py-lineno">376</tt>  <tt class="py-line"> </tt>
-<a name="L377"></a><tt class="py-lineno">377</tt>  <tt class="py-line">    <tt class="py-comment"># Write comments</tt> </tt>
-<a name="L378"></a><tt class="py-lineno">378</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">comment_lines</tt><tt class="py-op">:</tt> </tt>
-<a name="L379"></a><tt class="py-lineno">379</tt>  <tt class="py-line">        <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">'# '</tt><tt class="py-op">)</tt> </tt>
-<a name="L380"></a><tt class="py-lineno">380</tt>  <tt class="py-line">        <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
-<a name="L381"></a><tt class="py-lineno">381</tt>  <tt class="py-line">        <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">linesep</tt><tt class="py-op">)</tt> </tt>
-<a name="L382"></a><tt class="py-lineno">382</tt>  <tt class="py-line"> </tt>
-<a name="L383"></a><tt class="py-lineno">383</tt>  <tt class="py-line">    <tt class="py-comment"># Write out the shape of the fs</tt> </tt>
-<a name="L384"></a><tt class="py-lineno">384</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">for</tt> <tt class="py-name">elem</tt> <tt class="py-keyword">in</tt> <tt class="py-name">data</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">:</tt> </tt>
-<a name="L385"></a><tt class="py-lineno">385</tt>  <tt class="py-line">        <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">'%i '</tt> <tt class="py-op">%</tt> <tt class="py-name">elem</tt><tt class="py-op">)</tt> </tt>
-<a name="L386"></a><tt class="py-lineno">386</tt>  <tt class="py-line">    <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">linesep</tt><tt class="py-op">)</tt> </tt>
-<a name="L387"></a><tt class="py-lineno">387</tt>  <tt class="py-line"> </tt>
-<a name="L388"></a><tt class="py-lineno">388</tt>  <tt class="py-line">    <tt class="py-comment"># Masked entries in the fs will go in as 'nan'</tt> </tt>
-<a name="L389"></a><tt class="py-lineno">389</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">filled</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">.</tt><tt class="py-name">filled</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L390"></a><tt class="py-lineno">390</tt>  <tt class="py-line">    <tt class="py-comment"># Write to file</tt> </tt>
-<a name="L391"></a><tt class="py-lineno">391</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">filled</tt><tt class="py-op">.</tt><tt class="py-name">tofile</tt><tt class="py-op">(</tt><tt class="py-name">fid</tt><tt class="py-op">,</tt> <tt class="py-string">' '</tt><tt class="py-op">,</tt> <tt class="py-string">'%%.%ig'</tt> <tt class="py-op">%</tt> <tt class="py-name">precision</tt><tt class="py-op">)</tt> </tt>
-<a name="L392"></a><tt class="py-lineno">392</tt>  <tt class="py-line">    <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">linesep</tt><tt class="py-op">)</tt> </tt>
-<a name="L393"></a><tt class="py-lineno">393</tt>  <tt class="py-line"> </tt>
-<a name="L394"></a><tt class="py-lineno">394</tt>  <tt class="py-line">    <tt class="py-comment"># Close file</tt> </tt>
-<a name="L395"></a><tt class="py-lineno">395</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">if</tt> <tt class="py-name">newfile</tt><tt class="py-op">:</tt> </tt>
-<a name="L396"></a><tt class="py-lineno">396</tt>  <tt class="py-line">        <tt class="py-name">fid</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-</div><a name="L397"></a><tt class="py-lineno">397</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+</div><a name="L304"></a><tt class="py-lineno">304</tt>  <tt class="py-line"> </tt><script type="text/javascript">
 <!--
 expandto(location.href);
 // -->
@@ -490,7 +397,7 @@ expandto(location.href);
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Thu May 21 14:31:04 2009</a>
+    3.0.1 on Thu Oct 22 19:45:03 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

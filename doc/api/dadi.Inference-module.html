@@ -93,7 +93,6 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">pts</span>,
         <span class="summary-sig-arg">lower_bound</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">upper_bound</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">fold</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0</span>)</span><br />
@@ -138,7 +137,6 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">pts</span>,
         <span class="summary-sig-arg">lower_bound</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">upper_bound</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">fold</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">epsilon</span>=<span class="summary-sig-default">0.001</span>,
@@ -350,7 +348,6 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">pts</span>,
         <span class="summary-sig-arg">lower_bound</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">upper_bound</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">fold</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
@@ -378,7 +375,6 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">pts</span>,
         <span class="summary-sig-arg">lower_bound</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">upper_bound</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">fold</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">epsilon</span>=<span class="summary-sig-default">0.001</span>,
@@ -469,7 +465,6 @@ Comparison and optimization of model spectra to data.
         <span class="sig-arg">pts</span>,
         <span class="sig-arg">lower_bound</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">upper_bound</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">fold</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">verbose</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">epsilon</span>=<span class="sig-default">0.001</span>,
@@ -501,7 +496,6 @@ lower_bound: Lower bound on parameter values. If not None, must be of same
              length as p0.
 upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0.
-fold: If True, base inference on the folded spectrum.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
@@ -776,7 +770,6 @@ model nor data.
         <span class="sig-arg">pts</span>,
         <span class="sig-arg">lower_bound</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">upper_bound</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">fold</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">verbose</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
@@ -807,7 +800,6 @@ lower_bound: Lower bound on parameter values. If not None, must be of same
              length as p0.
 upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0.
-fold: If True, base inference on the folded spectrum.
 verbose: If True, print optimization status every &lt;verbose&gt; steps.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
@@ -836,7 +828,6 @@ full_output: If True, return full outputs as in described in
         <span class="sig-arg">pts</span>,
         <span class="sig-arg">lower_bound</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">upper_bound</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">fold</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">verbose</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">epsilon</span>=<span class="sig-default">0.001</span>,
@@ -868,7 +859,6 @@ lower_bound: Lower bound on parameter values. If not None, must be of same
              length as p0.
 upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0.
-fold: If True, base inference on the folded spectrum.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
@@ -917,7 +907,7 @@ full_output: If True, return full outputs as in described in
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Thu May 21 14:31:03 2009</a>
+    3.0.1 on Thu Oct 22 19:45:02 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
