@@ -301,3 +301,96 @@ def _cached_projection(proj_to, proj_from, hits):
 
     _projection_cache[key] = contrib
     return contrib
+
+def array_from_file(fid, return_comments=False):
+    """
+    Read array from file.
+
+    fid: string with file name to read from or an open file object.
+    return_comments: If True, the return value is (fs, comments), where
+                     comments is a list of strings containing the comments
+                     from the file (without #'s).
+
+    The file format is:
+        # Any number of comment lines beginning with a '#'
+        A single line containing N integers giving the dimensions of the fs
+          array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+          (That would be 4x4x2 *samples*.)
+        A single line giving the array elements. The order of elements is 
+          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+    """
+    newfile = False
+    # Try to read from fid. If we can't, assume it's something that we can
+    # use to open a file.
+    if not hasattr(fid, 'read'):
+        newfile = True
+        fid = file(fid, 'r')
+
+    line = fid.readline()
+    # Strip out the comments
+    comments = []
+    while line.startswith('#'):
+        comments.append(line[1:].strip())
+        line = fid.readline()
+
+    # Read the shape of the data
+    shape = tuple([int(d) for d in line.split()])
+
+    data = numpy.fromfile(fid, count=numpy.product(shape), sep=' ')
+    # fromfile returns a 1-d array. Reshape it to the proper form.
+    data = data.reshape(*shape)
+
+    # If we opened a new file, clean it up.
+    if newfile:
+        fid.close()
+
+    if not return_comments:
+        return data
+    else:
+        return data,comments
+
+def array_to_file(data, fid, precision=16, comment_lines = []):
+    """
+    Write array to file.
+
+    data: array to write
+    fid: string with file name to write to or an open file object.
+    precision: precision with which to write out entries of the SFS. (They 
+               are formated via %.<p>g, where <p> is the precision.)
+    comment lines: list of strings to be used as comment lines in the header
+                   of the output file.
+
+    The file format is:
+        # Any number of comment lines beginning with a '#'
+        A single line containing N integers giving the dimensions of the fs
+          array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+          (That would be 4x4x2 *samples*.)
+        A single line giving the array elements. The order of elements is 
+          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+    """
+    # Open the file object.
+    newfile = False
+    if not hasattr(fid, 'write'):
+        newfile = True
+        fid = file(fid, 'w')
+
+    # Write comments
+    for line in comment_lines:
+        fid.write('# ')
+        fid.write(line.strip())
+        fid.write(os.linesep)
+
+    # Write out the shape of the fs
+    for elem in data.shape:
+        fid.write('%i ' % elem)
+    fid.write(os.linesep)
+
+    # Masked entries in the fs will go in as 'nan'
+    filled = data.filled()
+    # Write to file
+    filled.tofile(fid, ' ', '%%.%ig' % precision)
+    fid.write(os.linesep)
+
+    # Close file
+    if newfile:
+        fid.close()
