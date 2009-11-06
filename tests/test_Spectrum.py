@@ -156,8 +156,7 @@ class SpectrumTestCase(unittest.TestCase):
         folded2 = fs2.fold()
 
         # We'll iterate through each of these arithmetic functions.
-        from operator import add,sub,mul,div,truediv,floordiv,pow,abs,pos,neg,\
-                iadd,isub,imul,idiv,itruediv,ifloordiv,ipow
+        from operator import add,sub,mul,div,truediv,floordiv,pow,abs,pos,neg
 
         arr = numpy.random.uniform(size=ns)
         marr = numpy.random.uniform(size=ns)
@@ -261,56 +260,61 @@ class SpectrumTestCase(unittest.TestCase):
             result = op(folded1)
             self.assertTrue(result.folded)
 
-        for op in [iadd,isub,imul,idiv,itruediv,ifloordiv,ipow]:
-            fs1origmask = fs1.mask.copy()
+        try:
+            # The in-place methods aren't in operator in python 2.4...
+            from operator import iadd,isub,imul,idiv,itruediv,ifloordiv,ipow
+            for op in [iadd,isub,imul,idiv,itruediv,ifloordiv,ipow]:
+                fs1origmask = fs1.mask.copy()
 
-            # Check that in-place operations preserve folding status.
-            op(fs1,fs2)
-            self.assertFalse(fs1.folded)
-            self.assert_(numpy.all(fs1.mask == fs1origmask))
+                # Check that in-place operations preserve folding status.
+                op(fs1,fs2)
+                self.assertFalse(fs1.folded)
+                self.assert_(numpy.all(fs1.mask == fs1origmask))
 
-            op(fs1,2.0)
-            self.assertFalse(fs1.folded)
-            self.assert_(numpy.all(fs1.mask == fs1origmask))
+                op(fs1,2.0)
+                self.assertFalse(fs1.folded)
+                self.assert_(numpy.all(fs1.mask == fs1origmask))
 
-            op(fs1,numpyfloat)
-            self.assertFalse(fs1.folded)
-            self.assert_(numpy.all(fs1.mask == fs1origmask))
+                op(fs1,numpyfloat)
+                self.assertFalse(fs1.folded)
+                self.assert_(numpy.all(fs1.mask == fs1origmask))
 
-            op(fs1,arr)
-            self.assertFalse(fs1.folded)
-            self.assert_(numpy.all(fs1.mask == fs1origmask))
+                op(fs1,arr)
+                self.assertFalse(fs1.folded)
+                self.assert_(numpy.all(fs1.mask == fs1origmask))
 
-            op(fs1,marr)
-            self.assertFalse(fs1.folded)
-            self.assert_(numpy.all(fs1.mask == fs1origmask))
+                op(fs1,marr)
+                self.assertFalse(fs1.folded)
+                self.assert_(numpy.all(fs1.mask == fs1origmask))
 
-            # Now folded Spectra
-            folded1origmask = folded1.mask.copy()
+                # Now folded Spectra
+                folded1origmask = folded1.mask.copy()
 
-            op(folded1,folded2)
-            self.assertTrue(folded1.folded)
-            self.assert_(numpy.all(folded1.mask == folded1origmask))
+                op(folded1,folded2)
+                self.assertTrue(folded1.folded)
+                self.assert_(numpy.all(folded1.mask == folded1origmask))
 
-            op(folded1,2.0)
-            self.assertTrue(folded1.folded)
-            self.assert_(numpy.all(folded1.mask == folded1origmask))
+                op(folded1,2.0)
+                self.assertTrue(folded1.folded)
+                self.assert_(numpy.all(folded1.mask == folded1origmask))
 
-            op(folded1,numpyfloat)
-            self.assertTrue(folded1.folded)
-            self.assert_(numpy.all(folded1.mask == folded1origmask))
+                op(folded1,numpyfloat)
+                self.assertTrue(folded1.folded)
+                self.assert_(numpy.all(folded1.mask == folded1origmask))
 
-            op(folded1,arr)
-            self.assertTrue(folded1.folded)
-            self.assert_(numpy.all(folded1.mask == folded1origmask))
+                op(folded1,arr)
+                self.assertTrue(folded1.folded)
+                self.assert_(numpy.all(folded1.mask == folded1origmask))
 
-            op(folded1,marr)
-            self.assertTrue(folded1.folded)
-            self.assert_(numpy.all(folded1.mask == folded1origmask))
+                op(folded1,marr)
+                self.assertTrue(folded1.folded)
+                self.assert_(numpy.all(folded1.mask == folded1origmask))
 
-            # Check that exceptions are properly raised.
-            self.assertRaises(ValueError, op, fs1, folded2)
-            self.assertRaises(ValueError, op, folded1, fs2)
+                # Check that exceptions are properly raised.
+                self.assertRaises(ValueError, op, fs1, folded2)
+                self.assertRaises(ValueError, op, folded1, fs2)
+        except ImportError:
+            pass
 
         # Restore logging of warnings
         dadi.Spectrum_mod.logger.setLevel(logging.WARNING)
