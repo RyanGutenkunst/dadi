@@ -385,10 +385,11 @@ def array_to_file(data, fid, precision=16, comment_lines = []):
         fid.write('%i ' % elem)
     fid.write(os.linesep)
 
-    # Masked entries in the fs will go in as 'nan'
-    filled = data.filled()
+    if hasattr(data, 'filled'):
+        # Masked entries in the fs will go in as 'nan'
+        data = data.filled()
     # Write to file
-    filled.tofile(fid, ' ', '%%.%ig' % precision)
+    data.tofile(fid, ' ', '%%.%ig' % precision)
     fid.write(os.linesep)
 
     # Close file
