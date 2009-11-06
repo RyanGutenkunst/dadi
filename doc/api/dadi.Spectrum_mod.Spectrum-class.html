@@ -1124,11 +1124,14 @@ Object of same type as a from ndarray obj.
       </p>
     <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
       <code>__delattr__</code>,
+      <code>__format__</code>,
       <code>__getattribute__</code>,
       <code>__hash__</code>,
       <code>__init__</code>,
       <code>__reduce_ex__</code>,
-      <code>__setattr__</code>
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__subclasshook__</code>
       </p>
     </td>
   </tr>
@@ -1565,11 +1568,17 @@ misidentification.</td>
     </td>
   </tr></table>
   
-  <p>Create a new masked array from scratch.</p>
-<div class="rst-section" id="rst-notes">
-<h1 class="heading">Notes</h1>
-<p>A masked array can also be created by taking a .view(MaskedArray).</p>
-</div>
+  <pre class="literalblock">
+
+Create a new masked array from scratch.
+
+Notes
+-----
+A masked array can also be created by taking a .view(MaskedArray).
+
+    
+
+</pre>
   <dl class="fields">
     <dt>Returns: <pre class="literalblock">
 a new object with type S, a subtype of T
@@ -1597,7 +1606,11 @@ a new object with type S, a subtype of T
     </td>
   </tr></table>
   
-  Finalizes the masked array.
+  <pre class="literalblock">
+Finalizes the masked array.
+        
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         <a href="numpy.ndarray-class.html#__array_finalize__">__array_finalize__</a>
@@ -1622,8 +1635,12 @@ a new object with type S, a subtype of T
     </td>
   </tr></table>
   
-  Special hook for ufuncs.
+  <pre class="literalblock">
+
+Special hook for ufuncs.
 Wraps the numpy array and sets the mask according to context.
+
+</pre>
   <dl class="fields">
     <dt>Returns: <pre class="literalblock">
 Object of same type as a from ndarray obj.
@@ -1651,7 +1668,11 @@ Object of same type as a from ndarray obj.
     </td>
   </tr></table>
   
-  Copies some attributes of obj to self.
+  <pre class="literalblock">
+Copies some attributes of obj to self.
+        
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ma.core.MaskedArray._update_from
@@ -1675,7 +1696,12 @@ Object of same type as a from ndarray obj.
     </td>
   </tr></table>
   
-  Literal string representation.
+  <pre class="literalblock">
+Literal string representation.
+
+        
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         object.__repr__
@@ -2513,7 +2539,10 @@ Most commonly this is because of missing or non-constant context.
     </td>
   </tr></table>
   
-  Add other to self, and return a new masked array.
+  <pre class="literalblock">
+Add other to self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__add__
@@ -2537,7 +2566,10 @@ Most commonly this is because of missing or non-constant context.
     </td>
   </tr></table>
   
-  Divide other into self, and return a new masked array.
+  <pre class="literalblock">
+Divide other into self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__div__
@@ -2561,7 +2593,10 @@ Most commonly this is because of missing or non-constant context.
     </td>
   </tr></table>
   
-  Divide other into self, and return a new masked array.
+  <pre class="literalblock">
+Divide other into self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__floordiv__
@@ -2585,7 +2620,10 @@ Most commonly this is because of missing or non-constant context.
     </td>
   </tr></table>
   
-  Add other to self in-place.
+  <pre class="literalblock">
+Add other to self in-place.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__iadd__
@@ -2609,7 +2647,10 @@ Most commonly this is because of missing or non-constant context.
     </td>
   </tr></table>
   
-  Divide self by other in-place.
+  <pre class="literalblock">
+Divide self by other in-place.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__idiv__
@@ -2660,7 +2701,10 @@ x//y
     </td>
   </tr></table>
   
-  Multiply self by other in-place.
+  <pre class="literalblock">
+Multiply self by other in-place.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__imul__
@@ -2684,7 +2728,10 @@ x//y
     </td>
   </tr></table>
   
-  Raise self to the power other, in place.
+  <pre class="literalblock">
+Raise self to the power other, in place.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__ipow__
@@ -2708,7 +2755,10 @@ x//y
     </td>
   </tr></table>
   
-  Subtract other from self in-place.
+  <pre class="literalblock">
+Subtract other from self in-place.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__isub__
@@ -2759,7 +2809,10 @@ x/y
     </td>
   </tr></table>
   
-  Multiply other by self, and return a new masked array.
+  <pre class="literalblock">
+Multiply other by self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__mul__
@@ -2783,7 +2836,10 @@ x/y
     </td>
   </tr></table>
   
-  Raise self to the power other, masking the potential NaNs/Infs
+  <pre class="literalblock">
+Raise self to the power other, masking the potential NaNs/Infs
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__pow__
@@ -2808,7 +2864,10 @@ x/y
     </td>
   </tr></table>
   
-  Add other to self, and return a new masked array.
+  <pre class="literalblock">
+Add other to self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__radd__
@@ -2886,7 +2945,10 @@ y//x
     </td>
   </tr></table>
   
-  Multiply other by self, and return a new masked array.
+  <pre class="literalblock">
+Multiply other by self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__rmul__
@@ -2937,7 +2999,10 @@ pow(x, y[, z])
     </td>
   </tr></table>
   
-  Subtract other to self, and return a new masked array.
+  <pre class="literalblock">
+Subtract other to self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__rsub__
@@ -2989,7 +3054,10 @@ y/x
     </td>
   </tr></table>
   
-  Subtract other to self, and return a new masked array.
+  <pre class="literalblock">
+Subtract other to self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__sub__
@@ -3013,7 +3081,10 @@ y/x
     </td>
   </tr></table>
   
-  Divide other into self, and return a new masked array.
+  <pre class="literalblock">
+Divide other into self, and return a new masked array.
+
+</pre>
   <dl class="fields">
     <dt>Overrides:
         numpy.ndarray.__truediv__
@@ -3099,7 +3170,7 @@ y/x
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Thu Oct 22 19:45:02 2009</a>
+    3.0.1 on Fri Nov  6 14:17:05 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
