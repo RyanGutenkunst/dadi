@@ -142,6 +142,13 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
         nu, gamma, h = nu_f(next_t), gamma_f(next_t), h_f(next_t)
         theta0 = theta0_f(next_t)
 
+        if numpy.any(numpy.less([T,nu,theta0], 0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
         _inject_mutations_1D(phi, this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
@@ -208,6 +215,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
         gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
         h1,h2 = h1_f(next_t), h2_f(next_t)
         theta0 = theta0_f(next_t)
+
+        if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
 
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0)
         phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
@@ -305,6 +319,14 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         h1,h2,h3 = h1_f(next_t), h2_f(next_t), h3_f(next_t)
         theta0 = theta0_f(next_t)
 
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0)
         phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
                                  gamma1, h1, this_dt, use_delj_trick)
@@ -371,6 +393,13 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1,
     we need to evolve. This we can efficiently do in Python, rather than 
     relying on C. The nice thing is that the Python is much faster to debug.
     """
+    if numpy.any(numpy.less([T,nu,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
+
     M = _Mfunc1D(xx, gamma, h)
     MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, gamma, h)
     V = _Vfunc(xx, nu)
@@ -411,6 +440,12 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     """
     Integrate two populations with constant parameters.
     """
+    if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu1,nu2], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
     yy = xx
 
     # The use of nuax (= numpy.newaxis) here is for memory conservation. We
@@ -477,6 +512,12 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     """
     Integrate three population with constant parameters.
     """
+    if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu1,nu2,nu3], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
     zz = yy = xx
 
     Vx = _Vfunc(xx, nu1)
