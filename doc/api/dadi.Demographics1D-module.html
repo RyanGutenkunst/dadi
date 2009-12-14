@@ -88,7 +88,7 @@ Single population demographic models.
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#snm" class="summary-sig-name">snm</a>(<span class="summary-sig-arg">notused</span>,
-        <span class="summary-sig-arg">(n1,)</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
       Standard neutral model.</td>
           <td align="right" valign="top">
@@ -106,8 +106,8 @@ Single population demographic models.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#two_epoch" class="summary-sig-name">two_epoch</a>(<span class="summary-sig-arg">(nu, T)</span>,
-        <span class="summary-sig-arg">(n1,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#two_epoch" class="summary-sig-name">two_epoch</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
       Instantaneous size change some time ago.</td>
           <td align="right" valign="top">
@@ -125,8 +125,8 @@ Single population demographic models.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#growth" class="summary-sig-name">growth</a>(<span class="summary-sig-arg">((n1,), xx)</span>,
-        <span class="summary-sig-arg">(phi,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#growth" class="summary-sig-name">growth</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
       Exponential growth beginning some time ago.</td>
           <td align="right" valign="top">
@@ -144,8 +144,8 @@ Single population demographic models.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#bottlegrowth" class="summary-sig-name">bottlegrowth</a>(<span class="summary-sig-arg">((n1,), xx, phi)</span>,
-        <span class="summary-sig-arg">(nu_func,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#bottlegrowth" class="summary-sig-name">bottlegrowth</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
       Instantanous size change followed by exponential growth.</td>
           <td align="right" valign="top">
@@ -163,11 +163,11 @@ Single population demographic models.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="three_epoch"></a><span class="summary-sig-name">three_epoch</span>(<span class="summary-sig-arg">(nuB, nuF, TB, TF)</span>,
-        <span class="summary-sig-arg">(n1,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics1D-module.html#three_epoch" class="summary-sig-name">three_epoch</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      n1: Number of samples in resulting SFS
-pts: Number of grid points to use in integration.</td>
+      params = (nuB,nuF,TB,TF)
+ns = (n1,)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics1D-pysrc.html#three_epoch">source&nbsp;code</a></span>
             
@@ -229,7 +229,7 @@ pts: Number of grid points to use in integration.</td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">snm</span>(<span class="sig-arg">notused</span>,
-        <span class="sig-arg">(n1,)</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -241,7 +241,9 @@ pts: Number of grid points to use in integration.</td>
 
 Standard neutral model.
 
-n1: Number of samples in resulting SFS
+ns = (n1,)
+
+n1: Number of samples in resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -256,8 +258,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">two_epoch</span>(<span class="sig-arg">(nu, T)</span>,
-        <span class="sig-arg">(n1,)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">two_epoch</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -269,10 +271,13 @@ pts: Number of grid points to use in integration.
 
 Instantaneous size change some time ago.
 
+params = (nu,T)
+ns = (n1,)
+
 nu: Ratio of contemporary to ancient population size
 T: Time in the past at which size change happened (in units of 2*Na 
    generations) 
-n1: Number of samples in resulting SFS
+n1: Number of samples in resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -287,8 +292,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">growth</span>(<span class="sig-arg">((n1,), xx)</span>,
-        <span class="sig-arg">(phi,)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">growth</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -300,10 +305,13 @@ pts: Number of grid points to use in integration.
 
 Exponential growth beginning some time ago.
 
+params = (nu,T)
+ns = (n1,)
+
 nu: Ratio of contemporary to ancient population size
 T: Time in the past at which growth began (in units of 2*Na 
    generations) 
-n1: Number of samples in resulting SFS
+n1: Number of samples in resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -318,8 +326,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth</span>(<span class="sig-arg">((n1,), xx, phi)</span>,
-        <span class="sig-arg">(nu_func,)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -331,12 +339,49 @@ pts: Number of grid points to use in integration.
 
 Instantanous size change followed by exponential growth.
 
+params = (nuB,nuF,T)
+ns = (n1,)
+
 nuB: Ratio of population size after instantanous change to ancient
      population size
-nuF: Ratio of contempoary to ancient population size
+nuF: Ratio of contemporary to ancient population size
 T: Time in the past at which instantaneous change happened and growth began
    (in units of 2*Na generations) 
-n1: Number of samples in resulting SFS
+n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="three_epoch"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">three_epoch</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
+        <span class="sig-arg">pts</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Demographics1D-pysrc.html#three_epoch">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+params = (nuB,nuF,TB,TF)
+ns = (n1,)
+
+nuB: Ratio of bottleneck population size to ancient pop size
+nuF: Ratio of contemporary to ancient pop size
+TB: Length of bottleneck (in units of 2*Na generations) 
+TF: Time since bottleneck recovery (in units of 2*Na generations) 
+
+n1: Number of samples in resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -374,7 +419,7 @@ pts: Number of grid points to use in integration.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Nov  6 14:29:17 2009</a>
+    3.0.1 on Mon Dec 14 08:49:38 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

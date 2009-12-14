@@ -87,10 +87,10 @@ Two population demographic models.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="snm"></a><span class="summary-sig-name">snm</span>(<span class="summary-sig-arg">notused</span>,
-        <span class="summary-sig-arg">(n1, n2)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#snm" class="summary-sig-name">snm</a>(<span class="summary-sig-arg">notused</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Standard neutral model, populations never diverge.</td>
+      ns = (n1,n2)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#snm">source&nbsp;code</a></span>
             
@@ -106,11 +106,11 @@ Two population demographic models.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#bottlegrowth" class="summary-sig-name">bottlegrowth</a>(<span class="summary-sig-arg">(nuB, nuF, T)</span>,
-        <span class="summary-sig-arg">(n1, n2)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#bottlegrowth" class="summary-sig-name">bottlegrowth</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Instantanous size change followed by exponential growth with no population
-split.</td>
+      params = (nuB,nuF,T)
+ns = (n1,n2)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#bottlegrowth">source&nbsp;code</a></span>
             
@@ -126,10 +126,11 @@ split.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#bottlegrowth_split" class="summary-sig-name">bottlegrowth_split</a>(<span class="summary-sig-arg">(nuB, nuF, T, Ts)</span>,
-        <span class="summary-sig-arg">(n1, n2)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#bottlegrowth_split" class="summary-sig-name">bottlegrowth_split</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Instantanous size change followed by exponential growth then split.</td>
+      params = (nuB,nuF,T,Ts)
+ns = (n1,n2)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#bottlegrowth_split">source&nbsp;code</a></span>
             
@@ -145,11 +146,11 @@ split.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#bottlegrowth_split_mig" class="summary-sig-name">bottlegrowth_split_mig</a>(<span class="summary-sig-arg">(m, (n1, n2), xx, phi, nu_func)</span>,
-        <span class="summary-sig-arg">(phi,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#bottlegrowth_split_mig" class="summary-sig-name">bottlegrowth_split_mig</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Instantanous size change followed by exponential growth then split with
-migration.</td>
+      params = (nuB,nuF,m,T,Ts)
+ns = (n1,n2)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#bottlegrowth_split_mig">source&nbsp;code</a></span>
             
@@ -165,10 +166,11 @@ migration.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#split_mig" class="summary-sig-name">split_mig</a>(<span class="summary-sig-arg">(nu1, nu2, T, m)</span>,
-        <span class="summary-sig-arg">(n1, n2)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#split_mig" class="summary-sig-name">split_mig</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Split into two populations of specifed size, with migration.</td>
+      params = (nu1,nu2,T,m)
+ns = (n1,n2)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#split_mig">source&nbsp;code</a></span>
             
@@ -184,7 +186,7 @@ migration.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="split_mig_mscore"></a><span class="summary-sig-name">split_mig_mscore</span>(<span class="summary-sig-arg">(nu1, nu2, T, m)</span>)</span><br />
+          <td><span class="summary-sig"><a name="split_mig_mscore"></a><span class="summary-sig-name">split_mig_mscore</span>(<span class="summary-sig-arg">params</span>)</span><br />
       ms core command for split_mig.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#split_mig_mscore">source&nbsp;code</a></span>
@@ -201,10 +203,11 @@ migration.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#IM" class="summary-sig-name">IM</a>(<span class="summary-sig-arg">(m12, m21, (n1, n2), xx, phi, phi)</span>,
-        <span class="summary-sig-arg">(nu1_func,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#IM" class="summary-sig-name">IM</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Isolation-with-migration model with exponential pop growth.</td>
+      ns = (n1,n2)
+params = (s,nu1,nu2,T,m12,m21)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#IM">source&nbsp;code</a></span>
             
@@ -220,7 +223,7 @@ migration.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="IM_mscore"></a><span class="summary-sig-name">IM_mscore</span>(<span class="summary-sig-arg">(s, nu1, nu2, T, m12, m21)</span>)</span><br />
+          <td><span class="summary-sig"><a name="IM_mscore"></a><span class="summary-sig-name">IM_mscore</span>(<span class="summary-sig-arg">params</span>)</span><br />
       ms core command for IM.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#IM_mscore">source&nbsp;code</a></span>
@@ -237,11 +240,11 @@ migration.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#IM_pre" class="summary-sig-name">IM_pre</a>(<span class="summary-sig-arg">(nuPre, TPre, s, m12, m21, (n1, n2), xx, phi)</span>,
-        <span class="summary-sig-arg">(phi,)</span>,
+          <td><span class="summary-sig"><a href="dadi.Demographics2D-module.html#IM_pre" class="summary-sig-name">IM_pre</a>(<span class="summary-sig-arg">params</span>,
+        <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">pts</span>)</span><br />
-      Isolation-with-migration model with exponential pop growth and a size change
-prior to split.</td>
+      params = (nuPre,TPre,s,nu1,nu2,T,m12,m21)
+ns = (n1,n2)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#IM_pre">source&nbsp;code</a></span>
             
@@ -257,7 +260,7 @@ prior to split.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="IM_pre_mscore"></a><span class="summary-sig-name">IM_pre_mscore</span>(<span class="summary-sig-arg">(nuPre, TPre, s, nu1, nu2, T, m12, m21)</span>)</span><br />
+          <td><span class="summary-sig"><a name="IM_pre_mscore"></a><span class="summary-sig-name">IM_pre_mscore</span>(<span class="summary-sig-arg">params</span>)</span><br />
       ms core command for IM_pre.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Demographics2D-pysrc.html#IM_pre_mscore">source&nbsp;code</a></span>
@@ -312,6 +315,33 @@ prior to split.</td>
   </td>
 </tr>
 </table>
+<a name="snm"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">snm</span>(<span class="sig-arg">notused</span>,
+        <span class="sig-arg">ns</span>,
+        <span class="sig-arg">pts</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Demographics2D-pysrc.html#snm">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+ns = (n1,n2)
+
+Standard neutral model, populations never diverge.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="bottlegrowth"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -319,8 +349,8 @@ prior to split.</td>
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth</span>(<span class="sig-arg">(nuB, nuF, T)</span>,
-        <span class="sig-arg">(n1, n2)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -330,6 +360,9 @@ prior to split.</td>
   
   <pre class="literalblock">
 
+params = (nuB,nuF,T)
+ns = (n1,n2)
+
 Instantanous size change followed by exponential growth with no population
 split.
 
@@ -338,7 +371,7 @@ nuB: Ratio of population size after instantanous change to ancient
 nuF: Ratio of contempoary to ancient population size
 T: Time in the past at which instantaneous change happened and growth began
    (in units of 2*Na generations) 
-n1,n2: Shape of resulting SFS
+n1,n2: Sample sizes of resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -353,8 +386,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth_split</span>(<span class="sig-arg">(nuB, nuF, T, Ts)</span>,
-        <span class="sig-arg">(n1, n2)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth_split</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -364,6 +397,9 @@ pts: Number of grid points to use in integration.
   
   <pre class="literalblock">
 
+params = (nuB,nuF,T,Ts)
+ns = (n1,n2)
+
 Instantanous size change followed by exponential growth then split.
 
 nuB: Ratio of population size after instantanous change to ancient
@@ -372,7 +408,7 @@ nuF: Ratio of contempoary to ancient population size
 T: Time in the past at which instantaneous change happened and growth began
    (in units of 2*Na generations) 
 Ts: Time in the past at which the two populations split.
-n1,n2: Shape of resulting SFS
+n1,n2: Sample sizes of resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -387,8 +423,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth_split_mig</span>(<span class="sig-arg">(m, (n1, n2), xx, phi, nu_func)</span>,
-        <span class="sig-arg">(phi,)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bottlegrowth_split_mig</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -397,6 +433,9 @@ pts: Number of grid points to use in integration.
   </tr></table>
   
   <pre class="literalblock">
+
+params = (nuB,nuF,m,T,Ts)
+ns = (n1,n2)
 
 Instantanous size change followed by exponential growth then split with
 migration.
@@ -408,7 +447,7 @@ m: Migration rate between the two populations (2*Na*m).
 T: Time in the past at which instantaneous change happened and growth began
    (in units of 2*Na generations) 
 Ts: Time in the past at which the two populations split.
-n1,n2: Shape of resulting SFS
+n1,n2: Sample sizes of resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -423,8 +462,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">split_mig</span>(<span class="sig-arg">(nu1, nu2, T, m)</span>,
-        <span class="sig-arg">(n1, n2)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">split_mig</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -434,13 +473,16 @@ pts: Number of grid points to use in integration.
   
   <pre class="literalblock">
 
+params = (nu1,nu2,T,m)
+ns = (n1,n2)
+
 Split into two populations of specifed size, with migration.
 
 nu1: Size of population 1 after split.
 nu2: Size of population 2 after split.
 T: Time in the past of split (in units of 2*Na generations) 
 m: Migration rate between populations (2*Na*m)
-n1,n2: Shape of resulting SFS
+n1,n2: Sample sizes of resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -455,8 +497,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">IM</span>(<span class="sig-arg">(m12, m21, (n1, n2), xx, phi, phi)</span>,
-        <span class="sig-arg">(nu1_func,)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">IM</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -466,6 +508,9 @@ pts: Number of grid points to use in integration.
   
   <pre class="literalblock">
 
+ns = (n1,n2)
+params = (s,nu1,nu2,T,m12,m21)
+
 Isolation-with-migration model with exponential pop growth.
 
 s: Size of pop 1 after split. (Pop 2 has size 1-s.)
@@ -474,7 +519,7 @@ nu2: Final size of pop 2.
 T: Time in the past of split (in units of 2*Na generations) 
 m12: Migration from pop 2 to pop 1 (2*Na*m12)
 m21: Migration from pop 1 to pop 2
-n1,n2: Shape of resulting SFS
+n1,n2: Sample sizes of resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -489,8 +534,8 @@ pts: Number of grid points to use in integration.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">IM_pre</span>(<span class="sig-arg">(nuPre, TPre, s, m12, m21, (n1, n2), xx, phi)</span>,
-        <span class="sig-arg">(phi,)</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">IM_pre</span>(<span class="sig-arg">params</span>,
+        <span class="sig-arg">ns</span>,
         <span class="sig-arg">pts</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -499,6 +544,9 @@ pts: Number of grid points to use in integration.
   </tr></table>
   
   <pre class="literalblock">
+
+params = (nuPre,TPre,s,nu1,nu2,T,m12,m21)
+ns = (n1,n2)
 
 Isolation-with-migration model with exponential pop growth and a size change
 prior to split.
@@ -511,7 +559,7 @@ nu2: Final size of pop 2.
 T: Time in the past of split (in units of 2*Na generations) 
 m12: Migration from pop 2 to pop 1 (2*Na*m12)
 m21: Migration from pop 1 to pop 2
-n1,n2: Shape of resulting SFS
+n1,n2: Sample sizes of resulting Spectrum
 pts: Number of grid points to use in integration.
 
 </pre>
@@ -549,7 +597,7 @@ pts: Number of grid points to use in integration.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Nov  6 14:29:17 2009</a>
+    3.0.1 on Mon Dec 14 08:49:38 2009</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
