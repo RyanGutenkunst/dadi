@@ -286,7 +286,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     pylab.clf()
     if adjust:
-        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.94, right=0.95, 
+                              hspace=0.26, wspace=0.26)
 
     max_toplot = max(masked_model.max(), masked_data.max())
     min_toplot = min(masked_model.min(), masked_data.min())
@@ -313,10 +314,12 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
                        pop_ids=data_pop_ids, colorbar=False)
+    ax.set_title('data')
 
-    pylab.subplot(2,2,2, sharex=ax, sharey=ax)
+    ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
                        pop_ids=model_pop_ids, extend=extend )
+    ax2.set_title('model')
 
     if residual == 'Anscombe':
         resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data,
@@ -332,14 +335,16 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     resid_extend = _extend_mapping[-resid_range <= resid.min(), 
                                    resid_range >= resid.max()]
 
-    pylab.subplot(2,2,3, sharex=ax, sharey=ax)
+    ax3 = pylab.subplot(2,2,3, sharex=ax, sharey=ax)
     plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
                   extend=resid_extend)
+    ax3.set_title('residuals')
 
     ax = pylab.subplot(2,2,4)
     flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
                                resid.ravel())
     ax.hist(flatresid, bins=20, normed=True)
+    ax.set_title('residuals')
     ax.set_yticks([])
     pylab.show()
 
