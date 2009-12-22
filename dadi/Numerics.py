@@ -159,11 +159,12 @@ def intersect_masks(m1, m2):
     m1 and m2 wrapped as masked_arrays with identical masks.
     """
     ma = numpy.ma
+    import dadi
     if ma.isMaskedArray(m1) or ma.isMaskedArray(m2):
         joint_mask = ma.mask_or(ma.getmask(m1), ma.getmask(m2))
 
-        m1 = ma.masked_array(m1, mask=joint_mask.copy())
-        m2 = ma.masked_array(m2, mask=joint_mask.copy())
+        m1 = dadi.Spectrum(m1, mask=joint_mask.copy())
+        m2 = dadi.Spectrum(m2, mask=joint_mask.copy())
     return m1,m2
 
 def trapz(yy, xx=None, dx=None, axis=-1):

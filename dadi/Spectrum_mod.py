@@ -43,10 +43,12 @@ class Spectrum(numpy.ma.masked_array):
         check_folding: If True and data_folded=True, the data and mask will be
                        checked to ensure they are consistent with a folded
                        Spectrum. If they are not, a warning will be printed.
+        pop_ids: Optional list of strings containing the population labels.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
                 data_folded=None, check_folding=True, dtype=float, copy=True, 
-                fill_value=numpy.nan, keep_mask=True, shrink=True):
+                fill_value=numpy.nan, keep_mask=True, shrink=True, 
+                pop_ids=None):
         data = numpy.asanyarray(data)
 
         if mask is numpy.ma.nomask:
@@ -86,6 +88,22 @@ class Spectrum(numpy.ma.masked_array):
                             'mask is not True for all entries which are '
                             'nonsensical for a folded Spectrum.')
 
+        if hasattr(data, 'pop_ids'):
+            if pop_ids is None or pop_ids == data.pop_ids:
+                subarr.pop_ids = data.pop_ids
+            elif pop_ids != data.pop_ids:
+                logger.warn('Changing population labels in construction of new '
+                            'Spectrum.')
+                if len(pop_ids) != subarr.ndim:
+                    raise ValueError('pop_ids must be of length equal to '
+                                     'dimensionality of Spectrum.')
+                subarr.pop_ids = pop_ids
+        else:
+            if pop_ids is not None and len(pop_ids) != subarr.ndim:
+                raise ValueError('pop_ids must be of length equal to '
+                                 'dimensionality of Spectrum.')
+            subarr.pop_ids = pop_ids
+
         if mask_corners:
             subarr.mask_corners()
 
@@ -101,21 +119,26 @@ class Spectrum(numpy.ma.masked_array):
             return
         numpy.ma.masked_array.__array_finalize__(self, obj)
         self.folded = getattr(obj, 'folded', 'unspecified')
+        self.pop_ids = getattr(obj, 'pop_ids', None)
     def __array_wrap__(self, obj, context=None):
         result = obj.view(type(self))
         result = numpy.ma.masked_array.__array_wrap__(self, obj, 
                                                       context=context)
         result.folded = self.folded
+        result.pop_ids = self.pop_ids
         return result
     def _update_from(self, obj):
         numpy.ma.masked_array._update_from(self, obj)
         if hasattr(obj, 'folded'):
             self.folded = obj.folded
+        if hasattr(obj, 'pop_ids'):
+            self.pop_ids = obj.pop_ids
     # masked_array has priority 15.
     __array_priority__ = 20
 
     def __repr__(self):
-        return 'Spectrum(%s, folded=%s)' % (str(self), str(self.folded))
+        return 'Spectrum(%s, folded=%s, pop_ids=%s)'\
+                % (str(self), str(self.folded), str(self.pop_ids))
 
     def mask_corners(self):
         """
@@ -175,14 +198,23 @@ class Spectrum(numpy.ma.masked_array):
 
         # Read the shape of the data
         shape_spl = line.split()
-        if shape_spl[-1] not in ['folded','unfolded']:
+        if 'folded' not in shape_spl and 'unfolded' not in shape_spl:
             # This case handles the old file format
             shape = tuple([int(d) for d in shape_spl])
             folded = False
+            pop_ids = None
         else:
             # This case handles the new file format
-            shape = tuple([int(d) for d in shape_spl[:-1]])
-            folded = (shape_spl[-1] == 'folded')
+            shape,next_ii = [int(shape_spl[0])], 1
+            while shape_spl[next_ii] not in ['folded', 'unfolded']:
+                shape.append(int(shape_spl[next_ii]))
+                next_ii += 1
+            folded = (shape_spl[next_ii] == 'folded')
+            # Are there population labels in the file?
+            if len(shape_spl) > next_ii + 1:
+                pop_ids = line.split('"')[1::2]
+            else:
+                pop_ids = None
 
         data = numpy.fromstring(fid.readline().strip(), 
                                 count=numpy.product(shape), sep=' ')
@@ -203,7 +235,8 @@ class Spectrum(numpy.ma.masked_array):
         if newfile:
             fid.close()
 
-        fs = Spectrum(data, mask, mask_corners, data_folded=folded) 
+        fs = Spectrum(data, mask, mask_corners, data_folded=folded,
+                      pop_ids=pop_ids)
 
         if not return_comments:
             return fs
@@ -222,9 +255,9 @@ class Spectrum(numpy.ma.masked_array):
                    are formated via %.<p>g, where <p> is the precision.)
         comment lines: list of strings to be used as comment lines in the header
                        of the output file.
-        foldmaskinfo: If False, foldinging and mask information will not be
-                      saved. This conforms to the file format for dadi versions
-                      prior to 1.3.0.
+        foldmaskinfo: If False, folding and mask and population label
+                      information will not be saved. This conforms to the file
+                      format for dadi versions prior to 1.3.0.
 
         The file format is:
             # Any number of comment lines beginning with a '#'
@@ -233,6 +266,8 @@ class Spectrum(numpy.ma.masked_array):
               (That would be 4x4x2 *samples*.)
             On the *same line*, the string 'folded' or 'unfolded' denoting the
               folding status of the array
+            On the *same line*, optional strings each containing the population
+              labels in quotes separated by spaces, e.g. "pop 1" "pop 2"
             A single line giving the array elements. The order of elements is 
               e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
             A single line giving the elements of the mask in the same order as
@@ -259,6 +294,10 @@ class Spectrum(numpy.ma.masked_array):
                 fid.write('unfolded')
             else:
                 fid.write('folded')
+            if self.pop_ids is not None:
+                for label in self.pop_ids:
+                    fid.write(' "%s"' % label)
+
         fid.write(os.linesep)
 
         # Write the data to the file
@@ -381,7 +420,13 @@ class Spectrum(numpy.ma.masked_array):
         # Do the marginalization
         for axis in sorted(over)[::-1]:
             output = output.sum(axis=axis)
+        pop_ids = False
+        if self.pop_ids is not None:
+            pop_ids = list(self.pop_ids)
+            for axis in sorted(over)[::-1]:
+                del pop_ids[axis]
         output.folded = False
+        output.pop_ids = pop_ids
 
         if mask_corners:
             output.mask_corners()
@@ -511,12 +556,13 @@ class Spectrum(numpy.ma.masked_array):
         # Convert back to a properly shaped array
         samp = samp.reshape(self.shape)
         # Convert to a fs and mask the bad entries
-        samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded)
+        samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded,
+                        pop_ids = self.pop_ids)
         return samp
 
     @staticmethod
     def from_ms_file(fid, average=True, mask_corners=True, return_header=False,
-                     pop_assignments=None):
+                     pop_assignments=None, pop_ids=None):
         """
         Read frequency spectrum from file of ms output.
 
@@ -534,6 +580,8 @@ class Spectrum(numpy.ma.masked_array):
                          list of the from [6,8]. This example places
                          the first 6 samples into population 1, and the next 8
                          into population 2.
+        pop_ids: Optional list of strings containing the population labels.
+                 If pop_ids is None, labels will be "pop0", "pop1", ...
         """
         newfile = False
         # Try to read from fid. If we can't, assume it's something that we can
@@ -657,7 +705,7 @@ class Spectrum(numpy.ma.masked_array):
         if newfile:
             fid.close()
 
-        fs = Spectrum(data, mask_corners=mask_corners)
+        fs = Spectrum(data, mask_corners=mask_corners, pop_ids=pop_ids)
         if average:
             fs /= runs
 
@@ -668,7 +716,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_sfscode_file(fid, sites='all', average=True, mask_corners=True, 
-                          return_header=False):
+                          return_header=False, pop_ids=None):
         """
         Read frequency spectrum from file of sfs_code output.
 
@@ -683,6 +731,8 @@ class Spectrum(numpy.ma.masked_array):
         return_header: If true, the return value is (fs, (command,seeds), where
                        command and seeds are strings containing the ms
                        commandline and the seeds used.
+        pop_ids: Optional list of strings containing the population labels.
+                 If pop_ids is None, labels will be "pop0", "pop1", ...
         """
         newfile = False
         # Try to read from fid. If we can't, assume it's something that we can
@@ -800,7 +850,7 @@ class Spectrum(numpy.ma.masked_array):
         if newfile:
             fid.close()
         
-        fs = Spectrum(data, mask_corners=mask_corners)
+        fs = Spectrum(data, mask_corners=mask_corners, pop_ids=pop_ids)
         if average:
             fs /= runs
 
@@ -1019,7 +1069,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_phi(phi, ns, xxs, mask_corners=True,
-                 het_ascertained=None):
+                 het_ascertained=None, pop_ids=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1034,22 +1084,26 @@ class Spectrum(numpy.ma.masked_array):
                          *not* in the current sample.) If 'yy' or 'zz', it
                          assumed that the ascertainment individual came from
                          population 2 or 3, respectively.
+        pop_ids: Optional list of strings containing the population labels.
+                 If pop_ids is None, labels will be "pop0", "pop1", ...
         """
         if not phi.ndim == len(ns) == len(xxs):
             raise ValueError('Dimensionality of phi and lengths of ns and xxs '
                              'do not all agree.')
         if phi.ndim == 1:
-            return Spectrum._from_phi_1D(ns[0], xxs[0], phi, mask_corners,
-                                         het_ascertained)
+            fs = Spectrum._from_phi_1D(ns[0], xxs[0], phi, mask_corners,
+                                       het_ascertained)
         elif phi.ndim == 2:
-            return Spectrum._from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], 
-                                         phi, mask_corners, het_ascertained)
+            fs = Spectrum._from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], 
+                                       phi, mask_corners, het_ascertained)
         elif phi.ndim == 3:
-            return Spectrum._from_phi_3D(ns[0], ns[1], ns[2], 
-                                         xxs[0], xxs[1], xxs[2], 
-                                         phi, mask_corners, het_ascertained)
+            fs = Spectrum._from_phi_3D(ns[0], ns[1], ns[2], 
+                                       xxs[0], xxs[1], xxs[2], 
+                                       phi, mask_corners, het_ascertained)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
+        fs.pop_ids = pop_ids
+        return fs
 
     def scramble_pop_ids(self, mask_corners=True):
         """
@@ -1177,7 +1231,8 @@ class Spectrum(numpy.ma.masked_array):
                 contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
                 pop_contribs.append(contrib)
             fs += reduce(operator.mul, pop_contribs)
-        fsout = Spectrum(fs, mask_corners=mask_corners)
+        fsout = Spectrum(fs, mask_corners=mask_corners, 
+                         pop_ids=pop_ids)
         if polarized:
             return fsout
         else:
@@ -1329,7 +1384,7 @@ class Spectrum(numpy.ma.masked_array):
             fs -= negative_entries
             fs += reverse_array(negative_entries)
     
-        return Spectrum(fs, mask_corners=mask_corners)
+        return Spectrum(fs, mask_corners=mask_corners, pop_ids=pop_ids)
 
     # The code below ensures that when I do arithmetic with Spectrum objects,
     # it is not done between a folded and an unfolded array. If it is, I raise
@@ -1362,9 +1417,18 @@ def %(method)s(self, other):
     else:
         newdata = self.data.%(method)s (other)
         newmask = self.mask
+    newpop_ids = self.pop_ids
+    if hasattr(other, 'pop_ids'):
+        if other.pop_ids is None:
+            newpop_ids = self.pop_ids
+        elif self.pop_ids is None:
+            newpop_ids = other.pop_ids
+        elif other.pop_ids != self.pop_ids:
+            logger.warn('Arithmetic between Spectra with different pop_ids. '
+                        'Resulting pop_id may not be correct.')
     outfs = self.__class__.__new__(self.__class__, newdata, newmask, 
                                    mask_corners=False, data_folded=self.folded,
-                                   check_folding=False)
+                                   check_folding=False, pop_ids=newpop_ids)
     return outfs
 """ % {'method':method})
 
@@ -1379,6 +1443,10 @@ def %(method)s(self, other):
         self.mask = numpy.ma.mask_or(self.mask, other.mask)
     else:
         self.data.%(method)s (other)
+    if hasattr(other, 'pop_ids') and other.pop_ids is not None\
+             and other.pop_ids != self.pop_ids:
+        logger.warn('Arithmetic between Spectra with different pop_ids. '
+                    'Resulting pop_id may not be correct.')
     return self
 """ % {'method':method})
 

@@ -108,8 +108,7 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
     pylab.show()
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
-                       pop1_label= 'pop1', pop2_label='pop2',
-                       extend='neither', colorbar=True):
+                       pop_ids=None, extend='neither', colorbar=True):
     """
     Logarithmic heatmap of single 2d SFS.
 
@@ -117,8 +116,7 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     vmin: Values in sfs below vmin are masked in plot.
     vmax: Values in sfs above vmin saturate the color spectrum.
     ax: Axes object to plot into. If None, the result of pylab.gca() is used.
-    pop1_label: Label for population 1.
-    pop2_label: Label for population 2.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
     extend: Whether the colorbar should have 'extension' arrows. See
             help(pylab.colorbar) for more details.
     colorbar: Should we plot a colorbar?
@@ -147,8 +145,13 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     ax.plot([0,sfs.shape[1]],[0, sfs.shape[0]], '-k', lw=0.2)
 
-    ax.set_ylabel(pop1_label, horizontalalignment='left')
-    ax.set_xlabel(pop2_label, verticalalignment='bottom')
+    if pop_ids is None:
+        if sfs.pop_ids is not None:
+            pop_ids = sfs.pop_ids
+        else:
+            pop_ids = ['pop0','pop1']
+    ax.set_ylabel(pop_ids[0], horizontalalignment='left')
+    ax.set_xlabel(pop_ids[1], verticalalignment='bottom')
 
     ax.xaxis.set_major_formatter(_ctf)
     ax.xaxis.set_major_locator(_sfsTickLocator())
@@ -161,9 +164,8 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     ax.set_ylim(0, sfs.shape[0])
 
 
-def plot_2d_resid(resid, resid_range=None, ax=None, 
-                  pop1_label = 'pop1', pop2_label='pop2', extend='neither',
-                  colorbar=True):
+def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
+                  extend='neither', colorbar=True):
     """
     Linear heatmap of 2d residual array.
 
@@ -171,8 +173,7 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
     resid_range: Values > resid range or < resid_range saturate the color
                  spectrum.
     ax: Axes object to plot into. If None, the result of pylab.gca() is used.
-    pop1_label: Label for population 1.
-    pop2_label: Label for population 2.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
     extend: Whether the colorbar should have 'extension' arrows. See
             help(pylab.colorbar) for more details.
     colorbar: Should we plot a colorbar?
@@ -195,8 +196,13 @@ def plot_2d_resid(resid, resid_range=None, ax=None,
 
     ax.plot([0,resid.shape[1]],[0, resid.shape[0]], '-k', lw=0.2)
 
-    ax.set_ylabel(pop1_label, horizontalalignment='left')
-    ax.set_xlabel(pop2_label, verticalalignment='bottom')
+    if pop_ids is None:
+        if resid.pop_ids is not None:
+            pop_ids = sfs.pop_ids
+        else:
+            pop_ids = ['pop0','pop1']
+    ax.set_ylabel(pop_ids[0], horizontalalignment='left')
+    ax.set_xlabel(pop_ids[1], verticalalignment='bottom')
 
     ax.xaxis.set_major_formatter(_ctf)
     ax.xaxis.set_major_locator(_sfsTickLocator())
@@ -216,7 +222,7 @@ _extend_mapping = {(True, True): 'neither',
 
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop_labels=['pop1', 'pop2'], residual='Anscombe',
+                          pop_ids=None, residual='Anscombe',
                           adjust=True):
     """
     Mulitnomial comparison between 2d model and data.
@@ -229,7 +235,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop_labels: List of labels for populations 1 and 2.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -243,12 +249,12 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 
     plot_2d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
-                         pop_labels=pop_labels, residual=residual,
+                         pop_ids=pop_ids, residual=residual,
                          adjust=adjust)
     
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
-                         pop_labels=['pop1', 'pop2'], residual='Anscombe',
+                         pop_ids=None, residual='Anscombe',
                          adjust=True):
     """
     Poisson comparison between 2d model and data.
@@ -261,7 +267,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop_labels: List of labels for populations 1 and 2.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -290,15 +296,27 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
         vmin = min_toplot
     extend = _extend_mapping[vmin <= min_toplot, vmax >= max_toplot]
 
+    if pop_ids is not None:
+        data_pop_ids = model_pop_ids = resid_pop_ids = pop_ids
+        if len(pop_ids) != 2:
+            raise ValueError('pop_ids must be of length 2.')
+    else:
+        data_pop_ids = masked_data.pop_ids
+        if masked_model.pop_ids is None:
+            model_pop_ids = data_pop_ids
+
+        if model_pop_ids == data_pop_ids:
+           resid_pop_ids = model_pop_ids
+        else:
+            resid_pop_ids = None
+
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
-                       pop1_label=pop_labels[0], pop2_label=pop_labels[1],
-                       colorbar=False)
+                       pop_ids=data_pop_ids, colorbar=False)
 
     pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
-                       pop1_label=pop_labels[0], pop2_label=pop_labels[1],
-                       extend=extend )
+                       pop_ids=model_pop_ids, extend=extend )
 
     if residual == 'Anscombe':
         resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data,
@@ -315,8 +333,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                                    resid_range >= resid.max()]
 
     pylab.subplot(2,2,3, sharex=ax, sharey=ax)
-    plot_2d_resid(resid, resid_range, 
-                  pop1_label=pop_labels[0], pop2_label=pop_labels[1],
+    plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
                   extend=resid_extend)
 
     ax = pylab.subplot(2,2,4)
@@ -328,8 +345,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop_labels=['pop1', 'pop2', 'pop3'], 
-                          residual='Anscombe', adjust=True):
+                          pop_ids=None, residual='Anscombe', adjust=True):
     """
     Multinomial comparison between 3d model and data.
 
@@ -341,7 +357,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop_labels: List of labels for populations 1, 2, and 3.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -355,12 +371,11 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 
     plot_3d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
-                         pop_labels=pop_labels, residual=residual,
+                         pop_ids=pop_ids, residual=residual,
                          adjust=adjust)
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
-                         resid_range=None, fig_num=None,
-                         pop_labels=['pop1', 'pop2', 'pop3'], 
+                         resid_range=None, fig_num=None, pop_ids=None, 
                          residual='Anscombe', adjust=True):
     """
     Poisson comparison between 3d model and data.
@@ -373,7 +388,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     resid_range: Residual plot saturates at +- resid_range.
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
-    pop_labels: List of labels for populations 1, 2, and 3.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
     residual: 'Anscombe' for Anscombe residuals, which are more normally
               distributed for Poisson sampling. 'linear' for the linear
               residuals, which can be less biased.
@@ -429,28 +444,43 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     resid_extend = _extend_mapping[-resid_range <= min_resid, 
                                    resid_range >= max_resid]
 
+    if pop_ids is not None:
+        if len(pop_ids) != 3:
+            raise ValueError('pop_ids must be of length 3.')
+        data_ids = model_ids = resid_ids = pop_ids
+    else:
+        data_ids = masked_data.pop_ids
+        if masked_model.pop_ids is None:
+            model_ids = data_ids
+
+        if model_ids == data_ids:
+           resid_ids = model_ids
+        else:
+            resid_ids = None
+
     for sax in range(3):
         marg_data = masked_data.sum(axis=2-sax)
         marg_model = masked_model.sum(axis=2-sax)
 
-        labels = list(pop_labels[:])
-        del labels[2-sax]
+        curr_ids = []
+        for ids in [data_ids, model_ids, resid_ids]:
+            if ids is not None:
+                ids = list(ids)
+                del ids[2-sax]
+            curr_ids.append(ids)
 
         ax = pylab.subplot(4,3,sax+1)
         plot_colorbar = (sax == 2)
-        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax,
-                           pop1_label=labels[0], pop2_label=labels[1],
+        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=curr_ids[0],
                            extend=extend, colorbar=plot_colorbar)
 
         pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
-        plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax,
-                           pop1_label=labels[0], pop2_label=labels[1],
-                           extend=extend, colorbar=False)
+        plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax, 
+                           pop_ids=curr_ids[1], extend=extend, colorbar=False)
 
         resid = resids[sax]
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
-        plot_2d_resid(resid, resid_range, 
-                      pop1_label=labels[0], pop2_label=labels[1],
+        plot_2d_resid(resid, resid_range, pop_ids=curr_ids[2],
                       extend=resid_extend, colorbar=plot_colorbar)
 
         ax = pylab.subplot(4,3,sax+10)
