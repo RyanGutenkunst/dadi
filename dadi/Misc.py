@@ -172,8 +172,23 @@ def make_data_dict(filename):
 
     This is specific to the particular data format described on the wiki. 
     Modification for other formats should be straightforward.
+
+    The file can be zipped (extension .zip) or gzipped (extension .gz). If 
+    zipped, there must be only a single file in the zip archive.
     """
-    f = file(filename)
+    if os.path.splitext(filename)[1] == '.gz':
+        import gzip
+        f = gzip.open(filename)
+    elif os.path.splitext(filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError('Must be only a single data file in zip '
+                             'archive: %s' % filename)
+        f = archive.open(namelist[0])
+    else:
+        f = open(filename)
 
     # Skip to the header
     while True:
