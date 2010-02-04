@@ -420,7 +420,7 @@ class Spectrum(numpy.ma.masked_array):
         # Do the marginalization
         for axis in sorted(over)[::-1]:
             output = output.sum(axis=axis)
-        pop_ids = False
+        pop_ids = None
         if self.pop_ids is not None:
             pop_ids = list(self.pop_ids)
             for axis in sorted(over)[::-1]:
