@@ -469,9 +469,13 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
 
         curr_ids = []
         for ids in [data_ids, model_ids, resid_ids]:
+            if ids is None:
+                ids = ['pop0', 'pop1', 'pop2']
+
             if ids is not None:
                 ids = list(ids)
                 del ids[2-sax]
+
             curr_ids.append(ids)
 
         ax = pylab.subplot(4,3,sax+1)
