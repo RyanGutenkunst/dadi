@@ -15,8 +15,9 @@ _counter = 0
 #: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
 _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
-                lower_bound=None, upper_bound=None, 
-                verbose=0, multinom=True, flush_delay=0):
+                 lower_bound=None, upper_bound=None, 
+                 verbose=0, multinom=True, flush_delay=0,
+                 func_args=[]):
     """
     Objective function for optimization.
     """
@@ -28,7 +29,8 @@ def _object_func(params, data, model_func, pts,
         result = _out_of_bounds_val
     else:
         ns = data.sample_sizes 
-        sfs = model_func(params,ns,pts)
+        all_args = [params, ns] + list(func_args) + [pts]
+        sfs = model_func(*all_args)
         if multinom:
             result = ll_multinom(sfs, data)
         else:
@@ -52,7 +54,8 @@ def _object_func_log(log_params, *args, **kwargs):
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
-                 gtol=1e-5, multinom=True, maxiter=None, full_output=False):
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 func_args=[]):
     """
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -82,11 +85,16 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     maxiter: Maximum iterations to run for.
     full_output: If True, return full outputs as in described in 
                  help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
     """
     import scipy.optimize
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay)
+            multinom, flush_delay, func_args)
 
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
                                        numpy.log(p0), epsilon=epsilon,
@@ -264,7 +272,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                       lower_bound=None, upper_bound=None,
                       verbose=0, flush_delay=0.5, 
                       multinom=True, maxiter=None, 
-                      full_output=False):
+                      full_output=False, func_args=[]):
     """
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
@@ -292,11 +300,16 @@ def optimize_log_fmin(p0, data, model_func, pts,
     maxiter: Maximum iterations to run for.
     full_output: If True, return full outputs as in described in 
                  help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
     """
     import scipy.optimize
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay)
+            multinom, flush_delay, func_args)
 
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
                                   disp=False, maxiter=maxiter, full_output=True)
@@ -309,7 +322,8 @@ def optimize_log_fmin(p0, data, model_func, pts,
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
-             gtol=1e-5, multinom=True, maxiter=None, full_output=False):
+             gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+             func_args=[]):
     """
     Optimize params to fit model to data using the BFGS method.
 
@@ -339,11 +353,16 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     maxiter: Maximum iterations to run for.
     full_output: If True, return full outputs as in described in 
                  help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
     """
     import scipy.optimize
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay)
+            multinom, flush_delay, func_args)
 
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
                                        epsilon=epsilon,
