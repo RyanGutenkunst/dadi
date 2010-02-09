@@ -97,6 +97,7 @@ The constructor has the format:
     check_folding: If True and data_folded=True, the data and mask will be
                    checked to ensure they are consistent with a folded
                    Spectrum. If they are not, a warning will be printed.
+    pop_ids: Optional list of strings containing the population labels.
 
 </pre>
 
@@ -1172,7 +1173,8 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">copy</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">fill_value</span>=<span class="summary-sig-default">nan</span>,
         <span class="summary-sig-arg">keep_mask</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">shrink</span>=<span class="summary-sig-default">True</span>)</span><br />
+        <span class="summary-sig-arg">shrink</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
       Create a new masked array from scratch.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__new__">source&nbsp;code</a></span>
@@ -1231,7 +1233,8 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">average</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>,
-        <span class="summary-sig-arg">pop_assignments</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">pop_assignments</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
       Read frequency spectrum from file of ms output.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_ms_file">source&nbsp;code</a></span>
@@ -1252,7 +1255,8 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">sites</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">all</code><code class="variable-quote">'</code></span>,
         <span class="summary-sig-arg">average</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
       Read frequency spectrum from file of sfs_code output.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_sfscode_file">source&nbsp;code</a></span>
@@ -1342,7 +1346,8 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">xxs</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_phi">source&nbsp;code</a></span>
@@ -1560,7 +1565,8 @@ misidentification.</td>
         <span class="sig-arg">copy</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">fill_value</span>=<span class="sig-default">nan</span>,
         <span class="sig-arg">keep_mask</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">shrink</span>=<span class="sig-default">True</span>)</span>
+        <span class="sig-arg">shrink</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -1807,9 +1813,9 @@ precision: precision with which to write out entries of the SFS. (They
            are formated via %.&lt;p&gt;g, where &lt;p&gt; is the precision.)
 comment lines: list of strings to be used as comment lines in the header
                of the output file.
-foldmaskinfo: If False, foldinging and mask information will not be
-              saved. This conforms to the file format for dadi versions
-              prior to 1.3.0.
+foldmaskinfo: If False, folding and mask and population label
+              information will not be saved. This conforms to the file
+              format for dadi versions prior to 1.3.0.
 
 The file format is:
     # Any number of comment lines beginning with a '#'
@@ -1818,6 +1824,8 @@ The file format is:
       (That would be 4x4x2 *samples*.)
     On the *same line*, the string 'folded' or 'unfolded' denoting the
       folding status of the array
+    On the *same line*, optional strings each containing the population
+      labels in quotes separated by spaces, e.g. &quot;pop 1&quot; &quot;pop 2&quot;
     A single line giving the array elements. The order of elements is 
       e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
     A single line giving the elements of the mask in the same order as
@@ -1855,9 +1863,9 @@ precision: precision with which to write out entries of the SFS. (They
            are formated via %.&lt;p&gt;g, where &lt;p&gt; is the precision.)
 comment lines: list of strings to be used as comment lines in the header
                of the output file.
-foldmaskinfo: If False, foldinging and mask information will not be
-              saved. This conforms to the file format for dadi versions
-              prior to 1.3.0.
+foldmaskinfo: If False, folding and mask and population label
+              information will not be saved. This conforms to the file
+              format for dadi versions prior to 1.3.0.
 
 The file format is:
     # Any number of comment lines beginning with a '#'
@@ -1866,6 +1874,8 @@ The file format is:
       (That would be 4x4x2 *samples*.)
     On the *same line*, the string 'folded' or 'unfolded' denoting the
       folding status of the array
+    On the *same line*, optional strings each containing the population
+      labels in quotes separated by spaces, e.g. &quot;pop 1&quot; &quot;pop 2&quot;
     A single line giving the array elements. The order of elements is 
       e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
     A single line giving the elements of the mask in the same order as
@@ -2034,7 +2044,8 @@ Note: Entries where the current fs is masked or 0 will be masked in the
         <span class="sig-arg">average</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>,
-        <span class="sig-arg">pop_assignments</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">pop_assignments</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -2060,6 +2071,8 @@ pop_assignments: If None, the assignments of samples to populations is
                  list of the from [6,8]. This example places
                  the first 6 samples into population 1, and the next 8
                  into population 2.
+pop_ids: Optional list of strings containing the population labels.
+         If pop_ids is None, labels will be &quot;pop0&quot;, &quot;pop1&quot;, ...
 
 </pre>
   <dl class="fields">
@@ -2077,7 +2090,8 @@ pop_assignments: If None, the assignments of samples to populations is
         <span class="sig-arg">sites</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">all</code><code class="variable-quote">'</code></span>,
         <span class="sig-arg">average</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -2100,6 +2114,8 @@ mask_corners: If True, mask the 'absent in all samples' and 'fixed in
 return_header: If true, the return value is (fs, (command,seeds), where
                command and seeds are strings containing the ms
                commandline and the seeds used.
+pop_ids: Optional list of strings containing the population labels.
+         If pop_ids is None, labels will be &quot;pop0&quot;, &quot;pop1&quot;, ...
 
 </pre>
   <dl class="fields">
@@ -2319,7 +2335,8 @@ See from_phi for explanation of arguments.
         <span class="sig-arg">ns</span>,
         <span class="sig-arg">xxs</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -2342,6 +2359,8 @@ het_ascertained: If 'xx', then FS is derived assuming that SNPs have
                  *not* in the current sample.) If 'yy' or 'zz', it
                  assumed that the ascertainment individual came from
                  population 2 or 3, respectively.
+pop_ids: Optional list of strings containing the population labels.
+         If pop_ids is None, labels will be &quot;pop0&quot;, &quot;pop1&quot;, ...
 
 </pre>
   <dl class="fields">
@@ -3170,7 +3189,7 @@ Divide other into self, and return a new masked array.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Dec 14 08:49:38 2009</a>
+    3.0.1 on Tue Feb  9 09:53:18 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

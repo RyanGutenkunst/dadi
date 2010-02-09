@@ -29,9 +29,9 @@ for arg in os.sys.argv:
         os.system("svn info > dadi/svnversion")
 
 core.setup(name='dadi',
-           version='1.3.3',
+           version='1.3.4',
            author='Ryan Gutenkunst',
-           author_email='rng7@cornell.edu',
+           author_email='ryan@gutenkunst.org',
            url='http://dadi.googlecode.com',
            ext_modules = [tridiag, int_c],
            scripts=['scripts/ms_jsfs.py'],

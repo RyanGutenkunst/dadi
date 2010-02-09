@@ -95,7 +95,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">upper_bound</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
       Objective function for optimization.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#_object_func">source&nbsp;code</a></span>
@@ -143,7 +144,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">gtol</span>=<span class="summary-sig-default">1e-05</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
       Optimize log(params) to fit model to data using the BFGS method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>
@@ -352,7 +354,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
       Optimize log(params) to fit model to data using Nelder-Mead.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_fmin">source&nbsp;code</a></span>
@@ -381,7 +384,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">gtol</span>=<span class="summary-sig-default">1e-05</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
       Optimize params to fit model to data using the BFGS method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>
@@ -476,7 +480,8 @@ Comparison and optimization of model spectra to data.
         <span class="sig-arg">gtol</span>=<span class="sig-default">1e-05</span>,
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>&nbsp;
@@ -513,6 +518,11 @@ multinom: If True, do a multinomial fit where model is optimially scaled to
 maxiter: Maximum iterations to run for.
 full_output: If True, return full outputs as in described in 
              help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that 
+           model_func's first argument is an array of parameters to
+           optimize, that its second argument is an array of sample sizes
+           for the sfs, and that its last argument is the list of grid
+           points to use in evaluation.
 
 </pre>
   <dl class="fields">
@@ -779,7 +789,8 @@ model nor data.
         <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_fmin">source&nbsp;code</a></span>&nbsp;
@@ -814,6 +825,11 @@ multinom: If True, do a multinomial fit where model is optimially scaled to
 maxiter: Maximum iterations to run for.
 full_output: If True, return full outputs as in described in 
              help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that 
+           model_func's first argument is an array of parameters to
+           optimize, that its second argument is an array of sample sizes
+           for the sfs, and that its last argument is the list of grid
+           points to use in evaluation.
 
 </pre>
   <dl class="fields">
@@ -839,7 +855,8 @@ full_output: If True, return full outputs as in described in
         <span class="sig-arg">gtol</span>=<span class="sig-default">1e-05</span>,
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>&nbsp;
@@ -876,6 +893,11 @@ multinom: If True, do a multinomial fit where model is optimially scaled to
 maxiter: Maximum iterations to run for.
 full_output: If True, return full outputs as in described in 
              help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that 
+           model_func's first argument is an array of parameters to
+           optimize, that its second argument is an array of sample sizes
+           for the sfs, and that its last argument is the list of grid
+           points to use in evaluation.
 
 </pre>
   <dl class="fields">
@@ -912,7 +934,7 @@ full_output: If True, return full outputs as in described in
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Dec 14 08:49:38 2009</a>
+    3.0.1 on Tue Feb  9 09:53:18 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
