@@ -153,11 +153,10 @@ def IM(params, ns, pts):
     phi = PhiManip.phi_1D(xx)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
 
-    if T > 0:
-        nu1_func = lambda t: s * (nu1/s)**(t/T)
-        nu2_func = lambda t: (1-s) * (nu2/(1-s))**(t/T)
-        phi = Integration.two_pops(phi, xx, T, nu1_func, nu2_func,
-                                   m12=m12, m21=m21)
+    nu1_func = lambda t: s * (nu1/s)**(t/T)
+    nu2_func = lambda t: (1-s) * (nu2/(1-s))**(t/T)
+    phi = Integration.two_pops(phi, xx, T, nu1_func, nu2_func,
+                               m12=m12, m21=m21)
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
@@ -202,17 +201,15 @@ def IM_pre(params, ns, pts):
     xx = Numerics.default_grid(pts)
 
     phi = PhiManip.phi_1D(xx)
-    if TPre > 0:
-        phi = Integration.one_pop(phi, xx, TPre, nu=nuPre)
+    phi = Integration.one_pop(phi, xx, TPre, nu=nuPre)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
 
-    if T > 0:
-        nu1_0 = nuPre*s
-        nu2_0 = nuPre*(1-s)
-        nu1_func = lambda t: nu1_0 * (nu1/nu1_0)**(t/T)
-        nu2_func = lambda t: nu2_0 * (nu2/nu2_0)**(t/T)
-        phi = Integration.two_pops(phi, xx, T, nu1_func, nu2_func,
-                                   m12=m12, m21=m21)
+    nu1_0 = nuPre*s
+    nu2_0 = nuPre*(1-s)
+    nu1_func = lambda t: nu1_0 * (nu1/nu1_0)**(t/T)
+    nu2_func = lambda t: nu2_0 * (nu2/nu2_0)**(t/T)
+    phi = Integration.two_pops(phi, xx, T, nu1_func, nu2_func,
+                               m12=m12, m21=m21)
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
