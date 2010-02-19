@@ -2,7 +2,7 @@ include dadi/svnversion
 include epydoc.config
 include MANIFEST.in
 include LICENSE.txt
-recursive-include doc *
+recursive-include doc *.html *.css *.js *.pdf *.tex
 recursive-include examples *
 recursive-include tests *
 global-exclude *.msout *.swp *.pyc seedms *.png
