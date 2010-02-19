@@ -8,23 +8,34 @@ import scipy.integrate
 
 from dadi import Numerics
 
-def phi_1D(xx, theta=1.0, gamma=0, h=0.5):
+def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5,
+           theta=None):
     """
     One-dimensional phi for a constant-sized population with genic selection.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
-    theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
-           event rate per generation for the simulated locus.
-    gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 4*Nref * s, where s is the
            selective advantage.
     h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
        aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
        genic selection.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
 
     Returns a new phi array.
     """
+
+    if theta is not None:
+        raise ValueError('The parameter theta has been deprecated in favor of '
+                         'parameters nu and theta0, for consistency with the '
+                         'Integration functions.')
+
     if h == 0.5:
-        return phi_1D_genic(xx, theta, gamma)
+        return phi_1D_genic(xx, nu, theta0, gamma)
 
     # Eqn 1 from Williamson, Fledel-Alon, Bustamante _Genetics_ 168:463 (2004).
     # First we evaluate the relevant integrals.
@@ -45,22 +56,31 @@ def phi_1D(xx, theta=1.0, gamma=0, h=0.5):
     if xx[-1] == 1:
         # I used Mathematica to check that this was the proper limit.
         phi[-1] = 1./int0
-    return phi*theta
+    return phi * nu*theta0
 
-def phi_1D_genic(xx, theta=1.0, gamma=0):
+def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None):
     """
     One-dimensional phi for a constant-sized population with genic selection.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
-    theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
-           event rate per generation for the simulated locus.
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
     gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
            selective advantage.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
 
     Returns a new phi array.
     """
+
+    if theta is not None:
+        raise ValueError('The parameter theta has been deprecated in favor of '
+                         'parameters nu and theta0, for consistency with the '
+                         'Integration functions.')
     if gamma == 0:
-        return phi_1D_snm(xx, theta)
+        return phi_1D_snm(xx, nu, theta0)
 
     exp = numpy.exp
     phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
@@ -69,19 +89,28 @@ def phi_1D_genic(xx, theta=1.0, gamma=0):
     if xx[-1] == 1:
         limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
         phi[-1] = limit
-    return phi * theta
+    return phi * nu*theta0
 
-def phi_1D_snm(xx, theta=1.0):
+def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None):
     """
     Standard neutral one-dimensional probability density.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
-    theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
-           event rate per generation for the simulated locus.
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
 
     Returns a new phi array.
     """
-    phi = theta/xx
+
+    if theta is not None:
+        raise ValueError('The parameter theta has been deprecated in favor of '
+                         'parameters nu and theta0, for consistency with the '
+                         'Integration functions.')
+    phi = nu*theta0/xx
     if xx[0] == 0:
         phi[0] = phi[1]
     return phi
