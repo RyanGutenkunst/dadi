@@ -9,6 +9,7 @@ from numpy import logical_and, logical_not
 
 from dadi import Misc, Numerics
 from scipy.special import gammaln
+import scipy.optimize
 
 #: Counts calls to object_func
 _counter = 0
@@ -17,12 +18,15 @@ _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
-                 func_args=[]):
+                 func_args=[], fixed_params=None):
     """
     Objective function for optimization.
     """
     global _counter
     _counter += 1
+
+    # Deal with fixed parameters
+    params = _project_params_up(params, fixed_params)
 
     if (lower_bound is not None and numpy.any(params < lower_bound)) or\
        (upper_bound is not None and numpy.any(params > upper_bound)):
@@ -36,6 +40,7 @@ def _object_func(params, data, model_func, pts,
         else:
             result = ll(sfs, data)
 
+    # Bad result
     if numpy.isnan(result):
         result = _out_of_bounds_val
 
@@ -55,7 +60,7 @@ def _object_func_log(log_params, *args, **kwargs):
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-                 func_args=[]):
+                 func_args=[], fixed_params=None):
     """
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -90,12 +95,19 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
     """
-    import scipy.optimize
-
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args)
+            multinom, flush_delay, func_args, fixed_params)
 
+    p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
                                        numpy.log(p0), epsilon=epsilon,
                                        args = args, gtol=gtol, 
@@ -103,12 +115,12 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                                        disp=False,
                                        maxiter=maxiter)
     xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
 
     if not full_output:
-        return numpy.exp(xopt)
+        return xopt
     else:
-        return numpy.exp(xopt), fopt, gopt, Bopt, func_calls, grad_calls,\
-                warnflag
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
 def minus_ll(model, data):
     """
@@ -272,7 +284,8 @@ def optimize_log_fmin(p0, data, model_func, pts,
                       lower_bound=None, upper_bound=None,
                       verbose=0, flush_delay=0.5, 
                       multinom=True, maxiter=None, 
-                      full_output=False, func_args=[]):
+                      full_output=False, func_args=[], 
+                      fixed_params=None):
     """
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
@@ -305,33 +318,38 @@ def optimize_log_fmin(p0, data, model_func, pts,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
     """
-    import scipy.optimize
-
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args)
+            multinom, flush_delay, func_args, fixed_params)
 
+    p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
                                   disp=False, maxiter=maxiter, full_output=True)
     xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
 
     if not full_output:
-        return numpy.exp(xopt)
+        return xopt
     else:
-        return numpy.exp(xopt), fopt, iter, funcalls, warnflag 
+        return xopt, fopt, iter, funcalls, warnflag 
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-             func_args=[]):
+             func_args=[], fixed_params=None):
     """
     Optimize params to fit model to data using the BFGS method.
 
     This optimization method works well when we start reasonably close to the
     optimum. It is best at burrowing down a single minimum.
-
-    Because this works in params, it cannot explore values of params < 0.
-    It should also perform better when parameters range over scales.
 
     p0: Initial parameters.
     data: Spectrum with data.
@@ -358,12 +376,19 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
     """
-    import scipy.optimize
-
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args)
+            multinom, flush_delay, func_args, fixed_params)
 
+    p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
                                        epsilon=epsilon,
                                        args = args, gtol=gtol, 
@@ -371,8 +396,44 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                                        disp=False,
                                        maxiter=maxiter)
     xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(xopt, fixed_params)
 
     if not full_output:
         return xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
+def _project_params_down(pin, fixed_params):
+    """
+    Eliminate fixed parameters from pin.
+    """
+    if fixed_params is None:
+        return pin
+
+    if len(pin) != len(fixed_params):
+        raise ValueError('fixed_params list must have same length as input '
+                         'parameter array.')
+
+    pout = []
+    for ii, (curr_val,fixed_val) in enumerate(zip(pin, fixed_params)):
+        if fixed_val is None:
+            pout.append(curr_val)
+
+    return numpy.array(pout)
+
+def _project_params_up(pin, fixed_params):
+    """
+    Fold fixed parameters into pin.
+    """
+    if fixed_params is None:
+        return pin
+
+    pout = numpy.zeros(len(fixed_params))
+    orig_ii = 0
+    for out_ii, val in enumerate(fixed_params):
+        if val is None:
+            pout[out_ii] = pin[orig_ii]
+            orig_ii += 1
+        else:
+            pout[out_ii] = fixed_params[out_ii]
+    return pout
