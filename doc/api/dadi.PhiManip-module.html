@@ -89,9 +89,11 @@ admixture
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="dadi.PhiManip-module.html#phi_1D" class="summary-sig-name">phi_1D</a>(<span class="summary-sig-arg">xx</span>,
-        <span class="summary-sig-arg">theta</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
         <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
-        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>)</span><br />
+        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">theta</span>=<span class="summary-sig-default">None</span>)</span><br />
       One-dimensional phi for a constant-sized population with genic selection.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.PhiManip-pysrc.html#phi_1D">source&nbsp;code</a></span>
@@ -109,8 +111,10 @@ admixture
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="dadi.PhiManip-module.html#phi_1D_genic" class="summary-sig-name">phi_1D_genic</a>(<span class="summary-sig-arg">xx</span>,
-        <span class="summary-sig-arg">theta</span>=<span class="summary-sig-default">1.0</span>,
-        <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">theta</span>=<span class="summary-sig-default">None</span>)</span><br />
       One-dimensional phi for a constant-sized population with genic selection.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.PhiManip-pysrc.html#phi_1D_genic">source&nbsp;code</a></span>
@@ -128,7 +132,9 @@ admixture
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="dadi.PhiManip-module.html#phi_1D_snm" class="summary-sig-name">phi_1D_snm</a>(<span class="summary-sig-arg">xx</span>,
-        <span class="summary-sig-arg">theta</span>=<span class="summary-sig-default">1.0</span>)</span><br />
+        <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">theta</span>=<span class="summary-sig-default">None</span>)</span><br />
       Standard neutral one-dimensional probability density.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.PhiManip-pysrc.html#phi_1D_snm">source&nbsp;code</a></span>
@@ -434,9 +440,11 @@ admixture
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">phi_1D</span>(<span class="sig-arg">xx</span>,
-        <span class="sig-arg">theta</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">nu</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
         <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
-        <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>)</span>
+        <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">theta</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.PhiManip-pysrc.html#phi_1D">source&nbsp;code</a></span>&nbsp;
@@ -448,13 +456,17 @@ admixture
 One-dimensional phi for a constant-sized population with genic selection.
 
 xx: one-dimensional grid of frequencies upon which phi is defined
-theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
-       event rate per generation for the simulated locus.
-gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+        event rate per generation for the simulated locus and Nref is the 
+        reference population size.
+gamma: scaled selection coefficient, equal to 4*Nref * s, where s is the
        selective advantage.
 h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
    aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
    genic selection.
+theta: deprecated in favor of distinct nu and theta0 arguments, for 
+       consistency with Integration functions.
 
 Returns a new phi array.
 
@@ -471,8 +483,10 @@ Returns a new phi array.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">phi_1D_genic</span>(<span class="sig-arg">xx</span>,
-        <span class="sig-arg">theta</span>=<span class="sig-default">1.0</span>,
-        <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>)</span>
+        <span class="sig-arg">nu</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">theta</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.PhiManip-pysrc.html#phi_1D_genic">source&nbsp;code</a></span>&nbsp;
@@ -484,10 +498,14 @@ Returns a new phi array.
 One-dimensional phi for a constant-sized population with genic selection.
 
 xx: one-dimensional grid of frequencies upon which phi is defined
-theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
-       event rate per generation for the simulated locus.
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+        event rate per generation for the simulated locus and Nref is the 
+        reference population size.
 gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
        selective advantage.
+theta: deprecated in favor of distinct nu and theta0 arguments, for 
+       consistency with Integration functions.
 
 Returns a new phi array.
 
@@ -504,7 +522,9 @@ Returns a new phi array.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">phi_1D_snm</span>(<span class="sig-arg">xx</span>,
-        <span class="sig-arg">theta</span>=<span class="sig-default">1.0</span>)</span>
+        <span class="sig-arg">nu</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">theta</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.PhiManip-pysrc.html#phi_1D_snm">source&nbsp;code</a></span>&nbsp;
@@ -516,8 +536,12 @@ Returns a new phi array.
 Standard neutral one-dimensional probability density.
 
 xx: one-dimensional grid of frequencies upon which phi is defined
-theta: scaled mutation rate, equal to 4*Nc * u, where u is the mutation 
-       event rate per generation for the simulated locus.
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+        event rate per generation for the simulated locus and Nref is the 
+        reference population size.
+theta: deprecated in favor of distinct nu and theta0 arguments, for 
+       consistency with Integration functions.
 
 Returns a new phi array.
 
@@ -883,7 +907,7 @@ xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Feb  9 09:53:18 2010</a>
+    3.0.1 on Tue Mar  9 13:01:23 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

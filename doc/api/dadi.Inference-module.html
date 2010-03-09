@@ -96,7 +96,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0</span>,
-        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
       Objective function for optimization.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#_object_func">source&nbsp;code</a></span>
@@ -145,7 +146,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
-        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using the BFGS method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>
@@ -355,7 +357,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
-        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using Nelder-Mead.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_fmin">source&nbsp;code</a></span>
@@ -385,10 +388,47 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
-        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span><br />
+        <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize params to fit model to data using the BFGS method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_project_params_down"></a><span class="summary-sig-name">_project_params_down</span>(<span class="summary-sig-arg">pin</span>,
+        <span class="summary-sig-arg">fixed_params</span>)</span><br />
+      Eliminate fixed parameters from pin.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Inference-pysrc.html#_project_params_down">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_project_params_up"></a><span class="summary-sig-name">_project_params_up</span>(<span class="summary-sig-arg">pin</span>,
+        <span class="summary-sig-arg">fixed_params</span>)</span><br />
+      Fold fixed parameters into pin.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Inference-pysrc.html#_project_params_up">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -481,7 +521,8 @@ Comparison and optimization of model spectra to data.
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
-        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span>
+        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>&nbsp;
@@ -523,6 +564,14 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+fixed_params: If not None, should be a list used to fix model parameters at
+              particular values. For example, if the model parameters
+              are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+              will hold nu1=0.5 and m=2. The optimizer will only change 
+              T and m. Note that the bounds lists must include all
+              parameters. Optimization will fail if the fixed values
+              lie outside their bounds. A full-length p0 should be passed
+              in; values corresponding to fixed parameters are ignored.
 
 </pre>
   <dl class="fields">
@@ -790,7 +839,8 @@ model nor data.
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
-        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span>
+        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_fmin">source&nbsp;code</a></span>&nbsp;
@@ -830,6 +880,14 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+fixed_params: If not None, should be a list used to fix model parameters at
+              particular values. For example, if the model parameters
+              are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+              will hold nu1=0.5 and m=2. The optimizer will only change 
+              T and m. Note that the bounds lists must include all
+              parameters. Optimization will fail if the fixed values
+              lie outside their bounds. A full-length p0 should be passed
+              in; values corresponding to fixed parameters are ignored.
 
 </pre>
   <dl class="fields">
@@ -856,7 +914,8 @@ func_args: Additional arguments to model_func. It is assumed that
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
-        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>)</span>
+        <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>&nbsp;
@@ -869,9 +928,6 @@ Optimize params to fit model to data using the BFGS method.
 
 This optimization method works well when we start reasonably close to the
 optimum. It is best at burrowing down a single minimum.
-
-Because this works in params, it cannot explore values of params &lt; 0.
-It should also perform better when parameters range over scales.
 
 p0: Initial parameters.
 data: Spectrum with data.
@@ -898,6 +954,14 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+fixed_params: If not None, should be a list used to fix model parameters at
+              particular values. For example, if the model parameters
+              are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+              will hold nu1=0.5 and m=2. The optimizer will only change 
+              T and m. Note that the bounds lists must include all
+              parameters. Optimization will fail if the fixed values
+              lie outside their bounds. A full-length p0 should be passed
+              in; values corresponding to fixed parameters are ignored.
 
 </pre>
   <dl class="fields">
@@ -934,7 +998,7 @@ func_args: Additional arguments to model_func. It is assumed that
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Feb  9 09:53:18 2010</a>
+    3.0.1 on Tue Mar  9 13:01:23 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
