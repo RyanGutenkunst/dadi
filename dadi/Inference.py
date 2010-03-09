@@ -437,3 +437,64 @@ def _project_params_up(pin, fixed_params):
         else:
             pout[out_ii] = fixed_params[out_ii]
     return pout
+
+index_exp = numpy.index_exp
+def optimize_grid(data, model_func, pts, grid,
+                  verbose=0, flush_delay=0.5,
+                  multinom=True, full_output=False,
+                  func_args=[], fixed_params=None):
+    """
+    Optimize params to fit model to data using brute force search over a grid.
+
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                (params, (n1,n2...), pts)
+    pts: Grid points list for evaluating likelihoods
+    grid: Grid of parameter values over which to evaluate likelihood. See
+          below for specification instructions.
+    verbose: If > 0, print optimization status every <verbose> steps.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.brute)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+
+    Search grids are specified using a dadi.Inference.index_exp object (which
+    is an alias for numpy.index_exp). The grid is specified by passing a range
+    of values for each parameter. For example, index_exp[0:1.1:0.3,
+    0.7:0.9:11j] will search over parameter 1 with values 0,0.3,0.6,0.9 and
+    over parameter 2 with 11 points between 0.7 and 0.9 (inclusive). (Notice
+    the 11j in the second parameter range specification.) Note that the grid
+    list should include only parameters that are optimized over, not fixed
+    parameter values.
+    """
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, fixed_params)
+
+    outputs = scipy.optimize.brute(_object_func, ranges=grid,
+                                   args = args, full_output=full_output)
+    if full_output:
+        xopt, fopt, grid, fout = outputs
+    else:
+        xopt = outputs
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, grid, fout
