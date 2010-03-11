@@ -18,7 +18,7 @@ _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
-                 func_args=[], fixed_params=None):
+                 func_args=[], fixed_params=None, ll_scale=1):
     """
     Objective function for optimization.
     """
@@ -49,7 +49,7 @@ def _object_func(params, data, model_func, pts,
         print '%-8i, %-12g, %s' % (_counter, result, param_str)
         Misc.delayed_flush(delay=flush_delay)
 
-    return -result
+    return -result/ll_scale
 
 def _object_func_log(log_params, *args, **kwargs):
     """
@@ -60,7 +60,7 @@ def _object_func_log(log_params, *args, **kwargs):
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-                 func_args=[], fixed_params=None):
+                 func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -103,9 +103,15 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale > 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you'll probably want to
+              re-optimize with ll_scale=1.
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, fixed_params)
+            multinom, flush_delay, func_args, fixed_params, ll_scale)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -328,7 +334,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                   in; values corresponding to fixed parameters are ignored.
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, fixed_params)
+            multinom, flush_delay, func_args, fixed_params, 1.0)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
@@ -344,7 +350,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-             func_args=[], fixed_params=None):
+             func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize params to fit model to data using the BFGS method.
 
@@ -384,9 +390,15 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale > 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you'll probably want to
+              re-optimize with ll_scale=1.
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, fixed_params)
+            multinom, flush_delay, func_args, fixed_params, ll_scale)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
@@ -484,7 +496,7 @@ def optimize_grid(data, model_func, pts, grid,
     parameter values.
     """
     args = (data, model_func, pts, None, None, verbose,
-            multinom, flush_delay, func_args, fixed_params)
+            multinom, flush_delay, func_args, fixed_params, 1.0)
 
     outputs = scipy.optimize.brute(_object_func, ranges=grid,
                                    args = args, full_output=full_output)
