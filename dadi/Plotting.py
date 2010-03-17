@@ -34,6 +34,31 @@ _ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 from dadi import Numerics, Inference
 
+def plot_1d_fs(fs, fig_num=None):
+    """
+    Plot a 1-dimensional frequency spectrum.
+
+    fs: 1-dimensional Spectrum
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+
+    Note that all the plotting is done with pylab. To see additional pylab
+    methods: "import pylab; help(pylab)". Pylab's many functions are documented
+    at http://matplotlib.sourceforge.net/contents.html
+    """
+
+    if fig_num is None:
+        fig = pylab.gcf()
+    else:
+        fig = pylab.figure(fig_num, figsize=(7,7))
+    fig.clear()
+
+    ax = fig.add_subplot(1,1,1)
+    ax.semilogy(fs, '-ob')
+
+    ax.set_xlim(0, fs.sample_sizes[0])
+    fig.show()
+
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
                           plot_masked=False):
     """
