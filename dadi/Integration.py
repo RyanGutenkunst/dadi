@@ -124,7 +124,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     elif T - initial_t < 0:
         raise ValueError('Final integration time T (%f) is less than '
                          'intial_time (%f). Integration cannot be run '
-                         'backwards.' % (T, initial_time))
+                         'backwards.' % (T, initial_t))
 
     vars_to_check = (nu, gamma, h, theta0)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
@@ -193,7 +193,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     elif T - initial_t < 0:
         raise ValueError('Final integration time T (%f) is less than '
                          'intial_time (%f). Integration cannot be run '
-                         'backwards.' % (T, initial_time))
+                         'backwards.' % (T, initial_t))
 
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
@@ -278,7 +278,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     elif T - initial_t < 0:
         raise ValueError('Final integration time T (%f) is less than '
                          'intial_time (%f). Integration cannot be run '
-                         'backwards.' % (T, initial_time))
+                         'backwards.' % (T, initial_t))
 
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
