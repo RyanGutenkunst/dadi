@@ -35,7 +35,7 @@ upper_bound = [100, 100, 100, 100, 3, 3]
 lower_bound = [1e-2, 1e-2, 1e-2, 0, 0, 0]
 
 # Makde the extrapolating version of our demographic model function.
-func_ex = dadi.Numerics.make_extrap_func(func)
+func_ex = dadi.Numerics.make_extrap_log_func(func)
 # Calculate the model AFS.
 model = func_ex(params, ns, pts_l)
 # Likelihood of the data given the model AFS.
