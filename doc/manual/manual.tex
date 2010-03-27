@@ -383,6 +383,10 @@ The migration parameter \py{m12} specifies the rate of migration \emph{from pop 
 It is equal to the fraction of individuals each generation in pop 1 that are new migrants from pop 2, times the 2\Nref.
 \py{Integration.three_pops} is a straightforward extension of \py{two_pops} but now there are three population sizes and six migration parameters.
 
+Note that for all these methods, the integration time \py{T} must be positive.
+To ensure this, it is best to define your time parameters as the \emph{interval between} events rather than the absolute time of those events.
+For example, a size change happened a time \py{Tsize} before a population split \py{Tsplit} in the past.
+
 Importantly, population sizes and migration rates (and selection coefficients) may be functions of time.
 This allows one to simulate exponential growth and other more complex scenarios.
 To do so, simply pass a function that takes a single argument (the time) and returns the given variable.
@@ -409,7 +413,7 @@ Again, this differs from \emph{ms}, where the scaling factor is $4 \Nref$ genera
 So to get equivalent migration ($m_{ij}$) in \ms for a given rate in \dadi, \emph{multiply} by 2.
 
 
-\subsection{Fixed $theta$}\label{sec:fixed_theta}
+\subsection{Fixed $\theta$}\label{sec:fixed_theta}
 
 If you wish to set a fixed value of $\theta = 4 N_0 \mu$ in your analysis, that information must be provided to the initial $\phi$ creation function and the \py{Integration} functions.
 For an example, see Listing~\ref{lst:fixed_theta}, which defines a demographic model in which $\theta$ is fixed to be 137 for derived population 1.
@@ -808,7 +812,57 @@ In the \py{dadi-<version>} directory, run \py{sudo python setup.py install}.
 This will compile the C modules \dadi uses and install those plus all \dadi Python files in your Python installation's \py{site-packages} directory.
 A (growing) series of tests can be run in the \py{tests} directory, via \py{python run_tests.py}
 
-%s\section{Frequently asked questions}
+\section{Frequently asked questions}
+
+\begin{enumerate}
+\item What does the message \py{WARNING:Inference:Model is < 0 where data is not masked.} mean?
+
+This warning comes from the likelihood calculation function.
+It indicates that the model frequency spectrum has negative values that are trying to be compared with data.
+Negative values in the frequency spectrum are nonsense, so this most likely indicates numerical difficulties.
+If you're running an optimization, occasional warnings like this likely not a problem.
+The optimization explores a wide range of parameter values, most of which are bad fits.
+If these errors crop up for parameter values that will be a bad fit anyways, the errors won't change the final result.
+On the other hand, if you are re getting these warnings near good-fitting sets of parameters, you'll need to fix them.
+There are two possible causes, and thus two possible solutions.
+
+\begin{enumerate}
+\item The negative values might be arising from the extrapolation process (over different grid sizes).
+In this case, replace any calls to \py{Numerics.make_extrap_func} to \py{Numerics.make_extrap_log_func}.
+This will do the extrapolation based on the logarithms of the value in the frequency spectrum, guaranteeing positive results.
+
+\item The negative values might be arising from calculating an individual spectrum (for a fixed grid size).
+This typically only happens in cases of very rapid exponential growth.
+In this case, you can try a finer grid size (increase the elements of the \py{pts_l} list) or smaller time steps.
+The time step is set by the call to \py{dadi.Integration.set_timescale_factor(pts_l[-1], factor=10)}.
+To shorten the time step, increase \py{factor}.
+First try shortening the time step, as this will typically increase computation time less than increasing the grid size.
+\end{enumerate}
+
+\item I'm projecting my data down to a smaller frequency spectrum. What sample sizes should I project down to?
+
+At this time, we have not done any formal power testing to judge the optimal level of projection, but we do have a rule-of-thumb.
+As you project down to smaller sample sizes, more SNPs can be used in constructing the FS (because they have
+enough successful calls).
+However, as you project downward, some SNPs will ``disappear'' from the FS because they get partially projected down
+to 0 observations in all the populations.
+Our rule of thumb is to use the projection that maximizes the number of segregating SNPs.
+The number of segregating SNPs can be calculated as \py{fs.S()}.
+
+\item Can I use a likelihood-ratio-test to decide whether allowing a parameter to be non-zero yields a statistically significantly better model? (For example, migration versus no migration.)
+
+Yes, although assigning significance values can be computationally intensive.
+\dadi calculates a composite likelihood, which assumes all SNPs in the data are independent.
+This doesn't bias parameter inference for neutral models~\cite{bib:Wiuf2006}, but if your SNPs are actually linked, the standard likelihood-ratio test will be anti-conservative, i.e. it will reject the more complex model more often that it should.
+
+To overcome this, you need to calculate the null distribution, i.e. what improvements in likelihood would you expect if there really were no migration in the data, but your model included migration?
+To do this, generate simulated data sets with a coalescent simulator under your best-fit model without migration, replicating as closely as possible your sequencing strategy (size and linkage between sequenced regions).
+Then fit each data set using the no-migration model, and the migration model.
+The resulting distribution of likelihood differences is the null distribution, i.e. if there really is no migration, how much does
+adding the migration parameter improve the likelihood (because you're better fitting noise)?
+Compare the improvement from the real data with this null distribution to assign a p-value.
+
+\end{enumerate}
 
 %\begin{lstlisting}[caption={Dork}, float]
 %blah blah
