@@ -165,6 +165,9 @@ def ll_per_bin(model, data):
         logger.warn('Model is 0 where data is neither masked nor 0.')
     if numpy.any(numpy.logical_and(model.mask, numpy.logical_not(data.mask))):
         logger.warn('Model is masked in some entries where data is not.')
+    if numpy.any(numpy.logical_and(numpy.isnan(model), 
+                                   numpy.logical_not(data.mask))):
+        logger.warn('Model is nan in some entries where data is not masked.')
 
     return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
 
