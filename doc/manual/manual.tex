@@ -76,7 +76,9 @@ Also, if you have particular needs that modification to \dadi may fulfill, pleas
 
 One of Python's major strengths is its interactive nature.
 This is very useful in the exploratory stages of a project: for examining data and testing models.
-My preferred workflow involves one window editing a Python script (e.g. \py{script.py}) and another running an IPython session.
+If you intend to use \dadi's plotting commands, which rely on \py{matplotlib}, they you'll almost certainly want to install IPython, an enhanced Python shell that fixes several difficulties with interactive plotting using \py{matplotlib}.
+
+My preferred workflow involves one window editing a Python script (e.g. \py{script.py}) and another running an IPython session (started as \py{ipython -pylab}).
 In the IPython session I can interactively use \dadi, while I record my work in \py{script.py}.
 IPython's \py{\%run script.py} magic command lets me apply changes I've made to \py{script.py} to my interactive session. 
 (Note that you will need to reload other Python modules used by your script if you change them.)
