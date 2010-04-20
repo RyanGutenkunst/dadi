@@ -30,11 +30,13 @@ dadi.Hessian.hessian	dadi.Hessian-module.html#hessian
 dadi.Inference	dadi.Inference-module.html
 dadi.Inference.optimize_log	dadi.Inference-module.html#optimize_log
 dadi.Inference._object_func_log	dadi.Inference-module.html#_object_func_log
+dadi.Inference.index_exp	dadi.Inference-module.html#index_exp
 dadi.Inference.ll	dadi.Inference-module.html#ll
 dadi.Inference.__package__	dadi.Inference-module.html#__package__
 dadi.Inference.ll_multinom	dadi.Inference-module.html#ll_multinom
 dadi.Inference.logger	dadi.Inference-module.html#logger
 dadi.Inference.Anscombe_Poisson_residual	dadi.Inference-module.html#Anscombe_Poisson_residual
+dadi.Inference.optimize_grid	dadi.Inference-module.html#optimize_grid
 dadi.Inference.minus_ll	dadi.Inference-module.html#minus_ll
 dadi.Inference._project_params_down	dadi.Inference-module.html#_project_params_down
 dadi.Inference._project_params_up	dadi.Inference-module.html#_project_params_up
@@ -124,6 +126,7 @@ dadi.Plotting.plot_1d_comp_multinom	dadi.Plotting-module.html#plot_1d_comp_multi
 dadi.Plotting.plot_single_2d_sfs	dadi.Plotting-module.html#plot_single_2d_sfs
 dadi.Plotting.__package__	dadi.Plotting-module.html#__package__
 dadi.Plotting.plot_2d_comp_Poisson	dadi.Plotting-module.html#plot_2d_comp_Poisson
+dadi.Plotting.plot_1d_fs	dadi.Plotting-module.html#plot_1d_fs
 dadi.Plotting.plot_3d_comp_multinom	dadi.Plotting-module.html#plot_3d_comp_multinom
 dadi.Plotting.plot_3d_comp_Poisson	dadi.Plotting-module.html#plot_3d_comp_Poisson
 dadi.Plotting.plot_2d_comp_multinom	dadi.Plotting-module.html#plot_2d_comp_multinom
