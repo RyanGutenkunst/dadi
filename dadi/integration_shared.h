@@ -8,22 +8,24 @@ double Mfunc2D(double x, double y, double m, double gamma, double h);
 double Mfunc3D(double x, double y, double z, double mxy, double mxz,
         double gamma, double h);
 
-// Differences between x values.
-void compute_dx(int N; double xx[N], int N, double dx[N-1]);
-// Values intermediate between x values.
-void compute_xInt(int N; double xx[N], int N, double xInt[N-1]);
+/* Differences between x values.
+ */
+void compute_dx(double *xx, int N, double *dx);
+/* Values intermediate between x values.
+ */
+void compute_xInt(double *xx, int N, double *xInt);
 /* dfactor which normalizes the fluxes to be consistent with probability
  * conservation given the trapezoid rule.
  */
-void compute_dfactor(int N; double dx[N-1], int N, double dfactor[N]);
+void compute_dfactor(double *dx, int N, double *dfactor);
 /* Chang and Cooper's delj factor, if use_delj_trick is True. Else just returns
  * an array of 0.5.
  */
-void compute_delj(int N; double dx[N-1], double MInt[N-1], double VInt[N-1],
-        int N, double delj[N-1], int use_delj_trick);
+void compute_delj(double *dx, double *MInt, double *VInt,
+        int N, double *delj, int use_delj_trick);
 /* a,b,c arrays for use with tridiag, corresponding to a fully implicit
  * integration. Doing them simultaneously allows an easy but minor optimization.
  */
-void compute_abc_nobc(int N; double dx[N-1], double dfactor[N], 
-        double delj[N-1], double MInt[N-1], double V[N], double dt, int N,
-        double a[N], double b[N], double c[N]);
+void compute_abc_nobc(double *dx, double *dfactor, 
+        double *delj, double *MInt, double *V, double dt, int N,
+        double *a, double *b, double *c);

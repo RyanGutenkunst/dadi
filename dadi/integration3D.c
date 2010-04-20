@@ -1,28 +1,49 @@
 #include "integration_shared.h"
 #include "tridiag.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-void implicit_3Dx(int L, int M, int N;
-        double phi[L][M][N], 
-        double xx[L], double yy[M], double zz[N],
+/* Visual C++ does not support the C99 standard, so we can't use
+ * variable-length arrays such as arr[L][M][N].
+ *
+ * See integration2D.c for detail on how this complicates indexing, and what
+ * tricks are necessary.
+ */
+
+void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
         double nu1, double m12, double m13, double gamma1, double h1,
         double dt, int L, int M, int N, int use_delj_trick){
     int ii,jj,kk;
 
-    double dx[L-1], dfactor[L], xInt[L-1];
+    double *dx = malloc((L-1) * sizeof(*dx));
+    double *dfactor = malloc(L * sizeof(*dfactor));
+    double *xInt = malloc((L-1) * sizeof(*xInt));
+
+    double Mfirst, Mlast;
+    double *MInt = malloc((L-1) * sizeof(*MInt));
+    double *V = malloc(L * sizeof(*V));
+    double *VInt = malloc((L-1) * sizeof(*VInt));
+
+    double *delj = malloc((L-1) * sizeof(*delj));
+
+    double *a = malloc(L * sizeof(*a));
+    double *b = malloc(L * sizeof(*b));
+    double *c = malloc(L * sizeof(*c));
+    double *r = malloc(L * sizeof(*r));
+    double *temp = malloc(L * sizeof(*temp));
+
+    double y, z;
+
     compute_dx(xx, L, dx);
     compute_dfactor(dx, L, dfactor);
     compute_xInt(xx, L, xInt);
     
-    double Mfirst, Mlast;
-    double MInt[L-1], V[L], VInt[L-1];
-    double delj[L-1];
     for(ii=0; ii < L; ii++)
         V[ii] = Vfunc(xx[ii], nu1);
     for(ii=0; ii < L-1; ii++)
         VInt[ii] = Vfunc(xInt[ii], nu1);
 
-    double a[L], b[L], c[L], r[L], temp[L];
-    double y, z;
+    tridiag_malloc(L);
     for(jj = 0; jj < M; jj++){
         for(kk = 0; kk < N; kk++){
             y = yy[jj];
@@ -36,42 +57,69 @@ void implicit_3Dx(int L, int M, int N;
             compute_delj(dx, MInt, VInt, L, delj, use_delj_trick);
             compute_abc_nobc(dx, dfactor, delj, MInt, V, dt, L, a, b, c);
             for(ii = 0; ii < L; ii++)
-                r[ii] = phi[ii][jj][kk]/dt;
+                r[ii] = phi[ii*L*M + jj*M + kk]/dt;
 
             if((jj==0) && (kk==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
             if((jj==M-1) && (kk==N-1) && (Mlast >= 0))
                 b[L-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
 
-            tridiag(a, b, c, r, temp, L);
+            tridiag_premalloc(a, b, c, r, temp, L);
             for(ii = 0; ii < L; ii++)
-                phi[ii][jj][kk] = temp[ii];
+                phi[ii*L*M + jj*M + kk] = temp[ii];
         }
     }
+    tridiag_free();
+
+    free(dx);
+    free(dfactor);
+    free(xInt);
+    free(MInt);
+    free(V);
+    free(VInt);
+    free(delj);
+    free(a);
+    free(b);
+    free(c);
+    free(r);
+    free(temp);
 }
 
-void implicit_3Dy(int L, int M, int N;
-        double phi[L][M][N], 
-        double xx[L], double yy[M], double zz[N],
+void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
         double nu2, double m21, double m23, double gamma2, double h2,
         double dt, int L, int M, int N, int use_delj_trick){
     int ii,jj,kk;
 
-    double dy[M-1], dfactor[M], yInt[M-1];
+    double *dy = malloc((M-1) * sizeof(*dy));
+    double *dfactor = malloc(M * sizeof(*dfactor));
+    double *yInt = malloc((M-1) * sizeof(*yInt));
+
+    double Mfirst, Mlast;
+
+    double *MInt = malloc((M-1) * sizeof(*MInt));
+    double *V = malloc(M * sizeof(*V));
+    double *VInt = malloc((M-1) * sizeof(*VInt));
+
+    double *delj = malloc((M-1) * sizeof(*delj));
+
+    double *a = malloc(M * sizeof(*a));
+    double *b = malloc(M * sizeof(*b));
+    double *c = malloc(M * sizeof(*c));
+    double *r = malloc(M * sizeof(*r));
+    double *temp = malloc(M * sizeof(*temp));
+
+    double x, z;
+
     compute_dx(yy, M, dy);
     compute_dfactor(dy, M, dfactor);
     compute_xInt(yy, M, yInt);
     
-    double Mfirst, Mlast;
-    double MInt[M-1], V[M], VInt[M-1];
-    double delj[M-1];
     for(jj=0; jj < M; jj++)
         V[jj] = Vfunc(yy[jj], nu2);
     for(jj=0; jj < M-1; jj++)
         VInt[jj] = Vfunc(yInt[jj], nu2);
 
-    double a[M], b[M], c[M], r[M], temp[M];
-    double x, z;
+    tridiag_malloc(M);
     for(ii = 0; ii < L; ii++){
         for(kk = 0; kk < N; kk++){
             x = xx[ii];
@@ -85,42 +133,69 @@ void implicit_3Dy(int L, int M, int N;
             compute_delj(dy, MInt, VInt, M, delj, use_delj_trick);
             compute_abc_nobc(dy, dfactor, delj, MInt, V, dt, M, a, b, c);
             for(jj = 0; jj < M; jj++)
-                r[jj] = phi[ii][jj][kk]/dt;
+                r[jj] = phi[ii*L*M + jj*M + kk]/dt;
 
             if((ii==0) && (kk==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
             if((ii==L-1) && (kk==N-1) && (Mlast >= 0))
                 b[M-1] += -(-0.5/nu2 - Mlast)*2./dy[M-2];
 
-            tridiag(a, b, c, r, temp, M);
+            tridiag_premalloc(a, b, c, r, temp, M);
             for(jj = 0; jj < M; jj++)
-                phi[ii][jj][kk] = temp[jj];
+                phi[ii*L*M + jj*M + kk] = temp[jj];
         }
     }
+    tridiag_free();
+
+    free(dy);
+    free(dfactor);
+    free(yInt);
+    free(MInt);
+    free(V);
+    free(VInt);
+    free(delj);
+    free(a);
+    free(b);
+    free(c);
+    free(r);
+    free(temp);
 }
 
-void implicit_3Dz(int L, int M, int N;
-        double phi[L][M][N], 
-        double xx[L], double yy[M], double zz[N],
+void implicit_3Dz(double *phi, double *xx, double *yy, double *zz,
         double nu3, double m31, double m32, double gamma3, double h3,
         double dt, int L, int M, int N, int use_delj_trick){
     int ii,jj,kk;
 
-    double dz[N-1], dfactor[N], zInt[N-1];
+    double *dz = malloc((N-1) * sizeof(*dz));
+    double *dfactor = malloc(N * sizeof(*dfactor));
+    double *zInt = malloc((N-1) * sizeof(*zInt));
+
+    double Mfirst, Mlast;
+
+    double *MInt = malloc((N-1) * sizeof(*MInt));
+    double *V = malloc(N * sizeof(*V));
+    double *VInt = malloc((N-1) * sizeof(*VInt));
+
+    double *delj = malloc((N-1) * sizeof(*delj));
+
+    double *a = malloc(N * sizeof(*a));
+    double *b = malloc(N * sizeof(*b));
+    double *c = malloc(N * sizeof(*c));
+    double *r = malloc(N * sizeof(*r));
+    double *temp = malloc(N * sizeof(*temp));
+
+    double x, y;
+
     compute_dx(zz, N, dz);
     compute_dfactor(dz, N, dfactor);
     compute_xInt(zz, N, zInt);
     
-    double Mfirst, Mlast;
-    double MInt[N-1], V[N], VInt[N-1];
-    double delj[N-1];
     for(kk=0; kk < N; kk++)
         V[kk] = Vfunc(zz[kk], nu3);
     for(kk=0; kk < N-1; kk++)
         VInt[kk] = Vfunc(zInt[kk], nu3);
 
-    double a[N], b[N], c[N], r[N];
-    double x, y;
+    tridiag_malloc(N);
     for(ii = 0; ii < L; ii++){
         for(jj = 0; jj < M; jj++){
             x = xx[ii];
@@ -134,86 +209,134 @@ void implicit_3Dz(int L, int M, int N;
             compute_delj(dz, MInt, VInt, N, delj, use_delj_trick);
             compute_abc_nobc(dz, dfactor, delj, MInt, V, dt, N, a, b, c);
             for(kk = 0; kk < N; kk++)
-                r[kk] = phi[ii][jj][kk]/dt;
+                r[kk] = phi[ii*L*M + jj*M + kk]/dt;
 
             if((ii==0) && (jj==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu3 - Mfirst)*2./dz[0];
             if((ii==L-1) && (jj==M-1) && (Mlast >= 0))
                 b[N-1] += -(-0.5/nu3 - Mlast)*2./dz[N-2];
 
-            tridiag(a, b, c, r, phi[ii][jj], N);
+            tridiag_premalloc(a, b, c, r, &phi[ii*L*M + jj*M], N);
         }
     }
+    tridiag_free();
+
+    free(dz);
+    free(dfactor);
+    free(zInt);
+    free(MInt);
+    free(V);
+    free(VInt);
+    free(delj);
+    free(a);
+    free(b);
+    free(c);
+    free(r);
+    free(temp);
 }
 
-void implicit_precalc_3Dx(int L, int M, int N;
-        double phi[L][M][N], 
-        double ax[L][M][N], double bx[L][M][N], double cx[L][M][N],
+void implicit_precalc_3Dx(double *phi, double *ax, double *bx, double *cx,
         double dt, int L, int M, int N){
     int ii,jj,kk;
+    int index;
 
-    double a[L], b[L], c[L], r[L];
-    double new_row[L];
+    double *a = malloc(L * sizeof(*a));
+    double *b = malloc(L * sizeof(*b));
+    double *c = malloc(L * sizeof(*c));
+    double *r = malloc(L * sizeof(*r));
+    double *new_row = malloc(L * sizeof(*new_row));
 
+    tridiag_malloc(L);
     for(jj = 0; jj < M; jj++){
         for(kk = 0; kk < N; kk++){
             for(ii = 0; ii < L; ii++){
-                a[ii] = ax[ii][jj][kk];
-                b[ii] = bx[ii][jj][kk] + 1/dt;
-                c[ii] = cx[ii][jj][kk];
-                r[ii] = 1/dt * phi[ii][jj][kk];
+                index = ii*L*M + jj*M + kk;
+                a[ii] = ax[index];
+                b[ii] = bx[index] + 1/dt;
+                c[ii] = cx[index];
+                r[ii] = 1/dt * phi[index];
             }
 
-            tridiag(a, b, c, r, new_row, L);
+            tridiag_premalloc(a, b, c, r, new_row, L);
             for(ii = 0; ii < L; ii++)
-                phi[ii][jj][kk] = new_row[ii];
+                phi[ii*L*M + jj*M + kk] = new_row[ii];
         }
     }
+    tridiag_free();
+
+    free(a);
+    free(b);
+    free(c);
+    free(r);
+    free(new_row);
 }
 
-void implicit_precalc_3Dy(int L, int M, int N;
-        double phi[L][M][N], 
-        double ay[L][M][N], double by[L][M][N], double cy[L][M][N],
+void implicit_precalc_3Dy(double *phi, double *ay, double *by, double *cy,
         double dt, int L, int M, int N){
     int ii,jj,kk;
+    int index;
 
-    double a[M], b[M], c[M], r[M];
-    double new_row[M];
+    double *a = malloc(M * sizeof(*a));
+    double *b = malloc(M * sizeof(*b));
+    double *c = malloc(M * sizeof(*c));
+    double *r = malloc(M * sizeof(*r));
+    double *new_row = malloc(M * sizeof(*new_row));
 
+    tridiag_malloc(M);
     for(ii = 0; ii < L; ii++){
         for(kk = 0; kk < N; kk++){
             for(jj = 0; jj < M; jj++){
-                a[jj] = ay[ii][jj][kk];
-                b[jj] = by[ii][jj][kk] + 1/dt;
-                c[jj] = cy[ii][jj][kk];
-                r[jj] = 1/dt * phi[ii][jj][kk];
+                index = ii*L*M + jj*M + kk;
+                a[jj] = ay[index];
+                b[jj] = by[index] + 1/dt;
+                c[jj] = cy[index];
+                r[jj] = 1/dt * phi[index];
             }
 
-            tridiag(a, b, c, r, new_row, M);
+            tridiag_premalloc(a, b, c, r, new_row, M);
             for(jj = 0; jj < M; jj++)
-                phi[ii][jj][kk] = new_row[jj];
+                phi[ii*L*M + jj*M + kk] = new_row[jj];
         }
     }
+    tridiag_free();
+
+    free(a);
+    free(b);
+    free(c);
+    free(r);
+    free(new_row);
 }
 
-void implicit_precalc_3Dz(int L, int M, int N;
-        double phi[L][M][N], 
-        double az[L][M][N], double bz[L][M][N], double cz[L][M][N],
+void implicit_precalc_3Dz(double *phi, double *az, double *bz, double *cz,
         double dt, int L, int M, int N){
     int ii,jj,kk;
+    int index;
 
-    double a[N], b[N], c[N], r[N];
+    double *a = malloc(N * sizeof(*a));
+    double *b = malloc(N * sizeof(*b));
+    double *c = malloc(N * sizeof(*c));
+    double *r = malloc(N * sizeof(*r));
+    double *new_row = malloc(N * sizeof(*new_row));
 
+    tridiag_malloc(N);
     for(ii = 0; ii < L; ii++){
         for(jj = 0; jj < M; jj++){
             for(kk = 0; kk < N; kk++){
-                a[kk] = az[ii][jj][kk];
-                b[kk] = bz[ii][jj][kk] + 1/dt;
-                c[kk] = cz[ii][jj][kk];
-                r[kk] = 1/dt * phi[ii][jj][kk];
+                index = ii*L*M + jj*M + kk;
+                a[kk] = az[index];
+                b[kk] = bz[index] + 1/dt;
+                c[kk] = cz[index];
+                r[kk] = 1/dt * phi[index];
             }
 
-            tridiag(a, b, c, r, phi[ii][jj], N);
+            tridiag_premalloc(a, b, c, r, &phi[ii*L*M + jj*M], N);
         }
     }
+    tridiag_free();
+
+    free(a);
+    free(b);
+    free(c);
+    free(r);
+    free(new_row);
 }
