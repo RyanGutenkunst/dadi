@@ -197,7 +197,7 @@ def trapz(yy, xx=None, dx=None, axis=-1):
 
     return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)
 
-def make_extrap_func(func):
+def make_extrap_func(func, extrap_x_l=None):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
@@ -207,24 +207,38 @@ def make_extrap_func(func):
           The function can take further keyword arguments. Note that those
           arguments must *always* be passed by keyword into the extrapolated
           function.
+    extrap_x_l: An explict list of x values to use for extrapolation. If not 
+         provided, the extrapolation routine will look for '.extrap_x'
+         attributes on the results of func. The method Spectrum.from_phi will
+         add an extrap_x attribute to resulting Spectra, equal to the x-value
+         of the first non-zero grid point. An explicit list is useful if you
+         want to override this behavior for testing.
 
     Returns a new function whose last argument is a list of numbers of grid
     points and that returns a result extrapolated to infinitely many grid
     points.
     """
+    x_l_from_results = (extrap_x_l is None)
+
     def extrap_func(*args, **kwargs):
         other_args, pts_l = args[:-1], args[-1]
 
-        x_l, result_l = [],[]
+        result_l = []
+        if x_l_from_results:
+            x_l = []
+        else:
+            x_l = extrap_x_l
+
         for pts in pts_l:
-            # We extrapolate based on the first grid spacing. This seems to
-            # give better results than, for example, the average spacing.
-            x = default_grid(pts)[1]
-            x_l.append(x)
             # Some python vodoo here to call the original function with the
             # proper arguments.
             result = func(*(other_args + (pts,)), **kwargs)
             result_l.append(result)
+            if x_l_from_results:
+                try:
+                    x_l.append(result.extrap_x)
+                except AttributeError:
+                    raise ValueError("Extrapolation function error: No explicit extrapolation x_l provided, and results do not have 'extrap_x' attributes. If this is an FS extrapolation, check your from_phi method.")
 
         # Extrapolate
         if len(pts_l) == 1:
@@ -246,7 +260,7 @@ def make_extrap_func(func):
 
     return extrap_func
 
-def make_extrap_log_func(func):
+def make_extrap_log_func(func, extrap_x_l=None):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
@@ -257,6 +271,12 @@ def make_extrap_log_func(func):
     func: A function whose last argument is the number of Numerics.default_grid 
           points to use in calculation and that returns a single scalar or 
           array.
+    extrap_x_l: An explict list of x values to use for extrapolation. If not 
+         provided, the extrapolation routine will look for '.extrap_x'
+         attributes on the results of func. The method Spectrum.from_phi will
+         add an extrap_x attribute to resulting Spectra, equal to the x-value
+         of the first non-zero grid point. An explicit list is useful if you
+         want to override this behavior for testing.
 
     Returns a new function whose last argument is a list of numbers of grid
     points and that returns a result extrapolated to infinitely many grid
@@ -264,7 +284,7 @@ def make_extrap_log_func(func):
     """
     def logfunc(*args, **kwargs):
         return numpy.log(func(*args, **kwargs))
-    exlog_func = make_extrap_func(logfunc)
+    exlog_func = make_extrap_func(logfunc, extrap_x_l=extrap_x_l)
     def ex_func(*args, **kwargs):
         return numpy.exp(exlog_func(*args, **kwargs))
     return ex_func

@@ -114,18 +114,25 @@ class Spectrum(numpy.ma.masked_array):
     # myself to discover that I also needed _update_from.
     # Also, see http://docs.scipy.org/doc/numpy/reference/arrays.classes.html
     # Also, see http://docs.scipy.org/doc/numpy/user/basics.subclassing.html
+    #
+    # We need these methods to ensure extra attributes get copied along when
+    # we do arithmetic on the FS.
     def __array_finalize__(self, obj):
         if obj is None: 
             return
         numpy.ma.masked_array.__array_finalize__(self, obj)
         self.folded = getattr(obj, 'folded', 'unspecified')
         self.pop_ids = getattr(obj, 'pop_ids', None)
+        if hasattr(obj, 'extrap_x'):
+            self.extrap_x = obj.extrap_x
     def __array_wrap__(self, obj, context=None):
         result = obj.view(type(self))
         result = numpy.ma.masked_array.__array_wrap__(self, obj, 
                                                       context=context)
         result.folded = self.folded
         result.pop_ids = self.pop_ids
+        if hasattr(self, 'extrap_x'):
+            result.extrap_x = self.extrap_x
         return result
     def _update_from(self, obj):
         numpy.ma.masked_array._update_from(self, obj)
@@ -133,6 +140,8 @@ class Spectrum(numpy.ma.masked_array):
             self.folded = obj.folded
         if hasattr(obj, 'pop_ids'):
             self.pop_ids = obj.pop_ids
+        if hasattr(obj, 'extrap_x'):
+            self.extrap_x = obj.extrap_x
     # masked_array has priority 15.
     __array_priority__ = 20
 
@@ -1103,6 +1112,10 @@ class Spectrum(numpy.ma.masked_array):
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
         fs.pop_ids = pop_ids
+        # Record value to use for extrapolation. This is the first grid point,
+        # which is where new mutations are introduced. Note that extrapolation
+        # will likely fail if grids differ between dimensions.
+        fs.extrap_x = xxs[0][1]
         return fs
 
     def scramble_pop_ids(self, mask_corners=True):
