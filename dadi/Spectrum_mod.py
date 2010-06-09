@@ -12,6 +12,7 @@ import numpy
 from numpy import newaxis as nuax
 from scipy import comb
 from scipy.integrate import trapz
+from scipy.special import betainc
 
 import dadi.Numerics
 from dadi.Numerics import reverse_array, _cached_projection, _lncomb
@@ -985,7 +986,8 @@ class Spectrum(numpy.ma.masked_array):
         return (pihat - theta)/C
 
     @staticmethod
-    def _from_phi_1D(n, xx, phi, mask_corners=True, het_ascertained=None):
+    def _from_phi_1D_direct(n, xx, phi, mask_corners=True, 
+                            het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1001,7 +1003,50 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def _from_phi_2D(nx, ny, xx, yy, phi, mask_corners=True, 
+    def _from_phi_1D_analytic(n, xx, phi, mask_corners=True, 
+                              divergent=False):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+
+        divergent: If True, the interval from xx[0] to xx[1] is modeled as
+                   phi[1] * xx[1]/x. This captures the typical 1/x
+                   divergence at x = 0.
+        """
+        # This function uses the result that 
+        # \int_0^y \Gamma(a+b)/\Gamma(a) \Gamma(b) x^{a-1) (1-x)^{b-1} 
+        # is betainc(a,b,y)
+        # So the integral in analytic for a piece-wise linear phi.
+        data = numpy.zeros(n+1)
+
+        # Values for xx just slighly (~1e-16) outside the range [0,1] can cause
+        # betainc calculation to fail.
+        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+
+        # Slopes of our linear-segments
+        s = (phi[1:]-phi[:-1])/(xx[1:]-xx[:-1])
+        # For the integration of the "constant" term in the piecewise linear
+        # approximation of phi from each interval to the next.
+        c1 = (phi[:-1] - s*xx[:-1])/(n+1)
+        for d in range(0,n+1):
+            c2 = s*(d+1)/((n+1)*(n+2))
+            beta1 = betainc(d+1,n-d+1,xx)
+            beta2 = betainc(d+2,n-d+1,xx)
+            # Each entry is the value of the integral from one value of xx to
+            # the next.
+            entries = c1*(beta1[1:]-beta1[:-1]) + c2*(beta2[1:]-beta2[:-1])
+            if divergent:
+                entries[0] = phi[1]*xx[1]/d * betainc(d,n-d+1,xx[1])
+            data[d] = numpy.sum(entries)
+        fs = dadi.Spectrum(data, mask_corners=mask_corners)
+        return fs
+
+    @staticmethod
+    def _from_phi_2D_direct(nx, ny, xx, yy, phi, mask_corners=True, 
                      het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
@@ -1031,9 +1076,51 @@ class Spectrum(numpy.ma.masked_array):
                 data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
     
         return Spectrum(data, mask_corners=mask_corners)
-    
+
     @staticmethod
-    def _from_phi_3D(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
+    def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+        """
+        data = numpy.zeros((nx+1,ny+1))
+
+        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
+
+        beta_cache_xx = {}
+        for ii in range(0, nx+1):
+            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
+            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
+
+        s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+        c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
+        for jj in range(0, ny+1):
+            c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
+            beta1_yy = betainc(jj+1,ny-jj+1,yy)
+            beta2_yy = betainc(jj+2,ny-jj+1,yy)
+            over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
+                               + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
+                               axis=-1)
+
+            s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
+            c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
+            for ii in range(0, nx+1):
+                c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
+                beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
+                beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
+                value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
+                                  + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
+                data[ii,jj] = value
+        fs = dadi.Spectrum(data, mask_corners=mask_corners)
+        return fs
+
+    @staticmethod
+    def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
                      het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
@@ -1077,8 +1164,61 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def from_phi(phi, ns, xxs, mask_corners=True,
-                 het_ascertained=None, pop_ids=None):
+    def _from_phi_3D_analytic(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+        """
+        data = numpy.zeros((nx+1,ny+1,nz+1))
+
+        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
+        zz = numpy.minimum(numpy.maximum(zz, 0), 1.0)
+
+        beta_cache_xx = {}
+        for ii in range(0, nx+1):
+            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
+            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
+        beta_cache_yy = {}
+        for jj in range(0, ny+1):
+            beta_cache_yy[jj+1,ny-jj+1] = betainc(jj+1,ny-jj+1,yy)
+            beta_cache_yy[jj+2,ny-jj+1] = betainc(jj+2,ny-jj+1,yy)
+
+        s_zz = (phi[:,:,1:]-phi[:,:,:-1])/(zz[nuax,nuax,1:]-zz[nuax,nuax,:-1])
+        c1_zz = (phi[:,:,:-1] - s_zz*zz[nuax,nuax,:-1])/(nz+1)
+        for kk in range(0, nz+1):
+            c2_zz = s_zz*(kk+1)/((nz+1)*(nz+2))
+            beta1_zz = betainc(kk+1,nz-kk+1,zz)
+            beta2_zz = betainc(kk+2,nz-kk+1,zz)
+            over_z = numpy.sum(c1_zz*(beta1_zz[nuax,nuax,1:]-beta1_zz[nuax,nuax,:-1]) + c2_zz*(beta2_zz[nuax,nuax,1:]-beta2_zz[nuax,nuax,:-1]), axis=-1)
+
+            s_yy = (over_z[:,1:]-over_z[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+            c1_yy = (over_z[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
+            for jj in range(0, ny+1):
+                c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
+                beta1_yy = beta_cache_yy[jj+1,ny-jj+1]
+                beta2_yy = beta_cache_yy[jj+2,ny-jj+1]
+                over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1]) + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]), axis=-1)
+        
+                s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
+                c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
+                for ii in range(0, nx+1):
+                    c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
+                    beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
+                    beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
+                    value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1]) + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
+                    data[ii,jj,kk] = value
+        fs = dadi.Spectrum(data, mask_corners=mask_corners)
+        return fs
+
+
+    @staticmethod
+    def from_phi(phi, ns, xxs, mask_corners=True, het_ascertained=None, 
+                 pop_ids=None, force_direct=False):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1093,22 +1233,44 @@ class Spectrum(numpy.ma.masked_array):
                          *not* in the current sample.) If 'yy' or 'zz', it
                          assumed that the ascertainment individual came from
                          population 2 or 3, respectively.
+                         (Note that this option also forces direct integration,
+                         which may be less accurate than the semi-analytic
+                         method. This could be fixed if there is interest.)
         pop_ids: Optional list of strings containing the population labels.
                  If pop_ids is None, labels will be "pop0", "pop1", ...
+        force_direct: Forces integration to use older direct integration method,
+                      rather than using analytic integration of sampling 
+                      formula.
         """
         if not phi.ndim == len(ns) == len(xxs):
             raise ValueError('Dimensionality of phi and lengths of ns and xxs '
                              'do not all agree.')
         if phi.ndim == 1:
-            fs = Spectrum._from_phi_1D(ns[0], xxs[0], phi, mask_corners,
-                                       het_ascertained)
+            if not het_ascertained and not force_direct:
+                fs = Spectrum._from_phi_1D_analytic(ns[0], xxs[0], phi,
+                                                    mask_corners)
+            else:
+                fs = Spectrum._from_phi_1D_direct(ns[0], xxs[0], phi, 
+                                                  mask_corners, het_ascertained)
         elif phi.ndim == 2:
-            fs = Spectrum._from_phi_2D(ns[0], ns[1], xxs[0], xxs[1], 
-                                       phi, mask_corners, het_ascertained)
+            if not het_ascertained and not force_direct:
+                fs = Spectrum._from_phi_2D_analytic(ns[0], ns[1], 
+                                                    xxs[0], xxs[1], phi,
+                                                    mask_corners)
+            else:
+                fs = Spectrum._from_phi_2D_direct(ns[0], ns[1], xxs[0], xxs[1], 
+                                                  phi, mask_corners, 
+                                                  het_ascertained)
         elif phi.ndim == 3:
-            fs = Spectrum._from_phi_3D(ns[0], ns[1], ns[2], 
-                                       xxs[0], xxs[1], xxs[2], 
-                                       phi, mask_corners, het_ascertained)
+            if not het_ascertained and not force_direct:
+                fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
+                                                  xxs[0], xxs[1], xxs[2], 
+                                                  phi, mask_corners, 
+                                                  het_ascertained)
+            else:
+                fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
+                                                    xxs[0], xxs[1], xxs[2], 
+                                                    phi, mask_corners)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
         fs.pop_ids = pop_ids
@@ -1116,6 +1278,10 @@ class Spectrum(numpy.ma.masked_array):
         # which is where new mutations are introduced. Note that extrapolation
         # will likely fail if grids differ between dimensions.
         fs.extrap_x = xxs[0][1]
+        for xx in xxs[1:]:
+            if not xx[1] == fs.extrap_x:
+                logger.warn('Spectrum calculated from phi different grids for '
+                            'different dimensions. Extrapolation may fail.')
         return fs
 
     def scramble_pop_ids(self, mask_corners=True):
