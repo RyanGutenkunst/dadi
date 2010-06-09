@@ -22,7 +22,10 @@ for arg in sys.argv:
     if arg.startswith('--compiler'):
         compiler = arg.split('=')[1]
 if compiler in ['unix','mingw32','cygwin']:
-    extra_compile_args = ['-std="iso9899:1990"', '-pedantic']
+    extra_compile_args = []
+    # RNG: This seems to cause problems on some machines. To test for
+    # compatibility with VC++, uncomment this line.
+    #extra_compile_args = ['-std="iso9899:1990"', '-pedantic-errors']
 else:
     extra_compile_args = []
 
