@@ -45,11 +45,13 @@ class Spectrum(numpy.ma.masked_array):
                        checked to ensure they are consistent with a folded
                        Spectrum. If they are not, a warning will be printed.
         pop_ids: Optional list of strings containing the population labels.
+        extrap_x: Optional floating point value specifying x value to use
+                  for extrapolation.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_corners=True, 
                 data_folded=None, check_folding=True, dtype=float, copy=True, 
                 fill_value=numpy.nan, keep_mask=True, shrink=True, 
-                pop_ids=None):
+                pop_ids=None, extrap_x=None):
         data = numpy.asanyarray(data)
 
         if mask is numpy.ma.nomask:
@@ -108,6 +110,8 @@ class Spectrum(numpy.ma.masked_array):
         if mask_corners:
             subarr.mask_corners()
 
+        subarr.extrap_x = extrap_x
+
         return subarr
 
     # See http://www.scipy.org/Subclasses for information on the
@@ -124,16 +128,14 @@ class Spectrum(numpy.ma.masked_array):
         numpy.ma.masked_array.__array_finalize__(self, obj)
         self.folded = getattr(obj, 'folded', 'unspecified')
         self.pop_ids = getattr(obj, 'pop_ids', None)
-        if hasattr(obj, 'extrap_x'):
-            self.extrap_x = obj.extrap_x
+        self.extrap_x = getattr(obj, 'extrap_x', None)
     def __array_wrap__(self, obj, context=None):
         result = obj.view(type(self))
         result = numpy.ma.masked_array.__array_wrap__(self, obj, 
                                                       context=context)
         result.folded = self.folded
         result.pop_ids = self.pop_ids
-        if hasattr(self, 'extrap_x'):
-            result.extrap_x = self.extrap_x
+        result.extrap_x = self.extrap_x
         return result
     def _update_from(self, obj):
         numpy.ma.masked_array._update_from(self, obj)
@@ -1582,6 +1584,9 @@ class Spectrum(numpy.ma.masked_array):
     # I set check_folding = False in the constructor because it raises useless
     # warnings when, for example, I do (model + 1). 
 
+    # These functions also ensure that the pop_ids and extrap_x attributes
+    # get properly copied over.
+
     # This is pretty advanced Python voodoo, so don't fret if you don't
     # understand it at first glance. :-)
     for method in ['__add__','__radd__','__sub__','__rsub__','__mul__',
@@ -1605,9 +1610,14 @@ def %(method)s(self, other):
         elif other.pop_ids != self.pop_ids:
             logger.warn('Arithmetic between Spectra with different pop_ids. '
                         'Resulting pop_id may not be correct.')
+    if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
+        extrap_x = None
+    else:
+        extrap_x = self.extrap_x
     outfs = self.__class__.__new__(self.__class__, newdata, newmask, 
                                    mask_corners=False, data_folded=self.folded,
-                                   check_folding=False, pop_ids=newpop_ids)
+                                   check_folding=False, pop_ids=newpop_ids,
+                                   extrap_x=extrap_x)
     return outfs
 """ % {'method':method})
 
@@ -1626,6 +1636,8 @@ def %(method)s(self, other):
              and other.pop_ids != self.pop_ids:
         logger.warn('Arithmetic between Spectra with different pop_ids. '
                     'Resulting pop_id may not be correct.')
+    if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
+        self.extrap_x = None
     return self
 """ % {'method':method})
 
