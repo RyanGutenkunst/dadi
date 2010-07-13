@@ -51,7 +51,7 @@ for arg in os.sys.argv:
         os.system("svn info > dadi/svnversion")
 
 core.setup(name='dadi',
-           version='1.4.1',
+           version='1.5.0',
            author='Ryan Gutenkunst',
            author_email='ryan@gutenkunst.org',
            url='http://dadi.googlecode.com',
