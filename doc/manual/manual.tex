@@ -606,13 +606,14 @@ As of version 1.5.0, the default grid in \dadi has points exponentially clustere
 This grid was suggested by Simon Gravel.
 The parameter \py{crwd} controls how closely grid points crowd the endpoints of the interval.
 
-We have performed some empirical investigations of the best value for \py{crwd}, although these results cannot be considered definative.
+We have performed some empirical investigations of the best value for \py{crwd}, although these results cannot be considered definitive.
 We ran simulations for a variety of models and parameter values for a variety of sample sizes.
 Denoting the largest sample size as \py{n}, we asked which value of \py{crwd} yielded the most accurate FS with \py{pts_l = [n, n+10, n+20]}.
 Results are shown in Fig.~\ref{fig:best_crwd}.
 It is evident that the best value for \py{crwd} is lower for smaller sample sizes.
 The red lines are empirical functions which approximate the optimum.
 These are implemented in \py{Numerics.estimate_best_exp_grid_crwd}.
+Fig.~\ref{fig:consistent_crwd} demonstrates that the optimum value of \py{crwd} doesn't depend strongly on the number of grid points used for integration.
 Unless you need absolute top performance, the default value of \py{crwd=8} will probably be sufficient.
 
 \begin{figure}
@@ -620,6 +621,12 @@ Unless you need absolute top performance, the default value of \py{crwd=8} will 
 \subfigure{\includegraphics[scale=0.37]{opt_crwd_1d}}
 \subfigure{\includegraphics[scale=0.37]{opt_crwd_2d}}
 \caption{\textbf{Empirical optimum values for \py{crwd}:} Each point represents the optimum value of \py{crwd} for a given model with a particular random choice of parameters.\label{fig:best_crwd}}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.37]{consistent_crwd}
+\caption{\textbf{Consistency of optimum \py{crwd} value:} For a one-dimensional system with 30 samples, the likelihood of a particular data set was calculated with \py{pts_l = [base, base+10, base+20]}, for varying \py{crwd} factors and values of \py{base}. In general, the optimum value of the \py{crwd} parameter does not depend on \py{base}.\label{fig:consistent_crwd}}
 \end{figure}
 
 \subsection{Likelihoods}
