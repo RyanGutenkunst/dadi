@@ -139,7 +139,7 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     sfs: SFS to plot
     vmin: Values in sfs below vmin are masked in plot.
-    vmax: Values in sfs above vmin saturate the color spectrum.
+    vmax: Values in sfs above vmax saturate the color spectrum.
     ax: Axes object to plot into. If None, the result of pylab.gca() is used.
     pop_ids: If not None, override pop_ids stored in Spectrum.
     extend: Whether the colorbar should have 'extension' arrows. See
@@ -523,3 +523,176 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         ax.hist(flatresid, bins=20, normed=True)
         ax.set_yticks([])
     pylab.show()
+
+def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None):
+    """
+    Logarithmic heatmap of single 3d FS.
+
+    Note that this method is slow, because it relies on matplotlib's software
+    rendering. For faster and better looking plots, use plot_3d_spectrum_mayavi.
+
+    fs: FS to plot
+    vmin: Values in fs below vmin are masked in plot.
+    vmax: Values in fs above vmax saturate the color spectrum.
+    fignum: Figure number to plot into. If None, a new figure will be created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    """
+    import mpl_toolkits.mplot3d as mplot3d
+    
+    fig = pylab.figure(fignum)
+    ax = mplot3d.Axes3D(fig)
+
+    if vmin is None:
+        vmin = fs.min()
+    if vmax is None:
+        vmax = fs.max()
+
+    # Which entries should I plot?
+    toplot = numpy.logical_not(fs.mask)
+    toplot = numpy.logical_and(toplot, fs.data >= vmin)
+    
+    # Figure out the color mapping.
+    normalized = (numpy.log(fs)-numpy.log(vmin))\
+            /(numpy.log(vmax)-numpy.log(vmin))
+    normalized = numpy.minimum(normalized, 1)
+    colors = pylab.cm.hsv(normalized)
+    
+    # We draw by calculating which faces are visible and including each as a
+    # polygon.
+    polys, polycolors = [],[]
+    for ii in range(fs.shape[0]):
+        for jj in range(fs.shape[1]):
+            for kk in range(fs.shape[2]):
+                if not toplot[ii,jj,kk]:
+                    continue
+                if kk < fs.shape[2]-1 and toplot[ii,jj,kk+1]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj-0.5,kk+0.5],[ii-0.5,jj-0.5,kk+0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if kk > 0 and toplot[ii,jj,kk-1]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk-0.5],[ii+0.5,jj+0.5,kk-0.5],
+                                  [ii+0.5,jj-0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if jj < fs.shape[1]-1 and toplot[ii,jj+1,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj+0.5,kk-0.5],[ii-0.5,jj+0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if jj > 0 and toplot[ii,jj-1,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj-0.5,kk+0.5],[ii+0.5,jj-0.5,kk+0.5],
+                                  [ii+0.5,jj-0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if ii < fs.shape[0]-1 and toplot[ii+1,jj,kk]:
+                    pass
+                else:
+                    polys.append([[ii+0.5,jj-0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj+0.5,kk-0.5],[ii+0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if ii > 0 and toplot[ii-1,jj,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj-0.5,kk+0.5],[ii-0.5,jj+0.5,kk+0.5],
+                                  [ii-0.5,jj+0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                    
+
+    polycoll = mplot3d.art3d.Poly3DCollection(polys, facecolor=polycolors, 
+                                              edgecolor='k', linewidths=0.5)
+    ax.add_collection(polycoll)
+
+    # Set the limits
+    ax.set_xlim3d(-0.5,fs.shape[0]-0.5)
+    ax.set_ylim3d(-0.5,fs.shape[1]-0.5)
+    ax.set_zlim3d(-0.5,fs.shape[2]-0.5)
+
+    if pop_ids is None:
+        if sfs.pop_ids is not None:
+            pop_ids = sfs.pop_ids
+        else:
+            pop_ids = ['pop0','pop1','pop2']
+    ax.set_xlabel(pop_ids[0], horizontalalignment='left')
+    ax.set_ylabel(pop_ids[1], verticalalignment='bottom')
+    ax.set_zlabel(pop_ids[2], verticalalignment='bottom')
+
+    # XXX: I can't set the axis ticks to be just the endpoints.
+
+    pylab.show()
+
+def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None, 
+                            pop_ids=None):
+    """
+    Logarithmic heatmap of single 3d FS.
+
+    This method relies on MayaVi2's mlab interface. See http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html . To edit plot
+    properties, click leftmost icon in the toolbar.
+
+    If you get an ImportError upon calling this function, it is likely that you
+    don't have mayavi installed.
+
+    fs: FS to plot
+    vmin: Values in fs below vmin are masked in plot.
+    vmax: Values in fs above vmax saturate the color spectrum.
+    fignum: Figure number to plot into. If None, a new figure will be created.
+            Note that these are MayaVi figures, which are separate from
+            matplotlib figures.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    """
+    from enthought.mayavi import mlab
+
+    fig = mlab.figure(fignum, bgcolor=(1,1,1))
+    mlab.clf(fig)
+
+    if vmin is None:
+        vmin = fs.min()
+    if vmax is None:
+        vmax = fs.max()
+
+    # Which entries should I plot?
+    toplot = numpy.logical_not(fs.mask)
+    toplot = numpy.logical_and(toplot, fs.data >= vmin)
+
+    # For the color mapping
+    normalized = (numpy.log(fs)-numpy.log(vmin))\
+            /(numpy.log(vmax)-numpy.log(vmin))
+    normalized = numpy.minimum(normalized, 1)
+
+    xs,ys,zs = numpy.indices(fs.shape)
+    flat_xs = xs.flatten()
+    flat_ys = ys.flatten()
+    flat_zs = zs.flatten()
+    flat_toplot = toplot.flatten()
+    
+    mlab.barchart(flat_xs[flat_toplot], flat_ys[flat_toplot], 
+                  flat_zs[flat_toplot], normalized.flatten()[flat_toplot], 
+                  colormap='hsv', scale_mode='none', lateral_scale=1, 
+                  figure=fig)
+
+    if pop_ids is None:
+        if sfs.pop_ids is not None:
+            pop_ids = sfs.pop_ids
+        else:
+            pop_ids = ['pop0','pop1','pop2']
+
+    a = mlab.axes(xlabel=pop_ids[0],ylabel=pop_ids[1],zlabel=pop_ids[2], 
+                  figure=fig, color=(0,0,0))
+    a.axes.label_format = ""
+    a.title_text_property.color = (0,0,0)
+    mlab.text3d(fs.sample_sizes[0],fs.sample_sizes[1],fs.sample_sizes[2]+1, 
+                '(%i,%i,%i)'%tuple(fs.sample_sizes), scale=0.75, figure=fig,
+                color=(0,0,0))
+    mlab.view(azimuth=-40, elevation=65, distance='auto', focalpoint='auto')
+
+    mlab.show()
