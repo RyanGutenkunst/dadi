@@ -11,7 +11,7 @@ class ResultsTestCase(unittest.TestCase):
 
         answer = dadi.Spectrum(1./numpy.arange(18))
 
-        self.assert_(numpy.ma.allclose(fs, answer, atol=1e-4))
+        self.assert_(numpy.ma.allclose(fs, answer, atol=1e-3))
 
     def test_1d_stationary(self):
         func_ex = dadi.Numerics.\
@@ -21,7 +21,7 @@ class ResultsTestCase(unittest.TestCase):
         fs = func_ex((0.5,10), (17,), [40,50,60])
         answer = dadi.Spectrum(0.5/numpy.arange(18))
 
-        self.assert_(numpy.ma.allclose(fs, answer, atol=1e-3))
+        self.assert_(numpy.ma.allclose(fs, answer, atol=1e-2))
 
     def test_IM(self):
         func_ex = dadi.Numerics.\
@@ -43,3 +43,6 @@ class ResultsTestCase(unittest.TestCase):
         self.assert_(abs(resid).max() < 0.2)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(ResultsTestCase)
+
+if __name__ == '__main__':
+    unittest.main()
