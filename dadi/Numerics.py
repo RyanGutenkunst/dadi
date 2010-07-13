@@ -60,7 +60,7 @@ def estimate_best_exp_grid_crwd(ns):
         return min(max(xx**0.4 / 1.3, 1), 9)
     elif len(ns) == 2:
         return min(max(1.5 * xx**0.4, 1), 8)
-    elif:
+    else:
         raise ValueError('Due to computational expense, no optimum has been '
                          'determined for 3D or more models. Try sticking with '
                          'crwd=8.')
