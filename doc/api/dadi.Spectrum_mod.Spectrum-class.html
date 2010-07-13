@@ -40,7 +40,7 @@
     <td width="100%">
       <span class="breadcrumbs">
         <a href="dadi-module.html">Package&nbsp;dadi</a> ::
-        <a href="dadi.Spectrum_mod-module.html">Module&nbsp;Spectrum_mod</a> ::
+        Module&nbsp;Spectrum_mod ::
         Class&nbsp;Spectrum
       </span>
     </td>
@@ -60,13 +60,9 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Spectrum</h1><p class="nomargin-top"><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum">source&nbsp;code</a></span></p>
 <pre class="base-tree">
-           object --+        
-                    |        
-        <a href="numpy.ndarray-class.html">numpy.ndarray</a> --+    
-                        |    
-numpy.ma.core.MaskedArray --+
-                            |
-                           <strong class="uidshort">Spectrum</strong>
+numpy.ma.masked_array --+
+                        |
+                       <strong class="uidshort">Spectrum</strong>
 </pre>
 
 <hr />
@@ -98,34 +94,11 @@ The constructor has the format:
                    checked to ensure they are consistent with a folded
                    Spectrum. If they are not, a warning will be printed.
     pop_ids: Optional list of strings containing the population labels.
+    extrap_x: Optional floating point value specifying x value to use
+              for extrapolation.
 
 </pre>
 
-<!-- ==================== NESTED CLASSES ==================== -->
-<a name="section-NestedClasses"></a>
-<table class="summary" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Nested Classes</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-NestedClasses"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
-</tr>
-  <tr>
-    <td colspan="2" class="summary">
-    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b> (private):
-      <code><a href="numpy.ndarray-class.html" onclick="show_private();">_baseclass</a></code>
-      </p></div>
-    </td>
-  </tr>
-</table>
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -149,9 +122,36 @@ The constructor has the format:
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__array_finalize__" class="summary-sig-name">__array_finalize__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">obj</span>)</span><br />
-      Finalizes the masked array.</td>
+          <td><span class="summary-sig"><a name="__new__"></a><span class="summary-sig-name">__new__</span>(<span class="summary-sig-arg">subtype</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">mask</span>=<span class="summary-sig-default">numpy.ma.nomask</span>,
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">data_folded</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">check_folding</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">dtype</span>=<span class="summary-sig-default">float</span>,
+        <span class="summary-sig-arg">copy</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">fill_value</span>=<span class="summary-sig-default">numpy.nan</span>,
+        <span class="summary-sig-arg">keep_mask</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">shrink</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">extrap_x</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__new__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__array_finalize__"></a><span class="summary-sig-name">__array_finalize__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">obj</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__array_finalize__">source&nbsp;code</a></span>
             
@@ -163,17 +163,13 @@ The constructor has the format:
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type"><pre class="literalblock">
-Object of same type as a from ndarray obj.
-
-</pre></span>
+      <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__array_wrap__" class="summary-sig-name">__array_wrap__</a>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a name="__array_wrap__"></a><span class="summary-sig-name">__array_wrap__</span>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">obj</span>,
-        <span class="summary-sig-arg">context</span>=<span class="summary-sig-default">None</span>)</span><br />
-      Special hook for ufuncs.</td>
+        <span class="summary-sig-arg">context</span>=<span class="summary-sig-default">None</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__array_wrap__">source&nbsp;code</a></span>
             
@@ -189,9 +185,8 @@ Object of same type as a from ndarray obj.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_update_from" class="summary-sig-name" onclick="show_private();">_update_from</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">obj</span>)</span><br />
-      Copies some attributes of obj to self.</td>
+          <td><span class="summary-sig"><a name="_update_from"></a><span class="summary-sig-name">_update_from</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">obj</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._update_from">source&nbsp;code</a></span>
             
@@ -207,8 +202,7 @@ Object of same type as a from ndarray obj.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
-      Literal string representation.</td>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__repr__">source&nbsp;code</a></span>
             
@@ -268,6 +262,22 @@ Object of same type as a from ndarray obj.
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="sample_sizes"></a><span class="summary-sig-name">sample_sizes</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.sample_sizes">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 <tr class="private">
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
@@ -277,6 +287,22 @@ Object of same type as a from ndarray obj.
           <td><span class="summary-sig"><a name="_get_Npop"></a><span class="summary-sig-name">_get_Npop</span>(<span class="summary-sig-arg">self</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._get_Npop">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Npop"></a><span class="summary-sig-name">Npop</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.Npop">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -311,7 +337,7 @@ Object of same type as a from ndarray obj.
           <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#to_file" class="summary-sig-name">to_file</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">fid</span>,
         <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">16</span>,
-        <span class="summary-sig-arg">comment_lines</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">comment_lines</span>=<span class="summary-sig-default">[]</span>,
         <span class="summary-sig-arg">foldmaskinfo</span>=<span class="summary-sig-default">True</span>)</span><br />
       Write frequency spectrum to file.</td>
           <td align="right" valign="top">
@@ -332,7 +358,7 @@ Object of same type as a from ndarray obj.
           <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#tofile" class="summary-sig-name">tofile</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">fid</span>,
         <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">16</span>,
-        <span class="summary-sig-arg">comment_lines</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">comment_lines</span>=<span class="summary-sig-default">[]</span>,
         <span class="summary-sig-arg">foldmaskinfo</span>=<span class="summary-sig-default">True</span>)</span><br />
       Write frequency spectrum to file.</td>
           <td align="right" valign="top">
@@ -461,6 +487,25 @@ Object of same type as a from ndarray obj.
       Unfolded frequency spectrum</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.unfold">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#fixed_size_sample" class="summary-sig-name">fixed_size_sample</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">nsamples</span>,
+        <span class="summary-sig-arg">only_nonmasked</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Generate a resampled fs from the current one.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.fixed_size_sample">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -606,536 +651,6 @@ Object of same type as a from ndarray obj.
       
     </td>
   </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__add__" class="summary-sig-name">__add__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Add other to self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__add__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__div__" class="summary-sig-name">__div__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Divide other into self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__div__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__floordiv__" class="summary-sig-name">__floordiv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Divide other into self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__floordiv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__iadd__" class="summary-sig-name">__iadd__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Add other to self in-place.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__iadd__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__idiv__" class="summary-sig-name">__idiv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Divide self by other in-place.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__idiv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__ifloordiv__" class="summary-sig-name">__ifloordiv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      x//y</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__ifloordiv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__imul__" class="summary-sig-name">__imul__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Multiply self by other in-place.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__imul__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__ipow__" class="summary-sig-name">__ipow__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Raise self to the power other, in place.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__ipow__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__isub__" class="summary-sig-name">__isub__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Subtract other from self in-place.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__isub__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__itruediv__" class="summary-sig-name">__itruediv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      x/y</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__itruediv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__mul__" class="summary-sig-name">__mul__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Multiply other by self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__mul__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__pow__" class="summary-sig-name">__pow__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Raise self to the power other, masking the potential NaNs/Infs</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__pow__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__radd__" class="summary-sig-name">__radd__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Add other to self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__radd__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__rdiv__" class="summary-sig-name">__rdiv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      y/x</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rdiv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__rfloordiv__" class="summary-sig-name">__rfloordiv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      y//x</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rfloordiv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__rmul__" class="summary-sig-name">__rmul__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Multiply other by self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rmul__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__rpow__" class="summary-sig-name">__rpow__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      pow(x, y[, z])</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rpow__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__rsub__" class="summary-sig-name">__rsub__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Subtract other to self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rsub__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__rtruediv__" class="summary-sig-name">__rtruediv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      y/x</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rtruediv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__sub__" class="summary-sig-name">__sub__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Subtract other to self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__sub__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__truediv__" class="summary-sig-name">__truediv__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">other</span>)</span><br />
-      Divide other into self, and return a new masked array.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__truediv__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" class="summary">
-    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b>:
-      <code>__deepcopy__</code>,
-      <code>__eq__</code>,
-      <code>__float__</code>,
-      <code>__getitem__</code>,
-      <code>__getslice__</code>,
-      <code>__getstate__</code>,
-      <code>__int__</code>,
-      <code>__ne__</code>,
-      <code>__reduce__</code>,
-      <code>__setitem__</code>,
-      <code>__setmask__</code>,
-      <code>__setslice__</code>,
-      <code>__setstate__</code>,
-      <code>__str__</code>,
-      <code>all</code>,
-      <code>anom</code>,
-      <code>any</code>,
-      <code>argmax</code>,
-      <code>argmin</code>,
-      <code>argsort</code>,
-      <code>astype</code>,
-      <code>clip</code>,
-      <code>compress</code>,
-      <code>compressed</code>,
-      <code>copy</code>,
-      <code>count</code>,
-      <code>cumprod</code>,
-      <code>cumsum</code>,
-      <code>diagonal</code>,
-      <code>filled</code>,
-      <code>flatten</code>,
-      <code>get_fill_value</code>,
-      <code>get_imag</code>,
-      <code>get_real</code>,
-      <code>harden_mask</code>,
-      <code>ids</code>,
-      <code>iscontiguous</code>,
-      <code>max</code>,
-      <code>mean</code>,
-      <code>min</code>,
-      <code>mini</code>,
-      <code>nonzero</code>,
-      <code>prod</code>,
-      <code>product</code>,
-      <code>ptp</code>,
-      <code>put</code>,
-      <code>ravel</code>,
-      <code>raw_data</code>,
-      <code>repeat</code>,
-      <code>reshape</code>,
-      <code>resize</code>,
-      <code>round</code>,
-      <code>set_fill_value</code>,
-      <code>shrink_mask</code>,
-      <code>soften_mask</code>,
-      <code>sort</code>,
-      <code>squeeze</code>,
-      <code>std</code>,
-      <code>sum</code>,
-      <code>swapaxes</code>,
-      <code>take</code>,
-      <code>toflex</code>,
-      <code>tolist</code>,
-      <code>torecords</code>,
-      <code>tostring</code>,
-      <code>trace</code>,
-      <code>transpose</code>,
-      <code>unshare_mask</code>,
-      <code>var</code>,
-      <code>view</code>
-      </p>
-    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b> (private):
-      <code>_get_data</code>,
-      <code>_get_flat</code>,
-      <code>_get_mask</code>,
-      <code>_get_recordmask</code>,
-      <code>_set_flat</code>,
-      <code>_set_mask</code>,
-      <code>_set_recordmask</code>
-      </p></div>
-    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="numpy.ndarray-class.html">numpy.ndarray</a></code></b>:
-      <code><a href="numpy.ndarray-class.html#__abs__">__abs__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__and__">__and__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__array__">__array__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__contains__">__contains__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__copy__">__copy__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__delitem__">__delitem__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__delslice__">__delslice__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__divmod__">__divmod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__ge__">__ge__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__gt__">__gt__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__hex__">__hex__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__iand__">__iand__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__ilshift__">__ilshift__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__imod__">__imod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__index__">__index__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__invert__">__invert__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__ior__">__ior__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__irshift__">__irshift__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__iter__">__iter__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__ixor__">__ixor__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__le__">__le__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__len__">__len__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__long__">__long__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__lshift__">__lshift__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__lt__">__lt__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__mod__">__mod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__neg__">__neg__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__nonzero__">__nonzero__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__oct__">__oct__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__or__">__or__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__pos__">__pos__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rand__">__rand__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rdivmod__">__rdivmod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rlshift__">__rlshift__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rmod__">__rmod__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__ror__">__ror__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rrshift__">__rrshift__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rshift__">__rshift__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__rxor__">__rxor__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__xor__">__xor__</a></code>,
-      <code><a href="numpy.ndarray-class.html#byteswap">byteswap</a></code>,
-      <code><a href="numpy.ndarray-class.html#choose">choose</a></code>,
-      <code><a href="numpy.ndarray-class.html#conj">conj</a></code>,
-      <code><a href="numpy.ndarray-class.html#conjugate">conjugate</a></code>,
-      <code><a href="numpy.ndarray-class.html#dump">dump</a></code>,
-      <code><a href="numpy.ndarray-class.html#dumps">dumps</a></code>,
-      <code><a href="numpy.ndarray-class.html#fill">fill</a></code>,
-      <code><a href="numpy.ndarray-class.html#getfield">getfield</a></code>,
-      <code><a href="numpy.ndarray-class.html#item">item</a></code>,
-      <code><a href="numpy.ndarray-class.html#itemset">itemset</a></code>,
-      <code><a href="numpy.ndarray-class.html#newbyteorder">newbyteorder</a></code>,
-      <code><a href="numpy.ndarray-class.html#searchsorted">searchsorted</a></code>,
-      <code><a href="numpy.ndarray-class.html#setfield">setfield</a></code>,
-      <code><a href="numpy.ndarray-class.html#setflags">setflags</a></code>
-      </p>
-    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
-      <code>__delattr__</code>,
-      <code>__format__</code>,
-      <code>__getattribute__</code>,
-      <code>__hash__</code>,
-      <code>__init__</code>,
-      <code>__reduce_ex__</code>,
-      <code>__setattr__</code>,
-      <code>__sizeof__</code>,
-      <code>__subclasshook__</code>
-      </p>
-    </td>
-  </tr>
 </table>
 <!-- ==================== STATIC METHODS ==================== -->
 <a name="section-StaticMethods"></a>
@@ -1154,37 +669,6 @@ Object of same type as a from ndarray obj.
     </table>
   </td>
 </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type"><pre class="literalblock">
-a new object with type S, a subtype of T
-
-</pre></span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#__new__" class="summary-sig-name">__new__</a>(<span class="summary-sig-arg">subtype</span>,
-        <span class="summary-sig-arg">data</span>,
-        <span class="summary-sig-arg">mask</span>=<span class="summary-sig-default">False</span>,
-        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">data_folded</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">check_folding</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">dtype</span>=<span class="summary-sig-default">&lt;type 'float'&gt;</span>,
-        <span class="summary-sig-arg">copy</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">fill_value</span>=<span class="summary-sig-default">nan</span>,
-        <span class="summary-sig-arg">keep_mask</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">shrink</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
-      Create a new masked array from scratch.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__new__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
@@ -1252,7 +736,7 @@ a new object with type S, a subtype of T
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#from_sfscode_file" class="summary-sig-name">from_sfscode_file</a>(<span class="summary-sig-arg">fid</span>,
-        <span class="summary-sig-arg">sites</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">all</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">sites</span>=<span class="summary-sig-default">'all'</span>,
         <span class="summary-sig-arg">average</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>,
@@ -1273,14 +757,14 @@ a new object with type S, a subtype of T
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_1D" class="summary-sig-name" onclick="show_private();">_from_phi_1D</a>(<span class="summary-sig-arg">n</span>,
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_1D_direct" class="summary-sig-name" onclick="show_private();">_from_phi_1D_direct</a>(<span class="summary-sig-arg">n</span>,
         <span class="summary-sig-arg">xx</span>,
         <span class="summary-sig-arg">phi</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D_direct">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1294,7 +778,28 @@ a new object with type S, a subtype of T
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_2D" class="summary-sig-name" onclick="show_private();">_from_phi_2D</a>(<span class="summary-sig-arg">nx</span>,
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_1D_analytic" class="summary-sig-name" onclick="show_private();">_from_phi_1D_analytic</a>(<span class="summary-sig-arg">n</span>,
+        <span class="summary-sig-arg">xx</span>,
+        <span class="summary-sig-arg">phi</span>,
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">divergent</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Compute sample Spectrum from population frequency distribution phi.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D_analytic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_2D_direct" class="summary-sig-name" onclick="show_private();">_from_phi_2D_direct</a>(<span class="summary-sig-arg">nx</span>,
         <span class="summary-sig-arg">ny</span>,
         <span class="summary-sig-arg">xx</span>,
         <span class="summary-sig-arg">yy</span>,
@@ -1303,7 +808,7 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D_direct">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1317,7 +822,29 @@ a new object with type S, a subtype of T
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_3D" class="summary-sig-name" onclick="show_private();">_from_phi_3D</a>(<span class="summary-sig-arg">nx</span>,
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_2D_analytic" class="summary-sig-name" onclick="show_private();">_from_phi_2D_analytic</a>(<span class="summary-sig-arg">nx</span>,
+        <span class="summary-sig-arg">ny</span>,
+        <span class="summary-sig-arg">xx</span>,
+        <span class="summary-sig-arg">yy</span>,
+        <span class="summary-sig-arg">phi</span>,
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Compute sample Spectrum from population frequency distribution phi.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D_analytic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_3D_direct" class="summary-sig-name" onclick="show_private();">_from_phi_3D_direct</a>(<span class="summary-sig-arg">nx</span>,
         <span class="summary-sig-arg">ny</span>,
         <span class="summary-sig-arg">nz</span>,
         <span class="summary-sig-arg">xx</span>,
@@ -1328,7 +855,31 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D_direct">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_3D_analytic" class="summary-sig-name" onclick="show_private();">_from_phi_3D_analytic</a>(<span class="summary-sig-arg">nx</span>,
+        <span class="summary-sig-arg">ny</span>,
+        <span class="summary-sig-arg">nz</span>,
+        <span class="summary-sig-arg">xx</span>,
+        <span class="summary-sig-arg">yy</span>,
+        <span class="summary-sig-arg">zz</span>,
+        <span class="summary-sig-arg">phi</span>,
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Compute sample Spectrum from population frequency distribution phi.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D_analytic">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1347,7 +898,8 @@ a new object with type S, a subtype of T
         <span class="summary-sig-arg">xxs</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">force_direct</span>=<span class="summary-sig-default">False</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_phi">source&nbsp;code</a></span>
@@ -1441,92 +993,7 @@ misidentification.</td>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a name="__array_priority__"></a><span class="summary-name">__array_priority__</span> = <code title="20">20</code><br />
-      Array priority.
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="method"></a><span class="summary-name">method</span> = <code title="'__ipow__'"><code class="variable-quote">'</code><code class="variable-string">__ipow__</code><code class="variable-quote">'</code></code>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" class="summary">
-    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b> (private):
-      <code>_defaulthardmask</code>,
-      <code>_defaultmask</code>
-      </p></div>
-    </td>
-  </tr>
-</table>
-<!-- ==================== PROPERTIES ==================== -->
-<a name="section-Properties"></a>
-<table class="summary" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Properties</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Properties"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
-</tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a href="dadi.Spectrum_mod.Spectrum-class.html#sample_sizes" class="summary-name">sample_sizes</a>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a href="dadi.Spectrum_mod.Spectrum-class.html#Npop" class="summary-name">Npop</a>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" class="summary">
-    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b>:
-      <code>T</code>,
-      <code>baseclass</code>,
-      <code>data</code>,
-      <code>fill_value</code>,
-      <code>flat</code>,
-      <code>hardmask</code>,
-      <code>imag</code>,
-      <code>mask</code>,
-      <code>real</code>,
-      <code>recordmask</code>,
-      <code>sharedmask</code>
-      </p>
-    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>numpy.ma.core.MaskedArray</code></b> (private):
-      <code>_data</code>
-      </p></div>
-    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="numpy.ndarray-class.html">numpy.ndarray</a></code></b>:
-      <code><a href="numpy.ndarray-class.html#__array_interface__">__array_interface__</a></code>,
-      <code><a href="numpy.ndarray-class.html#__array_struct__">__array_struct__</a></code>,
-      <code><a href="numpy.ndarray-class.html#base">base</a></code>,
-      <code><a href="numpy.ndarray-class.html#ctypes">ctypes</a></code>,
-      <code><a href="numpy.ndarray-class.html#dtype">dtype</a></code>,
-      <code><a href="numpy.ndarray-class.html#flags">flags</a></code>,
-      <code><a href="numpy.ndarray-class.html#itemsize">itemsize</a></code>,
-      <code><a href="numpy.ndarray-class.html#nbytes">nbytes</a></code>,
-      <code><a href="numpy.ndarray-class.html#ndim">ndim</a></code>,
-      <code><a href="numpy.ndarray-class.html#shape">shape</a></code>,
-      <code><a href="numpy.ndarray-class.html#size">size</a></code>,
-      <code><a href="numpy.ndarray-class.html#strides">strides</a></code>
-      </p>
-    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
-      <code>__class__</code>
-      </p>
+        <a name="__array_priority__"></a><span class="summary-name">__array_priority__</span> = <code title="20">20</code>
     </td>
   </tr>
 </table>
@@ -1548,174 +1015,6 @@ misidentification.</td>
   </td>
 </tr>
 </table>
-<a name="__new__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__new__</span>(<span class="sig-arg">subtype</span>,
-        <span class="sig-arg">data</span>,
-        <span class="sig-arg">mask</span>=<span class="sig-default">False</span>,
-        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">data_folded</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">check_folding</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">dtype</span>=<span class="sig-default">&lt;type 'float'&gt;</span>,
-        <span class="sig-arg">copy</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">fill_value</span>=<span class="sig-default">nan</span>,
-        <span class="sig-arg">keep_mask</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">shrink</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
-    <br /><em class="fname">Static Method</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__new__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-
-Create a new masked array from scratch.
-
-Notes
------
-A masked array can also be created by taking a .view(MaskedArray).
-
-    
-
-</pre>
-  <dl class="fields">
-    <dt>Returns: <pre class="literalblock">
-a new object with type S, a subtype of T
-
-</pre></dt>
-    <dt>Overrides:
-        object.__new__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__array_finalize__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__array_finalize__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">obj</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__array_finalize__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Finalizes the masked array.
-        
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        <a href="numpy.ndarray-class.html#__array_finalize__">__array_finalize__</a>
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__array_wrap__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__array_wrap__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">obj</span>,
-        <span class="sig-arg">context</span>=<span class="sig-default">None</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__array_wrap__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-
-Special hook for ufuncs.
-Wraps the numpy array and sets the mask according to context.
-
-</pre>
-  <dl class="fields">
-    <dt>Returns: <pre class="literalblock">
-Object of same type as a from ndarray obj.
-
-</pre></dt>
-    <dt>Overrides:
-        numpy.ndarray.__array_wrap__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="_update_from"></a>
-<div class="private">
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">_update_from</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">obj</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._update_from">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Copies some attributes of obj to self.
-        
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ma.core.MaskedArray._update_from
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__repr__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
-    <br /><em class="fname">(Representation operator)</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__repr__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Literal string representation.
-
-        
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        object.__repr__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
 <a name="from_file"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -1796,7 +1095,7 @@ See to_file method for details on the file format.
   <h3 class="epydoc"><span class="sig"><span class="sig-name">to_file</span>(<span class="sig-arg">self</span>,
         <span class="sig-arg">fid</span>,
         <span class="sig-arg">precision</span>=<span class="sig-default">16</span>,
-        <span class="sig-arg">comment_lines</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">comment_lines</span>=<span class="sig-default">[]</span>,
         <span class="sig-arg">foldmaskinfo</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -1846,7 +1145,7 @@ The file format is:
   <h3 class="epydoc"><span class="sig"><span class="sig-name">tofile</span>(<span class="sig-arg">self</span>,
         <span class="sig-arg">fid</span>,
         <span class="sig-arg">precision</span>=<span class="sig-default">16</span>,
-        <span class="sig-arg">comment_lines</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">comment_lines</span>=<span class="sig-default">[]</span>,
         <span class="sig-arg">foldmaskinfo</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -1883,9 +1182,6 @@ The file format is:
 
 </pre>
   <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.tofile
-    </dt>
   </dl>
 </td></tr></table>
 </div>
@@ -2007,6 +1303,35 @@ Spectrum object.
   </dl>
 </td></tr></table>
 </div>
+<a name="fixed_size_sample"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">fixed_size_sample</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">nsamples</span>,
+        <span class="sig-arg">only_nonmasked</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.fixed_size_sample">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Generate a resampled fs from the current one.
+
+nsamples: Number of samples to include in the new FS.
+only_nonmasked: If True, only SNPs from non-masked will be resampled. 
+                Otherwise, all SNPs will be used.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="sample"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2087,7 +1412,7 @@ pop_ids: Optional list of strings containing the population labels.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">from_sfscode_file</span>(<span class="sig-arg">fid</span>,
-        <span class="sig-arg">sites</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">all</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">sites</span>=<span class="sig-default">'all'</span>,
         <span class="sig-arg">average</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>,
@@ -2228,14 +1553,14 @@ Following Gillespie &quot;Population Genetics: A Concise Guide&quot; pg. 45
   </dl>
 </td></tr></table>
 </div>
-<a name="_from_phi_1D"></a>
+<a name="_from_phi_1D_direct"></a>
 <div class="private">
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_1D</span>(<span class="sig-arg">n</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_1D_direct</span>(<span class="sig-arg">n</span>,
         <span class="sig-arg">xx</span>,
         <span class="sig-arg">phi</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
@@ -2243,7 +1568,7 @@ Following Gillespie &quot;Population Genetics: A Concise Guide&quot; pg. 45
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D_direct">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
@@ -2258,14 +1583,51 @@ See from_phi for explanation of arguments.
   </dl>
 </td></tr></table>
 </div>
-<a name="_from_phi_2D"></a>
+<a name="_from_phi_1D_analytic"></a>
 <div class="private">
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_2D</span>(<span class="sig-arg">nx</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_1D_analytic</span>(<span class="sig-arg">n</span>,
+        <span class="sig-arg">xx</span>,
+        <span class="sig-arg">phi</span>,
+        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">divergent</span>=<span class="sig-default">False</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D_analytic">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Compute sample Spectrum from population frequency distribution phi.
+
+This function uses analytic formulae for integrating over a 
+piecewise-linear approximation to phi.
+
+See from_phi for explanation of arguments.
+
+divergent: If True, the interval from xx[0] to xx[1] is modeled as
+           phi[1] * xx[1]/x. This captures the typical 1/x
+           divergence at x = 0.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_from_phi_2D_direct"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_2D_direct</span>(<span class="sig-arg">nx</span>,
         <span class="sig-arg">ny</span>,
         <span class="sig-arg">xx</span>,
         <span class="sig-arg">yy</span>,
@@ -2275,7 +1637,7 @@ See from_phi for explanation of arguments.
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D_direct">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
@@ -2290,14 +1652,48 @@ See from_phi for explanation of arguments.
   </dl>
 </td></tr></table>
 </div>
-<a name="_from_phi_3D"></a>
+<a name="_from_phi_2D_analytic"></a>
 <div class="private">
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_3D</span>(<span class="sig-arg">nx</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_2D_analytic</span>(<span class="sig-arg">nx</span>,
+        <span class="sig-arg">ny</span>,
+        <span class="sig-arg">xx</span>,
+        <span class="sig-arg">yy</span>,
+        <span class="sig-arg">phi</span>,
+        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D_analytic">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Compute sample Spectrum from population frequency distribution phi.
+
+This function uses analytic formulae for integrating over a 
+piecewise-linear approximation to phi.
+
+See from_phi for explanation of arguments.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_from_phi_3D_direct"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_3D_direct</span>(<span class="sig-arg">nx</span>,
         <span class="sig-arg">ny</span>,
         <span class="sig-arg">nz</span>,
         <span class="sig-arg">xx</span>,
@@ -2309,13 +1705,49 @@ See from_phi for explanation of arguments.
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D_direct">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
   <pre class="literalblock">
 
 Compute sample Spectrum from population frequency distribution phi.
+
+See from_phi for explanation of arguments.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_from_phi_3D_analytic"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_3D_analytic</span>(<span class="sig-arg">nx</span>,
+        <span class="sig-arg">ny</span>,
+        <span class="sig-arg">nz</span>,
+        <span class="sig-arg">xx</span>,
+        <span class="sig-arg">yy</span>,
+        <span class="sig-arg">zz</span>,
+        <span class="sig-arg">phi</span>,
+        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D_analytic">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Compute sample Spectrum from population frequency distribution phi.
+
+This function uses analytic formulae for integrating over a 
+piecewise-linear approximation to phi.
 
 See from_phi for explanation of arguments.
 
@@ -2336,7 +1768,8 @@ See from_phi for explanation of arguments.
         <span class="sig-arg">xxs</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">force_direct</span>=<span class="sig-default">False</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -2359,8 +1792,14 @@ het_ascertained: If 'xx', then FS is derived assuming that SNPs have
                  *not* in the current sample.) If 'yy' or 'zz', it
                  assumed that the ascertainment individual came from
                  population 2 or 3, respectively.
+                 (Note that this option also forces direct integration,
+                 which may be less accurate than the semi-analytic
+                 method. This could be fixed if there is interest.)
 pop_ids: Optional list of strings containing the population labels.
          If pop_ids is None, labels will be &quot;pop0&quot;, &quot;pop1&quot;, ...
+force_direct: Forces integration to use older direct integration method,
+              rather than using analytic integration of sampling 
+              formula.
 
 </pre>
   <dl class="fields">
@@ -2542,623 +1981,6 @@ Most commonly this is because of missing or non-constant context.
   </dl>
 </td></tr></table>
 </div>
-<a name="__add__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__add__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-    <br /><em class="fname">(Addition operator)</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__add__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Add other to self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__add__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__div__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__div__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__div__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Divide other into self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__div__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__floordiv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__floordiv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__floordiv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Divide other into self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__floordiv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__iadd__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__iadd__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__iadd__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Add other to self in-place.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__iadd__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__idiv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__idiv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__idiv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Divide self by other in-place.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__idiv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__ifloordiv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__ifloordiv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__ifloordiv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-x//y
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__ifloordiv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__imul__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__imul__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__imul__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Multiply self by other in-place.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__imul__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__ipow__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__ipow__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__ipow__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Raise self to the power other, in place.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__ipow__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__isub__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__isub__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__isub__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Subtract other from self in-place.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__isub__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__itruediv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__itruediv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__itruediv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-x/y
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__itruediv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__mul__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__mul__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__mul__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Multiply other by self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__mul__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__pow__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__pow__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__pow__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Raise self to the power other, masking the potential NaNs/Infs
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__pow__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__radd__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__radd__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-    <br /><em class="fname">(Right-side addition operator)</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__radd__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Add other to self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__radd__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__rdiv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__rdiv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rdiv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-y/x
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__rdiv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__rfloordiv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__rfloordiv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rfloordiv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-y//x
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__rfloordiv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__rmul__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__rmul__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rmul__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Multiply other by self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__rmul__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__rpow__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__rpow__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rpow__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-pow(x, y[, z])
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__rpow__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__rsub__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__rsub__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rsub__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Subtract other to self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__rsub__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__rtruediv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__rtruediv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__rtruediv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-y/x
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__rtruediv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__sub__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__sub__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-    <br /><em class="fname">(Subtraction operator)</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__sub__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Subtract other to self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__sub__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="__truediv__"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__truediv__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">other</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.__truediv__">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Divide other into self, and return a new masked array.
-
-</pre>
-  <dl class="fields">
-    <dt>Overrides:
-        numpy.ndarray.__truediv__
-        <dd><em class="note">(inherited documentation)</em></dd>
-    </dt>
-  </dl>
-</td></tr></table>
-</div>
-<br />
-<!-- ==================== PROPERTY DETAILS ==================== -->
-<a name="section-PropertyDetails"></a>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Property Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-PropertyDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
-</tr>
-</table>
-<a name="sample_sizes"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <h3 class="epydoc">sample_sizes</h3>
-  
-  <dl class="fields">
-    <dt>Get Method:</dt>
-    <dd class="value"><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_get_sample_sizes" class="summary-sig-name" onclick="show_private();">_get_sample_sizes</a>(<span class="summary-sig-arg">self</span>)</span>
-    </dd>
-  </dl>
-</td></tr></table>
-</div>
-<a name="Npop"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <h3 class="epydoc">Npop</h3>
-  
-  <dl class="fields">
-    <dt>Get Method:</dt>
-    <dd class="value"><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_get_Npop" class="summary-sig-name" onclick="show_private();">_get_Npop</a>(<span class="summary-sig-arg">self</span>)</span>
-    </dd>
-  </dl>
-</td></tr></table>
-</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -3189,7 +2011,7 @@ Divide other into self, and return a new masked array.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Apr 20 09:59:15 2010</a>
+    3.0.1 on Tue Jul 13 15:05:39 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -316,6 +316,48 @@ http://matplotlib.sourceforge.net/contents.html
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Plotting-module.html#plot_3d_spectrum" class="summary-sig-name">plot_3d_spectrum</a>(<span class="summary-sig-arg">fs</span>,
+        <span class="summary-sig-arg">fignum</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">vmin</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">vmax</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Logarithmic heatmap of single 3d FS.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Plotting-module.html#plot_3d_spectrum_mayavi" class="summary-sig-name">plot_3d_spectrum_mayavi</a>(<span class="summary-sig-arg">fs</span>,
+        <span class="summary-sig-arg">fignum</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">vmin</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">vmax</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Logarithmic heatmap of single 3d FS.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum_mayavi">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 </table>
 <!-- ==================== VARIABLES ==================== -->
 <a name="section-Variables"></a>
@@ -514,7 +556,7 @@ Logarithmic heatmap of single 2d SFS.
 
 sfs: SFS to plot
 vmin: Values in sfs below vmin are masked in plot.
-vmax: Values in sfs above vmin saturate the color spectrum.
+vmax: Values in sfs above vmax saturate the color spectrum.
 ax: Axes object to plot into. If None, the result of pylab.gca() is used.
 pop_ids: If not None, override pop_ids stored in Spectrum.
 extend: Whether the colorbar should have 'extension' arrows. See
@@ -753,6 +795,83 @@ adjust: Should method use automatic 'subplots_adjust'? For advanced
   </dl>
 </td></tr></table>
 </div>
+<a name="plot_3d_spectrum"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">plot_3d_spectrum</span>(<span class="sig-arg">fs</span>,
+        <span class="sig-arg">fignum</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">vmin</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">vmax</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Logarithmic heatmap of single 3d FS.
+
+Note that this method is slow, because it relies on matplotlib's software
+rendering. For faster and better looking plots, use plot_3d_spectrum_mayavi.
+
+fs: FS to plot
+vmin: Values in fs below vmin are masked in plot.
+vmax: Values in fs above vmax saturate the color spectrum.
+fignum: Figure number to plot into. If None, a new figure will be created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="plot_3d_spectrum_mayavi"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">plot_3d_spectrum_mayavi</span>(<span class="sig-arg">fs</span>,
+        <span class="sig-arg">fignum</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">vmin</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">vmax</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum_mayavi">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Logarithmic heatmap of single 3d FS.
+
+This method relies on MayaVi2's mlab interface. See http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html . To edit plot
+properties, click leftmost icon in the toolbar.
+
+If you get an ImportError upon calling this function, it is likely that you
+don't have mayavi installed.
+
+fs: FS to plot
+vmin: Values in fs below vmin are masked in plot.
+vmax: Values in fs above vmax saturate the color spectrum.
+fignum: Figure number to plot into. If None, a new figure will be created.
+        Note that these are MayaVi figures, which are separate from
+        matplotlib figures.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== VARIABLES DETAILS ==================== -->
 <a name="section-VariablesDetails"></a>
@@ -841,7 +960,7 @@ matplotlib.ticker.FuncFormatter(lambda x, pos: '%i' %(x-0.4))
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Apr 20 09:59:14 2010</a>
+    3.0.1 on Tue Jul 13 15:05:39 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

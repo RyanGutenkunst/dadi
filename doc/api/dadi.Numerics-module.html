@@ -87,10 +87,63 @@ Numerically useful functions, including extrapolation and default grid.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#default_grid" class="summary-sig-name">default_grid</a>(<span class="summary-sig-arg">num_pts</span>)</span><br />
-      A nonuniform grid of points on [0,1].</td>
+          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#quadratic_grid" class="summary-sig-name">quadratic_grid</a>(<span class="summary-sig-arg">num_pts</span>)</span><br />
+      A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="dadi.Numerics-pysrc.html#default_grid">source&nbsp;code</a></span>
+            <span class="codelink"><a href="dadi.Numerics-pysrc.html#quadratic_grid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#estimate_best_exp_grid_crwd" class="summary-sig-name">estimate_best_exp_grid_crwd</a>(<span class="summary-sig-arg">ns</span>)</span><br />
+      Emperical &quot;best&quot; values for exponential grid crowding.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Numerics-pysrc.html#estimate_best_exp_grid_crwd">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#exponential_grid" class="summary-sig-name">exponential_grid</a>(<span class="summary-sig-arg">pts</span>,
+        <span class="summary-sig-arg">crwd</span>=<span class="summary-sig-default">8.0</span>)</span><br />
+      An exponentially spaced grid.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Numerics-pysrc.html#exponential_grid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#default_grid" class="summary-sig-name">default_grid</a>(<span class="summary-sig-arg">pts</span>,
+        <span class="summary-sig-arg">crwd</span>=<span class="summary-sig-default">8.0</span>)</span><br />
+      An exponentially spaced grid.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Numerics-pysrc.html#exponential_grid">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -266,7 +319,8 @@ Numerically useful functions, including extrapolation and default grid.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#make_extrap_func" class="summary-sig-name">make_extrap_func</a>(<span class="summary-sig-arg">func</span>)</span><br />
+          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#make_extrap_func" class="summary-sig-name">make_extrap_func</a>(<span class="summary-sig-arg">func</span>,
+        <span class="summary-sig-arg">extrap_x_l</span>=<span class="summary-sig-default">None</span>)</span><br />
       Generate a version of func that extrapolates to infinitely many gridpoints.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Numerics-pysrc.html#make_extrap_func">source&nbsp;code</a></span>
@@ -283,7 +337,8 @@ Numerically useful functions, including extrapolation and default grid.
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#make_extrap_log_func" class="summary-sig-name">make_extrap_log_func</a>(<span class="summary-sig-arg">func</span>)</span><br />
+          <td><span class="summary-sig"><a href="dadi.Numerics-module.html#make_extrap_log_func" class="summary-sig-name">make_extrap_log_func</a>(<span class="summary-sig-arg">func</span>,
+        <span class="summary-sig-arg">extrap_x_l</span>=<span class="summary-sig-default">None</span>)</span><br />
       Generate a version of func that extrapolates to infinitely many gridpoints.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Numerics-pysrc.html#make_extrap_log_func">source&nbsp;code</a></span>
@@ -420,6 +475,95 @@ Numerically useful functions, including extrapolation and default grid.
   </td>
 </tr>
 </table>
+<a name="quadratic_grid"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">quadratic_grid</span>(<span class="sig-arg">num_pts</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Numerics-pysrc.html#quadratic_grid">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.
+
+The grid is weighted to be denser near 0 and 1, which is useful for
+population genetic simulations. In between, it smoothly increases and
+then decreases the step size.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="estimate_best_exp_grid_crwd"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">estimate_best_exp_grid_crwd</span>(<span class="sig-arg">ns</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Numerics-pysrc.html#estimate_best_exp_grid_crwd">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Emperical &quot;best&quot; values for exponential grid crowding.
+
+These functional forms were estimated by running many simulations at
+different parameter values and asking when a simulation at pts_l = [max(ns),
+max(ns)+10, max(ns)+20] was most accurate.
+
+These cannot be considered absolute best values, as that may depend on the
+model. It does seem broadly true that the optimal value of crwd increases
+with system size, up to a point.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="exponential_grid"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">exponential_grid</span>(<span class="sig-arg">pts</span>,
+        <span class="sig-arg">crwd</span>=<span class="sig-default">8.0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Numerics-pysrc.html#exponential_grid">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+An exponentially spaced grid. This is now the default grid.
+
+crwd controls the degree to which grid points crowd against x=0 or x=1.
+The value of crwd=8 seems to be a good default for integration with large
+systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+beyond this.
+
+This grid was contributed by Simon Gravel.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="default_grid"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -427,20 +571,24 @@ Numerically useful functions, including extrapolation and default grid.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">default_grid</span>(<span class="sig-arg">num_pts</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">default_grid</span>(<span class="sig-arg">pts</span>,
+        <span class="sig-arg">crwd</span>=<span class="sig-default">8.0</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="dadi.Numerics-pysrc.html#default_grid">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="dadi.Numerics-pysrc.html#exponential_grid">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
   <pre class="literalblock">
 
-A nonuniform grid of points on [0,1].
+An exponentially spaced grid. This is now the default grid.
 
-The grid is weighted to be denser near 0 and 1, which is useful for
-population genetic simulations. In between, it smoothly increases and
-then decreases the step size.
+crwd controls the degree to which grid points crowd against x=0 or x=1.
+The value of crwd=8 seems to be a good default for integration with large
+systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+beyond this.
+
+This grid was contributed by Simon Gravel.
 
 </pre>
   <dl class="fields">
@@ -687,7 +835,8 @@ This is modified from the SciPy version to work with n-D yy and 1-D xx.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_extrap_func</span>(<span class="sig-arg">func</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_extrap_func</span>(<span class="sig-arg">func</span>,
+        <span class="sig-arg">extrap_x_l</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Numerics-pysrc.html#make_extrap_func">source&nbsp;code</a></span>&nbsp;
@@ -704,6 +853,12 @@ func: A function whose last argument with no default value is the number of
       The function can take further keyword arguments. Note that those
       arguments must *always* be passed by keyword into the extrapolated
       function.
+extrap_x_l: An explict list of x values to use for extrapolation. If not 
+     provided, the extrapolation routine will look for '.extrap_x'
+     attributes on the results of func. The method Spectrum.from_phi will
+     add an extrap_x attribute to resulting Spectra, equal to the x-value
+     of the first non-zero grid point. An explicit list is useful if you
+     want to override this behavior for testing.
 
 Returns a new function whose last argument is a list of numbers of grid
 points and that returns a result extrapolated to infinitely many grid
@@ -721,7 +876,8 @@ points.
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_extrap_log_func</span>(<span class="sig-arg">func</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_extrap_log_func</span>(<span class="sig-arg">func</span>,
+        <span class="sig-arg">extrap_x_l</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Numerics-pysrc.html#make_extrap_log_func">source&nbsp;code</a></span>&nbsp;
@@ -739,6 +895,12 @@ behaved for SFS calculation.
 func: A function whose last argument is the number of Numerics.default_grid 
       points to use in calculation and that returns a single scalar or 
       array.
+extrap_x_l: An explict list of x values to use for extrapolation. If not 
+     provided, the extrapolation routine will look for '.extrap_x'
+     attributes on the results of func. The method Spectrum.from_phi will
+     add an extrap_x attribute to resulting Spectra, equal to the x-value
+     of the first non-zero grid point. An explicit list is useful if you
+     want to override this behavior for testing.
 
 Returns a new function whose last argument is a list of numbers of grid
 points and that returns a result extrapolated to infinitely many grid
@@ -886,7 +1048,7 @@ The file format is:
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Apr 20 09:59:14 2010</a>
+    3.0.1 on Tue Jul 13 15:05:39 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
