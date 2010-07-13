@@ -546,6 +546,26 @@ class Spectrum(numpy.ma.masked_array):
         outfs = Spectrum(newdata, mask=newmask, data_folded=False)
         return outfs
 
+    def fixed_size_sample(self, nsamples, only_nonmasked=False):
+        """
+        Generate a resampled fs from the current one.
+
+        nsamples: Number of samples to include in the new FS.
+        only_nonmasked: If True, only SNPs from non-masked will be resampled. 
+                        Otherwise, all SNPs will be used.
+        """
+        flat = self.flatten()
+        if only_nonmasked:
+            pvals = flat.data/flat.sum()
+            pvals[flat.mask] = 0
+        else:
+            pvals = flat.data/flat.data.sum()
+    
+        sample = numpy.random.multinomial(int(nsamples), pvals)
+        sample = sample.reshape(self.shape)
+    
+        return dadi.Spectrum(sample, mask=self.mask, pop_ids=self.pop_ids)
+
     def sample(self):
         """
         Generate a Poisson-sampled fs from the current one.
