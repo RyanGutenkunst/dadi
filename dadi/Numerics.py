@@ -7,9 +7,9 @@ import os
 from scipy import comb
 from scipy.special import gammaln
 
-def default_grid(num_pts):
+def quadratic_grid(num_pts):
     """
-    A nonuniform grid of points on [0,1].
+    A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.
 
     The grid is weighted to be denser near 0 and 1, which is useful for
     population genetic simulations. In between, it smoothly increases and
@@ -42,6 +42,48 @@ def default_grid(num_pts):
     grid = numpy.concatenate((grid[:-1], a*q**3 + b*q**2 + c*q + d))
 
     return grid
+
+def estimate_best_exp_grid_crwd(ns):
+    """
+    Emperical "best" values for exponential grid crowding.
+
+    These functional forms were estimated by running many simulations at
+    different parameter values and asking when a simulation at pts_l = [max(ns),
+    max(ns)+10, max(ns)+20] was most accurate.
+
+    These cannot be considered absolute best values, as that may depend on the
+    model. It does seem broadly true that the optimal value of crwd increases
+    with system size, up to a point.
+    """
+    xx = numpy.mean(ns)
+    if len(ns) == 1:
+        return min(max(xx**0.4 / 1.3, 1), 9)
+    elif len(ns) == 2:
+        return min(max(1.5 * xx**0.4, 1), 8)
+    elif:
+        raise ValueError('Due to computational expense, no optimum has been '
+                         'determined for 3D or more models. Try sticking with '
+                         'crwd=8.')
+
+def exponential_grid(pts, crwd=8.):
+    """
+    An exponentially spaced grid. This is now the default grid.
+
+    crwd controls the degree to which grid points crowd against x=0 or x=1.
+    The value of crwd=8 seems to be a good default for integration with large
+    systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+    beyond this.
+
+    This grid was contributed by Simon Gravel.
+    """
+    unif = numpy.linspace(-1,1,pts)
+    grid = 1./(1. + numpy.exp(-crwd*unif))
+
+    # Normalize
+    grid = (grid-grid[0])/(grid[-1]-grid[0])
+    return grid
+
+default_grid = exponential_grid
 
 def end_point_first_derivs(xx):
     """
