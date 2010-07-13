@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{graphicx}
+\usepackage{subfigure}
 
 \bibliographystyle{plos2009}
 
@@ -587,14 +588,38 @@ To transform the demographic model function you have created (call it \py{my_dem
 my_extrap_func = Numerics.make_extrap_log_func(my_demo_func)
 \end{lstlisting}
 Having done this, the final argument to \py{my_extrap_func} is now a \emph{sequence} of grid sizes, which will be used for extrapolation.
-In our experience, good results are obtained by using grid sizes that are a multiple of 10, with the smallest grid size slightly larger than the largest population sample size.
+In our experience, good results are obtained by setting the smallest grid size slightly larger than the largest population sample size.
 For example, if you have sample sizes of 16, 24, and 12 samples in the three populations you're working with, a good choice of grid sizes is probably \py{pts_l = [40,50,60]}.
+This can be altered depending on your usage. For example, if you are fitting a complex slow model, it may speed up the analysis considerably to first run an optimization at small grid sizes (even less than the maximum number of samples).
+This should get your parameter values approximately correct.
+They can be refined by running another optimization with a finer grid.
 
 A simulated frequency spectrum is thus obtained by calling
 \begin{lstlisting}
 model = my_extrap_func(params, ns, pts_l)
 \end{lstlisting}
 Here \py{ns} is the sequence of sample sizes for the populations in the model, \py{params} is the model parameters, and \py{pts_l} is the grid sizes.
+
+\subsubsection{Grid choice}
+As of version 1.5.0, the default grid in \dadi has points exponentially clustered toward $x=0$ and $x=1$.
+This grid was suggested by Simon Gravel.
+The parameter \py{crwd} controls how closely grid points crowd the endpoints of the interval.
+
+We have performed some empirical investigations of the best value for \py{crwd}, although these results cannot be considered definative.
+We ran simulations for a variety of models and parameter values for a variety of sample sizes.
+Denoting the largest sample size as \py{n}, we asked which value of \py{crwd} yielded the most accurate FS with \py{pts_l = [n, n+10, n+20]}.
+Results are shown in Fig.~\ref{fig:best_crwd}.
+It is evident that the best value for \py{crwd} is lower for smaller sample sizes.
+The red lines are empirical functions which approximate the optimum.
+These are implemented in \py{Numerics.estimate_best_exp_grid_crwd}.
+Unless you need absolute top performance, the default value of \py{crwd=8} will probably be sufficient.
+
+\begin{figure}
+\centering
+\subfigure{\includegraphics[scale=0.37]{opt_crwd_1d}}
+\subfigure{\includegraphics[scale=0.37]{opt_crwd_2d}}
+\caption{\textbf{Empirical optimum values for \py{crwd}:} Each point represents the optimum value of \py{crwd} for a given model with a particular random choice of parameters.\label{fig:best_crwd}}
+\end{figure}
 
 \subsection{Likelihoods}
 
