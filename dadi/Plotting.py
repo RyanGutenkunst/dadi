@@ -619,8 +619,8 @@ def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None):
     ax.set_zlim3d(-0.5,fs.shape[2]-0.5)
 
     if pop_ids is None:
-        if sfs.pop_ids is not None:
-            pop_ids = sfs.pop_ids
+        if fs.pop_ids is not None:
+            pop_ids = fs.pop_ids
         else:
             pop_ids = ['pop0','pop1','pop2']
     ax.set_xlabel(pop_ids[0], horizontalalignment='left')
@@ -681,8 +681,8 @@ def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None,
                   figure=fig)
 
     if pop_ids is None:
-        if sfs.pop_ids is not None:
-            pop_ids = sfs.pop_ids
+        if fs.pop_ids is not None:
+            pop_ids = fs.pop_ids
         else:
             pop_ids = ['pop0','pop1','pop2']
 
