@@ -512,7 +512,8 @@ class Spectrum(numpy.ma.masked_array):
         # Mask out the remains of the folding operation.
         final_mask = numpy.logical_or(final_mask, where_folded_out)
 
-        outfs = Spectrum(folded, mask=final_mask, data_folded=True)
+        outfs = Spectrum(folded, mask=final_mask, data_folded=True,
+                         pop_ids=self.pop_ids)
         return outfs
 
     def unfold(self):
