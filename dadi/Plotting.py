@@ -328,6 +328,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
             raise ValueError('pop_ids must be of length 2.')
     else:
         data_pop_ids = masked_data.pop_ids
+        model_pop_ids = masked_model.pop_ids
         if masked_model.pop_ids is None:
             model_pop_ids = data_pop_ids
 
@@ -480,7 +481,9 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         data_ids = model_ids = resid_ids = pop_ids
     else:
         data_ids = masked_data.pop_ids
-        if masked_model.pop_ids is None:
+        model_ids = masked_model.pop_ids
+
+        if model_ids is None:
             model_ids = data_ids
 
         if model_ids == data_ids:
