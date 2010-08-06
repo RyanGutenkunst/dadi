@@ -94,8 +94,14 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     """
     pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
     if lower_bound is not None:
+        for ii,bound in enumerate(lower_bound):
+            if bound is None:
+                lower_bound[ii] = -numpy.inf
         pnew = numpy.maximum(pnew, 1.01*numpy.asarray(lower_bound))
     if upper_bound is not None:
+        for ii,bound in enumerate(upper_bound):
+            if bound is None:
+                upper_bound[ii] = numpy.inf
         pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
     return pnew
 

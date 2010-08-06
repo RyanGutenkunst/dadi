@@ -28,17 +28,23 @@ def _object_func(params, data, model_func, pts,
     # Deal with fixed parameters
     params = _project_params_up(params, fixed_params)
 
-    if (lower_bound is not None and numpy.any(params < lower_bound)) or\
-       (upper_bound is not None and numpy.any(params > upper_bound)):
-        result = _out_of_bounds_val
+    # Check our parameter bounds
+    if lower_bound is not None:
+        for pval,bound in zip(params, lower_bound):
+            if bound is not None and pval < bound:
+                return -out_of_bounds_val/ll_scale
+    if upper_bound is not None:
+        for pval,bound in zip(params, upper_bound):
+            if bound is not None and pval > bound:
+                return -out_of_bounds_val/ll_scale
+
+    ns = data.sample_sizes 
+    all_args = [params, ns] + list(func_args) + [pts]
+    sfs = model_func(*all_args)
+    if multinom:
+        result = ll_multinom(sfs, data)
     else:
-        ns = data.sample_sizes 
-        all_args = [params, ns] + list(func_args) + [pts]
-        sfs = model_func(*all_args)
-        if multinom:
-            result = ll_multinom(sfs, data)
-        else:
-            result = ll(sfs, data)
+        result = ll(sfs, data)
 
     # Bad result
     if numpy.isnan(result):
@@ -59,10 +65,10 @@ def _object_func_log(log_params, *args, **kwargs):
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
-                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 pgtol=1e-5, multinom=True, maxiter=None, full_output=False,
                  func_args=[], fixed_params=None, ll_scale=1):
     """
-    Optimize log(params) to fit model to data using the BFGS method.
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
 
     This optimization method works well when we start reasonably close to the
     optimum. It is best at burrowing down a single minimum.
@@ -75,19 +81,21 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     model_function: Function to evaluate model spectrum. Should take arguments
                     (params, (n1,n2...), pts)
     lower_bound: Lower bound on parameter values. If not None, must be of same
-                 length as p0.
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
     upper_bound: Upper bound on parameter values. If not None, must be of same
-                 length as p0.
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
     verbose: If > 0, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
-    gtol: Convergence criterion for optimization. For more info, 
-          see help(scipy.optimize.fmin_bfgs)
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
     multinom: If True, do a multinomial fit where model is optimially scaled to
               data at each step. If False, assume theta is a parameter and do
               no scaling.
-    maxiter: Maximum iterations to run for.
+    maxiter: Maximum algorithm iterations to run.
     full_output: If True, return full outputs as in described in 
                  help(scipy.optimize.fmin_bfgs)
     func_args: Additional arguments to model_func. It is assumed that 
@@ -109,24 +117,50 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               simply reduce the magnitude of the log-likelihood. Once in a
               region of reasonable likelihood, you'll probably want to
               re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    
     """
-    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+    args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, fixed_params, ll_scale)
 
     p0 = _project_params_down(p0, fixed_params)
-    outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
-                                       numpy.log(p0), epsilon=epsilon,
-                                       args = args, gtol=gtol, 
-                                       full_output=True,
-                                       disp=False,
-                                       maxiter=maxiter)
-    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    else:
+        lower_bound = numpy.log(lower_bound)
+        lower_bound[numpy.isnan(lower_bound)] = None
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    else:
+        upper_bound = numpy.log(upper_bound)
+        upper_bound[numpy.isnan(upper_bound)] = None
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func_log, 
+                                           numpy.log(p0), bounds = bounds,
+                                           epsilon=epsilon, args = args,
+                                           iprint = -1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
     xopt = _project_params_up(numpy.exp(xopt), fixed_params)
 
     if not full_output:
         return xopt
     else:
-        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+        return xopt, fopt, info_dict
 
 def minus_ll(model, data):
     """
@@ -310,9 +344,11 @@ def optimize_log_fmin(p0, data, model_func, pts,
     model_function: Function to evaluate model spectrum. Should take arguments
                     (params, (n1,n2...), pts)
     lower_bound: Lower bound on parameter values. If not None, must be of same
-                 length as p0.
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
     upper_bound: Upper bound on parameter values. If not None, must be of same
-                 length as p0.
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
     verbose: If True, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
@@ -352,10 +388,10 @@ def optimize_log_fmin(p0, data, model_func, pts,
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
-             gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+             pgtol=1e-5, multinom=True, maxiter=None, full_output=False,
              func_args=[], fixed_params=None, ll_scale=1):
     """
-    Optimize params to fit model to data using the BFGS method.
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
 
     This optimization method works well when we start reasonably close to the
     optimum. It is best at burrowing down a single minimum.
@@ -365,19 +401,21 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     model_function: Function to evaluate model spectrum. Should take arguments
                     (params, (n1,n2...), pts)
     lower_bound: Lower bound on parameter values. If not None, must be of same
-                 length as p0.
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
     upper_bound: Upper bound on parameter values. If not None, must be of same
-                 length as p0.
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
     verbose: If > 0, print optimization status every <verbose> steps.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
-    gtol: Convergence criterion for optimization. For more info, 
-          see help(scipy.optimize.fmin_bfgs)
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
     multinom: If True, do a multinomial fit where model is optimially scaled to
               data at each step. If False, assume theta is a parameter and do
               no scaling.
-    maxiter: Maximum iterations to run for.
+    maxiter: Maximum algorithm iterations evaluations to run.
     full_output: If True, return full outputs as in described in 
                  help(scipy.optimize.fmin_bfgs)
     func_args: Additional arguments to model_func. It is assumed that 
@@ -399,24 +437,43 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               simply reduce the magnitude of the log-likelihood. Once in a
               region of reasonable likelihood, you'll probably want to
               re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
     """
-    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+    args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, fixed_params, ll_scale)
 
     p0 = _project_params_down(p0, fixed_params)
-    outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
-                                       epsilon=epsilon,
-                                       args = args, gtol=gtol, 
-                                       full_output=True,
-                                       disp=False,
-                                       maxiter=maxiter)
-    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func, 
+                                           numpy.log(p0), bounds=bounds,
+                                           epsilon=epsilon, args=args,
+                                           iprint=-1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
     xopt = _project_params_up(xopt, fixed_params)
 
     if not full_output:
         return xopt
     else:
-        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+        return xopt, fopt, info_dict
 
 def _project_params_down(pin, fixed_params):
     """
