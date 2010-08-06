@@ -359,6 +359,9 @@ class Spectrum(numpy.ma.masked_array):
             if proj != self.sample_sizes[axis]:
                 output = output._project_one_axis(proj, axis)
 
+        output.pop_ids = self.pop_ids
+        output.extrap_x = self.extrap_x
+
         # Return folded or unfolded as original.
         if original_folded:
             return output.fold()
@@ -439,6 +442,7 @@ class Spectrum(numpy.ma.masked_array):
                 del pop_ids[axis]
         output.folded = False
         output.pop_ids = pop_ids
+        output.extrap_x = self.extrap_x
 
         if mask_corners:
             output.mask_corners()
@@ -514,6 +518,7 @@ class Spectrum(numpy.ma.masked_array):
 
         outfs = Spectrum(folded, mask=final_mask, data_folded=True,
                          pop_ids=self.pop_ids)
+        outfs.extrap_x = self.extrap_x
         return outfs
 
     def unfold(self):
@@ -544,7 +549,9 @@ class Spectrum(numpy.ma.masked_array):
         newmask = numpy.logical_xor(self.mask, where_folded_out)
         newmask = numpy.logical_or(newmask, reverse_array(newmask))
     
-        outfs = Spectrum(newdata, mask=newmask, data_folded=False)
+        outfs = Spectrum(newdata, mask=newmask, data_folded=False, 
+                         pop_ids=self.pop_ids)
+        outfs.extrap_x = self.extrap_x
         return outfs
 
     def fixed_size_sample(self, nsamples, only_nonmasked=False):
