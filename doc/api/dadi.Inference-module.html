@@ -143,14 +143,14 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">epsilon</span>=<span class="summary-sig-default">0.001</span>,
-        <span class="summary-sig-arg">gtol</span>=<span class="summary-sig-default">1e-05</span>,
+        <span class="summary-sig-arg">pgtol</span>=<span class="summary-sig-default">1e-05</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
-      Optimize log(params) to fit model to data using the BFGS method.</td>
+      Optimize log(params) to fit model to data using the L-BFGS-B method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>
             
@@ -386,14 +386,14 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">verbose</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">epsilon</span>=<span class="summary-sig-default">0.001</span>,
-        <span class="summary-sig-arg">gtol</span>=<span class="summary-sig-default">1e-05</span>,
+        <span class="summary-sig-arg">pgtol</span>=<span class="summary-sig-default">1e-05</span>,
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
-      Optimize params to fit model to data using the BFGS method.</td>
+      Optimize log(params) to fit model to data using the L-BFGS-B method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>
             
@@ -553,7 +553,7 @@ Comparison and optimization of model spectra to data.
         <span class="sig-arg">verbose</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">epsilon</span>=<span class="sig-default">0.001</span>,
-        <span class="sig-arg">gtol</span>=<span class="sig-default">1e-05</span>,
+        <span class="sig-arg">pgtol</span>=<span class="sig-default">1e-05</span>,
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
@@ -568,7 +568,7 @@ Comparison and optimization of model spectra to data.
   
   <pre class="literalblock">
 
-Optimize log(params) to fit model to data using the BFGS method.
+Optimize log(params) to fit model to data using the L-BFGS-B method.
 
 This optimization method works well when we start reasonably close to the
 optimum. It is best at burrowing down a single minimum.
@@ -581,19 +581,21 @@ data: Spectrum with data.
 model_function: Function to evaluate model spectrum. Should take arguments
                 (params, (n1,n2...), pts)
 lower_bound: Lower bound on parameter values. If not None, must be of same
-             length as p0.
+             length as p0. A parameter can be declared unbound by assigning
+             a bound of None.
 upper_bound: Upper bound on parameter values. If not None, must be of same
-             length as p0.
+             length as p0. A parameter can be declared unbound by assigning
+             a bound of None.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 epsilon: Step-size to use for finite-difference derivatives.
-gtol: Convergence criterion for optimization. For more info, 
-      see help(scipy.optimize.fmin_bfgs)
+pgtol: Convergence criterion for optimization. For more info, 
+      see help(scipy.optimize.fmin_l_bfgs_b)
 multinom: If True, do a multinomial fit where model is optimially scaled to
           data at each step. If False, assume theta is a parameter and do
           no scaling.
-maxiter: Maximum iterations to run for.
+maxiter: Maximum algorithm iterations to run.
 full_output: If True, return full outputs as in described in 
              help(scipy.optimize.fmin_bfgs)
 func_args: Additional arguments to model_func. It is assumed that 
@@ -615,6 +617,15 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
           simply reduce the magnitude of the log-likelihood. Once in a
           region of reasonable likelihood, you'll probably want to
           re-optimize with ll_scale=1.
+
+The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+Nocedal. The algorithm is described in:
+  * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+    Constrained Optimization, (1995), SIAM Journal on Scientific and
+    Statistical Computing , 16, 5, pp. 1190-1208.
+  * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+    FORTRAN routines for large scale bound constrained optimization (1997),
+    ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
 
 </pre>
   <dl class="fields">
@@ -906,9 +917,11 @@ data: Spectrum with data.
 model_function: Function to evaluate model spectrum. Should take arguments
                 (params, (n1,n2...), pts)
 lower_bound: Lower bound on parameter values. If not None, must be of same
-             length as p0.
+             length as p0. A parameter can be declared unbound by assigning
+             a bound of None.
 upper_bound: Upper bound on parameter values. If not None, must be of same
-             length as p0.
+             length as p0. A parameter can be declared unbound by assigning
+             a bound of None.
 verbose: If True, print optimization status every &lt;verbose&gt; steps.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
@@ -953,7 +966,7 @@ fixed_params: If not None, should be a list used to fix model parameters at
         <span class="sig-arg">verbose</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">flush_delay</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">epsilon</span>=<span class="sig-default">0.001</span>,
-        <span class="sig-arg">gtol</span>=<span class="sig-default">1e-05</span>,
+        <span class="sig-arg">pgtol</span>=<span class="sig-default">1e-05</span>,
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
@@ -968,7 +981,7 @@ fixed_params: If not None, should be a list used to fix model parameters at
   
   <pre class="literalblock">
 
-Optimize params to fit model to data using the BFGS method.
+Optimize log(params) to fit model to data using the L-BFGS-B method.
 
 This optimization method works well when we start reasonably close to the
 optimum. It is best at burrowing down a single minimum.
@@ -978,19 +991,21 @@ data: Spectrum with data.
 model_function: Function to evaluate model spectrum. Should take arguments
                 (params, (n1,n2...), pts)
 lower_bound: Lower bound on parameter values. If not None, must be of same
-             length as p0.
+             length as p0. A parameter can be declared unbound by assigning
+             a bound of None.
 upper_bound: Upper bound on parameter values. If not None, must be of same
-             length as p0.
+             length as p0. A parameter can be declared unbound by assigning
+             a bound of None.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 epsilon: Step-size to use for finite-difference derivatives.
-gtol: Convergence criterion for optimization. For more info, 
-      see help(scipy.optimize.fmin_bfgs)
+pgtol: Convergence criterion for optimization. For more info, 
+      see help(scipy.optimize.fmin_l_bfgs_b)
 multinom: If True, do a multinomial fit where model is optimially scaled to
           data at each step. If False, assume theta is a parameter and do
           no scaling.
-maxiter: Maximum iterations to run for.
+maxiter: Maximum algorithm iterations evaluations to run.
 full_output: If True, return full outputs as in described in 
              help(scipy.optimize.fmin_bfgs)
 func_args: Additional arguments to model_func. It is assumed that 
@@ -1012,6 +1027,15 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
           simply reduce the magnitude of the log-likelihood. Once in a
           region of reasonable likelihood, you'll probably want to
           re-optimize with ll_scale=1.
+
+The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+Nocedal. The algorithm is described in:
+  * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+    Constrained Optimization, (1995), SIAM Journal on Scientific and
+    Statistical Computing , 16, 5, pp. 1190-1208.
+  * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+    FORTRAN routines for large scale bound constrained optimization (1997),
+    ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
 
 </pre>
   <dl class="fields">
@@ -1117,7 +1141,7 @@ parameter values.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Tue Jul 13 15:05:39 2010</a>
+    3.0.1 on Fri Aug  6 10:44:27 2010</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
