@@ -2,6 +2,9 @@
 Functions for integrating population frequency spectra.
 """
 
+import logging
+logger = logging.getLogger('Integration')
+
 #
 # Note that these functions have all be written for xx=yy=zz, so the grids are
 # identical in each direction. That's not essential here, though. The reason we
@@ -43,6 +46,12 @@ def set_timescale_factor(pts, factor=10):
     # the integration doesn't know whether its results will be used in an
     # extrapolation.
     global timescale_factor
+    logger.warn('set_timescale_factor has been deprecated, as it may be too '
+                'conservative (and thus slow) in choosing timesteps. If you '
+                'wish to take smaller timesteps for accuracy (particularly for '
+                'a very quickly growing population), manually set '
+                'dadi.Integration.timescale_factor to a smaller value. '
+                '(Current value is %g.)' % timescale_factor)
     timescale_factor = Numerics.default_grid(pts)[1]/factor
 
 def _inject_mutations_1D(phi, dt, xx, theta0):
@@ -220,6 +229,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
                  _compute_dt(dy,nu2,[m21],gamma2,h2))
+        print dt
         this_dt = min(dt, T - current_t)
 
         next_t = current_t + this_dt
