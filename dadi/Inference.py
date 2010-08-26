@@ -32,11 +32,11 @@ def _object_func(params, data, model_func, pts,
     if lower_bound is not None:
         for pval,bound in zip(params, lower_bound):
             if bound is not None and pval < bound:
-                return -out_of_bounds_val/ll_scale
+                return -_out_of_bounds_val/ll_scale
     if upper_bound is not None:
         for pval,bound in zip(params, upper_bound):
             if bound is not None and pval > bound:
-                return -out_of_bounds_val/ll_scale
+                return -_out_of_bounds_val/ll_scale
 
     ns = data.sample_sizes 
     all_args = [params, ns] + list(func_args) + [pts]
