@@ -229,7 +229,6 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
                  _compute_dt(dy,nu2,[m21],gamma2,h2))
-        print dt
         this_dt = min(dt, T - current_t)
 
         next_t = current_t + this_dt
