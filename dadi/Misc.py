@@ -218,10 +218,13 @@ def make_data_dict(filename):
         spl = line.split()
 
         data_this_snp = {}
-        data_this_snp['context'] = spl[0]
-        data_this_snp['outgroup_context'] = spl[1]
-        data_this_snp['outgroup_allele'] = spl[1][1]
-        data_this_snp['segregating'] = spl[2],spl[allele2_index] 
+
+        # We convert to upper case to avoid any issues with mixed case between
+        # SNPs.
+        data_this_snp['context'] = spl[0].upper()
+        data_this_snp['outgroup_context'] = spl[1].upper()
+        data_this_snp['outgroup_allele'] = spl[1][1].upper()
+        data_this_snp['segregating'] = spl[2].upper(),spl[allele2_index].upper()
 
         calls_dict = {}
         for ii,pop in enumerate(pops):
