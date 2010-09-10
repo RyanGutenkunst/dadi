@@ -65,7 +65,7 @@ def _object_func_log(log_params, *args, **kwargs):
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
-                 pgtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
                  func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
@@ -131,8 +131,6 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, fixed_params, ll_scale)
 
-    p0 = _project_params_down(p0, fixed_params)
-
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
         lower_bound = [None] * len(p0)
@@ -147,6 +145,8 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
         upper_bound[numpy.isnan(upper_bound)] = None
     upper_bound = _project_params_down(upper_bound, fixed_params)
     bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
 
     outputs = scipy.optimize.fmin_l_bfgs_b(_object_func_log, 
                                            numpy.log(p0), bounds = bounds,
@@ -388,7 +388,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
-             pgtol=1e-5, multinom=True, maxiter=None, full_output=False,
+             pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
              func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
@@ -450,8 +450,6 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, fixed_params, ll_scale)
 
-    p0 = _project_params_down(p0, fixed_params)
-
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
         lower_bound = [None] * len(p0)
@@ -460,6 +458,8 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
         upper_bound = [None] * len(p0)
     upper_bound = _project_params_down(upper_bound, fixed_params)
     bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
 
     outputs = scipy.optimize.fmin_l_bfgs_b(_object_func, 
                                            numpy.log(p0), bounds=bounds,
