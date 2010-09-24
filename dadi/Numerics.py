@@ -352,16 +352,23 @@ def _cached_projection(proj_to, proj_from, hits):
     except KeyError:
         pass
 
-    proj_hits = numpy.arange(proj_to+1)
-    contrib = comb(proj_to,proj_hits)*comb(proj_from-proj_to,hits-proj_hits)
-    contrib /= comb(proj_from, hits)
-
-    if numpy.any(numpy.isnan(contrib)):
+    if numpy.isscalar(proj_to) and numpy.isscalar(proj_from)\
+       and proj_from < proj_to:
+        # Short-circuit calculation.
+        contrib = numpy.zeros(proj_to+1)
+    else:
+        # We set numpy's error reporting so that it will ignore underflows, 
+        # because those just imply that contrib is 0.
+        previous_err_state = numpy.seterr(under='ignore', divide='raise',
+                                          over='raise', invalid='raise')
+        proj_hits = numpy.arange(proj_to+1)
+        # For large sample sizes, we need to do the calculation in logs, and it
+        # is accurate enough for small sizes as well.
         lncontrib = _lncomb(proj_to,proj_hits)
         lncontrib += _lncomb(proj_from-proj_to,hits-proj_hits)
         lncontrib -= _lncomb(proj_from, hits)
         contrib = numpy.exp(lncontrib)
-
+        numpy.seterr(**previous_err_state)
     _projection_cache[key] = contrib
     return contrib
 
