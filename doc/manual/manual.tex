@@ -718,12 +718,12 @@ These all require installation of the Python library \py{matplotlib}.
 \subsection{Essential matplotlib commands}
 To access additional, more general, methods for manipulating plots
 \begin{lstlisting}
-import pylab
+import matplotlib.pyplot as pyplot
 \end{lstlisting}
-In particular, the method \py{pylab.figure()} will create a new empty figure.
+In particular, the method \py{pyplot.figure()} will create a new empty figure.
 
 One quirk of \py{matplotlib} is that your plots may not show up immediately upon calling the plotting commands.
-If they don't, a call to \py{pylab.show()} will pop them up.
+If they don't, a call to \py{pyplot.show()} will pop them up.
 If you are not running in IPython, this will cause Python to block, so do not place it in scripts you run from the command-line, unless it is the last line.
 
 \subsection{1D comparison}
