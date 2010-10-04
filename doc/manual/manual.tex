@@ -655,19 +655,8 @@ theta0 = dadi.Inference.optimal_sfs_scaling(model, data)
 
 \subsection{Fitting}
 
-To find the maximum-likelihood model parameters for a given data set, \dadi implements a nonlinear optimization procedure.
-Three optimization methods are provided.
-Two are the BFGS method in terms of raw parameters or log parameters, implemented in \py{dadi.Inference.optimize} and \py{dadi.Inference.optimize_log}.
-The other is a simplex (a.k.a. amoeba) method in terms of log parameters, implemented in \py{dadi.Inference.optimize_log_fmin}.
-
-Both BFGS and simplex are local search algorithms; thus they are efficient, but not guaranteed to find the global optimum.
-Thus, it is good to run several optimizations for each data set, starting from different initial parameters.
-If all goes well, multiple such runs will converge to the same set of parameters and likelihood, and this likelihood will the the highest found.
-This is strong evidence that you have indeed found the global optimum.
-To facilitate this, \dadi provides a method \py{dadi.Misc.perturb_params} that randomly perturbs the parameters passed in to generate a new initial point for the optimization.
-
-Note that the algorithm in \py{dadi.Inference.optimize} is typically more efficient than that in \py{dadi.Inference.optimize_log_fmin}.
-However, \py{optimize_log_fmin} can be more robust so if \py{optimize} is causing difficulty, you may consider trying \py{optimize_log_fmin}.
+To find the maximum-likelihood model parameters for a given data set, \dadi employs non-linear optimization.
+Several optimization methods are provided, as detailed in Section~\ref{sec:which_optimizer}.
 
 \subsubsection{Parameter bounds}
 
@@ -691,6 +680,35 @@ A common example is doing likelihood-ratio tests on nested models.
 The optional argument \py{fixed_params} to the optimization methods facilitates this.
 As an example, if \py{fixed_params=[None,1.0,None,2.0]}, the first and third model parameters will be optimized, with the second and fourth parameters fixed to 1 and 2 respectively.
 Note that when using this option, a full length initial parameter set \py{p0} should be passed in.
+
+\subsection{Which optimizer should I use?}\label{sec:which_optimizer}
+
+\dadi provides a multitude of optimization algorithms, each of which performs best in particular circumstances.
+
+The two most-general purpose routines are the BFGS methods implemented in \py{dadi.Inference.optimize} and \py{dadi.Inference.optimize_log}.
+These perform a local search from a specified set of parameters, using an algorithm which attempts to estimate the curvature of the likelihood surface.
+However, these methods may have convergence problems if the maximum-likelihood parameters are at one or more of the parameter bounds.
+
+\dadi also implements two L-BFGS-B methods, \py{dadi.Inference.optimize_lbfgsb} and \py{dadi.Inference.optimize_log_lbfgsb}.
+These implement a variant of the BFGS method that deals much more efficiently with bounded parameter spaces.
+If your optimizations are often hitting the parameter bounds, try using these methods.
+Note that it is probably best to start with the vanilla BFGS methods, because the L-BFGS-B methods will always try parameter values at the bounds during the search.
+This can dramatically slow model fitting.
+
+We also provide a simplex (a.k.a. amoeba) method in terms of log parameters, implemented in \py{dadi.Inference.optimize_log_fmin}.
+This method does not use derivative information, so it may be more robust than the BFGS-based methods, but it is much slower.
+
+Finally, there is a simple grid search, implemented in \py{dadi.Inference.optimize_grid}.
+
+Both BFGS and simplex are local search algorithms; thus they are efficient, but not guaranteed to find the global optimum.
+Thus, it is important to run several optimizations for each data set, starting from different initial parameters.
+If all goes well, multiple such runs will converge to the same set of parameters and likelihood, and this likelihood will the the highest found.
+This is strong evidence that you have indeed found the global optimum.
+To facilitate this, \dadi provides a method \py{dadi.Misc.perturb_params} that randomly perturbs the parameters passed in to generate a new initial point for the optimization.
+
+%Note that the algorithm in \py{dadi.Inference.optimize} is typically more efficient than that in \py{dadi.Inference.optimize_log_fmin}.
+%However, \py{optimize_log_fmin} can be more robust so if \py{optimize} is causing difficulty, you may consider trying \py{optimize_log_fmin}.
+
 
 \section{Plotting}
 
