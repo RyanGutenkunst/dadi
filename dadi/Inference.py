@@ -65,13 +65,86 @@ def _object_func_log(log_params, *args, **kwargs):
 
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
-                 pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
                  func_args=[], fixed_params=None, ll_scale=1):
+    """
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in log(params), it cannot explore values of params < 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If > 0, print optimization status every <verbose> steps.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale > 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you'll probably want to
+              re-optimize with ll_scale=1.
+    """
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, fixed_params, ll_scale)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
+                                       numpy.log(p0), epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
+def optimize_log_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+                        func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
     This optimization method works well when we start reasonably close to the
-    optimum. It is best at burrowing down a single minimum.
+    optimum. It is best at burrowing down a single minimum. This method is better than
+    optimize_log if the optimum lies at one or more of the parameter bounds. However,
+    if your optimum is not on the bounds, this method may be much slower.
 
     Because this works in log(params), it cannot explore values of params < 0.
     It should also perform better when parameters range over scales.
@@ -190,18 +263,30 @@ def ll_per_bin(model, data):
     if data.folded and not model.folded:
         model = model.fold()
 
-    if numpy.any(logical_and(model < 0, logical_not(data.mask))):
+    final_missing = None
+    missing = logical_and(model < 0, logical_not(data.mask))
+    if numpy.any(missing):
         logger.warn('Model is < 0 where data is not masked.')
+        final_missing = missing
     # If the data is 0, it's okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.
-    if numpy.any(logical_and(model == 0, 
-                             logical_and(data > 0, logical_not(data.mask)))):
+    missing = logical_and(model == 0, logical_and(data > 0, logical_not(data.mask)))
+    if numpy.any(missing):
         logger.warn('Model is 0 where data is neither masked nor 0.')
-    if numpy.any(numpy.logical_and(model.mask, numpy.logical_not(data.mask))):
+        final_missing = missing
+    missing = numpy.logical_and(model.mask, numpy.logical_not(data.mask))
+    if numpy.any(missing):
         logger.warn('Model is masked in some entries where data is not.')
-    if numpy.any(numpy.logical_and(numpy.isnan(model), 
-                                   numpy.logical_not(data.mask))):
+        final_missing = missing
+    missing = numpy.logical_and(numpy.isnan(model), numpy.logical_not(data.mask))
+    if numpy.any(missing):
         logger.warn('Model is nan in some entries where data is not masked.')
+        final_missing = missing
+
+    if final_missing is not None:
+        logger.warn('Number of affected entries is %i. Sum of data in those '
+                    'entries is %g:' % (final_missing.sum(), 
+                                        data[final_missing].sum()))
 
     return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
 
@@ -388,13 +473,84 @@ def optimize_log_fmin(p0, data, model_func, pts,
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
-             pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+             gtol=1e-5, multinom=True, maxiter=None, full_output=False,
              func_args=[], fixed_params=None, ll_scale=1):
+    """
+    Optimize params to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If > 0, print optimization status every <verbose> steps.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale > 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you'll probably want to
+              re-optimize with ll_scale=1.
+    """
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, fixed_params, ll_scale)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
+                                       epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
+
+def optimize_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+                    verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                    pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+                    func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
     This optimization method works well when we start reasonably close to the
-    optimum. It is best at burrowing down a single minimum.
+    optimum. It is best at burrowing down a single minimum. This method is better than
+    optimize_log if the optimum lies at one or more of the parameter bounds. However,
+    if your optimum is not on the bounds, this method may be much slower.
 
     p0: Initial parameters.
     data: Spectrum with data.
