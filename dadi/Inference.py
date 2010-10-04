@@ -256,37 +256,47 @@ def ll(model, data):
     ll_arr = ll_per_bin(model, data)
     return ll_arr.sum()
 
-def ll_per_bin(model, data):
+def ll_per_bin(model, data, missing_model_cutoff=1e-9):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
+
+    missing_model_cutoff: Due to numerical issues, there may be entries in the
+                          FS that cannot be stable calculated. If these entries
+                          involve a fraction of the data larger than
+                          missing_model_cutoff, a warning is printed.
     """
     if data.folded and not model.folded:
         model = model.fold()
 
     final_missing = None
     missing = logical_and(model < 0, logical_not(data.mask))
-    if numpy.any(missing):
+    missing_sum = data[missing].sum()
+    data_sum = data.sum()
+    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         logger.warn('Model is < 0 where data is not masked.')
         final_missing = missing
     # If the data is 0, it's okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.
     missing = logical_and(model == 0, logical_and(data > 0, logical_not(data.mask)))
-    if numpy.any(missing):
+    missing_sum = data[missing].sum()
+    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         logger.warn('Model is 0 where data is neither masked nor 0.')
         final_missing = missing
     missing = numpy.logical_and(model.mask, numpy.logical_not(data.mask))
-    if numpy.any(missing):
+    missing_sum = data[missing].sum()
+    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
+        print missing_sum, data_sum
         logger.warn('Model is masked in some entries where data is not.')
         final_missing = missing
     missing = numpy.logical_and(numpy.isnan(model), numpy.logical_not(data.mask))
-    if numpy.any(missing):
+    missing_sum = data[missing].sum()
+    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         logger.warn('Model is nan in some entries where data is not masked.')
         final_missing = missing
 
     if final_missing is not None:
         logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (final_missing.sum(), 
-                                        data[final_missing].sum()))
+                    'entries is %g:' % (final_missing.sum(), missing_sum))
 
     return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
 
