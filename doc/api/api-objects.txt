@@ -30,6 +30,7 @@ dadi.Hessian.hessian_elem	dadi.Hessian-module.html#hessian_elem
 dadi.Hessian.logger	dadi.Hessian-module.html#logger
 dadi.Hessian.hessian	dadi.Hessian-module.html#hessian
 dadi.Inference	dadi.Inference-module.html
+dadi.Inference.optimize_log_lbfgsb	dadi.Inference-module.html#optimize_log_lbfgsb
 dadi.Inference.optimize_log	dadi.Inference-module.html#optimize_log
 dadi.Inference._object_func_log	dadi.Inference-module.html#_object_func_log
 dadi.Inference.index_exp	dadi.Inference-module.html#index_exp
@@ -49,6 +50,7 @@ dadi.Inference.optimize	dadi.Inference-module.html#optimize
 dadi.Inference._counter	dadi.Inference-module.html#_counter
 dadi.Inference._out_of_bounds_val	dadi.Inference-module.html#_out_of_bounds_val
 dadi.Inference.linear_Poisson_residual	dadi.Inference-module.html#linear_Poisson_residual
+dadi.Inference.optimize_lbfgsb	dadi.Inference-module.html#optimize_lbfgsb
 dadi.Inference.minus_ll_multinom	dadi.Inference-module.html#minus_ll_multinom
 dadi.Inference.optimal_sfs_scaling	dadi.Inference-module.html#optimal_sfs_scaling
 dadi.Inference._object_func	dadi.Inference-module.html#_object_func
@@ -64,6 +66,7 @@ dadi.Integration._inject_mutations_3D	dadi.Integration-module.html#_inject_mutat
 dadi.Integration.use_old_timestep	dadi.Integration-module.html#use_old_timestep
 dadi.Integration.__package__	dadi.Integration-module.html#__package__
 dadi.Integration.one_pop	dadi.Integration-module.html#one_pop
+dadi.Integration.logger	dadi.Integration-module.html#logger
 dadi.Integration._three_pops_const_params	dadi.Integration-module.html#_three_pops_const_params
 dadi.Integration._two_pops_const_params	dadi.Integration-module.html#_two_pops_const_params
 dadi.Integration.use_delj_trick	dadi.Integration-module.html#use_delj_trick
@@ -166,6 +169,9 @@ dadi.integration_c.implicit_2Dy	dadi.integration_c-module.html#implicit_2Dy
 dadi.integration_c.implicit_precalc_3Dz	dadi.integration_c-module.html#implicit_precalc_3Dz
 dadi.integration_c.implicit_precalc_3Dx	dadi.integration_c-module.html#implicit_precalc_3Dx
 dadi.integration_c.implicit_precalc_3Dy	dadi.integration_c-module.html#implicit_precalc_3Dy
+dadi.lbfgsb	dadi.lbfgsb-module.html
+dadi.lbfgsb.fmin_l_bfgs_b	dadi.lbfgsb-module.html#fmin_l_bfgs_b
+dadi.lbfgsb.__package__	dadi.lbfgsb-module.html#__package__
 dadi.tridiag	dadi.tridiag-module.html
 dadi.tridiag.tridiag	dadi.tridiag-module.html#tridiag
 dadi.tridiag.tridiag_fl	dadi.tridiag-module.html#tridiag_fl
