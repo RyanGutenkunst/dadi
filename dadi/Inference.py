@@ -256,7 +256,7 @@ def ll(model, data):
     ll_arr = ll_per_bin(model, data)
     return ll_arr.sum()
 
-def ll_per_bin(model, data, missing_model_cutoff=1e-9):
+def ll_per_bin(model, data, missing_model_cutoff=1e-6):
     """
     The Poisson log-likelihood of each entry in the data given the model sfs.
 
