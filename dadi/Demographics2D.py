@@ -120,7 +120,7 @@ def split_mig_mscore(params):
     """
     ms core command for split_mig.
     """
-    params = nu1,nu2,T,m
+    nu1,nu2,T,m = params
 
     command = "-n 1 %(nu1)f -n 2 %(nu2)f "\
             "-ma x %(m12)f %(m21)f x "\
