@@ -976,18 +976,22 @@ class Spectrum(numpy.ma.masked_array):
         return S/denom
     
     def pi(self):
-        """
-        Estimated expected heterozygosity.
+        r"""
+        Estimated expected number of pairwise differences between two
+        chromosomes in the population.
     
-        Note that this estimate assumes a randomly mating population.
+        Note that this estimate includes a factor of sample_size/(sample_size-1)
+        to make E(\hat{pi}) = theta.
         """
         if self.ndim != 1:
-            raise ValueError("Only defined on a one-dimensional SFS.")
+            raise ValueError("Only defined for a one-dimensional SFS.")
     
         n = self.sample_sizes[0]
         # sample frequencies p 
-        p = 1.*numpy.arange(0,n+1)/n
-        return n/(n-1) * 2*numpy.ma.sum(self*p*(1-p))
+        p = numpy.arange(0,n+1,dtype=float)/n
+        # This expression derives from Gillespie's _Population_Genetics:_A
+        # _Concise_Guide_, 2nd edition, section 2.6.
+        return n/(n-1.) * 2*numpy.ma.sum(self*p*(1-p))
     
     def Tajima_D(self):
         """
