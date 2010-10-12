@@ -101,6 +101,13 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -109,6 +116,12 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
     ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
               too large. (This appears to be a flaw in the scipy
               implementation.) To overcome this, pass ll_scale > 1, which will
@@ -134,17 +147,20 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
-def optimize_log_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+def optimize_log_lbfgsb(p0, data, model_func, pts, 
+                        lower_bound=None, upper_bound=None,
                         verbose=0, flush_delay=0.5, epsilon=1e-3, 
-                        pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
                         func_args=[], fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
     This optimization method works well when we start reasonably close to the
-    optimum. It is best at burrowing down a single minimum. This method is better than
-    optimize_log if the optimum lies at one or more of the parameter bounds. However,
-    if your optimum is not on the bounds, this method may be much slower.
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
 
     Because this works in log(params), it cannot explore values of params < 0.
     It should also perform better when parameters range over scales.
@@ -184,6 +200,8 @@ def optimize_log_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
     ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
               too large. (This appears to be a flaw in the scipy
               implementation.) To overcome this, pass ll_scale > 1, which will
@@ -466,6 +484,8 @@ def optimize_log_fmin(p0, data, model_func, pts,
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, fixed_params, 1.0)
@@ -524,6 +544,8 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
     ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
               too large. (This appears to be a flaw in the scipy
               implementation.) To overcome this, pass ll_scale > 1, which will
@@ -550,7 +572,8 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
 
-def optimize_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+def optimize_lbfgsb(p0, data, model_func, pts, 
+                    lower_bound=None, upper_bound=None,
                     verbose=0, flush_delay=0.5, epsilon=1e-3, 
                     pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
                     func_args=[], fixed_params=None, ll_scale=1):
@@ -558,9 +581,10 @@ def optimize_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound=Non
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
     This optimization method works well when we start reasonably close to the
-    optimum. It is best at burrowing down a single minimum. This method is better than
-    optimize_log if the optimum lies at one or more of the parameter bounds. However,
-    if your optimum is not on the bounds, this method may be much slower.
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
 
     p0: Initial parameters.
     data: Spectrum with data.
@@ -597,6 +621,8 @@ def optimize_lbfgsb(p0, data, model_func, pts, lower_bound=None, upper_bound=Non
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
     ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
               too large. (This appears to be a flaw in the scipy
               implementation.) To overcome this, pass ll_scale > 1, which will
@@ -711,6 +737,8 @@ def optimize_grid(data, model_func, pts, grid,
                   parameters. Optimization will fail if the fixed values
                   lie outside their bounds. A full-length p0 should be passed
                   in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
 
     Search grids are specified using a dadi.Inference.index_exp object (which
     is an alias for numpy.index_exp). The grid is specified by passing a range
