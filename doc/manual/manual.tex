@@ -181,12 +181,17 @@ fs = Spectrum.from_data_dict(dd, pop_ids=['YRI', 'CEU'],
 \end{lstlisting}
 The \py{pop_ids} argument specifies which populations to use to create the FS, and their order.
 \py{projections} denotes the population sample sizes for the resulting FS.
+(Recall that for a diploid organism, assuming random mating, we get two samples from each individual.)
 Note that the total number of calls to Allele1 and Allele2 in a given population need not be the same for each SNP.
 When constructing the Spectrum each SNP will be projected down to the requested number of samples in each population.
 (Note that SNPs cannot be projected up, so SNPs without enough calls in any population will be ignored.)
 \py{polarized} specifies whether \dadi should use outgroup information to polarize the SNPs.
 If \py{polarized=True}, SNPs without outgroup information, or with that information \py{-} will be ignored.
 If \py{polarized=False}, outgroup information will be ignored and the resulting \py{Spectrum} will be folded.
+
+If your data have missing calls for some individuals, projecting down to a smaller sample size will increase the number of SNPs you can use for analysis.
+On the other hand, some fraction of the SNPs will now project down to frequency 0, and thus be uniformative.
+As a rule of thumb, we often choose our projection to maximize the number of segregating sites in our final fs (assessed via \py{fs.S()}), although we have not formally tested whether this maximizes statistical power.
 
 The method \py{Spectrum.from_data_dict_corrected} polarizes the SNPs using outgroup information and applies a statistical correction for multiple mutations described by Hernandez et al.~\cite{bib:Hernandez2007}.
 Any SNPs without full trinucleotide ingroup and outgroup sequences will be ignored, as well as SNPs in which the flanking bases are not conserved between ingroup and outgroup, or in which the outgroup allele is not one of the segregating alleles.
