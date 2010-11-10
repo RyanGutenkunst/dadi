@@ -31,7 +31,7 @@ tri_freq = dict((line.split()[0], float(line.split()[1]))
                 for line in file('tri_freq.dat').readlines())
 # We combine these to make a table of 1-f_{ux}, in the notation of
 # of Hernandez, Williamson & Bustamante, Mol Biol Evol 24:1792 (2007).
-dadi.Misc.make_fux_table('fux_table.dat', 0.012, Q, tri_freq)
+dadi.Misc.make_fux_table('fux_table.dat', 0.0112, Q, tri_freq)
 # And finally we get the corrected frequency spectrum.
 fs_corr = dadi.Spectrum.from_data_dict_corrected(dd, ['YRI','CEU'], [20,20],
                                                  'fux_table.dat')
