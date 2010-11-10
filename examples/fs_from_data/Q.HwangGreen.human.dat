@@ -1,9 +1,9 @@
 # Trinuclotide transition rate matrix inferred along the human lineage by 
 # Hwang and Green, PNAS 101:13994 (2004).
 # Sent to Ryan Gutenkunst by Ryan Hernandez.
-# Entries are indexed using the base order CGTA.
-# For example, the trinucleotide ACT maps to 3*16+0*4+3*1=51.
-# So the transition rate from ACT to AGT is entry [51,55].
+# Entries are indexed using the base order CGTA = [0,1,2,3].
+# For example, the trinucleotide ACT maps to 3*16+0*4+2*1=50.
+# So the transition rate from ACT to AGT is entry [50,54].
 #
 # The diagonal entries have been set so that each row sums to 0.
 64 64 
