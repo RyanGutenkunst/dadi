@@ -113,10 +113,12 @@ def make_fux_table(fid, ts, Q, tri_freq):
     ts: Expected number of substitutions per site between ingroup and outgroup.
     Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
        which entries are ordered using the code CGTA -> 0,1,2,3. For example, 
-       ACT -> 3*16+0*4+3*1=51. The transition rate from ACT to AGT is then 
-       entry 51,55.
+       ACT -> 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then 
+       entry 50,54.
     tri_freq: Dictionary in which each entry maps a trinucleotide to its 
-              stationary frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
+              ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
+              Note that should be the frequency in the entire region scanned
+              for variation, not just sites where there are SNPs.
     """
     code = 'CGTA'
     # Ensure that the rows of Q sum to zero.
