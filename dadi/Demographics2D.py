@@ -165,6 +165,8 @@ def IM_mscore(params):
     """
     ms core command for IM.
     """
+    s,nu1,nu2,T,m12,m21 = params
+
     alpha1 = numpy.log(nu1/s)/T
     alpha2 = numpy.log(nu2/(1-s))/T
     command = "-n 1 %(nu1)f -n 2 %(nu2)f "\
