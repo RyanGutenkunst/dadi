@@ -69,8 +69,12 @@ def ms_command(theta, ns, core, iter, recomb=0, rsites=None):
     recomb: Assumed recombination rate
     rsites: Sites for recombination. If None, default is 10*theta.
     """
-    ms_command = "ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i "\
-            "%(sample_sizes)s %(core)s"
+    if len(ns) > 1:
+        ms_command = "ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i "\
+                "%(sample_sizes)s %(core)s"
+    else:
+        ms_command = "ms %(total_chrom)i %(iter)i -t %(theta)f  %(core)s"
+
     if recomb:
         ms_command = ms_command + " -r %(recomb)f %(rsites)i"
         if not rsites:
