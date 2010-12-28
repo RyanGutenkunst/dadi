@@ -399,3 +399,15 @@ def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
             phi[:,jj,kk] = Numerics.trapz(phi_int, xx, axis=0)
 
     return phi
+
+def remove_pop(phi, xx, popnum):
+    """
+    Remove a population from phi.
+
+    Returns new phi with one fewer population.
+
+    phi: phi corresponding to original populations
+    xx: Mapping of points in phi to frequencies in population to be removed
+    popnum: Population number to remove, numbering from 1.
+    """
+    return Numerics.trapz(phi, xx, axis=popnum-1)
