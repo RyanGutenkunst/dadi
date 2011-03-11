@@ -83,7 +83,12 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None):
         return phi_1D_snm(xx, nu, theta0)
 
     exp = numpy.exp
-    phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+    if gamma > -300:
+        phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+    else:
+        # Avoid overflow issues for very negative gammas
+        phi = 1./(xx*(1-xx)) * exp(2*gamma*xx)
+
     if xx[0] == 0:
         phi[0] = phi[1]
     if xx[-1] == 1:
