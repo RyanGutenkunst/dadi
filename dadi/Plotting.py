@@ -223,7 +223,7 @@ def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
 
     if pop_ids is None:
         if resid.pop_ids is not None:
-            pop_ids = sfs.pop_ids
+            pop_ids = resid.pop_ids
         else:
             pop_ids = ['pop0','pop1']
     ax.set_ylabel(pop_ids[0], horizontalalignment='left')
