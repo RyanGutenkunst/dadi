@@ -26,7 +26,8 @@ class Spectrum(numpy.ma.masked_array):
     categories.
 
     The constructor has the format:
-        fs = dadi.Spectrum(data, mask, mask_corners, data_folded, check_folding)
+        fs = dadi.Spectrum(data, mask, mask_corners, data_folded, check_folding,
+                           pop_ids, extrap_x)
         
         data: The frequency spectrum data
         mask: An optional array of the same size as data. 'True' entires in
@@ -1681,3 +1682,12 @@ def %(method)s(self, other):
            and other.folded != self.folded:
             raise ValueError('Cannot operate with a folded Spectrum and an '
                              'unfolded one.')
+
+# Allow spectrum objects to be pickled. 
+# See http://effbot.org/librarybook/copy-reg.htm
+import copy_reg
+def Spectrum_unpickler(data, mask, data_folded, pop_ids, extrap_x):
+    return dadi.Spectrum(data, mask, mask_corners=False, data_folded=data_folded, check_folding=False, pop_ids=pop_ids, extrap_x=extrap_x)
+def Spectrum_pickler(fs):
+    return Spectrum_unpickler, (fs.data, fs.mask, fs.folded, fs.pop_ids, fs.extrap_x)
+copy_reg.pickle(Spectrum, Spectrum_pickler, Spectrum_unpickler)
