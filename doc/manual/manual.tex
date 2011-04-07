@@ -921,7 +921,7 @@ The number of segregating SNPs can be calculated as \py{fs.S()}.
 
 Yes, although assigning significance values can be computationally intensive.
 \dadi calculates a composite likelihood, which assumes all SNPs in the data are independent.
-This doesn't bias parameter inference for neutral models~\cite{bib:Wiuf2006}, but if your SNPs are actually linked, the standard likelihood-ratio test will be anti-conservative, i.e. it will reject the more complex model more often that it should.
+This doesn't bias parameter inference for neutral models~\cite{bib:Wiuf2006}, but if your SNPs are actually linked, the standard likelihood-ratio test will be anti-conservative, i.e. it will reject the simpler model more often that it should.
 
 To overcome this, you need to calculate the null distribution, i.e. what improvements in likelihood would you expect if there really were no migration in the data, but your model included migration?
 To do this, generate simulated data sets with a coalescent simulator under your best-fit model without migration, replicating as closely as possible your sequencing strategy (size and linkage between sequenced regions).
