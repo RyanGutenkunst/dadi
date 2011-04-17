@@ -587,7 +587,7 @@ class Spectrum(numpy.ma.masked_array):
         # 0 there or masked. 
         bad_entries = numpy.logical_or(self == 0, self.mask)
         # We convert to a 1-d array for passing into the sampler
-        means = self.ravel()
+        means = self.ravel().copy()
         # Filter out those bad entries.
         means[bad_entries.ravel()] = 1
         # Sample
