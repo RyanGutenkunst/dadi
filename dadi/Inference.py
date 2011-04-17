@@ -18,7 +18,7 @@ _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
-                 func_args=[], fixed_params=None, ll_scale=1):
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1):
     """
     Objective function for optimization.
     """
@@ -39,8 +39,12 @@ def _object_func(params, data, model_func, pts,
                 return -_out_of_bounds_val/ll_scale
 
     ns = data.sample_sizes 
-    all_args = [params, ns] + list(func_args) + [pts]
-    sfs = model_func(*all_args)
+    all_args = [params, ns] + list(func_args)
+    # Pass the pts argument via keyword, but don't alter the passed-in 
+    # func_kwargs
+    func_kwargs = func_kwargs.copy()
+    func_kwargs['pts'] = pts
+    sfs = model_func(*all_args, **func_kwargs)
     if multinom:
         result = ll_multinom(sfs, data)
     else:
@@ -66,7 +70,7 @@ def _object_func_log(log_params, *args, **kwargs):
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-                 func_args=[], fixed_params=None, ll_scale=1):
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1):
     """
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -108,6 +112,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
                would pass func_args = [0.1,0.2] (and ignore the fixed_params 
                argument).
+    func_kwargs: Additional keyword arguments to model_func.
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -130,7 +135,8 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               re-optimize with ll_scale=1.
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, fixed_params, ll_scale)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -152,7 +158,8 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
                         verbose=0, flush_delay=0.5, epsilon=1e-3, 
                         pgtol=1e-5, multinom=True, maxiter=1e5, 
                         full_output=False,
-                        func_args=[], fixed_params=None, ll_scale=1):
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -192,6 +199,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -220,7 +228,8 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
     
     """
     args = (data, model_func, pts, None, None, verbose,
-            multinom, flush_delay, func_args, fixed_params, ll_scale)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -441,6 +450,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                       verbose=0, flush_delay=0.5, 
                       multinom=True, maxiter=None, 
                       full_output=False, func_args=[], 
+                      func_kwargs={},
                       fixed_params=None):
     """
     Optimize log(params) to fit model to data using Nelder-Mead. 
@@ -476,6 +486,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -488,7 +499,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
      fixed_params usage.)
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, fixed_params, 1.0)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
@@ -504,7 +515,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-             func_args=[], fixed_params=None, ll_scale=1):
+             func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1):
     """
     Optimize params to fit model to data using the BFGS method.
 
@@ -536,6 +547,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -554,7 +566,8 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               re-optimize with ll_scale=1.
     """
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, fixed_params, ll_scale)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
@@ -576,7 +589,8 @@ def optimize_lbfgsb(p0, data, model_func, pts,
                     lower_bound=None, upper_bound=None,
                     verbose=0, flush_delay=0.5, epsilon=1e-3, 
                     pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
-                    func_args=[], fixed_params=None, ll_scale=1):
+                    func_args=[], func_kwargs={}, fixed_params=None, 
+                    ll_scale=1):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -613,6 +627,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -640,7 +655,8 @@ def optimize_lbfgsb(p0, data, model_func, pts,
         ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
     """
     args = (data, model_func, pts, None, None, verbose,
-            multinom, flush_delay, func_args, fixed_params, ll_scale)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -706,7 +722,7 @@ index_exp = numpy.index_exp
 def optimize_grid(data, model_func, pts, grid,
                   verbose=0, flush_delay=0.5,
                   multinom=True, full_output=False,
-                  func_args=[], fixed_params=None):
+                  func_args=[], func_kwargs={}, fixed_params=None):
     """
     Optimize params to fit model to data using brute force search over a grid.
 
@@ -729,6 +745,7 @@ def optimize_grid(data, model_func, pts, grid,
                optimize, that its second argument is an array of sample sizes
                for the sfs, and that its last argument is the list of grid
                points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
     fixed_params: If not None, should be a list used to fix model parameters at
                   particular values. For example, if the model parameters
                   are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -750,7 +767,7 @@ def optimize_grid(data, model_func, pts, grid,
     parameter values.
     """
     args = (data, model_func, pts, None, None, verbose,
-            multinom, flush_delay, func_args, fixed_params, 1.0)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0)
 
     outputs = scipy.optimize.brute(_object_func, ranges=grid,
                                    args = args, full_output=full_output)

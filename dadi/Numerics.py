@@ -222,9 +222,9 @@ def trapz(yy, xx=None, dx=None, axis=-1):
         raise ValueError('One and only one of xx or dx must be specified.')
     elif (xx is not None) and (dx is None):
         dx = numpy.diff(xx)
+    yy = numpy.asanyarray(yy)
     nd = yy.ndim
 
-    yy = numpy.asarray(yy)
     if yy.shape[axis] != (len(dx)+1):
         raise ValueError('Length of xx must be equal to length of yy along '
                          'specified axis. Here len(xx) = %i and '
@@ -243,18 +243,15 @@ def make_extrap_func(func, extrap_x_l=None):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
-    func: A function whose last argument with no default value is the number of
-          default_grid points to use in calculation and that returns a single
-          scalar or array.
-          The function can take further keyword arguments. Note that those
-          arguments must *always* be passed by keyword into the extrapolated
-          function.
+    func: A function that returns a single scalar or array and whose last
+        argument is 'pts': the number of default_grid points to use in
+        calculation.  
     extrap_x_l: An explict list of x values to use for extrapolation. If not 
-         provided, the extrapolation routine will look for '.extrap_x'
-         attributes on the results of func. The method Spectrum.from_phi will
-         add an extrap_x attribute to resulting Spectra, equal to the x-value
-         of the first non-zero grid point. An explicit list is useful if you
-         want to override this behavior for testing.
+        provided, the extrapolation routine will look for '.extrap_x'
+        attributes on the results of func. The method Spectrum.from_phi will
+        add an extrap_x attribute to resulting Spectra, equal to the x-value
+        of the first non-zero grid point. An explicit list is useful if you
+        want to override this behavior for testing.
 
     Returns a new function whose last argument is a list of numbers of grid
     points and that returns a result extrapolated to infinitely many grid
@@ -263,7 +260,11 @@ def make_extrap_func(func, extrap_x_l=None):
     x_l_from_results = (extrap_x_l is None)
 
     def extrap_func(*args, **kwargs):
-        other_args, pts_l = args[:-1], args[-1]
+        if 'pts' not in kwargs:
+            other_args, pts_l = args[:-1], args[-1]
+        else:
+            other_args = args
+            pts_l = kwargs['pts']
 
         result_l = []
         if x_l_from_results:
@@ -271,10 +272,14 @@ def make_extrap_func(func, extrap_x_l=None):
         else:
             x_l = extrap_x_l
 
+        if numpy.isscalar(pts_l):
+            pts_l = [pts_l]
+
         for pts in pts_l:
             # Some python vodoo here to call the original function with the
             # proper arguments.
-            result = func(*(other_args + (pts,)), **kwargs)
+            kwargs['pts'] = pts
+            result = func(*other_args, **kwargs)
             result_l.append(result)
             if x_l_from_results:
                 try:
@@ -299,6 +304,9 @@ def make_extrap_func(func, extrap_x_l=None):
             raise ValueError('Number of calculations to use for extrapolation '
                              'must be between 1 and 6')
         return ex_result
+
+    extrap_func.func_name = func.func_name
+    extrap_func.func_doc = func.func_doc
 
     return extrap_func
 
