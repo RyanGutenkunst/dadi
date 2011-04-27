@@ -57,7 +57,7 @@ void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
             compute_delj(dx, MInt, VInt, L, delj, use_delj_trick);
             compute_abc_nobc(dx, dfactor, delj, MInt, V, dt, L, a, b, c);
             for(ii = 0; ii < L; ii++)
-                r[ii] = phi[ii*L*M + jj*M + kk]/dt;
+                r[ii] = phi[ii*M*N + jj*N + kk]/dt;
 
             if((jj==0) && (kk==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
@@ -66,7 +66,7 @@ void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
 
             tridiag_premalloc(a, b, c, r, temp, L);
             for(ii = 0; ii < L; ii++)
-                phi[ii*L*M + jj*M + kk] = temp[ii];
+                phi[ii*M*N + jj*N + kk] = temp[ii];
         }
     }
     tridiag_free();
@@ -133,7 +133,7 @@ void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
             compute_delj(dy, MInt, VInt, M, delj, use_delj_trick);
             compute_abc_nobc(dy, dfactor, delj, MInt, V, dt, M, a, b, c);
             for(jj = 0; jj < M; jj++)
-                r[jj] = phi[ii*L*M + jj*M + kk]/dt;
+                r[jj] = phi[ii*M*N + jj*N + kk]/dt;
 
             if((ii==0) && (kk==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
@@ -142,7 +142,7 @@ void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
 
             tridiag_premalloc(a, b, c, r, temp, M);
             for(jj = 0; jj < M; jj++)
-                phi[ii*L*M + jj*M + kk] = temp[jj];
+                phi[ii*M*N + jj*N + kk] = temp[jj];
         }
     }
     tridiag_free();
@@ -209,14 +209,14 @@ void implicit_3Dz(double *phi, double *xx, double *yy, double *zz,
             compute_delj(dz, MInt, VInt, N, delj, use_delj_trick);
             compute_abc_nobc(dz, dfactor, delj, MInt, V, dt, N, a, b, c);
             for(kk = 0; kk < N; kk++)
-                r[kk] = phi[ii*L*M + jj*M + kk]/dt;
+                r[kk] = phi[ii*M*N + jj*N + kk]/dt;
 
             if((ii==0) && (jj==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu3 - Mfirst)*2./dz[0];
             if((ii==L-1) && (jj==M-1) && (Mlast >= 0))
                 b[N-1] += -(-0.5/nu3 - Mlast)*2./dz[N-2];
 
-            tridiag_premalloc(a, b, c, r, &phi[ii*L*M + jj*M], N);
+            tridiag_premalloc(a, b, c, r, &phi[ii*M*N + jj*N], N);
         }
     }
     tridiag_free();
@@ -250,7 +250,7 @@ void implicit_precalc_3Dx(double *phi, double *ax, double *bx, double *cx,
     for(jj = 0; jj < M; jj++){
         for(kk = 0; kk < N; kk++){
             for(ii = 0; ii < L; ii++){
-                index = ii*L*M + jj*M + kk;
+                index = ii*M*N + jj*N + kk;
                 a[ii] = ax[index];
                 b[ii] = bx[index] + 1/dt;
                 c[ii] = cx[index];
@@ -259,7 +259,7 @@ void implicit_precalc_3Dx(double *phi, double *ax, double *bx, double *cx,
 
             tridiag_premalloc(a, b, c, r, new_row, L);
             for(ii = 0; ii < L; ii++)
-                phi[ii*L*M + jj*M + kk] = new_row[ii];
+                phi[ii*M*N + jj*N + kk] = new_row[ii];
         }
     }
     tridiag_free();
@@ -286,7 +286,7 @@ void implicit_precalc_3Dy(double *phi, double *ay, double *by, double *cy,
     for(ii = 0; ii < L; ii++){
         for(kk = 0; kk < N; kk++){
             for(jj = 0; jj < M; jj++){
-                index = ii*L*M + jj*M + kk;
+                index = ii*M*N + jj*N + kk;
                 a[jj] = ay[index];
                 b[jj] = by[index] + 1/dt;
                 c[jj] = cy[index];
@@ -295,7 +295,7 @@ void implicit_precalc_3Dy(double *phi, double *ay, double *by, double *cy,
 
             tridiag_premalloc(a, b, c, r, new_row, M);
             for(jj = 0; jj < M; jj++)
-                phi[ii*L*M + jj*M + kk] = new_row[jj];
+                phi[ii*M*N + jj*N + kk] = new_row[jj];
         }
     }
     tridiag_free();
@@ -322,14 +322,14 @@ void implicit_precalc_3Dz(double *phi, double *az, double *bz, double *cz,
     for(ii = 0; ii < L; ii++){
         for(jj = 0; jj < M; jj++){
             for(kk = 0; kk < N; kk++){
-                index = ii*L*M + jj*M + kk;
+                index = ii*M*N + jj*N + kk;
                 a[kk] = az[index];
                 b[kk] = bz[index] + 1/dt;
                 c[kk] = cz[index];
                 r[kk] = 1/dt * phi[index];
             }
 
-            tridiag_premalloc(a, b, c, r, &phi[ii*L*M + jj*M], N);
+            tridiag_premalloc(a, b, c, r, &phi[ii*M*N + jj*N], N);
         }
     }
     tridiag_free();

@@ -9,8 +9,8 @@
  *
  * Given that, f2py passes 2D arrays in as flat 1D arrays. As a result,
  * indexing is more complicated.  If we have an array arr[L][M],
- * then arr[ii][jj] = arr[ii*L + jj]. More subtly, if we want to pull
- * out row ii to pass to another function, the notation is &arr[ii*L].
+ * then arr[ii][jj] = arr[ii*M + jj]. More subtly, if we want to pull
+ * out row ii to pass to another function, the notation is &arr[ii*M].
  *
  * To see versions of these functions that use variable-length arrays (and
  * thus are easier to understand, look prior to SVN revision 351.
@@ -61,7 +61,7 @@ void implicit_2Dx(double *phi, double *xx, double *yy,
         compute_delj(dx, MInt, VInt, L, delj, use_delj_trick);
         compute_abc_nobc(dx, dfactor, delj, MInt, V, dt, L, a, b, c);
         for(ii = 0; ii < L; ii++)
-            r[ii] = phi[ii*L + jj]/dt;
+            r[ii] = phi[ii*M + jj]/dt;
 
         if((jj==0) && (Mfirst <= 0))
             b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
@@ -70,7 +70,7 @@ void implicit_2Dx(double *phi, double *xx, double *yy,
 
         tridiag_premalloc(a, b, c, r, temp, L);
         for(ii = 0; ii < L; ii++)
-            phi[ii*L + jj] = temp[ii];
+            phi[ii*M + jj] = temp[ii];
     }
     tridiag_free();
 
@@ -133,14 +133,14 @@ void implicit_2Dy(double *phi, double *xx, double *yy,
         compute_delj(dy, MInt, VInt, M, delj, use_delj_trick);
         compute_abc_nobc(dy, dfactor, delj, MInt, V, dt, M, a, b, c);
         for(jj = 0; jj < M; jj++)
-            r[jj] = phi[ii*L + jj]/dt;
+            r[jj] = phi[ii*M + jj]/dt;
 
         if((ii==0) && (Mfirst <= 0))
             b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
         if((ii==L-1) && (Mlast >= 0))
             b[M-1] += -(-0.5/nu2 - Mlast)*2./dy[M-2];
 
-        tridiag_premalloc(a, b, c, r, &phi[ii*L], M);
+        tridiag_premalloc(a, b, c, r, &phi[ii*M], M);
     }
     tridiag_free();
 
@@ -173,15 +173,15 @@ void implicit_precalc_2Dx(double *phi, double *ax, double *bx, double *cx,
     tridiag_malloc(L);
     for(jj=0; jj < M; jj++){
         for(ii = 0; ii < L; ii++){
-            a[ii] = ax[ii*L + jj];
-            b[ii] = bx[ii*L + jj] + 1/dt;
-            c[ii] = cx[ii*L + jj];
-            r[ii] = 1/dt * phi[ii*L + jj];
+            a[ii] = ax[ii*M + jj];
+            b[ii] = bx[ii*M + jj] + 1/dt;
+            c[ii] = cx[ii*M + jj];
+            r[ii] = 1/dt * phi[ii*M + jj];
         }
 
         tridiag_premalloc(a, b, c, r, temp, L);
         for(ii = 0; ii < L; ii++)
-            phi[ii*L + jj] = temp[ii];
+            phi[ii*M + jj] = temp[ii];
     }
     tridiag_free();
 
@@ -202,11 +202,11 @@ void implicit_precalc_2Dy(double *phi, double *ay, double *by, double *cy,
     tridiag_malloc(M);
     for(ii = 0; ii < L; ii++){
         for(jj = 0; jj < M; jj++){
-            b[jj] = by[ii*L + jj] + 1/dt;
-            r[jj] = 1/dt * phi[ii*L + jj];
+            b[jj] = by[ii*M + jj] + 1/dt;
+            r[jj] = 1/dt * phi[ii*M + jj];
         }
 
-        tridiag_premalloc(&ay[ii*L], b, &cy[ii*L], r, &phi[ii*L], M);
+        tridiag_premalloc(&ay[ii*M], b, &cy[ii*M], r, &phi[ii*M], M);
     }
     tridiag_free();
 
