@@ -35,3 +35,10 @@ try:
     __SVNVERSION__ = file(_svn_file).read().strip()
 except:
     __SVNVERSION__ = 'Unknown'
+
+# When doing arithmetic with Spectrum objects (which are masked arrays), we
+# often have masked values which generate annoying arithmetic warnings. Here
+# we tell numpy to ignore such warnings. This puts greater onus on the user to
+# check results, but for our use case I think it's the better default.
+import numpy
+numpy.seterr(all='ignore')
