@@ -45,15 +45,14 @@ int_c = core.Extension(name = 'dadi.integration_c',
 
 # If we're building a distribution, try to update svnversion. Note that this
 # fails silently.
-for arg in os.sys.argv:    
-    if arg.count('sdist') or arg.count('bdist'):
-        os.system("svn up")
-        os.system("svn info > dadi/svnversion")
+if any(arg.count('dist') for arg in os.sys.argv):    
+    os.system("svn up")
+    os.system("svn info > dadi/svnversion")
 
 core.setup(name='dadi',
-           version='1.5.2',
+           version='1.5.3',
            author='Ryan Gutenkunst',
-           author_email='ryan@gutenkunst.org',
+           author_email='rgutenk@email.arizona.edu',
            url='http://dadi.googlecode.com',
            ext_modules = [tridiag, int_c],
            scripts=['scripts/ms_jsfs.py'],
