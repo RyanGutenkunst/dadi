@@ -135,7 +135,9 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
                        pop_ids=None, extend='neither', colorbar=True):
     """
-    Logarithmic heatmap of single 2d SFS.
+    Heatmap of single 2d SFS. 
+    
+    If vmax is greater than a factor of 10, plot on log scale.
 
     sfs: SFS to plot
     vmin: Values in sfs below vmin are masked in plot.
@@ -155,16 +157,19 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
         vmax = sfs.max()
 
     pylab.cm.hsv.set_under('w')
+    if vmax / vmin > 10:
+        # Under matplotlib 1.0.1, default LogFormatter omits some tick lines.
+        # This works more consistently.
+        norm = matplotlib.colors.LogNorm(vmin=vmin*(1-1e-3), vmax=vmax*(1+1e-3))
+        format = matplotlib.ticker.LogFormatterMathtext()
+    else:
+        norm = matplotlib.colors.Normalize(vmin=vmin*(1-1e-3), 
+                                           vmax=vmax*(1+1e-3))
+        format = None
     mappable=ax.pcolor(numpy.ma.masked_where(sfs<vmin, sfs), 
                        cmap=pylab.cm.hsv, shading='flat',
-                       norm = matplotlib.colors.LogNorm(vmin=vmin*(1-1e-3),
-                                                        vmax=vmax))
-    #cbticks = [numpy.round(vmin+0.05,1), numpy.round(vmax-0.05, 1)]
-
-    # This can be passed to colorbar (format=format) to make ticks be 10^blah.
-    # But I don't think it looks particularly nice.
-    format = matplotlib.ticker.FormatStrFormatter('$10^{%.1f}$')
-    ax.figure.colorbar(mappable, extend=extend)
+                       norm=norm)
+    ax.figure.colorbar(mappable, extend=extend, format=format)
     if not colorbar:
         del ax.figure.axes[-1]
 
