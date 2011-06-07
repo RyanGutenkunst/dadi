@@ -105,7 +105,10 @@ def _compute_dt(dx, nu, ms, gamma, h):
     maxVM = max(0.25/nu, sum(ms),\
                 abs(gamma) * 2*max(numpy.abs(h + (1-2*h)*0.5) * 0.5*(1-0.5),
                                    numpy.abs(h + (1-2*h)*0.25) * 0.25*(1-0.25)))
-    dt = timescale_factor / maxVM
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
     if dt == 0:
         raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
                          'gamma=%f, h=%f.' % (nu, str(ms), gamma, h))
