@@ -1298,14 +1298,14 @@ class Spectrum(numpy.ma.masked_array):
                                                   het_ascertained)
         elif phi.ndim == 3:
             if not het_ascertained and not force_direct:
+                fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
+                                                    xxs[0], xxs[1], xxs[2], 
+                                                    phi, mask_corners)
+            else:
                 fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                                   xxs[0], xxs[1], xxs[2], 
                                                   phi, mask_corners, 
                                                   het_ascertained)
-            else:
-                fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
-                                                    xxs[0], xxs[1], xxs[2], 
-                                                    phi, mask_corners)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
         fs.pop_ids = pop_ids
