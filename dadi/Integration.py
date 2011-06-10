@@ -60,27 +60,32 @@ def _inject_mutations_1D(phi, dt, xx, theta0):
     """
     phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
     return phi
-def _inject_mutations_2D(phi, dt, xx, yy, theta0):
+def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2):
     """
     Inject novel mutations for a timestep.
     """
     # Population 1
-    phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
+    if not frozen1:
+        phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
     # Population 2
-    phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+    if not frozen2:
+        phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
     return phi
-def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0):
+def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2, frozen3):
     """
     Inject novel mutations for a timestep.
     """
     # Population 1
     # Normalization based on the multi-dimensional trapezoid rule is 
     # implemented                      ************** here ***************
-    phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+    if not frozen1:
+        phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
     # Population 2
-    phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+    if not frozen2:
+        phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
     # Population 3
-    phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+    if not frozen3:
+        phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
     return phi
 
 def _compute_dt(dx, nu, ms, gamma, h):
@@ -114,7 +119,8 @@ def _compute_dt(dx, nu, ms, gamma, h):
                          'gamma=%f, h=%f.' % (nu, str(ms), gamma, h))
     return dt
 
-def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
+def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0, 
+            frozen=False):
     """
     Integrate a 1-dimensional phi foward.
 
@@ -130,7 +136,17 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
+
+    frozen: If True, population is 'frozen' so that it does not change.
+            In the one_pop case, this is equivalent to not running the
+            integration at all.
     """
+    phi = phi.copy()
+
+    # For a one population integration, freezing means just not integrating.
+    if frozen:
+        return phi
+
     if T - initial_t == 0:
         return phi
     elif T - initial_t < 0:
@@ -140,7 +156,8 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
 
     vars_to_check = (nu, gamma, h, theta0)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        return _one_pop_const_params(phi, xx, T, nu, gamma,h, theta0, initial_t)
+        return _one_pop_const_params(phi, xx, T, nu, gamma, h, theta0, 
+                                     initial_t)
 
     nu_f = Misc.ensure_1arg_func(nu)
     gamma_f = Misc.ensure_1arg_func(gamma)
@@ -177,7 +194,8 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0):
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
-             h1=0.5, h2=0.5, theta0=1, initial_t=0):
+             h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False, 
+             frozen2=False):
     """
     Integrate a 2-dimensional phi foward.
 
@@ -200,6 +218,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
     """
+    phi = phi.copy()
+
     if T - initial_t == 0:
         return phi
     elif T - initial_t < 0:
@@ -207,10 +227,15 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
                          'intial_time (%f). Integration cannot be run '
                          'backwards.' % (T, initial_t))
 
+    if (frozen1 or frozen2) and (m12 != 0 or m21 != 0):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21, 
-                                      gamma1, gamma2, h1, h2, theta0, initial_t)
+                                      gamma1, gamma2, h1, h2, theta0, initial_t,
+                                      frozen1, frozen2)
     yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -249,11 +274,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
 
-        _inject_mutations_2D(phi, this_dt, xx, yy, theta0)
-        phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
-                                 this_dt, use_delj_trick)
-        phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
-                                 this_dt, use_delj_trick)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2)
+        if not frozen1: 
+            phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
+                                     this_dt, use_delj_trick)
+        if not frozen2: 
+            phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
+                                     this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -261,7 +288,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
                gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
-               theta0=1, initial_t=0):
+               theta0=1, initial_t=0, frozen1=False, frozen2=False,
+               frozen3=False):
     """
     Integrate a 3-dimensional phi foward.
 
@@ -285,12 +313,21 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
     """
+    phi = phi.copy()
+
     if T - initial_t == 0:
         return phi
     elif T - initial_t < 0:
         raise ValueError('Final integration time T (%f) is less than '
                          'intial_time (%f). Integration cannot be run '
                          'backwards.' % (T, initial_t))
+
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 !=0 or m32 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
 
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
@@ -357,13 +394,17 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
 
-        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0)
-        phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
-                                 gamma1, h1, this_dt, use_delj_trick)
-        phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
-                                 gamma2, h2, this_dt, use_delj_trick)
-        phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
-                                 gamma3, h3, this_dt, use_delj_trick)
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
+                             frozen1, frozen2, frozen3)
+        if not frozen1:
+            phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
+                                     gamma1, h1, this_dt, use_delj_trick)
+        if not frozen2:
+            phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
+                                     gamma2, h2, this_dt, use_delj_trick)
+        if not frozen3:
+            phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+                                     gamma3, h3, this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -458,6 +499,7 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1,
     current_t = initial_t
     while current_t < T:    
         this_dt = min(dt, T - current_t)
+
         _inject_mutations_1D(phi, this_dt, xx, theta0)
         r = phi/this_dt
         phi = tridiag.tridiag(a, b+1/this_dt, c, r)
@@ -466,7 +508,7 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1,
 
 def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
                            gamma1=0, gamma2=0, h1=0.5, h2=0.5, theta0=1, 
-                           initial_t=0):
+                           initial_t=0, frozen1=False, frozen2=False):
     """
     Integrate two populations with constant parameters.
     """
@@ -528,9 +570,11 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     current_t = initial_t
     while current_t < T:    
         this_dt = min(dt, T - current_t)
-        _inject_mutations_2D(phi, this_dt, xx, yy, theta0)
-        phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
-        phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2)
+        if not frozen1:
+            phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
         current_t += this_dt
 
     return phi
@@ -538,7 +582,8 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
 def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1, 
                              m12=0, m13=0, m21=0, m23=0, m31=0, m32=0, 
                              gamma1=0, gamma2=0, gamma3=0, 
-                             h1=0.5, h2=0.5, h3=0.5, theta0=1, initial_t=0):
+                             h1=0.5, h2=0.5, h3=0.5, theta0=1, initial_t=0,
+                             frozen1=False, frozen2=False, frozen3=False):
     """
     Integrate three population with constant parameters.
     """
@@ -636,9 +681,13 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     current_t = initial_t
     while current_t < T:    
         this_dt = min(dt, T - current_t)
-        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0)
-        phi = int_c.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
-        phi = int_c.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
-        phi = int_c.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
+                             frozen1, frozen2, frozen3)
+        if not frozen1:
+            phi = int_c.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            phi = int_c.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
+        if not frozen3:
+            phi = int_c.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
         current_t += this_dt
     return phi
