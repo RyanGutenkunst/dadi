@@ -431,6 +431,14 @@ Derived pop 1 is thus the reference population for specifying all population siz
 When fixing $\theta$, every \py{Integration} function must be told what the reference $\theta$ is, using the option \py{theta0}.
 In addition, the methods for creating an initial $\phi$ distribution must be passed the appropriate value of $\theta$ using the \py{theta0} option.
 
+\subsection{Ancient sequences}\label{sec:ancient_sequences}
+
+If you have DNA samples from multiple timepoints, you can construct a frequency spectrum in which different axes correspond to samples from different timepoints.
+To support this in \dadi, the \py{Integration.one_pop}, \py{two_pops}, and \py{three_pops} support \py{freeze} arguments.
+When \py{True}, these arguments will ``freeze'' a particular population so that it no longer changes (although the relationship between SNPs in the frozen and unfrozen populations will change).
+Note that because time in \dadi models is in genetic units, you need to be careful in how you specify the time of collection of your frozen sample.
+In this case, you likely want to run a model that explicitly includes $\theta$ as a parameter (see Section~\ref{sec:fixed_theta}), so that you can convert from physical to genetic units within the model function.
+
 
 \begin{lstlisting}[caption={\textbf{Bottleneck:} At time \py{TF} + \py{TB} in the past, an equilibrium population goes through a bottleneck of depth \py{nuB}, recovering to relative size \py{nuF}.}, float, label={lst:bottleneck}]
 def bottleneck(params, ns, pts):

@@ -136,6 +136,19 @@ class FreezingTestCase(unittest.TestCase):
                               fs_decouple3.marginalize([2]), 
                               rtol=1e-1))
 
+    def test_2d_correctness(self):
+        """
+        Test marginal spectra from 3d freezing
+        """
+        xx = dadi.Numerics.default_grid(30)
+        phi = dadi.PhiManip.phi_1D(xx)
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+        phi = two_pops(phi, xx, T=0.1, nu2=0.3, gamma2=0.5, frozen1=True)
+        fs = dadi.Spectrum.from_phi(phi, [10,10], [xx,xx])
+
+        fs_stored = dadi.Spectrum.from_file('test_2D_frozen1.fs')
+        self.assert_(numpy.ma.allclose(fs, fs_stored, rtol=1e-2))
+
 suite = unittest.TestLoader().loadTestsFromTestCase(FreezingTestCase)
 
 if __name__ == '__main__':
