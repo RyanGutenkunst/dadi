@@ -296,34 +296,38 @@ def ll_per_bin(model, data, missing_model_cutoff=1e-6):
         model = model.fold()
 
     final_missing = None
+
     missing = logical_and(model < 0, logical_not(data.mask))
     missing_sum = data[missing].sum()
     data_sum = data.sum()
     if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         logger.warn('Model is < 0 where data is not masked.')
-        final_missing = missing
+        logger.warn('Number of affected entries is %i. Sum of data in those '
+                    'entries is %g:' % (missing.sum(), missing_sum))
+
     # If the data is 0, it's okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.
     missing = logical_and(model == 0, logical_and(data > 0, logical_not(data.mask)))
     missing_sum = data[missing].sum()
     if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         logger.warn('Model is 0 where data is neither masked nor 0.')
-        final_missing = missing
+        logger.warn('Number of affected entries is %i. Sum of data in those '
+                    'entries is %g:' % (missing.sum(), missing_sum))
+
     missing = numpy.logical_and(model.mask, numpy.logical_not(data.mask))
     missing_sum = data[missing].sum()
     if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         print missing_sum, data_sum
         logger.warn('Model is masked in some entries where data is not.')
-        final_missing = missing
+        logger.warn('Number of affected entries is %i. Sum of data in those '
+                    'entries is %g:' % (missing.sum(), missing_sum))
+
     missing = numpy.logical_and(numpy.isnan(model), numpy.logical_not(data.mask))
     missing_sum = data[missing].sum()
     if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
         logger.warn('Model is nan in some entries where data is not masked.')
-        final_missing = missing
-
-    if final_missing is not None:
         logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (final_missing.sum(), missing_sum))
+                    'entries is %g:' % (missing.sum(), missing_sum))
 
     return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
 
