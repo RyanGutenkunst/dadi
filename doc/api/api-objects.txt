@@ -126,6 +126,7 @@ dadi.PhiManip.phi_2D_to_3D_split_2	dadi.PhiManip-module.html#phi_2D_to_3D_split_
 dadi.PhiManip.phi_2D_admix_1_into_2	dadi.PhiManip-module.html#phi_2D_admix_1_into_2
 dadi.PhiManip.phi_1D_snm	dadi.PhiManip-module.html#phi_1D_snm
 dadi.PhiManip.phi_3D_admix_1_and_2_into_3	dadi.PhiManip-module.html#phi_3D_admix_1_and_2_into_3
+dadi.PhiManip.remove_pop	dadi.PhiManip-module.html#remove_pop
 dadi.PhiManip.phi_3D_admix_1_and_3_into_2	dadi.PhiManip-module.html#phi_3D_admix_1_and_3_into_2
 dadi.Plotting	dadi.Plotting-module.html
 dadi.Plotting.plot_1d_comp_Poisson	dadi.Plotting-module.html#plot_1d_comp_Poisson
@@ -155,6 +156,8 @@ dadi.RunInParallel.currdir	dadi.RunInParallel-module.html#currdir
 dadi.RunInParallel.my_rank	dadi.RunInParallel-module.html#my_rank
 dadi.RunInParallel.logger	dadi.RunInParallel-module.html#logger
 dadi.Spectrum_mod	dadi.Spectrum_mod-module.html
+dadi.Spectrum_mod.Spectrum_unpickler	dadi.Spectrum_mod-module.html#Spectrum_unpickler
+dadi.Spectrum_mod.Spectrum_pickler	dadi.Spectrum_mod-module.html#Spectrum_pickler
 dadi.Spectrum_mod.logger	dadi.Spectrum_mod-module.html#logger
 dadi.integration_c	dadi.integration_c-module.html
 dadi.integration_c.implicit_3Dz	dadi.integration_c-module.html#implicit_3Dz
@@ -169,9 +172,6 @@ dadi.integration_c.implicit_2Dy	dadi.integration_c-module.html#implicit_2Dy
 dadi.integration_c.implicit_precalc_3Dz	dadi.integration_c-module.html#implicit_precalc_3Dz
 dadi.integration_c.implicit_precalc_3Dx	dadi.integration_c-module.html#implicit_precalc_3Dx
 dadi.integration_c.implicit_precalc_3Dy	dadi.integration_c-module.html#implicit_precalc_3Dy
-dadi.lbfgsb	dadi.lbfgsb-module.html
-dadi.lbfgsb.fmin_l_bfgs_b	dadi.lbfgsb-module.html#fmin_l_bfgs_b
-dadi.lbfgsb.__package__	dadi.lbfgsb-module.html#__package__
 dadi.tridiag	dadi.tridiag-module.html
 dadi.tridiag.tridiag	dadi.tridiag-module.html#tridiag
 dadi.tridiag.tridiag_fl	dadi.tridiag-module.html#tridiag_fl

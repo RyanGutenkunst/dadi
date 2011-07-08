@@ -129,7 +129,9 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">dt</span>,
         <span class="summary-sig-arg">xx</span>,
         <span class="summary-sig-arg">yy</span>,
-        <span class="summary-sig-arg">theta0</span>)</span><br />
+        <span class="summary-sig-arg">theta0</span>,
+        <span class="summary-sig-arg">frozen1</span>,
+        <span class="summary-sig-arg">frozen2</span>)</span><br />
       Inject novel mutations for a timestep.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_inject_mutations_2D">source&nbsp;code</a></span>
@@ -151,7 +153,10 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">xx</span>,
         <span class="summary-sig-arg">yy</span>,
         <span class="summary-sig-arg">zz</span>,
-        <span class="summary-sig-arg">theta0</span>)</span><br />
+        <span class="summary-sig-arg">theta0</span>,
+        <span class="summary-sig-arg">frozen1</span>,
+        <span class="summary-sig-arg">frozen2</span>,
+        <span class="summary-sig-arg">frozen3</span>)</span><br />
       Inject novel mutations for a timestep.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_inject_mutations_3D">source&nbsp;code</a></span>
@@ -196,7 +201,8 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
-        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">frozen</span>=<span class="summary-sig-default">False</span>)</span><br />
       Integrate a 1-dimensional phi foward.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#one_pop">source&nbsp;code</a></span>
@@ -225,7 +231,9 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">h1</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
-        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">frozen1</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">frozen2</span>=<span class="summary-sig-default">False</span>)</span><br />
       Integrate a 2-dimensional phi foward.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#two_pops">source&nbsp;code</a></span>
@@ -261,7 +269,10 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">h3</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
-        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">frozen1</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">frozen2</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">frozen3</span>=<span class="summary-sig-default">False</span>)</span><br />
       Integrate a 3-dimensional phi foward.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#three_pops">source&nbsp;code</a></span>
@@ -428,7 +439,9 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">h1</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
-        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">frozen1</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">frozen2</span>=<span class="summary-sig-default">False</span>)</span><br />
       Integrate two populations with constant parameters.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_two_pops_const_params">source&nbsp;code</a></span>
@@ -464,7 +477,10 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">h2</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">h3</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
-        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">frozen1</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">frozen2</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">frozen3</span>=<span class="summary-sig-default">False</span>)</span><br />
       Integrate three population with constant parameters.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_three_pops_const_params">source&nbsp;code</a></span>
@@ -632,7 +648,8 @@ multiplying the eqn through by some other 2N...)
         <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
-        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
+        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">frozen</span>=<span class="sig-default">False</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Integration-pysrc.html#one_pop">source&nbsp;code</a></span>&nbsp;
@@ -655,6 +672,10 @@ theta0: Propotional to ancestral size. Typically constant.
 T: Time at which to halt integration
 initial_t: Time at which to start integration. (Note that this only matters
            if one of the demographic parameters is a function of time.)
+
+frozen: If True, population is 'frozen' so that it does not change.
+        In the one_pop case, this is equivalent to not running the
+        integration at all.
 
 </pre>
   <dl class="fields">
@@ -680,7 +701,9 @@ initial_t: Time at which to start integration. (Note that this only matters
         <span class="sig-arg">h1</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">h2</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
-        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
+        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">frozen1</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">frozen2</span>=<span class="sig-default">False</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Integration-pysrc.html#two_pops">source&nbsp;code</a></span>&nbsp;
@@ -741,7 +764,10 @@ Note: Generalizing to different grids in different phi directions is
         <span class="sig-arg">h2</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">h3</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
-        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
+        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">frozen1</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">frozen2</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">frozen3</span>=<span class="sig-default">False</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Integration-pysrc.html#three_pops">source&nbsp;code</a></span>&nbsp;
@@ -867,7 +893,7 @@ relying on C. The nice thing is that the Python is much faster to debug.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Oct  4 16:18:37 2010</a>
+    3.0.1 on Fri Jul  8 14:31:17 2011</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

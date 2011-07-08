@@ -97,6 +97,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">flush_delay</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
       Objective function for optimization.</td>
@@ -148,6 +149,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
       Optimize log(params) to fit model to data using the BFGS method.</td>
@@ -180,6 +182,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">100000.0</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
       Optimize log(params) to fit model to data using the L-BFGS-B method.</td>
@@ -393,6 +396,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using Nelder-Mead.</td>
           <td align="right" valign="top">
@@ -424,6 +428,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
       Optimize params to fit model to data using the BFGS method.</td>
@@ -456,6 +461,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">maxiter</span>=<span class="summary-sig-default">100000.0</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
       Optimize log(params) to fit model to data using the L-BFGS-B method.</td>
@@ -519,6 +525,7 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">multinom</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize params to fit model to data using brute force search over a grid.</td>
           <td align="right" valign="top">
@@ -623,6 +630,7 @@ Comparison and optimization of model spectra to data.
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
   </h3>
@@ -666,6 +674,14 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+           Using func_args.
+           For example, you could define your model function as
+           def func((p1,p2), ns, f1, f2, pts):
+               ....
+           If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+           would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+           argument).
+func_kwargs: Additional keyword arguments to model_func.
 fixed_params: If not None, should be a list used to fix model parameters at
               particular values. For example, if the model parameters
               are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -674,6 +690,12 @@ fixed_params: If not None, should be a list used to fix model parameters at
               parameters. Optimization will fail if the fixed values
               lie outside their bounds. A full-length p0 should be passed
               in; values corresponding to fixed parameters are ignored.
+              For example, suppose your model function is 
+              def func((p1,f1,p2,f2), ns, pts):
+                  ....
+              If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+              you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+              the func_args argument).
 ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
           too large. (This appears to be a flaw in the scipy
           implementation.) To overcome this, pass ll_scale &gt; 1, which will
@@ -707,6 +729,7 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
         <span class="sig-arg">maxiter</span>=<span class="sig-default">100000.0</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
   </h3>
@@ -720,9 +743,10 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
 Optimize log(params) to fit model to data using the L-BFGS-B method.
 
 This optimization method works well when we start reasonably close to the
-optimum. It is best at burrowing down a single minimum. This method is better than
-optimize_log if the optimum lies at one or more of the parameter bounds. However,
-if your optimum is not on the bounds, this method may be much slower.
+optimum. It is best at burrowing down a single minimum. This method is
+better than optimize_log if the optimum lies at one or more of the
+parameter bounds. However, if your optimum is not on the bounds, this
+method may be much slower.
 
 Because this works in log(params), it cannot explore values of params &lt; 0.
 It should also perform better when parameters range over scales.
@@ -754,6 +778,7 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
 fixed_params: If not None, should be a list used to fix model parameters at
               particular values. For example, if the model parameters
               are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -762,6 +787,8 @@ fixed_params: If not None, should be a list used to fix model parameters at
               parameters. Optimization will fail if the fixed values
               lie outside their bounds. A full-length p0 should be passed
               in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and 
+ fixed_params usage.)
 ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
           too large. (This appears to be a flaw in the scipy
           implementation.) To overcome this, pass ll_scale &gt; 1, which will
@@ -1075,6 +1102,7 @@ model nor data.
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -1117,6 +1145,7 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
 fixed_params: If not None, should be a list used to fix model parameters at
               particular values. For example, if the model parameters
               are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -1125,6 +1154,8 @@ fixed_params: If not None, should be a list used to fix model parameters at
               parameters. Optimization will fail if the fixed values
               lie outside their bounds. A full-length p0 should be passed
               in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and 
+ fixed_params usage.)
 
 </pre>
   <dl class="fields">
@@ -1152,6 +1183,7 @@ fixed_params: If not None, should be a list used to fix model parameters at
         <span class="sig-arg">maxiter</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
   </h3>
@@ -1192,6 +1224,7 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
 fixed_params: If not None, should be a list used to fix model parameters at
               particular values. For example, if the model parameters
               are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -1200,6 +1233,8 @@ fixed_params: If not None, should be a list used to fix model parameters at
               parameters. Optimization will fail if the fixed values
               lie outside their bounds. A full-length p0 should be passed
               in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and 
+ fixed_params usage.)
 ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
           too large. (This appears to be a flaw in the scipy
           implementation.) To overcome this, pass ll_scale &gt; 1, which will
@@ -1233,6 +1268,7 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
         <span class="sig-arg">maxiter</span>=<span class="sig-default">100000.0</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
   </h3>
@@ -1246,9 +1282,10 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
 Optimize log(params) to fit model to data using the L-BFGS-B method.
 
 This optimization method works well when we start reasonably close to the
-optimum. It is best at burrowing down a single minimum. This method is better than
-optimize_log if the optimum lies at one or more of the parameter bounds. However,
-if your optimum is not on the bounds, this method may be much slower.
+optimum. It is best at burrowing down a single minimum. This method is
+better than optimize_log if the optimum lies at one or more of the
+parameter bounds. However, if your optimum is not on the bounds, this
+method may be much slower.
 
 p0: Initial parameters.
 data: Spectrum with data.
@@ -1277,6 +1314,7 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
 fixed_params: If not None, should be a list used to fix model parameters at
               particular values. For example, if the model parameters
               are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -1285,6 +1323,8 @@ fixed_params: If not None, should be a list used to fix model parameters at
               parameters. Optimization will fail if the fixed values
               lie outside their bounds. A full-length p0 should be passed
               in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and 
+ fixed_params usage.)
 ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
           too large. (This appears to be a flaw in the scipy
           implementation.) To overcome this, pass ll_scale &gt; 1, which will
@@ -1322,6 +1362,7 @@ Nocedal. The algorithm is described in:
         <span class="sig-arg">multinom</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
+        <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -1352,6 +1393,7 @@ func_args: Additional arguments to model_func. It is assumed that
            optimize, that its second argument is an array of sample sizes
            for the sfs, and that its last argument is the list of grid
            points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
 fixed_params: If not None, should be a list used to fix model parameters at
               particular values. For example, if the model parameters
               are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
@@ -1360,6 +1402,8 @@ fixed_params: If not None, should be a list used to fix model parameters at
               parameters. Optimization will fail if the fixed values
               lie outside their bounds. A full-length p0 should be passed
               in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and 
+ fixed_params usage.)
 
 Search grids are specified using a dadi.Inference.index_exp object (which
 is an alias for numpy.index_exp). The grid is specified by passing a range
@@ -1405,7 +1449,7 @@ parameter values.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Mon Oct  4 16:18:37 2010</a>
+    3.0.1 on Fri Jul  8 14:31:17 2011</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
