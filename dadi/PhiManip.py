@@ -48,7 +48,12 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5,
         ints[ii] = val
 
     phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
-    phi *= 1./(xx*(1-xx))
+    # Protect from division by zero errors
+    if xx[0] == 0 and xx[-1] == 1:
+        phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    else:
+        phi *= 1./(xx*(1-xx))
+
     if xx[0] == 0:
         # Technically, phi diverges at 0. This fixes lets us do numerics
         # sensibly.
@@ -83,11 +88,20 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None):
         return phi_1D_snm(xx, nu, theta0)
 
     exp = numpy.exp
-    if gamma > -300:
-        phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+    # Protect from warnings on divisino by zero
+    if xx[0] == 0 and xx[-1] == 1:
+        phi = 0*xx
+        if gamma > -300:
+            phi[1:-1] = 1./(xx[1:-1]*(1-xx[1:-1]))\
+                    * (1-exp(-2*gamma*(1-xx[1:-1])))/(1-exp(-2*gamma))
+        else:
+            # Avoid overflow issues for very negative gammas
+            phi[1:-1] = 1./(xx[1:-1]*(1-xx[1:-1])) * exp(2*gamma*xx[1:-1])
     else:
-        # Avoid overflow issues for very negative gammas
-        phi = 1./(xx*(1-xx)) * exp(2*gamma*xx)
+        if gamma > -300:
+            phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+        else:
+            phi = 1./(xx*(1-xx)) * exp(2*gamma*xx)
 
     if xx[0] == 0:
         phi[0] = phi[1]
@@ -115,9 +129,13 @@ def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None):
         raise ValueError('The parameter theta has been deprecated in favor of '
                          'parameters nu and theta0, for consistency with the '
                          'Integration functions.')
-    phi = nu*theta0/xx
+    # Protect from division by zero errors
     if xx[0] == 0:
+        phi = 0*xx
+        phi[1:] = nu*theta0/xx[1:]
         phi[0] = phi[1]
+    else:
+        phi = nu*theta0/xx
     return phi
 
 def phi_1D_to_2D(xx, phi_1D):
