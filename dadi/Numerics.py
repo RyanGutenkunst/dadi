@@ -2,8 +2,8 @@
 Numerically useful functions, including extrapolation and default grid.
 """
 
+import functools, os
 import numpy
-import os
 from scipy import comb
 from scipy.special import gammaln
 
@@ -239,7 +239,7 @@ def trapz(yy, xx=None, dx=None, axis=-1):
 
     return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)
 
-def make_extrap_func(func, extrap_x_l=None):
+def make_extrap_func(func, extrap_x_l=None, extrap_log=False):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
@@ -260,32 +260,63 @@ def make_extrap_func(func, extrap_x_l=None):
     x_l_from_results = (extrap_x_l is None)
 
     def extrap_func(*args, **kwargs):
+        # Separate pts (or pts_l) from arguments
         if 'pts' not in kwargs:
             other_args, pts_l = args[:-1], args[-1]
         else:
             other_args = args
             pts_l = kwargs['pts']
 
-        result_l = []
-        if x_l_from_results:
-            x_l = []
+        if 'no_extrap' in kwargs:
+            no_extrap = True
+            del kwargs['no_extrap']
         else:
-            x_l = extrap_x_l
+            no_extrap = False
 
         if numpy.isscalar(pts_l):
             pts_l = [pts_l]
 
-        for pts in pts_l:
-            # Some python vodoo here to call the original function with the
-            # proper arguments.
-            kwargs['pts'] = pts
-            result = func(*other_args, **kwargs)
-            result_l.append(result)
-            if x_l_from_results:
-                try:
-                    x_l.append(result.extrap_x)
-                except AttributeError:
-                    raise ValueError("Extrapolation function error: No explicit extrapolation x_l provided, and results do not have 'extrap_x' attributes. If this is an FS extrapolation, check your from_phi method.")
+        # Create a sub-function that fixes all other arguments and only
+        # takes in pts.
+        partial_func = functools.partial(func, *other_args, **kwargs)
+
+        ##
+        ## The commented-out code implements distribution of fs calculations
+        ## among multiple processors. Unfortunately, it doesn't work with
+        ## iPython, because pickling functions is very fragile in the
+        ## interactive interpreter. If we had some sort of data structure for
+        ## defining models, then this would be much easier to implement. Note
+        ## that there might still be issues on Windows systems, because of its
+        ## poor-man's version of fork().
+        ##
+        #import cPickle, multiprocessing
+        #try:
+        #    # Test whether sub-function is picklable. If not, pool.map will
+        #    # hang.
+        #    cPickle.dumps(partial_func)
+        #    pool = multiprocessing.Pool()
+        #    result_l = pool.map(partial_func, pts_l)
+        #    pool.close()
+        #except (cPickle.PicklingError, TypeError):
+        #    print('Function passed to extrap func must be picklable for '
+        #          'multi-processor executation.')
+        #    import sys
+        #    sys.exit()
+
+        result_l = map(partial_func, pts_l)
+        if no_extrap:
+            return result_l
+
+        if x_l_from_results:
+            try:
+                x_l = [r.extrap_x for r in result_l]
+            except AttributeError:
+                raise ValueError("Extrapolation function error: No explicit extrapolation x_l provided, and results do not have 'extrap_x' attributes. If this is an FS extrapolation, check your from_phi method.")
+        else:
+            x_l = extrap_x_l
+
+        if extrap_log:
+            result_l = [numpy.log(r) for r in result_l]
 
         # Extrapolate
         if len(pts_l) == 1:
@@ -303,6 +334,10 @@ def make_extrap_func(func, extrap_x_l=None):
         else:
             raise ValueError('Number of calculations to use for extrapolation '
                              'must be between 1 and 6')
+
+        if extrap_log:
+            ex_result = numpy.exp(ex_result)
+
         return ex_result
 
     extrap_func.func_name = func.func_name
@@ -332,12 +367,7 @@ def make_extrap_log_func(func, extrap_x_l=None):
     points and that returns a result extrapolated to infinitely many grid
     points.
     """
-    def logfunc(*args, **kwargs):
-        return numpy.log(func(*args, **kwargs))
-    exlog_func = make_extrap_func(logfunc, extrap_x_l=extrap_x_l)
-    def ex_func(*args, **kwargs):
-        return numpy.exp(exlog_func(*args, **kwargs))
-    return ex_func
+    return make_extrap_func(func, extrap_x_l=extrap_x_l, extrap_log=True)
 
 _projection_cache = {}
 def _lncomb(N,k):
