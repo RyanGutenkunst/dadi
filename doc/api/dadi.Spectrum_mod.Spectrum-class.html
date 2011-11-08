@@ -762,8 +762,7 @@ chromosomes in the population.</td>
           <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#_from_phi_1D_direct" class="summary-sig-name" onclick="show_private();">_from_phi_1D_direct</a>(<span class="summary-sig-arg">n</span>,
         <span class="summary-sig-arg">xx</span>,
         <span class="summary-sig-arg">phi</span>,
-        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_1D_direct">source&nbsp;code</a></span>
@@ -806,8 +805,8 @@ chromosomes in the population.</td>
         <span class="summary-sig-arg">xx</span>,
         <span class="summary-sig-arg">yy</span>,
         <span class="summary-sig-arg">phi</span>,
-        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">admix_props</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_2D_direct">source&nbsp;code</a></span>
@@ -854,7 +853,7 @@ chromosomes in the population.</td>
         <span class="summary-sig-arg">zz</span>,
         <span class="summary-sig-arg">phi</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">admix_props</span>=<span class="summary-sig-default">None</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum._from_phi_3D_direct">source&nbsp;code</a></span>
@@ -899,8 +898,8 @@ chromosomes in the population.</td>
         <span class="summary-sig-arg">ns</span>,
         <span class="summary-sig-arg">xxs</span>,
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
-        <span class="summary-sig-arg">het_ascertained</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">admix_props</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">force_direct</span>=<span class="summary-sig-default">False</span>)</span><br />
       Compute sample Spectrum from population frequency distribution phi.</td>
           <td align="right" valign="top">
@@ -1567,8 +1566,7 @@ Following Gillespie &quot;Population Genetics: A Concise Guide&quot; pg. 45
   <h3 class="epydoc"><span class="sig"><span class="sig-name">_from_phi_1D_direct</span>(<span class="sig-arg">n</span>,
         <span class="sig-arg">xx</span>,
         <span class="sig-arg">phi</span>,
-        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -1636,8 +1634,8 @@ divergent: If True, the interval from xx[0] to xx[1] is modeled as
         <span class="sig-arg">xx</span>,
         <span class="sig-arg">yy</span>,
         <span class="sig-arg">phi</span>,
-        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">admix_props</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -1705,7 +1703,7 @@ See from_phi for explanation of arguments.
         <span class="sig-arg">zz</span>,
         <span class="sig-arg">phi</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">admix_props</span>=<span class="sig-default">None</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -1771,8 +1769,8 @@ See from_phi for explanation of arguments.
         <span class="sig-arg">ns</span>,
         <span class="sig-arg">xxs</span>,
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
-        <span class="sig-arg">het_ascertained</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">admix_props</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">force_direct</span>=<span class="sig-default">False</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
@@ -1790,17 +1788,14 @@ ns: Sequence of P sample sizes for each population.
 xxs: Sequence of P one-dimesional grids on which phi is defined.
 mask_corners: If True, resulting FS is masked in 'absent' and 'fixed'
               entries.
-het_ascertained: If 'xx', then FS is derived assuming that SNPs have
-                 been ascertained by being heterozygous in one
-                 individual from population 1. (This individual is
-                 *not* in the current sample.) If 'yy' or 'zz', it
-                 assumed that the ascertainment individual came from
-                 population 2 or 3, respectively.
-                 (Note that this option also forces direct integration,
-                 which may be less accurate than the semi-analytic
-                 method. This could be fixed if there is interest.)
 pop_ids: Optional list of strings containing the population labels.
          If pop_ids is None, labels will be &quot;pop0&quot;, &quot;pop1&quot;, ...
+admix_props: Admixture proportions for sampled individuals. For example,
+             if there are two populations, and individuals from the
+             first pop are admixed with fraction f from the second
+             population, then admix_props=((1-f,f),(0,1)). For three
+             populations, the no-admixture setting is
+             admix_props=((1,0,0),(0,1,0),(0,0,1)). 
 force_direct: Forces integration to use older direct integration method,
               rather than using analytic integration of sampling 
               formula.
@@ -2015,7 +2010,7 @@ Most commonly this is because of missing or non-constant context.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Jul  8 14:31:18 2011</a>
+    3.0.1 on Tue Nov  8 14:39:18 2011</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

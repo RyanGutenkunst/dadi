@@ -99,15 +99,15 @@ dadi.Numerics.intersect_masks	dadi.Numerics-module.html#intersect_masks
 dadi.Numerics.quartic_extrap	dadi.Numerics-module.html#quartic_extrap
 dadi.Numerics.__package__	dadi.Numerics-module.html#__package__
 dadi.Numerics.quintic_extrap	dadi.Numerics-module.html#quintic_extrap
+dadi.Numerics.make_extrap_func	dadi.Numerics-module.html#make_extrap_func
 dadi.Numerics.reverse_array	dadi.Numerics-module.html#reverse_array
 dadi.Numerics.estimate_best_exp_grid_crwd	dadi.Numerics-module.html#estimate_best_exp_grid_crwd
 dadi.Numerics.array_to_file	dadi.Numerics-module.html#array_to_file
 dadi.Numerics.array_from_file	dadi.Numerics-module.html#array_from_file
 dadi.Numerics.end_point_first_derivs	dadi.Numerics-module.html#end_point_first_derivs
-dadi.Numerics.make_extrap_func	dadi.Numerics-module.html#make_extrap_func
-dadi.Numerics.make_extrap_log_func	dadi.Numerics-module.html#make_extrap_log_func
 dadi.Numerics.cubic_extrap	dadi.Numerics-module.html#cubic_extrap
 dadi.Numerics.trapz	dadi.Numerics-module.html#trapz
+dadi.Numerics.make_extrap_log_func	dadi.Numerics-module.html#make_extrap_log_func
 dadi.Numerics.linear_extrap	dadi.Numerics-module.html#linear_extrap
 dadi.Numerics.quadratic_extrap	dadi.Numerics-module.html#quadratic_extrap
 dadi.PhiManip	dadi.PhiManip-module.html
