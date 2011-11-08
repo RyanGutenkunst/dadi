@@ -382,6 +382,9 @@ Direct admixture events can be specified using the methods \py{phi_2D_admix_1_in
 These methods do not change the dimensionality of $\phi$, but rather simulate discrete admixture events.
 For example, \py{phi_2D_admix_1_into_2} can be used to simulate a large discrete influx of individuals from pop 1 into pop 2.
 For example, this might model European (pop 1) admixture into indigenous Americans (pop 2).
+Note that the \py{PhiManip} methods for admixture can compromise the effectiveness of extrapolation for evaluating entries in the frequency spectrum corresponding to SNPs private to the recipient population.
+If your model involves admixture, you may obtain better accuracy by avoiding extrapolation and instead setting \py{pts_l} to be a list of length 1.
+Alternatively, if the admixture is the final event in your model, you can model admixture using the \py{admix_props} arguments for \py{Spectrum.from_phi}.
 
 Along with these discrete manipulations of $\phi$, we have the continuous transformations as time passes, due to genetic drift at different population sizes or migration.
 This is handled by \py{Integration} methods, \py{Integration.one_pop}, \py{Integration.two_pops}, and \py{Integration.three_pops}.
