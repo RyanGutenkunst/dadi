@@ -244,8 +244,8 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False):
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
     func: A function that returns a single scalar or array and whose last
-        argument is 'pts': the number of default_grid points to use in
-        calculation.  
+        non-keyword argument is 'pts': the number of default_grid points to use
+        in calculation.  
     extrap_x_l: An explict list of x values to use for extrapolation. If not 
         provided, the extrapolation routine will look for '.extrap_x'
         attributes on the results of func. The method Spectrum.from_phi will
