@@ -1536,9 +1536,9 @@ class Spectrum(numpy.ma.masked_array):
                        ...
                    Where every combination of three + one bases is considered
                    (order is not important).  The triplet is the context and
-                   putatively derived allele in the reference species. The
-                   single base is the base in the outgroup. The numerical value
-                   is 1-f_{ux} in the notation of the paper.
+                   putatively derived allele (x) in the reference species. The
+                   single base is the base (u) in the outgroup. The numerical
+                   value is 1-f_{ux} in the notation of the paper.
 
         The data dictionary should be organized as:
             {snp_id:{'segregating': ['A','T'],
