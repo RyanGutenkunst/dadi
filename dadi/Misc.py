@@ -7,6 +7,9 @@ import os,sys,time
 import numpy
 import scipy.linalg
 
+# Nucleotide order assumed in Q matrices.
+code = 'CGTA'
+
 #: Storage for times at which each stream was flushed.
 __times_last_flushed = {}
 def delayed_flush(stream=sys.stdout, delay=1):
@@ -109,7 +112,7 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
         pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
     return pnew
 
-def make_fux_table(fid, ts, Q, tri_freq):
+def make_fux_table_old(fid, ts, Q, tri_freq):
     """
     Make file of 1-fux for use in ancestral misidentification correction.
 
@@ -124,7 +127,6 @@ def make_fux_table(fid, ts, Q, tri_freq):
               Note that should be the frequency in the entire region scanned
               for variation, not just sites where there are SNPs.
     """
-    code = 'CGTA'
     # Ensure that the rows of Q sum to zero.
     for ii,row in enumerate(Q):
         s = row.sum() - row[ii]
@@ -175,6 +177,108 @@ def make_fux_table(fid, ts, Q, tri_freq):
     fid.write(os.linesep.join(outlines))
     if newfile:
         fid.close()
+
+def make_fux_table(fid, ts, Q, tri_freq):
+    """
+    Make file of 1-fux for use in ancestral misidentification correction.
+
+    fid: Filename to output to.
+    ts: Expected number of substitutions per site between ingroup and outgroup.
+    Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
+       which entries are ordered using the code CGTA -> 0,1,2,3. For example, 
+       ACT -> 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then 
+       entry 50,54.
+    tri_freq: Dictionary in which each entry maps a trinucleotide to its 
+              ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
+              Note that should be the frequency in the entire region scanned
+              for variation, not just sites where there are SNPs.
+    """
+    # Ensure that the *columns* of Q sum to zero.
+    # That is the correct condition when Q_{i,j} is the rate from i to j.
+    # This indicates a typo in Hernandez, Williamson, and Bustamante.
+    for ii in range(Q.shape[1]):
+        s = Q[:,ii].sum() - Q[ii,ii]
+        Q[ii,ii] = -s
+
+    eQhalf = scipy.linalg.matfuncs.expm(Q * ts/2.)
+    if not hasattr(fid, 'write'):
+        newfile = True
+        fid = file(fid, 'w')
+
+    outlines = []
+    for first_ii,first in enumerate(code):
+        for x_ii,x in enumerate(code):
+            for third_ii,third in enumerate(code):
+                # This the index into Q and eQ
+                xind = 16*first_ii+4*x_ii+1*third_ii
+                for u_ii,u in enumerate(code):
+                    # This the index into Q and eQ
+                    uind = 16*first_ii+4*u_ii+1*third_ii
+
+                    ## Note that the Q terms factor out in our final
+                    ## calculation, because for both PMuUu and PMuUx the final
+                    ## factor in Eqn 2 is P(S={u,x}|M=u).
+                    #Qux = Q[uind,xind]
+                    #denomu = Q[uind].sum() - Q[uind,uind]
+
+                    PMuUu, PMuUx = 0,0
+                    # Equation 2 in HWB. We have to generalize slightly to
+                    # calculate PMuUx. In calculate PMuUx, we're summing over
+                    # alpha the probability that the MRCA was alpha, and it
+                    # substituted to x on the outgroup branch, and it
+                    # substituted to u on the ingroup branch, and it mutated to
+                    # x in the ingroup (conditional on it having mutated in the
+                    # ingroup). Note that the mutation to x condition cancels
+                    # in fux, so we don't bother to calculate it.
+                    for aa,alpha in enumerate(code):
+                        aind = 16*first_ii+4*aa+1*third_ii
+
+                        pia = tri_freq[first+alpha+third]
+                        Pau = eQhalf[aind,uind]
+                        Pax = eQhalf[aind,xind]
+
+                        PMuUu += pia * Pau*Pau
+                        PMuUx += pia * Pau*Pax
+
+                    # This is 1-fux. For a given SNP with actual ancestral state
+                    # u and derived allele x, this is 1 minus the probability
+                    # that the outgroup will have u.
+                    # Eqn 3 in HWB.
+                    res = 1 - PMuUu/(PMuUu + PMuUx)
+                    # These aren't SNPs, so we can arbitrarily set them to 0
+                    if u == x:
+                        res = 0
+                    
+                    outlines.append('%c%c%c %c %.6f' % (first,x,third,u,res))
+
+    fid.write(os.linesep.join(outlines))
+    if newfile:
+        fid.close()
+
+def zero_diag(Q):
+    """
+    Copy of Q altered such that diagonal entries are all 0.
+    """
+    Q_nodiag = Q.copy()
+    for ii in range(Q.shape[0]):
+        Q_nodiag[ii,ii] = 0
+    return Q_nodiag
+
+def tri_freq_dict_to_array(tri_freq_dict):
+    tripi = numpy.zeros(64)
+    for ii,left in enumerate(code):
+        for jj,center in enumerate(code):
+            for kk,right in enumerate(code):
+                row = ii*16 + jj*4 + kk
+                tripi[row] = tri_freq_dict[left+center+right]
+    return tripi
+
+def total_instantaneous_rate(Q, pi):
+    """
+    Total instantaneous substitution rate.
+    """
+    Qzero = zero_diag(Q)
+    return numpy.dot(pi, Qzero).sum()
 
 def make_data_dict(filename):
     """
