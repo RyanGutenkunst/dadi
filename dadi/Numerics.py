@@ -4,7 +4,7 @@ Numerically useful functions, including extrapolation and default grid.
 
 import functools, os
 import numpy
-from scipy import comb
+from scipy.misc import comb
 from scipy.special import gammaln
 
 def quadratic_grid(num_pts):
@@ -266,6 +266,7 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False):
         else:
             other_args = args
             pts_l = kwargs['pts']
+            del kwargs['pts']
 
         if 'no_extrap' in kwargs:
             no_extrap = True
