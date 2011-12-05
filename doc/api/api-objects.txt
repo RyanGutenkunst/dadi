@@ -81,12 +81,16 @@ dadi.Integration.timescale_factor	dadi.Integration-module.html#timescale_factor
 dadi.Integration._compute_delj	dadi.Integration-module.html#_compute_delj
 dadi.Misc	dadi.Misc-module.html
 dadi.Misc.make_fux_table	dadi.Misc-module.html#make_fux_table
+dadi.Misc.code	dadi.Misc-module.html#code
 dadi.Misc.ms_command	dadi.Misc-module.html#ms_command
+dadi.Misc.total_instantaneous_rate	dadi.Misc-module.html#total_instantaneous_rate
 dadi.Misc.__package__	dadi.Misc-module.html#__package__
 dadi.Misc.delayed_flush	dadi.Misc-module.html#delayed_flush
 dadi.Misc.ensure_1arg_func	dadi.Misc-module.html#ensure_1arg_func
+dadi.Misc.tri_freq_dict_to_array	dadi.Misc-module.html#tri_freq_dict_to_array
 dadi.Misc.make_data_dict	dadi.Misc-module.html#make_data_dict
 dadi.Misc.perturb_params	dadi.Misc-module.html#perturb_params
+dadi.Misc.zero_diag	dadi.Misc-module.html#zero_diag
 dadi.Misc.__times_last_flushed	dadi.Misc-module.html#__times_last_flushed
 dadi.Numerics	dadi.Numerics-module.html
 dadi.Numerics.quadratic_grid	dadi.Numerics-module.html#quadratic_grid

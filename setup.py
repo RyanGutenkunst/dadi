@@ -50,7 +50,7 @@ if any(arg.count('dist') for arg in os.sys.argv):
     os.system("svn info > dadi/svnversion")
 
 core.setup(name='dadi',
-           version='1.6.1',
+           version='1.6.2',
            author='Ryan Gutenkunst',
            author_email='rgutenk@email.arizona.edu',
            url='http://dadi.googlecode.com',
