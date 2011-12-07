@@ -4,7 +4,11 @@ Numerically useful functions, including extrapolation and default grid.
 
 import functools, os
 import numpy
-from scipy.misc import comb
+# Account for difference in scipy installations.
+try:
+    from scipy.misc import comb
+except ImportError:
+    from scipy import comb
 from scipy.special import gammaln
 
 def quadratic_grid(num_pts):

@@ -10,7 +10,11 @@ import os
 
 import numpy
 from numpy import newaxis as nuax
-from scipy.misc import comb
+# Account for difference in scipy installations.
+try:
+    from scipy.misc import comb
+except ImportError:
+    from scipy import comb
 from scipy.integrate import trapz
 from scipy.special import betainc
 
