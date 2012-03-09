@@ -1,6 +1,8 @@
 """
 Numerically useful functions, including extrapolation and default grid.
 """
+import logging
+logger = logging.getLogger('Numerics')
 
 import functools, os
 import numpy
@@ -243,7 +245,7 @@ def trapz(yy, xx=None, dx=None, axis=-1):
 
     return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)
 
-def make_extrap_func(func, extrap_x_l=None, extrap_log=False):
+def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
@@ -256,6 +258,12 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False):
         add an extrap_x attribute to resulting Spectra, equal to the x-value
         of the first non-zero grid point. An explicit list is useful if you
         want to override this behavior for testing.
+    fail_mag:  Simon Gravel noted that there can be numerical instabilities in
+        extrapolation when working with large spectra that have very small
+        entires (of order 1e-24). To avoid these instabilities, we ignore the 
+        extrapolation values (and use the input result with the smallest x) 
+        if the extrapolation is more than fail_mag orders of magnitude away
+        from the smallest x input result.
 
     Returns a new function whose last argument is a list of numbers of grid
     points and that returns a result extrapolated to infinitely many grid
@@ -342,6 +350,28 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False):
 
         if extrap_log:
             ex_result = numpy.exp(ex_result)
+
+        # Simon Gravel noted that there can be numerical instabilities in
+        # extrapolation when working with large spectra that have very small
+        # entires (of order 1e-24).
+        # To avoid these instabilities, we ignore the extrapolation values
+        # if it is too different from the input values.
+        if len(pts_l) > 1:
+            # Assume the best input value comes from the smallest grid.
+            best_result = result_l[numpy.argmin(x_l)]
+            if extrap_log:
+                best_result = numpy.exp(best_result)
+
+            # The extrapolation is deemed to have failed if it results in a
+            # value more than fail_mag orders of magnitude away from the 
+            # best input value.
+            extrap_failed = abs(numpy.log10(ex_result/best_result)) > fail_mag
+            if numpy.any(extrap_failed):
+                logger.warn('Extrapolation may have failed. Check resulting '
+                            'frequency spectrum for unexpected results.')
+
+            # For entries that fail, use the "best" input result.
+            ex_result[extrap_failed] = best_result[extrap_failed]
 
         return ex_result
 
