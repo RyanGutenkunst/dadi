@@ -4,6 +4,8 @@ Comparison and optimization of model spectra to data.
 import logging
 logger = logging.getLogger('Inference')
 
+import os,sys
+
 import numpy
 from numpy import logical_and, logical_not
 
@@ -18,7 +20,8 @@ _out_of_bounds_val = -1e8
 def _object_func(params, data, model_func, pts, 
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
-                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1):
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_stream=sys.stdout):
     """
     Objective function for optimization.
     """
@@ -56,7 +59,8 @@ def _object_func(params, data, model_func, pts,
 
     if (verbose > 0) and (_counter % verbose == 0):
         param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
-        print '%-8i, %-12g, %s' % (_counter, result, param_str)
+        output_stream.write('%-8i, %-12g, %s%s' % (_counter, result, param_str,
+                                                   os.linesep))
         Misc.delayed_flush(delay=flush_delay)
 
     return -result/ll_scale
@@ -70,7 +74,8 @@ def _object_func_log(log_params, *args, **kwargs):
 def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1):
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_file=None):
     """
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -89,6 +94,8 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     upper_bound: Upper bound on parameter values. If not None, must be of same
                  length as p0.
     verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
@@ -134,9 +141,14 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               region of reasonable likelihood, you'll probably want to
               re-optimize with ll_scale=1.
     """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale)
+            ll_scale, output_stream)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -147,6 +159,9 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                                        maxiter=maxiter)
     xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
     xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
 
     if not full_output:
         return xopt
@@ -159,7 +174,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
                         pgtol=1e-5, multinom=True, maxiter=1e5, 
                         full_output=False,
                         func_args=[], func_kwargs={}, fixed_params=None, 
-                        ll_scale=1):
+                        ll_scale=1, output_file=None):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -183,6 +198,8 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
                  length as p0. A parameter can be declared unbound by assigning
                  a bound of None.
     verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
@@ -227,9 +244,14 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
         ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
     
     """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale)
+            ll_scale, output_stream)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -256,6 +278,9 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
     xopt, fopt, info_dict = outputs
 
     xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
 
     if not full_output:
         return xopt
@@ -455,7 +480,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                       multinom=True, maxiter=None, 
                       full_output=False, func_args=[], 
                       func_kwargs={},
-                      fixed_params=None):
+                      fixed_params=None, output_file=None):
     """
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
@@ -477,6 +502,8 @@ def optimize_log_fmin(p0, data, model_func, pts,
                  length as p0. A parameter can be declared unbound by assigning
                  a bound of None.
     verbose: If True, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     multinom: If True, do a multinomial fit where model is optimially scaled to
@@ -502,14 +529,23 @@ def optimize_log_fmin(p0, data, model_func, pts,
     (See help(dadi.Inference.optimize_log for examples of func_args and 
      fixed_params usage.)
     """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
-            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
                                   disp=False, maxiter=maxiter, full_output=True)
     xopt, fopt, iter, funcalls, warnflag = outputs
     xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
 
     if not full_output:
         return xopt
@@ -519,7 +555,8 @@ def optimize_log_fmin(p0, data, model_func, pts,
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
-             func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1):
+             func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+             output_file=None):
     """
     Optimize params to fit model to data using the BFGS method.
 
@@ -535,6 +572,8 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     upper_bound: Upper bound on parameter values. If not None, must be of same
                  length as p0.
     verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
@@ -569,9 +608,14 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               region of reasonable likelihood, you'll probably want to
               re-optimize with ll_scale=1.
     """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale)
+            ll_scale, output_stream)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
@@ -582,6 +626,9 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                                        maxiter=maxiter)
     xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
     xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
 
     if not full_output:
         return xopt
@@ -594,7 +641,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
                     verbose=0, flush_delay=0.5, epsilon=1e-3, 
                     pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
                     func_args=[], func_kwargs={}, fixed_params=None, 
-                    ll_scale=1):
+                    ll_scale=1, output_file=None):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -615,6 +662,8 @@ def optimize_lbfgsb(p0, data, model_func, pts,
                  length as p0. A parameter can be declared unbound by assigning
                  a bound of None.
     verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     epsilon: Step-size to use for finite-difference derivatives.
@@ -658,9 +707,14 @@ def optimize_lbfgsb(p0, data, model_func, pts,
         FORTRAN routines for large scale bound constrained optimization (1997),
         ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
     """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale)
+            ll_scale, output_stream)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -681,6 +735,9 @@ def optimize_lbfgsb(p0, data, model_func, pts,
     xopt, fopt, info_dict = outputs
 
     xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
 
     if not full_output:
         return xopt
@@ -726,7 +783,8 @@ index_exp = numpy.index_exp
 def optimize_grid(data, model_func, pts, grid,
                   verbose=0, flush_delay=0.5,
                   multinom=True, full_output=False,
-                  func_args=[], func_kwargs={}, fixed_params=None):
+                  func_args=[], func_kwargs={}, fixed_params=None,
+                  output_file=None):
     """
     Optimize params to fit model to data using brute force search over a grid.
 
@@ -737,6 +795,8 @@ def optimize_grid(data, model_func, pts, grid,
     grid: Grid of parameter values over which to evaluate likelihood. See
           below for specification instructions.
     verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
     flush_delay: Standard output will be flushed once every <flush_delay>
                  minutes. This is useful to avoid overloading I/O on clusters.
     multinom: If True, do a multinomial fit where model is optimially scaled to
@@ -770,8 +830,14 @@ def optimize_grid(data, model_func, pts, grid,
     list should include only parameters that are optimized over, not fixed
     parameter values.
     """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
     args = (data, model_func, pts, None, None, verbose,
-            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0)
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
 
     outputs = scipy.optimize.brute(_object_func, ranges=grid,
                                    args = args, full_output=full_output)
@@ -780,6 +846,9 @@ def optimize_grid(data, model_func, pts, grid,
     else:
         xopt = outputs
     xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
 
     if not full_output:
         return xopt
