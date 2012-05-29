@@ -1025,7 +1025,8 @@ class Spectrum(numpy.ma.masked_array):
         return (pihat - theta)/C
 
     @staticmethod
-    def _from_phi_1D_direct(n, xx, phi, mask_corners=True):
+    def _from_phi_1D_direct(n, xx, phi, mask_corners=True,
+                            het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1034,6 +1035,8 @@ class Spectrum(numpy.ma.masked_array):
         data = numpy.zeros(n+1)
         for ii in range(0,n+1):
             factorx = comb(n,ii) * xx**ii * (1-xx)**(n-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
             data[ii] = trapz(factorx * phi, xx)
     
         return Spectrum(data, mask_corners=mask_corners)
@@ -1082,8 +1085,8 @@ class Spectrum(numpy.ma.masked_array):
         return fs
 
     @staticmethod
-    def _from_phi_2D_direct(nx, ny, xx, yy, phi, admix_props=None, 
-                            mask_corners=True):
+    def _from_phi_2D_direct(nx, ny, xx, yy, phi, mask_corners=True, 
+                            admix_props=None, het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1103,11 +1106,15 @@ class Spectrum(numpy.ma.masked_array):
         factorx_cache = {}
         for ii in range(0, nx+1):
             factorx = comb(nx, ii) * xadmix**ii * (1-xadmix)**(nx-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
             factorx_cache[nx,ii] = factorx
     
         dx, dy = numpy.diff(xx), numpy.diff(yy)
         for jj in range(0,ny+1):
             factory = comb(ny, jj) * yadmix**jj * (1-yadmix)**(ny-jj)
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
             for ii in range(0, nx+1):
                 integrated_over_y = trapz(factorx_cache[nx,ii] * factory * phi,
                                           dx=dy)
@@ -1161,7 +1168,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
-                            admix_props=None):
+                            admix_props=None, het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1190,12 +1197,18 @@ class Spectrum(numpy.ma.masked_array):
         for ii in range(0, nx+1):
             factorx = comb(nx, ii) * xadmix**ii * (1-xadmix)**(nx-ii)
             factorx_cache[nx,ii] = factorx
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
         for jj in range(0, ny+1):
             factory = comb(ny, jj) * yadmix**jj * (1-yadmix)**(ny-jj)
             factory_cache[ny,jj] = factory[nuax,:]
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
     
         for kk in range(0, nz+1):
             factorz = comb(nz, kk) * zadmix**kk * (1-zadmix)**(nz-kk)
+            if het_ascertained == 'zz':
+                factorz *= zz*(1-zz)
             over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
             for jj in range(0, ny+1):
                 factory = factory_cache[ny,jj]
@@ -1265,7 +1278,8 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_phi(phi, ns, xxs, mask_corners=True, 
-                 pop_ids=None, admix_props=None, force_direct=False):
+                 pop_ids=None, admix_props=None, het_ascertained=None, 
+                 force_direct=False):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1282,6 +1296,20 @@ class Spectrum(numpy.ma.masked_array):
                      population, then admix_props=((1-f,f),(0,1)). For three
                      populations, the no-admixture setting is
                      admix_props=((1,0,0),(0,1,0),(0,0,1)). 
+                     (Note that this option also forces direct integration,
+                     which may be less accurate than the semi-analytic
+                     method.)
+        het_ascertained: If 'xx', then FS is calculated assuming that SNPs have
+ 	                 been ascertained by being heterozygous in one
+ 	                 individual from population 1. (This individual is
+ 	                 *not* in the current sample.) If 'yy' or 'zz', it
+ 	                 assumed that the ascertainment individual came from
+ 	                 population 2 or 3, respectively.
+ 	                 (Note that this option also forces direct integration,
+ 	                 which may be less accurate than the semi-analytic
+ 	                 method. This could be fixed if there is interest. Note
+                         also that this option cannot be used simultaneously
+                         with admix_props.)
         force_direct: Forces integration to use older direct integration method,
                       rather than using analytic integration of sampling 
                       formula.
@@ -1292,32 +1320,43 @@ class Spectrum(numpy.ma.masked_array):
         if not phi.ndim == len(ns) == len(xxs):
             raise ValueError('Dimensionality of phi and lengths of ns and xxs '
                              'do not all agree.')
+        if het_ascertained and not het_ascertained in ['xx','yy','zz']:
+            raise ValueError("If used, het_ascertained must be 'xx', 'yy', or "
+                             "'zz'.")
+
+        if admix_props and het_ascertained:
+            error = """admix_props and het_ascertained options cannot be used 
+            simultaneously. Instead, please use the PhiManip methods to 
+            implement admixture. If this proves inappropriate for your use, 
+            contact the the dadi developers, as it may be possible to support
+            both options simultaneously in the future."""
+            raise NotImplementedError(error)
         if phi.ndim == 1:
-            if not force_direct:
+            if not het_ascertained and not force_direct:
                 fs = Spectrum._from_phi_1D_analytic(ns[0], xxs[0], phi,
                                                     mask_corners)
             else:
                 fs = Spectrum._from_phi_1D_direct(ns[0], xxs[0], phi, 
-                                                  mask_corners)
+                                                  mask_corners, het_ascertained)
         elif phi.ndim == 2:
-            if not admix_props and not force_direct:
+            if not het_ascertained and not admix_props and not force_direct:
                 fs = Spectrum._from_phi_2D_analytic(ns[0], ns[1], 
                                                     xxs[0], xxs[1], phi,
                                                     mask_corners)
             else:
                 fs = Spectrum._from_phi_2D_direct(ns[0], ns[1], xxs[0], xxs[1], 
-                                                  phi, admix_props, 
-                                                  mask_corners)
+                                                  phi, mask_corners, 
+                                                  admix_props, het_ascertained)
         elif phi.ndim == 3:
-            if not admix_props and not force_direct:
+            if not het_ascertained and not admix_props and not force_direct:
                 fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
                                                     xxs[0], xxs[1], xxs[2], 
                                                     phi, mask_corners)
             else:
                 fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                                   xxs[0], xxs[1], xxs[2], 
-                                                  phi, admix_props, 
-                                                  mask_corners)
+                                                  phi, mask_corners, 
+                                                  admix_props, het_ascertained)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
         fs.pop_ids = pop_ids
