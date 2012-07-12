@@ -13,6 +13,8 @@ from dadi import Misc, Numerics
 from scipy.special import gammaln
 import scipy.optimize
 
+#: Stores thetas
+_theta_store = {}
 #: Counts calls to object_func
 _counter = 0
 #: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
@@ -21,7 +23,7 @@ def _object_func(params, data, model_func, pts,
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
                  func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-                 output_stream=sys.stdout):
+                 output_stream=sys.stdout, store_thetas=False):
     """
     Objective function for optimization.
     """
@@ -29,20 +31,20 @@ def _object_func(params, data, model_func, pts,
     _counter += 1
 
     # Deal with fixed parameters
-    params = _project_params_up(params, fixed_params)
+    params_up = _project_params_up(params, fixed_params)
 
     # Check our parameter bounds
     if lower_bound is not None:
-        for pval,bound in zip(params, lower_bound):
+        for pval,bound in zip(params_up, lower_bound):
             if bound is not None and pval < bound:
                 return -_out_of_bounds_val/ll_scale
     if upper_bound is not None:
-        for pval,bound in zip(params, upper_bound):
+        for pval,bound in zip(params_up, upper_bound):
             if bound is not None and pval > bound:
                 return -_out_of_bounds_val/ll_scale
 
     ns = data.sample_sizes 
-    all_args = [params, ns] + list(func_args)
+    all_args = [params_up, ns] + list(func_args)
     # Pass the pts argument via keyword, but don't alter the passed-in 
     # func_kwargs
     func_kwargs = func_kwargs.copy()
@@ -53,12 +55,16 @@ def _object_func(params, data, model_func, pts,
     else:
         result = ll(sfs, data)
 
+    if store_thetas:
+        global _theta_store
+        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+
     # Bad result
     if numpy.isnan(result):
         result = _out_of_bounds_val
 
     if (verbose > 0) and (_counter % verbose == 0):
-        param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params]))
+        param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params_up]))
         output_stream.write('%-8i, %-12g, %s%s' % (_counter, result, param_str,
                                                    os.linesep))
         Misc.delayed_flush(delay=flush_delay)
@@ -802,8 +808,15 @@ def optimize_grid(data, model_func, pts, grid,
     multinom: If True, do a multinomial fit where model is optimially scaled to
               data at each step. If False, assume theta is a parameter and do
               no scaling.
-    full_output: If True, return full outputs as in described in 
-                 help(scipy.optimize.brute)
+    full_output: If True, return popt, llopt, grid, llout, thetas. Here popt is
+                 the best parameter set found and llopt is the corresponding
+                 (composite) log-likelihood. grid is the array of parameter
+                 values tried, llout is the corresponding log-likelihoods, and
+                 thetas is the corresponding thetas. Note that the grid includes
+                 only the parameters optimized over, and that the order of
+                 indices is such that grid[:,0,2] would be a set of parameters
+                 if two parameters were optimized over. (Note the : in the
+                 first index.)
     func_args: Additional arguments to model_func. It is assumed that 
                model_func's first argument is an array of parameters to
                optimize, that its second argument is an array of sample sizes
@@ -837,12 +850,25 @@ def optimize_grid(data, model_func, pts, grid,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, full_output)
+
+    if full_output:
+        global _theta_store
+        _theta_store = {}
 
     outputs = scipy.optimize.brute(_object_func, ranges=grid,
-                                   args = args, full_output=full_output)
+                                   args=args, full_output=full_output,
+                                   finish=False)
     if full_output:
         xopt, fopt, grid, fout = outputs
+        # Thetas are stored as a dictionary, because we can't guarantee
+        # iteration order in brute(). So we have to iterate back over them
+        # to produce the proper order to return.
+        thetas = numpy.zeros(fout.shape)
+        for indices, temp in numpy.ndenumerate(fout):
+            # This is awkward, because we need to access grid[:,indices]
+            grid_indices = tuple([slice(None,None,None)] + list(indices))
+            thetas[indices] = _theta_store[tuple(grid[grid_indices])]
     else:
         xopt = outputs
     xopt = _project_params_up(xopt, fixed_params)
@@ -853,4 +879,4 @@ def optimize_grid(data, model_func, pts, grid,
     if not full_output:
         return xopt
     else:
-        return xopt, fopt, grid, fout
+        return xopt, fopt, grid, fout, thetas
