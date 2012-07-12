@@ -41,21 +41,24 @@ print 'Model log-likelihood:', ll_model
 # The optimal value of theta given the model.
 theta = dadi.Inference.optimal_sfs_scaling(model, data)
 
-## Perturb our parameter array before optimization. This does so by taking each
-## parameter a up to a factor of two up or down.
-#p0 = dadi.Misc.perturb_params(params, fold=1, upper_bound=upper_bound)
-## Do the optimization. By default we assume that theta is a free parameter,
-## since it's trivial to find given the other parameters. If you want to fix
-## theta, add a multinom=False to the call.
-## (This is commented out by default, since it takes several minutes.)
-#popt = dadi.Inference.optimize_log(p0, data, func_ex, pts_l, 
-#                                   lower_bound=lower_bound,
-#                                   upper_bound=upper_bound,
-#                                   verbose=len(params))
-##print 'Optimized parameters', repr(popt)
-#model = func_ex(popt, ns, pts_l)
-#ll_opt = dadi.Inference.ll_multinom(model, data)
-#print 'Optimized log-likelihood:', ll_opt
+# Perturb our parameter array before optimization. This does so by taking each
+# parameter a up to a factor of two up or down.
+p0 = dadi.Misc.perturb_params(params, fold=1, upper_bound=upper_bound)
+# Do the optimization. By default we assume that theta is a free parameter,
+# since it's trivial to find given the other parameters. If you want to fix
+# theta, add a multinom=False to the call.
+# (This is commented out by default, since it takes several minutes.)
+# The maxiter argument restricts how long the optimizer will run. For production
+# runs, you may want to set this value higher, to encourage better convergence.
+popt = dadi.Inference.optimize_log(p0, data, func_ex, pts_l, 
+                                   lower_bound=lower_bound,
+                                   upper_bound=upper_bound,
+                                   verbose=len(params),
+                                   maxiter=3)
+print 'Optimized parameters', repr(popt)
+model = func_ex(popt, ns, pts_l)
+ll_opt = dadi.Inference.ll_multinom(model, data)
+print 'Optimized log-likelihood:', ll_opt
 
 # Plot a comparison of the resulting fs with the data.
 import pylab
