@@ -32,6 +32,7 @@ dadi.Hessian.hessian	dadi.Hessian-module.html#hessian
 dadi.Inference	dadi.Inference-module.html
 dadi.Inference.optimize_log_lbfgsb	dadi.Inference-module.html#optimize_log_lbfgsb
 dadi.Inference.optimize_log	dadi.Inference-module.html#optimize_log
+dadi.Inference._theta_store	dadi.Inference-module.html#_theta_store
 dadi.Inference._object_func_log	dadi.Inference-module.html#_object_func_log
 dadi.Inference.index_exp	dadi.Inference-module.html#index_exp
 dadi.Inference.ll	dadi.Inference-module.html#ll
@@ -103,6 +104,7 @@ dadi.Numerics.intersect_masks	dadi.Numerics-module.html#intersect_masks
 dadi.Numerics.quartic_extrap	dadi.Numerics-module.html#quartic_extrap
 dadi.Numerics.__package__	dadi.Numerics-module.html#__package__
 dadi.Numerics.quintic_extrap	dadi.Numerics-module.html#quintic_extrap
+dadi.Numerics.logger	dadi.Numerics-module.html#logger
 dadi.Numerics.make_extrap_func	dadi.Numerics-module.html#make_extrap_func
 dadi.Numerics.reverse_array	dadi.Numerics-module.html#reverse_array
 dadi.Numerics.estimate_best_exp_grid_crwd	dadi.Numerics-module.html#estimate_best_exp_grid_crwd

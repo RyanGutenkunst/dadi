@@ -99,7 +99,9 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
+        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">output_stream</span>=<span class="summary-sig-default">sys.stdout</span>,
+        <span class="summary-sig-arg">store_thetas</span>=<span class="summary-sig-default">False</span>)</span><br />
       Objective function for optimization.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#_object_func">source&nbsp;code</a></span>
@@ -151,7 +153,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
+        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">output_file</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using the BFGS method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>
@@ -184,7 +187,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
+        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">output_file</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using the L-BFGS-B method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_lbfgsb">source&nbsp;code</a></span>
@@ -397,7 +401,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
-        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">output_file</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using Nelder-Mead.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_fmin">source&nbsp;code</a></span>
@@ -430,7 +435,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
+        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">output_file</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize params to fit model to data using the BFGS method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>
@@ -463,7 +469,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>)</span><br />
+        <span class="summary-sig-arg">ll_scale</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">output_file</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize log(params) to fit model to data using the L-BFGS-B method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_lbfgsb">source&nbsp;code</a></span>
@@ -526,7 +533,8 @@ Comparison and optimization of model spectra to data.
         <span class="summary-sig-arg">full_output</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">func_args</span>=<span class="summary-sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="summary-sig-arg">func_kwargs</span>=<span class="summary-sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
-        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">fixed_params</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">output_file</span>=<span class="summary-sig-default">None</span>)</span><br />
       Optimize params to fit model to data using brute force search over a grid.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_grid">source&nbsp;code</a></span>
@@ -560,6 +568,13 @@ Comparison and optimization of model spectra to data.
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger('Inference')">logging.getLogger('Inference')</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="_theta_store"></a><span class="summary-name">_theta_store</span> = <code title="{}"><code class="variable-group">{</code><code class="variable-group">}</code></code>
     </td>
   </tr>
 <tr class="private">
@@ -632,7 +647,8 @@ Comparison and optimization of model spectra to data.
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
+        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">output_file</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log">source&nbsp;code</a></span>&nbsp;
@@ -658,6 +674,8 @@ lower_bound: Lower bound on parameter values. If not None, must be of same
 upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+output_file: Stream verbose output into this filename. If None, stream to
+             standard out.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 epsilon: Step-size to use for finite-difference derivatives.
@@ -731,7 +749,8 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
+        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">output_file</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_lbfgsb">source&nbsp;code</a></span>&nbsp;
@@ -762,6 +781,8 @@ upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0. A parameter can be declared unbound by assigning
              a bound of None.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+output_file: Stream verbose output into this filename. If None, stream to
+             standard out.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 epsilon: Step-size to use for finite-difference derivatives.
@@ -1103,7 +1124,8 @@ model nor data.
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
-        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">output_file</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_log_fmin">source&nbsp;code</a></span>&nbsp;
@@ -1132,6 +1154,8 @@ upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0. A parameter can be declared unbound by assigning
              a bound of None.
 verbose: If True, print optimization status every &lt;verbose&gt; steps.
+output_file: Stream verbose output into this filename. If None, stream to
+             standard out.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 multinom: If True, do a multinomial fit where model is optimially scaled to
@@ -1185,7 +1209,8 @@ fixed_params: If not None, should be a list used to fix model parameters at
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
+        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">output_file</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize">source&nbsp;code</a></span>&nbsp;
@@ -1208,6 +1233,8 @@ lower_bound: Lower bound on parameter values. If not None, must be of same
 upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+output_file: Stream verbose output into this filename. If None, stream to
+             standard out.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 epsilon: Step-size to use for finite-difference derivatives.
@@ -1270,7 +1297,8 @@ ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
         <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>)</span>
+        <span class="sig-arg">ll_scale</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">output_file</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_lbfgsb">source&nbsp;code</a></span>&nbsp;
@@ -1298,6 +1326,8 @@ upper_bound: Upper bound on parameter values. If not None, must be of same
              length as p0. A parameter can be declared unbound by assigning
              a bound of None.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+output_file: Stream verbose output into this filename. If None, stream to
+             standard out.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 epsilon: Step-size to use for finite-difference derivatives.
@@ -1363,7 +1393,8 @@ Nocedal. The algorithm is described in:
         <span class="sig-arg">full_output</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">func_args</span>=<span class="sig-default"><code class="variable-group">[</code><code class="variable-group">]</code></span>,
         <span class="sig-arg">func_kwargs</span>=<span class="sig-default"><code class="variable-group">{</code><code class="variable-group">}</code></span>,
-        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">fixed_params</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">output_file</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Inference-pysrc.html#optimize_grid">source&nbsp;code</a></span>&nbsp;
@@ -1381,13 +1412,22 @@ pts: Grid points list for evaluating likelihoods
 grid: Grid of parameter values over which to evaluate likelihood. See
       below for specification instructions.
 verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+output_file: Stream verbose output into this filename. If None, stream to
+             standard out.
 flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
              minutes. This is useful to avoid overloading I/O on clusters.
 multinom: If True, do a multinomial fit where model is optimially scaled to
           data at each step. If False, assume theta is a parameter and do
           no scaling.
-full_output: If True, return full outputs as in described in 
-             help(scipy.optimize.brute)
+full_output: If True, return popt, llopt, grid, llout, thetas. Here popt is
+             the best parameter set found and llopt is the corresponding
+             (composite) log-likelihood. grid is the array of parameter
+             values tried, llout is the corresponding log-likelihoods, and
+             thetas is the corresponding thetas. Note that the grid includes
+             only the parameters optimized over, and that the order of
+             indices is such that grid[:,0,2] would be a set of parameters
+             if two parameters were optimized over. (Note the : in the
+             first index.)
 func_args: Additional arguments to model_func. It is assumed that 
            model_func's first argument is an array of parameters to
            optimize, that its second argument is an array of sample sizes
@@ -1449,7 +1489,7 @@ parameter values.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Sun Dec  4 19:24:34 2011</a>
+    3.0.1 on Thu Jul 12 12:44:14 2012</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
