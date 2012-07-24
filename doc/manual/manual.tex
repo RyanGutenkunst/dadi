@@ -442,6 +442,7 @@ When \py{True}, these arguments will ``freeze'' a particular population so that 
 Note that because time in \dadi models is in genetic units, you need to be careful in how you specify the time of collection of your frozen sample.
 In this case, you likely want to run a model that explicitly includes $\theta$ as a parameter (see Section~\ref{sec:fixed_theta}), so that you can convert from physical to genetic units within the model function.
 
+\clearpage
 
 \begin{lstlisting}[caption={\textbf{Bottleneck:} At time \py{TF} + \py{TB} in the past, an equilibrium population goes through a bottleneck of depth \py{nuB}, recovering to relative size \py{nuF}.}, float, label={lst:bottleneck}]
 def bottleneck(params, ns, pts):
@@ -593,6 +594,8 @@ def NewWorld((nuEu0, nuEu, nuAs0, nuAs, nuMx0, nuMx,
     # theta0=1.)
     return theta0*fs
 \end{lstlisting}
+
+\clearpage
 
 \section{Simulation and fitting}
 
