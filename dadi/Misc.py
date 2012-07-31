@@ -258,7 +258,7 @@ def make_data_dict(filename):
     data_dict = {}
 
     # Now walk down the file
-    for line in f:
+    for SNP_ii, line in enumerate(f):
         if line.startswith('#'):
             continue
         # Split the into fields by whitespace
@@ -280,6 +280,8 @@ def make_data_dict(filename):
 
         # We name our SNPs using the final columns
         snp_id = '_'.join(spl[allele2_index+1+len(pops):])
+        if snp_id == '':
+            snp_id = 'SNP_{0}'.format(SNP_ii)
 
         data_dict[snp_id] = data_this_snp
 
