@@ -490,7 +490,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
     """
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
-    This optimization method make work better than BFGS when far from a
+    This optimization method may work better than BFGS when far from a
     minimum. It is much slower, but more robust, because it doesn't use
     gradient information.
 

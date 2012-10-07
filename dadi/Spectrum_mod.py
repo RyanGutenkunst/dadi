@@ -1086,15 +1086,44 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def _from_phi_2D_direct(nx, ny, xx, yy, phi, mask_corners=True, 
-                            admix_props=None, het_ascertained=None):
+                            het_ascertained=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
         See from_phi for explanation of arguments.
         """
-        if admix_props is None:
-            admix_props = ((1,0), (0,1))
+        # Calculate the 2D sfs from phi using the trapezoid rule for
+        # integration.
+        data = numpy.zeros((nx+1, ny+1))
 
+        # Cache to avoid duplicated work.
+        factorx_cache = {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
+                factorx_cache[nx,ii] = factorx
+
+        dx, dy = numpy.diff(xx), numpy.diff(yy)
+        for jj in range(0,ny+1):
+            factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
+                integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
+                for ii in range(0, nx+1):
+                    factorx = factorx_cache[nx,ii]
+                    data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
+
+        return Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_2D_admix_props(nx, ny, xx, yy, phi, mask_corners=True, 
+                                 admix_props=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        """
         xadmix = admix_props[0][0]*xx[:,nuax] + admix_props[0][1]*yy[nuax,:]
         yadmix = admix_props[1][0]*xx[:,nuax] + admix_props[1][1]*yy[nuax,:]
 
@@ -1106,15 +1135,11 @@ class Spectrum(numpy.ma.masked_array):
         factorx_cache = {}
         for ii in range(0, nx+1):
             factorx = comb(nx, ii) * xadmix**ii * (1-xadmix)**(nx-ii)
-            if het_ascertained == 'xx':
-                factorx *= xx*(1-xx)
             factorx_cache[nx,ii] = factorx
     
         dx, dy = numpy.diff(xx), numpy.diff(yy)
         for jj in range(0,ny+1):
             factory = comb(ny, jj) * yadmix**jj * (1-yadmix)**(ny-jj)
-            if het_ascertained == 'yy':
-                factory *= yy*(1-yy)
             for ii in range(0, nx+1):
                 integrated_over_y = trapz(factorx_cache[nx,ii] * factory * phi,
                                           dx=dy)
@@ -1168,7 +1193,52 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
-                            admix_props=None, het_ascertained=None):
+                     het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        """
+        data = numpy.zeros((nx+1, ny+1, nz+1))
+    
+        dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
+        half_dx = dx/2.0
+    
+        # We cache these calculations...
+        factorx_cache, factory_cache = {}, {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
+            factorx_cache[nx,ii] = factorx
+        for jj in range(0, ny+1):
+            factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
+            factory_cache[ny,jj] = factory[nuax,:]
+    
+        for kk in range(0, nz+1):
+            factorz = comb(nz, kk) * zz**kk * (1-zz)**(nz-kk)
+            if het_ascertained == 'zz':
+                factorz *= zz*(1-zz)
+            over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
+            for jj in range(0, ny+1):
+                factory = factory_cache[ny,jj]
+                over_y = trapz(factory * over_z, dx=dy)
+                for ii in range(0, nx+1):
+                    factorx = factorx_cache[nx,ii]
+                    # It's faster here to do the trapezoid rule explicitly
+                    # rather than using SciPy's more general routine.
+                    integrand = factorx * over_y
+                    ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
+                    data[ii,jj,kk] = ans
+    
+        return Spectrum(data, mask_corners=mask_corners)
+    
+
+    @staticmethod
+    def _from_phi_3D_admix_props(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
+                                 admix_props=None):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1193,33 +1263,28 @@ class Spectrum(numpy.ma.masked_array):
         half_dx = dx/2.0
     
         # We cache these calculations...
-        factorx_cache, factory_cache = {}, {}
+        factorx_cache, factory_cache, factorz_cache = {}, {}, {}
         for ii in range(0, nx+1):
             factorx = comb(nx, ii) * xadmix**ii * (1-xadmix)**(nx-ii)
             factorx_cache[nx,ii] = factorx
-            if het_ascertained == 'xx':
-                factorx *= xx*(1-xx)
+
         for jj in range(0, ny+1):
             factory = comb(ny, jj) * yadmix**jj * (1-yadmix)**(ny-jj)
-            factory_cache[ny,jj] = factory[nuax,:]
-            if het_ascertained == 'yy':
-                factory *= yy*(1-yy)
-    
+            factory_cache[ny,jj] = factory
+
         for kk in range(0, nz+1):
             factorz = comb(nz, kk) * zadmix**kk * (1-zadmix)**(nz-kk)
-            if het_ascertained == 'zz':
-                factorz *= zz*(1-zz)
-            over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
+            factorz_cache[nz,kk] = factorz
+    
+        for kk in range(0, nz+1):
+            factorz = factorz_cache[nz,kk]
             for jj in range(0, ny+1):
                 factory = factory_cache[ny,jj]
-                over_y = trapz(factory * over_z, dx=dy)
                 for ii in range(0, nx+1):
                     factorx = factorx_cache[nx,ii]
-                    # It's faster here to do the trapezoid rule explicitly
-                    # rather than using SciPy's more general routine.
-                    integrand = factorx * over_y
-                    ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
-                    data[ii,jj,kk] = ans
+                    over_z = trapz(factorz * factory * factorx * phi, dx=dz)
+                    over_y = trapz(over_z, dx=dy)
+                    data[ii,jj,kk] = trapz(over_y, dx=dx)
     
         return Spectrum(data, mask_corners=mask_corners)
 
@@ -1331,6 +1396,7 @@ class Spectrum(numpy.ma.masked_array):
             contact the the dadi developers, as it may be possible to support
             both options simultaneously in the future."""
             raise NotImplementedError(error)
+
         if phi.ndim == 1:
             if not het_ascertained and not force_direct:
                 fs = Spectrum._from_phi_1D_analytic(ns[0], xxs[0], phi,
@@ -1343,20 +1409,30 @@ class Spectrum(numpy.ma.masked_array):
                 fs = Spectrum._from_phi_2D_analytic(ns[0], ns[1], 
                                                     xxs[0], xxs[1], phi,
                                                     mask_corners)
-            else:
+            elif not admix_props:
                 fs = Spectrum._from_phi_2D_direct(ns[0], ns[1], xxs[0], xxs[1], 
                                                   phi, mask_corners, 
-                                                  admix_props, het_ascertained)
+                                                  het_ascertained)
+            else:
+                fs = Spectrum.from_phi_2D_admix_props(ns[0], ns[1], 
+                                                      xxs[0], xxs[1], 
+                                                      phi, mask_corners, 
+                                                      admix_props)
         elif phi.ndim == 3:
             if not het_ascertained and not admix_props and not force_direct:
                 fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
                                                     xxs[0], xxs[1], xxs[2], 
                                                     phi, mask_corners)
-            else:
+            elif not admix_props:
                 fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                                   xxs[0], xxs[1], xxs[2], 
                                                   phi, mask_corners, 
-                                                  admix_props, het_ascertained)
+                                                  het_ascertained)
+            else:
+                fs = Spectrum._from_phi_3D_admix_props(ns[0], ns[1], ns[2], 
+                                                       xxs[0], xxs[1], xxs[2], 
+                                                       phi, mask_corners, 
+                                                       admix_props)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
         fs.pop_ids = pop_ids
