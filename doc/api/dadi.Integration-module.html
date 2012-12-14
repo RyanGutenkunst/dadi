@@ -202,7 +202,8 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
         <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
-        <span class="summary-sig-arg">frozen</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">frozen</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">beta</span>=<span class="summary-sig-default">1</span>)</span><br />
       Integrate a 1-dimensional phi foward.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#one_pop">source&nbsp;code</a></span>
@@ -290,7 +291,8 @@ Functions for integrating population frequency spectra.
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a name="_Vfunc"></a><span class="summary-sig-name">_Vfunc</span>(<span class="summary-sig-arg">x</span>,
-        <span class="summary-sig-arg">nu</span>)</span></td>
+        <span class="summary-sig-arg">nu</span>,
+        <span class="summary-sig-arg">beta</span>=<span class="summary-sig-default">1</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_Vfunc">source&nbsp;code</a></span>
             
@@ -410,7 +412,8 @@ Functions for integrating population frequency spectra.
         <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
         <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
         <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
-        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">beta</span>=<span class="summary-sig-default">1</span>)</span><br />
       Integrate one population with constant parameters.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_one_pop_const_params">source&nbsp;code</a></span>
@@ -484,6 +487,118 @@ Functions for integrating population frequency spectra.
       Integrate three population with constant parameters.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Integration-pysrc.html#_three_pops_const_params">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_Vfunc_X"></a><span class="summary-sig-name">_Vfunc_X</span>(<span class="summary-sig-arg">x</span>,
+        <span class="summary-sig-arg">nu</span>,
+        <span class="summary-sig-arg">beta</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Integration-pysrc.html#_Vfunc_X">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_Mfunc1D_X"></a><span class="summary-sig-name">_Mfunc1D_X</span>(<span class="summary-sig-arg">x</span>,
+        <span class="summary-sig-arg">gamma</span>,
+        <span class="summary-sig-arg">h</span>,
+        <span class="summary-sig-arg">beta</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Integration-pysrc.html#_Mfunc1D_X">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_inject_mutations_1D_X"></a><span class="summary-sig-name">_inject_mutations_1D_X</span>(<span class="summary-sig-arg">phi</span>,
+        <span class="summary-sig-arg">dt</span>,
+        <span class="summary-sig-arg">xx</span>,
+        <span class="summary-sig-arg">theta0</span>,
+        <span class="summary-sig-arg">beta</span>,
+        <span class="summary-sig-arg">alpha</span>)</span><br />
+      Inject novel mutations for a timestep.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Integration-pysrc.html#_inject_mutations_1D_X">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Integration-module.html#one_pop_X" class="summary-sig-name">one_pop_X</a>(<span class="summary-sig-arg">phi</span>,
+        <span class="summary-sig-arg">xx</span>,
+        <span class="summary-sig-arg">T</span>,
+        <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">beta</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">alpha</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">frozen</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Integrate a 1-dimensional phi foward.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Integration-pysrc.html#one_pop_X">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Integration-module.html#_one_pop_const_params_X" class="summary-sig-name" onclick="show_private();">_one_pop_const_params_X</a>(<span class="summary-sig-arg">phi</span>,
+        <span class="summary-sig-arg">xx</span>,
+        <span class="summary-sig-arg">T</span>,
+        <span class="summary-sig-arg">nu</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">gamma</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">beta</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">alpha</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">theta0</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">initial_t</span>=<span class="summary-sig-default">0</span>)</span><br />
+      Integrate one population with constant parameters.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Integration-pysrc.html#_one_pop_const_params_X">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -649,7 +764,8 @@ multiplying the eqn through by some other 2N...)
         <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
         <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>,
-        <span class="sig-arg">frozen</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">frozen</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">beta</span>=<span class="sig-default">1</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Integration-pysrc.html#one_pop">source&nbsp;code</a></span>&nbsp;
@@ -666,8 +782,10 @@ xx: Grid upon (0,1) overwhich phi is defined.
 nu, gamma, and theta0 may be functions of time.
 nu: Population size
 gamma: Selection coefficient on *all* segregating alleles
-h: Dominance coefficient. h = 0.5 corresponds to genic selection.
+h: Dominance coefficient. h = 0.5 corresponds to genic selection. 
+   Heterozygotes have fitness 1+2sh and homozygotes have fitness 1+2s.
 theta0: Propotional to ancestral size. Typically constant.
+beta: Breeding ratio, beta=Nf/Nm.
 
 T: Time at which to halt integration
 initial_t: Time at which to start integration. (Note that this only matters
@@ -843,10 +961,101 @@ Chang an Cooper's \delta_j term. Typically we set this to 0.5.
         <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
         <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
         <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
-        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
+        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">beta</span>=<span class="sig-default">1</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Integration-pysrc.html#_one_pop_const_params">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Integrate one population with constant parameters.
+
+In this case, we can precompute our a,b,c matrices for the linear system
+we need to evolve. This we can efficiently do in Python, rather than 
+relying on C. The nice thing is that the Python is much faster to debug.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="one_pop_X"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">one_pop_X</span>(<span class="sig-arg">phi</span>,
+        <span class="sig-arg">xx</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">nu</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">beta</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">alpha</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">theta0</span>=<span class="sig-default">1.0</span>,
+        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">frozen</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Integration-pysrc.html#one_pop_X">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Integrate a 1-dimensional phi foward.
+
+phi: Initial 1-dimensional phi
+xx: Grid upon (0,1) overwhich phi is defined.
+
+nu, gamma, and theta0 may be functions of time.
+nu: Population size
+gamma: Scaled selection coefficient on *all* segregating alleles
+h: Dominance coefficient. h = 0.5 corresponds to genic selection. 
+   Heterozygous females have fitness 1+2sh and homozygous females have
+   fitness 1+2s. Male carriers have fitness 1+2s.
+theta0: Propotional to ancestral size. Typically constant.
+beta: Breeding ratio, beta=Nf/Nm.
+alpha: Male to female mutation rate ratio, beta = mu_m / mu_f.
+
+T: Time at which to halt integration
+initial_t: Time at which to start integration. (Note that this only matters
+           if one of the demographic parameters is a function of time.)
+
+frozen: If True, population is 'frozen' so that it does not change.
+        In the one_pop case, this is equivalent to not running the
+        integration at all.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_one_pop_const_params_X"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_one_pop_const_params_X</span>(<span class="sig-arg">phi</span>,
+        <span class="sig-arg">xx</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">nu</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">gamma</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">h</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">beta</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">alpha</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">theta0</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">initial_t</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Integration-pysrc.html#_one_pop_const_params_X">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
@@ -893,7 +1102,7 @@ relying on C. The nice thing is that the Python is much faster to debug.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Thu Jul 12 12:44:14 2012</a>
+    3.0.1 on Fri Dec 14 15:16:34 2012</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
