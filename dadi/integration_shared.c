@@ -5,6 +5,10 @@ double Vfunc(double x, double nu){
     return 1./nu * x*(1.-x);
 }
 
+double Vfunc_beta(double x, double nu, double beta){
+    return 1./nu * x*(1.-x) * pow(beta+1, 2)/(4*beta);
+}
+
 double Mfunc1D(double x, double gamma, double h){
     return gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
 }

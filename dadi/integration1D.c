@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 void implicit_1Dx(double *phi, double *xx,
-        double nu, double gamma, double h, double dt, int L, 
+        double nu, double gamma, double h, double beta, double dt, int L, 
         int use_delj_trick){
     int ii;
     
@@ -32,10 +32,10 @@ void implicit_1Dx(double *phi, double *xx,
     Mfirst = Mfunc1D(xx[0], gamma, h);
     Mlast = Mfunc1D(xx[L-1], gamma, h);
     for(ii=0; ii < L; ii++)
-        V[ii] = Vfunc(xx[ii], nu);
+        V[ii] = Vfunc_beta(xx[ii], nu, beta);
     for(ii=0; ii < L-1; ii++){
         MInt[ii] = Mfunc1D(xInt[ii], gamma, h);
-        VInt[ii] = Vfunc(xInt[ii], nu);
+        VInt[ii] = Vfunc_beta(xInt[ii], nu, beta);
     }
 
     compute_delj(dx, MInt, VInt, L, delj, use_delj_trick);

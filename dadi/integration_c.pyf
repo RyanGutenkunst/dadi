@@ -1,6 +1,6 @@
 python module integration_c
 interface
-  subroutine implicit_1Dx(phi, xx, nu, gamma, h, dt, L, use_delj_trick)
+  subroutine implicit_1Dx(phi, xx, nu, gamma, h, beta, dt, L, use_delj_trick)
     intent(c) implicit_1Dx
     intent(c)
     double precision intent(in, out), dimension(L) :: phi
@@ -8,6 +8,7 @@ interface
     double precision intent(in) :: nu
     double precision intent(in) :: gamma
     double precision intent(in) :: h
+    double precision intent(in) :: beta 
     double precision intent(in) :: dt
     integer intent(hide), depend(phi) :: L = len(phi)
     integer intent(in) :: use_delj_trick

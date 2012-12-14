@@ -120,7 +120,7 @@ def _compute_dt(dx, nu, ms, gamma, h):
     return dt
 
 def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0, 
-            frozen=False):
+            frozen=False, beta=1):
     """
     Integrate a 1-dimensional phi foward.
 
@@ -130,8 +130,10 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
     nu, gamma, and theta0 may be functions of time.
     nu: Population size
     gamma: Selection coefficient on *all* segregating alleles
-    h: Dominance coefficient. h = 0.5 corresponds to genic selection.
+    h: Dominance coefficient. h = 0.5 corresponds to genic selection. 
+       Heterozygotes have fitness 1+2sh and homozygotes have fitness 1+2s.
     theta0: Propotional to ancestral size. Typically constant.
+    beta: Breeding ratio, beta=Nf/Nm.
 
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
@@ -154,18 +156,20 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
                          'intial_time (%f). Integration cannot be run '
                          'backwards.' % (T, initial_t))
 
-    vars_to_check = (nu, gamma, h, theta0)
+    vars_to_check = (nu, gamma, h, theta0, beta)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         return _one_pop_const_params(phi, xx, T, nu, gamma, h, theta0, 
-                                     initial_t)
+                                     initial_t, beta)
 
     nu_f = Misc.ensure_1arg_func(nu)
     gamma_f = Misc.ensure_1arg_func(gamma)
     h_f = Misc.ensure_1arg_func(h)
     theta0_f = Misc.ensure_1arg_func(theta0)
+    beta_f = Misc.ensure_1arg_func(beta)
 
     current_t = initial_t
     nu, gamma, h = nu_f(current_t), gamma_f(current_t), h_f(current_t)
+    beta = beta_f(current_t)
     dx = numpy.diff(xx)
     while current_t < T:
         dt = _compute_dt(dx,nu,[0],gamma,h)
@@ -176,6 +180,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
         # using the last timepoints nu,gamma,h.
         next_t = current_t + this_dt
         nu, gamma, h = nu_f(next_t), gamma_f(next_t), h_f(next_t)
+        beta = beta_f(next_t)
         theta0 = theta0_f(next_t)
 
         if numpy.any(numpy.less([T,nu,theta0], 0)):
@@ -188,7 +193,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
         _inject_mutations_1D(phi, this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
-        phi = int_c.implicit_1Dx(phi, xx, nu, gamma, h, this_dt, 
+        phi = int_c.implicit_1Dx(phi, xx, nu, gamma, h, beta, this_dt, 
                                  use_delj_trick=use_delj_trick)
         current_t = next_t
     return phi
@@ -412,8 +417,8 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 #
 # Here are the python versions of the population genetic functions.
 #
-def _Vfunc(x, nu):
-    return 1./nu * x*(1-x)
+def _Vfunc(x, nu, beta=1):
+    return 1./nu * x*(1-x) * (beta+1.)**2/(4.*beta)
 def _Mfunc1D(x, gamma, h):
     return gamma * 2*(h + (1-2*h)*x) * x*(1-x)
 def _Mfunc2D(x,y, mxy, gamma, h):
@@ -456,7 +461,7 @@ def _compute_delj(dx, MInt, VInt, axis=0):
     return delj
 
 def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1, 
-                          initial_t=0):
+                          initial_t=0, beta=1):
     """
     Integrate one population with constant parameters.
 
@@ -473,8 +478,8 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1,
 
     M = _Mfunc1D(xx, gamma, h)
     MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, gamma, h)
-    V = _Vfunc(xx, nu)
-    VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
+    V = _Vfunc(xx, nu, beta=beta)
+    VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu, beta=beta)
 
     dx = numpy.diff(xx)
     dfactor = _compute_dfactor(dx)
@@ -689,5 +694,116 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
             phi = int_c.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
         if not frozen3:
             phi = int_c.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
+        current_t += this_dt
+    return phi
+
+def _Vfunc_X(x, nu, beta):
+    return 1./nu * x*(1-x) * (2*beta+4.)*(beta+1.)/(9.*beta)
+def _Mfunc1D_X(x, gamma, h, beta):
+    return gamma * 4./3. * (0.5+h+x*(1-2*h)) * x*(1-x)
+def _inject_mutations_1D_X(phi, dt, xx, theta0, beta, alpha):
+    """
+    Inject novel mutations for a timestep.
+    """
+    factor = 2./(1.+2.*beta)*(1./(alpha+1.) + beta) 
+    phi[1] += dt/xx[1] * theta0/2. * factor * 2./(xx[2] - xx[0])
+    return phi
+
+def one_pop_X(phi, xx, T, nu=1, gamma=0, h=0.5, beta=1, alpha=1, theta0=1.0, 
+              initial_t=0, frozen=False):
+    """
+    Integrate a 1-dimensional phi foward.
+
+    phi: Initial 1-dimensional phi
+    xx: Grid upon (0,1) overwhich phi is defined.
+
+    nu, gamma, and theta0 may be functions of time.
+    nu: Population size
+    gamma: Scaled selection coefficient on *all* segregating alleles
+    h: Dominance coefficient. h = 0.5 corresponds to genic selection. 
+       Heterozygous females have fitness 1+2sh and homozygous females have
+       fitness 1+2s. Male carriers have fitness 1+2s.
+    theta0: Propotional to ancestral size. Typically constant.
+    beta: Breeding ratio, beta=Nf/Nm.
+    alpha: Male to female mutation rate ratio, beta = mu_m / mu_f.
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    frozen: If True, population is 'frozen' so that it does not change.
+            In the one_pop case, this is equivalent to not running the
+            integration at all.
+    """
+    phi = phi.copy()
+
+    # For a one population integration, freezing means just not integrating.
+    if frozen:
+        return phi
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    vars_to_check = (nu, gamma, h, theta0, beta, alpha)
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        return _one_pop_const_params_X(phi, xx, T, nu, gamma, h, beta, alpha, 
+                                       theta0, initial_t)
+    else:
+        raise NotImplementedError('X chromosome integration currently only '
+                                  'implemented for constant parameters.')
+
+def _one_pop_const_params_X(phi, xx, T, nu=1, gamma=0, h=0.5, beta=1, alpha=1, 
+                            theta0=1, initial_t=0):
+    """
+    Integrate one population with constant parameters.
+
+    In this case, we can precompute our a,b,c matrices for the linear system
+    we need to evolve. This we can efficiently do in Python, rather than 
+    relying on C. The nice thing is that the Python is much faster to debug.
+    """
+    if numpy.any(numpy.less([T,nu,theta0,beta,alpha], 0)):
+        raise ValueError('A time, population size, migration rate, theta0, '
+                         'beta, or alpha is < 0. Has the model been '
+                         'mis-specified?')
+    if numpy.any(numpy.equal([nu,beta], 0)):
+        raise ValueError('A population size or beta is 0. Has the model been '
+                         'mis-specified?')
+
+    M = _Mfunc1D_X(xx, gamma, h, beta)
+    MInt = _Mfunc1D_X((xx[:-1] + xx[1:])/2, gamma, h, beta)
+    V = _Vfunc_X(xx, nu, beta)
+    VInt = _Vfunc_X((xx[:-1] + xx[1:])/2, nu, beta)
+
+    dx = numpy.diff(xx)
+    dfactor = _compute_dfactor(dx)
+    delj = _compute_delj(dx, MInt, VInt)
+
+    a = numpy.zeros(phi.shape)
+    a[1:] += dfactor[1:]*(-MInt * delj - V[:-1]/(2*dx))
+
+    c = numpy.zeros(phi.shape)
+    c[:-1] += -dfactor[:-1]*(-MInt * (1-delj) + V[1:]/(2*dx))
+
+    b = numpy.zeros(phi.shape)
+    b[:-1] += -dfactor[:-1]*(-MInt * delj - V[:-1]/(2*dx))
+    b[1:] += dfactor[1:]*(-MInt * (1-delj) + V[1:]/(2*dx))
+
+    if(M[0] <= 0):
+        b[0] += (0.5/nu - M[0])*2/dx[0]
+    if(M[-1] >= 0):
+        b[-1] += -(-0.5/nu - M[-1])*2/dx[-1]
+
+    dt = _compute_dt(dx,nu,[0],gamma,h)
+    current_t = initial_t
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
+
+        _inject_mutations_1D_X(phi, this_dt, xx, theta0, beta, alpha)
+        r = phi/this_dt
+        phi = tridiag.tridiag(a, b+1./this_dt, c, r)
         current_t += this_dt
     return phi

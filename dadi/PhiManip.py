@@ -8,8 +8,7 @@ import scipy.integrate
 
 from dadi import Numerics
 
-def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5,
-           theta=None):
+def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
     """
     One-dimensional phi for a constant-sized population with genic selection.
 
@@ -35,9 +34,15 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5,
                          'Integration functions.')
 
     if h == 0.5:
-        return phi_1D_genic(xx, nu, theta0, gamma)
+        return phi_1D_genic(xx, nu, theta0, gamma, beta=beta)
 
     # Eqn 1 from Williamson, Fledel-Alon, Bustamante _Genetics_ 168:463 (2004).
+
+    # Modified to incorporate fact that for beta != 1, we get a term of 
+    # 4*beta/(beta+1)^2 in V. This can be implemented by rescaling gamma
+    # and rescaling the final phi.
+    gamma = gamma * 4.*beta/(beta+1.)**2
+
     # First we evaluate the relevant integrals.
     ints = numpy.empty(len(xx))
     integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2)
@@ -61,9 +66,9 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5,
     if xx[-1] == 1:
         # I used Mathematica to check that this was the proper limit.
         phi[-1] = 1./int0
-    return phi * nu*theta0
+    return phi * nu*theta0 * 4.*beta/(beta+1.)**2
 
-def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None):
+def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
     """
     One-dimensional phi for a constant-sized population with genic selection.
 
@@ -85,7 +90,10 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None):
                          'parameters nu and theta0, for consistency with the '
                          'Integration functions.')
     if gamma == 0:
-        return phi_1D_snm(xx, nu, theta0)
+        return phi_1D_snm(xx, nu, theta0, beta=beta)
+
+    # Beta effectively re-scales gamma.
+    gamma = gamma * 4.*beta/(beta+1.)**2
 
     exp = numpy.exp
     # Protect from warnings on divisino by zero
@@ -108,9 +116,9 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None):
     if xx[-1] == 1:
         limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
         phi[-1] = limit
-    return phi * nu*theta0
+    return phi * nu*theta0 * 4.*beta/(beta+1.)**2
 
-def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None):
+def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
     """
     Standard neutral one-dimensional probability density.
 
@@ -136,7 +144,7 @@ def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None):
         phi[0] = phi[1]
     else:
         phi = nu*theta0/xx
-    return phi
+    return phi * 4.*beta/(beta+1.)**2
 
 def phi_1D_to_2D(xx, phi_1D):
     """
@@ -434,3 +442,51 @@ def remove_pop(phi, xx, popnum):
     popnum: Population number to remove, numbering from 1.
     """
     return Numerics.trapz(phi, xx, axis=popnum-1)
+
+def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
+    """
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 4*Nref * s, where s is the
+           selective advantage.
+    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+       aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
+       1+2s. h = 0.5 corresonds to genic selection.
+
+    Returns a new phi array.
+    """
+    Kv = (2.*beta+4.)*(beta+1.)/(9.*beta)
+    Km1 = 4./3. * gamma*(0.5+h)
+    Km2 = 4./3.*gamma*(1.-2.*h)
+    g1 = Km1/Kv
+    g2 = Km2/Kv
+
+    # First we evaluate the relevant integrals.
+    ints = numpy.empty(len(xx))
+    integrand = lambda xi: numpy.exp(-2*g1*xi - g2*xi**2)
+    val, eps = scipy.integrate.quad(integrand, 0, 1)
+    int0 = val
+    for ii,q in enumerate(xx):
+        val, eps = scipy.integrate.quad(integrand, q, 1)
+        ints[ii] = val
+
+    phi = numpy.exp(2*g1*xx + g2*xx**2)*ints/int0
+    # Protect from division by zero errors
+    if xx[0] == 0 and xx[-1] == 1:
+        phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    else:
+        phi *= 1./(xx*(1-xx))
+
+    if xx[0] == 0:
+        # Technically, phi diverges at 0. This fixes lets us do numerics
+        # sensibly.
+        phi[0] = phi[1]
+    if xx[-1] == 1:
+        # I used Mathematica to check that this was the proper limit.
+        phi[-1] = 1./int0
+    return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)
