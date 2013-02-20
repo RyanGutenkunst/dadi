@@ -1414,7 +1414,7 @@ class Spectrum(numpy.ma.masked_array):
                                                   phi, mask_corners, 
                                                   het_ascertained)
             else:
-                fs = Spectrum.from_phi_2D_admix_props(ns[0], ns[1], 
+                fs = Spectrum._from_phi_2D_admix_props(ns[0], ns[1], 
                                                       xxs[0], xxs[1], 
                                                       phi, mask_corners, 
                                                       admix_props)
