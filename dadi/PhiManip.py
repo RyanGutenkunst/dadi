@@ -146,6 +146,17 @@ def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
         phi = nu*theta0/xx
     return phi * 4.*beta/(beta+1.)**2
 
+def check_xx(xx):
+    """
+    Check whether xx is monotonically increasing from 0 to 1. 
+    """
+    if not xx[0] == 0 and xx[1] == 1:
+        raise ValueError('Input xx argument does not run from 0 to 1.'
+                         'Have you passed in an incorrect argument?')
+    if not numpy.all(numpy.diff(xx) >= 0):
+        raise ValueError('Input xx argument is not monotonically increasing. '
+                         'Have you passed in an incorrect argument?')
+
 def phi_1D_to_2D(xx, phi_1D):
     """
     Implement a one-to-two population split.
@@ -155,6 +166,8 @@ def phi_1D_to_2D(xx, phi_1D):
 
     Returns a new two-dimensional phi array.
     """
+    check_xx(xx)
+
     pts = len(xx)
     phi_2D = numpy.zeros((pts, pts))
     for ii in range(1, pts-1):
@@ -170,6 +183,8 @@ def phi_2D_to_3D_split_2(xx, phi_2D):
 
     Returns a new three-dimensional phi array.
     """
+    check_xx(xx)
+
     return phi_2D_to_3D_admix(phi_2D,0,xx,xx,xx)
 
 def phi_2D_to_3D_split_1(xx, phi_2D):
@@ -181,6 +196,8 @@ def phi_2D_to_3D_split_1(xx, phi_2D):
 
     Returns a new three-dimensional phi array.
     """
+    check_xx(xx)
+
     return phi_2D_to_3D_admix(phi_2D,1,xx,xx,xx)
 
 def _admixture_intermediates(phi, ad_z, zz):
