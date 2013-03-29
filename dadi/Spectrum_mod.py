@@ -1109,10 +1109,10 @@ class Spectrum(numpy.ma.masked_array):
             factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
             if het_ascertained == 'yy':
                 factory *= yy*(1-yy)
-                integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
-                for ii in range(0, nx+1):
-                    factorx = factorx_cache[nx,ii]
-                    data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
+            integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
+            for ii in range(0, nx+1):
+                factorx = factorx_cache[nx,ii]
+                data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
 
         return Spectrum(data, mask_corners=mask_corners)
 
