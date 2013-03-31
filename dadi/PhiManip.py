@@ -17,7 +17,7 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
     theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus and Nref is the 
             reference population size.
-    gamma: scaled selection coefficient, equal to 4*Nref * s, where s is the
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
            selective advantage.
     h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
        aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
@@ -77,7 +77,7 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
     theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus and Nref is the 
             reference population size.
-    gamma: scaled selection coefficient, equal to 4*Nc * s, where s is the
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
            selective advantage.
     theta: deprecated in favor of distinct nu and theta0 arguments, for 
            consistency with Integration functions.
@@ -469,7 +469,7 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
     theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus and Nref is the 
             reference population size.
-    gamma: scaled selection coefficient, equal to 4*Nref * s, where s is the
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
            selective advantage.
     h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
        aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
