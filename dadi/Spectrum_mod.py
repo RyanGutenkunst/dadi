@@ -1526,7 +1526,7 @@ class Spectrum(numpy.ma.masked_array):
         Npops = len(pop_ids)
         fs = numpy.zeros(numpy.asarray(projections)+1)
         for snp, snp_info in data_dict.items():
-            # Skip SNPs that aren't triallelic.
+            # Skip SNPs that aren't biallelic.
             if len(snp_info['segregating']) != 2:
                 continue
 
