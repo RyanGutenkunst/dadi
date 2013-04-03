@@ -3,6 +3,7 @@
  * in Python.
  */
 double Vfunc(double x, double nu);
+double Vfunc_beta(double x, double nu, double beta);
 double Mfunc1D(double x, double gamma, double h);
 double Mfunc2D(double x, double y, double m, double gamma, double h);
 double Mfunc3D(double x, double y, double z, double mxy, double mxz,
