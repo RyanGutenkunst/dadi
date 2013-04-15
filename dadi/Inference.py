@@ -775,6 +775,9 @@ def _project_params_up(pin, fixed_params):
     if fixed_params is None:
         return pin
 
+    if numpy.isscalar(pin):
+        pin = [pin]
+
     pout = numpy.zeros(len(fixed_params))
     orig_ii = 0
     for out_ii, val in enumerate(fixed_params):
