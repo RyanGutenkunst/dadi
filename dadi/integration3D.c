@@ -12,7 +12,8 @@
 
 void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
         double nu1, double m12, double m13, double gamma1, double h1,
-        double dt, int L, int M, int N, int use_delj_trick){
+        double dt, int L, int M, int N, int use_delj_trick,
+        int Mstart, int Mend){
     int ii,jj,kk;
 
     double *dx = malloc((L-1) * sizeof(*dx));
@@ -44,7 +45,7 @@ void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
         VInt[ii] = Vfunc(xInt[ii], nu1);
 
     tridiag_malloc(L);
-    for(jj = 0; jj < M; jj++){
+    for(jj = Mstart; jj < Mend; jj++){
         for(kk = 0; kk < N; kk++){
             y = yy[jj];
             z = zz[kk];
@@ -59,9 +60,9 @@ void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
             for(ii = 0; ii < L; ii++)
                 r[ii] = phi[ii*M*N + jj*N + kk]/dt;
 
-            if((jj==0) && (kk==0) && (Mfirst <= 0))
+            if((yy[jj]==0) && (zz[kk]==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
-            if((jj==M-1) && (kk==N-1) && (Mlast >= 0))
+            if((yy[jj]==1) && (zz[kk]==1) && (Mlast >= 0))
                 b[L-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
 
             tridiag_premalloc(a, b, c, r, temp, L);
@@ -87,7 +88,8 @@ void implicit_3Dx(double *phi, double *xx, double *yy, double *zz,
 
 void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
         double nu2, double m21, double m23, double gamma2, double h2,
-        double dt, int L, int M, int N, int use_delj_trick){
+        double dt, int L, int M, int N, int use_delj_trick,
+        int Lstart, int Lend){
     int ii,jj,kk;
 
     double *dy = malloc((M-1) * sizeof(*dy));
@@ -120,7 +122,7 @@ void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
         VInt[jj] = Vfunc(yInt[jj], nu2);
 
     tridiag_malloc(M);
-    for(ii = 0; ii < L; ii++){
+    for(ii = Lstart; ii < Lend; ii++){
         for(kk = 0; kk < N; kk++){
             x = xx[ii];
             z = zz[kk];
@@ -135,9 +137,9 @@ void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
             for(jj = 0; jj < M; jj++)
                 r[jj] = phi[ii*M*N + jj*N + kk]/dt;
 
-            if((ii==0) && (kk==0) && (Mfirst <= 0))
+            if((xx[ii]==0) && (zz[kk]==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
-            if((ii==L-1) && (kk==N-1) && (Mlast >= 0))
+            if((xx[ii]==1) && (zz[kk]==1) && (Mlast >= 0))
                 b[M-1] += -(-0.5/nu2 - Mlast)*2./dy[M-2];
 
             tridiag_premalloc(a, b, c, r, temp, M);
@@ -163,7 +165,8 @@ void implicit_3Dy(double *phi, double *xx, double *yy, double *zz,
 
 void implicit_3Dz(double *phi, double *xx, double *yy, double *zz,
         double nu3, double m31, double m32, double gamma3, double h3,
-        double dt, int L, int M, int N, int use_delj_trick){
+        double dt, int L, int M, int N, int use_delj_trick,
+        int Lstart, int Lend){
     int ii,jj,kk;
 
     double *dz = malloc((N-1) * sizeof(*dz));
@@ -196,7 +199,7 @@ void implicit_3Dz(double *phi, double *xx, double *yy, double *zz,
         VInt[kk] = Vfunc(zInt[kk], nu3);
 
     tridiag_malloc(N);
-    for(ii = 0; ii < L; ii++){
+    for(ii = Lstart; ii < Lend; ii++){
         for(jj = 0; jj < M; jj++){
             x = xx[ii];
             y = yy[jj];
@@ -211,9 +214,9 @@ void implicit_3Dz(double *phi, double *xx, double *yy, double *zz,
             for(kk = 0; kk < N; kk++)
                 r[kk] = phi[ii*M*N + jj*N + kk]/dt;
 
-            if((ii==0) && (jj==0) && (Mfirst <= 0))
+            if((xx[ii]==0) && (yy[jj]==0) && (Mfirst <= 0))
                 b[0] += (0.5/nu3 - Mfirst)*2./dz[0];
-            if((ii==L-1) && (jj==M-1) && (Mlast >= 0))
+            if((xx[ii]==1) && (yy[jj]==1) && (Mlast >= 0))
                 b[N-1] += -(-0.5/nu3 - Mlast)*2./dz[N-2];
 
             tridiag_premalloc(a, b, c, r, &phi[ii*M*N + jj*N], N);
@@ -236,7 +239,7 @@ void implicit_3Dz(double *phi, double *xx, double *yy, double *zz,
 }
 
 void implicit_precalc_3Dx(double *phi, double *ax, double *bx, double *cx,
-        double dt, int L, int M, int N){
+        double dt, int L, int M, int N, int Mstart, int Mend){
     int ii,jj,kk;
     int index;
 
@@ -247,7 +250,7 @@ void implicit_precalc_3Dx(double *phi, double *ax, double *bx, double *cx,
     double *new_row = malloc(L * sizeof(*new_row));
 
     tridiag_malloc(L);
-    for(jj = 0; jj < M; jj++){
+    for(jj = Mstart; jj < Mend; jj++){
         for(kk = 0; kk < N; kk++){
             for(ii = 0; ii < L; ii++){
                 index = ii*M*N + jj*N + kk;
@@ -272,7 +275,7 @@ void implicit_precalc_3Dx(double *phi, double *ax, double *bx, double *cx,
 }
 
 void implicit_precalc_3Dy(double *phi, double *ay, double *by, double *cy,
-        double dt, int L, int M, int N){
+        double dt, int L, int M, int N, int Lstart, int Lend){
     int ii,jj,kk;
     int index;
 
@@ -283,7 +286,7 @@ void implicit_precalc_3Dy(double *phi, double *ay, double *by, double *cy,
     double *new_row = malloc(M * sizeof(*new_row));
 
     tridiag_malloc(M);
-    for(ii = 0; ii < L; ii++){
+    for(ii = Lstart; ii < Lend; ii++){
         for(kk = 0; kk < N; kk++){
             for(jj = 0; jj < M; jj++){
                 index = ii*M*N + jj*N + kk;
@@ -308,7 +311,7 @@ void implicit_precalc_3Dy(double *phi, double *ay, double *by, double *cy,
 }
 
 void implicit_precalc_3Dz(double *phi, double *az, double *bz, double *cz,
-        double dt, int L, int M, int N){
+        double dt, int L, int M, int N, int Lstart, int Lend){
     int ii,jj,kk;
     int index;
 
@@ -319,7 +322,7 @@ void implicit_precalc_3Dz(double *phi, double *az, double *bz, double *cz,
     double *new_row = malloc(N * sizeof(*new_row));
 
     tridiag_malloc(N);
-    for(ii = 0; ii < L; ii++){
+    for(ii = Lstart; ii < Lend; ii++){
         for(jj = 0; jj < M; jj++){
             for(kk = 0; kk < N; kk++){
                 index = ii*M*N + jj*N + kk;

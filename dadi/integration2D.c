@@ -18,7 +18,8 @@
 
 void implicit_2Dx(double *phi, double *xx, double *yy,
         double nu1, double m12, double gamma1, double h1,
-        double dt, int L, int M, int use_delj_trick){
+        double dt, int L, int M, int use_delj_trick,
+        int Mstart, int Mend){
     int ii, jj;
 
     double *dx = malloc((L-1) * sizeof(*dx));
@@ -50,7 +51,7 @@ void implicit_2Dx(double *phi, double *xx, double *yy,
         VInt[ii] = Vfunc(xInt[ii], nu1);
 
     tridiag_malloc(L);
-    for(jj=0; jj < M; jj++){
+    for(jj=Mstart; jj < Mend; jj++){
         y = yy[jj];
 
         Mfirst = Mfunc2D(xx[0], y, m12, gamma1, h1);
@@ -63,9 +64,9 @@ void implicit_2Dx(double *phi, double *xx, double *yy,
         for(ii = 0; ii < L; ii++)
             r[ii] = phi[ii*M + jj]/dt;
 
-        if((jj==0) && (Mfirst <= 0))
+        if((yy[jj]==0) && (Mfirst <= 0))
             b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
-        if((jj==M-1) && (Mlast >= 0))
+        if((yy[jj]==1) && (Mlast >= 0))
             b[L-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
 
         tridiag_premalloc(a, b, c, r, temp, L);
@@ -90,7 +91,8 @@ void implicit_2Dx(double *phi, double *xx, double *yy,
 
 void implicit_2Dy(double *phi, double *xx, double *yy,
         double nu2, double m21, double gamma2, double h2,
-        double dt, int L, int M, int use_delj_trick){
+        double dt, int L, int M, int use_delj_trick, 
+        int Lstart, int Lend){
     int ii, jj;
 
     double *dy = malloc((M-1) * sizeof(*dy));
@@ -122,7 +124,7 @@ void implicit_2Dy(double *phi, double *xx, double *yy,
         VInt[jj] = Vfunc(yInt[jj], nu2);
 
     tridiag_malloc(M);
-    for(ii=0; ii < L; ii++){
+    for(ii=Lstart; ii < Lend; ii++){
         x = xx[ii];
 
         Mfirst = Mfunc2D(yy[0], x, m21, gamma2, h2);
@@ -135,9 +137,9 @@ void implicit_2Dy(double *phi, double *xx, double *yy,
         for(jj = 0; jj < M; jj++)
             r[jj] = phi[ii*M + jj]/dt;
 
-        if((ii==0) && (Mfirst <= 0))
+        if((xx[ii]==0) && (Mfirst <= 0))
             b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
-        if((ii==L-1) && (Mlast >= 0))
+        if((xx[ii]==1) && (Mlast >= 0))
             b[M-1] += -(-0.5/nu2 - Mlast)*2./dy[M-2];
 
         tridiag_premalloc(a, b, c, r, &phi[ii*M], M);
@@ -158,7 +160,7 @@ void implicit_2Dy(double *phi, double *xx, double *yy,
 }
 
 void implicit_precalc_2Dx(double *phi, double *ax, double *bx, double *cx,
-        double dt, int L, int M){
+        double dt, int L, int M, int Mstart, int Mend){
     /* Warning: The bx passed in here should *not* include the 1/dt
      * contribution.
      */
@@ -171,7 +173,7 @@ void implicit_precalc_2Dx(double *phi, double *ax, double *bx, double *cx,
     double *temp = malloc(L * sizeof(*temp));
 
     tridiag_malloc(L);
-    for(jj=0; jj < M; jj++){
+    for(jj=Mstart; jj < Mend; jj++){
         for(ii = 0; ii < L; ii++){
             a[ii] = ax[ii*M + jj];
             b[ii] = bx[ii*M + jj] + 1/dt;
@@ -193,14 +195,14 @@ void implicit_precalc_2Dx(double *phi, double *ax, double *bx, double *cx,
 }
 
 void implicit_precalc_2Dy(double *phi, double *ay, double *by, double *cy,
-        double dt, int L, int M){
+        double dt, int L, int M, int Lstart, int Lend){
     int ii, jj;
 
     double *b = malloc(M * sizeof(*b));
     double *r = malloc(M * sizeof(*r));
 
     tridiag_malloc(M);
-    for(ii = 0; ii < L; ii++){
+    for(ii = Lstart; ii < Lend; ii++){
         for(jj = 0; jj < M; jj++){
             b[jj] = by[ii*M + jj] + 1/dt;
             r[jj] = 1/dt * phi[ii*M + jj];

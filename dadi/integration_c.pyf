@@ -13,7 +13,7 @@ interface
     integer intent(hide), depend(phi) :: L = len(phi)
     integer intent(in) :: use_delj_trick
   end subroutine implicit_1Dx
-  subroutine implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1, dt, L, M, use_delj_trick)
+  subroutine implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1, dt, L, M, use_delj_trick, Mstart, Mend)
     intent(c) implicit_2Dx
     intent(c)
     double precision intent(in, out), dimension(L,M) :: phi
@@ -27,8 +27,10 @@ interface
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(in) :: use_delj_trick
+    integer intent(optional) :: Mstart = 0
+    integer intent(optional) :: Mend = shape(phi,1) 
   end subroutine implicit_2Dx
-  subroutine implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2, dt, L, M, use_delj_trick)
+  subroutine implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2, dt, L, M, use_delj_trick, Lstart, Lend)
     intent(c) implicit_2Dy
     intent(c)
     double precision intent(in, out), dimension(L,M) :: phi
@@ -42,8 +44,10 @@ interface
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(in) :: use_delj_trick
+    integer intent(optional) :: Lstart = 0
+    integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_2Dy
-  subroutine implicit_precalc_2Dx(phi, ax, bx, cx, dt, L, M)
+  subroutine implicit_precalc_2Dx(phi, ax, bx, cx, dt, L, M, Mstart, Mend)
     intent(c) implicit_precalc_2Dx
     intent(c)
     double precision intent(in, out), dimension(L,M) :: phi
@@ -53,8 +57,10 @@ interface
     double precision intent(in) :: dt
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
+    integer intent(optional) :: Mstart = 0
+    integer intent(optional) :: Mend = shape(phi,1) 
   end subroutine implicit_precalc_2Dx
-  subroutine implicit_precalc_2Dy(phi, ay, by, cy, dt, L, M)
+  subroutine implicit_precalc_2Dy(phi, ay, by, cy, dt, L, M, Lstart, Lend)
     intent(c) implicit_precalc_2Dy
     intent(c)
     double precision intent(in, out), dimension(L,M) :: phi
@@ -64,8 +70,10 @@ interface
     double precision intent(in) :: dt
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
+    integer intent(optional) :: Lstart = 0
+    integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_precalc_2Dy
-  subroutine implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, gamma1, h1, dt, L, M, N, use_delj_trick)
+  subroutine implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, gamma1, h1, dt, L, M, N, use_delj_trick, Mstart, Mend)
     intent(c) implicit_3Dx
     intent(c)
     double precision intent(in,out), dimension(L,M,N) :: phi
@@ -82,8 +90,10 @@ interface
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(hide), depend(phi) :: N = shape(phi, 2)
     integer intent(in) :: use_delj_trick
+    integer intent(optional) :: Mstart = 0
+    integer intent(optional) :: Mend = shape(phi,0) 
   end subroutine implicit_3Dx
-  subroutine implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, gamma2, h2, dt, L, M, N, use_delj_trick)
+  subroutine implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, gamma2, h2, dt, L, M, N, use_delj_trick, Lstart, Lend)
     intent(c) implicit_3Dy
     intent(c)
     double precision intent(in,out), dimension(L,M,N) :: phi
@@ -100,8 +110,10 @@ interface
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(hide), depend(phi) :: N = shape(phi, 2)
     integer intent(in) :: use_delj_trick
+    integer intent(optional) :: Lstart = 0
+    integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_3Dy
-  subroutine implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, gamma3, h3, dt, L, M, N, use_delj_trick)
+  subroutine implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, gamma3, h3, dt, L, M, N, use_delj_trick, Lstart, Lend)
     intent(c) implicit_3Dz
     intent(c)
     double precision intent(in,out), dimension(L,M,N) :: phi
@@ -118,8 +130,10 @@ interface
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(hide), depend(phi) :: N = shape(phi, 2)
     integer intent(in) :: use_delj_trick
+    integer intent(optional) :: Lstart = 0
+    integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_3Dz
-  subroutine implicit_precalc_3Dx(phi, ax, bx, cx, dt, L, M, N)
+  subroutine implicit_precalc_3Dx(phi, ax, bx, cx, dt, L, M, N, Mstart, Mend)
     intent(c) implicit_precalc_3Dx
     intent(c)
     double precision intent(in, out), dimension(L,M,N) :: phi
@@ -130,8 +144,10 @@ interface
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(optional) :: Mstart = 0
+    integer intent(optional) :: Mend = shape(phi,0) 
   end subroutine implicit_precalc_3Dx
-  subroutine implicit_precalc_3Dy(phi, ay, by, cy, dt, L, M, N)
+  subroutine implicit_precalc_3Dy(phi, ay, by, cy, dt, L, M, N, Lstart, Lend)
     intent(c) implicit_precalc_3Dy
     intent(c)
     double precision intent(in, out), dimension(L,M,N) :: phi
@@ -142,8 +158,10 @@ interface
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(optional) :: Lstart = 0
+    integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_precalc_3Dy
-  subroutine implicit_precalc_3Dz(phi, az, bz, cz, dt, L, M, N)
+  subroutine implicit_precalc_3Dz(phi, az, bz, cz, dt, L, M, N, Lstart, Lend)
     intent(c) implicit_precalc_3Dz
     intent(c)
     double precision intent(in, out), dimension(L,M,N) :: phi
@@ -154,6 +172,8 @@ interface
     integer intent(hide), depend(phi) :: L = shape(phi, 0)
     integer intent(hide), depend(phi) :: M = shape(phi, 1)
     integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(optional) :: Lstart = 0
+    integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_precalc_3Dz
 end interface
 end python module integration_c
