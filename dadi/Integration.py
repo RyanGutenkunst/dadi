@@ -5,12 +5,21 @@ Functions for integrating population frequency spectra.
 import logging
 logger = logging.getLogger('Integration')
 
-#
 # Note that these functions have all be written for xx=yy=zz, so the grids are
 # identical in each direction. That's not essential here, though. The reason we
 # do it is because later we'll want to extrapolate, and it's not obvious how to
 # do so if the grids differ.
 #
+# Note that we could do different grids, if we solved a more complex
+# extrapolation polynomial. For example:
+#    val = a + b x + c x^2 + d y + e y^2 + f x y
+# Where x and y denote the injection points for x and y axes.
+
+# Also note that we have tested using multiprocessing to split up calls to
+# the C integration methods. This appears to give no speedup (or even cause a
+# slowdown). I suspect this is due to the cost of copying phi back and forth
+# between subprocesses. I tried using shared memory to fix this, but was
+# unsuccessful.
 
 #: Controls use of Chang and Cooper's delj trick, which seems to lower accuracy.
 use_delj_trick = False
