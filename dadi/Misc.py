@@ -61,7 +61,7 @@ def ensure_1arg_func(var):
                          'function.')
     return var_f
 
-def ms_command(theta, ns, core, iter, recomb=0, rsites=None):
+def ms_command(theta, ns, core, iter, recomb=0, rsites=None, seeds=None):
     """
     Generate ms command for simulation from core.
 
@@ -71,6 +71,8 @@ def ms_command(theta, ns, core, iter, recomb=0, rsites=None):
     iter: Iterations to run ms
     recomb: Assumed recombination rate
     rsites: Sites for recombination. If None, default is 10*theta.
+    seeds: Seeds for random number generator. If None, ms default is used.
+           Otherwise, three integers should be passed. Example: (132, 435, 123)
     """
     if len(ns) > 1:
         ms_command = "ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i "\
@@ -86,7 +88,13 @@ def ms_command(theta, ns, core, iter, recomb=0, rsites=None):
                 'numpops': len(ns), 'sample_sizes': ' '.join(map(str, ns)),
                 'core': core, 'recomb': recomb, 'rsites': rsites}
 
-    return ms_command % sub_dict
+    ms_command = ms_command % sub_dict
+
+    if seeds is not None:
+        seed_command = " -seeds %i %i %i" % (seeds[0], seeds[1], seeds[2])
+        ms_command = ms_command + seed_command
+    
+    return ms_command
 
 def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     """
