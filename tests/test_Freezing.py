@@ -25,6 +25,7 @@ class FreezingTestCase(unittest.TestCase):
         """
         xx = dadi.Numerics.default_grid(30)
         phi = dadi.PhiManip.phi_1D(xx)
+        phi = one_pop(phi, xx, T=0.2, nu=0.1)
         phi_orig = dadi.PhiManip.phi_1D_to_2D(xx, phi)
         phi_frozen1 = two_pops(phi_orig, xx, T=0.1, nu2=0.3, gamma2=0.5,
                                frozen1=True)
@@ -69,6 +70,9 @@ class FreezingTestCase(unittest.TestCase):
         xx = dadi.Numerics.default_grid(30)
         phi = dadi.PhiManip.phi_1D(xx)
         phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+        # To be a useful test, the population we're freezing can't be at
+        # equilibrium before testing.
+        phi = dadi.Integration.two_pops(phi, xx, T=0.2, nu1=0.5, nu2=2.0)
         phi_orig = dadi.PhiManip.phi_2D_to_3D_split_2(xx, phi)
         phi_frozen1 = three_pops(phi_orig, xx, T=0.3, 
                                  nu2=0.3, gamma2=0.5,

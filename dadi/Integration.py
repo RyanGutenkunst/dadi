@@ -349,7 +349,8 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3, 
                                         m12, m13, m21, m23, m31, m32, 
                                         gamma1, gamma2, gamma3, h1, h2, h3,
-                                        theta0, initial_t)
+                                        theta0, initial_t,
+                                        frozen1, frozen2, frozen3)
     zz = yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
