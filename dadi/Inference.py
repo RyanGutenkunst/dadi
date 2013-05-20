@@ -326,41 +326,52 @@ def ll_per_bin(model, data, missing_model_cutoff=1e-6):
     if data.folded and not model.folded:
         model = model.fold()
 
-    final_missing = None
+    # Using numpy.ma.log here ensures that any negative or nan entries in model
+    # yield masked entries in result. We can then check for correctness of
+    # calculation by simply comparing masks.
+    # Note: Using .data attributes directly saves a little computation time. We
+    # use model and data as a whole at least once, to ensure masking is done
+    # properly.
+    result = -model.data + data.data*numpy.ma.log(model) - gammaln(data + 1.)
+    if numpy.all(result.mask == data.mask):
+        return result
 
-    missing = logical_and(model < 0, logical_not(data.mask))
-    missing_sum = data[missing].sum()
+    not_data_mask = logical_not(data.mask)
     data_sum = data.sum()
-    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
+
+    missing = logical_and(model < 0, not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data.sum() > missing_model_cutoff:
         logger.warn('Model is < 0 where data is not masked.')
         logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (missing.sum(), missing_sum))
+                    'entries is %g:' % (missing.sum(), data[missing].sum()))
 
     # If the data is 0, it's okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.
-    missing = logical_and(model == 0, logical_and(data > 0, logical_not(data.mask)))
-    missing_sum = data[missing].sum()
-    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
+    missing = logical_and(model == 0, logical_and(data > 0, not_data_mask))
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum > missing_model_cutoff:
         logger.warn('Model is 0 where data is neither masked nor 0.')
         logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (missing.sum(), missing_sum))
+                    'entries is %g:' % (missing.sum(), data[missing].sum()))
 
-    missing = numpy.logical_and(model.mask, numpy.logical_not(data.mask))
-    missing_sum = data[missing].sum()
-    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
-        print missing_sum, data_sum
+    missing = numpy.logical_and(model.mask, not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum > missing_model_cutoff:
+        print data[missing].sum(), data_sum
         logger.warn('Model is masked in some entries where data is not.')
         logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (missing.sum(), missing_sum))
+                    'entries is %g:' % (missing.sum(), data[missing].sum()))
 
-    missing = numpy.logical_and(numpy.isnan(model), numpy.logical_not(data.mask))
-    missing_sum = data[missing].sum()
-    if numpy.any(missing) and missing_sum/data_sum > missing_model_cutoff:
+    missing = numpy.logical_and(numpy.isnan(model), not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum > missing_model_cutoff:
         logger.warn('Model is nan in some entries where data is not masked.')
         logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (missing.sum(), missing_sum))
+                    'entries is %g:' % (missing.sum(), data[missing].sum()))
 
-    return -model + data*numpy.ma.log(model) - gammaln(data + 1.)
+    return result
+
 
 def ll_multinom_per_bin(model, data):
     """
