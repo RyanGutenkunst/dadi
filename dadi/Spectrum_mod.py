@@ -976,9 +976,51 @@ class Spectrum(numpy.ma.masked_array):
     
         n = self.sample_sizes[0]
         S = self.S()
-        denom = numpy.sum(1./numpy.arange(1,n))
+        an = numpy.sum(1./numpy.arange(1,n))
     
-        return S/denom
+        return S/an
+    
+    def theta_L(self):
+        """
+        theta_L as defined by Zeng et al. "Statistical Tests for Detecting
+        Positive Selection by Utilizing High-Frequency Variants" (2006)
+        Genetics
+    
+        Note that is only sensible for 1-dimensional spectra.
+        """
+        if self.Npop != 1:
+            raise ValueError("Only defined on a one-dimensional fs.")
+    
+        n = self.sample_sizes[0]
+        return numpy.sum(numpy.arange(1,n)*self[1:n])/(n-1)
+
+    def Zengs_E(self):
+        """
+        Zeng et al.'s E statistic.
+
+        From Zeng et al. "Statistical Tests for Detecting Positive Selection by
+        Utilizing High-Frequency Variants" (2006) Genetics
+        """
+        num = self.theta_L() - self.Watterson_theta()
+
+        n = self.sample_sizes[0]
+
+        # See after Eq. 3
+        an = numpy.sum(1./numpy.arange(1,n))
+        # See after Eq. 9
+        bn = numpy.sum(1./numpy.arange(1,n)**2)
+        s = self.S()
+
+        # See immediately after Eq. 12
+        theta = self.Watterson_theta()
+        theta_sq = s*(s-1.)/(an**2 + bn)
+
+        # Eq. 14
+        var = (n/(2.*(n-1.)) - 1./an) * theta\
+                + (bn/an**2 + 2.*(n/(n-1.))**2 * bn - 2*(n*bn-n+1.)/((n-1.)*an)
+                   - (3.*n+1.)/(n-1.)) * theta_sq
+
+        return num/numpy.sqrt(var)
     
     def pi(self):
         r"""
