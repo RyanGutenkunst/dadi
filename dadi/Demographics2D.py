@@ -220,6 +220,8 @@ def IM_pre_mscore(params):
     """
     ms core command for IM_pre.
     """
+    nuPre,Tpre,s,nu1,nu2,T,m12,m21 = params
+    
     nu1_0 = nuPre*s
     nu2_0 = nuPre*(1-s)
     alpha1 = numpy.log(nu1/nu1_0)/T
