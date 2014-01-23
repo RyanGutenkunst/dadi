@@ -233,6 +233,6 @@ def IM_pre_mscore(params):
             "-en %(TP)f 1 1"
 
     sub_dict = {'nu1':nu1, 'nu2':nu2, 'alpha1':2*alpha1, 'alpha2':2*alpha2,
-                'm12':2*m12, 'm21':2*m21, 'T': T/2, 'nuP':nuPre, 'TP':TPre/2}
+                'm12':2*m12, 'm21':2*m21, 'T': T/2, 'nuP':nuPre, 'TP':(T+TPre)/2}
 
     return command % sub_dict
