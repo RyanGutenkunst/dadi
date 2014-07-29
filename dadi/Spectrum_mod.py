@@ -607,7 +607,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_ms_file(fid, average=True, mask_corners=True, return_header=False,
-                     pop_assignments=None, pop_ids=None):
+                     pop_assignments=None, pop_ids=None, bootstrap_segments=1):
         """
         Read frequency spectrum from file of ms output.
 
@@ -627,6 +627,10 @@ class Spectrum(numpy.ma.masked_array):
                          into population 2.
         pop_ids: Optional list of strings containing the population labels.
                  If pop_ids is None, labels will be "pop0", "pop1", ...
+        bootstrap_segments: If bootstrap_segments is an integer greater than 1,
+                            the data will be broken up into that many segments
+                            based on SNP position. Instead of single FS, a list
+                            of spectra will be returned, one for each segment.
         """
         newfile = False
         # Try to read from fid. If we can't, assume it's something that we can
@@ -687,77 +691,100 @@ class Spectrum(numpy.ma.masked_array):
             bottom5 = bottom_l[5]
             top5 = top_l[5]
         
-        data = numpy.zeros(fs_shape, numpy.int_)
-        for ii in range(runs):
+        all_data = [numpy.zeros(fs_shape, numpy.int_)
+                    for boot_ii in range(bootstrap_segments)]
+        for run_ii in range(runs):
             line = fid.readline()
             segsites = int(line.split()[-1])
             
             if segsites == 0:
                 # Special case, need to read 3 lines to stay synced.
-                for ii in range(3):
+                for _ in range(3):
                     line = fid.readline()
                 continue
             line = fid.readline()
             while not line.startswith('positions'):
                 line = fid.readline()
+
+            # Read SNP positions for creating bootstrap segments
+            positions = [float(_) for _ in line.split()[1:]]
+            # Where we should break our interval to create our bootstraps
+            breakpts = numpy.linspace(0, 1, bootstrap_segments+1)
+            # The indices that correspond to those breakpoints
+            break_iis = numpy.searchsorted(positions, breakpts)
+            # Correct for searchsorted behavior if last position is 1,
+            # to ensure all SNPs are captured
+            break_iis[-1] = len(positions)
         
             # Read the chromosomes in
             chromos = fid.read((segsites+1)*total_samples)
         
-            for snp in range(segsites):
-                # Slice to get all the entries that refer to a particular SNP
-                this_snp = chromos[snp::segsites+1]
-                # Count SNPs per population, and record them.
-                if dimension == 1:
-                    data[this_snp.count('1')] += 1
-                elif dimension == 2:
-                    data[this_snp[bottom0:top0].count('1'), 
-                         this_snp[bottom1:top1].count('1')] += 1
-                elif dimension == 3:
-                    data[this_snp[bottom0:top0].count('1'), 
-                         this_snp[bottom1:top1].count('1'),
-                         this_snp[bottom2:top2].count('1')] += 1
-                elif dimension == 4:
-                    data[this_snp[bottom0:top0].count('1'), 
-                         this_snp[bottom1:top1].count('1'),
-                         this_snp[bottom2:top2].count('1'),
-                         this_snp[bottom3:top3].count('1')] += 1
-                elif dimension == 5:
-                    data[this_snp[bottom0:top0].count('1'), 
-                         this_snp[bottom1:top1].count('1'),
-                         this_snp[bottom2:top2].count('1'),
-                         this_snp[bottom3:top3].count('1'),
-                         this_snp[bottom4:top4].count('1')] += 1
-                elif dimension == 6:
-                    data[this_snp[bottom0:top0].count('1'), 
-                         this_snp[bottom1:top1].count('1'),
-                         this_snp[bottom2:top2].count('1'),
-                         this_snp[bottom3:top3].count('1'),
-                         this_snp[bottom4:top4].count('1'),
-                         this_snp[bottom5:top5].count('1')] += 1
-                else:
-                    # This is noticably slower, so we special case the cases
-                    # above.
-                    for ii in range(dimension):
-                        bottom = bottom_l[ii]
-                        top = top_l[ii]
-                        counts[ii] = this_snp[bottom:top].count('1')
-                    data[tuple(counts)] += 1
+            # For each bootstrap segment, relevant SNPs run from start_ii:end_ii
+            for boot_ii, (start_ii, end_ii) \
+                    in enumerate(zip(break_iis[:-1], break_iis[1:])):
+                # Use the data array corresponding to this bootstrap segment
+                data = all_data[boot_ii]
+                for snp in range(start_ii, end_ii):
+                    # Slice to get all the entries that refer to a given SNP
+                    this_snp = chromos[snp::segsites+1]
+                    # Count SNPs per population, and record them.
+                    if dimension == 1:
+                        data[this_snp.count('1')] += 1
+                    elif dimension == 2:
+                        data[this_snp[bottom0:top0].count('1'), 
+                             this_snp[bottom1:top1].count('1')] += 1
+                    elif dimension == 3:
+                        data[this_snp[bottom0:top0].count('1'), 
+                             this_snp[bottom1:top1].count('1'),
+                             this_snp[bottom2:top2].count('1')] += 1
+                    elif dimension == 4:
+                        data[this_snp[bottom0:top0].count('1'), 
+                             this_snp[bottom1:top1].count('1'),
+                             this_snp[bottom2:top2].count('1'),
+                             this_snp[bottom3:top3].count('1')] += 1
+                    elif dimension == 5:
+                        data[this_snp[bottom0:top0].count('1'), 
+                             this_snp[bottom1:top1].count('1'),
+                             this_snp[bottom2:top2].count('1'),
+                             this_snp[bottom3:top3].count('1'),
+                             this_snp[bottom4:top4].count('1')] += 1
+                    elif dimension == 6:
+                        data[this_snp[bottom0:top0].count('1'), 
+                             this_snp[bottom1:top1].count('1'),
+                             this_snp[bottom2:top2].count('1'),
+                             this_snp[bottom3:top3].count('1'),
+                             this_snp[bottom4:top4].count('1'),
+                             this_snp[bottom5:top5].count('1')] += 1
+                    else:
+                        # This is noticably slower, so we special case the cases
+                        # above.
+                        for dim_ii in range(dimension):
+                            bottom = bottom_l[dim_ii]
+                            top = top_l[dim_ii]
+                            counts[dim_ii] = this_snp[bottom:top].count('1')
+                        data[tuple(counts)] += 1
         
+            # Read to the next iteration
             line = fid.readline()
             line = fid.readline()
 
         if newfile:
             fid.close()
 
-        fs = Spectrum(data, mask_corners=mask_corners, pop_ids=pop_ids)
+        all_fs = [Spectrum(data, mask_corners=mask_corners, pop_ids=pop_ids)
+                  for data in all_data]
         if average:
-            fs /= runs
+            all_fs = [fs/runs for fs in all_fs]
+
+        # If we aren't setting up for bootstrapping, return fs, rather than a
+        # list of length 1. (This ensures backward compatibility.)
+        if bootstrap_segments == 1:
+            all_fs = all_fs[0]
 
         if not return_header:
-            return fs
+            return all_fs
         else:
-            return fs, (command,seeds)
+            return all_fs, (command,seeds)
 
     @staticmethod
     def from_sfscode_file(fid, sites='all', average=True, mask_corners=True, 
