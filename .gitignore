@@ -1,3 +1,5 @@
 build
 *.so
 *module.c
+*.pyc
+.*.swp
