@@ -288,13 +288,10 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
 
-        # We inject half the mutations at a time, because Simon Gravel pointed
-        # out that this better simulates symmetric cases.
-        _inject_mutations_2D(phi, this_dt/2., xx, yy, theta0, frozen1, frozen2)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2)
         if not frozen1: 
             phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
                                      this_dt, use_delj_trick)
-        _inject_mutations_2D(phi, this_dt/2., xx, yy, theta0, frozen1, frozen2)
         if not frozen2: 
             phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
                                      this_dt, use_delj_trick)
@@ -412,18 +409,14 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
 
-        _inject_mutations_3D(phi, this_dt/3., xx, yy, zz, theta0,
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
                              frozen1, frozen2, frozen3)
         if not frozen1:
             phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
                                      gamma1, h1, this_dt, use_delj_trick)
-        _inject_mutations_3D(phi, this_dt/3., xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3)
         if not frozen2:
             phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
                                      gamma2, h2, this_dt, use_delj_trick)
-        _inject_mutations_3D(phi, this_dt/3., xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3)
         if not frozen3:
             phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
                                      gamma3, h3, this_dt, use_delj_trick)
@@ -592,10 +585,9 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     current_t = initial_t
     while current_t < T:    
         this_dt = min(dt, T - current_t)
-        _inject_mutations_2D(phi, this_dt/2., xx, yy, theta0, frozen1, frozen2)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2)
         if not frozen1:
             phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
-        _inject_mutations_2D(phi, this_dt/2., xx, yy, theta0, frozen1, frozen2)
         if not frozen2:
             phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
         current_t += this_dt
@@ -704,16 +696,12 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     current_t = initial_t
     while current_t < T:    
         this_dt = min(dt, T - current_t)
-        _inject_mutations_3D(phi, this_dt/3., xx, yy, zz, theta0,
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
                              frozen1, frozen2, frozen3)
         if not frozen1:
             phi = int_c.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
-        _inject_mutations_3D(phi, this_dt/3., xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3)
         if not frozen2:
             phi = int_c.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
-        _inject_mutations_3D(phi, this_dt/3., xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3)
         if not frozen3:
             phi = int_c.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
         current_t += this_dt
