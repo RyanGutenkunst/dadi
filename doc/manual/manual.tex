@@ -829,7 +829,7 @@ These residuals are more normally distributed than the Poisson residuals when ex
 
 \section{Bootstrapping}
 
-Because \dadi's likelihood function treats all variants as independent, and they are often not, standard likelihood theory should not be used to estimate parameter uncertainties are significance levels for hypothesis tests.
+Because \dadi's likelihood function treats all variants as independent, and they are often not, standard likelihood theory should not be used to estimate parameter uncertainties and significance levels for hypothesis tests.
 To do such tests, one can bootstrap.
 For estimating parameter uncertainties, one can use a nonparameteric bootstrap, i.e. sampling with replacement from independent units of your data (genes or chromosomes) to generate new data sets to fit.
 For hypothesis tests, the parametric bootstrap is preferred.
@@ -856,6 +856,31 @@ If you'd like to actually write the file, you could do
 os.system("%s > temp.msout" % command)
 ms_fs = dadi.Spectrum.from_ms_file("temp.msout")
 \end{lstlisting}
+
+\section{Uncertainty analysis}
+\dadi can also perform uncertainty analysis using the Godambe matrix, an estimator for the Hessian matrix.
+An example:
+\begin{lstlisting}
+param_uncert = dadi.godambe.uncert(func_ex, all_boot, p0, data, eps)
+\end{lstlisting}
+where \py{func_ex} is the extrapolated model, \py{all_boot} is a numpy array containing the bootstrapped data sets, \py{p0} is the best-fit parameters, \py{data} is the original data, and \py{eps} is the step size for the derivative calculation.
+\py{param_uncert} is a numpy array equal in length to \py{p0}, where each entry in \py{param_uncert} is the uncertainty of the parameter it corresponds to in \py{p0}.
+This method is preferable to fitting the bootstrapped datasets, as fitting of multiple data sets is computationally time consuming.
+
+\section{Likelihood ratio test}
+Using the Godambe matrix, \dadi can also perform hypothesis testing through the likelihood ratio test.
+The likelihood ratio test allows for comparison between two models, specifically a simple model which is nested within a more complex model, where the simple model is a unique case of the more complex model.
+The likelihood ratio test statistic is equal to \py{2*(ll_{c}-ll_{s})}, where \py{ll_{c}} and \py{ll_{s}} are the likelihoods of the complex and simple model, respectively.
+Model selection is then performed by comparing this test statistic to a $\chi^2$ distribution with degrees of freedom equal to the difference in number of parameters between the simple and complex model.
+To utilize this method with the composite likelihoods \dadi uses, a multiplicative adjustment to the likelihood ratio test statistic is necessary.
+\dadi returns this adjustment, an example of which is shown below.
+\begin{lstlisting}
+adjust = dadi.godambe.LRT(func_ex, all_boot, p0, data, eps, diff)
+\end{lstlisting}
+The above parameters are the same as the uncertainty analysis section example (where \py{p0} is the best-fit parameters from the simple model), while \py{diff} is the integer value difference between the number of parameters in the simple and complex model.
+Cases exist where the distribution used for critical values are more complex combinations of $\chi^2$ distributions, for example when the nested parameter is on the boundary of the admissible parameter space.
+Examples of how to handle these scenarios can be found in Coffman(2015).
+Similar to uncertainty analysis, this method of model selection is preferable to using a parametric bootstrap since fine tuning of the parametric model can be time consuming and prone to error.
 
 \section{Installation}
 
