@@ -131,7 +131,7 @@ def uncert(func_ex, all_boot, p0, data, eps, log=True):
     godambe, hess = get_godambe(func_ex, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
 
-def LRT(func_ex, all_boot, p0, data, eps, diff=1)
+def LRT(func_ex, all_boot, p0, data, eps, diff=1):
     #p0 is the best fit parameters in the simple model with the complex model parameter(s) as the first diff number of parameters in p0
     adjust = 0.0
     func = lambda param: Inference.ll_multinom(func_ex([param[:diff]+p0[diff:]], ns, grid_pts), data)
