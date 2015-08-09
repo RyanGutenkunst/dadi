@@ -1,4 +1,4 @@
-Diffusion Approximation for Demographic Inference
+**Diffusion Approximation for Demographic Inference**
 
 ∂a∂i implements methods for demographic history and selection inference from genetic data, based on diffusion approximations to the allele frequency spectrum. One of ∂a∂i's main benefits is speed: fitting a two-population model typically takes around 10 minutes, and run time is independent of the number of SNPs in your data set. ∂a∂i is also flexible, handling up to three simultaneous populations, with arbitrary timecourses for population size and migration, plus the possibility of admixture and population-specific selection.
 
