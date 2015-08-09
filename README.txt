@@ -1,15 +1,18 @@
-dadi is a powerful method for fitting demographic models to genetic data.
+# Diffusion Approximation for Demographic Inference
 
-Binary installers are available for OS X and Windows. If you use a binary installer, we still suggest downloading the source, so as to get the documentation, examples and tests.
+∂a∂i implements methods for demographic history and selection inference from genetic data, based on diffusion approximations to the allele frequency spectrum. One of ∂a∂i's main benefits is speed: fitting a two-population model typically takes around 10 minutes, and run time is independent of the number of SNPs in your data set. ∂a∂i is also flexible, handling up to three simultaneous populations, with arbitrary timecourses for population size and migration, plus the possibility of admixture and population-specific selection.
 
-To install from soruce, simply run `python setup.py install`.
+Originally ∂a∂i was initially developed by [Ryan Gutenkunst](http://gutengroup.mcb.arizona.edu) in the labs of Scott Williamson and [Carlos Bustamante](http://www.bustamantelab.org) in Cornell's [Department of Biological Statistics and Computational Biology](http://www.bscb.cornell.edu). Ryan is now faculty in [Molecular and Cellular Biology](http://mcb.arizona.edu) at the [University of Arizona](http://www.arizona.edu), and [his group](http://gutengroup.mcb.arizona.edu) continues to work on ∂a∂i.
 
-After that, run a (growing) series of tests on the installation. Change to the `tests` directory and run `python run_tests.py`
+## News
+  * **∂a∂i version 1.6.3 released**; Jul 12, 2012
 
-Usage examples are found under the `examples` directory.
+This release improves `optimize_grid`, in response to a request by Xueqiu, and also adds the option to push optimization output to a file. It also includes a fix contributed by Simon Gravel for errors in extrapolation for very large spectra. Finally, spectra calculation for SNPs ascertained by sequencing a single individual has been added, in response to a request by Joe Pickrell.
 
-Additional documenation is under the doc directory. To view the API documentation, open doc/api/index.html in a web browser.
+  * **∂a∂i version 1.6.2 released**; Dec 4, 2011
 
-To stay updated on dadi's development, go to dadi.googlecode.com and sign up for the (low-traffic) dadi-announce mailing list.
+This release fixes a long-standing bug in `make_fux_table`. (Testing suggests that in almost all cases the bug had little effect on results.) Also fixed is a bug that prevented optimizations from succeeding.
 
-Please post questions to the dadi-users mailing list, so we can build up an archive of useful tips.
+  * **∂a∂i version 1.6.1 released**; Nov 8, 2011
+
+This release improves support for modeling admixture. It turns out that when the admixture methods in `PhiManip` are used, this can result in oscillations in the calculated frequency spectrum as the grid size is changes, which invalidates extrapolation. One solution is to run with `pts_l` of length one, so there is no extrapolation. Another solution, if the admixture is the last event in your model, is to implement admixture using the new `admix_props` argument to `Spectrum.from_phi`, rather than using the `PhiManip` methods.
