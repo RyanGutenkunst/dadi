@@ -5,7 +5,10 @@ Diffusion Approximation for Demographic Inference
 Originally ∂a∂i was initially developed by  Ryan Gutenkunst in the labs of Scott Williamson and Carlos Bustamante [http://www.bustamantelab.org] in Cornell's Department of Biological Statistics and Computational Biology. Ryan is now faculty in Molecular and Cellular Biology at the University of Arizona, and his group continues to work on ∂a∂i [http://gutengroup.mcb.arizona.edu].
 
 **Getting started**
+
 Please see the wiki pages on Getting Started [https://bitbucket.org/RyanGutenkunst/dadi/wiki/GettingStarted], Installation [https://bitbucket.org/RyanGutenkunst/dadi/wiki/Installation], and our Data Format [ [https://bitbucket.org/RyanGutenkunst/dadi/wiki/DataFormats].
+
+Also, please sign up for our mailing list, where we help the community with ∂a∂i. Please do search the archives before posting. Many questions come up repeatedly. [http://groups.google.com/group/dadi-user]
 
 **∂a∂i version 1.6.3 released**; Jul 12, 2012
 
