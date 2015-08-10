@@ -102,10 +102,21 @@ def get_grad(func, p0, eps):
     return grad
 
 def get_godambe(func_ex, all_boot, p0, data, eps, log=True):
-    #assume that last element of p0 is theta, and the remaining elements are the demographic model parameters
-    #log dictates whether parameters are regular are logarithmic
-    #func_ex is dadi extrapolated function, all_boot is bootstrapped data, p0 is best_fit params for data/func_ex combination
+    """
+    Godambe information and Hessian matrices
+
+    NOTE: Assumes that last parameter in p0 is theta.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex. 
+        parameter in p0 is theta.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    log: If True, calculate derivatives in terms of log-parameters
+    """
     J = numpy.zeros((len(p0), len(p0)))
+    ns = data.sample_sizes
     func = lambda params: Inference.ll(params[-1]*func_ex(params[:-1], ns, grid_pts), data)
     hess = -get_hess(func, p0, eps)
     if log:
@@ -128,13 +139,42 @@ def get_godambe(func_ex, all_boot, p0, data, eps, log=True):
     return godambe, hess
 
 def uncert(func_ex, all_boot, p0, data, eps, log=True):
+    """
+    Parameter uncertainties from Godambe Information Matrix
+
+    Returns standard deviations of parameter values.
+
+    NOTE: Assumes that last parameter in p0 is theta.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    log: If True, assume log-normal distribution of parameters. Returned values 
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    """
     godambe, hess = get_godambe(func_ex, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
 
 def LRT(func_ex, all_boot, p0, data, eps, diff=1):
+    """
+    First-order moment matching adjustment factor for likelihood ratio test
+
+    NOTE: Assumes that last parameter in p0 is theta.
+
+    func_ex: Model function for complex model
+    all_boot: List of bootstrap frequency spectra
+    p0: XXX: Unclear to me.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    diff: Difference in number of parameters between complex and simple models
+    """
     #p0 is the best fit parameters in the simple model with the complex model parameter(s) as the first diff number of parameters in p0
-    adjust = 0.0
-    func = lambda param: Inference.ll_multinom(func_ex([param[:diff]+p0[diff:]], ns, grid_pts), data)
+    ns = data.sample_sizes
+    func = lambda param: Inference.ll_multinom(func_ex([param[:diff]+p0[diff:]],
+                                                       ns, grid_pts), data)
     H = -get_hess_log(func, p0[:diff], eps)
     J_boot = numpy.zeros([diff, diff])
     J_array = []
