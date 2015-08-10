@@ -3,3 +3,9 @@ build
 *module.c
 *.pyc
 .*.swp
+*.aux
+*.log
+*.lol
+*.out
+*.gz
+*.toc
