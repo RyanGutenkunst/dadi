@@ -48,17 +48,21 @@ p0 = dadi.Misc.perturb_params(params, fold=1, upper_bound=upper_bound)
 # since it's trivial to find given the other parameters. If you want to fix
 # theta, add a multinom=False to the call.
 # (This is commented out by default, since it takes several minutes.)
-# The maxiter argument restricts how long the optimizer will run. For production
-# runs, you may want to set this value higher, to encourage better convergence.
+# The maxiter argument restricts how long the optimizer will run. For real 
+# runs, you will want to set this value higher, to encourage better
+# convergence.
 popt = dadi.Inference.optimize_log(p0, data, func_ex, pts_l, 
                                    lower_bound=lower_bound,
                                    upper_bound=upper_bound,
                                    verbose=len(params),
                                    maxiter=3)
+
 print 'Optimized parameters', repr(popt)
 model = func_ex(popt, ns, pts_l)
 ll_opt = dadi.Inference.ll_multinom(model, data)
 print 'Optimized log-likelihood:', ll_opt
+# The optimal value of theta given the model and the optimized parameters.
+theta_opt = dadi.Inference.optimal_sfs_scaling(model, data)
 
 # Plot a comparison of the resulting fs with the data.
 import pylab
@@ -84,33 +88,51 @@ mscommand = dadi.Misc.ms_command(1., ns, mscore, int(1e6))
 #                                    pop_ids=('YRI','CEU'))
 #pylab.show()
 
+# These are the optimal parameter estimates for this model and data, from long
+# optimization runs.
+popt = array([ 1.87913514,  0.07206629,  1.77945941,  0.92878784,  0.36389356,
+        0.11160405])
+
 # Below here we compare uncertainty estimates from folded and unfolded spectra.
 # Estimates are done using the hessian (Fischer Information Matrix).
 # Due to linkage in the data, these are underestimates. It is still
 # informative, however, to compare the two methods.
 
-## These are the optimal parameters when the spectrum is folded. They can be
-## found simply by passing fold=True to the above call to optimize_log.
-#pfold =  array([1.907,  0.073,  1.830,  0.899,  0.425,  0.113])
-#
-## The interface to hessian computation is designed for general functions, so we
-## need to define the specific functions of interest here. These functions
-## calculate -ll given the logs of the parameters. (Because we work in log
-## parameters, the uncertainties we estimate will be *relative* parameter
-## uncertainties.)
-#from dadi.Inference import ll_multinom
-#func = lambda lp: -ll_multinom(func_ex(numpy.exp(lp), ns, pts_l), data)
-#foldfunc = lambda lp: -ll_multinom(func_ex(numpy.exp(lp), ns, pts_l).fold(), 
-#                                   data.fold()) 
-#
-## Calculate the two hessians
-#h = dadi.Hessian.hessian(func, numpy.log(params), 0.05)
-#hfold = dadi.Hessian.hessian(foldfunc, numpy.log(pfold), 0.05)
-#
-## Now we calculate the *relative* parameter uncertainties.
-#uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(h)))
-#uncerts_folded = numpy.sqrt(numpy.diag(numpy.linalg.inv(hf)))
-#
-## The increase in uncertainty is not too bad. Tp increasing by 50% is the only
-## substantial one.
-#print uncerts_folded/uncerts - 1
+# These are the optimal parameters when the spectrum is folded. They can be
+# found simply by passing fold=True to the above call to optimize_log.
+pfold =  array([1.907,  0.073,  1.830,  0.899,  0.425,  0.113])
+
+# The interface to hessian computation is designed for general functions, so we
+# need to define the specific functions of interest here. These functions
+# calculate -ll given the logs of the parameters. (Because we work in log
+# parameters, the uncertainties we estimate will be *relative* parameter
+# uncertainties.)
+from dadi.Inference import ll_multinom
+func = lambda lp: -ll_multinom(func_ex(numpy.exp(lp), ns, pts_l), data)
+foldfunc = lambda lp: -ll_multinom(func_ex(numpy.exp(lp), ns, pts_l).fold(), 
+                                   data.fold()) 
+
+# Calculate the two hessians
+h = dadi.Hessian.hessian(func, numpy.log(popt), 0.05)
+hfold = dadi.Hessian.hessian(foldfunc, numpy.log(pfold), 0.05)
+
+# Now we calculate the *relative* parameter uncertainties.
+uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(h)))
+uncerts_folded = numpy.sqrt(numpy.diag(numpy.linalg.inv(hfold)))
+
+# The increase in uncertainty is not too bad. Tp increasing by 50% is the only
+# substantial one.
+print uncerts_folded/uncerts - 1
+
+# Now we calculate uncertainty estimates using the Godambe Information Matrix,
+# which accounts for linkage in the data that the Hessian approach neglects.
+# To use the GIM approach, we need to have spectra from bootstrapping our data.
+# Let's load the ones we've provided for the example.
+# (We're using Python list comprehension syntax to do this in one line.)
+all_boot = [dadi.Spectrum.from_file('bootstraps/{0:02d}.fs'.format(ii)) 
+            for ii in range(100)]
+# Note that the godambe methods assume that theta is the last parameter in
+# the list passed in.
+p0 = list(popt)
+p0.append(theta_opt)
+uncert = dadi.godambe.uncert(func_ex, all_boot, p0, data, 0.01, log=True)
