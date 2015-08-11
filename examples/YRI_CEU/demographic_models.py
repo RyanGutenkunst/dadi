@@ -6,7 +6,7 @@ import dadi
 
 def prior_onegrow_mig((nu1F, nu2B, nu2F, m, Tp, T), (n1,n2), pts):
     """
-    Model with growth, split, bottleneck in pop2 , exp recovery, migration
+    Model with growth, split, bottleneck in pop2, exp recovery, migration
 
     nu1F: The ancestral population size after growth. (Its initial size is
           defined to be 1.)
@@ -58,3 +58,19 @@ def prior_onegrow_mig_mscore((nu1F, nu2B, nu2F, m, Tp, T)):
                 'm':2*m, 'T':T/2, 'Tsum':(T+Tp)/2}
 
     return command % sub_dict
+
+def prior_onegrow_nomig((nu1F, nu2B, nu2F, Tp, T), (n1,n2), pts):
+    """
+    Model with growth, split, bottleneck in pop2, exp recovery, no migration
+
+    nu1F: The ancestral population size after growth. (Its initial size is
+          defined to be 1.)
+    nu2B: The bottleneck size for pop2
+    nu2F: The final size for pop2
+    Tp: The scaled time between ancestral population growth and the split.
+    T: The time between the split and present
+
+    n1,n2: Size of fs to generate.
+    pts: Number of points to use in grid for evaluation.
+    """
+    return prior_onegrow_mig((nu1F, nu2B, nu2F, 0, Tp, T), (n1,n2), pts)

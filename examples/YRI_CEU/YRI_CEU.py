@@ -24,6 +24,7 @@ upper_bound = [100, 100, 3, 20]
 # Instead, we'll work with our custom model
 func = demographic_models.prior_onegrow_mig
 # ll for this model: -1066.66
+# These are the best-fit models parameters.
 params = array([1.881, 0.0710, 1.845, 0.911, 0.355, 0.111])
 # The upper_bound array is for use in optimization. Occasionally the optimizer
 # will try wacky parameter values. We in particular want to exclude values with
@@ -136,3 +137,10 @@ all_boot = [dadi.Spectrum.from_file('bootstraps/{0:02d}.fs'.format(ii))
 p0 = list(popt)
 p0.append(theta_opt)
 uncert = dadi.godambe.uncert(func_ex, all_boot, p0, data, 0.01, log=True)
+
+# Let's do a likelihood-ratio test comparing models with and without migration.
+# The no migration model is implemented as 
+# demographic_models.prior_onegrow_nomig
+# The best-fit ll for this model is -1146.09.
+# These are the best-fit models parameters
+# array([ 1.897,  0.0388,  9.677,  0.395,  0.070]).
