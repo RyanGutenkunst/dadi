@@ -858,7 +858,7 @@ ms_fs = dadi.Spectrum.from_ms_file("temp.msout")
 \end{lstlisting}
 
 \section{Uncertainty analysis}
-\dadi can also perform uncertainty analysis using the Godambe matrix, an estimator for the Hessian matrix.
+\dadi can also perform uncertainty analysis using the Godambe matrix, which is equivalent to the Fisher Information Matrix, but for composite likelihoods.
 An example:
 \begin{lstlisting}
 param_uncert = dadi.godambe.uncert(func_ex, all_boot, p0, data, eps)
@@ -869,18 +869,18 @@ This method is preferable to fitting the bootstrapped datasets, as fitting of mu
 
 \section{Likelihood ratio test}
 Using the Godambe matrix, \dadi can also perform hypothesis testing through the likelihood ratio test.
-The likelihood ratio test allows for comparison between two models, specifically a simple model which is nested within a more complex model, where the simple model is a unique case of the more complex model.
-The likelihood ratio test statistic is equal to \py{2*(ll_{c}-ll_{s})}, where \py{ll_{c}} and \py{ll_{s}} are the likelihoods of the complex and simple model, respectively.
+The likelihood ratio test allows for comparison between two nested models, such that the simple model is a special case of the more complex model.
+The full likelihood ratio test statistic is equal to $2*(ll_{c}-ll_{s})$, where $ll_{c}$ and $ll_{s}$ are the likelihoods of the complex and simple model, respectively.
 Model selection is then performed by comparing this test statistic to a $\chi^2$ distribution with degrees of freedom equal to the difference in number of parameters between the simple and complex model.
-To utilize this method with the composite likelihoods \dadi uses, a multiplicative adjustment to the likelihood ratio test statistic is necessary.
-\dadi returns this adjustment, an example of which is shown below.
+To perform likelihood ratio tests using composite likelihoods, a multiplicative adjustment to the likelihood ratio test statistic is needed.
+\dadi can calculate this adjustment, an example of which is shown below.
 \begin{lstlisting}
 adjust = dadi.godambe.LRT(func_ex, all_boot, p0, data, eps, diff)
 \end{lstlisting}
 The above parameters are the same as the uncertainty analysis section example (where \py{p0} is the best-fit parameters from the simple model), while \py{diff} is the integer value difference between the number of parameters in the simple and complex model.
-Cases exist where the distribution used for critical values are more complex combinations of $\chi^2$ distributions, for example when the nested parameter is on the boundary of the admissible parameter space.
-Examples of how to handle these scenarios can be found in Coffman(2015).
-Similar to uncertainty analysis, this method of model selection is preferable to using a parametric bootstrap since fine tuning of the parametric model can be time consuming and prone to error.
+Cases exist in which the distribution used for critical values is a more complex combination of $\chi^2$ distributions, for example when the nested parameter is on the boundary of the admissible parameter space.
+Examples of how to handle these scenarios can be found in \cite{Coffman2015}.
+Similar to uncertainty analysis, this method of model selection is preferable to using a parametric bootstrap, because fine tuning of the parametric model can be time consuming and prone to error.
 
 \section{Installation}
 
