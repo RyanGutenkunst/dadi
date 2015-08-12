@@ -4,6 +4,8 @@ from numpy import array
 
 import dadi
 
+import godambe
+
 # In demographic_models.py, we've defined a custom model for this problem
 import demographic_models
 
@@ -64,7 +66,7 @@ ll_opt = dadi.Inference.ll_multinom(model, data)
 print 'Optimized log-likelihood:', ll_opt
 # The optimal value of theta given the model and the optimized parameters.
 theta_opt = dadi.Inference.optimal_sfs_scaling(model, data)
-
+"""
 # Plot a comparison of the resulting fs with the data.
 import pylab
 pylab.figure()
@@ -74,7 +76,7 @@ dadi.Plotting.plot_2d_comp_multinom(model, data, vmin=1, resid_range=3,
 # ipython.
 pylab.show()
 pylab.savefig('YRI_CEU.png', dpi=50)
-
+"""
 # Let's generate some data using ms, if you have it installed.
 mscore = demographic_models.prior_onegrow_mig_mscore(params)
 # I find that it's most efficient to simulate with theta=1 and then scale up.
@@ -112,7 +114,7 @@ from dadi.Inference import ll_multinom
 func = lambda lp: -ll_multinom(func_ex(numpy.exp(lp), ns, pts_l), data)
 foldfunc = lambda lp: -ll_multinom(func_ex(numpy.exp(lp), ns, pts_l).fold(), 
                                    data.fold()) 
-
+"""
 # Calculate the two hessians
 h = dadi.Hessian.hessian(func, numpy.log(popt), 0.05)
 hfold = dadi.Hessian.hessian(foldfunc, numpy.log(pfold), 0.05)
@@ -124,7 +126,7 @@ uncerts_folded = numpy.sqrt(numpy.diag(numpy.linalg.inv(hfold)))
 # The increase in uncertainty is not too bad. Tp increasing by 50% is the only
 # substantial one.
 print uncerts_folded/uncerts - 1
-
+"""
 # Now we calculate uncertainty estimates using the Godambe Information Matrix,
 # which accounts for linkage in the data that the Hessian approach neglects.
 # To use the GIM approach, we need to have spectra from bootstrapping our data.
@@ -136,7 +138,9 @@ all_boot = [dadi.Spectrum.from_file('bootstraps/{0:02d}.fs'.format(ii))
 # the list passed in.
 p0 = list(popt)
 p0.append(theta_opt)
-uncert = dadi.godambe.uncert(func_ex, all_boot, p0, data, 0.01, log=True)
+
+uncert = godambe.uncert(func_ex, ns, pts_l, all_boot, p0, data, 0.01, log=True)
+print uncert, " are uncertainties from GIM"
 
 # Let's do a likelihood-ratio test comparing models with and without migration.
 # The no migration model is implemented as 
@@ -144,3 +148,19 @@ uncert = dadi.godambe.uncert(func_ex, all_boot, p0, data, 0.01, log=True)
 # The best-fit ll for this model is -1146.09.
 # These are the best-fit models parameters
 # array([ 1.897,  0.0388,  9.677,  0.395,  0.070]).
+# Since LRT evaluates the complex model using the
+# best-fit parameters from the simple model,
+# need to create list of parameters for the complex
+# model using the simple (no-mig) best-fit params
+# Also, calculating theta to maintain consistency
+# with uncert example above.
+p0 = [1.897,  0.0388,  9.677, 0.395,  0.070]
+# Since evalution is done with more complex model,
+# need to insert zero migration value at corresponding
+# migration parameter index in complex model
+p0.insert(3, 0.0)
+LRT = godambe.LRT(func_ex, ns, pts_l, all_boot, p0, data, 0.01, diff=[3])
+print LRT, " is the value by which to adjust the LRT test statistic"
+print "This yields a test statistic of ", LRT*2*(ll_model-(-1146.09))
+
+
