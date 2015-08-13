@@ -84,14 +84,17 @@ def get_hess(func, p0, eps):
     p0: Parameter values to take derivative around
     eps: Fractional stepsize to use when taking finite-difference derivatives
     """
-    f0 = func(p0)
-    epp = eps
-    eps = numpy.empty([len(p0), 1])
-    for i in range(len(p0)):
-        if p0[i] != 0:
-            eps[i] = epp*p0[i]
+    # Calculate step sizes for finite-differences.
+    eps_in = eps
+    eps = numpy.empty([len(p0)])
+    for i, pval in enumerate(p0):
+        if pval != 0:
+            eps[i] = eps_in*pval
         else:
-            eps[i] = epp
+            # Account for zero parameters
+            eps[i] = eps_in
+
+    f0 = func(p0)
     hess = numpy.empty((len(p0), len(p0)))
     for ii in range(len(p0)):
         for jj in range(ii, len(p0)):
@@ -108,13 +111,16 @@ def get_grad(func, p0, eps):
     eps: Fractional stepsize to use when taking finite-difference derivatives
     """
     f0 = func(p0)
-    epp = eps
+    # Calculate step sizes for finite-differences.
+    eps_in = eps
     eps = numpy.empty([len(p0)])
-    for i in range(len(p0)):
-        if p0[i] != 0:
-            eps[i] = epp*p0[i]
-        if p0[i] == 0:
-            eps[i] = epp
+    for i, pval in enumerate(p0):
+        if pval != 0:
+            eps[i] = eps_in*pval
+        else:
+            # Account for parameters equal to zero
+            eps[i] = eps_in
+
     grad = numpy.empty([len(p0), 1])
     for ii in range(len(p0)):
         pwork = numpy.array(p0, copy=True, dtype=True)
