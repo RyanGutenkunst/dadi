@@ -3,7 +3,7 @@ import numpy
 from dadi import Inference
 from dadi.Spectrum_mod import Spectrum
 
-def hessian_elem(func, f0, p0, ii, jj, eps):
+def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
     """
     Calculate element [ii][jj] of the Hessian matrix, a matrix
     of partial second derivatives w.r.t. to parameters ii and jj
@@ -13,6 +13,7 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
     p0: Parameters for func
     eps: List of absolute step sizes to use for each parameter when taking
          finite differences.
+    args: Additional arguments to func
     """
     # Note that we need to specify dtype=float, to avoid this being an integer
     # array which will silently fail when adding fractional eps.
@@ -20,18 +21,18 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
     if ii == jj:
         if pwork[ii] != 0:
             pwork[ii] = p0[ii] + eps[ii]
-            fp = func(pwork)
+            fp = func(pwork, *args)
             
             pwork[ii] = p0[ii] - eps[ii]
-            fm = func(pwork)
+            fm = func(pwork, *args)
             
             element = (fp - 2*f0 + fm)/eps[ii]**2
         if pwork[ii] == 0:
             pwork[ii] = p0[ii] + 2*eps[ii]
-            fp = func(pwork)
+            fp = func(pwork, *args)
             
             pwork[ii] = p0[ii] + eps[ii]
-            fm = func(pwork)
+            fm = func(pwork, *args)
 
             element = (fp - 2*fm + f0)/eps[ii]**2
     else:
@@ -39,50 +40,51 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
             # f(xi + hi, xj + h)
             pwork[ii] = p0[ii] + eps[ii]
             pwork[jj] = p0[jj] + eps[jj]
-            fpp = func(pwork)
+            fpp = func(pwork, *args)
             
             # f(xi + hi, xj - hj)
             pwork[ii] = p0[ii] + eps[ii]
             pwork[jj] = p0[jj] - eps[jj]
-            fpm = func(pwork)
+            fpm = func(pwork, *args)
             
             # f(xi - hi, xj + hj)
             pwork[ii] = p0[ii] - eps[ii]
             pwork[jj] = p0[jj] + eps[jj]
-            fmp = func(pwork)
+            fmp = func(pwork, *args)
             
             # f(xi - hi, xj - hj)
             pwork[ii] = p0[ii] - eps[ii]
             pwork[jj] = p0[jj] - eps[jj]
-            fmm = func(pwork)
+            fmm = func(pwork, *args)
 
             element = (fpp - fpm - fmp + fmm)/(4 * eps[ii]*eps[jj])
         else:
             # f(xi + hi, xj + h)
             pwork[ii] = p0[ii] + eps[ii]
             pwork[jj] = p0[jj] + eps[jj]
-            fpp = func(pwork)
+            fpp = func(pwork, *args)
             
             # f(xi + hi, xj)
             pwork[ii] = p0[ii] + eps[ii]
             pwork[jj] = p0[jj]
-            fpm = func(pwork)
+            fpm = func(pwork, *args)
             
             # f(xi, xj + hj)
             pwork[ii] = p0[ii]
             pwork[jj] = p0[jj] + eps[jj]
-            fmp = func(pwork)
+            fmp = func(pwork, *args)
             
             element = (fpp - fpm - fmp + f0)/(eps[ii]*eps[jj])
     return element
 
-def get_hess(func, p0, eps):
+def get_hess(func, p0, eps, args=()):
     """
     Calculate Hessian matrix, a matrix of partial second derivatives. Hij = dfunc/(dp_i dp_j)
     
     func: Model function
     p0: Parameter values to take derivative around
     eps: Fractional stepsize to use when taking finite-difference derivatives
+    args: Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
     eps_in = eps
@@ -94,23 +96,24 @@ def get_hess(func, p0, eps):
             # Account for zero parameters
             eps[i] = eps_in
 
-    f0 = func(p0)
+    f0 = func(p0, *args)
     hess = numpy.empty((len(p0), len(p0)))
     for ii in range(len(p0)):
         for jj in range(ii, len(p0)):
-            hess[ii][jj] = hessian_elem(func, f0, p0, ii, jj, eps)
+            hess[ii][jj] = hessian_elem(func, f0, p0, ii, jj, eps, args=args)
             hess[jj][ii] = hess[ii][jj]
     return hess
 
-def get_grad(func, p0, eps):
+def get_grad(func, p0, eps, args=()):
     """
     Calculate gradient vector
     
     func: Model function
     p0: Parameters for func
     eps: Fractional stepsize to use when taking finite-difference derivatives
+    args: Additional arguments to func
     """
-    f0 = func(p0)
+    f0 = func(p0, *args)
     # Calculate step sizes for finite-differences.
     eps_in = eps
     eps = numpy.empty([len(p0)])
@@ -126,15 +129,15 @@ def get_grad(func, p0, eps):
         pwork = numpy.array(p0, copy=True, dtype=float)
         if pwork[ii] != 0:
             pwork[ii] = p0[ii] + eps[ii]
-            fp = func(pwork)
+            fp = func(pwork, *args)
             pwork[ii] = p0[ii] - eps[ii]
-            fm = func(pwork)
+            fm = func(pwork, *args)
             grad[ii] = (fp - fm)/(2*eps[ii])
         if pwork[ii] == 0:
             pwork[ii] = p0[ii] + eps[ii]
-            fp = func(pwork)
+            fp = func(pwork, *args)
             pwork[ii] = p0[ii]
-            fm = func(pwork)
+            fm = func(pwork, *args)
             grad[ii] = (fp - fm)/(eps[ii])
     return grad
 
@@ -154,22 +157,30 @@ def get_godambe(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
     eps: Fractional stepsize to use when taking finite-difference derivatives
     log: If True, calculate derivatives in terms of log-parameters
     """
+    # Cache evaluations of the frequency spectrum inside our hessian/J 
+    # evaluation function
+    cache = {}
+    def func(params, data):
+        key = (tuple(params[:-1]), tuple(ns), tuple(grid_pts))
+        if key not in cache:
+            cache[key] = func_ex(params[:-1], ns, grid_pts)
+        fs = cache[key] 
+        return Inference.ll(params[-1]*fs, data)
+    def log_func(logparams, data):
+        return func(numpy.exp(logparams), data)
+
     J = numpy.zeros((len(p0), len(p0)))
-    ns = data.sample_sizes
-    grid_pts = [ns[0]+20, ns[0]+30, ns[0]+40]
-    func = lambda params: Inference.ll(params[-1]*func_ex(params[:-1], ns, grid_pts), data)
-    hess = -get_hess(func, p0, eps)
-    if log:
-        func = lambda params: Inference.ll(numpy.exp(params[-1])*func_ex(numpy.exp(params[:-1]), ns, grid_pts), data)
-        hess = -get_hess(func, numpy.log(p0), eps)
+    if not log:
+        hess = -get_hess(func, p0, eps, args=[data])
+    else:
+        hess = -get_hess(log_func, numpy.log(p0), eps, args=[data])
+
     for ii, boot in enumerate(all_boot):
         boot = Spectrum(boot)
         if not log:
-            func = lambda params: Inference.ll(params[-1]*func_ex(params[:-1], ns, grid_pts), boot)
-            grad_temp = get_grad(func, p0, eps)
-        if log:
-            func = lambda params: Inference.ll(numpy.exp(params[-1])*func_ex(numpy.exp(params[:-1]), ns, grid_pts), boot)
-            grad_temp = get_grad(func, numpy.log(p0), eps)
+            grad_temp = get_grad(func, p0, eps, args=[boot])
+        else:
+            grad_temp = get_grad(log_func, numpy.log(p0), eps, args=[boot])
         J_temp = numpy.outer(grad_temp, grad_temp)
         J = J + J_temp
     J = J/len(all_boot)
