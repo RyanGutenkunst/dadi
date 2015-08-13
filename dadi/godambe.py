@@ -178,7 +178,7 @@ def get_godambe(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess
 
-def uncert(func_ex, all_boot, p0, data, eps, log=True):
+def uncert(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
     """
     Parameter uncertainties from Godambe Information Matrix
 
