@@ -4,8 +4,6 @@ from numpy import array
 
 import dadi
 
-import godambe
-
 # In demographic_models.py, we've defined a custom model for this problem
 import demographic_models
 
@@ -134,12 +132,9 @@ print uncerts_folded/uncerts - 1
 # (We're using Python list comprehension syntax to do this in one line.)
 all_boot = [dadi.Spectrum.from_file('bootstraps/{0:02d}.fs'.format(ii)) 
             for ii in range(100)]
-# Note that the godambe methods assume that theta is the last parameter in
-# the list passed in.
-p0 = list(popt)
-p0.append(theta_opt)
 
-uncert = godambe.uncert(func_ex, ns, pts_l, all_boot, p0, data, 0.01, log=True)
+uncert = dadi.godambe.uncert(func_ex, pts_l, all_boot, popt, data, 0.01, 
+                             log=True, multinom=True)
 print uncert, " are uncertainties from GIM"
 
 # Let's do a likelihood-ratio test comparing models with and without migration.
@@ -159,8 +154,7 @@ p0 = [1.897,  0.0388,  9.677, 0.395,  0.070]
 # need to insert zero migration value at corresponding
 # migration parameter index in complex model
 p0.insert(3, 0.0)
-LRT = godambe.LRT(func_ex, ns, pts_l, all_boot, p0, data, 0.01, diff=[3])
+
+LRT = dadi.godambe.LRT(func_ex, pts_l, all_boot, p0, data, 0.01, diff_indices=[3], multinom=True)
 print LRT, " is the value by which to adjust the LRT test statistic"
 print "This yields a test statistic of ", LRT*2*(ll_model-(-1146.09))
-
-
