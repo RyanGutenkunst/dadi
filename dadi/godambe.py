@@ -200,7 +200,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     # G = H*J^-1*H
     J_inv = numpy.linalg.inv(J)
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
-    return godambe, hess
+    return godambe, hess, J
 
 def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True, multinom=True):
     """
@@ -231,10 +231,11 @@ def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True, multinom=True):
         theta_opt = Inference.optimal_sfs_scaling(model, data)
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
-    godambe, hess = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
-    return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
+    GIM, H, J = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
+    return numpy.sqrt(numpy.diag(numpy.linalg.inv((GIM))))
 
-def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices):
+def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices,
+        multinom=True):
     """
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -246,8 +247,19 @@ def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices):
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
     diff: List of positions of nested parameters in complex model parameter list
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
     """
-    ns = data.sample_sizes
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
 
     # We only need to take derivatives with respect to the parameters in the
     # complex model that have been set to specified values in the simple model
@@ -259,17 +271,9 @@ def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices):
         full_params[diff_indices] = diff_params
         return func_ex(full_params, ns, grid_pts)
 
-    func = lambda param: Inference.ll_multinom(diff_func(param, ns, grid_pts), data)
-    H = -get_hess(func, [p0[i] for i in diff_indices], eps)
-    J_boot = numpy.zeros([len(diff_indices), len(diff_indices)])
-    J_array = []
-    for i in range(0, len(all_boot)):
-        boot = Spectrum(all_boot[i])
-        func = lambda param: Inference.ll_multinom(diff_func(param, ns, grid_pts), boot)
-        cU_theta = get_grad(func, [p0[i] for i in diff_indices], eps)
-        J_theta = numpy.outer(cU_theta, cU_theta)
-        J_boot = J_boot + J_theta
-        J_array.append(J_theta)
-    J = J_boot/len(all_boot)
+    p_nested = numpy.asarray(p0)[diff_indices]
+    GIM, H, J = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps, 
+                            log=False)
+
     adjust = len(diff_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
