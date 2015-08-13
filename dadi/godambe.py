@@ -170,11 +170,11 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     # evaluation function
     cache = {}
     def func(params, data):
-        key = (tuple(params[:-1]), tuple(ns), tuple(grid_pts))
+        key = (tuple(params), tuple(ns), tuple(grid_pts))
         if key not in cache:
-            cache[key] = func_ex(params[:-1], ns, grid_pts)
+            cache[key] = func_ex(params, ns, grid_pts)
         fs = cache[key] 
-        return Inference.ll(params[-1]*fs, data)
+        return Inference.ll(fs, data)
     def log_func(logparams, data):
         return func(numpy.exp(logparams), data)
 
@@ -202,7 +202,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess
 
-def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
+def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True, multinom=True):
     """
     Parameter uncertainties from Godambe Information Matrix
 
@@ -218,7 +218,19 @@ def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     log: If True, assume log-normal distribution of parameters. Returned values 
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
     """
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     godambe, hess = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
 
