@@ -141,7 +141,7 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/(eps[ii])
     return grad
 
-def get_godambe(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
+def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     """
     Godambe information and Hessian matrices
 
@@ -157,6 +157,8 @@ def get_godambe(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
     eps: Fractional stepsize to use when taking finite-difference derivatives
     log: If True, calculate derivatives in terms of log-parameters
     """
+    ns = data.sample_sizes
+
     # Cache evaluations of the frequency spectrum inside our hessian/J 
     # evaluation function
     cache = {}
@@ -189,7 +191,7 @@ def get_godambe(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess
 
-def uncert(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
+def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     """
     Parameter uncertainties from Godambe Information Matrix
 
@@ -206,7 +208,7 @@ def uncert(func_ex, ns, grid_pts, all_boot, p0, data, eps, log=True):
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
     """
-    godambe, hess = get_godambe(func_ex, ns, grid_pts, all_boot, p0, data, eps, log)
+    godambe, hess = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
 
 def LRT(func_ex, all_boot, p0, data, eps, diff):
