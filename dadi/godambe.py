@@ -11,7 +11,8 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
     func: Model function
     f0: Evaluation of func at p0
     p0: Parameters for func
-    eps: Fractional stepsize to use when taking finite-difference derivatives
+    eps: List of absolute step sizes to use for each parameter when taking
+         finite differences.
     """
     pwork = numpy.array(p0, copy=True)
     if ii == jj:
@@ -26,8 +27,10 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
         if pwork[ii] == 0:
             pwork[ii] = p0[ii] + 2*eps[ii]
             fp = func(pwork)
+            
             pwork[ii] = p0[ii] + eps[ii]
             fm = func(pwork)
+
             element = (fp - 2*fm + f0)/eps[ii]**2
     else:
         if pwork[ii] != 0 and pwork[jj] != 0:
@@ -50,8 +53,9 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
             pwork[ii] = p0[ii] - eps[ii]
             pwork[jj] = p0[jj] - eps[jj]
             fmm = func(pwork)
+
             element = (fpp - fpm - fmp + fmm)/(4 * eps[ii]*eps[jj])
-        if pwork[ii] == 0 or pwork[jj] == 0:
+        else:
             # f(xi + hi, xj + h)
             pwork[ii] = p0[ii] + eps[ii]
             pwork[jj] = p0[jj] + eps[jj]
