@@ -59,13 +59,15 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
             
             # f(xi + hi, xj)
             pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj]
             fpm = func(pwork)
             
             # f(xi, xj + hj)
+            pwork[ii] = p0[ii]
             pwork[jj] = p0[jj] + eps[jj]
             fmp = func(pwork)
             
-            element = (fpp - fpm - fmp + f0)/(4 * eps[ii]*eps[jj])
+            element = (fpp - fpm - fmp + f0)/(eps[ii]*eps[jj])
     return element
 
 def get_hess(func, p0, eps):
