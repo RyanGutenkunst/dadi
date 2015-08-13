@@ -222,7 +222,7 @@ def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     godambe, hess = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
 
-def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff):
+def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices):
     """
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -236,17 +236,28 @@ def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff):
     diff: List of positions of nested parameters in complex model parameter list
     """
     ns = data.sample_sizes
-    func = lambda param: Inference.ll_multinom(func_ex([param[diff.index(i)] if i in diff else p0[i] for i in range(len(p0))], ns, grid_pts), data)
-    H = -get_hess(func, [p0[i] for i in diff], eps)
-    J_boot = numpy.zeros([len(diff), len(diff)])
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p0, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[diff_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    func = lambda param: Inference.ll_multinom(diff_func(param, ns, grid_pts), data)
+    H = -get_hess(func, [p0[i] for i in diff_indices], eps)
+    J_boot = numpy.zeros([len(diff_indices), len(diff_indices)])
     J_array = []
     for i in range(0, len(all_boot)):
         boot = Spectrum(all_boot[i])
-        func = lambda param: Inference.ll_multinom(func_ex([param[diff.index(i)] if i in diff else p0[i] for i in range(len(p0))], ns, grid_pts), boot)
-        cU_theta = get_grad(func, [p0[i] for i in diff], eps)
+        func = lambda param: Inference.ll_multinom(diff_func(param, ns, grid_pts), boot)
+        cU_theta = get_grad(func, [p0[i] for i in diff_indices], eps)
         J_theta = numpy.outer(cU_theta, cU_theta)
         J_boot = J_boot + J_theta
         J_array.append(J_theta)
     J = J_boot/len(all_boot)
-    adjust = len(diff)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
+    adjust = len(diff_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
