@@ -14,7 +14,9 @@ def hessian_elem(func, f0, p0, ii, jj, eps):
     eps: List of absolute step sizes to use for each parameter when taking
          finite differences.
     """
-    pwork = numpy.array(p0, copy=True)
+    # Note that we need to specify dtype=float, to avoid this being an integer
+    # array which will silently fail when adding fractional eps.
+    pwork = numpy.array(p0, copy=True, dtype=float)
     if ii == jj:
         if pwork[ii] != 0:
             pwork[ii] = p0[ii] + eps[ii]
@@ -115,7 +117,7 @@ def get_grad(func, p0, eps):
             eps[i] = epp
     grad = numpy.empty([len(p0), 1])
     for ii in range(len(p0)):
-        pwork = numpy.array(p0, copy=True)
+        pwork = numpy.array(p0, copy=True, dtype=True)
         if pwork[ii] != 0:
             pwork[ii] = p0[ii] + eps[ii]
             fp = func(pwork)
