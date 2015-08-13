@@ -29,12 +29,12 @@ def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
             element = (fp - 2*f0 + fm)/eps[ii]**2
         if pwork[ii] == 0:
             pwork[ii] = p0[ii] + 2*eps[ii]
-            fp = func(pwork, *args)
+            fpp = func(pwork, *args)
             
             pwork[ii] = p0[ii] + eps[ii]
-            fm = func(pwork, *args)
+            fp = func(pwork, *args)
 
-            element = (fp - 2*fm + f0)/eps[ii]**2
+            element = (fpp - 2*fp + f0)/eps[ii]**2
     else:
         if pwork[ii] != 0 and pwork[jj] != 0:
             # f(xi + hi, xj + h)
@@ -79,7 +79,8 @@ def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
 
 def get_hess(func, p0, eps, args=()):
     """
-    Calculate Hessian matrix, a matrix of partial second derivatives. Hij = dfunc/(dp_i dp_j)
+    Calculate Hessian matrix of partial second derivatives. 
+    Hij = dfunc/(dp_i dp_j)
     
     func: Model function
     p0: Parameter values to take derivative around
@@ -93,7 +94,7 @@ def get_hess(func, p0, eps, args=()):
         if pval != 0:
             eps[i] = eps_in*pval
         else:
-            # Account for zero parameters
+            # Account for parameters equal to zero
             eps[i] = eps_in
 
     f0 = func(p0, *args)
@@ -127,17 +128,23 @@ def get_grad(func, p0, eps, args=()):
     grad = numpy.empty([len(p0), 1])
     for ii in range(len(p0)):
         pwork = numpy.array(p0, copy=True, dtype=float)
-        if pwork[ii] != 0:
+
+        if p0[ii] != 0:
             pwork[ii] = p0[ii] + eps[ii]
             fp = func(pwork, *args)
+
             pwork[ii] = p0[ii] - eps[ii]
             fm = func(pwork, *args)
+
             grad[ii] = (fp - fm)/(2*eps[ii])
-        if pwork[ii] == 0:
+        else:
+            # Do one-sided finite-difference 
             pwork[ii] = p0[ii] + eps[ii]
             fp = func(pwork, *args)
+
             pwork[ii] = p0[ii]
             fm = func(pwork, *args)
+
             grad[ii] = (fp - fm)/(eps[ii])
     return grad
 
@@ -171,23 +178,27 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     def log_func(logparams, data):
         return func(numpy.exp(logparams), data)
 
-    J = numpy.zeros((len(p0), len(p0)))
+    # First calculate the observed hessian
     if not log:
         hess = -get_hess(func, p0, eps, args=[data])
     else:
         hess = -get_hess(log_func, numpy.log(p0), eps, args=[data])
 
+    # Now the expectation of J over the bootstrap data
+    J = numpy.zeros((len(p0), len(p0)))
     for ii, boot in enumerate(all_boot):
         boot = Spectrum(boot)
         if not log:
             grad_temp = get_grad(func, p0, eps, args=[boot])
         else:
             grad_temp = get_grad(log_func, numpy.log(p0), eps, args=[boot])
+
         J_temp = numpy.outer(grad_temp, grad_temp)
         J = J + J_temp
     J = J/len(all_boot)
-    J_inv = numpy.linalg.inv(J)
+
     # G = H*J^-1*H
+    J_inv = numpy.linalg.inv(J)
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess
 
