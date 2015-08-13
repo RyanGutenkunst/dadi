@@ -222,7 +222,7 @@ def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     godambe, hess = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv((godambe))))
 
-def LRT(func_ex, all_boot, p0, data, eps, diff):
+def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff):
     """
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -236,7 +236,6 @@ def LRT(func_ex, all_boot, p0, data, eps, diff):
     diff: List of positions of nested parameters in complex model parameter list
     """
     ns = data.sample_sizes
-    grid_pts = [ns[0]+20, ns[0]+30, ns[0]+40]
     func = lambda param: Inference.ll_multinom(func_ex([param[diff.index(i)] if i in diff else p0[i] for i in range(len(p0))], ns, grid_pts), data)
     H = -get_hess(func, [p0[i] for i in diff], eps)
     J_boot = numpy.zeros([len(diff), len(diff)])
