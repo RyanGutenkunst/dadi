@@ -123,7 +123,7 @@ def get_grad(func, p0, eps):
 
     grad = numpy.empty([len(p0), 1])
     for ii in range(len(p0)):
-        pwork = numpy.array(p0, copy=True, dtype=True)
+        pwork = numpy.array(p0, copy=True, dtype=float)
         if pwork[ii] != 0:
             pwork[ii] = p0[ii] + eps[ii]
             fp = func(pwork)
