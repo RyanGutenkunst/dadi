@@ -26,17 +26,6 @@ except ImportError:
 import Spectrum_mod 
 Spectrum = Spectrum_mod.Spectrum
 
-try:
-    # This is to try and ensure we have a nice __SVNVERSION__ attribute, so
-    # when we get bug reports, we know what version they were using. The
-    # svnversion file is created by setup.py.
-    import os
-    _directory = os.path.dirname(Integration.__file__)
-    _svn_file = os.path.join(_directory, 'svnversion')
-    __SVNVERSION__ = file(_svn_file).read().strip()
-except:
-    __SVNVERSION__ = 'Unknown'
-
 # When doing arithmetic with Spectrum objects (which are masked arrays), we
 # often have masked values which generate annoying arithmetic warnings. Here
 # we tell numpy to ignore such warnings. This puts greater onus on the user to

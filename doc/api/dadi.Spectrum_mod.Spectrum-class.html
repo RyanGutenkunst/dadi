@@ -588,6 +588,40 @@ The constructor has the format:
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#theta_L" class="summary-sig-name">theta_L</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      theta_L as defined by Zeng et al.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.theta_L">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#Zengs_E" class="summary-sig-name">Zengs_E</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Zeng et al.'s E statistic.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.Zengs_E">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="dadi.Spectrum_mod.Spectrum-class.html#pi" class="summary-sig-name">pi</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Estimated expected number of pairwise differences between two
 chromosomes in the population.</td>
@@ -720,7 +754,8 @@ chromosomes in the population.</td>
         <span class="summary-sig-arg">mask_corners</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">return_header</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">pop_assignments</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">bootstrap_segments</span>=<span class="summary-sig-default">1</span>)</span><br />
       Read frequency spectrum from file of ms output.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.from_ms_file">source&nbsp;code</a></span>
@@ -1421,7 +1456,8 @@ Note: Entries where the current fs is masked or 0 will be masked in the
         <span class="sig-arg">mask_corners</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">return_header</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">pop_assignments</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">bootstrap_segments</span>=<span class="sig-default">1</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -1449,6 +1485,10 @@ pop_assignments: If None, the assignments of samples to populations is
                  into population 2.
 pop_ids: Optional list of strings containing the population labels.
          If pop_ids is None, labels will be &quot;pop0&quot;, &quot;pop1&quot;, ...
+bootstrap_segments: If bootstrap_segments is an integer greater than 1,
+                    the data will be broken up into that many segments
+                    based on SNP position. Instead of single FS, a list
+                    of spectra will be returned, one for each segment.
 
 </pre>
   <dl class="fields">
@@ -1548,6 +1588,59 @@ indicated by equation 10.
 Watterson's estimator of theta.
 
 Note that is only sensible for 1-dimensional spectra.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="theta_L"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">theta_L</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.theta_L">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+theta_L as defined by Zeng et al. &quot;Statistical Tests for Detecting
+Positive Selection by Utilizing High-Frequency Variants&quot; (2006)
+Genetics
+
+Note that is only sensible for 1-dimensional spectra.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="Zengs_E"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">Zengs_E</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="dadi.Spectrum_mod-pysrc.html#Spectrum.Zengs_E">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Zeng et al.'s E statistic.
+
+From Zeng et al. &quot;Statistical Tests for Detecting Positive Selection by
+Utilizing High-Frequency Variants&quot; (2006) Genetics
 
 </pre>
   <dl class="fields">
@@ -2142,7 +2235,7 @@ Most commonly this is because of missing or non-constant context.
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Dec 14 15:16:34 2012</a>
+    3.0.1 on Fri Aug 14 15:39:34 2015</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

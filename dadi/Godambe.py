@@ -1,3 +1,6 @@
+"""
+Parameter uncertainties and likelihood ratio tests using Godambe information.
+"""
 import numpy
 
 from dadi import Inference

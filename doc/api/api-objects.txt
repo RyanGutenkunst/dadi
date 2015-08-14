@@ -1,7 +1,4 @@
 dadi	dadi-module.html
-dadi._svn_file	dadi-module.html#_svn_file
-dadi._directory	dadi-module.html#_directory
-dadi.__SVNVERSION__	dadi-module.html#__SVNVERSION__
 dadi.__package__	dadi-module.html#__package__
 dadi.Demographics1D	dadi.Demographics1D-module.html
 dadi.Demographics1D.snm	dadi.Demographics1D-module.html#snm
@@ -24,11 +21,17 @@ dadi.Demographics2D.bottlegrowth_split_mig	dadi.Demographics2D-module.html#bottl
 dadi.Demographics2D.IM_pre_mscore	dadi.Demographics2D-module.html#IM_pre_mscore
 dadi.Demographics2D.split_mig_mscore	dadi.Demographics2D-module.html#split_mig_mscore
 dadi.Demographics2D.split_mig	dadi.Demographics2D-module.html#split_mig
-dadi.Hessian	dadi.Hessian-module.html
-dadi.Hessian.__package__	dadi.Hessian-module.html#__package__
-dadi.Hessian.hessian_elem	dadi.Hessian-module.html#hessian_elem
-dadi.Hessian.logger	dadi.Hessian-module.html#logger
-dadi.Hessian.hessian	dadi.Hessian-module.html#hessian
+dadi.Godambe	dadi.Godambe-module.html
+dadi.Godambe.get_grad	dadi.Godambe-module.html#get_grad
+dadi.Godambe.get_hess	dadi.Godambe-module.html#get_hess
+dadi.Godambe.FIM_uncert	dadi.Godambe-module.html#FIM_uncert
+dadi.Godambe.Spectrum	dadi.Spectrum_mod.Spectrum-class.html
+dadi.Godambe.__package__	dadi.Godambe-module.html#__package__
+dadi.Godambe.get_godambe	dadi.Godambe-module.html#get_godambe
+dadi.Godambe.LRT_adjust	dadi.Godambe-module.html#LRT_adjust
+dadi.Godambe.hessian_elem	dadi.Godambe-module.html#hessian_elem
+dadi.Godambe.sum_chi2_ppf	dadi.Godambe-module.html#sum_chi2_ppf
+dadi.Godambe.GIM_uncert	dadi.Godambe-module.html#GIM_uncert
 dadi.Inference	dadi.Inference-module.html
 dadi.Inference.optimize_log_lbfgsb	dadi.Inference-module.html#optimize_log_lbfgsb
 dadi.Inference.optimize_log	dadi.Inference-module.html#optimize_log
@@ -135,6 +138,7 @@ dadi.PhiManip.phi_3D_admix_1_and_3_into_2	dadi.PhiManip-module.html#phi_3D_admix
 dadi.PhiManip._two_pop_admixture_intermediates	dadi.PhiManip-module.html#_two_pop_admixture_intermediates
 dadi.PhiManip._admixture_intermediates	dadi.PhiManip-module.html#_admixture_intermediates
 dadi.PhiManip.phi_2D_admix_2_into_1	dadi.PhiManip-module.html#phi_2D_admix_2_into_1
+dadi.PhiManip.check_xx	dadi.PhiManip-module.html#check_xx
 dadi.PhiManip.phi_1D_X	dadi.PhiManip-module.html#phi_1D_X
 dadi.PhiManip.phi_1D_genic	dadi.PhiManip-module.html#phi_1D_genic
 dadi.PhiManip.phi_2D_admix_1_into_2	dadi.PhiManip-module.html#phi_2D_admix_1_into_2
@@ -193,7 +197,6 @@ scripts.__package__	scripts-module.html#__package__
 scripts.ms_jsfs	scripts.ms_jsfs-module.html
 scripts.ms_jsfs.__package__	scripts.ms_jsfs-module.html#__package__
 dadi.Plotting._sfsTickLocator	dadi.Plotting._sfsTickLocator-class.html
-matplotlib.ticker.TickHelper.DummyAxis	matplotlib.ticker.TickHelper.DummyAxis-class.html
 dadi.Plotting._sfsTickLocator.__call__	dadi.Plotting._sfsTickLocator-class.html#__call__
 dadi.RunInParallel.Statement	dadi.RunInParallel.Statement-class.html
 dadi.RunInParallel.Statement.__init__	dadi.RunInParallel.Statement-class.html#__init__
@@ -213,6 +216,7 @@ dadi.Spectrum_mod.Spectrum._from_phi_1D_analytic	dadi.Spectrum_mod.Spectrum-clas
 dadi.Spectrum_mod.Spectrum.__array_finalize__	dadi.Spectrum_mod.Spectrum-class.html#__array_finalize__
 dadi.Spectrum_mod.Spectrum.__new__	dadi.Spectrum_mod.Spectrum-class.html#__new__
 dadi.Spectrum_mod.Spectrum.fixed_size_sample	dadi.Spectrum_mod.Spectrum-class.html#fixed_size_sample
+dadi.Spectrum_mod.Spectrum.Zengs_E	dadi.Spectrum_mod.Spectrum-class.html#Zengs_E
 dadi.Spectrum_mod.Spectrum._get_sample_sizes	dadi.Spectrum_mod.Spectrum-class.html#_get_sample_sizes
 dadi.Spectrum_mod.Spectrum.from_data_dict	dadi.Spectrum_mod.Spectrum-class.html#from_data_dict
 dadi.Spectrum_mod.Spectrum.Tajima_D	dadi.Spectrum_mod.Spectrum-class.html#Tajima_D
@@ -221,6 +225,7 @@ dadi.Spectrum_mod.Spectrum._total_per_entry	dadi.Spectrum_mod.Spectrum-class.htm
 dadi.Spectrum_mod.Spectrum.to_file	dadi.Spectrum_mod.Spectrum-class.html#to_file
 dadi.Spectrum_mod.Spectrum._from_phi_2D_admix_props	dadi.Spectrum_mod.Spectrum-class.html#_from_phi_2D_admix_props
 dadi.Spectrum_mod.Spectrum._from_phi_1D_direct	dadi.Spectrum_mod.Spectrum-class.html#_from_phi_1D_direct
+dadi.Spectrum_mod.Spectrum.theta_L	dadi.Spectrum_mod.Spectrum-class.html#theta_L
 dadi.Spectrum_mod.Spectrum.Watterson_theta	dadi.Spectrum_mod.Spectrum-class.html#Watterson_theta
 dadi.Spectrum_mod.Spectrum._from_phi_3D_direct	dadi.Spectrum_mod.Spectrum-class.html#_from_phi_3D_direct
 dadi.Spectrum_mod.Spectrum._data_by_tri	dadi.Spectrum_mod.Spectrum-class.html#_data_by_tri
@@ -245,9 +250,3 @@ dadi.Spectrum_mod.Spectrum._from_phi_2D_analytic	dadi.Spectrum_mod.Spectrum-clas
 dadi.Spectrum_mod.Spectrum.__repr__	dadi.Spectrum_mod.Spectrum-class.html#__repr__
 dadi.Spectrum_mod.Spectrum._get_Npop	dadi.Spectrum_mod.Spectrum-class.html#_get_Npop
 dadi.Spectrum_mod.Spectrum._project_one_axis	dadi.Spectrum_mod.Spectrum-class.html#_project_one_axis
-matplotlib.ticker.TickHelper.DummyAxis	matplotlib.ticker.TickHelper.DummyAxis-class.html
-matplotlib.ticker.TickHelper.DummyAxis.set_data_interval	matplotlib.ticker.TickHelper.DummyAxis-class.html#set_data_interval
-matplotlib.ticker.TickHelper.DummyAxis.set_view_interval	matplotlib.ticker.TickHelper.DummyAxis-class.html#set_view_interval
-matplotlib.ticker.TickHelper.DummyAxis.get_data_interval	matplotlib.ticker.TickHelper.DummyAxis-class.html#get_data_interval
-matplotlib.ticker.TickHelper.DummyAxis.get_view_interval	matplotlib.ticker.TickHelper.DummyAxis-class.html#get_view_interval
-matplotlib.ticker.TickHelper.DummyAxis.__init__	matplotlib.ticker.TickHelper.DummyAxis-class.html#__init__

@@ -118,7 +118,8 @@ http://matplotlib.sourceforge.net/contents.html
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="dadi.Plotting-module.html#plot_1d_fs" class="summary-sig-name">plot_1d_fs</a>(<span class="summary-sig-arg">fs</span>,
-        <span class="summary-sig-arg">fig_num</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">fig_num</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">show</span>=<span class="summary-sig-default">True</span>)</span><br />
       Plot a 1-dimensional frequency spectrum.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_1d_fs">source&nbsp;code</a></span>
@@ -160,7 +161,8 @@ http://matplotlib.sourceforge.net/contents.html
         <span class="summary-sig-arg">data</span>,
         <span class="summary-sig-arg">fig_num</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">residual</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">Anscombe</code><code class="variable-quote">'</code></span>,
-        <span class="summary-sig-arg">plot_masked</span>=<span class="summary-sig-default">False</span>)</span><br />
+        <span class="summary-sig-arg">plot_masked</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">show</span>=<span class="summary-sig-default">True</span>)</span><br />
       Poisson comparison between 1d model and data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_1d_comp_Poisson">source&nbsp;code</a></span>
@@ -183,7 +185,8 @@ http://matplotlib.sourceforge.net/contents.html
         <span class="summary-sig-arg">ax</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">extend</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">neither</code><code class="variable-quote">'</code></span>,
-        <span class="summary-sig-arg">colorbar</span>=<span class="summary-sig-default">True</span>)</span><br />
+        <span class="summary-sig-arg">colorbar</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">cmap</span>=<span class="summary-sig-default">pylab.cm.hsv</span>)</span><br />
       Heatmap of single 2d SFS.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_single_2d_sfs">source&nbsp;code</a></span>
@@ -255,7 +258,8 @@ http://matplotlib.sourceforge.net/contents.html
         <span class="summary-sig-arg">fig_num</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">residual</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">Anscombe</code><code class="variable-quote">'</code></span>,
-        <span class="summary-sig-arg">adjust</span>=<span class="summary-sig-default">True</span>)</span><br />
+        <span class="summary-sig-arg">adjust</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">show</span>=<span class="summary-sig-default">True</span>)</span><br />
       Poisson comparison between 2d model and data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_2d_comp_Poisson">source&nbsp;code</a></span>
@@ -305,7 +309,8 @@ http://matplotlib.sourceforge.net/contents.html
         <span class="summary-sig-arg">fig_num</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">residual</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">Anscombe</code><code class="variable-quote">'</code></span>,
-        <span class="summary-sig-arg">adjust</span>=<span class="summary-sig-default">True</span>)</span><br />
+        <span class="summary-sig-arg">adjust</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">show</span>=<span class="summary-sig-default">True</span>)</span><br />
       Poisson comparison between 3d model and data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_comp_Poisson">source&nbsp;code</a></span>
@@ -326,7 +331,8 @@ http://matplotlib.sourceforge.net/contents.html
         <span class="summary-sig-arg">fignum</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">vmin</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">vmax</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">show</span>=<span class="summary-sig-default">True</span>)</span><br />
       Logarithmic heatmap of single 3d FS.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum">source&nbsp;code</a></span>
@@ -347,7 +353,8 @@ http://matplotlib.sourceforge.net/contents.html
         <span class="summary-sig-arg">fignum</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">vmin</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">vmax</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">pop_ids</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">show</span>=<span class="summary-sig-default">True</span>)</span><br />
       Logarithmic heatmap of single 3d FS.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum_mayavi">source&nbsp;code</a></span>
@@ -427,7 +434,8 @@ http://matplotlib.sourceforge.net/contents.html
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">plot_1d_fs</span>(<span class="sig-arg">fs</span>,
-        <span class="sig-arg">fig_num</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">fig_num</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">show</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_1d_fs">source&nbsp;code</a></span>&nbsp;
@@ -441,6 +449,7 @@ Plot a 1-dimensional frequency spectrum.
 fs: 1-dimensional Spectrum
 fig_num: Clear and use figure fig_num for display. If None, an new figure
          window is created.
+show: If True, execute pylab.show command to make sure plot displays.
 
 Note that all the plotting is done with pylab. To see additional pylab
 methods: &quot;import pylab; help(pylab)&quot;. Pylab's many functions are documented
@@ -503,7 +512,8 @@ fit the data.
         <span class="sig-arg">data</span>,
         <span class="sig-arg">fig_num</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">residual</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">Anscombe</code><code class="variable-quote">'</code></span>,
-        <span class="sig-arg">plot_masked</span>=<span class="sig-default">False</span>)</span>
+        <span class="sig-arg">plot_masked</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">show</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_1d_comp_Poisson">source&nbsp;code</a></span>&nbsp;
@@ -524,6 +534,7 @@ residual: 'Anscombe' for Anscombe residuals, which are more normally
           residuals, which can be less biased.
 plot_masked: Additionally plots (in open circles) results for points in the 
              model or data that were masked.
+show: If True, execute pylab.show command to make sure plot displays.
 
 </pre>
   <dl class="fields">
@@ -543,7 +554,8 @@ plot_masked: Additionally plots (in open circles) results for points in the
         <span class="sig-arg">ax</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">extend</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">neither</code><code class="variable-quote">'</code></span>,
-        <span class="sig-arg">colorbar</span>=<span class="sig-default">True</span>)</span>
+        <span class="sig-arg">colorbar</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">cmap</span>=<span class="sig-default">pylab.cm.hsv</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_single_2d_sfs">source&nbsp;code</a></span>&nbsp;
@@ -564,6 +576,7 @@ pop_ids: If not None, override pop_ids stored in Spectrum.
 extend: Whether the colorbar should have 'extension' arrows. See
         help(pylab.colorbar) for more details.
 colorbar: Should we plot a colorbar?
+cmap: Pylab colormap to use for plotting.
 
 </pre>
   <dl class="fields">
@@ -671,7 +684,8 @@ fit the data.
         <span class="sig-arg">fig_num</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">residual</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">Anscombe</code><code class="variable-quote">'</code></span>,
-        <span class="sig-arg">adjust</span>=<span class="sig-default">True</span>)</span>
+        <span class="sig-arg">adjust</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">show</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_2d_comp_Poisson">source&nbsp;code</a></span>&nbsp;
@@ -766,7 +780,8 @@ fit the data.
         <span class="sig-arg">fig_num</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">residual</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">Anscombe</code><code class="variable-quote">'</code></span>,
-        <span class="sig-arg">adjust</span>=<span class="sig-default">True</span>)</span>
+        <span class="sig-arg">adjust</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">show</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_comp_Poisson">source&nbsp;code</a></span>&nbsp;
@@ -791,6 +806,7 @@ residual: 'Anscombe' for Anscombe residuals, which are more normally
           residuals, which can be less biased.
 adjust: Should method use automatic 'subplots_adjust'? For advanced
         manipulation of plots, it may be useful to make this False.
+show: If True, execute pylab.show command to make sure plot displays.
 
 </pre>
   <dl class="fields">
@@ -808,7 +824,8 @@ adjust: Should method use automatic 'subplots_adjust'? For advanced
         <span class="sig-arg">fignum</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">vmin</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">vmax</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">show</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum">source&nbsp;code</a></span>&nbsp;
@@ -827,6 +844,7 @@ vmin: Values in fs below vmin are masked in plot.
 vmax: Values in fs above vmax saturate the color spectrum.
 fignum: Figure number to plot into. If None, a new figure will be created.
 pop_ids: If not None, override pop_ids stored in Spectrum.
+show: If True, execute pylab.show command to make sure plot displays.
 
 </pre>
   <dl class="fields">
@@ -844,7 +862,8 @@ pop_ids: If not None, override pop_ids stored in Spectrum.
         <span class="sig-arg">fignum</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">vmin</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">vmax</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">pop_ids</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">show</span>=<span class="sig-default">True</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="dadi.Plotting-pysrc.html#plot_3d_spectrum_mayavi">source&nbsp;code</a></span>&nbsp;
@@ -868,6 +887,7 @@ fignum: Figure number to plot into. If None, a new figure will be created.
         Note that these are MayaVi figures, which are separate from
         matplotlib figures.
 pop_ids: If not None, override pop_ids stored in Spectrum.
+show: If True, execute mlab.show command to make sure plot displays.
 
 </pre>
   <dl class="fields">
@@ -962,7 +982,7 @@ matplotlib.ticker.FuncFormatter(lambda x, pos: '%i' %(x-0.4))
   <tr>
     <td align="left" class="footer">
     <a href="epydoc-log.html">Generated by Epydoc
-    3.0.1 on Fri Dec 14 15:16:34 2012</a>
+    3.0.1 on Fri Aug 14 15:39:34 2015</a>
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
