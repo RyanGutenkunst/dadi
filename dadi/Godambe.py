@@ -309,3 +309,40 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, diff_indices,
 
     adjust = len(diff_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
+
+def sum_chi2_ppf(x, weights=(0,1)):
+    """
+    Percent point function (inverse of cdf) of weighted sum of chi^2
+    distributions.
+
+    x: Value(s) at which to evaluate ppf
+    weights: Weights of chi^2 distributions, beginning with zero d.o.f.
+             For example, weights=(0,1) is the normal chi^2 distribution with 1
+             d.o.f. For single parameters on the boundary, the correct
+             distribution for the LRT is 0.5*chi^2_0 + 0.5*chi^2_1, which would
+             be weights=(0.5,0.5).
+    """
+    import scipy.stats.distributions as ssd
+    # Ensure that weights are valid
+    if abs(numpy.sum(weights) - 1) > 1e-6:
+        raise ValueError('Weights must sum to 1.')
+    # A little clunky, but we want to handle x = 0.5, and x = [2, 3, 4]
+    # correctly. So if x is a scalar, we record that fact so we can return a
+    # scalar on output.
+    if numpy.isscalar(x):
+        scalar_input = True
+    # Convert x into an array, so we can index it easily.
+    x = numpy.atleast_1d(x)
+    # Calculate total cdf of all chi^2 dists with dof > 1.
+    # (ssd.chi2.cdf(x,0) is always nan, so we avoid that.)
+    cdf = numpy.sum([w*ssd.chi2.cdf(x, d+1) for (d, w)
+                     in enumerate(weights[1:])], axis=0)
+    # Add in contribution from 0 d.o.f.
+    cdf[x > 0] += weights[0]
+    # Convert to ppf
+    ppf = 1-cdf
+
+    if scalar_input:
+        return ppf[0]
+    else:
+        return ppf
