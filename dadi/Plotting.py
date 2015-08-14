@@ -34,13 +34,14 @@ _ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 from dadi import Numerics, Inference
 
-def plot_1d_fs(fs, fig_num=None):
+def plot_1d_fs(fs, fig_num=None, show=True):
     """
     Plot a 1-dimensional frequency spectrum.
 
     fs: 1-dimensional Spectrum
     fig_num: Clear and use figure fig_num for display. If None, an new figure
              window is created.
+    show: If True, execute pylab.show command to make sure plot displays.
 
     Note that all the plotting is done with pylab. To see additional pylab
     methods: "import pylab; help(pylab)". Pylab's many functions are documented
@@ -57,7 +58,8 @@ def plot_1d_fs(fs, fig_num=None):
     ax.semilogy(fs, '-ob')
 
     ax.set_xlim(0, fs.sample_sizes[0])
-    fig.show()
+    if show:
+        fig.show()
 
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
                           plot_masked=False):
@@ -84,7 +86,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
                          plot_masked)
 
 def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
-                         plot_masked=False):
+                         plot_masked=False, show=True):
     """
     Poisson comparison between 1d model and data.
 
@@ -98,6 +100,7 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
               residuals, which can be less biased.
     plot_masked: Additionally plots (in open circles) results for points in the 
                  model or data that were masked.
+    show: If True, execute pylab.show command to make sure plot displays.
     """
     if fig_num is None:
         f = pylab.gcf()
@@ -130,10 +133,12 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
         pylab.plot(resid.data, '--og', mfc='w', zorder=-100)
 
     ax.set_xlim(0, data.shape[0]-1)
-    pylab.show()
+    if show:
+        pylab.show()
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
-                       pop_ids=None, extend='neither', colorbar=True):
+                       pop_ids=None, extend='neither', colorbar=True,
+                       cmap=pylab.cm.hsv):
     """
     Heatmap of single 2d SFS. 
     
@@ -147,6 +152,7 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     extend: Whether the colorbar should have 'extension' arrows. See
             help(pylab.colorbar) for more details.
     colorbar: Should we plot a colorbar?
+    cmap: Pylab colormap to use for plotting.
     """
     if ax is None:
         ax = pylab.gca()
@@ -167,11 +173,17 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
                                            vmax=vmax*(1+1e-3))
         format = None
     mappable=ax.pcolor(numpy.ma.masked_where(sfs<vmin, sfs), 
-                       cmap=pylab.cm.hsv, shading='flat',
+                       cmap=cmap, edgecolors='none',
                        norm=norm)
-    ax.figure.colorbar(mappable, extend=extend, format=format)
+    cb = ax.figure.colorbar(mappable, extend=extend, format=format)
     if not colorbar:
-        del ax.figure.axes[-1]
+        ax.figure.delaxes(ax.figure.axes[-1])
+    else:
+        # A hack so we can manually work around weird ticks in some colorbars
+        try:
+            ax.figure.dadi_colorbars.append(cb)
+        except AttributeError:
+            ax.figure.dadi_colorbars = [cb]
 
     ax.plot([0,sfs.shape[1]],[0, sfs.shape[0]], '-k', lw=0.2)
 
@@ -180,7 +192,7 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
             pop_ids = sfs.pop_ids
         else:
             pop_ids = ['pop0','pop1']
-    ax.set_ylabel(pop_ids[0], horizontalalignment='left')
+    ax.set_ylabel(pop_ids[0], verticalalignment='top')
     ax.set_xlabel(pop_ids[1], verticalalignment='bottom')
 
     ax.xaxis.set_major_formatter(_ctf)
@@ -215,14 +227,19 @@ def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
         resid_range = abs(resid).max()
 
     mappable=ax.pcolor(resid, cmap=pylab.cm.RdBu_r, vmin=-resid_range, 
-                       vmax=resid_range, shading='flat')
+                       vmax=resid_range, edgecolors='none')
 
     cbticks = [-resid_range, 0, resid_range]
     format = matplotlib.ticker.FormatStrFormatter('%.2g')
-    ax.figure.colorbar(mappable, ticks=cbticks, format=format,
-                       extend=extend)
+    cb = ax.figure.colorbar(mappable, ticks=cbticks, format=format,
+                            extend=extend)
     if not colorbar:
-        del ax.figure.axes[-1]
+        ax.figure.delaxes(ax.figure.axes[-1])
+    else:
+        try:
+            ax.figure.dadi_colorbars.append(cb)
+        except AttributeError:
+            ax.figure.dadi_colorbars = [cb]
 
     ax.plot([0,resid.shape[1]],[0, resid.shape[0]], '-k', lw=0.2)
 
@@ -231,7 +248,7 @@ def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
             pop_ids = resid.pop_ids
         else:
             pop_ids = ['pop0','pop1']
-    ax.set_ylabel(pop_ids[0], horizontalalignment='left')
+    ax.set_ylabel(pop_ids[0], verticalalignment='top')
     ax.set_xlabel(pop_ids[1], verticalalignment='bottom')
 
     ax.xaxis.set_major_formatter(_ctf)
@@ -285,7 +302,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
                          pop_ids=None, residual='Anscombe',
-                         adjust=True):
+                         adjust=True, show=True):
     """
     Poisson comparison between 2d model and data.
 
@@ -349,7 +366,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
-                       pop_ids=model_pop_ids, extend=extend )
+                       pop_ids=model_pop_ids, extend=extend)
     ax2.set_title('model')
 
     if residual == 'Anscombe':
@@ -377,7 +394,8 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     ax.hist(flatresid, bins=20, normed=True)
     ax.set_title('residuals')
     ax.set_yticks([])
-    pylab.show()
+    if show:
+        pylab.show()
 
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
@@ -412,7 +430,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None, pop_ids=None, 
-                         residual='Anscombe', adjust=True):
+                         residual='Anscombe', adjust=True, show=True):
     """
     Poisson comparison between 3d model and data.
 
@@ -430,6 +448,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
               residuals, which can be less biased.
     adjust: Should method use automatic 'subplots_adjust'? For advanced
             manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
     """
     if data.folded and not model.folded:
         model = model.fold()
@@ -530,9 +549,11 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                                    resid.ravel())
         ax.hist(flatresid, bins=20, normed=True)
         ax.set_yticks([])
-    pylab.show()
+    if show:
+        pylab.show()
 
-def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None):
+def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None,
+                     show=True):
     """
     Logarithmic heatmap of single 3d FS.
 
@@ -544,6 +565,7 @@ def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None):
     vmax: Values in fs above vmax saturate the color spectrum.
     fignum: Figure number to plot into. If None, a new figure will be created.
     pop_ids: If not None, override pop_ids stored in Spectrum.
+    show: If True, execute pylab.show command to make sure plot displays.
     """
     import mpl_toolkits.mplot3d as mplot3d
     
@@ -637,10 +659,11 @@ def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None):
 
     # XXX: I can't set the axis ticks to be just the endpoints.
 
-    pylab.show()
+    if show:
+        pylab.show()
 
 def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None, 
-                            pop_ids=None):
+                            pop_ids=None, show=True):
     """
     Logarithmic heatmap of single 3d FS.
 
@@ -657,6 +680,7 @@ def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None,
             Note that these are MayaVi figures, which are separate from
             matplotlib figures.
     pop_ids: If not None, override pop_ids stored in Spectrum.
+    show: If True, execute mlab.show command to make sure plot displays.
     """
     from enthought.mayavi import mlab
 
@@ -703,4 +727,5 @@ def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None,
                 color=(0,0,0))
     mlab.view(azimuth=-40, elevation=65, distance='auto', focalpoint='auto')
 
-    mlab.show()
+    if show:
+        mlab.show()
