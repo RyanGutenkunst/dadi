@@ -147,7 +147,7 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/(eps[ii])
     return grad
 
-def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
+def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False):
     """
     Godambe information and Hessian matrices
 
@@ -199,7 +199,8 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess, J
 
-def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True, multinom=True):
+def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=False, 
+               multinom=True):
     """
     Parameter uncertainties from Godambe Information Matrix
 
