@@ -858,32 +858,53 @@ ms_fs = dadi.Spectrum.from_ms_file("temp.msout")
 \end{lstlisting}
 
 \section{Uncertainty analysis}
-\dadi can also perform uncertainty analysis using the Godambe matrix, which is equivalent to the Fisher Information Matrix, but for composite likelihoods.
-An example:
+\dadi can also perform uncertainty analysis using the Godambe Information Matrix (GIM), which is equivalent to the Fisher Information Matrix, but for composite likelihoods.
+The function call is
 \begin{lstlisting}
-uncert = dadi.godambe.uncert(func_ex, grid_pts, all_boot, p0, 
-			     data, eps)
+uncert = dadi.Godambe.GIM_uncert(func_ex, grid_pts, all_boot,
+                                 p0, data, log, multinom, eps).
 \end{lstlisting}
-where \py{func_ex} is the extrapolated model, \py{grid_ps} is a list of points used in extrapolation, \py{all_boot} is a numpy array containing the bootstrapped data sets, \py{p0} is the best-fit parameters, \py{data} is the original data, and \py{eps} is the step size for the derivative calculation.
-\py{param_uncert} is a numpy array equal in length to \py{p0}, where each entry in \py{param_uncert} is the uncertainty of the parameter it corresponds to in \py{p0}.
-This method is preferable to fitting the bootstrapped datasets, as fitting of multiple data sets is computationally time consuming.
+Here \py{func_ex} is the model function, \py{grid_pts} is the set of grid points used in extrapolation, \py{all_boot} is a list containing bootstrapped data sets, \py{p0} is the best-fit parameters, and \py{data} is the original data.
+If \py{log = True}, then uncertainties will be calculated for the logs of the parameters; these can be interpreted as relative uncertainties for the parameters themselves.
+If \py{multinom = True}, it is assumed that $\theta$ is not an explicit parameter of the model (this is the most common case).
+\py{eps} is the relative step size to use when taking numerical derivatives; the default value is often sufficient.
+The returned \py{uncert} is an array equal in length to \py{p0}, where each entry in \py{uncert} is the estimated standard deviation of the parameter it corresponds to in \py{p0}.
+If \py{multinom = True}, there will be one extra entry in \py{uncert}, corresponding to $\theta$.
+
+Using the GIM is often preferable to directly fitting the bootstrapped datasets, because such fitting is computationally time consuming.
+However, the GIM approach approximates parameter uncertainties as normal, which may not be a good approximation if they are large.
+To check this, one can evaluate the GIM uncertainties and compare them with the parameter values themselves.
+If the GIM uncertainties are large compared to the parameter values (for example, if a standard deviation is half the parameter value itself), then fitting the bootstrap data sets may be necessary to get accurate uncertainty estimates.
+
+The \py{dadi.Godambe.FIM_uncert} function calculates uncertainties using the Fisher Information Matrix, which is sufficient if your data are unlinked.
 
 \section{Likelihood ratio test}
-Using the Godambe matrix, \dadi can also perform hypothesis testing through the likelihood ratio test.
+Using the Godambe Information Matrix, \dadi can also perform hypothesis testing through an adjusted likelihood ratio test.
 The likelihood ratio test allows for comparison between two nested models, such that the simple model is a special case of the more complex model.
-The full likelihood ratio test statistic is equal to $2*(ll_{c}-ll_{s})$, where $ll_{c}$ and $ll_{s}$ are the likelihoods of the complex and simple model, respectively.
+The full likelihood ratio test statistic is equal to $D = 2(ll_{c}-ll_{s})$, where $ll_{c}$ and $ll_{s}$ are the likelihoods of the complex and simple model, respectively.
 Model selection is then performed by comparing this test statistic to a $\chi^2$ distribution with degrees of freedom equal to the difference in number of parameters between the simple and complex model.
 To perform likelihood ratio tests using composite likelihoods, a multiplicative adjustment to the likelihood ratio test statistic shown above is needed.
-\dadi can calculate this adjustment, an example of which is shown below.
+\dadi can calculate this adjustment, using the function.
 \begin{lstlisting}
-adjust = dadi.godambe.LRT(func_ex, grid_pts, all_boot, p0, 
-			  data, eps, diff)
+adj = dadi.Godambe.LRT_adjust(func_ex, grid_pts, all_boot, p0, 
+			  data, nested_indices, multinom=True, eps)
 \end{lstlisting}
-The above parameters are the same as the uncertainty analysis section example, where \py{func_ex} is the complex function extrapolated and \py{p0} is the best-fit parameters for the simple model along with the nested values in the complex model.
-\py{diff} is a list corresponding to the positions of the nested parameters in \py{p0}.
-Cases exist in which the distribution used for critical values is a more complex combination of $\chi^2$ distributions, for example when the nested parameter is on the boundary of the admissible parameter space.
-Examples of how to handle these scenarios can be found in \cite{Coffman2015}.
-Similar to uncertainty analysis, this method of model selection is preferable to using a parametric bootstrap, because fine tuning of the parametric model can be time consuming and prone to error.
+The parameters have the same meaning as for \py{Godambe.GIM_uncert}, where \py{func_ex} is the complex model function and \py{p0} is the best-fit parameters for the simple implemented in the complex model.
+The additional parameter \py{nested_indices} is a list that indicates which positions in the complex model arguments are fixed to create the simple model.
+For example, if the complex model parameters are $[T, \nu_1, \nu_2, m]$, and the simple model is no migration (so $m = 0$), then \py{nested_indices=[3]}.
+(Indices are numbered starting from zero.)
+The resulting adjusted $D$ statistics is then $D_{adj} = adj \times 2(ll_{c}-ll_{s})$.
+
+In the simplest case of a single parameter on the interior of the complex parameter space, the null distribution for $D_{adj}$ is $\chi^2$ with 1 degree-of-freedom.
+If the a single parameter is on the boundary of the parameter space, the null distribution is $\frac{1}{2}\chi^2_0 + \frac{1}{2}\chi^2_1$.
+See \cite{Coffman2015} for an example of this.
+For convenience, \dadi includes a function that computes the p-value given $D$.
+\begin{lstlisting}
+p = sum_chi2_ppf(D, weights)
+\end{lstlisting}
+Here \py{D} is $D_{adj}$ and \py{weights} records the weights in the sum-of-$\chi^2$ distribution, beginning with zero degrees of freedom.
+For example, the case of a single parameter on the boundary would be \py{weights = (0.5, 0.5)}.
+For more complex scenarios, see \cite{Self1987}.
 
 \section{Installation}
 
@@ -979,12 +1000,6 @@ Compare the improvement from the real data with this null distribution to assign
 
 \end{enumerate}
 
-%\begin{lstlisting}[caption={Dork}, float]
-%blah blah
-%\end{lstlisting}
-
-%\thebibliography
 \bibliography{popgen}
-
 
 \end{document}
