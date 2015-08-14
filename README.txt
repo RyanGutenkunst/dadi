@@ -4,6 +4,8 @@
 
 Originally ∂a∂i was initially developed by  Ryan Gutenkunst in the labs of Scott Williamson and Carlos Bustamante [http://www.bustamantelab.org] in Cornell's Department of Biological Statistics and Computational Biology. Ryan is now faculty in Molecular and Cellular Biology at the University of Arizona, and his group continues to work on ∂a∂i [http://gutengroup.mcb.arizona.edu].
 
+If you use ∂a∂i in your research, please cite RN Gutenkunst, RD Hernandez, SH Williamson, CD Bustamante "Inferring the joint demographic history of multiple populations from multidimensional SNP data" PLoS Genetics 5:e1000695 (2009).
+
 **Getting started**
 
 Please see the wiki pages on Getting Started [https://bitbucket.org/RyanGutenkunst/dadi/wiki/GettingStarted], Installation [https://bitbucket.org/RyanGutenkunst/dadi/wiki/Installation], and our Data Format [ [https://bitbucket.org/RyanGutenkunst/dadi/wiki/DataFormats].
