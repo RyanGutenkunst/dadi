@@ -114,7 +114,6 @@ def get_grad(func, p0, eps, args=()):
     eps: Fractional stepsize to use when taking finite-difference derivatives
     args: Additional arguments to func
     """
-    f0 = func(p0, *args)
     # Calculate step sizes for finite-differences.
     eps_in = eps
     eps = numpy.empty([len(p0)])
@@ -155,11 +154,9 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=True):
     NOTE: Assumes that last parameter in p0 is theta.
 
     func_ex: Model function
-    ns: Number of samples in each population
     grid_pts: Number of grid points to evaluate the model function
     all_boot: List of bootstrap frequency spectra
-    p0: Best-fit parameters for func_ex. 
-        parameter in p0 is theta.
+    p0: Best-fit parameters for func_ex.
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
     log: If True, calculate derivatives in terms of log-parameters
@@ -207,8 +204,6 @@ def uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=True, multinom=True):
     Parameter uncertainties from Godambe Information Matrix
 
     Returns standard deviations of parameter values.
-
-    NOTE: Assumes that last parameter in p0 is theta.
 
     func_ex: Model function
     all_boot: List of bootstrap frequency spectra
