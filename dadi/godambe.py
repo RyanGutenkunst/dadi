@@ -144,7 +144,7 @@ def get_grad(func, p0, eps, args=()):
             pwork[ii] = p0[ii]
             fm = func(pwork, *args)
 
-            grad[ii] = (fp - fm)/(eps[ii])
+            grad[ii] = (fp - fm)/eps[ii]
     return grad
 
 def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False):
@@ -228,7 +228,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     GIM, H, J = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
-    return numpy.sqrt(numpy.diag(numpy.linalg.inv((GIM))))
+    return numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
 
 def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices,
         multinom=True):
