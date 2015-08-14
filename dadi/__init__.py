@@ -10,8 +10,7 @@ logging.basicConfig()
 
 import Demographics1D
 import Demographics2D
-import Hessian
-import godambe
+import Godambe
 import Inference
 import Integration
 import Misc
