@@ -147,7 +147,8 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/eps[ii]
     return grad
 
-def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False):
+def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
+                just_hess=False):
     """
     Godambe information and Hessian matrices
 
@@ -160,6 +161,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False):
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
     log: If True, calculate derivatives in terms of log-parameters
+    just_hess: If True, only evaluate and return the Hessian matrix
     """
     ns = data.sample_sizes
 
@@ -180,6 +182,9 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False):
         hess = -get_hess(func, p0, eps, args=[data])
     else:
         hess = -get_hess(log_func, numpy.log(p0), eps, args=[data])
+
+    if just_hess:
+        return hess
 
     # Now the expectation of J over the bootstrap data
     J = numpy.zeros((len(p0), len(p0)))
@@ -229,6 +234,36 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     GIM, H, J = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
+
+def FIM_uncert(func_ex, grid_pts, p0, data, eps, log=False, multinom=True):
+    """
+    Parameter uncertainties from Fisher Information Matrix
+
+    Returns standard deviations of parameter values.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    log: If True, assume log-normal distribution of parameters. Returned values 
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    """
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+    H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
+    return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
 def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices,
         multinom=True):
