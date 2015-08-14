@@ -9,3 +9,5 @@ build
 *.out
 *.gz
 *.toc
+dist
+dadi.egg-info

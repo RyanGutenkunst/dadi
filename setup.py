@@ -43,12 +43,6 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/tridiag.c'],
                          extra_compile_args=extra_compile_args)
 
-# If we're building a distribution, try to update svnversion. Note that this
-# fails silently.
-if any(arg.count('dist') for arg in os.sys.argv):    
-    os.system("svn up")
-    os.system("svn info > dadi/svnversion")
-
 core.setup(name='dadi',
            version='1.7.0',
            author='Ryan Gutenkunst',
@@ -57,7 +51,6 @@ core.setup(name='dadi',
            ext_modules = [tridiag, int_c],
            scripts=['scripts/ms_jsfs.py'],
            packages=['dadi'], 
-           package_data = {'dadi':['svnversion'],
-                           'tests':['IM.fs']},
+           package_data = {'tests':['IM.fs']},
            license='BSD'
            )
