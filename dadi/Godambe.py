@@ -147,8 +147,8 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/eps[ii]
     return grad
 
-def get_godambe(func_ex, grid_pts, all_boot, p0, data, log=False,
-                just_hess=False, eps=0.01):
+def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
+                just_hess=False):
     """
     Godambe information and Hessian matrices
 
