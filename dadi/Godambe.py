@@ -147,8 +147,8 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/eps[ii]
     return grad
 
-def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
-                just_hess=False):
+def get_godambe(func_ex, grid_pts, all_boot, p0, data, log=False,
+                just_hess=False, eps=0.01):
     """
     Godambe information and Hessian matrices
 
@@ -204,8 +204,8 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess, J
 
-def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=False, 
-               multinom=True):
+def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False, 
+               multinom=True, eps=0.01):
     """
     Parameter uncertainties from Godambe Information Matrix
 
@@ -235,7 +235,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     GIM, H, J = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
 
-def FIM_uncert(func_ex, grid_pts, p0, data, eps, log=False, multinom=True):
+def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     """
     Parameter uncertainties from Fisher Information Matrix
 
@@ -265,16 +265,17 @@ def FIM_uncert(func_ex, grid_pts, p0, data, eps, log=False, multinom=True):
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
-def LRT(func_ex, grid_pts, all_boot, p0, data, eps, diff_indices,
-        multinom=True):
+def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, diff_indices,
+               multinom=True, eps=0.01):
     """
     First-order moment matching adjustment factor for likelihood ratio test
 
     func_ex: Model function for complex model
     all_boot: List of bootstrap frequency spectra
-    p0: Best-fit parameters for the simple model, with nested parameter explicity defined
-    Although equal to values for simple model, should be in a list form that can be 
-    taken in by the complex model you'd like to evaluate
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you'd like
+        to evaluate.
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
     diff: List of positions of nested parameters in complex model parameter list
