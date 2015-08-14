@@ -265,7 +265,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
-def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, diff_indices,
+def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01):
     """
     First-order moment matching adjustment factor for likelihood ratio test
@@ -278,7 +278,8 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, diff_indices,
         to evaluate.
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
-    diff: List of positions of nested parameters in complex model parameter list
+    nested_indices: List of positions of nested parameters in complex model
+                    parameter list
     multinom: If True, assume model is defined without an explicit parameter for
               theta. Because uncertainty in theta must be accounted for to get
               correct uncertainties for other parameters, this function will
@@ -300,14 +301,14 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, diff_indices,
         # should come from p0
         full_params = numpy.array(p0, copy=True, dtype=float)
         # Use numpy indexing to set relevant parameters
-        full_params[diff_indices] = diff_params
+        full_params[nested_indices] = diff_params
         return func_ex(full_params, ns, grid_pts)
 
-    p_nested = numpy.asarray(p0)[diff_indices]
+    p_nested = numpy.asarray(p0)[nested_indices]
     GIM, H, J = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps, 
                             log=False)
 
-    adjust = len(diff_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
+    adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
 
 def sum_chi2_ppf(x, weights=(0,1)):

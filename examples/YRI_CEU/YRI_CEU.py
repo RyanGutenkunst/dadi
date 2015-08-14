@@ -149,7 +149,7 @@ ll_nomig = dadi.Inference.ll_multinom(model_nomig, data)
 p_lrt = [1.897,  0.0388,  9.677, 0, 0.395,  0.070]
 
 adj = dadi.Godambe.LRT_adjust(func_ex, pts_l, all_boot, p_lrt, data, 
-                              diff_indices=[3], multinom=True)
+                              nested_indices=[3], multinom=True)
 D_adj = adj*2*(ll_model - ll_nomig)
 print('Adjusted D statistic: {0:.4f}'.format(D_adj))
 
