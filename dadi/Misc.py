@@ -2,7 +2,7 @@
 Miscellaneous utility functions. Including ms simulation.
 """
 
-import os,sys,time
+import collections,os,sys,time
 
 import numpy
 import scipy.linalg
@@ -294,3 +294,48 @@ def make_data_dict(filename):
         data_dict[snp_id] = data_this_snp
 
     return data_dict
+
+def count_data_dict(data_dict, pop_ids):
+    """
+    Summarize data in data_dict by mapping SNP configurations to counts.
+
+    data_dict: data_dict formatted as in Misc.make_data_dict
+    pop_ids: IDs of populations to collect data for.
+    
+    Returns a dictionary with keys (successful_calls, derived_calls,
+    polarized) mapping to counts of SNPs. Here successful_calls is a tuple
+    with the number of good calls per population, derived_calls is a tuple
+    of derived calls per pop, and polarized indicates whether that SNP was
+    polarized using an ancestral state.
+    """
+    count_dict = collections.defaultdict(int)
+    for snp, snp_info in data_dict.iteritems():
+        # Skip SNPs that aren't biallelic.
+        if len(snp_info['segregating']) != 2:
+            continue
+
+        allele1,allele2 = snp_info['segregating']
+        if 'outgroup_allele' in snp_info and snp_info['outgroup_allele'] != '-'\
+            and snp_info['outgroup_allele'] in snp_info['segregating']:
+            outgroup_allele = snp_info['outgroup_allele']
+            this_snp_polarized = True
+        else:
+            outgroup_allele = allele1
+            this_snp_polarized = False
+
+        # Extract the allele calls for each population.
+        allele1_calls = [snp_info['calls'][pop][0] for pop in pop_ids]
+        allele2_calls = [snp_info['calls'][pop][1] for pop in pop_ids]
+        # How many chromosomes did we call successfully in each population?
+        successful_calls = [a1+a2 for (a1,a2) in zip(allele1_calls, allele2_calls)]
+
+        # Which allele is derived (different from outgroup)?
+        if allele1 == outgroup_allele:
+            derived_calls = allele2_calls
+        elif allele2 == outgroup_allele:
+            derived_calls = allele1_calls
+
+        # Update count_dict
+        count_dict[tuple(successful_calls),tuple(derived_calls),
+                   this_snp_polarized] += 1
+    return count_dict

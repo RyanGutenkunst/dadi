@@ -1645,7 +1645,43 @@ class Spectrum(numpy.ma.masked_array):
             return fsout
         else:
             return fsout.fold()
+
+    @staticmethod
+    def _from_count_dict(count_dict, ns, polarized=True):
+        """
+        Frequency spectrum from data mapping SNP configurations to counts.
+
+        count_dict: Result of Misc.count_data_dict
+        projections: List of sample sizes to project down to for each
+                     population.
+        polarized: If True, only include SNPs that count_dict marks as polarized. 
+                   If False, include all SNPs and fold resulting Spectrum.
+        """
     
+        # create slices for projection calculation
+        slices = [[numpy.newaxis] * len(projections) for ii in range(len(projections))]
+        for ii in range(len(projections)):
+            slices[ii][ii] = slice(None,None,None)
+            
+        fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1))
+        for (called_by_pop, derived_by_pop, this_snp_polarized), count\
+                in count_dict.items():
+            if polarized and not this_snp_polarized:
+                continue
+            pop_contribs = []
+            iter = zip(projections, called_by_pop, derived_by_pop)
+            for pop_ii, (p_to, p_from, hits) in enumerate(iter):
+                contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
+                pop_contribs.append(contrib)
+            fs_proj = reduce(operator.mul, pop_contribs)
+            
+            # create slices for adding projected fs to overall fs
+            fs_total += count * fs_proj
+        if polarized:
+            return fs_total
+        else:
+            return fs_total.fold()
+
     @staticmethod
     def _data_by_tri(data_dict):
         """
