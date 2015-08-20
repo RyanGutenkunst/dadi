@@ -1615,12 +1615,10 @@ class Spectrum(numpy.ma.masked_array):
                 continue
     
             # Extract the allele calls for each population.
-            allele1_calls = numpy.asarray([snp_info['calls'][pop][0]
-                                            for pop in pop_ids])
-            allele2_calls = numpy.asarray([snp_info['calls'][pop][1]
-                                            for pop in pop_ids])
+            allele1_calls = [snp_info['calls'][pop][0] for pop in pop_ids]
+            allele2_calls = [snp_info['calls'][pop][1] for pop in pop_ids]
             # How many chromosomes did we call successfully in each population?
-            successful_calls = allele1_calls + allele2_calls
+            successful_calls = [a1+a2 for (a1,a2) in zip(allele1_calls, allele2_calls)]
     
             # Which allele is derived (different from outgroup)?
             if allele1 == outgroup_allele:
