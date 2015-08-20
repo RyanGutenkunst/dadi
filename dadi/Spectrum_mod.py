@@ -1647,7 +1647,7 @@ class Spectrum(numpy.ma.masked_array):
             return fsout.fold()
 
     @staticmethod
-    def _from_count_dict(count_dict, ns, polarized=True):
+    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None):
         """
         Frequency spectrum from data mapping SNP configurations to counts.
 
@@ -1656,6 +1656,7 @@ class Spectrum(numpy.ma.masked_array):
                      population.
         polarized: If True, only include SNPs that count_dict marks as polarized. 
                    If False, include all SNPs and fold resulting Spectrum.
+        pop_ids: Optional list of strings containing the population labels.
         """
     
         # create slices for projection calculation
@@ -1663,7 +1664,8 @@ class Spectrum(numpy.ma.masked_array):
         for ii in range(len(projections)):
             slices[ii][ii] = slice(None,None,None)
             
-        fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1))
+        fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1),
+                                 pop_ids=pop_ids)
         for (called_by_pop, derived_by_pop, this_snp_polarized), count\
                 in count_dict.items():
             if polarized and not this_snp_polarized:
