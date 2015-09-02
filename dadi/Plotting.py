@@ -144,6 +144,8 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     
     If vmax is greater than a factor of 10, plot on log scale.
 
+    Returns colorbar that is created.
+
     sfs: SFS to plot
     vmin: Values in sfs below vmin are masked in plot.
     vmax: Values in sfs above vmax saturate the color spectrum.
@@ -204,6 +206,8 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     ax.set_xlim(0, sfs.shape[1])
     ax.set_ylim(0, sfs.shape[0])
+
+    return cb
 
 
 def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
