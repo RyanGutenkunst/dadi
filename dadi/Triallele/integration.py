@@ -1,0 +1,151 @@
+"""
+Integration of phi for triallelic diffusion
+"""
+
+#
+# RNG: Let's add some comments! Please!
+#
+
+import numpy as np
+from numpy import newaxis as nuax
+import dadi
+import numerics
+from scipy.sparse import identity
+import scipy.io
+import math
+import transition1, transition2, transition12, transition1D # cythonized transition1 and transition2
+
+reload(numerics)
+
+### for simultaneous mutation model, should probably have a separate param lambda and just include it in the two previous functions for injecting mutations, so that we introduce mutations by y*(1-lambda) and [1,1]*lambda
+def inject_mutations_1(phi, dt, x, dx, y2, theta1):
+    """
+    new mutations injected along phi[1,:] against a background given by y2
+    y2 is the diallelic density function
+    """
+    phi[1,1:-1] += y2[1:-1] / dx[1] * 1./x[1] * dt * theta1/2
+    return phi
+
+def inject_mutations_2(phi, dt, x, dx, y1, theta2):
+    """
+    new mutations injected along phi[:,1] against a background given by y1
+    """
+    phi[1:-1,1] += y1[1:-1] / dx[1] * 1./x[1] * dt * theta2/2
+    return phi
+
+def inject_simultaneous_muts(phi, dt, x, dx, theta):
+    """
+    simultaneous mutation model
+    """
+    phi[1,1] += 1. / x[1] / x[1] / dx[1] / dx[1] * dt * theta
+    return phi
+
+def equilibrium(phi, x, y1, y2, nu=1, sig1=0, sig2=0, theta1=1, theta2=1, dt=0.001, lam = 0):
+    """
+    Integrate the density function phi to equilibrium (10*2N generations)
+    y1 and y2 are the equilibrium 1D density functions for the background frequency spectrum
+    lam (lambda) = proportion of mutations arising from simultaneous mutation - should be either 0 or 1
+    """
+    if sig1 == 0 and sig2 == 0 and lam == 0: 
+        return equilibrium_neutral_exact(x),y1,y2
+    else:
+        dx = numerics.grid_dx(x)
+        U01 = numerics.domain(x)
+        C = identity(len(x)**2) + dt*transition12.transition12(x,dx,U01)
+        P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
+        P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
+        P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
+        
+        for ii in range(int(10/dt)):
+            phi = inject_mutations_1(phi, dt, x, dx, y2, theta1*(1-lam)) # no simultaneous mutations
+            phi = inject_mutations_2(phi, dt, x, dx, y1, theta2*(1-lam)) # no sim muts
+            phi = inject_simultaneous_muts(phi, dt, x, dx, (theta1+theta2)/2*lam) # all sim muts
+            phi = numerics.advance_adi(phi,U01,P1,P2,x,ii)
+            phi = numerics.advance_cov(phi,C,x,dx)
+            phi *= 1-P
+            
+        return phi,y1,y2
+
+def equilibrium_neutral_exact(x):
+    """
+    With thetas = 1
+    nu = 1
+    sig1 = sig2 = 0
+    """
+    phi = np.zeros((len(x),len(x)))
+    for ii in range(len(phi))[1:]:
+        phi[ii,1:-ii-1] = 1./x[ii]/x[1:-ii-1]
+    return phi
+
+
+def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt=0.001, lam = 0):
+    """
+    Integrate phi, y1, and y2 forward in time
+    """
+    dx = numerics.grid_dx(x)
+    U01 = numerics.domain(x)
+    C = identity(len(x)**2) + dt/nu*transition12.transition12(x,dx,U01) # covariance term
+    P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
+    P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
+    P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
+    P1D2 = transition1D.transition1D(x,dx,dt,sig2,nu)
+
+    P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
+    
+    for ii in range(int(T/dt)):
+        y1[1] += dt/dx[1]/x[1]/2 * theta1
+        y1 = numerics.advance1D(y1,P1D1)
+        y2[1] += dt/dx[1]/x[1]/2 * theta2
+        y2 = numerics.advance1D(y2,P1D2)
+        phi = inject_mutations_1(phi, dt, x, dx, y2, theta1*(1-lam))
+        phi = inject_mutations_2(phi, dt, x, dx, y1, theta2*(1-lam))
+        phi = inject_simultaneous_muts(phi, dt, x, dx, (theta1+theta2)/2*lam / nu)
+        phi = numerics.advance_adi(phi,U01,P1,P2,x,ii)
+        phi = numerics.advance_cov(phi,C,x,dx)
+        phi *= 1-P
+    
+    T_elapsed = int(T/dt)*dt
+    if T - T_elapsed > 1e-8:
+        # adjust dt and integrate last time step
+        dt = T-T_elapsed
+        C = identity(len(x)**2) + dt/nu*transition12.transition12(x,dx,U01) # covariance term
+        P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
+        P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
+        P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
+        P1D2 = transition1D.transition1D(x,dx,dt,sig2,nu)
+        P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
+        
+        y1[1] += dt/dx[1]/x[1]/2 * theta1
+        y1 = numerics.advance1D(y1,P1D1)
+        y2[1] += dt/dx[1]/x[1]/2 * theta2
+        y2 = numerics.advance1D(y2,P1D2)
+        phi = inject_mutations_1(phi, dt, x, dx, y2, theta1*(1-lam))
+        phi = inject_mutations_2(phi, dt, x, dx, y1, theta2*(1-lam))
+        phi = inject_simultaneous_muts(phi, dt, x, dx, (theta1+theta2)/2*lam / nu)
+        phi = numerics.advance_adi(phi,U01,P1,P2,x,0)
+        phi = numerics.advance_cov(phi,C,x,dx)
+        phi *= 1-P
+    
+    return phi,y1,y2
+    
+def alt_mut_mech_sample_spectrum(ns):
+    """
+    alternate mutation mechanism, mutations inserted at [1,1]
+    turns out that changing population size does not effect the distribution of mutations entering the population this way
+    we implement jenkins exact solution
+    this is for neutral spectrum only, for selected spectrum, integrate as above with lam = 1
+    """
+    fs = np.zeros((ns+1,ns+1))
+    for ii in range(ns)[1:]:
+        for jj in range(ns)[1:]:
+            if ii + jj < ns:
+                na = ns - ii - jj
+                fs[ii,jj] = 2*ns/(ns-2) * 1./((ns-na-1)*(ns-na)*(ns-na+1))
+    fs = dadi.Spectrum(fs)
+    fs[:,0].mask = True
+    fs[0,:].mask = True
+    for ii in range(len(fs)):
+        fs.mask[ii,ns-ii:] = True
+    return fs
+    
+
