@@ -5,7 +5,7 @@ import numpy as np
 setup(
     cmdclass={'build_ext': build_ext},
     ext_modules = [Extension("transition2",
-                 sources=["transition2_cy.pyx"],
+                 sources=["transition2.pyx"],
                  include_dirs=[np.get_include()])]
 )
 
