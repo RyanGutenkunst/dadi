@@ -1,10 +1,7 @@
 """
 Integration of phi for triallelic diffusion
+These methods include ones for the injection of density for new triallelic sites and integration forward in time
 """
-
-#
-# RNG: Let's add some comments! Please!
-#
 
 import numpy as np
 from numpy import newaxis as nuax
@@ -15,9 +12,7 @@ import scipy.io
 import math
 import transition1, transition2, transition12, transition1D # cythonized transition1 and transition2
 
-reload(numerics)
 
-### for simultaneous mutation model, should probably have a separate param lambda and just include it in the two previous functions for injecting mutations, so that we introduce mutations by y*(1-lambda) and [1,1]*lambda
 def inject_mutations_1(phi, dt, x, dx, y2, theta1):
     """
     new mutations injected along phi[1,:] against a background given by y2
@@ -35,36 +30,10 @@ def inject_mutations_2(phi, dt, x, dx, y1, theta2):
 
 def inject_simultaneous_muts(phi, dt, x, dx, theta):
     """
-    simultaneous mutation model
+    simultaneous mutation model - see Hodgkinson and Eyre-Walker 2010, injected at (Delta,Delta)
     """
     phi[1,1] += 1. / x[1] / x[1] / dx[1] / dx[1] * dt * theta
     return phi
-
-def equilibrium(phi, x, y1, y2, nu=1, sig1=0, sig2=0, theta1=1, theta2=1, dt=0.001, lam = 0):
-    """
-    Integrate the density function phi to equilibrium (10*2N generations)
-    y1 and y2 are the equilibrium 1D density functions for the background frequency spectrum
-    lam (lambda) = proportion of mutations arising from simultaneous mutation - should be either 0 or 1
-    """
-    if sig1 == 0 and sig2 == 0 and lam == 0: 
-        return equilibrium_neutral_exact(x),y1,y2
-    else:
-        dx = numerics.grid_dx(x)
-        U01 = numerics.domain(x)
-        C = identity(len(x)**2) + dt*transition12.transition12(x,dx,U01)
-        P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
-        P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
-        P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
-        
-        for ii in range(int(10/dt)):
-            phi = inject_mutations_1(phi, dt, x, dx, y2, theta1*(1-lam)) # no simultaneous mutations
-            phi = inject_mutations_2(phi, dt, x, dx, y1, theta2*(1-lam)) # no sim muts
-            phi = inject_simultaneous_muts(phi, dt, x, dx, (theta1+theta2)/2*lam) # all sim muts
-            phi = numerics.advance_adi(phi,U01,P1,P2,x,ii)
-            phi = numerics.advance_cov(phi,C,x,dx)
-            phi *= 1-P
-            
-        return phi,y1,y2
 
 def equilibrium_neutral_exact(x):
     """
@@ -77,14 +46,15 @@ def equilibrium_neutral_exact(x):
         phi[ii,1:-ii-1] = 1./x[ii]/x[1:-ii-1]
     return phi
 
-
 def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt=0.001, lam = 0):
     """
     Integrate phi, y1, and y2 forward in time
+    phi - density function for triallelic sites
+    y1,y2 - density of biallelic background sites, integrated forward alongside phi
     """
     dx = numerics.grid_dx(x)
     U01 = numerics.domain(x)
-    C = identity(len(x)**2) + dt/nu*transition12.transition12(x,dx,U01) # covariance term
+    C = identity(len(x)**2) + dt/nu*transition12.transition12(x,dx,U01)
     P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
     P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
     P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
@@ -132,7 +102,7 @@ def alt_mut_mech_sample_spectrum(ns):
     """
     alternate mutation mechanism, mutations inserted at [1,1]
     turns out that changing population size does not effect the distribution of mutations entering the population this way
-    we implement jenkins exact solution
+    we implement Jenkins et al (2014) exact solution
     this is for neutral spectrum only, for selected spectrum, integrate as above with lam = 1
     """
     fs = np.zeros((ns+1,ns+1))
@@ -147,5 +117,3 @@ def alt_mut_mech_sample_spectrum(ns):
     for ii in range(len(fs)):
         fs.mask[ii,ns-ii:] = True
     return fs
-    
-

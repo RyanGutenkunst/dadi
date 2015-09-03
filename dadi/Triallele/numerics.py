@@ -12,14 +12,27 @@ from scipy.sparse.linalg import spsolve
 from scipy.integrate import trapz
 from scipy.special import gamma
 from numpy import newaxis as nuax
-import dadi
+from dadi import Numerics
+from dadi.Spectrum_mod import Spectrum
 import math
 import pickle
 
+from bdry_injection import bdry_inj
+import transition1D
+
+
 def grid_dx(x):
+    """
+    We use uniform grids in x, using np.linspace(0,1,numpts)
+    Grid spacing Delta, which is halved at the first and last grid points.
+    """
     return (np.concatenate((np.diff(x),np.array([0]))) + np.concatenate((np.array([0]),np.diff(x))))/2
 
 def grid_dx_2d(x,dx):
+    """
+    The two dimensional grid spacing over the domain.
+    Grid points lie along the diagonal boundary, and Delta for those points is halved
+    """
     DXX = dx[:,nuax]*dx[nuax,:]
     for ii in range(len(x)):
         DXX[ii,len(x)-ii-1] *= 1./2
@@ -30,13 +43,11 @@ def int2(DXX,U):
     Integrate the density function over the domain
     need the proper DXX, as commented out below
     """
-    #DXX = dx[:,nuax]*dx[nuax,:]
-    #DXX[np.where(x[:,nuax] + x[nuax,:] == 1)] *= 1./2
     return np.sum(DXX*U)
 
 def domain(x):
     """
-    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain, while a 0 indicates that point falls outside the domain
+    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
     """
     tol = 1e-12
     U01 = np.ones((len(x),len(x)))
@@ -82,8 +93,7 @@ def transition1(x,dx,U01,sig1,sig2):
                     A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
         
         if sig1 != 0:
-            #M = sig1 * x*(1-x)
-            ## 3/14/15 - with two sites, the two seletion coefficients interfere
+            ## with two sites, the two seletion coefficients interfere
             x2 = x[jj]
             sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
             sig_new[-1] = 0
@@ -139,7 +149,6 @@ def transition2(x,dx,U01,sig1,sig2):
                     A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
         
         if sig2 != 0:
-            #M = sig2 * x*(1-x)
             x1 = x[ii]
             sig_new = sig2*(1-x-x1)/(1-x) + (sig2-sig1)*x1/(1-x)
             sig_new[-1] = 0
@@ -200,15 +209,14 @@ def transition12(x,dx,U01):
     C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
     return C
 
-def transition_line(x,dx,sig1,sig2): ### apr: should fix this to have s1, s2 ### Aug 21
+def transition_line(x,dx,sig1,sig2):
     """
-    Transition matrix for loss of type 3 allele, corresponding to states along the diagonal border of the domain
+    Transition matrix for loss of ancestral allele, corresponding to states along the diagonal border of the domain
     Selection strength is given by \tilde{sig} = (sig1 - sig2)/(1+sig2) ... probably not. Working on this.
     """
     P = np.zeros((3,len(x)))
     A = np.zeros((len(x),len(x)))
     V = x*(1-x)
-    #sig = (sig1-sig2)/(1+sig2) # this will cause problems for sig2 = -1, can't be right...
     sig = sig1 - sig2
     for ii in range(len(x)):
         if ii == 0:
@@ -232,6 +240,8 @@ def transition_bdry(x):
     """
     Along the diagonal boundary, integrating forward in time using the ADI method incorrectly pushed density to be absorbed along the boundary instead of diffusing more parallel to the boundary.
     So instead, the bulk of the domain is integrated using the methods above, and we handle the thin strip of the domain along the diagonal boundary separately by applying a split diffusion method parallel and perpendicular to the boundary.
+    
+    Sept 3, 2015 - this is not what we use. For both better runtime and accuracy, we simply calculate the amount of density for each point that should be lost to the boundary and remove that amount from the grid points
     """
     x_new = np.linspace(0,1,len(x)-1) # we integrate along the diagonal just inside the diagonal boundary where x1+x2=1, so the length of that array is one less that the total grid length
     V = x[:-1] * (1-x[1:])
@@ -276,7 +286,7 @@ def transition_bdry(x):
     
     return Pz,Pzperp
 
-# Use dadi.tridiag to solve the adi components, and scipy's sparse methods for the covariance term
+# Use tridiag to solve the adi components, and scipy's sparse methods for the covariance term
 
 def advance_adi(U,U01,P1,P2,x,ii):
     if np.mod(ii,2) == 0:
@@ -320,11 +330,12 @@ def advance_line(U,P_line,x,dx):
         U[ii,len(x)-ii-1] = u[ii]
     return U
 
-from bdry_injection import bdry_inj
 
 def advance_bdry(U,Pz,Pzperp,x,dx):
     """
     U_new is the new domain that is square to the diagonal boundary, and has dimensions (length(x)-1) x length(x)
+    
+    9/3/15 - no longer used, see comment in transition_bdry function
     """
     x_new = np.linspace(0,1,len(x)-1)
     U_new = np.zeros((len(x_new),len(x)))
@@ -391,7 +402,7 @@ def advance_bdry(U,Pz,Pzperp,x,dx):
     
     return U
 
-## 1D methods - could be coopted from dadi.
+## 1D methods - could be coopted from 
 
 def transition1D_py(x,dx,dt,sig,nu):
     P = np.zeros((len(x),len(x)))
@@ -407,182 +418,6 @@ def transition1D_py(x,dx,dt,sig,nu):
             P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
             P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + sig * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
     return P
-
-def advance1D(u,P):
-    a = np.concatenate((np.array([0]),np.diag(P,-1)))
-    b = np.diag(P)
-    c = np.concatenate((np.diag(P,1),np.array([0])))
-    u = dadi.tridiag.tridiag(a,b,c,u)
-    return u
-
-def sample1D(x,u,samples):
-    dx = grid_dx(x)
-    F = np.zeros(samples-1)
-    for i in range(len(F))[1:-1]:
-        j = i+1
-        F[i] = math.factorial(samples)/(math.factorial(samples-j)*math.factorial(j)) * np.sum( u * x**j * (1-x)**(samples-j) * dx )
-    return F
-
-### code in cython, major bottleneck here vvv
-
-def sample(phi, ns, x, DXX):
-    if type(ns) == int:
-        ns = tuple([ns])
-    if not type(ns) == int:
-        if len(ns) == 1:
-            ns = tuple(ns)
-        else:
-            ns = tuple([ns[0]])
-    #dx = grid_dx(x)
-    F = np.zeros((ns[0]+1,ns[0]+1))
-    for ii in range(len(F)):
-        for jj in range(len(F)):
-            if ii+jj < ns[0] and ii != 0 and jj != 0:
-                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
-                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(DXX * phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns[0]-ii-jj) )
-    return F
-
-sample_cache = {}
-def sample_cached(phi, ns, x, DXX):
-    if type(ns) == int:
-        ns = (ns,)
-    else:
-        if len(ns) == 1:
-            ns = tuple(ns)
-        else:
-            ns = (ns[0],)
-    
-    # We cache calculations of several big matrices that will be re-used 
-    # within and between integrations.
-    key = (ns, tuple(x))
-    if key not in sample_cache:
-        this_cache = {}
-        for ii in range(1,ns[0]-1):
-            # Create our cache
-            this_cache[ii] = (1-x[:,nuax]-x[nuax,:])**ii
-            # Somewhat ugly hack to use negative values to store second array
-            # to cache.
-            this_cache[-ii] = x[nuax,:]**ii
-        sample_cache[key] = this_cache
-    else:
-        this_cache = sample_cache[key]
-
-    #dx = grid_dx(x)
-    F = np.zeros((ns[0]+1,ns[0]+1))
-    prod_phi = DXX*phi
-    for ii in range(len(F)):
-        prod_x = prod_phi * x[:,nuax]**ii
-        for jj in range(len(F)):
-            if ii+jj < ns[0] and ii != 0 and jj != 0:
-                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
-                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(prod_x * this_cache[-jj] * this_cache[ns[0]-ii-jj])
-    F = dadi.Spectrum(F)
-    F.extrap_x = x[1]
-    F.mask[:,0] = True
-    F.mask[0,:] = True
-    for ii in range(len(F))[1:]:
-        F.mask[ii,len(F)-ii-1:] = True
-    return F
-
-### ^^^
-
-def trinomial(ns,ii,jj):
-    """
-    Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values
-    """
-    return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(ns-ii-jj+1))
-
-def misidentification(Spectrum, p):
-    """
-    Given folded spectrum, and probability p that the derived alleles are the true ancestral state
-    Then refold to return folded spectrum
-    """
-    F = np.zeros((len(Spectrum),len(Spectrum)))
-    for ii in range(len(Spectrum))[1:-1]:
-        for jj in range(len(Spectrum))[1:ii+1]:
-            if ii+jj < len(Spectrum):
-                F[ii,jj] += (1 - p) * Spectrum[ii,jj]
-                F[len(Spectrum)-1-ii-jj,jj] += p/2. * Spectrum[ii,jj]
-                F[ii,len(Spectrum)-1-ii-jj] += p/2. * Spectrum[ii,jj]
-    
-    return fold(dadi.Spectrum(F))
-    
-def fold(spectrum):
-    """
-    Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
-    """
-    #spectrum = dadi.Spectrum(spectrum)
-    #for ii in range(len(spectrum)):
-    #    for jj in range(len(spectrum)):
-    #        if jj > ii:
-    #            spectrum[jj,ii] += spectrum[ii,jj]
-    #            spectrum[ii,jj] = 0
-    #            spectrum.mask[ii,jj] = True
-    #        if ii+jj >= len(spectrum)-1:
-    #            spectrum.mask[ii,jj] = True
-    #spectrum.mask[0,:] = True
-    #spectrum.mask[:,0] = True
-    spectrum = dadi.Spectrum(spectrum)
-    if spectrum.mask[1,2] == True:
-        print "error: trying to fold a spectrum that is already folded"
-        return spectrum
-    else:
-        spectrum = (spectrum + np.transpose(spectrum))
-        for ii in range(len(spectrum)):
-            spectrum[ii,ii] /= 2
-        spectrum.mask[0,:] = True
-        spectrum.mask[:,0] = True
-        for ii in range(len(spectrum)):
-            spectrum.mask[ii,ii+1:] = True
-            spectrum.mask[ii,len(spectrum)-1-ii:] = True
-        return spectrum
-
-
-def sample_bootstrap(data):
-    
-    # create cdf for sampling from data
-    cdf = np.zeros(len(data)**2)
-    for ii in range(len(data)**2)[1:]:
-        if data.mask[ii/len(data),ii%len(data)] == False:
-            cdf[ii] = cdf[ii-1] + data[ii/len(data),ii%len(data)]
-        else:
-            cdf[ii] = cdf[ii-1]
-    
-    cdf = cdf/cdf[-1]
-        
-    #
-    fs = np.zeros((len(data),len(data)))
-    for ii in range(int(np.sum(data))):
-        jj = np.min(np.where(np.random.rand() < cdf))
-        fs[jj/len(data),jj%len(data)] += 1
-    #
-    fs = dadi.Spectrum(fs)
-    fs.mask[:,0] = True
-    fs.mask[0,:] = True
-    for ii in range(len(fs)):
-        for jj in range(len(fs)):
-            if ii < jj or ii + jj >= len(fs)-1:
-                fs.mask[ii,jj] = True
-                
-    return fs
-
-
-def univariate_lognormal_pdf(x,sigma,mu):
-    ## ln(scale) = mu
-    ## so scale = exp(mu)
-    ## shape = sigma
-    return 1./(x*sigma*np.sqrt(2*math.pi)) * np.exp ( -(np.log(x) - mu)**2 / (2*sigma**2) )
-
-def bivariate_lognormal_pdf(xx, params):
-    ## mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
-    mu1, mu2, sigma1, sigma2, rho = params
-    norm = 1./(2 * np.pi * (sigma1*sigma2) * np.sqrt(1-rho**2) * np.outer(xx,xx) )
-    q = 1/(1-rho**2) * ( ((np.log(xx[nuax,:])-mu1)/sigma1)**2 - 2*rho*((np.log(xx[nuax,:])-mu1)/sigma1)*((np.log(xx[:,nuax])-mu2)/sigma2) + ((np.log(xx[:,nuax])-mu2)/sigma2)**2 )
-    prob = norm * np.exp( -q/2. )
-    
-    return prob
-
-import transition1D
 
 def remove_diag_density_weights(x,dt,nu,sig1,sig2):
     dx = grid_dx(x)
@@ -638,12 +473,179 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     P[0,:] = 0
     return P
 
+def advance1D(u,P):
+    a = np.concatenate((np.array([0]),np.diag(P,-1)))
+    b = np.diag(P)
+    c = np.concatenate((np.diag(P,1),np.array([0])))
+    u = dadi.tridiag.tridiag(a,b,c,u)
+    return u
+
+def sample1D(x,u,samples):
+    dx = grid_dx(x)
+    F = np.zeros(samples-1)
+    for i in range(len(F))[1:-1]:
+        j = i+1
+        F[i] = math.factorial(samples)/(math.factorial(samples-j)*math.factorial(j)) * np.sum( u * x**j * (1-x)**(samples-j) * dx )
+    return F
+
+def sample(phi, ns, x, DXX):
+    """
+    For sampling the density function, we integrate against the trinomial distribution
+    """
+    if type(ns) == int:
+        ns = tuple([ns])
+    if not type(ns) == int:
+        if len(ns) == 1:
+            ns = tuple(ns)
+        else:
+            ns = tuple([ns[0]])
+    #dx = grid_dx(x)
+    F = np.zeros((ns[0]+1,ns[0]+1))
+    for ii in range(len(F)):
+        for jj in range(len(F)):
+            if ii+jj < ns[0] and ii != 0 and jj != 0:
+                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
+                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(DXX * phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns[0]-ii-jj) )
+    return F
+
+sample_cache = {}
+def sample_cached(phi, ns, x, DXX):
+    if type(ns) == int:
+        ns = (ns,)
+    else:
+        if len(ns) == 1:
+            ns = tuple(ns)
+        else:
+            ns = (ns[0],)
+    
+    # We cache calculations of several big matrices that will be re-used 
+    # within and between integrations.
+    key = (ns, tuple(x))
+    if key not in sample_cache:
+        this_cache = {}
+        for ii in range(1,ns[0]-1):
+            # Create our cache
+            this_cache[ii] = (1-x[:,nuax]-x[nuax,:])**ii
+            # Somewhat ugly hack to use negative values to store second array
+            # to cache.
+            this_cache[-ii] = x[nuax,:]**ii
+        sample_cache[key] = this_cache
+    else:
+        this_cache = sample_cache[key]
+
+    #dx = grid_dx(x)
+    F = np.zeros((ns[0]+1,ns[0]+1))
+    prod_phi = DXX*phi
+    for ii in range(len(F)):
+        prod_x = prod_phi * x[:,nuax]**ii
+        for jj in range(len(F)):
+            if ii+jj < ns[0] and ii != 0 and jj != 0:
+                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
+                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(prod_x * this_cache[-jj] * this_cache[ns[0]-ii-jj])
+    F = Spectrum(F)
+    F.extrap_x = x[1]
+    F.mask[:,0] = True
+    F.mask[0,:] = True
+    for ii in range(len(F))[1:]:
+        F.mask[ii,len(F)-ii-1:] = True
+    return F
+
+def trinomial(ns,ii,jj):
+    """
+    Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values
+    """
+    return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(ns-ii-jj+1))
+
+def misidentification(Spectrum, p):
+    """
+    Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
+    Then refold to return folded spectrum
+    """
+    F = np.zeros((len(Spectrum),len(Spectrum)))
+    for ii in range(len(Spectrum))[1:-1]:
+        for jj in range(len(Spectrum))[1:ii+1]:
+            if ii+jj < len(Spectrum):
+                F[ii,jj] += (1 - p) * Spectrum[ii,jj]
+                F[len(Spectrum)-1-ii-jj,jj] += p/2. * Spectrum[ii,jj]
+                F[ii,len(Spectrum)-1-ii-jj] += p/2. * Spectrum[ii,jj]
+    
+    return fold(Spectrum(F))
+    
+def fold(spectrum):
+    """
+    Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
+    """
+    spectrum = Spectrum(spectrum)
+    if spectrum.mask[1,2] == True:
+        print "error: trying to fold a spectrum that is already folded"
+        return spectrum
+    else:
+        spectrum = (spectrum + np.transpose(spectrum))
+        for ii in range(len(spectrum)):
+            spectrum[ii,ii] /= 2
+        spectrum.mask[0,:] = True
+        spectrum.mask[:,0] = True
+        for ii in range(len(spectrum)):
+            spectrum.mask[ii,ii+1:] = True
+            spectrum.mask[ii,len(spectrum)-1-ii:] = True
+        return spectrum
+
+
+def sample_bootstrap(data):
+    
+    # create cdf for sampling from data
+    cdf = np.zeros(len(data)**2)
+    for ii in range(len(data)**2)[1:]:
+        if data.mask[ii/len(data),ii%len(data)] == False:
+            cdf[ii] = cdf[ii-1] + data[ii/len(data),ii%len(data)]
+        else:
+            cdf[ii] = cdf[ii-1]
+    
+    cdf = cdf/cdf[-1]
+        
+    # 
+    fs = np.zeros((len(data),len(data)))
+    for ii in range(int(np.sum(data))):
+        jj = np.min(np.where(np.random.rand() < cdf))
+        fs[jj/len(data),jj%len(data)] += 1
+    #
+    fs = Spectrum(fs)
+    fs.mask[:,0] = True
+    fs.mask[0,:] = True
+    for ii in range(len(fs)):
+        for jj in range(len(fs)):
+            if ii < jj or ii + jj >= len(fs)-1:
+                fs.mask[ii,jj] = True
+                
+    return fs
+
+
+def univariate_lognormal_pdf(x,sigma,mu):
+    """
+    Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))
+    """
+    return 1./(x*sigma*np.sqrt(2*math.pi)) * np.exp ( -(np.log(x) - mu)**2 / (2*sigma**2) )
+
+def bivariate_lognormal_pdf(xx, params):
+    """
+    mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
+    We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution
+    """
+    mu1, mu2, sigma1, sigma2, rho = params
+    norm = 1./(2 * np.pi * (sigma1*sigma2) * np.sqrt(1-rho**2) * np.outer(xx,xx) )
+    q = 1/(1-rho**2) * ( ((np.log(xx[nuax,:])-mu1)/sigma1)**2 - 2*rho*((np.log(xx[nuax,:])-mu1)/sigma1)*((np.log(xx[:,nuax])-mu2)/sigma2) + ((np.log(xx[:,nuax])-mu2)/sigma2)**2 )
+    prob = norm * np.exp( -q/2. )
+    
+    return prob
 
 def ms_demo_params_to_dadi(nu_ms,tau_ms):
+    """
+    convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)
+    """
     return 1./nu_ms,2*tau_ms/nu_ms
 
 def optimal_sfs_scaling(model,data):
     data = numerics.fold(data)
     model = numerics.fold(data)
-    model, data = dadi.Numerics.intersect_masks(model, data)
+    model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
