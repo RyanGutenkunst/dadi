@@ -14,17 +14,18 @@ def equilibrium(params, ns, pts, folded = False, misid = False):
     params = [sig1,sig2,theta1,theta2,misid]
     
     """
-    sig1,sig2,theta1,theta2,misid = params
+    sig1,sig2,theta1,theta2,misid,dt = params
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
     
     y1 = dadi.PhiManip.phi_1D(x,gamma=sig1)
     y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
-    phi = np.zeros((len(x),len(x))) # 9/3 experiment with starting from neutral exact solution, might have to wait less time, using phi = integration.equilibrium_neutral_exact(x)
+    phi = np.zeros((len(x),len(x)))
     if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
         phi = integration.equilibrium_neutral_exact(x)
     else:
-        phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=0.001)
+        phi = integration.equilibrium_neutral_exact(x)
+        phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
     
     dx = numerics.grid_dx(x)
     DXX = numerics.grid_dx_2d(x,dx)
@@ -70,7 +71,8 @@ def two_epoch(params, ns, pts, folded = False, misid = False):
     if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
         phi = integration.equilibrium_neutral_exact(x)
     else:
-        phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=0.001)
+        phi = integration.equilibrium_neutral_exact(x)
+        phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
     
     phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu, sig1, sig2, theta1, theta2, dt)
     
@@ -111,7 +113,13 @@ def three_epoch(params, ns, pts, folded = False, misid = False):
     y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
     phi = np.zeros((len(x),len(x)))
     
-    phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, 1.0, sig1, sig2, theta1, theta2, dt)
+    # integrate to equilibrium first
+    if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
+        phi = integration.equilibrium_neutral_exact(x)
+    else:
+        phi = integration.equilibrium_neutral_exact(x)
+        phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
+    
     phi,y1,y2 = integration.advance(phi, x, TB, y1, y2, nuB, sig1, sig2, theta1, theta2, dt)
     phi,y1,y2 = integration.advance(phi, x, TF, y1, y2, nuF, sig1, sig2, theta1, theta2, dt)
 

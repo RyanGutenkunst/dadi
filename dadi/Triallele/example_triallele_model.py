@@ -7,7 +7,7 @@ import numpy as np, scipy, matplotlib
 
 nu, T = 2.0, 0.1 # instantaneous population size change (doubled in size) 0.1 time units (in 2Ne generations) ago
 sig1 = -1.0
-sig2 = 0.0
+sig2 = -10.0
 theta1 = 1.
 theta2 = 1.
 misid = 0.0 # no misidentification
