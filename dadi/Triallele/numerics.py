@@ -14,6 +14,7 @@ from scipy.special import gamma
 from numpy import newaxis as nuax
 from dadi import Numerics
 from dadi.Spectrum_mod import Spectrum
+import dadi
 import math
 import pickle
 

@@ -21,10 +21,13 @@ def equilibrium(params, ns, pts, folded = False, misid = False):
     y1 = dadi.PhiManip.phi_1D(x,gamma=sig1)
     y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
     phi = np.zeros((len(x),len(x))) # 9/3 experiment with starting from neutral exact solution, might have to wait less time, using phi = integration.equilibrium_neutral_exact(x)
-    phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=0.001)
+    if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
+        phi = integration.equilibrium_neutral_exact(x)
+    else:
+        phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=0.001)
     
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d
+    DXX = numerics.grid_dx_2d(x,dx)
     
     if not type(ns) == int:
         if len(ns) == 1:
@@ -52,9 +55,9 @@ def equilibrium(params, ns, pts, folded = False, misid = False):
     
 def two_epoch(params, ns, pts, folded = False, misid = False):
     """
-    params = [nu,T,sig1,sig2,theta1,theta2,misid]
+    params = [nu,T,sig1,sig2,theta1,theta2,misid,dt]
     """
-    nu,T,sig1,sig2,theta1,theta2,misid = params
+    nu,T,sig1,sig2,theta1,theta2,misid,dt = params
 
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
@@ -62,12 +65,17 @@ def two_epoch(params, ns, pts, folded = False, misid = False):
     y1 = dadi.PhiManip.phi_1D(x,gamma=sig1)
     y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
     phi = np.zeros((len(x),len(x)))
-
-    phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, 1.0, sig1, sig2, theta1, theta2, dt)
+    
+    # integrate to equilibrium first
+    if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
+        phi = integration.equilibrium_neutral_exact(x)
+    else:
+        phi,y1,y2 = integration.advance(phi, x, 20, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=0.001)
+    
     phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu, sig1, sig2, theta1, theta2, dt)
     
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d
+    DXX = numerics.grid_dx_2d(x,dx)
     
     if not type(ns) == int:
         if len(ns) == 1:
@@ -95,7 +103,7 @@ def two_epoch(params, ns, pts, folded = False, misid = False):
 
 
 def three_epoch(params, ns, pts, folded = False, misid = False):
-    nuB,nuF,TB,TF,sig1,sig2,theta1,theta2,p_mis,dt = params
+    nuB,nuF,TB,TF,sig1,sig2,theta1,theta2,misid,dt = params
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
     
@@ -108,7 +116,7 @@ def three_epoch(params, ns, pts, folded = False, misid = False):
     phi,y1,y2 = integration.advance(phi, x, TF, y1, y2, nuF, sig1, sig2, theta1, theta2, dt)
 
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d
+    DXX = numerics.grid_dx_2d(x,dx)
     
     if not type(ns) == int:
         if len(ns) == 1:
