@@ -145,25 +145,26 @@ for ii in range(len(Phi)):
     Phi.mask[ii,ns-ii:] = True
 
 ###
+cmap = plt.get_cmap('cubehelix_r')
 
 # plot differences
 fs = dadi.Triallele.numerics.fold(fs)/np.sum(fs)
 Phi = dadi.Triallele.numerics.fold(Phi)/np.sum(Phi)
 
-fig = plt.figure(1001,figsize=(4,6))
-ax1 = plt.subplot(3,1,1,aspect='equal')
-dadi.Plotting.plot_single_2d_sfs(np.transpose(fs),pop_ids=('Minor DAF','Major DAF'))
+fig = plt.figure(1001,figsize=(8,6),dpi=150)
+ax1 = plt.subplot(3,2,1,aspect='equal')
+dadi.Plotting.plot_single_2d_sfs(np.transpose(fs),pop_ids=('Minor DAF','Major DAF'),cmap=cmap)
 ax1.set_xlim([0,20])
 ax1.set_ylim([0,12])
 ax1.set_title('Diffusion')
 
-ax2 = plt.subplot(3,1,2,aspect='equal')
-dadi.Plotting.plot_single_2d_sfs(np.transpose(Phi),pop_ids=('Minor DAF','Major DAF'))
+ax2 = plt.subplot(3,2,3,aspect='equal')
+dadi.Plotting.plot_single_2d_sfs(np.transpose(Phi),pop_ids=('Minor DAF','Major DAF'),cmap=cmap)
 ax2.set_xlim([0,20])
 ax2.set_ylim([0,12])
 ax2.set_title('Coalescent')
 
-ax3 = plt.subplot(3,1,3,aspect='equal')
+ax3 = plt.subplot(3,2,5,aspect='equal')
 resid = dadi.Inference.linear_Poisson_residual(fs, Phi)
 plt.pcolor(np.transpose(resid),cmap=plt.cm.RdBu_r, vmin=-abs(resid).max(), vmax=abs(resid).max())
 plt.colorbar()
@@ -171,5 +172,65 @@ ax3.set_xlim([0,20])
 ax3.set_ylim([0,12])
 ax3.set_title('Residual')
 
+## compare equilibrium exact frequencies
+ax4 = plt.subplot(3,2,2,aspect='equal')
+
+fs60 = dadi.Triallele.numerics.sample_cached( dadi.Triallele.integration.equilibrium_neutral_exact(np.linspace(0,1,61)) , ns , np.linspace(0,1,61), dadi.Triallele.numerics.grid_dx_2d(np.linspace(0,1,61),dadi.Triallele.numerics.grid_dx(np.linspace(0,1,61))) )
+
+fs80 = dadi.Triallele.numerics.sample_cached( dadi.Triallele.integration.equilibrium_neutral_exact(np.linspace(0,1,81)) , ns , np.linspace(0,1,81), dadi.Triallele.numerics.grid_dx_2d(np.linspace(0,1,81),dadi.Triallele.numerics.grid_dx(np.linspace(0,1,81))) )
+
+fs100 = dadi.Triallele.numerics.sample_cached( dadi.Triallele.integration.equilibrium_neutral_exact(np.linspace(0,1,101)) , ns , np.linspace(0,1,101), dadi.Triallele.numerics.grid_dx_2d(np.linspace(0,1,101),dadi.Triallele.numerics.grid_dx(np.linspace(0,1,101))) )
+
+fseq = dadi.Numerics.quadratic_extrap((fs60,fs80,fs100),(fs60.extrap_x,fs80.extrap_x,fs100.extrap_x))
+
+fseq /= np.sum(fseq)
+
+fseq = dadi.Triallele.numerics.fold(fseq)
+
+dadi.Plotting.plot_single_2d_sfs(np.transpose(fseq),pop_ids=('Minor DAF','Major DAF'),cmap=cmap)
+ax4.set_xlim([0,20])
+ax4.set_ylim([0,12])
+ax4.set_title('Extrapolation on $\Delta x$')
+
+ax5 = plt.subplot(3,2,4,aspect='equal')
+
+Phieq = np.zeros((ns+1,ns+1))
+
+def d(na,nb,nc,n):
+    if nc > 1:
+        return 1./((na+nb)*(na+nb-1))*(1 + 1.*n/nc - 2.*n*(np.sum(1./np.linspace(1,n,n))-np.sum(1./np.linspace(1,nc-1,nc-1)))/(na+nb+1))
+    else:
+        return 1./((na+nb)*(na+nb-1))*(1 + 1.*n/nc - 2.*n*(np.sum(1./np.linspace(1,n,n)))/(na+nb+1))
+
+for ii in range(ns+1)[1:]: # ii is type b
+    for jj in range(ns+1)[1:]: # jj in type c
+        if ii+jj < ns:
+            C = ( 1./2 ) * (np.sum(1./np.linspace(1,ns,ns)) + 1./ns - 2) + ( 1./2 ) * ( np.sum(1./np.linspace(1,ns,ns))**2/2 - np.sum(1./np.linspace(1,ns,ns)**2)/2 - np.sum(1./np.linspace(1,ns,ns)) - 1./ns + 2)
+            Phieq[ii,jj] = 1./C * ( Pab*Pbc*d(ns-ii-jj,ii,jj,ns) + Pac*Pcb*d(ns-ii-jj,jj,ii,ns) + Pab*Pac*(1./(ii*jj) - d(ns-ii-jj,ii,jj,ns) - d(ns-ii-jj,jj,ii,ns)) )
+
+Phieq = Phieq/np.sum(Phieq)
+Phieq = dadi.Spectrum(Phieq)
+Phieq.mask[0,:] = True
+Phieq.mask[:,0] = True
+for ii in range(len(Phieq)):
+    Phieq.mask[ii,ns-ii:] = True
+    
+Phieq = dadi.Triallele.numerics.fold(Phieq)
+
+dadi.Plotting.plot_single_2d_sfs(np.transpose(Phieq),pop_ids=('Minor DAF','Major DAF'),cmap=cmap)
+ax5.set_xlim([0,20])
+ax5.set_ylim([0,12])
+ax5.set_title('Exact')
+
+ax6 = plt.subplot(3,2,6,aspect='equal')
+resideq = dadi.Inference.linear_Poisson_residual(fseq, Phieq)
+plt.pcolor(np.transpose(resideq),cmap=plt.cm.RdBu_r, vmin=-abs(resideq).max(), vmax=abs(resideq).max())
+plt.colorbar()
+ax6.set_xlim([0,20])
+ax6.set_ylim([0,12])
+ax6.set_title('Residual')
+
+
 fig.tight_layout()
+plt.savefig('jenkins_comparison.pdf')
 plt.show()
