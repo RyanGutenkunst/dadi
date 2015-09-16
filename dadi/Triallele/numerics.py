@@ -442,12 +442,18 @@ def remove_diag_density_weights(x,dt,nu,sig1,sig2):
     return P
 
 def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
+    """
+    Numerically determine the amount of density that should be lost to the diagonal boundary.
+    Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
+    We then check the fraction of density that is lost to z=1.
+    If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1*x/(x+y) + sig2*y/(x+y)
+    """
     dx = grid_dx(x)
     P = np.zeros((len(x),len(x)))
     for ii in range(len(x)):
         for jj in range(len(x)):
             if x[ii]+x[jj] < 1.0 and x[ii]+x[jj] > .75:
-                sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj]) # I think this order is correct for weights of sigmas
+                sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj]) 
                 P1D = transition1D.transition1D(x,dx,dt,sig,nu)
                 y = np.zeros(len(x))
                 y[ii+jj] = 1./dx[ii+jj]
