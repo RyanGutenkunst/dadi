@@ -44,23 +44,22 @@ def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim
                     A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
                     A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
         
-        if sig1 != 0:
-            x2 = x[jj]
-            sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
-            sig_new[-1] = 0
-            M = sig_new*x*(1-x)
-            M[np.where(U01[:,jj] == 1)[0][-1]] = 0
-            for ii in np.where(U01[:,jj] == 1)[0]:
-                if ii == 0:
-                    A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
-                    A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
-                elif ii == np.where(U01[:,jj] == 1)[0][-1]:
-                    A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
-                    A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
-                else:
-                    A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
-                    A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
-                    A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+        x2 = x[jj]
+        sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[:,jj] == 1)[0][-1]] = 0
+        for ii in np.where(U01[:,jj] == 1)[0]:
+            if ii == 0:
+                A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+            elif ii == np.where(U01[:,jj] == 1)[0][-1]:
+                A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
+                A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
+            else:
+                A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
 
         P[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
         P[jj,1,:] = np.diagonal(A)

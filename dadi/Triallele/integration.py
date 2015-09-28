@@ -59,9 +59,11 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
     P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
     P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
     P1D2 = transition1D.transition1D(x,dx,dt,sig2,nu)
-
-    P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
     
+    sig_line = sig1-sig2
+    Pline = transition1D.transition1D(x,dx,dt,sig_line,nu)
+    P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
+
     for ii in range(int(T/dt)):
         y1[1] += dt/dx[1]/x[1]/2 * theta1
         y1 = numerics.advance1D(y1,P1D1)
@@ -72,7 +74,10 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
         phi = inject_simultaneous_muts(phi, dt, x, dx, (theta1+theta2)/2*lam / nu)
         phi = numerics.advance_adi(phi,U01,P1,P2,x,ii)
         phi = numerics.advance_cov(phi,C,x,dx)
-        phi *= 1-P
+        #phi *= 1-P
+        # move density to diagonal boundary and integrate it
+        phi = numerics.move_density_to_bdry(x,phi,P)
+        phi = numerics.advance_line(x,phi,Pline)
     
     T_elapsed = int(T/dt)*dt
     if T - T_elapsed > 1e-8:
@@ -83,6 +88,9 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
         P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
         P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
         P1D2 = transition1D.transition1D(x,dx,dt,sig2,nu)
+        
+        sig_line = sig1-sig2
+        Pline = transition1D.transition1D(x,dx,dt,sig_line,nu)
         P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
         
         y1[1] += dt/dx[1]/x[1]/2 * theta1
@@ -94,7 +102,10 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
         phi = inject_simultaneous_muts(phi, dt, x, dx, (theta1+theta2)/2*lam / nu)
         phi = numerics.advance_adi(phi,U01,P1,P2,x,0)
         phi = numerics.advance_cov(phi,C,x,dx)
-        phi *= 1-P
+        #phi *= 1-P
+        # move density to diagonal boundary and integrate it
+        phi = numerics.move_density_to_bdry(x,phi,P)
+        phi = numerics.advance_line(x,phi,Pline)
     
     return phi,y1,y2
     
