@@ -191,6 +191,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
 
     # Now the expectation of J over the bootstrap data
     J = numpy.zeros((len(p0), len(p0)))
+    cU = numpy.zeros((len(p0), len(p0)))
     for ii, boot in enumerate(all_boot):
         boot = Spectrum(boot)
         if not log:
@@ -200,12 +201,14 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
 
         J_temp = numpy.outer(grad_temp, grad_temp)
         J = J + J_temp
+        cU = cU + grad_temp
     J = J/len(all_boot)
+    cU = cU/len(all_boot)
 
     # G = H*J^-1*H
     J_inv = numpy.linalg.inv(J)
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
-    return godambe, hess, J
+    return godambe, hess, J, cU
 
 def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False, 
                multinom=True, eps=0.01):
@@ -235,7 +238,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
         theta_opt = Inference.optimal_sfs_scaling(model, data)
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
-    GIM, H, J = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
+    GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
 
 def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
@@ -308,8 +311,8 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return func_ex(full_params, ns, grid_pts)
 
     p_nested = numpy.asarray(p0)[nested_indices]
-    GIM, H, J = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps, 
-                            log=False)
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps,
+                                log=False)
 
     adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
@@ -350,3 +353,117 @@ def sum_chi2_ppf(x, weights=(0,1)):
         return ppf[0]
     else:
         return ppf
+
+def wald(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+         full_params, multinom=True, eps=0.01, adj_and_org=False):
+    """
+    Calculate test stastic from wald test
+             
+    func_ex: Model function for complex model
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+    explicity defined.  Although equal to values for simple model, should
+    be in a list form that can be taken in by the complex model you'd like
+    to evaluate.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    nested_indices: List of positions of nested parameters in complex model
+    parameter list
+    full_params: Parameter values for parameters found only in complex model,
+    Can either be array with just values found only in the compelx model, or
+    entire list of parameters from complex model.
+    multinom: If True, assume model is defined without an explicit parameter for
+    theta. Because uncertainty in theta must be accounted for to get
+    correct uncertainties for other parameters, this function will
+    automatically consider theta if multinom=True. In that case, the
+    final entry of the returned uncertainties will correspond to
+    theta.
+    adj_and_org: Return both unadjusted wald and adjusted wald statistics if True;
+    If False, return just adjusted wald statistic
+    """
+    if multinom:
+         func_multi = func_ex
+         model = func_multi(p0, data.sample_sizes, grid_pts)
+         theta_opt = Inference.optimal_sfs_scaling(model, data)
+         p0 = list(p0) + [theta_opt]
+         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+         
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+         # diff_params argument is only the nested parameters. All the rest
+         # should come from p0
+         full_params = numpy.array(p0, copy=True, dtype=float)
+         # Use numpy indexing to set relevant parameters
+         full_params[nested_indices] = diff_params
+         return func_ex(full_params, ns, grid_pts)
+    
+    if len(full_params) == len(p0):
+        full_params = numpy.asarray(full_params)[nested_indices]
+    if len(full_params) != len(nested_indices):
+        raise KeyError('Full parameters not equal in length to p0 or nested indices')
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps,
+                                 log=False)
+    param_diff = full_params-p_nested
+
+    wald_org = numpy.dot(numpy.dot(numpy.transpose(param_diff),H),(param_diff))
+    wald_adj = numpy.dot(numpy.dot(numpy.transpose(param_diff),GIM),(param_diff))
+
+    if adj_and_org:
+        return wald_org, wald_adj
+    return wald_adj
+
+def score(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+          multinom=True, eps=0.01, adj_and_org=False):
+    """
+    Calculate test stastic from score test
+        
+    func_ex: Model function for complex model
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+    explicity defined.  Although equal to values for simple model, should
+    be in a list form that can be taken in by the complex model you'd like
+    to evaluate.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    nested_indices: List of positions of nested parameters in complex model
+    parameter list
+    multinom: If True, assume model is defined without an explicit parameter for
+    theta. Because uncertainty in theta must be accounted for to get
+    correct uncertainties for other parameters, this function will
+    automatically consider theta if multinom=True. In that case, the
+    final entry of the returned uncertainties will correspond to
+    theta.
+    adj_and_org: Return both unadjusted score and adjusted score statistics if True;
+    If False, return just adjusted score statistic
+    """
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p0, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[nested_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps,
+                            log=False)
+    
+    score_org = numpy.dot(numpy.dot(numpy.transpose(cU),numpy.linalg.inv(H)),cU)
+    score_adj = numpy.dot(numpy.dot(numpy.transpose(cU),numpy.linalg.inv(J)),cU)
+
+    if adj_and_org:
+        return score_org, score_adj
+    return score_adj
+
