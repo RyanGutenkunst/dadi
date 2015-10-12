@@ -274,6 +274,7 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
     First-order moment matching adjustment factor for likelihood ratio test
 
     func_ex: Model function for complex model
+    grid_pts: Grid points at which to evaluate func_ex
     all_boot: List of bootstrap frequency spectra
     p0: Best-fit parameters for the simple model, with nested parameter
         explicity defined.  Although equal to values for simple model, should
@@ -289,6 +290,7 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               automatically consider theta if multinom=True. In that case, the
               final entry of the returned uncertainties will correspond to
               theta.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
     """
     if multinom:
         func_multi = func_ex
@@ -313,6 +315,56 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
     adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
+
+def Wald_stat(func_ex, grid_pts, all_boot, p_complex, data, nested_indices,
+              nested_values, multinom=True, eps=0.01):
+    """
+    First-order moment matching adjustment factor for likelihood ratio test
+
+    func_ex: Model function for complex model
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you'd like
+        to evaluate.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    nested_indices: List of positions of nested parameters in complex model
+                    parameter list
+    nested_values: Values of nested parameters when evaluated at the simple
+                   model setting.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+    """
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p_complex, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p_complex = list(p_complex) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p_complex, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[nested_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    p_nested = numpy.asarray(p_complex)[nested_indices]
+    GIM, H, J = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, eps, 
+                            log=False)
+
+    diff_nested = p_nested - numpy.asarray(nested_values)
+    w = np.dot(diff_nested, np.dot(np.linalg.inv(GIM), diff_nested))
+    return w
 
 def sum_chi2_ppf(x, weights=(0,1)):
     """
