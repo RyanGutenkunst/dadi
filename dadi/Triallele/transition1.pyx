@@ -6,7 +6,7 @@ def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim
     """
     Implicit transition matrix for the ADI components of the discretization of the diffusion
     Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
-    Store the tridiagonal elements of the matrices, which need to be adjusted by I + nu/dt*P, where I is the identity matrix
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
     """
     cdef int ii
     cdef int jj
