@@ -35,7 +35,8 @@ def grid_dx_2d(x,dx):
 def int2(DXX,U):
     """
     Integrate the density function over the domain
-    need the proper DXX, as commented out below
+    DXX - two dimensional grid
+    U - density function
     """
     return np.sum(DXX*U)
 
@@ -55,36 +56,16 @@ def domain(x):
 transition1, transition2, and transition12 are in the cythonized pyx files
 """
 
-## I would like to move this density to the boundary instead of just removing it from the domain. 
-## This way, I can integrate it also along the diagonal boundary to fixation for derived allele 1 or 2.
-
-def remove_diag_density_weights(x,dt,nu,sig1,sig2):
-    dx = grid_dx(x)
-    P1D = transition1D.transition1D(x,dx,dt,0.0,nu)
-    P = np.zeros((len(x),len(x)))
-    for dd in np.where(x<.5)[0][1:]:
-        y = np.zeros(len(x))
-        y[dd] = 1./dx[dd]
-        y = advance1D(y,P1D)
-        prob = y[0]*dx[0]
-        for ii in range(len(x))[:-dd]:
-            y = np.zeros(len(x))
-            y[np.min((ii,len(x)-ii-dd-1))] += 1./dx[np.min((ii,len(x)-ii-dd-1))]
-            y = advance1D(y,P1D)
-            prob2 = y[0]*dx[0]
-            P[ii,len(x)-1-dd-ii] = prob
-            if dd == 1:
-                P[ii,len(x)-1-dd-ii] += prob2
-    P[:,0] = 0
-    P[0,:] = 0
-    return P
-
 def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     """
     Numerically determine the amount of density that should be lost to the diagonal boundary.
     Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
     We then check the fraction of density that is lost to z=1.
     If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1*x/(x+y) + sig2*y/(x+y)
+    x - one dimensional grid of domain
+    dt - time step of integration
+    nu - relative population size
+    sig1,sig2 - selection coefficients
     """
     dx = grid_dx(x)
     P = np.zeros((len(x),len(x)))
@@ -121,7 +102,8 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
 def move_density_to_bdry(x,phi,P):
     """
     P tells us how much should be removed, by multiplying phi*P
-    Instead, take that density and instead of deleting it, move straight to boundary
+    Take that density and instead of deleting it, move straight to boundary
+    P - stores how much denstity from each grid point should be moved to diagonal
     """
     for ii in range(len(x)):
         for jj in range(len(x)):
@@ -157,6 +139,13 @@ def move_density_to_bdry(x,phi,P):
 ### forward integration methods
 
 def advance_adi(U,U01,P1,P2,x,ii):
+    """
+    Integrate the ADI components forward in time, alternating which direction occurs first
+    U - density function
+    U01 - stores which points are in the domain
+    P1,P2 - transition matrices
+    ii - count of integration step
+    """
     if np.mod(ii,2) == 0:
         for jj in range(len(x)):
             if np.sum(U01[:,jj]) > 1:
@@ -174,17 +163,20 @@ def advance_adi(U,U01,P1,P2,x,ii):
     return U
 
 def advance_cov(U,C,x,dx):
+    """
+    Explicit integration of the covariance term, using scipy's sparse matrix for C
+    U - density function
+    C - transition matrix
+    """
     U = ( C * U.reshape(len(x)**2)).reshape(len(x),len(x))
     return U
 
-def advance_line(U,P_line,x,dx):
-    u = np.diag(np.fliplr(U))
-    u = dadi.tridiag.tridiag(P_line[0,:],P_line[1,:],P_line[2,:],u)
-    for ii in range(len(x)):
-        U[ii,len(x)-ii-1] = u[ii]
-    return U
-
 def advance1D(u,P):
+    """
+    tridiag breakdown for integration along the diagonal boundary
+    u - density along that diagonal
+    P - transition matrix
+    """
     a = np.concatenate((np.array([0]),np.diag(P,-1)))
     b = np.diag(P)
     c = np.concatenate((np.diag(P,1),np.array([0])))
@@ -192,6 +184,10 @@ def advance1D(u,P):
     return u
 
 def advance_line(x,phi,P):
+    """
+    Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
+    P - one dimensional transition matrix for the diagonal boundary
+    """
     u = np.diag(np.fliplr(phi))
     u = advance1D(u,P)
     for ii in range(len(x)):
@@ -200,36 +196,11 @@ def advance_line(x,phi,P):
 
 ### sampling methods
 
-def sample1D(x,u,samples):
-    dx = grid_dx(x)
-    F = np.zeros(samples-1)
-    for i in range(len(F))[1:-1]:
-        j = i+1
-        F[i] = math.factorial(samples)/(math.factorial(samples-j)*math.factorial(j)) * np.sum( u * x**j * (1-x)**(samples-j) * dx )
-    return F
-
-def sample(phi, ns, x, DXX):
-    """
-    For sampling the density function, we integrate against the trinomial distribution
-    """
-    if type(ns) == int:
-        ns = tuple([ns])
-    if not type(ns) == int:
-        if len(ns) == 1:
-            ns = tuple(ns)
-        else:
-            ns = tuple([ns[0]])
-    #dx = grid_dx(x)
-    F = np.zeros((ns[0]+1,ns[0]+1))
-    for ii in range(len(F)):
-        for jj in range(len(F)):
-            if ii+jj < ns[0] and ii != 0 and jj != 0:
-                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
-                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(DXX * phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns[0]-ii-jj) )
-    return F
-
 sample_cache = {}
 def sample_cached(phi, ns, x, DXX):
+    """
+    Obtain the expected sample frequency spectrum from the density function
+    """
     if type(ns) == int:
         ns = (ns,)
     else:
@@ -312,36 +283,6 @@ def fold(spectrum):
             spectrum.mask[ii,ii+1:] = True
             spectrum.mask[ii,len(spectrum)-1-ii:] = True
         return spectrum
-
-
-def sample_bootstrap(data):
-    
-    # create cdf for sampling from data
-    cdf = np.zeros(len(data)**2)
-    for ii in range(len(data)**2)[1:]:
-        if data.mask[ii/len(data),ii%len(data)] == False:
-            cdf[ii] = cdf[ii-1] + data[ii/len(data),ii%len(data)]
-        else:
-            cdf[ii] = cdf[ii-1]
-    
-    cdf = cdf/cdf[-1]
-        
-    # 
-    fs = np.zeros((len(data),len(data)))
-    for ii in range(int(np.sum(data))):
-        jj = np.min(np.where(np.random.rand() < cdf))
-        fs[jj/len(data),jj%len(data)] += 1
-    #
-    fs = Spectrum(fs)
-    fs.mask[:,0] = True
-    fs.mask[0,:] = True
-    for ii in range(len(fs)):
-        for jj in range(len(fs)):
-            if ii < jj or ii + jj >= len(fs)-1:
-                fs.mask[ii,jj] = True
-                
-    return fs
-
 
 def univariate_lognormal_pdf(x,sigma,mu):
     """

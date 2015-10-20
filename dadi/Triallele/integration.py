@@ -16,7 +16,11 @@ import transition1, transition2, transition12, transition1D # cythonized transit
 def inject_mutations_1(phi, dt, x, dx, y2, theta1):
     """
     new mutations injected along phi[1,:] against a background given by y2
-    y2 is the diallelic density function
+    phi - numerical density function
+    dt - given time step 
+    x, dx - one dimensional grid and grid spacing
+    y2 - the biallelic density function
+    theta1 - population scaled mutation rate for mutation 1
     """
     phi[1,1:-1] += y2[1:-1] / dx[1] * 1./x[1] * dt * theta1/2
     return phi
@@ -24,6 +28,11 @@ def inject_mutations_1(phi, dt, x, dx, y2, theta1):
 def inject_mutations_2(phi, dt, x, dx, y1, theta2):
     """
     new mutations injected along phi[:,1] against a background given by y1
+    phi - numerical density function
+    dt - given time step 
+    x, dx - one dimensional grid and grid spacing
+    y1 - the biallelic density function
+    theta2 - population scaled mutation rate for mutation 2
     """
     phi[1:-1,1] += y1[1:-1] / dx[1] * 1./x[1] * dt * theta2/2
     return phi
@@ -51,6 +60,12 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
     Integrate phi, y1, and y2 forward in time
     phi - density function for triallelic sites
     y1,y2 - density of biallelic background sites, integrated forward alongside phi
+    T - amount of time to integrate, scaled by 2N generations
+    nu - relative size of population to ancestral size
+    sig1,sig2 - selection coefficients for two derived alleles
+    theta1,theta2 - population scaled mutation rates
+    dt - time step for integration
+    lam - proportion of mutations that occur from simulateous mutation model (Hodgkinson/Eyre-Walker 2010)
     """
     dx = numerics.grid_dx(x)
     U01 = numerics.domain(x)
@@ -115,6 +130,7 @@ def alt_mut_mech_sample_spectrum(ns):
     turns out that changing population size does not effect the distribution of mutations entering the population this way
     we implement Jenkins et al (2014) exact solution
     this is for neutral spectrum only, for selected spectrum, integrate as above with lam = 1
+    ns - number of sampled individuals from the population
     """
     fs = np.zeros((ns+1,ns+1))
     for ii in range(ns)[1:]:
