@@ -44,20 +44,19 @@ int_c = core.Extension(name = 'dadi.integration_c',
                          extra_compile_args=extra_compile_args)
 
 # Configure our C modules that are built with Cython.
-#try:
-#    from Cython.Distutils import build_ext
-#    tri_modules = ['transition1', 'transition2', 'transition12', 
-#                   'bdry_injection', 'transition1D']
-#    tri_extensions = [core.Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules]
-#except ImportError:
-#    tri_extensions = []
+if '--cython_triallele' in sys.argv:
+    tri_modules = ['transition1', 'transition2', 'transition12', 
+                   'bdry_injection', 'transition1D']
+    tri_extensions = [core.Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules]
+else:
+    tri_extensions = []
 
 core.setup(name='dadi',
            version='1.7.0',
            author='Ryan Gutenkunst',
            author_email='rgutenk@email.arizona.edu',
            url='http://dadi.googlecode.com',
-           ext_modules = [tridiag, int_c],# + tri_extensions,
+           ext_modules = [tridiag, int_c] + tri_extensions,
            scripts=['scripts/ms_jsfs.py'],
            packages=['dadi', 'dadi.Triallele'], 
            package_data = {'tests':['IM.fs']},

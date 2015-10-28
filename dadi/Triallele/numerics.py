@@ -59,6 +59,9 @@ def transition1(x, dx, U01, sig1, sig2, nu):
     sig1/2 - population scaled selection coefficients
     nu - relative population size
     """
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    print "using numpy, not cython"
     P = np.zeros((len(x),3,len(x)))
     for jj in range(len(x)):
         A = np.zeros((len(x),len(x)))
@@ -123,6 +126,8 @@ def transition2(x, dx, U01, sig1, sig2, nu):
     sig1/2 - population scaled selection coefficients
     nu - relative population size
     """
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
     P = np.zeros((len(x),3,len(x)))
     for ii in range(len(x)):
         A = np.zeros((len(x),len(x)))
@@ -184,6 +189,8 @@ def transition12(x, dx, U01):
     dx - grid spacing
     U01 - domain markers
     """        
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
     C = lil_matrix((len(x)**2,len(x)**2))
     for ii in range(len(x)-1)[:-1]:
         for jj in range(len(x)-1)[:-1]:
@@ -226,6 +233,8 @@ def transition1D(x, dx, dt, sig, nu):
     sig - selection coefficient
     nu - relative population size
     """
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
     P = np.zeros((len(x),len(x)))
     for ii in range(len(x)):
         if ii == 0:
@@ -497,3 +506,12 @@ def optimal_sfs_scaling(model,data):
     model = numerics.fold(data)
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
+    
+# Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.
+try:
+    from transition1 import transition1
+    from transition2 import transition2
+    from transition12 import transition12
+    from transition1D import transition1D
+except ImportError:
+    pass

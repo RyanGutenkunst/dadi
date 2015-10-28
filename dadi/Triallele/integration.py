@@ -11,7 +11,6 @@ from scipy.sparse import identity
 import scipy.io
 import math
 
-
 def inject_mutations_1(phi, dt, x, dx, y2, theta1):
     """
     new mutations injected along phi[1,:] against a background given by y2
