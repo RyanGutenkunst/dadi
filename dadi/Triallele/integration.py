@@ -10,7 +10,6 @@ import numerics
 from scipy.sparse import identity
 import scipy.io
 import math
-import transition1, transition2, transition12, transition1D # cythonized transition1 and transition2
 
 
 def inject_mutations_1(phi, dt, x, dx, y2, theta1):
@@ -69,14 +68,14 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
     """
     dx = numerics.grid_dx(x)
     U01 = numerics.domain(x)
-    C = identity(len(x)**2) + dt/nu*transition12.transition12(x,dx,U01)
-    P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
-    P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
-    P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
-    P1D2 = transition1D.transition1D(x,dx,dt,sig2,nu)
+    C = identity(len(x)**2) + dt/nu*numerics.transition12(x,dx,U01)
+    P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*numerics.transition1(x,dx,U01,sig1,sig2,nu) 
+    P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*numerics.transition2(x,dx,U01,sig1,sig2,nu)
+    P1D1 = numerics.transition1D(x,dx,dt,sig1,nu)
+    P1D2 = numerics.transition1D(x,dx,dt,sig2,nu)
     
     sig_line = sig1-sig2
-    Pline = transition1D.transition1D(x,dx,dt,sig_line,nu)
+    Pline = numerics.transition1D(x,dx,dt,sig_line,nu)
     P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
 
     for ii in range(int(T/dt)):
@@ -98,14 +97,14 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
     if T - T_elapsed > 1e-8:
         # adjust dt and integrate last time step
         dt = T-T_elapsed
-        C = identity(len(x)**2) + dt/nu*transition12.transition12(x,dx,U01) # covariance term
-        P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition1.transition1(x,dx,U01,sig1,sig2,nu) 
-        P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*transition2.transition2(x,dx,U01,sig1,sig2,nu)
-        P1D1 = transition1D.transition1D(x,dx,dt,sig1,nu)
-        P1D2 = transition1D.transition1D(x,dx,dt,sig2,nu)
+        C = identity(len(x)**2) + dt/nu*numerics.transition12(x,dx,U01) # covariance term
+        P1 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*numerics.transition1(x,dx,U01,sig1,sig2,nu) 
+        P2 = np.outer(np.array([0,1,0]),np.ones(len(x))) + dt*numerics.transition2(x,dx,U01,sig1,sig2,nu)
+        P1D1 = numerics.transition1D(x,dx,dt,sig1,nu)
+        P1D2 = numerics.transition1D(x,dx,dt,sig2,nu)
         
         sig_line = sig1-sig2
-        Pline = transition1D.transition1D(x,dx,dt,sig_line,nu)
+        Pline = numerics.transition1D(x,dx,dt,sig_line,nu)
         P = numerics.remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2)
         
         y1[1] += dt/dx[1]/x[1]/2 * theta1

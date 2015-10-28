@@ -11,10 +11,6 @@ import dadi
 import math
 import pickle
 
-from bdry_injection import bdry_inj
-import transition1D
-
-
 def grid_dx(x):
     """
     We use uniform grids in x, using np.linspace(0,1,numpts)
@@ -52,9 +48,197 @@ def domain(x):
 
 ### transition matrices
 
-"""
-transition1, transition2, and transition12 are in the cythonized pyx files
-"""
+def transition1(x, dx, U01, sig1, sig2, nu):
+    """
+    Implicit transition matrix for the ADI components of the discretization of the diffusion
+    Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    sig1/2 - population scaled selection coefficients
+    nu - relative population size
+    """
+    P = np.zeros((len(x),3,len(x)))
+    for jj in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if jj > 0:
+            V = x*(1-x)/nu
+            V[np.max(np.where(U01[:,jj] == 1))] = 0
+            for ii in np.where(U01[:,jj] == 1)[0][:-1]:
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == np.where(U01[:,jj] == 1)[0][:-1][-1]:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        if jj == 0:
+            V = x*(1-x)/nu
+            for ii in range(len(x)):
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == len(x)-1:
+                    A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        
+        x2 = x[jj]
+        sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[:,jj] == 1)[0][-1]] = 0
+        for ii in np.where(U01[:,jj] == 1)[0]:
+            if ii == 0:
+                A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+            elif ii == np.where(U01[:,jj] == 1)[0][-1]:
+                A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
+                A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
+            else:
+                A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+        P[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        P[jj,1,:] = np.diagonal(A)
+        P[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+def transition2(x, dx, U01, sig1, sig2, nu):
+    """
+    Implicit transition matrix for the ADI components of the discretization of the diffusion
+    Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    sig1/2 - population scaled selection coefficients
+    nu - relative population size
+    """
+    P = np.zeros((len(x),3,len(x)))
+    for ii in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if ii > 0:
+            V = x*(1-x)/nu
+            V[np.max(np.where(U01[ii,:] == 1))] = 0
+            for jj in np.where(U01[ii,:] == 1)[0][:-1]:
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == np.where(U01[ii,:] == 1)[0][:-1][-1]:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        if ii == 0:
+            V = x*(1-x)/nu
+            for jj in range(len(x)):
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == len(x)-1:
+                    A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        
+        x1 = x[ii]
+        sig_new = sig2*(1-x-x1)/(1-x) + (sig2-sig1)*x1/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[ii,:] == 1)[0][-1]] = 0
+        for jj in np.where(U01[ii,:] == 1)[0]:
+            if jj == 0:
+                A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+            elif jj == np.where(U01[ii,:] == 1)[0][-1]:
+                A[jj,jj-1] += 1/dx[jj] * 2 * ( - M[jj-1] ) / 2
+                A[jj,jj] += 1/dx[jj] * 2 * ( - M[jj] ) / 2
+            else:
+                A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                A[jj,jj] += 0 # 1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+        
+        P[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        P[ii,1,:] = np.diagonal(A)
+        P[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+def transition12(x, dx, U01):
+    """
+    Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x*y*phi)
+    As with the ADI components, final transition matrix is given by I + dt/nu*P
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    """        
+    C = lil_matrix((len(x)**2,len(x)**2))
+    for ii in range(len(x)-1)[:-1]:
+        for jj in range(len(x)-1)[:-1]:
+            if U01[ii+2,jj+2] == 1 or U01[ii+1,jj+2] == 1 or U01[ii+2,jj+1] == 1:
+                if ii+1 < len(x) and jj+1 < len(x) and U01[ii+1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
+                    
+                if ii+1 < len(x) and jj-1 >= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
+                
+                if ii-1 >= 0 and jj+1 < len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
+                    
+                if ii-1 >= 0 and jj-1 >= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+            
+            elif U01[ii+1,jj+1] == 1 or U01[ii+1,jj] == 1 or U01[ii,jj+1] == 1:
+                if ii+1 < len(x) and jj-1 >= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+                
+                if ii-1 >= 0 and jj+1 < len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+                    
+                if ii-1 >= 0 and jj-1 >= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+    ii = 0
+    jj = len(x)-2
+    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+    ii = len(x)-2
+    jj = 0
+    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+    return C
+
+def transition1D(x, dx, dt, sig, nu):
+    """
+    transition matrix for one dimensional integration
+    x - grid
+    dx - grid spacing
+    dt - timestep for integration
+    sig - selection coefficient
+    nu - relative population size
+    """
+    P = np.zeros((len(x),len(x)))
+    for ii in range(len(x)):
+        if ii == 0:
+            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + sig * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+        elif ii == len(x) - 1:
+            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - sig * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
+        else:
+            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - sig * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + sig * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+    return P
 
 def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     """
@@ -73,7 +257,7 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
         for jj in range(len(x)):
             if x[ii]+x[jj] < 1.0 and x[ii]+x[jj] > .75:
                 sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj]) 
-                P1D = transition1D.transition1D(x,dx,dt,sig,nu)
+                P1D = transition1D(x,dx,dt,sig,nu)
                 y = np.zeros(len(x))
                 y[ii+jj] = 1./dx[ii+jj]
                 y = advance1D(y,P1D)
@@ -81,14 +265,14 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
                 P[ii,jj] = prob
                 if ii+jj == len(x)-2:
                     if ii==1:
-                        P1D = transition1D.transition1D(x,dx,dt,sig1,nu)
+                        P1D = transition1D(x,dx,dt,sig1,nu)
                         y = np.zeros(len(x))
                         y[ii] = 1./dx[ii]
                         y = advance1D(y,P1D)
                         prob2 = y[0]*dx[0]
                         P[ii,jj] += prob2
                     elif jj==1:
-                        P1D = transition1D.transition1D(x,dx,dt,sig2,nu)
+                        P1D = transition1D(x,dx,dt,sig2,nu)
                         y = np.zeros(len(x))
                         y[jj] = 1./dx[jj]
                         y = advance1D(y,P1D)
