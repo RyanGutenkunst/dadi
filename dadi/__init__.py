@@ -18,7 +18,10 @@ import Numerics
 import PhiManip
 
 # import the triallele modules - numerics, integration, demographics
-#import Triallele.numerics, Triallele.integration, Triallele.demographics
+try:
+    import Triallele.numerics, Triallele.integration, Triallele.demographics
+except ImportError:
+    pass
 
 # Protect import of Plotting in case matplotlib not installed.
 try:
