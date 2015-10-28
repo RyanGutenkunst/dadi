@@ -1,6 +1,8 @@
 """
 An example of obtaining the sample triallelic frequency spectrum for a simple two epoch demography, with selection
 """
+import time
+time1 = time.time()
 
 import dadi
 import numpy as np, scipy, matplotlib
@@ -28,4 +30,6 @@ for dt in dts:
 
 tri_fs = dadi.Numerics.quadratic_extrap((fs[dts[0]],fs[dts[1]],fs[dts[2]]),(dts[0],dts[1],dts[2]))
 
-dadi.Spectrum.to_file(fs,'tri.fs')
+tri_fs.to_file('tri.fs')
+time2 = time.time()
+print "total runtime = " + str(time2-time1)
