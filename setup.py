@@ -45,9 +45,12 @@ int_c = core.Extension(name = 'dadi.integration_c',
 
 # Configure our C modules that are built with Cython.
 if '--cython_triallele' in sys.argv:
+    from Cython.Distutils import build_ext
     tri_modules = ['transition1', 'transition2', 'transition12', 
-                   'bdry_injection', 'transition1D']
+                   'transition1D']
     tri_extensions = [core.Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules]
+    # remove cython_triallele flag so that setup does not see it
+    sys.argv.remove('--cython_triallele')
 else:
     tri_extensions = []
 
