@@ -43,22 +43,37 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/tridiag.c'],
                          extra_compile_args=extra_compile_args)
 
-# Configure our C modules that are built with Cython.
 if '--cython_triallele' in sys.argv:
-    tri_modules = ['transition1', 'transition2', 'transition12', 
-                   'bdry_injection', 'transition1D']
-    tri_extensions = [core.Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules]
-else:
-    tri_extensions = []
+    # Remove extra argument, so distutils doesn't complain
+    sys.argv.remove('--cython_triallele')
 
-core.setup(name='dadi',
-           version='1.7.0',
-           author='Ryan Gutenkunst',
-           author_email='rgutenk@email.arizona.edu',
-           url='http://dadi.googlecode.com',
-           ext_modules = [tridiag, int_c] + tri_extensions,
-           scripts=['scripts/ms_jsfs.py'],
-           packages=['dadi', 'dadi.Triallele'], 
-           package_data = {'tests':['IM.fs']},
-           license='BSD'
-           )
+    # Configure our C modules that are built with Cython.
+    # This needs to be done in a separate setup step from the remainder of dadi,
+    # to get f2py and Cython to play nicely together.
+    #http://numpy-discussion.10968.n7.nabble.com/cython-and-f2py-td26250.html
+    from distutils.core import setup
+    from distutils.extension import Extension
+    from Cython.Distutils import build_ext
+    tri_modules = ['transition1', 'transition2', 'transition12', 'transition1D']
+    tri_extensions = [core.Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules]
+    
+    setup(ext_modules = tri_extensions,
+          include_dirs = [numpy.get_include()],
+          cmdclass = {'build_ext': build_ext},
+          # Note that we build the extension modules in place
+          script_args = ['build_ext', '--inplace'], 
+          )
+
+numpy.distutils.core.setup(name='dadi',
+                           version='1.7.0',
+                           author='Ryan Gutenkunst',
+                           author_email='rgutenk@email.arizona.edu',
+                           url='http://dadi.googlecode.com',
+                           ext_modules = [tridiag, int_c],
+                           scripts=['scripts/ms_jsfs.py'],
+                           packages=['dadi', 'dadi.Triallele'], 
+                           package_data = {'tests':['IM.fs'],
+                                           # Copy Triallele extension modules
+                                           'dadi.Triallele':['*.so']},
+                           license='BSD'
+                           )
