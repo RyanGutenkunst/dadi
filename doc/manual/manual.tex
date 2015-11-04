@@ -907,10 +907,24 @@ For example, the case of a single parameter on the boundary would be \py{weights
 For more complex scenarios, see \cite{Self1987}.
 
 \section{Triallelic spectra}
-Some words about what the triallelic frequency spectrum is, and how it's calculated.
-\subsection{Model options}
+The triallelic frequency spectrum is the distribution of frequencies of triallelic, instead of biallelic, SNPs.
+The triallelic spectrum stores the counts of observed alleles with given major and minor derived allele frequencies, where the major and minor derived alleles are those appearing at higher or lower frequency, resp.
+We use a \py{dadi.Spectrum} object for the triallelic spectrum as well, with entries for infeasible triallelic frequencies masked.
+The \py{dadi.Triallele} methods can handle selection at one or both derived alleles, and can produce expected frequency spectra under arbitrary, single-population demography.
+By folding a triallelic frequency spectrum, we assume that we do not know which derived allele arose first.
 \subsection{Built in models}
-
+In \py{dadi.Triallele.demographics.py}, you will find three pre-built demographic models: \py{equilibrium}, \py{two_epoch}, and \py{three_epoch}.
+The methods take demographic, selection, and integration parameters as inputs, as well as number of sampled individuals (\py{ns}), and number of grid points to use for integration (\py{pts}).
+For example, the parameters for the equilibrium model takes parameters \py{[sig1, sig2, theta1, theta2, misid, dt]}.
+The \py{sig} parameters are the selection coefficients for each derived allele, \py{theta} are the scaled mutation rates for each derived allele, \py{misid} is the probability of ancestral misidentification, and \py{dt} is the integration time step.
+For non-equilibrium demographies, those models also take population sizes \py{nu} relative to the ancestral population size, and times \py{T} for which the population is at size \py{nu}.
+An example can be found in the Examples subdirectory.
+\subsection{Faster triallele with Cython}
+The Triallele methods are written in Python; however, considerable speed-up can be achieved by generating some of the code in C.
+Some methods are written using Cython, and these can be installed by compiling the Cythonized code when \dadi is built.
+To build the Cython extensions, use the flag \py{--cython_triallele} when installing \dadi, by running\\
+\py{sudo python setup.py install --cython_triallele}.\\
+If for some reason installation fails to build the Cython modules, \dadi can be installed without the Cythonized Triallele methods, and the Triallele methods will still be functional.
 
 \section{Installation}
 
