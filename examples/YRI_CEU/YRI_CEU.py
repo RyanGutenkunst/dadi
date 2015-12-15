@@ -159,16 +159,3 @@ print('Adjusted D statistic: {0:.4f}'.format(D_adj))
 # point percent function for a weighted sum of chi^2 dists.
 pval = dadi.Godambe.sum_chi2_ppf(D_adj, weights=(0.5,0.5))
 print('p-value for rejecting no-migration model: {0:.4f}'.format(pval))
-
-w_adj = dadi.Godambe.Wald_stat(func_ex, pts_l, all_boot, p_lrt, data, 
-                               nested_indices=[3], full_params=popt, 
-                               multinom=True)
-print('Adjusted Wald statistic: {0:.4f}'.format(w_adj))
-pval = dadi.Godambe.sum_chi2_ppf(w_adj, weights=(0.5,0.5))
-print('p-value for rejecting no-migration model: {0:.4f}'.format(pval))
-
-score_adj = dadi.Godambe.score_stat(func_ex, pts_l, all_boot, p_lrt, data, 
-                                    nested_indices=[3], multinom=True)
-print('Adjusted score statistic: {0:.4f}'.format(score_adj))
-pval = dadi.Godambe.sum_chi2_ppf(score_adj, weights=(0.5,0.5))
-print('p-value for rejecting no-migration model: {0:.4f}'.format(pval))
