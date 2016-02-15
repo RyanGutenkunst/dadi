@@ -252,8 +252,7 @@ class SpectrumTestCase(unittest.TestCase):
             self.assertRaises(ValueError, op, fs1, folded2)
             self.assertRaises(ValueError, op, folded1, fs2)
 
-        for op in [abs,pos,neg,numpy.ma.log,numpy.ma.exp,numpy.ma.sqrt,
-                   scipy.special.gammaln]:
+        for op in [abs,pos,neg,scipy.special.gammaln]:
             # Check that unary operations propogate folding status.
             result = op(fs1)
             self.assertFalse(result.folded)

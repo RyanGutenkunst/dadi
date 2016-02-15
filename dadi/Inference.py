@@ -332,7 +332,7 @@ def ll_per_bin(model, data, missing_model_cutoff=1e-6):
     # Note: Using .data attributes directly saves a little computation time. We
     # use model and data as a whole at least once, to ensure masking is done
     # properly.
-    result = -model.data + data.data*numpy.ma.log(model) - gammaln(data + 1.)
+    result = -model.data + data.data*model.log() - gammaln(data + 1.)
     if numpy.all(result.mask == data.mask):
         return result
 
