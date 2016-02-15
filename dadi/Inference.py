@@ -894,3 +894,10 @@ def optimize_grid(data, model_func, pts, grid,
         return xopt
     else:
         return xopt, fopt, grid, fout, thetas
+
+def add_misid_param(func):
+    def misid_func(params, *args, **kwargs):
+        misid = params[-1]
+        fs = func(params[:-1], *args, **kwargs)
+        return (1-misid)*fs + misid*Numerics.reverse_array(fs)
+    return misid_func
