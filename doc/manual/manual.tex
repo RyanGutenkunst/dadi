@@ -876,6 +876,21 @@ However, the GIM approach approximates parameter uncertainties as normal, which 
 To check this, one can evaluate the GIM uncertainties and compare them with the parameter values themselves.
 If the GIM uncertainties are large compared to the parameter values (for example, if a standard deviation is half the parameter value itself), then fitting the bootstrap data sets may be necessary to get accurate uncertainty estimates.
 
+Parameter uncertainties for correlated parameters can also be determined using the GIM with uncertainty propagation techniques.
+An example of this would be if one wanted to know the uncertainty in the total time of a demographic model, ${T_{total}}=T1+T2$ that contains two events occurring at times ${T1}$ and ${T2}$.
+If the variance for $T1$ and $T2$ are given by $\sigma_{T_1}^2$and $\sigma_{T_2}^2$, with a covariance term between the two $\sigma_{T_1T_2}$, the uncertainty in ${T_{total}}$ is 
+\begin{equation}
+\sigma_{T_{total}}=\sqrt{\sigma_{T_1}^2+\sigma_{T_2}^2+2\sigma_{T_1T_2}}.
+\end{equation}
+Another example where error propagation is necessary is when determining theta for an individual population, $\theta_{A}=\theta*nu_{A}$, from the overall theta, $\theta$, and the relative population size $nu_{A}$.
+For variance in $nu_{A}$ and $\theta$ given by $\sigma_{nu_{A}}^2$ and $\sigma_{\theta}^2$, respectively, and covariance between the two $\sigma_{nu_{A}\theta}$, the equation for uncertainty in $\theta_{A}$ is
+\begin{equation}
+\sigma_{{\theta_{A}}}=\sqrt{\theta^2\sigma_{nu_{A}}^2+{nu_{A}}^2\sigma_{\theta}^2+2*nu_{A}*\theta*\sigma_{nu_{A}\theta}}.
+\end{equation}
+The full GIM can be obtained from the \py{dadi.Godambe.GIM_uncert} function by setting \py{return_GIM=True}.
+Variances and covariances can be taken directly from the inverse of the GIM, where diagonal terms represent variance terms and off-diagonal terms represent covariance terms.
+For more complex scenarios, see \cite{Ku1966}.
+
 The \py{dadi.Godambe.FIM_uncert} function calculates uncertainties using the Fisher Information Matrix, which is sufficient if your data are unlinked.
 
 \section{Likelihood ratio test}
@@ -889,7 +904,10 @@ To perform likelihood ratio tests using composite likelihoods, a multiplicative 
 adj = dadi.Godambe.LRT_adjust(func_ex, grid_pts, all_boot, p0, 
 			  data, nested_indices, multinom=True, eps)
 \end{lstlisting}
-The parameters have the same meaning as for \py{Godambe.GIM_uncert}, where \py{func_ex} is the complex model function and \py{p0} is the best-fit parameters for the simple implemented in the complex model.
+The parameters have the same meaning as for \py{Godambe.GIM_uncert}, where \py{func_ex} is the complex model function and \py{p0} is the best-fit parameters.
+Results in \cite{Coffman2015} suggested that setting \py{p0} equal to the best-fit parameters from either the simple model or complex model yield similar adjustments, although the data in this paper were simulated under the simple model.
+Upon examination of situations where data was simulated under the complex model, it was found that evaluating the adjustment at the complex model parameterization showed more power and a more liberal adjustment than evaluating at the simple model parameterization.
+We suggest evaluating at the complex model parameterization, although evaluating at the simple model parameterization as well may offer additional insight and be preferable if you desire a more conservative estimate of the adjustment.
 The additional parameter \py{nested_indices} is a list that indicates which positions in the complex model arguments are fixed to create the simple model.
 For example, if the complex model parameters are $[T, \nu_1, \nu_2, m]$, and the simple model is no migration (so $m = 0$), then \py{nested_indices=[3]}.
 (Indices are numbered starting from zero.)

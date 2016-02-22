@@ -95,7 +95,12 @@ def get_hess(func, p0, eps, args=()):
     eps = numpy.empty([len(p0)])
     for i, pval in enumerate(p0):
         if pval != 0:
-            eps[i] = eps_in*pval
+            # Account for floating point arithmetic issues
+            if pval*eps_in < 1e-6:
+                eps[i] = eps_in
+                p0[i] = 0
+            else:
+                eps[i] = eps_in*pval
         else:
             # Account for parameters equal to zero
             eps[i] = eps_in
@@ -122,7 +127,12 @@ def get_grad(func, p0, eps, args=()):
     eps = numpy.empty([len(p0)])
     for i, pval in enumerate(p0):
         if pval != 0:
-            eps[i] = eps_in*pval
+            # Account for floating point arithmetic issues
+            if pval*eps_in < 1e-6:
+                eps[i] = eps_in
+                p0[i] = 0
+            else:
+                eps[i] = eps_in*pval
         else:
             # Account for parameters equal to zero
             eps[i] = eps_in
