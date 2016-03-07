@@ -88,6 +88,9 @@ def get_hess(func, p0, eps, args=()):
     func: Model function
     p0: Parameter values to take derivative around
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     args: Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
@@ -120,6 +123,9 @@ def get_grad(func, p0, eps, args=()):
     func: Model function
     p0: Parameters for func
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     args: Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
@@ -173,6 +179,9 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     p0: Best-fit parameters for func_ex.
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     log: If True, calculate derivatives in terms of log-parameters
     just_hess: If True, only evaluate and return the Hessian matrix
     """
@@ -232,7 +241,10 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
     all_boot: List of bootstrap frequency spectra
     p0: Best-fit parameters for func_ex
     data: Original data frequency spectrum
-    eps: Fractional stepsize to use when taking finite-difference derivatives
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     log: If True, assume log-normal distribution of parameters. Returned values 
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
@@ -267,7 +279,10 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     all_boot: List of bootstrap frequency spectra
     p0: Best-fit parameters for func_ex
     data: Original data frequency spectrum
-    eps: Fractional stepsize to use when taking finite-difference derivatives
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     log: If True, assume log-normal distribution of parameters. Returned values 
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
@@ -300,7 +315,6 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         be in a list form that can be taken in by the complex model you'd like
         to evaluate.
     data: Original data frequency spectrum
-    eps: Fractional stepsize to use when taking finite-difference derivatives
     nested_indices: List of positions of nested parameters in complex model
                     parameter list
     multinom: If True, assume model is defined without an explicit parameter for
@@ -308,6 +322,9 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               correct uncertainties for other parameters, this function will
               automatically consider theta if multinom=True.
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     """
     if multinom:
         func_multi = func_ex
@@ -394,6 +411,9 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               final entry of the returned uncertainties will correspond to
               theta.
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     adj_and_org: If False, return only adjusted Wald statistic. If True, also
                  return unadjusted statistic as second return value.
     """
@@ -452,6 +472,9 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
     nested_indices: List of positions of nested parameters in complex model
                     parameter list
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     multinom: If True, assume model is defined without an explicit parameter for
               theta. Because uncertainty in theta must be accounted for to get
               correct uncertainties for other parameters, this function will
