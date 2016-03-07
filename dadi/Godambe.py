@@ -6,6 +6,17 @@ import numpy
 from dadi import Inference
 from dadi.Spectrum_mod import Spectrum
 
+printed_citation = False
+def print_citation(func):
+    def citation_func(*args, **kwargs):
+        global printed_citation
+        if not printed_citation:
+            print("""If you use the Godambe methods in your published research, please cite Coffman et al. (2016) in addition to the main dadi paper Gutenkunst et al. (2009).
+AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591-593 (2016)""")
+            printed_citation = True
+        return func(*args, **kwargs)
+    return citation_func
+
 def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
     """
     Calculate element [ii][jj] of the Hessian matrix, a matrix
@@ -166,6 +177,7 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/eps[ii]
     return grad
 
+@print_citation
 def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
                 just_hess=False):
     """
@@ -230,6 +242,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess, J, cU
 
+@print_citation
 def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False, 
                multinom=True, eps=0.01, return_GIM=False):
     """
@@ -269,6 +282,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
     else:
         return uncerts, GIM
 
+@print_citation
 def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     """
     Parameter uncertainties from Fisher Information Matrix
@@ -302,6 +316,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
+@print_citation
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01):
     """
@@ -387,6 +402,7 @@ def sum_chi2_ppf(x, weights=(0,1)):
     else:
         return ppf
 
+@print_citation
 def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               full_params, multinom=True, eps=0.01, adj_and_org=False):
     """
@@ -456,6 +472,7 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return wald_adj, wald_org
     return wald_adj
 
+@print_citation
 def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01, adj_and_org=False):
     """
