@@ -567,7 +567,80 @@ def optimize_log_fmin(p0, data, model_func, pts,
     if not full_output:
         return xopt
     else:
-        return xopt, fopt, iter, funcalls, warnflag 
+        return xopt, fopt, iter, funcalls, warnflag
+
+def optimize_log_powell(p0, data, model_func, pts,
+                      lower_bound=None, upper_bound=None,
+                      verbose=0, flush_delay=0.5,
+                      multinom=True, maxiter=None,
+                      full_output=False, func_args=[],
+                      func_kwargs={},
+                      fixed_params=None, output_file=None):
+    """
+    Optimize log(params) to fit model to data using Powell's method.
+        
+    Because this works in log(params), it cannot explore values of params < 0.
+    
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+        (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+        length as p0. A parameter can be declared unbound by assigning
+        a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+        length as p0. A parameter can be declared unbound by assigning
+        a bound of None.
+    verbose: If True, print optimization status every <verbose> steps.
+        output_file: Stream verbose output into this filename. If None, stream to
+        standard out.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+        minutes. This is useful to avoid overloading I/O on clusters.
+        multinom: If True, do a multinomial fit where model is optimially scaled to
+        data at each step. If False, assume theta is a parameter and do
+        no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in
+        help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that
+        model_func's first argument is an array of parameters to
+        optimize, that its second argument is an array of sample sizes
+        for the sfs, and that its last argument is the list of grid
+        points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+        particular values. For example, if the model parameters
+        are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+        will hold nu1=0.5 and m=2. The optimizer will only change
+        T and m. Note that the bounds lists must include all
+        parameters. Optimization will fail if the fixed values
+        lie outside their bounds. A full-length p0 should be passed
+        in; values corresponding to fixed parameters are ignored.
+        (See help(dadi.Inference.optimize_log for examples of func_args and
+        fixed_params usage.)
+    """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_powell(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    xopt, fopt, direc, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+                                  
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, direc, iter, funcalls, warnflag
 
 def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
