@@ -506,7 +506,15 @@ def optimal_sfs_scaling(model,data):
     model = numerics.fold(data)
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
-    
+
+
+def fold_ancestral(F):
+    pass
+
+def project(F,n_to):
+    pass
+
+
 # Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.
 try:
     from transition1 import transition1
