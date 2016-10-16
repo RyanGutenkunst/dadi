@@ -473,6 +473,19 @@ class Spectrum(numpy.ma.masked_array):
         """
         return numpy.sum(self._counts_per_entry(), axis=-1)
 
+    def log(self):
+        """
+        Return the natural logarithm of the entries of the frequency spectrum.
+
+        Only necessary because numpy.ma.log now fails to propagate extra
+        attributes after numpy 1.10.
+        """
+        logfs = numpy.ma.log(self)
+        logfs.folded = self.folded
+        logfs.pop_ids = self.pop_ids
+        logfs.extrap_x = self.extrap_x
+        return logfs
+
     def fold(self):
         """
         Folded frequency spectrum
