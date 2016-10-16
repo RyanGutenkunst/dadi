@@ -79,13 +79,19 @@ def bottlegrowth_split_mig(params, ns, pts):
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
 
-    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
-    phi = Integration.one_pop(phi, xx, T-Ts, nu_func)
+    if T >= Ts:
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.one_pop(phi, xx, T-Ts, nu_func)
 
-    phi = PhiManip.phi_1D_to_2D(xx, phi)
-    nu0 = nu_func(T-Ts)
-    nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
-    phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func, m12=m, m21=m)
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        nu0 = nu_func(T-Ts)
+        nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
+        phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func, m12=m, m21=m)
+    else:
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        phi = Integration.two_pops(phi, xx, Ts-T, 1, 1, m12=m, m21=m)
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.two_pops(phi, xx, T, nu_func, nu_func, m12=m, m21=m)
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs

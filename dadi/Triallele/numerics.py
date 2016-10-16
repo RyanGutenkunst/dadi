@@ -507,12 +507,100 @@ def optimal_sfs_scaling(model,data):
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
 
-
+def tri_spectrum(array):
+    """
+    takes array and outputs correctly masked triallele spectrum
+    """
+    F = dadi.Spectrum(array)
+    F.mask[:,0] = True
+    F.mask[0,:] = True
+    for ii in range(len(F))[1:]:
+        F.mask[ii,len(F)-ii-1:] = True
+    return F
+    
 def fold_ancestral(F):
-    pass
+    """
+    Don't know ancestral state, so track minor frequencies
+    Store spectrum of two minor allele frequencies
+    """
+    F_new = 0*F
+    F_new = tri_spectrum(F_new)
+    ns = len(F)-1
+    for ii in range(ns):
+        for jj in range(ns):
+            kk = ns-ii-jj
+            if F.mask[ii,jj] == True:
+                continue
+            elif ii <= kk and jj <= kk:
+                if ii >= jj:
+                    F_new[ii,jj] += F[ii,jj]
+                else:
+                    F_new[jj,ii] += F[ii,jj]
+            elif ii > kk and jj <= kk:
+                F_new[kk,jj] += F[ii,jj]
+            elif ii <= kk and jj > kk:
+                F_new[kk,ii] += F[ii,jj]
+            else: # ii > kk and jj > kk
+                if ii >= jj:
+                    F_new[jj,kk] += F[ii,jj]
+                else:
+                    F_new[ii,kk] += F[ii,jj]
+    # mask if not a valid entry for ancestrally folded spectrum
+    for ii in range(ns):
+        for jj in range(ns):
+            kk = ns-ii-jj
+            if not (kk>=ii>=jj):
+                F_new.mask[ii,jj] = True
+    return F_new
 
-def project(F,n_to):
-    pass
+def ln_binomial(n,k):
+    return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)
+
+projection_cache = {}
+def cached_projection(proj_to,proj_from,hits):
+    """
+    Coefficients for projection from a larger size to smaller
+    proj_to: Number of samples to project down to
+    proj_from: Number of samples to project from
+    hits: Number of derived alleles projecting from - tuple of (n1,n3)
+    """
+    key = (proj_to, proj_from, hits)
+    try:
+        return projection_cache[key]
+    except KeyError:
+        pass
+    
+    X1, X2 = hits
+    X3 = proj_from - X1 - X2
+    proj_weights = np.zeros((proj_to+1,proj_to+1))
+    for ii in range(X1+1):
+        for jj in range(X2+1):
+            kk = proj_to - ii - jj
+            if kk > X3 or kk <0:
+                continue
+            f = ln_binomial(X1,ii) + ln_binomial(X2,jj) + ln_binomial(X3,kk) - ln_binomial(proj_from,proj_to)
+            proj_weights[ii,jj] = np.exp(f)
+    
+    projection_cache[key] = proj_weights
+    return proj_weights
+    
+def project(F_from, proj_to):
+    proj_from = len(F_from)-1
+    if proj_to == proj_from:
+        return F_from
+    elif proj_to > proj_from:
+        print 'sorry, but projection must be to smaller size!'
+        return F_from
+    else:
+        F_proj = np.zeros((proj_to+1,proj_to+1))
+        for X1 in range(proj_from):
+            for X2 in range(proj_from):
+                if F_from.mask[X1,X2] == False:
+                    hits = (X1,X2)
+                    proj_weights = cached_projection(proj_to,proj_from,hits)
+                    F_proj += proj_weights * F_from[X1,X2]
+        
+        return tri_spectrum(F_proj)
 
 
 # Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.

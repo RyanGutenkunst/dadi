@@ -8,7 +8,7 @@ If you use ∂a∂i in your research, please cite RN Gutenkunst, RD Hernandez, S
 
 **Getting started**
 
-Please see the wiki pages on Getting Started [https://bitbucket.org/RyanGutenkunst/dadi/wiki/GettingStarted], Installation [https://bitbucket.org/RyanGutenkunst/dadi/wiki/Installation], and our Data Format [ [https://bitbucket.org/RyanGutenkunst/dadi/wiki/DataFormats].
+Please see the wiki pages on Getting Started [https://bitbucket.org/GutenkunstLab/dadi/wiki/GettingStarted], Installation [https://bitbucket.org/GutenkunstLab/dadi/wiki/Installation], and our Data Format [ [https://bitbucket.org/GutenkunstLab/dadi/wiki/DataFormats].
 
 Also, please sign up for our mailing list, where we help the community with ∂a∂i. Please do search the archives before posting. Many questions come up repeatedly. [http://groups.google.com/group/dadi-user]
 
@@ -20,4 +20,4 @@ After a long hiatus, a new release. The most important update is Godambe.py, whi
 
 This release improves `optimize_grid`, in response to a request by Xueqiu, and also adds the option to push optimization output to a file. It also includes a fix contributed by Simon Gravel for errors in extrapolation for very large spectra. Finally, spectra calculation for SNPs ascertained by sequencing a single individual has been added, in response to a request by Joe Pickrell.
 
-[https://bitbucket.org/RyanGutenkunst/dadi/wiki/OldNews]
+[https://bitbucket.org/GutenkunstLab/dadi/wiki/OldNews]

@@ -9,6 +9,8 @@ build
 *.out
 *.gz
 *.toc
+*.bbl
+*.blg
 dist
 dadi.egg-info
 examples/YRI_CEU/seedms

@@ -6,6 +6,17 @@ import numpy
 from dadi import Inference
 from dadi.Spectrum_mod import Spectrum
 
+printed_citation = False
+def print_citation(func):
+    def citation_func(*args, **kwargs):
+        global printed_citation
+        if not printed_citation:
+            print("""If you use the Godambe methods in your published research, please cite Coffman et al. (2016) in addition to the main dadi paper Gutenkunst et al. (2009).
+AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591-593 (2016)""")
+            printed_citation = True
+        return func(*args, **kwargs)
+    return citation_func
+
 def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
     """
     Calculate element [ii][jj] of the Hessian matrix, a matrix
@@ -88,6 +99,9 @@ def get_hess(func, p0, eps, args=()):
     func: Model function
     p0: Parameter values to take derivative around
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     args: Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
@@ -95,7 +109,12 @@ def get_hess(func, p0, eps, args=()):
     eps = numpy.empty([len(p0)])
     for i, pval in enumerate(p0):
         if pval != 0:
-            eps[i] = eps_in*pval
+            # Account for floating point arithmetic issues
+            if pval*eps_in < 1e-6:
+                eps[i] = eps_in
+                p0[i] = 0
+            else:
+                eps[i] = eps_in*pval
         else:
             # Account for parameters equal to zero
             eps[i] = eps_in
@@ -115,6 +134,9 @@ def get_grad(func, p0, eps, args=()):
     func: Model function
     p0: Parameters for func
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     args: Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
@@ -122,7 +144,12 @@ def get_grad(func, p0, eps, args=()):
     eps = numpy.empty([len(p0)])
     for i, pval in enumerate(p0):
         if pval != 0:
-            eps[i] = eps_in*pval
+            # Account for floating point arithmetic issues
+            if pval*eps_in < 1e-6:
+                eps[i] = eps_in
+                p0[i] = 0
+            else:
+                eps[i] = eps_in*pval
         else:
             # Account for parameters equal to zero
             eps[i] = eps_in
@@ -150,6 +177,7 @@ def get_grad(func, p0, eps, args=()):
             grad[ii] = (fp - fm)/eps[ii]
     return grad
 
+@print_citation
 def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
                 just_hess=False):
     """
@@ -163,6 +191,9 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     p0: Best-fit parameters for func_ex.
     data: Original data frequency spectrum
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     log: If True, calculate derivatives in terms of log-parameters
     just_hess: If True, only evaluate and return the Hessian matrix
     """
@@ -211,10 +242,11 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
     return godambe, hess, J, cU
 
+@print_citation
 def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False, 
-               multinom=True, eps=0.01):
+               multinom=True, eps=0.01, return_GIM=False):
     """
-    Parameter uncertainties from Godambe Information Matrix
+    Parameter uncertainties from Godambe Information Matrix (GIM)
 
     Returns standard deviations of parameter values.
 
@@ -222,7 +254,10 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
     all_boot: List of bootstrap frequency spectra
     p0: Best-fit parameters for func_ex
     data: Original data frequency spectrum
-    eps: Fractional stepsize to use when taking finite-difference derivatives
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     log: If True, assume log-normal distribution of parameters. Returned values 
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
@@ -232,6 +267,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
               automatically consider theta if multinom=True. In that case, the
               final entry of the returned uncertainties will correspond to
               theta.
+    return_GIM: If true, also return the full GIM.
     """
     if multinom:
         func_multi = func_ex
@@ -240,8 +276,13 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
-    return numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
+    if not return_GIM:
+        return uncerts
+    else:
+        return uncerts, GIM
 
+@print_citation
 def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     """
     Parameter uncertainties from Fisher Information Matrix
@@ -252,7 +293,10 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     all_boot: List of bootstrap frequency spectra
     p0: Best-fit parameters for func_ex
     data: Original data frequency spectrum
-    eps: Fractional stepsize to use when taking finite-difference derivatives
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     log: If True, assume log-normal distribution of parameters. Returned values 
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
@@ -272,6 +316,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
+@print_citation
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01):
     """
@@ -285,7 +330,6 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         be in a list form that can be taken in by the complex model you'd like
         to evaluate.
     data: Original data frequency spectrum
-    eps: Fractional stepsize to use when taking finite-difference derivatives
     nested_indices: List of positions of nested parameters in complex model
                     parameter list
     multinom: If True, assume model is defined without an explicit parameter for
@@ -293,6 +337,9 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               correct uncertainties for other parameters, this function will
               automatically consider theta if multinom=True.
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     """
     if multinom:
         func_multi = func_ex
@@ -355,6 +402,7 @@ def sum_chi2_ppf(x, weights=(0,1)):
     else:
         return ppf
 
+@print_citation
 def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               full_params, multinom=True, eps=0.01, adj_and_org=False):
     """
@@ -379,6 +427,9 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               final entry of the returned uncertainties will correspond to
               theta.
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     adj_and_org: If False, return only adjusted Wald statistic. If True, also
                  return unadjusted statistic as second return value.
     """
@@ -421,6 +472,7 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return wald_adj, wald_org
     return wald_adj
 
+@print_citation
 def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01, adj_and_org=False):
     """
@@ -437,6 +489,9 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
     nested_indices: List of positions of nested parameters in complex model
                     parameter list
     eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
     multinom: If True, assume model is defined without an explicit parameter for
               theta. Because uncertainty in theta must be accounted for to get
               correct uncertainties for other parameters, this function will
