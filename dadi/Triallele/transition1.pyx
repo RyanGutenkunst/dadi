@@ -2,7 +2,7 @@
 import numpy as np
 cimport numpy as np
 
-def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim=1] dx,np.ndarray[np.float64_t, ndim=2] U01, np.float64_t sig1, np.float64_t sig2, np.float64_t nu):
+def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim=1] dx,np.ndarray[np.float64_t, ndim=2] U01, np.float64_t sig1, np.float64_t sig2):
     """
     Implicit transition matrix for the ADI components of the discretization of the diffusion
     Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
@@ -10,14 +10,15 @@ def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim
     """
     cdef int ii
     cdef int jj
-    cdef np.ndarray[np.float64_t, ndim=3] P = np.zeros((len(x),3,len(x)))
+    cdef np.ndarray[np.float64_t, ndim=3] PV = np.zeros((len(x),3,len(x)))
+    cdef np.ndarray[np.float64_t, ndim=3] PM = np.zeros((len(x),3,len(x)))
     cdef np.ndarray[np.float64_t, ndim=2] A = np.zeros((len(x),len(x)))
     cdef np.ndarray[np.float64_t, ndim=1] V = x*(1-x)
     cdef np.ndarray[np.float64_t, ndim=1] M = x*(1-x)
     for jj in range(len(x)):
-        A *= 0
+        A = np.zeros((len(x),len(x)))
         if jj > 0:
-            V = x*(1-x)/nu
+            V = x*(1-x)
             V[np.max(np.where(U01[:,jj] == 1))] = 0
             for ii in np.where(U01[:,jj] == 1)[0][:-1]:
                 if ii == 0:
@@ -31,7 +32,7 @@ def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim
                     A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
                     A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
         if jj == 0:
-            V = x*(1-x)/nu
+            V = x*(1-x)
             for ii in range(len(x)):
                 if ii == 0:
                     A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
@@ -44,6 +45,11 @@ def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim
                     A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
                     A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
         
+        PV[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[jj,1,:] = np.diagonal(A)
+        PV[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
         x2 = x[jj]
         sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
         sig_new[-1] = 0
@@ -61,7 +67,7 @@ def transition1(np.ndarray[np.float64_t, ndim=1] x,np.ndarray[np.float64_t, ndim
                 A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
                 A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
 
-        P[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
-        P[jj,1,:] = np.diagonal(A)
-        P[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
-    return P
+        PM[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[jj,1,:] = np.diagonal(A)
+        PM[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM
