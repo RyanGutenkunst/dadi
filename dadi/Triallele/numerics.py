@@ -48,7 +48,7 @@ def domain(x):
 
 ### transition matrices
 
-def transition1(x, dx, U01, sig1, sig2, nu):
+def transition1(x, dx, U01, sig1, sig2):
     """
     Implicit transition matrix for the ADI components of the discretization of the diffusion
     Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
@@ -62,11 +62,12 @@ def transition1(x, dx, U01, sig1, sig2, nu):
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
     print "using numpy, not cython"
-    P = np.zeros((len(x),3,len(x)))
+    PV = np.zeros((len(x),3,len(x)))
+    PM = np.zeros((len(x),3,len(x)))
     for jj in range(len(x)):
         A = np.zeros((len(x),len(x)))
         if jj > 0:
-            V = x*(1-x)/nu
+            V = x*(1-x)
             V[np.max(np.where(U01[:,jj] == 1))] = 0
             for ii in np.where(U01[:,jj] == 1)[0][:-1]:
                 if ii == 0:
@@ -80,7 +81,7 @@ def transition1(x, dx, U01, sig1, sig2, nu):
                     A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
                     A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
         if jj == 0:
-            V = x*(1-x)/nu
+            V = x*(1-x)
             for ii in range(len(x)):
                 if ii == 0:
                     A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
@@ -93,6 +94,11 @@ def transition1(x, dx, U01, sig1, sig2, nu):
                     A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
                     A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
         
+        PV[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[jj,1,:] = np.diagonal(A)
+        PV[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
         x2 = x[jj]
         sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
         sig_new[-1] = 0
@@ -110,12 +116,12 @@ def transition1(x, dx, U01, sig1, sig2, nu):
                 A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
                 A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
 
-        P[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
-        P[jj,1,:] = np.diagonal(A)
-        P[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
-    return P
+        PM[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[jj,1,:] = np.diagonal(A)
+        PM[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM
 
-def transition2(x, dx, U01, sig1, sig2, nu):
+def transition2(x, dx, U01, sig1, sig2):
     """
     Implicit transition matrix for the ADI components of the discretization of the diffusion
     Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
@@ -128,11 +134,12 @@ def transition2(x, dx, U01, sig1, sig2, nu):
     """
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
-    P = np.zeros((len(x),3,len(x)))
+    PV = np.zeros((len(x),3,len(x)))
+    PM = np.zeros((len(x),3,len(x)))
     for ii in range(len(x)):
         A = np.zeros((len(x),len(x)))
         if ii > 0:
-            V = x*(1-x)/nu
+            V = x*(1-x)
             V[np.max(np.where(U01[ii,:] == 1))] = 0
             for jj in np.where(U01[ii,:] == 1)[0][:-1]:
                 if jj == 0:
@@ -146,7 +153,7 @@ def transition2(x, dx, U01, sig1, sig2, nu):
                     A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
                     A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
         if ii == 0:
-            V = x*(1-x)/nu
+            V = x*(1-x)
             for jj in range(len(x)):
                 if jj == 0:
                     A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
@@ -159,6 +166,11 @@ def transition2(x, dx, U01, sig1, sig2, nu):
                     A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
                     A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
         
+        PV[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[ii,1,:] = np.diagonal(A)
+        PV[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
         x1 = x[ii]
         sig_new = sig2*(1-x-x1)/(1-x) + (sig2-sig1)*x1/(1-x)
         sig_new[-1] = 0
@@ -176,10 +188,10 @@ def transition2(x, dx, U01, sig1, sig2, nu):
                 A[jj,jj] += 0 # 1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
                 A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
         
-        P[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
-        P[ii,1,:] = np.diagonal(A)
-        P[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
-    return P
+        PM[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[ii,1,:] = np.diagonal(A)
+        PM[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM
 
 def transition12(x, dx, U01):
     """
@@ -224,7 +236,7 @@ def transition12(x, dx, U01):
     C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
     return C
 
-def transition1D(x, dx, dt, sig, nu):
+def transition1D(x, dx, sig):
     """
     transition matrix for one dimensional integration
     x - grid
@@ -235,19 +247,37 @@ def transition1D(x, dx, dt, sig, nu):
     """
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
-    P = np.zeros((len(x),len(x)))
+    PV = np.zeros((len(x),len(x)))
+    PM = np.zeros((len(x),len(x)))
     for ii in range(len(x)):
         if ii == 0:
-            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
-            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + sig * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            PV[ii,ii+1] = -1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii])
+            PM[ii,ii+1] = sig / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
         elif ii == len(x) - 1:
-            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - sig * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
-            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
+            PV[ii,ii-1] = - 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1])
+            PM[ii,ii-1] = sig / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
         else:
-            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - sig * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
-            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
-            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + sig * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
-    return P
+            PV[ii,ii-1] = - 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1])
+            PM[ii,ii-1] = - sig / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            PV[ii,ii+1] = - 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii])
+            PM[ii,ii+1] = sig / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+    return PV,PM
+
+transition1D_cache = {}
+def cached_transition1D(numpts,sig):
+    key = (numpts,sig)
+    try:
+        return transition1D_cache[key]
+    except KeyError:
+        pass
+    x = np.linspace(0,1,numpts+1)
+    dx = grid_dx(x)
+    V,M = transition1D(x,dx,sig)
+    transition1D_cache[key] = [V,M]
+    return transition1D_cache[key]
 
 def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     """
@@ -265,8 +295,9 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     for ii in range(len(x)):
         for jj in range(len(x)):
             if x[ii]+x[jj] < 1.0 and x[ii]+x[jj] > .75:
-                sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj]) 
-                P1D = transition1D(x,dx,dt,sig,nu)
+                sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj])
+                V,M = cached_transition1D(len(x)-1,sig)
+                P1D = np.eye(len(x)) + dt*(V/nu+M)
                 y = np.zeros(len(x))
                 y[ii+jj] = 1./dx[ii+jj]
                 y = advance1D(y,P1D)
@@ -274,14 +305,16 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
                 P[ii,jj] = prob
                 if ii+jj == len(x)-2:
                     if ii==1:
-                        P1D = transition1D(x,dx,dt,sig1,nu)
+                        V,M = cached_transition1D(len(x)-1,sig1)
+                        P1D = np.eye(len(x)) + dt*(V/nu+M)
                         y = np.zeros(len(x))
                         y[ii] = 1./dx[ii]
                         y = advance1D(y,P1D)
                         prob2 = y[0]*dx[0]
                         P[ii,jj] += prob2
                     elif jj==1:
-                        P1D = transition1D(x,dx,dt,sig2,nu)
+                        V,M = cached_transition1D(len(x)-1,sig2)
+                        P1D = np.eye(len(x)) + dt*(V/nu+M)
                         y = np.zeros(len(x))
                         y[jj] = 1./dx[jj]
                         y = advance1D(y,P1D)
@@ -342,17 +375,17 @@ def advance_adi(U,U01,P1,P2,x,ii):
     if np.mod(ii,2) == 0:
         for jj in range(len(x)):
             if np.sum(U01[:,jj]) > 1:
-                U[:,jj] = dadi.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
+                U[:,jj] = dadi.Integration.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
         for ii in range(len(x)):
             if np.sum(U01[ii,:]) > 1:
-                U[ii,:] = dadi.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
+                U[ii,:] = dadi.Integration.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
     else:
         for ii in range(len(x)):
             if np.sum(U01[ii,:]) > 1:
-                U[ii,:] = dadi.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
+                U[ii,:] = dadi.Integration.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
         for jj in range(len(x)):
             if np.sum(U01[:,jj]) > 1:
-                U[:,jj] = dadi.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
+                U[:,jj] = dadi.Integration.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
     return U
 
 def advance_cov(U,C,x,dx):
@@ -373,7 +406,7 @@ def advance1D(u,P):
     a = np.concatenate((np.array([0]),np.diag(P,-1)))
     b = np.diag(P)
     c = np.concatenate((np.diag(P,1),np.array([0])))
-    u = dadi.tridiag.tridiag(a,b,c,u)
+    u = dadi.Integration.tridiag.tridiag(a,b,c,u)
     return u
 
 def advance_line(x,phi,P):
