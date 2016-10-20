@@ -8,20 +8,19 @@ import integration
 import dadi
 from numpy import newaxis as nuax
 
-def equilibrium(params, ns, pts, folded = False, misid = False):
+def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Integrate the density function to equilibrium
-    params = [sig1,sig2,theta1,theta2,misid]
+    params = unused
     sig1, sig2 - population scaled selection coefficients for the two derived alleles
     theta1, theta2 - population scaled mutation rates
     misid - ancestral misidentification parameter
     dt - time step to use for integration
     folded = True - fold the frequency spectrum (if we assume we don't know the order that derived alleles appeared)
     """
-    sig1,sig2,theta1,theta2,misid,dt = params
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
-    
+
     y1 = dadi.PhiManip.phi_1D(x,gamma=sig1)
     y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
     phi = np.zeros((len(x),len(x)))
@@ -30,35 +29,27 @@ def equilibrium(params, ns, pts, folded = False, misid = False):
     else:
         phi = integration.equilibrium_neutral_exact(x)
         phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
-    
+
     dx = numerics.grid_dx(x)
     DXX = numerics.grid_dx_2d(x,dx)
-    
+
     if not type(ns) == int:
         if len(ns) == 1:
             ns = int(ns)
         else:
             ns = int(ns[0])
-    
+
     fs = numerics.sample_cached(phi, ns, x, DXX)
-    
+
     if folded == True:
         fs = numerics.fold(fs)
-    
-    if misid == True:
+
+    if misid > 0.0:
         fs = numerics.misidentification(fs,misid)
-    
-    fs = dadi.Spectrum(fs)
-    fs.extrap_x = x[1]
-    # mask out non-triallelic and non-interior entries
-    fs.mask[:,0] = True
-    fs.mask[0,:] = True
-    for ii in range(len(fs)):
-        fs.mask[ii,ns-ii:] = True
     
     return fs
     
-def two_epoch(params, ns, pts, folded = False, misid = False):
+def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Two epoch demography - a single population size change at some point in the past
     params = [nu,T,sig1,sig2,theta1,theta2,misid,dt]
@@ -69,56 +60,48 @@ def two_epoch(params, ns, pts, folded = False, misid = False):
     misid - ancestral misidentification parameter
     dt - time step to use for integration
     """
-    nu,T,sig1,sig2,theta1,theta2,misid,dt = params
+    nu,T = params
 
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
-    
+
     y1 = dadi.PhiManip.phi_1D(x,gamma=sig1)
     y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
     phi = np.zeros((len(x),len(x)))
-    
+
     # integrate to equilibrium first
     if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
         phi = integration.equilibrium_neutral_exact(x)
     else:
         phi = integration.equilibrium_neutral_exact(x)
         phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
-    
-    phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu, sig1, sig2, theta1, theta2, dt)
-    
+
+    phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu=nu, sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
+
     dx = numerics.grid_dx(x)
     DXX = numerics.grid_dx_2d(x,dx)
-    
+
     if not type(ns) == int:
         if len(ns) == 1:
             ns = int(ns)
         else:
             ns = int(ns[0])
-    
+
     fs = numerics.sample_cached(phi, ns, x, DXX)
     
     if folded == True:
         fs = numerics.fold(fs)
     
-    if misid == True:
+    if misid > 0.0:
         fs = numerics.misidentification(fs,misid)
-    
-    fs = dadi.Spectrum(fs)
-    fs.extrap_x = x[1]
-    # mask out non-triallelic and non-interior entries
-    fs.mask[:,0] = True
-    fs.mask[0,:] = True
-    for ii in range(len(fs)):
-        fs.mask[ii,ns-ii:] = True
     
     return fs
 
 
-def three_epoch(params, ns, pts, folded = False, misid = False):
+def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Three epoch demography - two instantaneous population size changes in the past
-    params = [nu1,nu2,T1,T2,sig1,sig2,theta1,theta2,misid,dt]
+    params = [nu1,nu2,T1,T2]
     nu1,nu2 - relative poplulation size changes to ancestral population size (nu1 occurs before nu2, historically)
     T1,T2 - time for which population had relative sizes nu1, nu2 (scaled by 2N generations)
     sig1, sig2 - population scaled selection coefficients for the two derived alleles
@@ -126,7 +109,7 @@ def three_epoch(params, ns, pts, folded = False, misid = False):
     misid - ancestral misidentification parameter
     dt - time step to use for integration
     """
-    nu1,nu2,T1,T2,sig1,sig2,theta1,theta2,misid,dt = params
+    nu1,nu2,T1,T2 = params
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
     
@@ -141,8 +124,8 @@ def three_epoch(params, ns, pts, folded = False, misid = False):
         phi = integration.equilibrium_neutral_exact(x)
         phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
     
-    phi,y1,y2 = integration.advance(phi, x, T1, y1, y2, nu1, sig1, sig2, theta1, theta2, dt)
-    phi,y1,y2 = integration.advance(phi, x, T2, y1, y2, nu2, sig1, sig2, theta1, theta2, dt)
+    phi,y1,y2 = integration.advance(phi, x, T1, y1, y2, nu1, sig1, sig2, theta1, theta2, dt=dt)
+    phi,y1,y2 = integration.advance(phi, x, T2, y1, y2, nu2, sig1, sig2, theta1, theta2, dt=dt)
 
     dx = numerics.grid_dx(x)
     DXX = numerics.grid_dx_2d(x,dx)
@@ -158,16 +141,59 @@ def three_epoch(params, ns, pts, folded = False, misid = False):
     if folded == True:
         fs = numerics.fold(fs)
     
-    if misid == True:
+    if misid > 0.0:
         fs = numerics.misidentification(fs,misid)
-    
-    fs = dadi.Spectrum(fs)
-    fs.extrap_x = x[1]
-    # mask out non-triallelic and non-interior entries
-    fs.mask[:,0] = True
-    fs.mask[0,:] = True
-    for ii in range(len(fs)):
-        fs.mask[ii,ns-ii:] = True
     
     return fs
 
+def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
+    """
+    Three epoch demography - two instantaneous population size changes in the past
+    params = [nu1,nu2,T1,T2]
+    nu1,nu2 - relative poplulation size changes to ancestral population size (nu1 occurs before nu2, historically)
+    T1,T2 - time for which population had relative sizes nu1, nu2 (scaled by 2N generations)
+    sig1, sig2 - population scaled selection coefficients for the two derived alleles
+    theta1, theta2 - population scaled mutation rates
+    misid - ancestral misidentification parameter
+    dt - time step to use for integration
+    """
+    nuB,nuF,T = params
+    if nuB == nuF:
+        nu = nuB
+    else:
+        nu = lambda t: nuB*np.exp(np.log(nuF/nuB) * t/T)
+    
+    x = np.linspace(0,1,pts+1)
+    sig1,sig2 = np.float(sig1),np.float(sig2)
+    
+    y1 = dadi.PhiManip.phi_1D(x,gamma=sig1)
+    y2 = dadi.PhiManip.phi_1D(x,gamma=sig2)
+    phi = np.zeros((len(x),len(x)))
+    
+    # integrate to equilibrium first
+    if sig1 == sig2 == 0.0 and theta1 == theta2 == 1:
+        phi = integration.equilibrium_neutral_exact(x)
+    else:
+        phi = integration.equilibrium_neutral_exact(x)
+        phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
+    
+    phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu, sig1, sig2, theta1, theta2, dt=dt)
+
+    dx = numerics.grid_dx(x)
+    DXX = numerics.grid_dx_2d(x,dx)
+    
+    if not type(ns) == int:
+        if len(ns) == 1:
+            ns = int(ns)
+        else:
+            ns = int(ns[0])
+    
+    fs = numerics.sample_cached(phi, ns, x, DXX)
+    
+    if folded == True:
+        fs = numerics.fold(fs)
+    
+    if misid > 0.0:
+        fs = numerics.misidentification(fs,misid)
+    
+    return fs
