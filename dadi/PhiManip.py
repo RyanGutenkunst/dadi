@@ -43,29 +43,61 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
     # and rescaling the final phi.
     gamma = gamma * 4.*beta/(beta+1.)**2
 
-    # First we evaluate the relevant integrals.
+    # Our final result is of the form 
+    # exp(Q) * int_0_x exp(-Q) / int_0_1 exp(-Q)
+
+    # For large negative gamma, exp(-Q) becomes numerically infinite.
+    # To work around this, we can adjust Q in both the top and bottom
+    # integrals by the same factor. We choose to make that factor the 
+    # maximum of -Q, which is -2*gamma.
+    Qadjust = 0
+    # For negative gamma, the maximum of -Q is -2*gamma.
+    if gamma < 0 and numpy.isinf(numpy.exp(-2*gamma)):
+        Qadjust = -2*gamma
+
+    # For large positive gamma, the prefactor exp(Q) becomes numerically
+    # infinite, while the numerator becomes very small. To work around this,
+    # we'll can pull the prefactor into the numerator integral.
+
+    # Evaluate the denominator integral.
+    integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2
+                                     - Qadjust)
+    int0, eps = scipy.integrate.quad(integrand, 0, 1)
+
     ints = numpy.empty(len(xx))
-    integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2)
-    val, eps = scipy.integrate.quad(integrand, 0, 1)
-    int0 = val
-    for ii,q in enumerate(xx):
-        val, eps = scipy.integrate.quad(integrand, q, 1)
-        ints[ii] = val
-
-    phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
-    # Protect from division by zero errors
-    if xx[0] == 0 and xx[-1] == 1:
-        phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    # Evaluate the numerator integrals
+    if gamma < 0:
+        # In this case, the prefactor is not divergent, so we can evaluate
+        # the numerator as before, using the Qadjust if necessary.
+        for ii,q in enumerate(xx):
+            val, eps = scipy.integrate.quad(integrand, q, 1)
+            ints[ii] = val
+        phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
     else:
-        phi *= 1./(xx*(1-xx))
+        # In this case, the prefactor may be divergent, so we do the integral
+        # with the prefactor pulled inside
+        integrand = lambda xi, q: numpy.exp(-4*gamma*h*(xi-q) -
+                                            2*gamma*(1-2*h)*(xi**2-q**2))
+        for ii,q in enumerate(xx):
+            val, eps = scipy.integrate.quad(integrand, q, 1, args=(q,))
+            ints[ii] = val
+        phi = ints/int0
 
-    if xx[0] == 0:
-        # Technically, phi diverges at 0. This fixes lets us do numerics
-        # sensibly.
-        phi[0] = phi[1]
-    if xx[-1] == 1:
-        # I used Mathematica to check that this was the proper limit.
+    # Protect from division by zero errors
+    phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    # Technically, phi diverges at 0. This kludge lets us do numerics
+    # sensibly.
+    phi[0] = phi[1]
+    # I used Mathematica to calculate the proper limit for x goes to 1.
+    # But if we've adjusted the denominator integrand, then that limit doesn't
+    # hold. We only need to do that in cases of strong negative selection,
+    # when phi near 1 should be almost zero anyways. So we'll just ensure
+    # that it is at least monotonically decreasing.
+    if Qadjust == 0:
         phi[-1] = 1./int0
+    else:
+        phi[-1] = min(phi[-1], phi[-2])
+
     return phi * nu*theta0 * 4.*beta/(beta+1.)**2
 
 def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
@@ -96,7 +128,7 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
     gamma = gamma * 4.*beta/(beta+1.)**2
 
     exp = numpy.exp
-    # Protect from warnings on divisino by zero
+    # Protect from warnings on division by zero
     if xx[0] == 0 and xx[-1] == 1:
         phi = 0*xx
         if gamma > -300:
