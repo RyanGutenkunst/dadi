@@ -62,7 +62,8 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
     # Evaluate the denominator integral.
     integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2
                                      - Qadjust)
-    int0, eps = scipy.integrate.quad(integrand, 0, 1)
+    int0, eps = scipy.integrate.quad(integrand, 0, 1, epsabs=0,
+                                     points=numpy.linspace(0,1,41))
 
     ints = numpy.empty(len(xx))
     # Evaluate the numerator integrals
@@ -70,7 +71,8 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
         # In this case, the prefactor is not divergent, so we can evaluate
         # the numerator as before, using the Qadjust if necessary.
         for ii,q in enumerate(xx):
-            val, eps = scipy.integrate.quad(integrand, q, 1)
+            val, eps = scipy.integrate.quad(integrand, q, 1, epsabs=0,
+                                            points=numpy.linspace(q,1,41))
             ints[ii] = val
         phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
     else:
