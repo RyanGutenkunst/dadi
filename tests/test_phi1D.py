@@ -109,7 +109,7 @@ class phi1DTestCase(unittest.TestCase):
         # For negative gamma, compare our implementation with Christian Huber's
         # arbitrary precision arithmetic version
         for gamma, h in [(-500, 0.14), (-500, 0.94), (-2000, 0.34),
-                         (-1429, 0.51)]:
+                         (-1429, 0.51), (-1e4, 0), (-1e5, 0), (-1e6, 0)]:
             phi_new = dadi.PhiManip.phi_1D(self.xx, gamma=gamma, h=h)
             phi_H = phi_1D_Huber(self.xx, gamma=gamma, h=h)
             assert(max(reldiff(phi_new, phi_H)) < 1e-4)
