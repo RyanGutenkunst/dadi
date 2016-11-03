@@ -148,7 +148,10 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
     if xx[0] == 0:
         phi[0] = phi[1]
     if xx[-1] == 1:
-        limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
+        if gamma < 300:
+            limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
+        else:
+            limit = 2*gamma
         phi[-1] = limit
     return phi * nu*theta0 * 4.*beta/(beta+1.)**2
 
