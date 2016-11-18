@@ -63,7 +63,7 @@ class Spectrum(numpy.ma.masked_array):
             mask = numpy.ma.make_mask_none(data.shape)
 
         subarr = numpy.ma.masked_array(data, mask=mask, dtype=dtype, copy=copy,
-                                       fill_value=numpy.nan, keep_mask=True, 
+                                       fill_value=fill_value, keep_mask=True, 
                                        shrink=True)
         subarr = subarr.view(subtype)
 
