@@ -13,6 +13,28 @@ except ImportError:
     from scipy import comb
 from scipy.special import gammaln
 
+def make_anc_state_misid_func(func):
+    """
+    Generate a version of func accounting for ancestral state misidentification.
+
+    func: The function to which misidentification should be incorporated. It
+          is assumed that the first argument of the function is a params
+          vector, to which the misidentification parameter will be added.
+
+    Returns a new function which takes in a params vector that is one entry
+    longer than the original function. The fraction misidentification will
+    be the last entry in the new params vector.
+    """
+    def misid_func(*args, **kwargs):
+        all_params = args[0]
+        misid = all_params[-1]
+        args[0] = all_params[:-1]
+        fs = func(*args, **kwargs)
+        return (1-misid)*fs + misid*Numerics.reverse_array(fs)
+    misid_func.func_name = func.func_name + '_misid'
+    misid_func.func_doc = func.func_doc
+    return misid_func
+
 def quadratic_grid(num_pts):
     """
     A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.
