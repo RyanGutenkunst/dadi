@@ -13,6 +13,16 @@ except ImportError:
     from scipy import comb
 from scipy.special import gammaln
 
+def apply_anc_state_misid(fs, p_misid):
+    """
+    Model ancestral state misidentification in a frequency spectrum.
+
+    fs: Input frequency spectrum.
+    p_misid: Fraction of sites assumed to suffer from ancestral
+             state misidentification.
+    """
+    return (1-p_misid)*fs + p_misid*reverse_array(fs)
+
 def make_anc_state_misid_func(func):
     """
     Generate a version of func accounting for ancestral state misidentification.
@@ -27,10 +37,11 @@ def make_anc_state_misid_func(func):
     """
     def misid_func(*args, **kwargs):
         all_params = args[0]
-        misid = all_params[-1]
+        p_misid = all_params[-1]
+        args = list(args)
         args[0] = all_params[:-1]
         fs = func(*args, **kwargs)
-        return (1-misid)*fs + misid*Numerics.reverse_array(fs)
+        return apply_anc_state_misid(fs, p_misid)
     misid_func.func_name = func.func_name + '_misid'
     misid_func.func_doc = func.func_doc
     return misid_func
