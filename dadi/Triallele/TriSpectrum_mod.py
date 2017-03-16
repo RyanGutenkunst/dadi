@@ -107,6 +107,7 @@ class TriSpectrum(numpy.ma.masked_array):
                                                       context=context)
         result.folded_major = self.folded_major
         result.folded_ancestral = self.folded_ancestral
+        result.extrap_x = self.extrap_x
         result.extrap_t = self.extrap_t
         return result
     def _update_from(self, obj):
@@ -366,9 +367,21 @@ class TriSpectrum(numpy.ma.masked_array):
     @staticmethod
     def from_phi(phi, ns, other_stuff):
         pass
-    
-     
-    
-    
-    
-    
+
+
+# Allow TriSpectrum objects to be pickled. 
+# See http://effbot.org/librarybook/copy-reg.htm
+import copy_reg
+def TriSpectrum_pickler(fs):
+    # Collect all the info necessary to save the state of a TriSpectrum
+    return TriSpectrum_unpickler, (fs.data, fs.mask, fs.folded_major,
+                                   fs.folded_ancestral,
+                                   fs.extrap_x, fs.extrap_t)
+def TriSpectrum_unpickler(data, mask, folded_major, folded_ancestral,
+                          extrap_x, extrap_t):
+    # Use that info to recreate the TriSpectrum
+    return TriSpectrum(data, mask, mask_infeasible=False,
+                       data_folded_major=folded_major,
+                       data_folded_ancestral=folded_ancestral,
+                       extrap_x=extrap_x, extrap_t=extrap_t)
+copy_reg.pickle(TriSpectrum, TriSpectrum_pickler, TriSpectrum_unpickler)
