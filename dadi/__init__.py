@@ -22,6 +22,15 @@ try:
     import Triallele.numerics, Triallele.integration, Triallele.demographics, Triallele.TriSpectrum_mod
     TriSpectrum = Triallele.TriSpectrum_mod.TriSpectrum
 except ImportError:
+    print "error in importing Triallele modules"
+    pass
+
+# import the two locus modules - numerics, integration, demographics, plotting
+try:
+    import TwoLocus.numerics, TwoLocus.integration, TwoLocus.demographics, TwoLocus.inference, TwoLocus.plotting, TwoLocus.TLSpectrum_mod
+    TLSpectrum = TwoLocus.TLSpectrum_mod.TLSpectrum
+except ImportError:
+    print "error in importing Two Locus modules"
     pass
 
 # Protect import of Plotting in case matplotlib not installed.

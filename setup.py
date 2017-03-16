@@ -43,9 +43,9 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/tridiag.c'],
                          extra_compile_args=extra_compile_args)
 
-if '--cython_triallele' in sys.argv:
+if '--cython' in sys.argv:
     # Remove extra argument, so distutils doesn't complain
-    sys.argv.remove('--cython_triallele')
+    sys.argv.remove('--cython')
 
     # Configure our C modules that are built with Cython.
     # This needs to be done in a separate setup step from the remainder of dadi,
@@ -54,10 +54,21 @@ if '--cython_triallele' in sys.argv:
     from distutils.core import setup
     from distutils.extension import Extension
     from Cython.Distutils import build_ext
+    
     tri_modules = ['transition1', 'transition2', 'transition12', 'transition1D']
     tri_extensions = [core.Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules]
     
     setup(ext_modules = tri_extensions,
+          include_dirs = [numpy.get_include()],
+          cmdclass = {'build_ext': build_ext},
+          # Note that we build the extension modules in place
+          script_args = ['build_ext', '--inplace'], 
+          )
+    
+    two_locus_modules = ['projection_genotypes', 'surface_interaction', 'transition1', 'transition2', 'transition3', 'transition12', 'transition13', 'transition23', 'transition1D']
+    two_locus_extensions = [core.Extension(name='dadi.TwoLocus.{0}'.format(_), sources=['dadi/TwoLocus/{0}.pyx'.format(_)]) for _ in two_locus_modules]
+    
+    setup(ext_modules = two_locus_extensions,
           include_dirs = [numpy.get_include()],
           cmdclass = {'build_ext': build_ext},
           # Note that we build the extension modules in place
@@ -71,9 +82,11 @@ numpy.distutils.core.setup(name='dadi',
                            url='http://dadi.googlecode.com',
                            ext_modules = [tridiag, int_c],
                            scripts=['scripts/ms_jsfs.py'],
-                           packages=['dadi', 'dadi.Triallele'], 
+                           packages=['dadi', 'dadi.Triallele', 'dadi.TwoLocus'], 
                            package_data = {'tests':['IM.fs'],
                                            # Copy Triallele extension modules
-                                           'dadi.Triallele':['*.so']},
+                                           'dadi.Triallele':['*.so'],
+                                           # Copy TwoLocus extension modules
+                                           'dadi.TwoLocus':['*.so']},
                            license='BSD'
                            )

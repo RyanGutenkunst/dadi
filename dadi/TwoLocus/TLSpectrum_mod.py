@@ -7,40 +7,27 @@ import numpy as np
 
 import os
 
-class TriSpectrum(numpy.ma.masked_array):
+class TLSpectrum(numpy.ma.masked_array):
     """
-    Represents a triallelic frequency spectrum.
-    
-    Similar structure to biallelic spectra as a masked array, but specific
-    to the triallelic spectrum, so that infeasible entries are masked,
-    and operations performed on triallelic spectra are different than 
-    typical spectra
+    Represents a two-locus frequency spectrum.
     
     The constructor has the format:
-        fs = dadi.Triallele.TriSpectrum(data, mask, mask_infeasible, 
-                                        data_folded_major,
-                                        data_folded_ancestral, extrap_x, 
-                                        extrap_t)
+        fs = dadi.Triallele.TLSpectrum(data, mask, mask_infeasible, 
+                                        data_folded,
+                                        extrap_x, extrap_t)
         
         data: The triallelic frequency spectrum data
         mask: An optional array of the same size as data, similar to dadi.Spectrum
-        data_folded_major: If True, it is assumed that the input data is folded 
-                           for the major and minor derived alleles
-        data_folded_ancestral: If True, it is assumed that the input data is folded
-                               to account for uncertainty in the ancestral state. Note
-                               that if True, data_folded_major must also be True.
-        check_folding_major: If True and data_folded_ancestral=True, the data and
-                             mask will be checked to ensure they are consistent
-        check_folding_ancestral: If True and data_folded_ancestral=True, the data and
-                                 mask will be checked to ensure they are consistent
+        data_folded: If True, it is assumed that the input data is folded 
+        check_folding: If True and data_folded=True, the data and
+                       mask will be checked to ensure they are consistent
         extrap_x: Optional floating point value specifying x value to use in
                   extrapolation.
         extrap_t: Optional floating point value specifying t value to use in
                   extrapolation.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_infeasible=True, 
-                data_folded_major=None, check_folding_major=True,
-                data_folded_ancestral=None, check_folding_ancestral=True,
+                data_folded=None, check_folding=True,
                 dtype=float, copy=True, fill_value=numpy.nan, keep_mask=True,
                 shrink=True, extrap_x=None, extrap_t=None):
         data = numpy.asanyarray(data)
@@ -52,36 +39,22 @@ class TriSpectrum(numpy.ma.masked_array):
                                        fill_value=fill_value, keep_mask=True, 
                                        shrink=True)
         subarr = subarr.view(subtype)
-        if hasattr(data, 'folded_major'):
-            if data_folded_major is None or data_folded_major == data.folded_major:
-                subarr.folded_major = data.folded_major
-            elif data_folded_major != data.folded_major:
-                raise ValueError('Data does not have same major/minor folding status as '
-                                 'was called for in Spectrum constructor.')
-        elif data_folded_major is not None:
-            subarr.folded_major = data_folded_major
+        if hasattr(data, 'folded'):
+            if data_folded is None or data_folded == data.folded:
+                subarr.folded = data.folded
+            elif data_folded != data.folded:
+                raise ValueError('Data does not have same folding status as '
+                                 'was called for in TLSpectrum constructor.')
+        elif data_folded is not None:
+            subarr.folded = data_folded
         else:
-            subarr.folded_major = False
+            subarr.folded = False
         
-        if hasattr(data, 'folded_ancestral'):
-            if data_folded_ancestral is None or data_folded_ancestral == data.folded_ancestral:
-                subarr.folded_ancestral = data.folded_ancestral
-            elif data_folded_ancestral != data.folded_ancestral:
-                raise ValueError('Data does not have same ancestral folding status as '
-                                 'was called for in Spectrum constructor.')
-        elif data_folded_ancestral is not None:
-            subarr.folded_ancestral = data_folded_ancestral
-        else:
-            subarr.folded_ancestral = False
-        
-        ### XXX To do: ensure that all goes well when creating the TriSpectrum, come
+        ### XXX To do: ensure that all goes well when creating the TLSpectrum, come
         ###     back to this
         # Check that if we're declaring that the input data is folded, it actually is,
         # and the mask reflects this.        
-        
-        ### XXX We also need to enforce that if the data is folded ancestra, it is also
-        ###     folded major
-        
+                
         if mask_infeasible:
             subarr.mask_infeasible()
         
@@ -99,24 +72,20 @@ class TriSpectrum(numpy.ma.masked_array):
         if obj is None: 
             return
         numpy.ma.masked_array.__array_finalize__(self, obj)
-        self.folded_major = getattr(obj, 'folded_major', 'unspecified')
-        self.folded_ancestral = getattr(obj, 'folded_ancestral', 'unspecified')
+        self.folded = getattr(obj, 'folded', 'unspecified')
         self.extrap_x = getattr(obj, 'extrap_x', None)
         self.extrap_t = getattr(obj, 'extrap_t', None)
     def __array_wrap__(self, obj, context=None):
         result = obj.view(type(self))
         result = numpy.ma.masked_array.__array_wrap__(self, obj, 
                                                       context=context)
-        result.folded_major = self.folded_major
-        result.folded_ancestral = self.folded_ancestral
+        result.folded = self.folded
         result.extrap_t = self.extrap_t
         return result
     def _update_from(self, obj):
         numpy.ma.masked_array._update_from(self, obj)
-        if hasattr(obj, 'folded_major'):
-            self.folded_major = obj.folded_major
-        if hasattr(obj, 'folded_ancestral'):
-            self.folded_ancestral = obj.folded_ancestral
+        if hasattr(obj, 'folded'):
+            self.folded = obj.folded
         if hasattr(obj, 'extrap_x'):
             self.extrap_x = obj.extrap_x
         if hasattr(obj, 'extrap_t'):
@@ -125,23 +94,34 @@ class TriSpectrum(numpy.ma.masked_array):
     __array_priority__ = 20
 
     def __repr__(self):
-        return 'Spectrum(%s, folded_major=%s, folded_ancestral=%s)'\
-                % (str(self), str(self.folded_major), str(self.folded_ancestral))
+        return 'Spectrum(%s, folded=%s)'\
+                % (str(self), str(self.folded))
 
     def mask_infeasible(self):
         """
         Mask any infeasible entries.
         """
-        self.mask[:,0] = True
-        self.mask[0,:] = True
-        for ii in range(len(self))[1:]:
-            self.mask[ii,len(self)-ii-1:] = True
+        ns = len(self)-1
+        self.mask[0,0,0] = True
+        self.mask[0,:,0] = True
+        self.mask[0,0,:] = True
+        for ii in range(len(self)):
+            for jj in range(len(self)):
+                for kk in range(len(self)):
+                    if ii+jj+kk > ns:
+                        self.mask[ii,jj,kk] = True
+
+        for ii in range(len(self)):
+            self.mask[ii,ns-ii,0] = True
+            self.mask[ii,0,ns-ii] = True
+        
+        return self
     
     def unfold(self):
-        if not self.folded_major:
+        if not self.folded:
             raise ValueError('Input Spectrum is not folded.')
         data = self.data
-        unfolded = TriSpectrum(data, mask_infeasible=True)
+        unfolded = TLSpectrum(data, mask_infeasible=True)
         unfolded.extrap_x = self.extrap_x
         unfolded.extrap_t = self.extrap_t
         return unfolded
@@ -185,8 +165,8 @@ class TriSpectrum(numpy.ma.masked_array):
             line = fid.readline()
 
         # Read the shape of the data
-        shape,folded_major,folded_ancestral,extrap_x,extrap_t = line.split()
-        shape = [int(shape)+1,int(shape)+1]
+        shape,folded,extrap_x,extrap_t = line.split()
+        shape = [int(shape)+1,int(shape)+1,int(shape)+1]
 
         data = numpy.fromstring(fid.readline().strip(), 
                                 count=numpy.product(shape), sep=' ')
@@ -198,14 +178,10 @@ class TriSpectrum(numpy.ma.masked_array):
                                 count=numpy.product(shape), sep=' ')
         mask = mask.reshape(*shape)
         
-        if folded_major == 'folded_major':
-            folded_major = True
+        if folded == 'folded':
+            folded = True
         else:
-            folded_major = False
-        if folded_ancestral == 'folded_ancestral':
-            folded_ancestral = True
-        else:
-            folded_ancestral = False
+            folded = False
         if extrap_x == 'None':
             extrap_x = None
         else:
@@ -219,8 +195,7 @@ class TriSpectrum(numpy.ma.masked_array):
         if newfile:
             fid.close()
 
-        fs = TriSpectrum(data, mask, mask_infeasible, data_folded_ancestral=folded_ancestral,
-                      data_folded_major=folded_major)
+        fs = TLSpectrum(data, mask, mask_infeasible, data_folded=folded)
         fs.extrap_x = extrap_x
         fs.extrap_t = extrap_t
         if not return_comments:
@@ -246,9 +221,7 @@ class TriSpectrum(numpy.ma.masked_array):
             A single line containing N integers giving the dimensions of the fs
               array. So this line would be '5 5 3' for an SFS that was 5x5x3.
               (That would be 4x4x2 *samples*.)
-            On the *same line*, the string 'folded_major' or 'unfolded_major' 
-              denoting the folding status of the array
-            On the *same line*, the string 'folded_ancestral' or 'unfolded_ancestral' 
+            On the *same line*, the string 'folded' or 'unfolded' 
               denoting the folding status of the array
             A single line giving the array elements. The order of elements is 
               e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
@@ -271,14 +244,10 @@ class TriSpectrum(numpy.ma.masked_array):
         fid.write('{0} '.format(self.sample_size))
 
         if foldmaskinfo:
-            if not self.folded_major:
-                fid.write('unfolded_major ')
+            if not self.folded:
+                fid.write('unfolded ')
             else:
-                fid.write('folded_major ')
-            if not self.folded_ancestral:
-                fid.write('unfolded_ancestral ')
-            else:
-                fid.write('folded_ancestral ')
+                fid.write('folded ')
         
         if extrapinfo:
             if not self.extrap_x:
@@ -307,74 +276,33 @@ class TriSpectrum(numpy.ma.masked_array):
 
     tofile = to_file
     
-    def fold_major(self):
-        if self.folded_major:
+    def fold(self):
+        if self.folded:
             raise ValueError('Input Spectrum is already folded.')
-        folded = self + np.transpose(self)
-        for ii in range(len(folded)):
-            folded[ii,ii] /= 2
-        folded.mask[0,:] = True
-        folded.mask[:,0] = True
-        for ii in range(len(folded)):
-            folded[ii,ii+1:] = 0
-            folded.mask[ii,ii+1:] = True
-            folded.mask[ii,len(self)-1-ii:] = True
-        
-        folded.folded_major = True
-        folded.folded_ancestral = self.folded_ancestral
-        folded.extrap_x = self.extrap_x
-        folded.extrap_t = self.extrap_t
-        return folded
-    
-    def fold_ancestral(self):
-        if self.folded_ancestral:
-            raise ValueError('Input Spectrum is already folded.')
+        ns = len(self[:,0,0]) - 1
         folded = 0*self
-        ns = len(folded)-1
-        for ii in range(ns):
-            for jj in range(ns):
-                kk = ns-ii-jj
-                if self.mask[ii,jj] == True:
-                    continue
-                elif ii <= kk and jj <= kk:
-                    if ii >= jj:
-                        folded[ii,jj] += self[ii,jj]
-                    else:
-                        folded[jj,ii] += self[ii,jj]
-                elif ii > kk and jj <= kk:
-                    folded[kk,jj] += self[ii,jj]
-                elif ii <= kk and jj > kk:
-                    folded[kk,ii] += self[ii,jj]
-                else: # ii > kk and jj > kk
-                    if ii >= jj:
-                        folded[jj,kk] += self[ii,jj]
-                    else:
-                        folded[ii,kk] += self[ii,jj]
-        # mask if not a valid entry for ancestrally folded spectrum
-        for ii in range(ns):
-            for jj in range(ns):
-                kk = ns-ii-jj
-                if not (kk>=ii>=jj):
-                    folded.mask[ii,jj] = True
+        for ii in range(ns+1):
+            for jj in range(ns+1):
+                for kk in range(ns+1):
+                    if self.mask[ii,jj,kk]:
+                        continue
+                    p = ii + jj
+                    q = ii + kk
+                    if p > ns/2 and q > ns/2:
+                        # Switch A/a and B/b, so AB becomes ab, Ab becomes aB, etc
+                        folded[ns-ii-jj-kk,kk,jj] = self[ns-ii-jj-kk,kk,jj] + self[ii,jj,kk]
+                        folded.mask[ii,jj,kk] = True
+                    elif p > ns/2:
+                        # Switch A/a, so AB -> aB, Ab -> ab, aB -> AB, and ab -> Ab
+                        folded[kk,ns-ii-jj-kk,ii] = self[kk,ns-ii-jj-kk,ii] + self[ii,jj,kk]
+                        folded.mask[ii,jj,kk] = True
+                    elif q > ns/2:
+                        # Switch B/b, so AB -> Ab, Ab -> AB, aB -> ab, and ab -> aB
+                        folded[jj,ii,ns-ii-jj-kk] = self[jj,ii,ns-ii-jj-kk] + self[ii,jj,kk]
+                        folded.mask[ii,jj,kk] = True
         
-        folded.folded_major = True
-        folded.folded_ancestral = True
+        folded.folded = True
         folded.extrap_x = self.extrap_x
         folded.extrap_t = self.extrap_t
         return folded
-    
-    def S(self):
-        """
-        Segregating sites
-        """
-        return self.sum()
-    
-    @staticmethod
-    def from_phi(phi, ns, other_stuff):
-        pass
-    
-     
-    
-    
-    
-    
+        
