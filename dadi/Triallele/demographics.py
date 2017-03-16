@@ -42,6 +42,7 @@ def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
             ns = int(ns[0])
 
     fs = numerics.sample_cached(phi, ns, x, DXX)
+    fs.extrap_t = dt
 
     if folded == True:
         fs = fs.fold_major()
@@ -90,7 +91,8 @@ def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.
             ns = int(ns[0])
 
     fs = numerics.sample_cached(phi, ns, x, DXX)
-    
+    fs.extrap_t = dt
+
     if folded == True:
         fs = fs.fold_major()
     
@@ -139,7 +141,8 @@ def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
             ns = int(ns[0])
     
     fs = numerics.sample_cached(phi, ns, x, DXX)
-    
+    fs.extrap_t = dt
+
     if folded == True:
         fs = fs.fold_major()
     
@@ -191,7 +194,8 @@ def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 =
             ns = int(ns[0])
     
     fs = numerics.sample_cached(phi, ns, x, DXX)
-    
+    fs.extrap_t = dt
+
     if folded == True:
         fs = fs.fold_major()
     

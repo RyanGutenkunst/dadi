@@ -461,12 +461,10 @@ def sample_cached(phi, ns, x, DXX):
             if ii+jj < ns[0] and ii != 0 and jj != 0:
                 #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
                 F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(prod_x * this_cache[-jj] * this_cache[ns[0]-ii-jj])
-    F = Spectrum(F)
+    F = TriSpectrum(F)
+    F.folded_major = False
+    F.folded_ancestral = False
     F.extrap_x = x[1]
-    F.mask[:,0] = True
-    F.mask[0,:] = True
-    for ii in range(len(F))[1:]:
-        F.mask[ii,len(F)-ii-1:] = True
     return F
 
 def trinomial(ns,ii,jj):
@@ -478,18 +476,18 @@ def trinomial(ns,ii,jj):
 
 ### various methods for spectrum manipulation or other methods needed for data fitting
 
-def misidentification(Spectrum, p):
+def misidentification(F, p):
     """
     Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
     Then refold to return folded spectrum
     """
-    F = TriSpectrum(np.zeros((len(Spectrum),len(Spectrum))))
-    for ii in range(len(Spectrum))[1:-1]:
-        for jj in range(len(Spectrum))[1:ii+1]:
-            if ii+jj < len(Spectrum):
-                F[ii,jj] += (1 - p) * Spectrum[ii,jj]
-                F[len(Spectrum)-1-ii-jj,jj] += p/2. * Spectrum[ii,jj]
-                F[ii,len(Spectrum)-1-ii-jj] += p/2. * Spectrum[ii,jj]
+    F = TriF(np.zeros((len(F),len(F))))
+    for ii in range(len(F))[1:-1]:
+        for jj in range(len(F))[1:ii+1]:
+            if ii+jj < len(F):
+                F[ii,jj] += (1 - p) * F[ii,jj]
+                F[len(F)-1-ii-jj,jj] += p/2. * F[ii,jj]
+                F[ii,len(F)-1-ii-jj] += p/2. * F[ii,jj]
     
     return F.fold()
     
@@ -498,8 +496,8 @@ def fold(spectrum):
     Note: this is now handled in the TriSpectrum class
     Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
     """
-    spectrum = Spectrum(spectrum)
-    if spectrum.mask[1,2] == True:
+    spectrum = TriSpectrum(spectrum)
+    if spectrum.folded_major == True:
         print "error: trying to fold a spectrum that is already folded"
         return spectrum
     else:

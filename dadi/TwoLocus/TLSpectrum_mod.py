@@ -94,7 +94,7 @@ class TLSpectrum(numpy.ma.masked_array):
     __array_priority__ = 20
 
     def __repr__(self):
-        return 'Spectrum(%s, folded=%s)'\
+        return 'TLSpectrum(%s, folded=%s)'\
                 % (str(self), str(self.folded))
 
     def mask_infeasible(self):
