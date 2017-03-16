@@ -11,6 +11,8 @@ import dadi
 import math
 import pickle
 
+from TriSpectrum_mod import TriSpectrum
+
 def grid_dx(x):
     """
     We use uniform grids in x, using np.linspace(0,1,numpts)
@@ -481,7 +483,7 @@ def misidentification(Spectrum, p):
     Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
     Then refold to return folded spectrum
     """
-    F = np.zeros((len(Spectrum),len(Spectrum)))
+    F = TriSpectrum(np.zeros((len(Spectrum),len(Spectrum))))
     for ii in range(len(Spectrum))[1:-1]:
         for jj in range(len(Spectrum))[1:ii+1]:
             if ii+jj < len(Spectrum):
@@ -489,10 +491,11 @@ def misidentification(Spectrum, p):
                 F[len(Spectrum)-1-ii-jj,jj] += p/2. * Spectrum[ii,jj]
                 F[ii,len(Spectrum)-1-ii-jj] += p/2. * Spectrum[ii,jj]
     
-    return fold(Spectrum(F))
+    return F.fold()
     
 def fold(spectrum):
     """
+    Note: this is now handled in the TriSpectrum class
     Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
     """
     spectrum = Spectrum(spectrum)
@@ -540,24 +543,25 @@ def optimal_sfs_scaling(model,data):
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
 
-def tri_spectrum(array):
-    """
-    takes array and outputs correctly masked triallele spectrum
-    """
-    F = dadi.Spectrum(array)
-    F.mask[:,0] = True
-    F.mask[0,:] = True
-    for ii in range(len(F))[1:]:
-        F.mask[ii,len(F)-ii-1:] = True
-    return F
+#def tri_spectrum(array):
+#    """
+#    takes array and outputs correctly masked triallele spectrum
+#    """
+#    F = dadi.Spectrum(array)
+#    F.mask[:,0] = True
+#    F.mask[0,:] = True
+#    for ii in range(len(F))[1:]:
+#        F.mask[ii,len(F)-ii-1:] = True
+#    return F
     
 def fold_ancestral(F):
     """
+    Note: this is now handled by the TriSpectrum class
     Don't know ancestral state, so track minor frequencies
     Store spectrum of two minor allele frequencies
     """
     F_new = 0*F
-    F_new = tri_spectrum(F_new)
+    F_new = TriSpectrum(F_new)
     ns = len(F)-1
     for ii in range(ns):
         for jj in range(ns):
@@ -633,7 +637,7 @@ def project(F_from, proj_to):
                     proj_weights = cached_projection(proj_to,proj_from,hits)
                     F_proj += proj_weights * F_from[X1,X2]
         
-        return tri_spectrum(F_proj)
+        return TriSpectrum(F_proj).fold()
 
 
 # Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.

@@ -8,6 +8,8 @@ import integration
 import dadi
 from numpy import newaxis as nuax
 
+from TriSpectrum_mod import TriSpectrum
+
 def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Integrate the density function to equilibrium
@@ -42,7 +44,7 @@ def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
     fs = numerics.sample_cached(phi, ns, x, DXX)
 
     if folded == True:
-        fs = numerics.fold(fs)
+        fs = fs.fold_major()
 
     if misid > 0.0:
         fs = numerics.misidentification(fs,misid)
@@ -90,7 +92,7 @@ def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.
     fs = numerics.sample_cached(phi, ns, x, DXX)
     
     if folded == True:
-        fs = numerics.fold(fs)
+        fs = fs.fold_major()
     
     if misid > 0.0:
         fs = numerics.misidentification(fs,misid)
@@ -139,7 +141,7 @@ def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
     fs = numerics.sample_cached(phi, ns, x, DXX)
     
     if folded == True:
-        fs = numerics.fold(fs)
+        fs = fs.fold_major()
     
     if misid > 0.0:
         fs = numerics.misidentification(fs,misid)
@@ -191,7 +193,7 @@ def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 =
     fs = numerics.sample_cached(phi, ns, x, DXX)
     
     if folded == True:
-        fs = numerics.fold(fs)
+        fs = fs.fold_major()
     
     if misid > 0.0:
         fs = numerics.misidentification(fs,misid)

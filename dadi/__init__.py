@@ -19,7 +19,8 @@ import PhiManip
 
 # import the triallele modules - numerics, integration, demographics
 try:
-    import Triallele.numerics, Triallele.integration, Triallele.demographics
+    import Triallele.numerics, Triallele.integration, Triallele.demographics, Triallele.TriSpectrum_mod
+    TriSpectrum = Triallele.TriSpectrum_mod.TriSpectrum
 except ImportError:
     pass
 
