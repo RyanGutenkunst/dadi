@@ -305,4 +305,76 @@ class TLSpectrum(numpy.ma.masked_array):
         folded.extrap_x = self.extrap_x
         folded.extrap_t = self.extrap_t
         return folded
-        
+    
+    # Ensures that when arithmetic is done with TLSpectrum objects,
+    # attributes are preserved. For details, see similar code in
+    # dadi.Spectrum_mod
+    for method in ['__add__','__radd__','__sub__','__rsub__','__mul__',
+                   '__rmul__','__div__','__rdiv__','__truediv__','__rtruediv__',
+                   '__floordiv__','__rfloordiv__','__rpow__','__pow__']:
+        exec("""
+def %(method)s(self, other):
+    self._check_other_folding(other)
+    if isinstance(other, numpy.ma.masked_array):
+        newdata = self.data.%(method)s (other.data)
+        newmask = numpy.ma.mask_or(self.mask, other.mask)
+    else:
+        newdata = self.data.%(method)s (other)
+        newmask = self.mask
+    if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
+        extrap_x = None
+    else:
+        extrap_x = self.extrap_x
+    if hasattr(other, 'extrap_t') and self.extrap_t != other.extrap_t:
+        extrap_t = None
+    else:
+        extrap_t = self.extrap_t
+    outfs = self.__class__.__new__(self.__class__, newdata, newmask, 
+                                   mask_infeasible=False, 
+                                   data_folded=self.folded,
+                                   extrap_x=extrap_x, extrap_t=extrap_t)
+    return outfs
+""" % {'method':method})
+
+    # Methods that modify the Spectrum in-place.
+    for method in ['__iadd__','__isub__','__imul__','__idiv__',
+                   '__itruediv__','__ifloordiv__','__ipow__']:
+        exec("""
+def %(method)s(self, other):
+    self._check_other_folding(other)
+    if isinstance(other, numpy.ma.masked_array):
+        self.data.%(method)s (other.data)
+        self.mask = numpy.ma.mask_or(self.mask, other.mask)
+    else:
+        self.data.%(method)s (other)
+    if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
+        self.extrap_x = None
+    if hasattr(other, 'extrap_t') and self.extrap_t != other.extrap_t:
+        self.extrap_t = None
+    return self
+""" % {'method':method})
+
+    def _check_other_folding(self, other):
+        """
+        Ensure other Spectrum has same .folded status
+        """
+        if isinstance(other, self.__class__)\
+           and (other.folded != self.folded):
+            raise ValueError('Cannot operate with a folded Spectrum and an '
+                             'unfolded one.')
+
+
+# Allow TLSpectrum objects to be pickled. 
+# See http://effbot.org/librarybook/copy-reg.htm
+import copy_reg
+def TLSpectrum_pickler(fs):
+    # Collect all the info necessary to save the state of a TLSpectrum
+    return TLSpectrum_unpickler, (fs.data, fs.mask, fs.folded,
+                                   fs.extrap_x, fs.extrap_t)
+def TLSpectrum_unpickler(data, mask, folded,
+                          extrap_x, extrap_t):
+    # Use that info to recreate the TLSpectrum
+    return TLSpectrum(data, mask, mask_infeasible=False,
+                       data_folded=folded,
+                       extrap_x=extrap_x, extrap_t=extrap_t)
+copy_reg.pickle(TLSpectrum, TLSpectrum_pickler, TLSpectrum_unpickler)

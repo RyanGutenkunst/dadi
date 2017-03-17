@@ -425,10 +425,13 @@ def advance_line(x,phi,P):
 ### sampling methods
 
 sample_cache = {}
-def sample_cached(phi, ns, x, DXX):
+def sample(phi, ns, x):
     """
     Obtain the expected sample frequency spectrum from the density function
     """
+    dx = grid_dx(x)
+    DXX = grid_dx_2d(x,dx)
+    
     if type(ns) == int:
         ns = (ns,)
     else:

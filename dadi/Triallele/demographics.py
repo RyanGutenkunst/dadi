@@ -33,7 +33,6 @@ def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
         phi,y1,y2 = integration.advance(phi, x, 2, y1, y2, nu=1., sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
 
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d(x,dx)
 
     if not type(ns) == int:
         if len(ns) == 1:
@@ -41,7 +40,7 @@ def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
         else:
             ns = int(ns[0])
 
-    fs = numerics.sample_cached(phi, ns, x, DXX)
+    fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
 
     if folded == True:
@@ -82,7 +81,6 @@ def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.
     phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu=nu, sig1=sig1, sig2=sig2, theta1=theta1, theta2=theta2, dt=dt)
 
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d(x,dx)
 
     if not type(ns) == int:
         if len(ns) == 1:
@@ -90,7 +88,7 @@ def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.
         else:
             ns = int(ns[0])
 
-    fs = numerics.sample_cached(phi, ns, x, DXX)
+    fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
 
     if folded == True:
@@ -132,7 +130,6 @@ def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
     phi,y1,y2 = integration.advance(phi, x, T2, y1, y2, nu2, sig1, sig2, theta1, theta2, dt=dt)
 
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d(x,dx)
     
     if not type(ns) == int:
         if len(ns) == 1:
@@ -140,7 +137,7 @@ def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
         else:
             ns = int(ns[0])
     
-    fs = numerics.sample_cached(phi, ns, x, DXX)
+    fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
 
     if folded == True:
@@ -185,7 +182,6 @@ def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 =
     phi,y1,y2 = integration.advance(phi, x, T, y1, y2, nu, sig1, sig2, theta1, theta2, dt=dt)
 
     dx = numerics.grid_dx(x)
-    DXX = numerics.grid_dx_2d(x,dx)
     
     if not type(ns) == int:
         if len(ns) == 1:
@@ -193,7 +189,7 @@ def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 =
         else:
             ns = int(ns[0])
     
-    fs = numerics.sample_cached(phi, ns, x, DXX)
+    fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
 
     if folded == True:
