@@ -99,6 +99,8 @@ class TriSpectrum(numpy.ma.masked_array):
         if obj is None: 
             return
         numpy.ma.masked_array.__array_finalize__(self, obj)
+        self.folded_major = getattr(obj, 'extrap_t', 'extrap_t')
+        self.folded_major = getattr(obj, 'extrap_x', 'extrap_x')
         self.folded_major = getattr(obj, 'folded_major', 'unspecified')
         self.folded_ancestral = getattr(obj, 'folded_ancestral', 'unspecified')
     def __array_wrap__(self, obj, context=None):
@@ -116,6 +118,10 @@ class TriSpectrum(numpy.ma.masked_array):
             self.folded_major = obj.folded_major
         if hasattr(obj, 'folded_ancestral'):
             self.folded_ancestral = obj.folded_ancestral
+        if hasattr(obj, 'extrap_x'):
+            self.extrap_x = obj.extrap_x
+        if hasattr(obj, 'extrap_t'):
+            self.extrap_t = obj.extrap_t
     # masked_array has priority 15.
     __array_priority__ = 20
 
