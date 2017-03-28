@@ -323,8 +323,14 @@ def ll_per_bin(model, data, missing_model_cutoff=1e-6):
                           involve a fraction of the data larger than
                           missing_model_cutoff, a warning is printed.
     """
-    if data.folded and not model.folded:
+    if hasattr(data, 'folded') and data.folded and not model.folded:
         model = model.fold()
+    if hasattr(data, 'folded_ancestral') and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, 'folded_major') and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
 
     # Using numpy.ma.log here ensures that any negative or nan entries in model
     # yield masked entries in result. We can then check for correctness of
@@ -419,8 +425,14 @@ def linear_Poisson_residual(model, data, mask=None):
     residuals are normally distributed. (If the mean is small, the Anscombe
     residuals are better.)
     """
-    if data.folded and not model.folded:
+    if hasattr(data, 'folded') and data.folded and not model.folded:
         model = model.fold()
+    if hasattr(data, 'folded_ancestral') and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, 'folded_major') and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
 
     resid = (model - data)/numpy.ma.sqrt(model)
     if mask is not None:
@@ -446,8 +458,14 @@ def Anscombe_Poisson_residual(model, data, mask=None):
     Note that I tried implementing the "adjusted deviance" residuals, but they
     always looked very biased for the cases where the data was 0.
     """
-    if data.folded and not model.folded:
+    if hasattr(data, 'folded') and data.folded and not model.folded:
         model = model.fold()
+    if hasattr(data, 'folded_ancestral') and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, 'folded_major') and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
     # Because my data have often been projected downward or averaged over many
     # iterations, it appears better to apply the same transformation to the data
     # and the model.
@@ -485,8 +503,14 @@ def optimal_sfs_scaling(model, data):
     This scaling is based on only those entries that are masked in neither
     model nor data.
     """
-    if data.folded and not model.folded:
+    if hasattr(data, 'folded') and data.folded and not model.folded:
         model = model.fold()
+    if hasattr(data, 'folded_ancestral') and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, 'folded_major') and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
 
     model, data = Numerics.intersect_masks(model, data)
     return data.sum()/model.sum()
