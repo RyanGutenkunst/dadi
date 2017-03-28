@@ -330,6 +330,20 @@ class TriSpectrum(numpy.ma.masked_array):
         folded.extrap_x = self.extrap_x
         folded.extrap_t = self.extrap_t
         return folded
+
+    def log(self):
+        """
+        Return the natural logarithm of the entries of the frequency spectrum.
+
+        Only necessary because numpy.ma.log now fails to propagate extra
+        attributes after numpy 1.10.
+        """
+        logfs = numpy.ma.log(self)
+        logfs.folded_major = self.folded_major
+        logfs.folded_ancestral = self.folded_ancestral
+        logfs.extrap_x = self.extrap_x
+        logfs.extrap_t = self.extrap_t
+        return logfs
     
     def fold_ancestral(self):
         if self.folded_ancestral:
