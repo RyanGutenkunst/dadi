@@ -34,11 +34,10 @@ def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
 
     dx = numerics.grid_dx(x)
 
-    if not type(ns) == int:
-        if len(ns) == 1:
-            ns = int(ns)
-        else:
-            ns = int(ns[0])
+    try:
+        ns = int(ns)
+    except TypeError:
+        ns = ns[0]
 
     fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
@@ -82,11 +81,10 @@ def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.
 
     dx = numerics.grid_dx(x)
 
-    if not type(ns) == int:
-        if len(ns) == 1:
-            ns = int(ns)
-        else:
-            ns = int(ns[0])
+    try:
+        ns = int(ns)
+    except TypeError:
+        ns = ns[0]
 
     fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
@@ -131,11 +129,10 @@ def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
 
     dx = numerics.grid_dx(x)
     
-    if not type(ns) == int:
-        if len(ns) == 1:
-            ns = int(ns)
-        else:
-            ns = int(ns[0])
+    try:
+        ns = int(ns)
+    except TypeError:
+        ns = ns[0]
     
     fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt
@@ -183,11 +180,10 @@ def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 =
 
     dx = numerics.grid_dx(x)
     
-    if not type(ns) == int:
-        if len(ns) == 1:
-            ns = int(ns)
-        else:
-            ns = int(ns[0])
+    try:
+        ns = int(ns)
+    except TypeError:
+        ns = ns[0]
     
     fs = numerics.sample(phi, ns, x)
     fs.extrap_t = dt

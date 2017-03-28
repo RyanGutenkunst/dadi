@@ -150,6 +150,10 @@ class TriSpectrum(numpy.ma.masked_array):
     def _get_sample_size(self):
         return numpy.asarray(self.shape)[0] - 1
     sample_size = property(_get_sample_size)
+
+    def _get_sample_sizes(self):
+        return [self._get_sample_size()]
+    sample_sizes = property(_get_sample_sizes)
     
     def _ensure_shape_and_dimension(self):
         """

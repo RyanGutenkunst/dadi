@@ -431,15 +431,13 @@ def sample(phi, ns, x):
     """
     dx = grid_dx(x)
     DXX = grid_dx_2d(x,dx)
-    
-    if type(ns) == int:
+
+    # Assume ns is typically a list of length 1, if not, make it into one.
+    try:
+        ns = tuple(ns)
+    except TypeError:
         ns = (ns,)
-    else:
-        if len(ns) == 1:
-            ns = tuple(ns)
-        else:
-            ns = (ns[0],)
-    
+
     # We cache calculations of several big matrices that will be re-used 
     # within and between integrations.
     key = (ns, tuple(x))
