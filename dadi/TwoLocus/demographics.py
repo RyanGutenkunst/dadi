@@ -2,11 +2,13 @@ import dadi, numpy as np
 import numerics, integration
 import copy
 
-# I want to cache equilibrium spectra within the .../dadi/TwoLocus/cached_eq directory
+# I want to cache equilibrium spectra within the ~/.dadi/TwoLocus_cache
+# directory
 import os
-cache_path = os.path.abspath(dadi.__file__)
-cache_path = cache_path.split('__')[0]
-cache_path += 'TwoLocus/cached_eq/'
+cache_path = os.path.join(os.path.expanduser('~'), '.dadi',
+                          'TwoLocus_cache')
+if not os.path.isdir(cache_path):
+    os.makedirs(cache_path)
 
 
 def equilibrium(numpts, ns, rho=0.0, dt=0.005, gammaA = 0.0, gammaB = 0.0, hA = 0.5, hB = 0.5):
