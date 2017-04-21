@@ -38,13 +38,10 @@ def equilibrium_phi(pts, rho, dt, gammaA=0, gammaB=0, hA=0, hB=0,
 def equilibrium(pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
                  hA=0.5, hB=0.5, thetaA=1.0, thetaB=1.0):
     x = numerics.grid(pts)
-    dx = numerics.grid_dx(x)
-    dx3 = numerics.grid_dx3(x,dx)
-
     yA, yB, phi = equilibrium_phi(pts, rho, dt, gammaA, gammaB, hA, hB,
                                   thetaA, thetaB)
 
-    fs = numerics.sample_cached(phi, ns, x, dx3)
+    fs = numerics.sample_cached(phi, ns, x)
     return fs
 
 def two_epoch(params, pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
@@ -52,8 +49,6 @@ def two_epoch(params, pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
     nu,T = params
 
     x = numerics.grid(pts)
-    dx = numerics.grid_dx(x)
-    dx3 = numerics.grid_dx3(x,dx)
     yA, yB, phi = equilibrium_phi(pts, rho, dt, gammaA, gammaB, hA, hB,
                                   thetaA, thetaB)
 
@@ -62,15 +57,13 @@ def two_epoch(params, pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
                                     hA=hA, hB=hB, rho=rho,
                                     thetaA=thetaA, thetaB=thetaB, dt=dt)
 
-    fs = numerics.sample_cached(phi, ns, x, dx3)
+    fs = numerics.sample_cached(phi, ns, x)
     return fs
 
 def three_epoch(params, pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
                 hA=0.5, hB=0.5, thetaA=1.0, thetaB=1.0):
     nu1,nu2,T1,T2 = params
     x = numerics.grid(pts)
-    dx = numerics.grid_dx(x)
-    dx3 = numerics.grid_dx3(x,dx)
 
     yA, yB, phi = equilibrium_phi(pts, rho, dt, gammaA, gammaB, hA, hB,
                                   thetaA, thetaB)
@@ -85,5 +78,5 @@ def three_epoch(params, pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
                                     hA=hA, hB=hB, rho=rho,
                                     thetaA=thetaA, thetaB=thetaB, dt=dt)
 
-    fs = numerics.sample_cached(phi, ns, x, dx3)
+    fs = numerics.sample_cached(phi, ns, x)
     return fs

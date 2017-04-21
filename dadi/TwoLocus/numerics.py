@@ -1162,7 +1162,10 @@ def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
 # sampling methods
 
 sample_cache = {}
-def sample_cached(phi, ns, x, dx3):
+def sample_cached(phi, ns, x):
+    dx = grid_dx(x)
+    dx3 = grid_dx3(x,dx)
+
     if type(ns) == int:
         ns = (ns,)
     else:
@@ -1170,7 +1173,7 @@ def sample_cached(phi, ns, x, dx3):
             ns = tuple(ns)
         else:
             ns = (ns[0],)
-    
+
     # cache calculations of several large matrices
     # cache x**ii, x**jj, and x**kk 
     # just cache x[:,nuax,nuax]**ii, and then later use np.swapaxes
@@ -1183,7 +1186,7 @@ def sample_cached(phi, ns, x, dx3):
         sample_cache[key] = this_cache
     else:
         this_cache = sample_cache[key]
-    
+
     F = np.zeros((ns[0]+1,ns[0]+1,ns[0]+1))
     prod_phi = dx3*phi
     for ii in range(len(F)):
@@ -1193,7 +1196,7 @@ def sample_cached(phi, ns, x, dx3):
             for kk in range(len(F)):
                 if ii+jj+kk <= ns[0]:
                     F[ii,jj,kk] = quadrinomial(ns[0],ii,jj,kk) * np.sum(prod_y * np.swapaxes(this_cache[kk],0,2) * this_cache[-(ns[0]-ii-jj-kk)])
-    
+
     F = TLSpectrum(F)
     return F
 
