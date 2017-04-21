@@ -40,7 +40,7 @@ except ImportError:
     pass
 
 # We do it this way so it's easier to reload.
-import Spectrum_mod 
+import Spectrum_mod
 Spectrum = Spectrum_mod.Spectrum
 
 # When doing arithmetic with Spectrum objects (which are masked arrays), we
@@ -49,3 +49,5 @@ Spectrum = Spectrum_mod.Spectrum
 # check results, but for our use case I think it's the better default.
 import numpy
 numpy.seterr(all='ignore')
+
+import tridiag
