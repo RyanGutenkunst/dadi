@@ -276,6 +276,33 @@ class TLSpectrum(numpy.ma.masked_array):
 
     tofile = to_file
     
+    def marginalA(self):
+        """
+        Marginal 1D frequency spectrum for A locus.
+        """
+        ns = self.shape[0] - 1
+        marg = dadi.Spectrum(np.zeros(ns+1))
+        for fAB in range(ns):
+            for fAb in range(ns-fAB):
+                marg[fAB+fAb] += self[fAB,fAb,:].sum()
+
+        marg.extrap_x = self.extrap_x
+        marg.extrap_t = self.extrap_t
+        return marg
+
+    def marginalB(self):
+        """
+        Marginal 1D frequency spectrum for B locus.
+        """
+        ns = self.shape[0] - 1
+        marg = dadi.Spectrum(np.zeros(ns+1))
+        for fAB in range(ns):
+            for faB in range(ns-fAB):
+                marg[fAB+faB] += self[fAB,:,faB].sum()
+
+        marg.extrap_x = self.extrap_x
+        marg.extrap_t = self.extrap_t
+        return marg
     def fold(self):
         if self.folded:
             raise ValueError('Input Spectrum is already folded.')
