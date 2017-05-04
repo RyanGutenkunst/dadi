@@ -1,25 +1,23 @@
 """
 Contains triallelic Spectrum object
 """
-
-import numpy
-import numpy as np
-
 import os
+import numpy as np
+import dadi
 import numerics
 
-class TLSpectrum(numpy.ma.masked_array):
+class TLSpectrum(np.ma.masked_array):
     """
     Represents a two-locus frequency spectrum.
-    
+
     The constructor has the format:
-        fs = dadi.Triallele.TLSpectrum(data, mask, mask_infeasible, 
+        fs = dadi.Triallele.TLSpectrum(data, mask, mask_infeasible,
                                         data_folded,
                                         extrap_x, extrap_t)
-        
+
         data: The triallelic frequency spectrum data
         mask: An optional array of the same size as data, similar to dadi.Spectrum
-        data_folded: If True, it is assumed that the input data is folded 
+        data_folded: If True, it is assumed that the input data is folded
         check_folding: If True and data_folded=True, the data and
                        mask will be checked to ensure they are consistent
         extrap_x: Optional floating point value specifying x value to use in
@@ -27,16 +25,16 @@ class TLSpectrum(numpy.ma.masked_array):
         extrap_t: Optional floating point value specifying t value to use in
                   extrapolation.
     """
-    def __new__(subtype, data, mask=numpy.ma.nomask, mask_infeasible=True, 
+    def __new__(subtype, data, mask=np.ma.nomask, mask_infeasible=True, 
                 data_folded=None, check_folding=True,
-                dtype=float, copy=True, fill_value=numpy.nan, keep_mask=True,
+                dtype=float, copy=True, fill_value=np.nan, keep_mask=True,
                 shrink=True, extrap_x=None, extrap_t=None):
-        data = numpy.asanyarray(data)
+        data = np.asanyarray(data)
         
-        if mask is numpy.ma.nomask:
-            mask = numpy.ma.make_mask_none(data.shape)
+        if mask is np.ma.nomask:
+            mask = np.ma.make_mask_none(data.shape)
         
-        subarr = numpy.ma.masked_array(data, mask=mask, dtype=dtype, copy=copy,
+        subarr = np.ma.masked_array(data, mask=mask, dtype=dtype, copy=copy,
                                        fill_value=fill_value, keep_mask=True, 
                                        shrink=True)
         subarr = subarr.view(subtype)
@@ -72,19 +70,19 @@ class TLSpectrum(numpy.ma.masked_array):
     def __array_finalize__(self, obj):
         if obj is None: 
             return
-        numpy.ma.masked_array.__array_finalize__(self, obj)
+        np.ma.masked_array.__array_finalize__(self, obj)
         self.folded = getattr(obj, 'folded', 'unspecified')
         self.extrap_x = getattr(obj, 'extrap_x', None)
         self.extrap_t = getattr(obj, 'extrap_t', None)
     def __array_wrap__(self, obj, context=None):
         result = obj.view(type(self))
-        result = numpy.ma.masked_array.__array_wrap__(self, obj, 
+        result = np.ma.masked_array.__array_wrap__(self, obj, 
                                                       context=context)
         result.folded = self.folded
         result.extrap_t = self.extrap_t
         return result
     def _update_from(self, obj):
-        numpy.ma.masked_array._update_from(self, obj)
+        np.ma.masked_array._update_from(self, obj)
         if hasattr(obj, 'folded'):
             self.folded = obj.folded
         if hasattr(obj, 'extrap_x'):
@@ -128,7 +126,7 @@ class TLSpectrum(numpy.ma.masked_array):
         return unfolded
 
     def _get_sample_size(self):
-        return numpy.asarray(self.shape)[0] - 1
+        return np.asarray(self.shape)[0] - 1
     sample_size = property(_get_sample_size)
     
     def _ensure_shape_and_dimension(self):
@@ -169,14 +167,14 @@ class TLSpectrum(numpy.ma.masked_array):
         shape,folded,extrap_x,extrap_t = line.split()
         shape = [int(shape)+1,int(shape)+1,int(shape)+1]
 
-        data = numpy.fromstring(fid.readline().strip(), 
-                                count=numpy.product(shape), sep=' ')
+        data = np.fromstring(fid.readline().strip(), 
+                                count=np.product(shape), sep=' ')
         # fromfile returns a 1-d array. Reshape it to the proper form.
         data = data.reshape(*shape)
 
         maskline = fid.readline().strip()
-        mask = numpy.fromstring(maskline, 
-                                count=numpy.product(shape), sep=' ')
+        mask = np.fromstring(maskline, 
+                                count=np.product(shape), sep=' ')
         mask = mask.reshape(*shape)
         
         if folded == 'folded':
@@ -268,7 +266,7 @@ class TLSpectrum(numpy.ma.masked_array):
 
         if foldmaskinfo:
             # Write the mask to the file
-            numpy.asarray(self.mask,int).tofile(fid, ' ')
+            np.asarray(self.mask,int).tofile(fid, ' ')
             fid.write(os.linesep)
 
         # Close file
@@ -276,7 +274,7 @@ class TLSpectrum(numpy.ma.masked_array):
             fid.close()
 
     tofile = to_file
-    
+
     def marginalA(self):
         """
         Marginal 1D frequency spectrum for A locus.
@@ -353,9 +351,9 @@ class TLSpectrum(numpy.ma.masked_array):
         exec("""
 def %(method)s(self, other):
     self._check_other_folding(other)
-    if isinstance(other, numpy.ma.masked_array):
+    if isinstance(other, np.ma.masked_array):
         newdata = self.data.%(method)s (other.data)
-        newmask = numpy.ma.mask_or(self.mask, other.mask)
+        newmask = np.ma.mask_or(self.mask, other.mask)
     else:
         newdata = self.data.%(method)s (other)
         newmask = self.mask
@@ -380,9 +378,9 @@ def %(method)s(self, other):
         exec("""
 def %(method)s(self, other):
     self._check_other_folding(other)
-    if isinstance(other, numpy.ma.masked_array):
+    if isinstance(other, np.ma.masked_array):
         self.data.%(method)s (other.data)
-        self.mask = numpy.ma.mask_or(self.mask, other.mask)
+        self.mask = np.ma.mask_or(self.mask, other.mask)
     else:
         self.data.%(method)s (other)
     if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
