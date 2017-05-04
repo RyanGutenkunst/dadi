@@ -1,14 +1,22 @@
+import os
 import dadi, numpy as np
 import numerics, integration
-import copy
 
-# I want to cache equilibrium spectra within the ~/.dadi/TwoLocus_cache
-# directory
-import os
-cache_path = os.path.join(os.path.expanduser('~'), '.dadi',
-                          'TwoLocus_cache')
-if not os.path.isdir(cache_path):
-    os.makedirs(cache_path)
+# Cache equilibrium spectra in ~/.dadi/TwoLocus_cache by default
+def set_cache_path(path='~/.dadi/TwoLocus_cache'):
+    """
+    Set directory in which demographic equilibrium phi spectra will be cached.
+
+    The collection of cached spectra can get large, so it may be helpful to
+    store them outside the user's home directory.
+    """
+    global cache_path
+    cache_path = os.path.expanduser(path)
+    if not os.path.isdir(cache_path):
+        os.makedirs(cache_path)
+
+cache_path=None
+set_cache_path()
 
 def equilibrium_phi(pts, rho, dt, gammaA=0, gammaB=0, hA=0, hB=0,
                     thetaA=1.0, thetaB=1.0):
