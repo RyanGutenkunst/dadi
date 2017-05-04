@@ -5,13 +5,32 @@ import numpy as np
 import dadi
 from numpy import newaxis as nuax
 from scipy.sparse import lil_matrix,identity
-from numpy import newaxis as nuax
 import math
-import copy
 
 from TLSpectrum_mod import TLSpectrum
 
 tol = 1e-12
+
+def LD_per_bin(ns):
+    """
+    LD statistics per bin for a TLSpectrum.
+
+    ns: Number of samples
+
+    Returns (D, r2). Both are TLSpectrum objects in which each entry is the
+    value of D or r^2 for that combination of haplotypes.
+    """
+    temp = np.arange(ns+1, dtype=float)/ns
+    # Fancy array arithmetic, to avoid explicity for loops.
+    pAB = temp[:,nuax,nuax]
+    pAb = temp[nuax,:,nuax]
+    paB = temp[nuax,nuax,:]
+    pA = pAB + pAb
+    pB = pAB + paB
+    D = TLSpectrum(pAB - pA*pB)
+    r2 = TLSpectrum(D**2/(pA*(1-pA)*pB*(1-pB)))
+
+    return D,r2
 
 def grid(numpts):
     """

@@ -6,6 +6,7 @@ import numpy
 import numpy as np
 
 import os
+import numerics
 
 class TLSpectrum(numpy.ma.masked_array):
     """
@@ -303,10 +304,20 @@ class TLSpectrum(numpy.ma.masked_array):
         marg.extrap_x = self.extrap_x
         marg.extrap_t = self.extrap_t
         return marg
+
+    def mean_r2(self):
+        """
+        Mean of normalized squared correlation coefficient between A and B loci.
+        """
+        ns = self.shape[0] - 1
+        norm = self.sum()
+        Dbin, r2bin = numerics.LD_per_bin(ns)
+        return (self*r2bin).sum()/self.sum()
+
     def fold(self):
         if self.folded:
             raise ValueError('Input Spectrum is already folded.')
-        ns = len(self[:,0,0]) - 1
+        ns = self.shape[0] - 1
         folded = 0*self
         for ii in range(ns+1):
             for jj in range(ns+1):
