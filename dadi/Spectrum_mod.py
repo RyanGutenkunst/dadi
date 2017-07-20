@@ -5,8 +5,7 @@ import logging
 logging.basicConfig()
 logger = logging.getLogger('Spectrum_mod')
 
-import operator
-import os
+import gzip, operator, os
 
 import numpy
 from numpy import newaxis as nuax
@@ -186,11 +185,12 @@ class Spectrum(numpy.ma.masked_array):
 
     # Make from_file a static method, so we can use it without an instance.
     @staticmethod
-    def from_file(fid, mask_corners=True, return_comments=False):
+    def from_file(fname, mask_corners=True, return_comments=False):
         """
         Read frequency spectrum from file.
 
-        fid: string with file name to read from or an open file object.
+        fname: String with file name to read from. If it ends in .gz, gzip
+               compression is assumed.
         mask_corners: If True, mask the 'absent in all samples' and 'fixed in
                       all samples' entries.
         return_comments: If true, the return value is (fs, comments), where
@@ -199,12 +199,10 @@ class Spectrum(numpy.ma.masked_array):
 
         See to_file method for details on the file format.
         """
-        newfile = False
-        # Try to read from fid. If we can't, assume it's something that we can
-        # use to open a file.
-        if not hasattr(fid, 'read'):
-            newfile = True
-            fid = file(fid, 'r')
+        if fname.endswith('.gz'):
+            fid = gzip.open(fname, 'rb')
+        else:
+            fid = file(fname, 'r')
 
         line = fid.readline()
         # Strip out the comments
@@ -248,10 +246,6 @@ class Spectrum(numpy.ma.masked_array):
                                     count=numpy.product(shape), sep=' ')
             mask = mask.reshape(*shape)
 
-        # If we opened a new file, clean it up.
-        if newfile:
-            fid.close()
-
         fs = Spectrum(data, mask, mask_corners, data_folded=folded,
                       pop_ids=pop_ids)
 
@@ -262,13 +256,14 @@ class Spectrum(numpy.ma.masked_array):
 
     fromfile = from_file
 
-    def to_file(self, fid, precision=16, comment_lines = [], 
+    def to_file(self, fname, precision=16, comment_lines = [], 
                 foldmaskinfo=True):
         """
         Write frequency spectrum to file.
-    
-        fid: string with file name to write to or an open file object.
-        precision: precision with which to write out entries of the SFS. (They 
+
+        fname: File name to write to.  If string ends in .gz, file will be saved
+               with gzip compression.
+        precision: precision with which to write out entries of the SFS. (They
                    are formated via %.<p>g, where <p> is the precision.)
         comment lines: list of strings to be used as comment lines in the header
                        of the output file.
@@ -291,16 +286,16 @@ class Spectrum(numpy.ma.masked_array):
               the data line. '1' indicates masked, '0' indicates unmasked.
         """
         # Open the file object.
-        newfile = False
-        if not hasattr(fid, 'write'):
-            newfile = True
+        if fname.endswith('.gz'):
+            fid = gzip.open(fname, 'wb')
+        else:
             fid = file(fid, 'w')
 
         # Write comments
         for line in comment_lines:
             fid.write('# ')
             fid.write(line.strip())
-            fid.write(os.linesep)
+            fid.write('\n')
 
         # Write out the shape of the fs
         for elem in self.data.shape:
@@ -315,20 +310,18 @@ class Spectrum(numpy.ma.masked_array):
                 for label in self.pop_ids:
                     fid.write(' "%s"' % label)
 
-        fid.write(os.linesep)
+        fid.write('\n')
 
         # Write the data to the file
         self.data.tofile(fid, ' ', '%%.%ig' % precision)
-        fid.write(os.linesep)
+        fid.write('\n')
 
         if foldmaskinfo:
             # Write the mask to the file
             numpy.asarray(self.mask,int).tofile(fid, ' ')
-            fid.write(os.linesep)
+            fid.write('\n')
 
-        # Close file
-        if newfile:
-            fid.close()
+        fid.close()
 
     tofile = to_file
 
