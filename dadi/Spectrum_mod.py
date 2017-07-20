@@ -1580,6 +1580,8 @@ class Spectrum(numpy.ma.masked_array):
         pop_ids: list of which populations to make fs for.
         projections: list of sample sizes to project down to for each
                      population.
+        mask_corners: If True (default), the 'observed in none' and 'observed 
+                      in all' entries of the FS will be masked.
         polarized: If True, the data are assumed to be correctly polarized by 
                    `outgroup_allele'. SNPs in which the 'outgroup_allele'
                    information is missing or '-' or not concordant with the
@@ -1599,59 +1601,12 @@ class Spectrum(numpy.ma.masked_array):
         order that the alleles are specified in 'segregating'.
         Non-diallelic polymorphisms are skipped.
         """
-        Npops = len(pop_ids)
-        fs = numpy.zeros(numpy.asarray(projections)+1)
-        for snp, snp_info in data_dict.iteritems():
-            # Skip SNPs that aren't biallelic.
-            if len(snp_info['segregating']) != 2:
-                continue
-
-            allele1,allele2 = snp_info['segregating']
-            if not polarized:
-                # If we don't want to polarize, we can choose which allele is
-                # derived arbitrarily since we'll fold anyways.
-                outgroup_allele = allele1
-            elif 'outgroup_allele' in snp_info\
-               and snp_info['outgroup_allele'] != '-'\
-               and snp_info['outgroup_allele'] in snp_info['segregating']:
-                # Otherwise we need to check that it's a useful outgroup
-                outgroup_allele = snp_info['outgroup_allele']
-            else: 
-                # If we're polarized and we didn't have good outgroup info, skip
-                # this SNP.
-                continue
-    
-            # Extract the allele calls for each population.
-            allele1_calls = [snp_info['calls'][pop][0] for pop in pop_ids]
-            allele2_calls = [snp_info['calls'][pop][1] for pop in pop_ids]
-            # How many chromosomes did we call successfully in each population?
-            successful_calls = [a1+a2 for (a1,a2) in zip(allele1_calls, allele2_calls)]
-    
-            # Which allele is derived (different from outgroup)?
-            if allele1 == outgroup_allele:
-                derived_calls = allele2_calls
-            elif allele2 == outgroup_allele:
-                derived_calls = allele1_calls
-    
-            # To handle arbitrary numbers of populations in the fs, we need
-            # to do some tricky slicing.
-            slices = [[numpy.newaxis] * len(pop_ids) for ii in range(Npops)]
-            for ii in range(len(pop_ids)):
-                slices[ii][ii] = slice(None,None,None)
-        
-            # Do the projection for this SNP.
-            pop_contribs = []
-            iter = zip(projections, successful_calls, derived_calls)
-            for pop_ii, (p_to, p_from, hits) in enumerate(iter):
-                contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
-                pop_contribs.append(contrib)
-            fs += reduce(operator.mul, pop_contribs)
-        fsout = Spectrum(fs, mask_corners=mask_corners, 
-                         pop_ids=pop_ids)
-        if polarized:
-            return fsout
-        else:
-            return fsout.fold()
+        import dadi.Misc
+        cd = dadi.Misc.count_data_dict(data_dict, pop_ids)
+        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids)
+        if mask_corners:
+            fs.mask_corners()
+        return fs
 
     @staticmethod
     def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None):
@@ -1661,16 +1616,17 @@ class Spectrum(numpy.ma.masked_array):
         count_dict: Result of Misc.count_data_dict
         projections: List of sample sizes to project down to for each
                      population.
-        polarized: If True, only include SNPs that count_dict marks as polarized. 
+        polarized: If True, only include SNPs that count_dict marks as
+                   polarized.
                    If False, include all SNPs and fold resulting Spectrum.
         pop_ids: Optional list of strings containing the population labels.
         """
-    
         # create slices for projection calculation
-        slices = [[numpy.newaxis] * len(projections) for ii in range(len(projections))]
+        slices = [[numpy.newaxis] * len(projections) for ii in
+                  range(len(projections))]
         for ii in range(len(projections)):
             slices[ii][ii] = slice(None,None,None)
-            
+
         fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1),
                                  pop_ids=pop_ids)
         for (called_by_pop, derived_by_pop, this_snp_polarized), count\
@@ -1683,7 +1639,7 @@ class Spectrum(numpy.ma.masked_array):
                 contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
                 pop_contribs.append(contrib)
             fs_proj = reduce(operator.mul, pop_contribs)
-            
+
             # create slices for adding projected fs to overall fs
             fs_total += count * fs_proj
         if polarized:

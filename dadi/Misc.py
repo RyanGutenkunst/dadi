@@ -301,7 +301,7 @@ def count_data_dict(data_dict, pop_ids):
 
     data_dict: data_dict formatted as in Misc.make_data_dict
     pop_ids: IDs of populations to collect data for.
-    
+
     Returns a dictionary with keys (successful_calls, derived_calls,
     polarized) mapping to counts of SNPs. Here successful_calls is a tuple
     with the number of good calls per population, derived_calls is a tuple
@@ -327,7 +327,8 @@ def count_data_dict(data_dict, pop_ids):
         allele1_calls = [snp_info['calls'][pop][0] for pop in pop_ids]
         allele2_calls = [snp_info['calls'][pop][1] for pop in pop_ids]
         # How many chromosomes did we call successfully in each population?
-        successful_calls = [a1+a2 for (a1,a2) in zip(allele1_calls, allele2_calls)]
+        successful_calls = [a1+a2 for (a1,a2)
+                            in zip(allele1_calls, allele2_calls)]
 
         # Which allele is derived (different from outgroup)?
         if allele1 == outgroup_allele:
