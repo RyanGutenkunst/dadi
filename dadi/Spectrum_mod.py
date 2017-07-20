@@ -289,7 +289,7 @@ class Spectrum(numpy.ma.masked_array):
         if fname.endswith('.gz'):
             fid = gzip.open(fname, 'wb')
         else:
-            fid = file(fid, 'w')
+            fid = file(fname, 'w')
 
         # Write comments
         for line in comment_lines:
@@ -312,14 +312,15 @@ class Spectrum(numpy.ma.masked_array):
 
         fid.write('\n')
 
-        # Write the data to the file
-        self.data.tofile(fid, ' ', '%%.%ig' % precision)
-        fid.write('\n')
+        # Write the data to the file. The obnoxious ravel call is to
+        # ensure compatibility with old version that used self.data.tofile.
+        numpy.savetxt(fid, [self.data.ravel()], delimiter=' ',
+                      fmt='%%.%ig' % precision)
 
         if foldmaskinfo:
             # Write the mask to the file
-            numpy.asarray(self.mask,int).tofile(fid, ' ')
-            fid.write('\n')
+            numpy.savetxt(fid, [numpy.asarray(self.mask, int).ravel()],
+                          delimiter=' ', fmt='%d')
 
         fid.close()
 
