@@ -274,7 +274,7 @@ _extend_mapping = {(True, True): 'neither',
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
                           pop_ids=None, residual='Anscombe',
-                          adjust=True):
+                          adjust=True,show=True):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -301,7 +301,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
     plot_2d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
                          pop_ids=pop_ids, residual=residual,
-                         adjust=adjust)
+                         adjust=adjust,show=show)
     
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
