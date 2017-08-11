@@ -393,8 +393,12 @@ def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
     flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
                                resid.ravel())
     ax.hist(flatresid, bins=20, normed=True,color='purple')
-    ax.set_title('Meta-residuals')
+
+    resid.data[resid.mask==True]=0
+    sum_squares=numpy.sum(resid.data**2)
+    ax.set_title(r'$res^2$ = '+'{0:.3f}'.format(sum_squares))
     ax.set_yticks([])
+
     if show:
         pylab.show()
 
