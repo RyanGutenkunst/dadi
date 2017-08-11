@@ -211,7 +211,7 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
 
 def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
-                  extend='neither', colorbar=True):
+                  extend='neither', colorbar=True,cmap=pylab.cm.RdBu_r):
     """
     Linear heatmap of 2d residual array.
 
@@ -230,7 +230,7 @@ def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
     if resid_range is None:
         resid_range = abs(resid).max()
 
-    mappable=ax.pcolor(resid, cmap=pylab.cm.RdBu_r, vmin=-resid_range, 
+    mappable=ax.pcolor(resid, cmap=cmap, vmin=-resid_range, 
                        vmax=resid_range, edgecolors='none')
 
     cbticks = [-resid_range, 0, resid_range]
@@ -292,6 +292,8 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
               residuals, which can be less biased.
     adjust: Should method use automatic 'subplots_adjust'? For advanced
             manipulation of plots, it may be useful to make this False.
+    show: Display the figure? False is useful for saving many comparisons
+            in a loop.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -302,7 +304,85 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                          resid_range=resid_range, fig_num=fig_num,
                          pop_ids=pop_ids, residual=residual,
                          adjust=adjust,show=show)
-    
+
+def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
+                       fig_num=None, pop_ids=None, 
+                       adjust=True, show=True):
+
+    if ns_resid.folded and not s_resid.folded:
+        s_resid = s_resid.fold()
+
+    masked_s, masked_ns = Numerics.intersect_masks(s_resid,ns_resid)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.94, right=0.95, 
+                              hspace=0.26, wspace=0.26) 
+                                 
+    max_toplot = max(masked_s.max(), masked_ns.max())
+    min_toplot = min(masked_s.min(), masked_ns.min())
+
+    if pop_ids is not None:
+        ns_pop_ids = s_pop_ids = resid_pop_ids = pop_ids
+        if len(pop_ids) != 2:
+            raise ValueError('pop_ids must be of length 2.')
+    else:
+        ns_pop_ids = masked_ns.pop_ids
+        s_pop_ids = masked_s.pop_ids
+        if masked_s.pop_ids is None:
+            s_pop_ids = ns_pop_ids
+
+        if s_pop_ids == ns_pop_ids:
+           resid_pop_ids = s_pop_ids
+        else:
+            resid_pop_ids = None
+
+    if resid_range is None:
+        resid_range = max((abs(masked_s.max()), abs(masked_s.min())))
+    resid_extend = _extend_mapping[-resid_range <= masked_s.min(), 
+                                   resid_range >= masked_s.max()]
+
+    ax = pylab.subplot(2,2,1)
+    plot_2d_resid(masked_s, resid_range=resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax.set_title('Synonymous Residuals')
+
+    if resid_range is None:
+        resid_range = max((abs(masked_ns.max()), abs(masked_ns.min())))
+    resid_extend = _extend_mapping[-resid_range <= masked_ns.min(), 
+                                   resid_range >= masked_ns.max()]
+
+    ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
+    plot_2d_resid(masked_ns, resid_range=resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax2.set_title('Nonsynonymous Residuals')
+
+    resid = masked_s-masked_ns
+
+    if resid_range is None:
+        resid_range = max((abs(resid.max()), abs(resid.min())))
+    resid_extend = _extend_mapping[-resid_range <= resid.min(), 
+                                   resid_range >= resid.max()]
+
+    ax3 = pylab.subplot(2,2,3, sharex=ax, sharey=ax)
+    plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend,cmap=pylab.cm.PuOr_r)
+    ax3.set_title('Meta-residuals')
+
+    ax = pylab.subplot(2,2,4)
+    flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                               resid.ravel())
+    ax.hist(flatresid, bins=20, normed=True,color='purple')
+    ax.set_title('Meta-residuals')
+    ax.set_yticks([])
+    if show:
+        pylab.show()
+
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
                          pop_ids=None, residual='Anscombe',
