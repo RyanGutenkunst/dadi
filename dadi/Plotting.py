@@ -309,6 +309,21 @@ def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
                        fig_num=None, pop_ids=None, 
                        adjust=True, show=True):
 
+    """
+    Comparison between 2d nonsynonymous residual and 2d synonymous residual.
+
+    s_resid: residual SFS from synonymous data
+    ns_resid: residual SFS from nonsynonymous data
+    resid_range: Residual plot saturates at +- resid_range. This range applies to both
+                 the residual SFS's supplied as well as the meta-residual plot.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    adjust: Should method use automatic 'subplots_adjust'? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: Display the plot? False can be useful when plotting many in a loop.
+    """
+
     if ns_resid.folded and not s_resid.folded:
         s_resid = s_resid.fold()
 
