@@ -5,6 +5,7 @@ import time
 time1 = time.time()
 
 import dadi
+import dadi.Triallele
 import numpy as np, scipy, matplotlib
 
 sig1 = 0.0 # selection coefficient for first derived allele
@@ -36,3 +37,7 @@ tri_fs = dadi.Numerics.quadratic_extrap((fs[dts[0]],fs[dts[1]],fs[dts[2]]),(dts[
 time2 = time.time()
 print "total runtime = " + str(time2-time1)
 
+## plot the triallele spectrum
+import matplotlib.pylab as plt
+dadi.Triallele.plotting.plot_single_trispectrum(tri_fs, folded=True, colorbar=True)
+plt.show()

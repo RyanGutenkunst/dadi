@@ -1,2 +1,2 @@
-import numerics, integration, demographics, TriSpectrum_mod
+import numerics, integration, demographics, plotting, TriSpectrum_mod
 TriSpectrum = TriSpectrum_mod.TriSpectrum
