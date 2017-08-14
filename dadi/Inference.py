@@ -174,6 +174,164 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
+def _object_func_resid(params, data, model_func, target_resid, pts, 
+                 lower_bound=None, upper_bound=None, 
+                 verbose=0, multinom=True, flush_delay=0,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_stream=sys.stdout, store_thetas=False):
+    """
+    Objective function for optimization.
+    """
+    global _counter
+    _counter += 1
+
+    # Deal with fixed parameters
+    params_up = _project_params_up(params, fixed_params)
+
+    # Check our parameter bounds
+    if lower_bound is not None:
+        for pval,bound in zip(params_up, lower_bound):
+            if bound is not None and pval < bound:
+                return -_out_of_bounds_val/ll_scale
+    if upper_bound is not None:
+        for pval,bound in zip(params_up, upper_bound):
+            if bound is not None and pval > bound:
+                return -_out_of_bounds_val/ll_scale
+
+    ns = data.sample_sizes 
+    all_args = [params_up, ns] + list(func_args)
+    # Pass the pts argument via keyword, but don't alter the passed-in 
+    # func_kwargs
+    func_kwargs = func_kwargs.copy()
+    func_kwargs['pts'] = pts
+    sfs = model_func(*all_args, **func_kwargs)
+    
+    model_resid = Anscombe_Poisson_residual(sfs, data)
+    resid = target_resid-model_resid
+    resid.data[resid.mask==True]=0
+    result=numpy.sum(resid.data**2)
+
+    if store_thetas:
+        global _theta_store
+        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+
+    # Bad result
+    if numpy.isnan(result):
+        result = _out_of_bounds_val
+
+    if (verbose > 0) and (_counter % verbose == 0):
+        param_str = 'array([%s])' % (', '.join(['%- 12g'%v for v in params_up]))
+        output_stream.write('%-8i, %-12g, %s%s' % (_counter, result, param_str,
+                                                   os.linesep))
+        Misc.delayed_flush(delay=flush_delay)
+
+    return result
+
+def _object_func_log_resid(log_params, *args, **kwargs):
+    """
+    Objective function for optimization in log(params).
+    """
+    return _object_func_resid(numpy.exp(log_params), *args, **kwargs)
+
+def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None, upper_bound=None,
+                 verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_file=None):
+    """
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in log(params), it cannot explore values of params < 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    target_resid: The residual sfs that we want to match, obtained from the 
+                  synonymous fits.
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale > 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you'll probably want to
+              re-optimize with ll_scale=1.
+    """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, target_resid, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log_resid, 
+                                       numpy.log(p0), epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return fopt, xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
 def optimize_log_lbfgsb(p0, data, model_func, pts, 
                         lower_bound=None, upper_bound=None,
                         verbose=0, flush_delay=0.5, epsilon=1e-3, 
