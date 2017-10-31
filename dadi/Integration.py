@@ -69,15 +69,16 @@ def _inject_mutations_1D(phi, dt, xx, theta0):
     """
     phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
     return phi
-def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2):
+def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
+                         nomut1, nomut2):
     """
     Inject novel mutations for a timestep.
     """
     # Population 1
-    if not frozen1:
+    if not frozen1 and not nomut1:
         phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
     # Population 2
-    if not frozen2:
+    if not frozen2 and not nomut2:
         phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
     return phi
 def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2, frozen3):
@@ -208,8 +209,8 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
-             h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False, 
-             frozen2=False):
+             h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False,
+             frozen2=False, nomut1=False, nomut2=False):
     """
     Integrate a 2-dimensional phi foward.
 
@@ -227,6 +228,14 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
+
+    frozen1,frozen2: If True, the corresponding population is "frozen" in time
+                     (no new mutations and no drift), so the resulting spectrum
+                     will correspond to an ancient DNA sample from that
+                     population.
+
+    nomut1,nomut2: If True, no new mutations will be introduced into the
+                   given population.
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
@@ -247,9 +256,9 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21, 
+        return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
                                       gamma1, gamma2, h1, h2, theta0, initial_t,
-                                      frozen1, frozen2)
+                                      frozen1, frozen2, nomut1, nomut2)
     yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -288,11 +297,12 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
 
-        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2)
-        if not frozen1: 
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2
+                             nomut1, nomut2)
+        if not frozen1:
             phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
                                      this_dt, use_delj_trick)
-        if not frozen2: 
+        if not frozen2:
             phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
                                      this_dt, use_delj_trick)
 
@@ -523,7 +533,8 @@ def _one_pop_const_params(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1,
 
 def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
                            gamma1=0, gamma2=0, h1=0.5, h2=0.5, theta0=1, 
-                           initial_t=0, frozen1=False, frozen2=False):
+                           initial_t=0, frozen1=False, frozen2=False,
+                           nomut1=False, nomut2=False):
     """
     Integrate two populations with constant parameters.
     """
@@ -583,9 +594,10 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
              _compute_dt(dy,nu2,[m21],gamma2,h2))
     current_t = initial_t
-    while current_t < T:    
+    while current_t < T:
         this_dt = min(dt, T - current_t)
-        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2
+                            nomut1, nomut2)
         if not frozen1:
             phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:
