@@ -297,7 +297,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
 
-        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                              nomut1, nomut2)
         if not frozen1:
             phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
@@ -596,7 +596,7 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     current_t = initial_t
     while current_t < T:
         this_dt = min(dt, T - current_t)
-        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                             nomut1, nomut2)
         if not frozen1:
             phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
