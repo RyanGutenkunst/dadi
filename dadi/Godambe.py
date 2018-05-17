@@ -179,11 +179,9 @@ def get_grad(func, p0, eps, args=()):
 
 @print_citation
 def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
-                just_hess=False):
+                just_hess=False, boot_theta_adjusts=[]):
     """
     Godambe information and Hessian matrices
-
-    NOTE: Assumes that last parameter in p0 is theta.
 
     func_ex: Model function
     grid_pts: Number of grid points to evaluate the model function
@@ -196,22 +194,28 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
          perturbations.
     log: If True, calculate derivatives in terms of log-parameters
     just_hess: If True, only evaluate and return the Hessian matrix
+    boot_theta_adjusts: Factors by which to adjust theta for each bootstrap
+                        sample, relative to full data theta.
     """
     ns = data.sample_sizes
+    if not boot_theta_adjusts:
+        boot_thetas_adjusts = np.ones(len(all_boot))
 
     # Cache evaluations of the frequency spectrum inside our hessian/J 
     # evaluation function
     cache = {}
-    def func(params, data):
+    def func(params, data, theta_adjust=1):
         key = (tuple(params), tuple(ns), tuple(grid_pts))
         if key not in cache:
             cache[key] = func_ex(params, ns, grid_pts)
-        fs = cache[key] 
+        # theta_adjust deals with bootstraps that need  different thetas
+        fs = theta_adjust*cache[key]
         return Inference.ll(fs, data)
-    def log_func(logparams, data):
-        return func(numpy.exp(logparams), data)
+    def log_func(logparams, data, theta_adjust=1):
+        return func(numpy.exp(logparams), data, theta_adjust)
 
-    # First calculate the observed hessian
+    # First calculate the observed hessian.
+    # theta_adjust defaults to 1.
     if not log:
         hess = -get_hess(func, p0, eps, args=[data])
     else:
@@ -224,12 +228,13 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     J = numpy.zeros((len(p0), len(p0)))
     # cU is a column vector
     cU = numpy.zeros((len(p0),1))
-    for ii, boot in enumerate(all_boot):
+    for ii, boot, theta_adjust in enumerate(zip(all_boot, boot_theta_adjusts)):
         boot = Spectrum(boot)
         if not log:
-            grad_temp = get_grad(func, p0, eps, args=[boot])
+            grad_temp = get_grad(func, p0, eps, args=[boot, theta_adjust])
         else:
-            grad_temp = get_grad(log_func, numpy.log(p0), eps, args=[boot])
+            grad_temp = get_grad(log_func, numpy.log(p0), eps,
+                                 args=[boot, theta_adjust])
 
         J_temp = numpy.outer(grad_temp, grad_temp)
         J = J + J_temp
@@ -243,8 +248,9 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     return godambe, hess, J, cU
 
 @print_citation
-def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False, 
-               multinom=True, eps=0.01, return_GIM=False):
+def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
+               multinom=True, eps=0.01, return_GIM=False,
+               boot_theta_adjusts=None):
     """
     Parameter uncertainties from Godambe Information Matrix (GIM)
 
@@ -258,7 +264,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
          Note that if eps*param is < 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
-    log: If True, assume log-normal distribution of parameters. Returned values 
+    log: If True, assume log-normal distribution of parameters. Returned values
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
     multinom: If True, assume model is defined without an explicit parameter for
@@ -268,14 +274,21 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
               final entry of the returned uncertainties will correspond to
               theta.
     return_GIM: If true, also return the full GIM.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
     """
     if multinom:
+        if boot_theta_adjusts:
+            raise ValueError('boot_thetas option can only be used with '
+                             'multinom=False')
         func_multi = func_ex
         model = func_multi(p0, data.sample_sizes, grid_pts)
         theta_opt = Inference.optimal_sfs_scaling(model, data)
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
-    GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log)
+    GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log,
+                                boot_theta_adjusts)
     uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
     if not return_GIM:
         return uncerts
@@ -297,7 +310,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
          Note that if eps*param is < 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
-    log: If True, assume log-normal distribution of parameters. Returned values 
+    log: If True, assume log-normal distribution of parameters. Returned values
          are then the standard deviations of the *logs* of the parameter values,
          which can be interpreted as relative parameter uncertainties.
     multinom: If True, assume model is defined without an explicit parameter for
@@ -319,6 +332,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
 @print_citation
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01):
+    # XXX: Need to implement boot_theta_adjusts
     """
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -405,6 +419,7 @@ def sum_chi2_ppf(x, weights=(0,1)):
 @print_citation
 def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
               full_params, multinom=True, eps=0.01, adj_and_org=False):
+    # XXX: Implement boot_theta_adjusts
     """
     Calculate test stastic from wald test
              
@@ -475,6 +490,7 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 @print_citation
 def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01, adj_and_org=False):
+    # XXX: Implement boot_theta_adjusts
     """
     Calculate test stastic from score test
         
