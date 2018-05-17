@@ -199,7 +199,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     """
     ns = data.sample_sizes
     if not boot_theta_adjusts:
-        boot_thetas_adjusts = np.ones(len(all_boot))
+        boot_theta_adjusts = numpy.ones(len(all_boot))
 
     # Cache evaluations of the frequency spectrum inside our hessian/J 
     # evaluation function
@@ -228,14 +228,13 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     J = numpy.zeros((len(p0), len(p0)))
     # cU is a column vector
     cU = numpy.zeros((len(p0),1))
-    for ii, boot, theta_adjust in enumerate(zip(all_boot, boot_theta_adjusts)):
+    for ii, (boot,theta_adjust) in enumerate(zip(all_boot, boot_theta_adjusts)):
         boot = Spectrum(boot)
         if not log:
             grad_temp = get_grad(func, p0, eps, args=[boot, theta_adjust])
         else:
             grad_temp = get_grad(log_func, numpy.log(p0), eps,
                                  args=[boot, theta_adjust])
-
         J_temp = numpy.outer(grad_temp, grad_temp)
         J = J + J_temp
         cU = cU + grad_temp
