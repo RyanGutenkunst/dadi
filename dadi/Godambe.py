@@ -287,7 +287,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log,
-                                boot_theta_adjusts)
+                                boot_theta_adjusts=boot_theta_adjusts)
     uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
     if not return_GIM:
         return uncerts
