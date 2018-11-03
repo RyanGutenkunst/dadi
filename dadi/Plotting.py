@@ -265,6 +265,8 @@ def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
     ax.set_xlim(0, resid.shape[1])
     ax.set_ylim(0, resid.shape[0])
 
+    return cb
+
 # Used to determine whether colorbars should have 'extended' arrows
 _extend_mapping = {(True, True): 'neither',
                    (False, True): 'min',
