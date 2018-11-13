@@ -340,3 +340,68 @@ def count_data_dict(data_dict, pop_ids):
         count_dict[tuple(successful_calls),tuple(derived_calls),
                    this_snp_polarized] += 1
     return count_dict
+
+def dd_from_SLiM_files(fnames):
+    """
+    Create a data dictionary from a sequence of SLiM output files.
+
+    It is assumed that each file corresponds to samples from a different
+    population. For example, in SLiM:
+        p1.outputSample(10, filePath='p1.slimout');
+        p2.outputSample(10, filePath='p2.slimout');
+
+    The populations will be named 0,1,2,... corresponding
+    to their order in fnames.
+
+    TODO: Add filtering by mutation type.
+    """
+    # Open all the files
+    fids = [file(_) for _ in fnames]
+    # For each population, we'll first map the mutation ids used in the file to
+    # the simulation-level global mutation ids
+    mut_dicts = [{} for _ in fids]
+    for fid, mut_dict in zip(fids, mut_dicts):
+        fid.readline(); fid.readline()
+        line = fid.readline()
+        while not line.startswith('Genomes:'):
+            local_id, global_id, _ = line.split(None, 2)
+            mut_dict[local_id] = global_id
+            line = fid.readline()
+
+    # Now for each population we count each mutation
+    mut_counts = [collections.defaultdict(int) for _ in fids]
+    # We also use this pass to measure the sample size for each pop.
+    sample_sizes = [0 for _ in fids]
+    for pop_ii, (fid, mut_count) in enumerate(zip(fids, mut_counts)):
+        # For each genome
+        for line in fid:
+            sample_sizes[pop_ii] += 1
+            mutations = line.split()[2:]
+            for m in mutations:
+                mut_count[m] += 1
+
+    # Now collect all mutations from all pops.
+    all_muts = set()
+    for mut_dict in mut_dicts:
+        all_muts.update(mut_dict.values())
+
+    # Create the empty data dictionary
+    dd = {}
+    for global_id in all_muts:
+        dd[global_id] = {'segregating': [0,1],
+                         'outgroup_allele': 0,
+                         'calls': {}}
+        for pop_id, n in enumerate(sample_sizes):
+            # We initialize each entry to indicate that the allele is not
+            # segregating in the population, since in this case it's
+            # not reported in that population's file.
+            dd[global_id]['calls'][pop_id] = [n, 0]
+
+    # Now update the alleles that are segregating in each population.
+    for pop_ii, (mut_count, mut_dict)\
+            in enumerate(zip(mut_counts, mut_dicts)):
+        for local_id, count in mut_count.items():
+            global_id = mut_dict[local_id]
+            dd[global_id]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
+
+    return dd
