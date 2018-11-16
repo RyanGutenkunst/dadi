@@ -341,7 +341,7 @@ def count_data_dict(data_dict, pop_ids):
                    this_snp_polarized] += 1
     return count_dict
 
-def dd_from_SLiM_files(fnames):
+def dd_from_SLiM_files(fnames, mut_types=None):
     """
     Create a data dictionary from a sequence of SLiM output files.
 
@@ -364,8 +364,9 @@ def dd_from_SLiM_files(fnames):
         fid.readline(); fid.readline()
         line = fid.readline()
         while not line.startswith('Genomes:'):
-            local_id, global_id, _ = line.split(None, 2)
-            mut_dict[local_id] = global_id
+            local_id, global_id, mut_type, _ = line.split(None, 3)
+            if mut_types is None or mut_type in mut_types:
+                mut_dict[local_id] = global_id
             line = fid.readline()
 
     # Now for each population we count each mutation
@@ -401,7 +402,12 @@ def dd_from_SLiM_files(fnames):
     for pop_ii, (mut_count, mut_dict)\
             in enumerate(zip(mut_counts, mut_dicts)):
         for local_id, count in mut_count.items():
-            global_id = mut_dict[local_id]
-            dd[global_id]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
+            try:
+                # Lookup in mut_dict will fail if mutation isn't of appropriate
+                # type to include in this run.
+                global_id = mut_dict[local_id]
+                dd[global_id]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
+            except KeyError:
+                pass
 
     return dd, sample_sizes
