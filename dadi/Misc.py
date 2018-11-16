@@ -404,4 +404,4 @@ def dd_from_SLiM_files(fnames):
             global_id = mut_dict[local_id]
             dd[global_id]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
 
-    return dd
+    return dd, sample_sizes
