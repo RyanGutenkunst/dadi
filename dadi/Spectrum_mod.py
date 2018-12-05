@@ -402,10 +402,10 @@ class Spectrum(numpy.ma.masked_array):
             proj = _cached_projection(n, proj_from, hits)
             proj_slice[axis] = slice(least, most+1)
             # Do the multiplications
-            pfs.data[to_slice] += self.data[from_slice] * proj[proj_slice]
-            pfs.mask[to_slice] = numpy.logical_or(pfs.mask[to_slice],
-                                                  self.mask[from_slice])
-    
+            pfs.data[tuple(to_slice)] += self.data[tuple(from_slice)] * proj[tuple(proj_slice)]
+            pfs.mask[tuple(to_slice)] = numpy.logical_or(pfs.mask[tuple(to_slice)],
+                                                         self.mask[tuple(from_slice)])
+
         return pfs
 
     def marginalize(self, over, mask_corners=True):
@@ -1626,6 +1626,8 @@ class Spectrum(numpy.ma.masked_array):
                   range(len(projections))]
         for ii in range(len(projections)):
             slices[ii][ii] = slice(None,None,None)
+        # Convert to tuples to avoid numpy error
+        slices = [tuple(_) for _ in slices]
 
         fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1),
                                  pop_ids=pop_ids)

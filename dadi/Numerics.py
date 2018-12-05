@@ -167,7 +167,7 @@ def reverse_array(arr):
     """
     Reverse an array along all axes, so arr[i,j] -> arr[-(i+1),-(j+1)].
     """
-    reverse_slice = [slice(None, None, -1) for ii in arr.shape]
+    reverse_slice = tuple(slice(None, None, -1) for ii in arr.shape)
     return arr[reverse_slice]
 
 def intersect_masks(m1, m2):
@@ -217,6 +217,7 @@ def trapz(yy, xx=None, dx=None, axis=-1):
     slice2[axis] = slice(None,-1)
     sliceX = [numpy.newaxis]*nd
     sliceX[axis] = slice(None)
+    slice1, slice2, sliceX = tuple(slice1), tuple(slice2), tuple(sliceX)
 
     return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)
 
