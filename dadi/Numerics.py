@@ -42,7 +42,7 @@ def make_anc_state_misid_func(func):
         args[0] = all_params[:-1]
         fs = func(*args, **kwargs)
         return apply_anc_state_misid(fs, p_misid)
-    misid_func.func_name = func.func_name + '_misid'
+    misid_func.__name__ = func.__name__ + '_misid'
     misid_func.func_doc = func.func_doc
     return misid_func
 
@@ -351,7 +351,7 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
 
         return ex_result
 
-    extrap_func.func_name = func.func_name
+    extrap_func.__name__ = func.__name__
     extrap_func.func_doc = func.func_doc
 
     return extrap_func
