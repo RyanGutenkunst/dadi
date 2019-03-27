@@ -43,7 +43,7 @@ def make_anc_state_misid_func(func):
         fs = func(*args, **kwargs)
         return apply_anc_state_misid(fs, p_misid)
     misid_func.__name__ = func.__name__ + '_misid'
-    misid_func.func_doc = func.func_doc
+    misid_func.__doc__ = func.__doc__
     return misid_func
 
 def quadratic_grid(num_pts):
@@ -352,7 +352,7 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
         return ex_result
 
     extrap_func.__name__ = func.__name__
-    extrap_func.func_doc = func.func_doc
+    extrap_func.__doc__ = func.__doc__
 
     return extrap_func
 
