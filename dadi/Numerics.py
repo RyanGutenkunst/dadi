@@ -292,7 +292,7 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
         #    import sys
         #    sys.exit()
 
-        result_l = map(partial_func, pts_l)
+        result_l = list(map(partial_func, pts_l))
         if no_extrap:
             return result_l
 
