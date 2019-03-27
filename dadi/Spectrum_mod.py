@@ -202,7 +202,7 @@ class Spectrum(numpy.ma.masked_array):
         if fname.endswith('.gz'):
             fid = gzip.open(fname, 'rb')
         else:
-            fid = file(fname, 'r')
+            fid = open(fname, 'r')
 
         line = fid.readline()
         # Strip out the comments
@@ -289,7 +289,7 @@ class Spectrum(numpy.ma.masked_array):
         if fname.endswith('.gz'):
             fid = gzip.open(fname, 'wb')
         else:
-            fid = file(fname, 'w')
+            fid = open(fname, 'w')
 
         # Write comments
         for line in comment_lines:
@@ -644,7 +644,7 @@ class Spectrum(numpy.ma.masked_array):
         # use to open a file.
         if not hasattr(fid, 'read'):
             newfile = True
-            fid = file(fid, 'r')
+            fid = open(fid, 'r')
 
         # Parse the commandline
         command = line = fid.readline()
@@ -818,7 +818,7 @@ class Spectrum(numpy.ma.masked_array):
         # use to open a file.
         if not hasattr(fid, 'read'):
             newfile = True
-            fid = file(fid, 'r')
+            fid = open(fid, 'r')
 
         if sites == 'all':
             only_nonsyn, only_syn = False, False
@@ -1748,7 +1748,7 @@ class Spectrum(numpy.ma.masked_array):
         """
         # Read the fux file into a dictionary.
         fux_dict = {}
-        f = file(fux_filename)
+        f = open(fux_filename)
         for line in f.readlines():
             if line.startswith('#'):
                 continue

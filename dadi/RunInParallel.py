@@ -70,7 +70,7 @@ while my_rank != 0:
         save_to = 'node_%i_crash.bp' % my_rank
         logger.critical("node %i: Command being run was: %s."
                         % (my_rank, command))
-        dump_file = file(save_to, 'w')
+        dump_file = open(save_to, 'w')
         cPickle.dump(msg_locals, dump_file)
         dump_file.close()
         logger.critical("node %i: Corresponding locals saved to %s."

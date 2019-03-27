@@ -148,7 +148,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               re-optimize with ll_scale=1.
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -306,7 +306,7 @@ def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None
               re-optimize with ll_scale=1.
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -409,7 +409,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
     
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -729,7 +729,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
      fixed_params usage.)
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -802,7 +802,7 @@ def optimize_log_powell(p0, data, model_func, pts,
         fixed_params usage.)
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -881,7 +881,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
               re-optimize with ll_scale=1.
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -980,7 +980,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
         ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -1113,7 +1113,7 @@ def optimize_grid(data, model_func, pts, grid,
     parameter values.
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 

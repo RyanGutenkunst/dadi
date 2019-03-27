@@ -145,7 +145,7 @@ def make_fux_table(fid, ts, Q, tri_freq):
     eQhalf = scipy.linalg.matfuncs.expm(Q * ts/2.)
     if not hasattr(fid, 'write'):
         newfile = True
-        fid = file(fid, 'w')
+        fid = open(fid, 'w')
 
     outlines = []
     for first_ii,first in enumerate(code):
@@ -356,7 +356,10 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     TODO: Add filtering by mutation type.
     """
     # Open all the files
-    fids = [file(_) for _ in fnames]
+    try:
+        fids = [open(_) for _ in fnames]
+    except TypeError:
+        fids = fnames
     # For each population, we'll first map the mutation ids used in the file to
     # the simulation-level global mutation ids
     mut_dicts = [{} for _ in fids]
