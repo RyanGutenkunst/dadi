@@ -27,8 +27,8 @@ use_delj_trick = False
 import numpy
 from numpy import newaxis as nuax
 
-import Misc, Numerics, tridiag
-import integration_c as int_c
+from . import Misc, Numerics, tridiag
+from . import integration_c as int_c
 
 #: Controls timestep for integrations. This is a reasonable default for
 #: gridsizes of ~60. See set_timescale_factor for better control.
