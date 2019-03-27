@@ -8,24 +8,17 @@ distribution.
 import logging
 logging.basicConfig()
 
-import Demographics1D
-import Demographics2D
-import Godambe
-import Inference
-import Integration
-import Misc
-import Numerics
-import PhiManip
+from . import Demographics1D, Demographics2D, Godambe, Inference, Integration
+from . import Misc, Numerics, PhiManip, Spectrum_mod, tridiag
+
+# We do it this way so it's easier to reload.
+Spectrum = Spectrum_mod.Spectrum
 
 # Protect import of Plotting in case matplotlib not installed.
 try:
-    import Plotting
+    from . import Plotting
 except ImportError:
     pass
-
-# We do it this way so it's easier to reload.
-import Spectrum_mod
-Spectrum = Spectrum_mod.Spectrum
 
 # When doing arithmetic with Spectrum objects (which are masked arrays), we
 # often have masked values which generate annoying arithmetic warnings. Here
@@ -33,5 +26,3 @@ Spectrum = Spectrum_mod.Spectrum
 # check results, but for our use case I think it's the better default.
 import numpy
 numpy.seterr(all='ignore')
-
-import tridiag
