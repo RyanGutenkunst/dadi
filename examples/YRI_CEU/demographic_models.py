@@ -4,10 +4,11 @@ Custom demographic model for our example.
 import numpy
 import dadi
 
-def prior_onegrow_mig((nu1F, nu2B, nu2F, m, Tp, T), (n1,n2), pts):
+def prior_onegrow_mig(params, ns, pts):
     """
     Model with growth, split, bottleneck in pop2, exp recovery, migration
 
+    params list is
     nu1F: The ancestral population size after growth. (Its initial size is
           defined to be 1.)
     nu2B: The bottleneck size for pop2
@@ -16,9 +17,11 @@ def prior_onegrow_mig((nu1F, nu2B, nu2F, m, Tp, T), (n1,n2), pts):
     Tp: The scaled time between ancestral population growth and the split.
     T: The time between the split and present
 
-    n1,n2: Size of fs to generate.
+    ns = (n1,n2): Size of fs to generate.
     pts: Number of points to use in grid for evaluation.
     """
+    nu1F, nu2B, nu2F, m, Tp, T = params
+    n1,n2 = ns
     # Define the grid we'll use
     xx = yy = dadi.Numerics.default_grid(pts)
 
@@ -39,10 +42,11 @@ def prior_onegrow_mig((nu1F, nu2B, nu2F, m, Tp, T), (n1,n2), pts):
     sfs = dadi.Spectrum.from_phi(phi, (n1,n2), (xx,yy))
     return sfs
 
-def prior_onegrow_mig_mscore((nu1F, nu2B, nu2F, m, Tp, T)):
+def prior_onegrow_mig_mscore(params):
     """
     ms core command corresponding to prior_onegrow_mig
     """
+    nu1F, nu2B, nu2F, m, Tp, T = params
     # Growth rate
     alpha2 = numpy.log(nu2F/nu2B)/T
 
@@ -59,10 +63,11 @@ def prior_onegrow_mig_mscore((nu1F, nu2B, nu2F, m, Tp, T)):
 
     return command % sub_dict
 
-def prior_onegrow_nomig((nu1F, nu2B, nu2F, Tp, T), (n1,n2), pts):
+def prior_onegrow_nomig(params, ns, pts):
     """
     Model with growth, split, bottleneck in pop2, exp recovery, no migration
 
+    params
     nu1F: The ancestral population size after growth. (Its initial size is
           defined to be 1.)
     nu2B: The bottleneck size for pop2
@@ -70,7 +75,8 @@ def prior_onegrow_nomig((nu1F, nu2B, nu2F, Tp, T), (n1,n2), pts):
     Tp: The scaled time between ancestral population growth and the split.
     T: The time between the split and present
 
-    n1,n2: Size of fs to generate.
+    ns = (n1,n2): Size of fs to generate.
     pts: Number of points to use in grid for evaluation.
     """
-    return prior_onegrow_mig((nu1F, nu2B, nu2F, 0, Tp, T), (n1,n2), pts)
+    nu1F, nu2B, nu2F, Tp, T = params
+    return prior_onegrow_mig((nu1F, nu2B, nu2F, 0, Tp, T), ns, pts)
