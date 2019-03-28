@@ -458,7 +458,7 @@ class Spectrum(numpy.ma.masked_array):
         """
         ind = numpy.indices(self.shape)
         # Transpose the first access to the last, so ind[ii,jj,kk] = [ii,jj,kk]
-        ind = ind.transpose(range(1,self.Npop+1)+[0])
+        ind = ind.transpose(list(range(1,self.Npop+1))+[0])
         return ind
 
     def _total_per_entry(self):
@@ -1640,7 +1640,9 @@ class Spectrum(numpy.ma.masked_array):
             for pop_ii, (p_to, p_from, hits) in enumerate(iter):
                 contrib = _cached_projection(p_to,p_from,hits)[slices[pop_ii]]
                 pop_contribs.append(contrib)
-            fs_proj = reduce(operator.mul, pop_contribs)
+            fs_proj = pop_contribs[0]
+            for contrib in pop_contribs[1:]:
+                fs_proj = fs_proj*contrib
 
             # create slices for adding projected fs to overall fs
             fs_total += count * fs_proj
@@ -1660,7 +1662,7 @@ class Spectrum(numpy.ma.masked_array):
         """
         result = {}
         genetic_bases = 'ACTG'
-        for snp, snp_info in data_dict.iteritems():
+        for snp, snp_info in data_dict.iter():
             # Skip non-diallelic polymorphisms
             if len(snp_info['segregating']) != 2:
                 continue
