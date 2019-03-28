@@ -36,7 +36,7 @@ def _fold(spectrum):
     else:
         spectrum = (spectrum + np.transpose(spectrum))
         for ii in range(len(spectrum)):
-            spectrum[ii,ii] /= 2
+            spectrum[ii,ii] = spectrum[ii,ii]/2
         spectrum.mask[0,:] = True
         spectrum.mask[:,0] = True
         for ii in range(len(spectrum)):
