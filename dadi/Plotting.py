@@ -394,7 +394,7 @@ def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
     ax = pylab.subplot(2,2,4)
     flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
                                resid.ravel())
-    ax.hist(flatresid, bins=20, normed=True,color='purple')
+    ax.hist(flatresid, bins=20, density=True,color='purple')
 
     resid.data[resid.mask==True]=0
     sum_squares=numpy.sum(resid.data**2)
@@ -496,7 +496,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
     ax = pylab.subplot(2,2,4)
     flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
                                resid.ravel())
-    ax.hist(flatresid, bins=20, normed=True)
+    ax.hist(flatresid, bins=20, density=True)
     ax.set_title('residuals')
     ax.set_yticks([])
     if show:
@@ -652,7 +652,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         ax = pylab.subplot(4,3,sax+10)
         flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
                                    resid.ravel())
-        ax.hist(flatresid, bins=20, normed=True)
+        ax.hist(flatresid, bins=20, density=True)
         ax.set_yticks([])
     if show:
         pylab.show()
