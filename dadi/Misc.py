@@ -309,7 +309,7 @@ def count_data_dict(data_dict, pop_ids):
     polarized using an ancestral state.
     """
     count_dict = collections.defaultdict(int)
-    for snp, snp_info in data_dict.iteritems():
+    for snp, snp_info in data_dict.items():
         # Skip SNPs that aren't biallelic.
         if len(snp_info['segregating']) != 2:
             continue
