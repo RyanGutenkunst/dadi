@@ -1662,7 +1662,7 @@ class Spectrum(numpy.ma.masked_array):
         """
         result = {}
         genetic_bases = 'ACTG'
-        for snp, snp_info in data_dict.iter():
+        for snp, snp_info in data_dict.items():
             # Skip non-diallelic polymorphisms
             if len(snp_info['segregating']) != 2:
                 continue
