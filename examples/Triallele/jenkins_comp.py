@@ -5,6 +5,7 @@ These parameters in ms are nu_ms = 0.5, tau = 0.025
 """
 
 import dadi
+import dadi.Triallele
 import numpy as np, scipy, math, scipy.io
 import matplotlib.pylab as plt
 from scipy.special import binom as binom
@@ -26,19 +27,19 @@ dt1 = 0.001
 dt2 = 0.0001
 
 # for dt0
-params = [nu,T,sig1,sig2,theta1,theta2,misid,dt0]
+params = [nu,T]
 fs00 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[0], folded = False, misid = False)
 fs10 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[1], folded = False, misid = False)
 fs20 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[2], folded = False, misid = False)
 
 # for dt1
-params = [nu,T,sig1,sig2,theta1,theta2,misid,dt1]
+params = [nu,T]
 fs01 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[0], folded = False, misid = False)
 fs11 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[1], folded = False, misid = False)
 fs21 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[2], folded = False, misid = False)
 
 # for dt2
-params = [nu,T,sig1,sig2,theta1,theta2,misid,dt2]
+params = [nu,T]
 fs02 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[0], folded = False, misid = False)
 fs12 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[1], folded = False, misid = False)
 fs22 = dadi.Triallele.demographics.two_epoch(params,ns,grid_pts[2], folded = False, misid = False)
@@ -228,7 +229,7 @@ def plot_2d_spectrum(sfs, cmap=new_cmap, vmin=None, vmax=None, colorbar=False, f
     if vmax is None:
         vmax = sfs.max()
     
-    mappable = ax.pcolor(np.ma.masked_where(sfs<vmin,sfs), vmin=vmin, vmax=vmax, cmap=cmap, shading='flat')
+    mappable = ax.pcolor(np.ma.masked_where(sfs<vmin,sfs), vmin=vmin, vmax=vmax, cmap=cmap, edgecolors='none')
     ax.set_xlim(0,sfs.shape[0]-1)
     ax.set_ylim(0,(sfs.shape[1]-1)/2+1)
     

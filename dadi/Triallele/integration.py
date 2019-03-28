@@ -6,7 +6,7 @@ These methods include ones for the injection of density for new triallelic sites
 import numpy as np
 from numpy import newaxis as nuax
 import dadi
-import numerics
+from . import numerics
 from scipy.sparse import identity
 import scipy.io
 import math

@@ -7,7 +7,6 @@ import matplotlib.image as mpimg
 import matplotlib.colors as colors
 from matplotlib.colors import LogNorm
 from matplotlib import ticker
-import cPickle
 
 import matplotlib
 # Set fontsize to 10
@@ -32,7 +31,7 @@ _new_cmap2 = _truncate_colormap(_cmap, 0.24, 1.0)
 def _fold(spectrum):
     spectrum = dadi.Spectrum(spectrum)
     if spectrum.mask[1,2] == True:
-        print "error: trying to fold a spectrum that is already folded"
+        print("error: trying to fold a spectrum that is already folded")
         return spectrum
     else:
         spectrum = (spectrum + np.transpose(spectrum))

@@ -454,7 +454,7 @@ def %(method)s(self, other):
 
 # Allow TriSpectrum objects to be pickled. 
 # See http://effbot.org/librarybook/copy-reg.htm
-import copy_reg
+import copyreg
 def TriSpectrum_pickler(fs):
     # Collect all the info necessary to save the state of a TriSpectrum
     return TriSpectrum_unpickler, (fs.data, fs.mask, fs.folded_major,
@@ -467,4 +467,4 @@ def TriSpectrum_unpickler(data, mask, folded_major, folded_ancestral,
                        data_folded_major=folded_major,
                        data_folded_ancestral=folded_ancestral,
                        extrap_x=extrap_x, extrap_t=extrap_t)
-copy_reg.pickle(TriSpectrum, TriSpectrum_pickler, TriSpectrum_unpickler)
+copyreg.pickle(TriSpectrum, TriSpectrum_pickler, TriSpectrum_unpickler)

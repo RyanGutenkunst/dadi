@@ -11,7 +11,7 @@ import dadi
 import math
 import pickle
 
-from TriSpectrum_mod import TriSpectrum
+from dadi.Triallele.TriSpectrum_mod import TriSpectrum
 
 def grid_dx(x):
     """
@@ -63,7 +63,7 @@ def transition1(x, dx, U01, sig1, sig2):
     """
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
-    print "using numpy, not cython"
+    print("using numpy, not cython")
     PV = np.zeros((len(x),3,len(x)))
     PM = np.zeros((len(x),3,len(x)))
     for jj in range(len(x)):
@@ -352,13 +352,13 @@ def move_density_to_bdry(x,phi,P):
                     phi[ii,jj] *= (1-amnt)
                 elif (len(x)-1-s) % 2 == 1:
                     # split between two points
-                    dist = (len(x)-1-s) / 2
+                    dist = (len(x)-1-s) // 2
                     phi[ii+dist+1,jj+dist] += phi[ii,jj]*amnt/2. * 2
                     phi[ii+dist,jj+dist+1] += phi[ii,jj]*amnt/2. * 2
                     phi[ii,jj] *= (1-amnt)
                 else:
                     # straight to boundary grid point
-                    dist = (len(x)-1-s) / 2
+                    dist = (len(x)-1-s) // 2
                     phi[ii+dist,jj+dist] += phi[ii,jj]*amnt * 2
                     phi[ii,jj] *= (1-amnt)
 
@@ -499,12 +499,12 @@ def fold(spectrum):
     """
     spectrum = TriSpectrum(spectrum)
     if spectrum.folded_major == True:
-        print "error: trying to fold a spectrum that is already folded"
+        print("error: trying to fold a spectrum that is already folded")
         return spectrum
     else:
         spectrum = (spectrum + np.transpose(spectrum))
         for ii in range(len(spectrum)):
-            spectrum[ii,ii] /= 2
+            spectrum[ii,ii] = spectrum[ii,ii]/2
         spectrum.mask[0,:] = True
         spectrum.mask[:,0] = True
         for ii in range(len(spectrum)):
@@ -625,7 +625,7 @@ def project(F_from, proj_to):
     if proj_to == proj_from:
         return F_from
     elif proj_to > proj_from:
-        print 'sorry, but projection must be to smaller size!'
+        print('sorry, but projection must be to smaller size!')
         return F_from
     else:
         F_proj = np.zeros((proj_to+1,proj_to+1))
