@@ -4,7 +4,6 @@ Contains triallelic Spectrum object
 import os
 import numpy as np
 import dadi
-from . import numerics
 
 class TLSpectrum(np.ma.masked_array):
     """
@@ -307,6 +306,7 @@ class TLSpectrum(np.ma.masked_array):
         """
         Mean of normalized squared correlation coefficient between A and B loci.
         """
+        from . import numerics
         ns = self.shape[0] - 1
         norm = self.sum()
         Dbin, r2bin = numerics.LD_per_bin(ns)
