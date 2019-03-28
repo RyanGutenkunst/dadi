@@ -4,7 +4,7 @@ import scipy, math
 from scipy.special import gammaln
 import scipy.optimize
 from numpy import logical_and, logical_not
-import numerics
+from . import numerics
 import os,sys
 
 
@@ -64,7 +64,7 @@ def ll_over_rho_bins(model_list,data_list):
     Input list of models for rho bins, and list of data for rho bins
     """
     if len(model_list) != len(data_list):
-        print 'model list and data list must be of same length'
+        print('model list and data list must be of same length')
         return 0
     LL = 0
     for ii in range(len(model_list)):
@@ -78,7 +78,7 @@ def ll_over_rho_bins_multinom(model_list,data_list):
     Input list of models for rho bins, and list of data for rho bins
     """
     if len(model_list) != len(data_list):
-        print 'model list and data list must be of same length'
+        print('model list and data list must be of same length')
         return 0
     LL = 0
     for ii in range(len(model_list)):
@@ -273,7 +273,7 @@ def optimize_log_lbfgsb(p0, data_list, model_func, pts, dts, rhos=[0],
     
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -327,7 +327,7 @@ def optimize_log_fmin(p0, data_list, model_func, pts, dts, rhos=[0],
                         func_args=[], func_kwargs={}, fixed_params=None, 
                         ll_scale=1, output_file=None):
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 
@@ -366,7 +366,7 @@ def optimize_log_fmin_interp(p0, data_list, model_func, pts, dts, model_rhos=[0]
     sorted_keys: 
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
 

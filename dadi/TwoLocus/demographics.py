@@ -1,6 +1,6 @@
 import os
 import dadi, numpy as np
-import numerics, integration
+from . import numerics, integration
 
 # Cache equilibrium spectra in ~/.dadi/TwoLocus_cache by default
 def set_cache_path(path='~/.dadi/TwoLocus_cache'):

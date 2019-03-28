@@ -1,7 +1,7 @@
 import numpy as np
 import dadi
 from scipy.sparse import identity
-import numerics
+from . import numerics
 
 def advance(phi, x, T, yA, yB, nu = 1., gammaA = 0.0, gammaB = 0.0, hA = 0.5, hB = 0.5, rho = 0.0, thetaA = 1.0, thetaB = 1.0, dt = 0.001):
     """

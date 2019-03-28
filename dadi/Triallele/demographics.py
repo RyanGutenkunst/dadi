@@ -2,13 +2,12 @@
 Equilibrium, two epoch, and three epoch (bottleneck) model with selection (sig1, sig2) on the two derived alleles
 """
 
-import numerics
+from . import numerics, integration
 import numpy as np
-import integration
 import dadi
 from numpy import newaxis as nuax
 
-from TriSpectrum_mod import TriSpectrum
+from dadi.Triallele.TriSpectrum_mod import TriSpectrum
 
 def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """

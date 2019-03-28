@@ -29,7 +29,7 @@ ns = fs.sample_size
 # fold the spectrum (ancestral state unknown)
 fs_folded = fs.fold()
 # project to a smaller sample size
-fs_project = dadi.TwoLocus.numerics.project(fs, ns/2)
+fs_project = dadi.TwoLocus.numerics.project(fs, ns//2)
 # compute mean r squared for observed variable sites
 r2 = fs.mean_r2()
 
@@ -62,7 +62,7 @@ spectra = {}
 for dt in dts:
     spectra.setdefault(dt,{})
     for pts in gridpts:
-        print 'computing for dt, pts = {0}, {1}'.format(dt,pts)
+        print('computing for dt, pts = {0}, {1}'.format(dt,pts))
         spectra[dt][pts] = dadi.TwoLocus.demographics.two_epoch((nu,T), pts, ns, rho=rho, dt=dt)
 
 # extrap_dt_pts takes a dictionary in the form spectra[dts][pts] and
@@ -91,7 +91,8 @@ dts = [0.005,0.0025,0.001]
 
 # do_calculation computes the expected frequency spectrum for a given sample
 # size and rho
-def do_calculation((params,pts,ns,rho,dt)):
+def do_calculation(arguments):
+    params, pts, ns, rho, dt = arguments
     # create spectrum for given param set, rho, etc
     temps = {}
     for dt in dts:

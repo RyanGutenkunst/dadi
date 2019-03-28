@@ -7,7 +7,7 @@ from numpy import newaxis as nuax
 from scipy.sparse import lil_matrix,identity
 import math
 
-from TLSpectrum_mod import TLSpectrum
+from dadi.TwoLocus.TLSpectrum_mod import TLSpectrum
 
 tol = 1e-12
 
@@ -578,7 +578,7 @@ def surface_interaction_b(phi,x,Psurf):
                     continue
                 if ii == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (jj+kk))/2
+                    dist = (len(x)-1 - (jj+kk))//2
                     rmdr = (len(x)-1 - (jj+kk))%2
                     if rmdr == 0:
                         phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -589,7 +589,7 @@ def surface_interaction_b(phi,x,Psurf):
                         phi[ii,jj,kk] *= (1-amnt)
                 elif jj == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+kk))/2
+                    dist = (len(x)-1 - (ii+kk))//2
                     rmdr = (len(x)-1 - (ii+kk))%2
                     if rmdr == 0:
                         phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -600,7 +600,7 @@ def surface_interaction_b(phi,x,Psurf):
                         phi[ii,jj,kk] *= (1-amnt)
                 elif kk == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj))/2
+                    dist = (len(x)-1 - (ii+jj))//2
                     rmdr = (len(x)-1 - (ii+jj))%2
                     if rmdr == 0:
                         phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
@@ -611,7 +611,7 @@ def surface_interaction_b(phi,x,Psurf):
                         phi[ii,jj,kk] *= (1-amnt)
                 else:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj+kk))/3
+                    dist = (len(x)-1 - (ii+jj+kk))//3
                     rmdr = (len(x)-1 - (ii+jj+kk))%3
                     if rmdr == 0: # in line with boundary grid point
                         phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -646,7 +646,7 @@ def surface_interaction(phi,x,Psurf):
                     continue
                 if ii == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (jj+kk))/2
+                    dist = (len(x)-1 - (jj+kk))//2
                     rmdr = (len(x)-1 - (jj+kk))%2
                     if rmdr == 0:
                         phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -657,7 +657,7 @@ def surface_interaction(phi,x,Psurf):
                         phi[ii,jj,kk] *= (1-amnt)
                 elif jj == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+kk))/2
+                    dist = (len(x)-1 - (ii+kk))//2
                     rmdr = (len(x)-1 - (ii+kk))%2
                     if rmdr == 0:
                         phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -668,7 +668,7 @@ def surface_interaction(phi,x,Psurf):
                         phi[ii,jj,kk] *= (1-amnt)
                 elif kk == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj))/2
+                    dist = (len(x)-1 - (ii+jj))//2
                     rmdr = (len(x)-1 - (ii+jj))%2
                     if rmdr == 0:
                         phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
@@ -679,7 +679,7 @@ def surface_interaction(phi,x,Psurf):
                         phi[ii,jj,kk] *= (1-amnt)
                 else:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj+kk))/3
+                    dist = (len(x)-1 - (ii+jj+kk))//3
                     rmdr = (len(x)-1 - (ii+jj+kk))%3
                     if rmdr == 0: # in line with boundary grid point
                         phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -1374,7 +1374,7 @@ def project(F_from, proj_to):
     if proj_to == proj_from:
         return F_from
     elif proj_to > proj_from:
-        print 'nope!'
+        print('nope!')
         return F_from
     else:
         F_proj = np.zeros((proj_to+1,proj_to+1,proj_to+1))
@@ -1502,7 +1502,7 @@ def observed_genotype_spectrum_dict_from_F(F):
                             Gdict[ng][(o1,o2,o3,o4,o5,o6,o7,o8)] = F[nAB,nAb,naB]*prob
     return Gdict
 
-import projection_genotypes
+from . import projection_genotypes
 
 genotype_projection_cache = {} # this cache can get very large for n_from large (>~100)
 def projection_cache_Gdict(n_from,n_to,hits):
@@ -1642,5 +1642,5 @@ try:
     from transition23 import transition23
     from surface_interaction import surface_interaction
 except ImportError:
-    print "using numpy versions"
+    print("using numpy versions")
     pass

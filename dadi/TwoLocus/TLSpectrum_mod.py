@@ -4,7 +4,7 @@ Contains triallelic Spectrum object
 import os
 import numpy as np
 import dadi
-import numerics
+from . import numerics
 
 class TLSpectrum(np.ma.masked_array):
     """
@@ -154,7 +154,7 @@ class TLSpectrum(np.ma.masked_array):
         # use to open a file.
         if not hasattr(fid, 'read'):
             newfile = True
-            fid = file(fid, 'r')
+            fid = open(fid, 'r')
 
         line = fid.readline()
         # Strip out the comments
@@ -231,7 +231,7 @@ class TLSpectrum(np.ma.masked_array):
         newfile = False
         if not hasattr(fid, 'write'):
             newfile = True
-            fid = file(fid, 'w')
+            fid = open(fid, 'w')
 
         # Write comments
         for line in comment_lines:
@@ -402,7 +402,7 @@ def %(method)s(self, other):
 
 # Allow TLSpectrum objects to be pickled. 
 # See http://effbot.org/librarybook/copy-reg.htm
-import copy_reg
+import copyreg
 def TLSpectrum_pickler(fs):
     # Collect all the info necessary to save the state of a TLSpectrum
     return TLSpectrum_unpickler, (fs.data, fs.mask, fs.folded,
@@ -413,4 +413,4 @@ def TLSpectrum_unpickler(data, mask, folded,
     return TLSpectrum(data, mask, mask_infeasible=False,
                        data_folded=folded,
                        extrap_x=extrap_x, extrap_t=extrap_t)
-copy_reg.pickle(TLSpectrum, TLSpectrum_pickler, TLSpectrum_unpickler)
+copyreg.pickle(TLSpectrum, TLSpectrum_pickler, TLSpectrum_unpickler)
