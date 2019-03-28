@@ -35,7 +35,7 @@ tri_fs = dadi.Numerics.quadratic_extrap((fs[dts[0]],fs[dts[1]],fs[dts[2]]),(dts[
 #tri_fs = tri_fs.fold_major()
 
 time2 = time.time()
-print "total runtime = " + str(time2-time1)
+print("total runtime = " + str(time2-time1))
 
 ## plot the triallele spectrum
 import matplotlib.pylab as plt
