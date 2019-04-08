@@ -1205,7 +1205,7 @@ class Spectrum(numpy.ma.masked_array):
             factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
             if het_ascertained == 'xx':
                 factorx *= xx*(1-xx)
-                factorx_cache[nx,ii] = factorx
+            factorx_cache[nx,ii] = factorx
 
         dx, dy = numpy.diff(xx), numpy.diff(yy)
         for jj in range(0,ny+1):
@@ -1596,14 +1596,15 @@ class Spectrum(numpy.ma.masked_array):
                      which may be less accurate than the semi-analytic
                      method.)
         het_ascertained: If 'xx', then FS is calculated assuming that SNPs have
- 	                 been ascertained by being heterozygous in one
- 	                 individual from population 1. (This individual is
- 	                 *not* in the current sample.) If 'yy' or 'zz', it
- 	                 assumed that the ascertainment individual came from
  	                 population 2 or 3, respectively.
- 	                 (Note that this option also forces direct integration,
- 	                 which may be less accurate than the semi-analytic
- 	                 method. This could be fixed if there is interest. Note
+                         been ascertained by being heterozygous in one
+                         individual from population 1. (This individual is
+                         *not* in the current sample.) If 'yy' or 'zz', it
+                         assumed that the ascertainment individual came from
+                         population 2 or 3, respectively.
+                         (Note that this option also forces direct integration,
+                         which may be less accurate than the semi-analytic
+                         method. This could be fixed if there is interest. Note
                          also that this option cannot be used simultaneously
                          with admix_props.)
         force_direct: Forces integration to use older direct integration method,
