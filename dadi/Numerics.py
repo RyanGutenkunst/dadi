@@ -13,17 +13,20 @@ except ImportError:
     from scipy import comb
 from scipy.special import gammaln, betaln, beta
 
+_multinomln_cache = {}
 def multinomln(N):
     """
     Get the multinomial coefficient for an array N.
     
     N: array of integers.
     """
-    N_sum = numpy.sum(N)
-    res = gammaln(N_sum+1)
-    for n in N:
-        res -= gammaln(n+1)
-    return res
+    if tuple(N) not in _multinomln_cache:
+        N_sum = numpy.sum(N)
+        res = gammaln(N_sum+1)
+        for n in N:
+            res -= gammaln(n+1)
+        _multinomln_cache[tuple(N)] = res
+    return _multinomln_cache[tuple(N)]
 
 _BetaBinomln_cache = {}
 def BetaBinomln(i,n,a,b):
