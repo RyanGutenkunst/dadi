@@ -25,8 +25,28 @@ def multinomln(N):
         res -= gammaln(n+1)
     return res
 
+_BetaBinomln_cache = {}
 def BetaBinomln(i,n,a,b):
-    return _lncomb(n,i) + betaln(i+a,n-i+b) - betaln(a,b)
+    if (i,n,a,b) not in _BetaBinomln_cache:
+        _BetaBinomln_cache[i,n,a,b] = _lncomb(n,i) + betaln(i+a,n-i+b) - betaln(a,b)
+    return _BetaBinomln_cache[i,n,a,b]
+
+_part_cache = {}
+def cached_part(x,n,minval=0,maxval=2):
+    """
+    Returns the integer partition summing to x with n entries and
+    min and max equal to 0 and 2 (or ploidy level), respectively.
+
+    This version uses a cache to speed up repeated evaluations.
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    """
+    if (x,n,minval,maxval) not in _part_cache:
+        _part_cache[x,n,minval,maxval] = list(part(x,n,minval,maxval))
+    return _part_cache[x,n,minval,maxval]
 
 def part(x, n, minval=0, maxval=2):
     """
@@ -55,7 +75,7 @@ def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
     """
     res=0.0
     tmp=0.0
-    partitions=[p for p in part(i,n,maxval=ploidy)]
+    partitions=[p for p in cached_part(i,n,maxval=ploidy)]
     for prt in partitions:
         tmp=0.0
         coeff=numpy.zeros(ploidy+1)
