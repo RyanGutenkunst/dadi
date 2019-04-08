@@ -18,7 +18,7 @@ from scipy.integrate import trapz
 from scipy.special import betainc
 
 import dadi.Numerics
-from dadi.Numerics import reverse_array, _cached_projection, _lncomb
+from dadi.Numerics import reverse_array, _cached_projection, _lncomb, BetaBinomConvolution
 
 class Spectrum(numpy.ma.masked_array):
     """
@@ -1118,6 +1118,33 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
+    def _from_phi_1D_direct_inbreeding(n, xx, phi, Fx, mask_corners=True,
+                                       ploidyx=2,het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi
+        plus inbreeding.
+        
+        See from_phi_inbreeding for explanation of arguments.
+        """
+        if n % ploidyx == 0:
+            nInd = n/ploidyx
+        else:
+            raise ValueError('Number of chromosomes {0} is not divisible '
+                             'by ploidy {1}.'.format(str(n),str(ploidyx)))
+        data = numpy.zeros(n+1)
+        alphax = xx*((1.0-Fx)/Fx)
+        alphax[0],alphax[-1] = 1.0e-20*((1.0-Fx)/Fx), (1.0-1.0e-20)*((1.0-Fx)/Fx)
+        betax  = (1.0-xx)*((1.0-Fx)/Fx)
+        betax[0],betax[-1] = (1.0-1.0e-20)*((1.0-Fx)/Fx), 1.0e-20*((1.0-Fx)/Fx)
+        for ii in range(0,n+1):
+            factorx = [BetaBinomConvolution(ii,nInd,alphax[j],betax[j],ploidy=ploidyx) for j in range(0,len(xx))]
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
+            data[ii] = trapz(factorx*phi,xx)
+        
+        return Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
     def _from_phi_1D_analytic(n, xx, phi, mask_corners=True, 
                               divergent=False):
         """
@@ -1190,6 +1217,58 @@ class Spectrum(numpy.ma.masked_array):
                 factorx = factorx_cache[nx,ii]
                 data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
 
+        return Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_2D_direct_inbreeding(nx, ny, xx, yy, phi, Fx, Fy, mask_corners=True,
+                                       ploidyx=2,ploidyy=2,het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi plus
+        inbreeding.
+        
+        See from_phi_inbreeding for explanation of arguments.
+        """
+        # Calculate the 2D sfs from phi using the trapezoid rule for
+        # integration.
+        if nx % ploidyx == 0:
+            nIndx = nx/ploidyx
+        else:
+            raise ValueError('Number of chromosomes {0} is not divisible '
+                             'by ploidy {1} for pop 1.'.format(str(nx),str(ploidyx)))
+        
+        if ny % ploidyy == 0:
+            nIndy = ny/ploidyy
+        else:
+            raise ValueError('Number of chromosomes {0} is not divisible '
+                             'by ploidy {1} for pop 2.'.format(str(ny),str(ploidyy)))
+        
+        data = numpy.zeros((nx+1, ny+1))
+        alphax = xx*((1.0-Fx)/Fx)
+        alphax[0],alphax[-1] = 1.0e-20*((1.0-Fx)/Fx), (1.0-1.0e-20)*((1.0-Fx)/Fx)
+        betax = (1.0-xx)*((1.0-Fx)/Fx)
+        betax[0],betax[-1] = (1.0-1.0e-20)*((1.0-Fx)/Fx), 1.0e-20*((1.0-Fx)/Fx)
+        alphay = yy*((1.0-Fy)/Fy)
+        alphay[0],alphay[-1] = 1.0e-20*((1.0-Fy)/Fy), (1.0-1.0e-20)*((1.0-Fy)/Fy)
+        betay = (1.0-yy)*((1.0-Fy)/Fy)
+        betay[0],betay[-1] = (1.0-1.0e-20)*((1.0-Fy)/Fy), 1.0e-20*((1.0-Fy)/Fy)
+        # Cache to avoid duplicated work
+        factorx_cache = {}
+        for ii in range(0,nx+1):
+            factorx = numpy.array([BetaBinomConvolution(ii,nIndx,alphax[j],betax[j],ploidy=ploidyx) for j in range(0,len(xx))])
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
+            factorx_cache[nx,ii] = factorx
+        
+        dx,dy = numpy.diff(xx), numpy.diff(yy)
+        for jj in range(0,ny+1):
+            factory = numpy.array([BetaBinomConvolution(jj,nIndy,alphay[j],betay[j],ploidy=ploidyy) for j in range(0,len(yy))])
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
+            integrated_over_y = trapz(factory[numpy.newaxis,:]*phi, dx=dy)
+            for ii in range(0,nx+1):
+                factorx = factorx_cache[nx,ii]
+                data[ii,jj] = trapz(factorx*integrated_over_y, dx=dx)
+        
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
@@ -1310,7 +1389,83 @@ class Spectrum(numpy.ma.masked_array):
                     data[ii,jj,kk] = ans
     
         return Spectrum(data, mask_corners=mask_corners)
-    
+
+    @staticmethod
+    def _from_phi_3D_direct_inbreeding(nx, ny, nz, xx, yy, zz, phi, Fx, Fy, Fz,
+                                       mask_corners=True, ploidyx=2, ploidyy=2, ploidyz=2,
+                                       het_ascertained=None):
+        """
+        Compute sample Spectrum from population frequency distribution phi
+        plus inbreeding.
+        
+        See from_phi_inbreeding for explanation of arguments.
+        """
+        # Calculate the 2D sfs from phi using the trapezoid rule for
+        # integration.
+        if nx % ploidyx == 0:
+            nIndx = nx/ploidyx
+        else:
+            raise ValueError('Number of chromosomes {0} is not divisible '
+                             'by ploidy {1} for pop 1.'.format(str(nx),str(ploidyx)))
+        
+        if ny % ploidyy == 0:
+            nIndy = ny/ploidyy
+        else:
+            raise ValueError('Number of chromosomes {0} is not divisible '
+                             'by ploidy {1} for pop 2.'.format(str(ny),str(ploidyy)))
+        
+        if nz % ploidyz == 0:
+            nIndz = nz/ploidyz
+        else:
+            raise ValueError('Number of chromosomes {0} is not divisible '
+                             'by ploidy {1} for pop 3.'.format(str(nz),str(ploidyz)))
+        
+        data = numpy.zeros((nx+1, ny+1, nz+1))
+        dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
+        half_dx = dx/2.0
+        alphax = xx*((1.0-Fx)/Fx)
+        alphax[0],alphax[-1] = 1.0e-20*((1.0-Fx)/Fx), (1.0-1.0e-20)*((1.0-Fx)/Fx)
+        betax = (1.0-xx)*((1.0-Fx)/Fx)
+        betax[0],betax[-1] = (1.0-1.0e-20)*((1.0-Fx)/Fx), 1.0e-20*((1.0-Fx)/Fx)
+        alphay = yy*((1.0-Fy)/Fy)
+        alphay[0],alphay[-1] = 1.0e-20*((1.0-Fy)/Fy), (1.0-1.0e-20)*((1.0-Fy)/Fy)
+        betay = (1.0-yy)*((1.0-Fy)/Fy)
+        betay[0],betay[-1] = (1.0-1.0e-20)*((1.0-Fy)/Fy), 1.0e-20*((1.0-Fy)/Fy)
+        alphaz = zz*((1.0-Fz)/Fz)
+        alphaz[0],alphaz[-1] = 1.0e-20*((1.0-Fz)/Fz), (1.0-1.0e-20)*((1.0-Fz)/Fz)
+        betaz = (1.0-zz)*((1.0-Fz)/Fz)
+        betaz[0],betaz[-1] = (1.0-1.0e-20)*((1.0-Fz)/Fz), 1.0e-20*((1.0-Fz)/Fz)
+        
+        # We cache these calculations...
+        factorx_cache, factory_cache = {}, {}
+        for ii in range(0, nx+1):
+            factorx = numpy.array([BetaBinomConvolution(ii,nIndx,alphax[j],betax[j],ploidy=ploidyx) for j in range(0,len(xx))])
+            if het_ascertained == 'xx':
+                factorx *= xx*(1-xx)
+            factorx_cache[nx,ii] = factorx
+        for jj in range(0, ny+1):
+            factory = numpy.array([BetaBinomConvolution(jj,nIndy,alphay[j],betay[j],ploidy=ploidyy) for j in range(0,len(yy))])
+            if het_ascertained == 'yy':
+                factory *= yy*(1-yy)
+            factory_cache[ny,jj] = factory[nuax,:]
+        
+        for kk in range(0, nz+1):
+            factorz = numpy.array([BetaBinomConvolution(kk,nIndz,alphaz[j],betaz[j],ploidy=ploidyz) for j in range(0,len(zz))])
+            if het_ascertained == 'zz':
+                factorz *= zz*(1-zz)
+            over_z = trapz(factorz[nuax, nuax,:] * phi, dx=dz)
+            for jj in range(0, ny+1):
+                factory = factory_cache[ny,jj]
+                over_y = trapz(factory * over_z, dx=dy)
+                for ii in range(0, nx+1):
+                    factorx = factorx_cache[nx,ii]
+                    # It's faster here to do the trapezoid rule explicitly
+                    # rather than using SciPy's more general routine.
+                    integrand = factorx * over_y
+                    ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
+                    data[ii,jj,kk] = ans
+        
+        return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_3D_admix_props(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
@@ -1509,6 +1664,94 @@ class Spectrum(numpy.ma.masked_array):
                                                        xxs[0], xxs[1], xxs[2], 
                                                        phi, mask_corners, 
                                                        admix_props)
+        else:
+            raise ValueError('Only implemented for dimensions 1,2 or 3.')
+        fs.pop_ids = pop_ids
+        # Record value to use for extrapolation. This is the first grid point,
+        # which is where new mutations are introduced. Note that extrapolation
+        # will likely fail if grids differ between dimensions.
+        fs.extrap_x = xxs[0][1]
+        for xx in xxs[1:]:
+            if not xx[1] == fs.extrap_x:
+                logger.warn('Spectrum calculated from phi different grids for '
+                            'different dimensions. Extrapolation may fail.')
+        return fs
+
+    @staticmethod
+    def from_phi_inbreeding(phi, ns, xxs, Fs, ploidys, mask_corners=True, 
+                            pop_ids=None, admix_props=None,
+                            het_ascertained=None, force_direct=True):
+        """
+        Compute sample Spectrum from population frequency distribution phi
+        plus inbreeding.
+        
+        phi: P-dimensional population frequency distribution.
+        ns: Sequence of P sample sizes for each population.
+        xxs: Sequence of P one-dimesional grids on which phi is defined.
+        Fs: Sequence of P inbreeding coefficients for each population.
+        ploidys: Sequence of P ploidy levels for each population.
+        mask_corners: If True, resulting FS is masked in 'absent' and 'fixed'
+                      entries.
+        pop_ids: Optional list of strings containing the population labels.
+                 If pop_ids is None, labels will be "pop0", "pop1", ...
+        admix_props: Admixture proportions for sampled individuals. For example,
+                     if there are two populations, and individuals from the
+                     first pop are admixed with fraction f from the second
+                     population, then admix_props=((1-f,f),(0,1)). For three
+                     populations, the no-admixture setting is
+                     admix_props=((1,0,0),(0,1,0),(0,0,1)). 
+                     (Note that this option also forces direct integration,
+                     which may be less accurate than the semi-analytic
+                     method.)
+        het_ascertained: If 'xx', then FS is calculated assuming that SNPs have
+                         been ascertained by being heterozygous in one
+                         individual from population 1. (This individual is
+                         *not* in the current sample.) If 'yy' or 'zz', it
+                         assumed that the ascertainment individual came from
+                         population 2 or 3, respectively.
+                         (Note that this option also forces direct integration,
+                         which may be less accurate than the semi-analytic
+                         method. This could be fixed if there is interest. Note
+                         also that this option cannot be used simultaneously
+                         with admix_props.)
+        force_direct: Forces integration to use older direct integration method,
+                      rather than using analytic integration of sampling 
+                      formula.
+        """
+        if admix_props and not numpy.allclose(numpy.sum(admix_props, axis=1),1):
+            raise ValueError('Admixture proportions {0} must sum to 1 for all '
+                             'populations.' .format(str(admix_props)))
+        if not phi.ndim == len(ns) == len(xxs) == len(Fs) == len(ploidys):
+            raise ValueError('Dimensionality of phi and lengths of ns, xxs, ploidys, and Fs '
+                             'do not all agree.')
+        if het_ascertained and not het_ascertained in ['xx','yy','zz']:
+            raise ValueError("If used, het_ascertained must be 'xx', 'yy', or "
+                             "'zz'.")
+
+        if admix_props and het_ascertained:
+            error = """admix_props and het_ascertained options cannot be used 
+            simultaneously. Instead, please use the PhiManip methods to 
+            implement admixture. If this proves inappropriate for your use, 
+            contact the the dadi developers, as it may be possible to support
+            both options simultaneously in the future."""
+            raise NotImplementedError(error)
+
+        if phi.ndim == 1:
+            fs = Spectrum._from_phi_1D_direct_inbreeding(ns[0], xxs[0], phi, Fs[0],
+                                                         mask_corners, ploidys[0],
+                                                         het_ascertained)
+        elif phi.ndim == 2:
+            fs = Spectrum._from_phi_2D_direct_inbreeding(ns[0], ns[1], xxs[0], xxs[1],
+                                                         phi, Fs[0], Fs[1], mask_corners,
+                                                         ploidys[0], ploidys[1],
+                                                         het_ascertained)
+        elif phi.ndim == 3:
+            fs = Spectrum._from_phi_3D_direct_inbreeding(ns[0], ns[1], ns[2], 
+                                                         xxs[0], xxs[1], xxs[2], 
+                                                         phi, Fs[0], Fs[1], Fs[2],
+                                                         mask_corners, ploidys[0],
+                                                         ploidys[1], ploidys[2],
+                                                         het_ascertained)
         else:
             raise ValueError('Only implemented for dimensions 1,2 or 3.')
         fs.pop_ids = pop_ids

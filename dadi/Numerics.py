@@ -11,7 +11,60 @@ try:
     from scipy.misc import comb
 except ImportError:
     from scipy import comb
-from scipy.special import gammaln
+from scipy.special import gammaln, betaln, beta
+
+def multinomln(N):
+    """
+    Get the multinomial coefficient for an array N.
+    
+    N: array of integers.
+    """
+    N_sum = numpy.sum(N)
+    res = gammaln(N_sum+1)
+    for n in N:
+        res -= gammaln(n+1)
+    return res
+
+def BetaBinomln(i,n,a,b):
+    return _lncomb(n,i) + betaln(i+a,n-i+b) - betaln(a,b)
+
+def part(x, n, minval=0, maxval=2):
+    """
+    Returns the integer partition summing to x with n entries and
+    min and max equal to 0 and 2 (or ploidy level), respectively.
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    """
+    if not n * minval <= x <= n * maxval:
+        return
+    elif n == 0:
+        yield []
+    else:
+        for val in range(minval, maxval + 1):
+            for p in part(x - val, n - 1, val, maxval):
+                yield [val] + p
+
+def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
+    """
+    Returns the probability of observing i 'successes' across
+    n beta binomial random variables with equal alpha,
+    beta, and number of trials.
+    """
+    res=0.0
+    tmp=0.0
+    partitions=[p for p in part(i,n,maxval=ploidy)]
+    for prt in partitions:
+        tmp=0.0
+        coeff=numpy.zeros(ploidy+1)
+        for p in prt:
+            coeff[p] += 1.0
+            tmp += BetaBinomln(p,ploidy,alpha,beta)
+        tmp += multinomln(coeff)
+        res += numpy.exp(tmp)
+    return res
 
 def apply_anc_state_misid(fs, p_misid):
     """
