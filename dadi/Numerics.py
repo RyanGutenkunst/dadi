@@ -77,14 +77,20 @@ def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
     beta, and number of trials.
     """
     res=0.0
-    tmp=0.0
-    partitions=[p for p in cached_part(i,n,maxval=ploidy)]
+    # Create list of BetaBinomln results, because list indexing
+    # is much faster than the function call and hashing inside
+    # the cached BetaBinomln. Caching in BetaBinomln is still
+    # marginally useful, even after caching at this level.
+    BetaBinomln_cache = [BetaBinomln(_,ploidy,alpha,beta) for _ in range(ploidy+1)]
+    partitions = cached_part(i,n,maxval=ploidy)
     for prt in partitions:
         tmp=0.0
-        coeff=numpy.zeros(ploidy+1)
-        for p in prt:
-            coeff[p] += 1.0
-            tmp += BetaBinomln(p,ploidy,alpha,beta)
+        # Partitions p have many repeated elements. It's faster
+        # to count each unique element and use that, rather than 
+        # iterating through all elements
+        coeff = [prt.count(p) for p in range(ploidy+1)]
+        for p in range(ploidy+1):
+            tmp += BetaBinomln_cache[p]*coeff[p]
         tmp += multinomln(coeff)
         res += numpy.exp(tmp)
     return res
