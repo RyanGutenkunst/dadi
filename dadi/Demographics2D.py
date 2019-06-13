@@ -242,3 +242,30 @@ def IM_pre_mscore(params):
                 'm12':2*m12, 'm21':2*m21, 'T': T/2, 'nuP':nuPre, 'TP':(T+TPre)/2}
 
     return command % sub_dict
+
+def IM_fsc(params, ns, pts):
+    """
+    params = (nu1,nu2,T,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with asymetric migration .
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nu1,nu2,T,m12,m21 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs

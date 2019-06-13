@@ -10,10 +10,7 @@ import gzip, operator, os
 import numpy
 from numpy import newaxis as nuax
 # Account for difference in scipy installations.
-try:
-    from scipy.misc import comb
-except ImportError:
-    from scipy import comb
+from scipy.special import comb
 from scipy.integrate import trapz
 from scipy.special import betainc
 
