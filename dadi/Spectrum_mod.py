@@ -249,6 +249,7 @@ class Spectrum(numpy.ma.masked_array):
         fs = Spectrum(data, mask, mask_corners, data_folded=folded,
                       pop_ids=pop_ids)
 
+        fid.close()
         if not return_comments:
             return fs
         else:
