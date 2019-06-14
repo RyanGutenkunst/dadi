@@ -1,17 +1,6 @@
 """
-Distribution functions to wrap demographics with scalar selection. Most
-of this code is modified dadi code, and the selection stuff is a 
-modified version of the script found at: 
+The selection stuff is a modified version of the script found at: 
 https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc
-
-There are a few changes to the integration, so that anything below the
-lower bound is assumed to be effectively neutral; and anything above
-the lower bound is assumed to not be segregating, and weighted 0.
-
-I added in multiprocessing capabilities because generating all the 
-spectra takes really long for large values of gamma. One workaround
-is to not integrate where the gammas are large, since the SFSes there
-should be close to 0... 
 """
 
 import operator
@@ -39,7 +28,7 @@ class Cache1D:
             # of cpus, otherwise this will just use nthreads-1 on your
             machine.
         cpus: For multiprocessing, number of jobs to launch.
-        echo: If True, print messages to track progress of cache generation.
+        verbose: If True, print messages to track progress of cache generation.
         """
         self.params, self.ns, self.pts_l = tuple(params), tuple(ns), tuple(pts_l)
 
@@ -198,37 +187,3 @@ class Cache1D:
         pos_fs = Spectrum(self.spectra[ii])
 
         return (1-ppos)*pdf_fs + ppos*pos_fs
-
-#define a bunch of default distributions just to make everything easier
-def gamma_dist(mgamma, alpha, beta):
-    """
-    x, shape, scale
-    """
-    return scipy.stats.distributions.gamma.pdf(-mgamma, alpha, scale=beta)
-
-
-def beta_dist(mgamma, alpha, beta):
-    """
-    x, alpha, beta
-    """
-    return scipy.stats.distributions.beta.pdf(-mgamma, alpha, beta)
-
-
-def exponential_dist(mgamma, scale):
-    return scipy.stats.distributions.expon.pdf(-mgamma, scale=scale)
-
-def lognormal_dist(mgamma, mu, sigma, scal_fac=1):
-    return scipy.stats.distributions.lognorm.pdf(
-        -mgamma, sigma, scale=np.exp(mu + np.log(scal_fac)))
-
-
-def normal_dist(mgamma, mu, sigma):
-    return scipy.stats.distributions.norm.pdf(-mgamma, loc=mu, scale=sigma)
-
-def neugamma(mgamma, p, alpha, beta):
-        mgamma=-mgamma
-        if (0 <= mgamma) and (mgamma < -smallgamma):
-                return p/(-smallgamma) + (1-p)*dadi.Selection.gamma_dist(
-                    -mgamma,alpha, beta)
-        else:
-                return dadi.Selection.gamma_dist(-mgamma, alpha, beta) * (1-p)
