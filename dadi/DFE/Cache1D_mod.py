@@ -145,8 +145,8 @@ class Cache1D:
 
         return Spectrum(theta*fs)
 
-    def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func, pts,
-                            exterior_int=True):
+    def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func=None, 
+                            pts=None, exterior_int=True):
         """
         Integrate spectra over a univariate prob. dist. for negative gammas,
         plus a point mass of positive selection.
@@ -179,6 +179,10 @@ class Cache1D:
                                 exterior_int=exterior_int)
 
         if gammapos not in self.gammas:
+            if demo_sel_func is None:
+                raise IndexError('Failed to find requested gammapos={0:.4f} '
+                                 'in Cache1D spectra. Was it included in '
+                                 'additional_gammas during cache generation?'.format(gammapos))
             pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
                                          self.ns, self.pts_l)
             self.gammas = np.append(self.gammas, gammapos)
