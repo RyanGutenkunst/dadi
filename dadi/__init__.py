@@ -8,7 +8,7 @@ distribution.
 import logging
 logging.basicConfig()
 
-from . import Demographics1D, Demographics2D, Godambe, Inference, Integration
+from . import Demographics1D, Demographics2D, Inference, Integration
 from . import Misc, Numerics, PhiManip, Spectrum_mod, tridiag
 
 # We do it this way so it's easier to reload.
