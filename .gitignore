@@ -17,3 +17,4 @@ examples/YRI_CEU/seedms
 examples/YRI_CEU/test.msout
 dadi/Triallele/*.c
 dadi/TwoLocus/*.c
+.vscode*
