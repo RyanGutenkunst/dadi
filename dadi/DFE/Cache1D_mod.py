@@ -1,5 +1,8 @@
 """
-The selection stuff is a modified version of the script found at: 
+Initial developed by Bernard Kim and published as fitdadi
+Kim, Huber, Lohmueller (2017) Genetics 
+Modified version of the script found at: https://doi.org/10.1534/genetics.116.197145
+Based on scripts from:
 https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc
 """
 
@@ -66,7 +69,7 @@ class Cache1D:
                     sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
                     if verbose:
                         print('{0}: {1}'.format(ii, gamma))
-                    outlist.append((gamma, sfs))
+                    outlist.append((ii, sfs))
 
             manager = multiprocessing.Manager()
             if cpus is None:
@@ -76,9 +79,9 @@ class Cache1D:
 
             # Assemble pool of workers
             pool = []
-            for ii in xrange(cpus):
+            for ii in range(cpus):
                 p = multiprocessing.Process(target=worker_sfs,
-                                            args=(work, results, demo_self_func, params, ns, pts_l))
+                                            args=(work, results, demo_sel_func, params, ns, pts_l))
                 p.start()
                 pool.append(p)
 
@@ -86,7 +89,7 @@ class Cache1D:
             for ii, gamma in enumerate(self.gammas):
                 work.put((ii, gamma))
             # Put commands on queue to close out workers
-            for jj in xrange(cpus):
+            for jj in range(cpus):
                 work.put(None)
             # Start work
             for p in pool:

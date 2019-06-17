@@ -11,6 +11,8 @@ class DFETestCase(unittest.TestCase):
         """
         dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
                          gamma_bounds=(1e-4, 20), gamma_pts=2)
+        dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
+                         gamma_bounds=(1e-4, 20), gamma_pts=10, mp=True)
 
     def test_1D_integration(self):
         """
@@ -92,6 +94,8 @@ class DFETestCase(unittest.TestCase):
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
         dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=2)
+        dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+                         gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
 
     def test_2D_integration(self):
         """
@@ -207,19 +211,3 @@ if __name__ == '__main__':
     #    pass
 
     unittest.main()
-
-    #    demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
-    #    ns, pts_l = [3,3], [20]
-    #    s1 = dadi.DFE.Cache1D(demo_params, ns, DemogSelModels.IM_single_gamma, pts_l,
-    #                          gamma_bounds=(1e-4, 20), gamma_pts=2,
-    #                          additional_gammas=[4.3])
-    #    s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM, pts_l,
-    #                          gamma_bounds=(1e-4, 2), gamma_pts=2,
-    #                          additional_gammas=[4.3])
-    #    # Basic mixture model
-    #    dadi.DFE.mixture([-0.5,0.5,0.5,0.1],None,s1,s2,PDFs.lognormal,PDFs.biv_lognormal,1,None)
-    #    # Test with positive selection
-    #    dadi.DFE.mixture_symmetric_point_pos([-0.5,0.5,0.5,0.1,4.3,0.1],None,s1,s2,PDFs.lognormal,PDFs.biv_lognormal,1,None)
-    #    # Test for case that should fail
-    #    dadi.DFE.mixture_symmetric_point_pos([-0.5,0.5,0.5,0.1,4.9,0.1],
-    #                                         None, s1, s2, PDFs.lognormal, PDFs.biv_lognormal, 1, None)
