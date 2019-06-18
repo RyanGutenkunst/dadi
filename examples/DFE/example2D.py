@@ -39,11 +39,11 @@ func_ex = DemogSelModels.IM
 # Check whether we already have a chached set of 2d spectra. If not
 # generate them.
 try:
-    s = pickle.load(open('test.spectra2d.bpkl', 'rb'))
+    s2 = pickle.load(open('test.spectra2d.bpkl', 'rb'))
 except IOError:
-    s = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-                gamma_bounds=(1e-2, 10), verbose=True, mp=True,
-                additional_gammas=[1.2, 4.3])
+    s2 = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+                 gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+                 additional_gammas=[1.2, 4.3])
     # Save spectra2d object
     fid = open('test.spectra2d.bpkl', 'wb')
     pickle.dump(s, fid, protocol=2)
@@ -53,13 +53,13 @@ except IOError:
 input_params, theta = [0.5,0.5,-0.8], 1e5
 sel_dist = PDFs.biv_lognormal
 # Expected sfs
-target = s.integrate(input_params, None, sel_dist, theta, None)
+target = s2.integrate(input_params, None, sel_dist, theta, None)
 # Get data with Poisson variance around expectation
 data = target.sample()
 
 # Parameters are mean, variance, and correlation coefficient
 p0 = [0,1.,0.8]
-popt = dadi.Inference.optimize(p0, data, s.integrate, pts=None,
+popt = dadi.Inference.optimize(p0, data, s2.integrate, pts=None,
                                func_args=[sel_dist, theta],
                                lower_bound=[None,0,-1],
                                upper_bound=[None,None,1],
@@ -72,7 +72,7 @@ print('Optimized parameters: {0}'.format(popt))
 fig = plt.figure(231, figsize=(4,3), dpi=150)
 fig.clear()
 ax = fig.add_subplot(1,1,1)
-Plotting.plot_biv_dfe(s.gammas, s.gammas, sel_dist, popt, ax=ax)
+Plotting.plot_biv_dfe(s2.gammas, s2.gammas, sel_dist, popt, ax=ax)
 fig.tight_layout()
 
 #
@@ -80,7 +80,7 @@ fig.tight_layout()
 # the single-population case using very high correlation.
 #
 params = [-0.5,0.5,0.99, 0.1, 4.3]
-fs_biv = s.integrate_symmetric_point_pos(params, None, sel_dist, theta,
+fs_biv = s2.integrate_symmetric_point_pos(params, None, sel_dist, theta,
                                          pts=None)
 
 func_single_ex = DemogSelModels.IM_single_gamma
@@ -89,7 +89,7 @@ try:
 except IOError:
     s1 = Cache1D(demo_params, ns, func_single_ex, pts_l=pts_l,
                  gamma_pts=100, gamma_bounds=(1e-2, 10), mp=True,
-                 verbose=False)
+                 additional_gammas = [1.2, 4.3], verbose=False)
     fid = open('test.spectra1d.bpkl', 'wb')
     pickle.dump(s1, fid, protocol=2)
     fid.close()
@@ -110,7 +110,7 @@ dadi.Plotting.plot_2d_comp_Poisson(fs1, fs_biv)
 # ppos1=ppos2=0.2, gammapos1=gammapos2=1.2.
 input_params, theta = [0.5,0.3,-0.5,0.2,1.2], 1e5
 # Expected sfs
-target = s.integrate_symmetric_point_pos(input_params, None, sel_dist, theta,
+target = s2.integrate_symmetric_point_pos(input_params, None, sel_dist, theta,
                                          pts=None)
 # Get data with Poisson variance around expectation
 data = target.sample()
@@ -122,7 +122,7 @@ data = target.sample()
 # asymmetric lognormal, we would pass in a p0 of total length 7.
 p0 = [0.3,0.3,0.1,0.2,1.2]
 popt = dadi.Inference.optimize(p0, data,
-                               s.integrate_symmetric_point_pos,
+                               s2.integrate_symmetric_point_pos,
                                pts=None, func_args=[sel_dist, theta],
                                # Note that mu in principle has no lower or
                                # upper bound, sigma has only a lower bound
@@ -140,11 +140,31 @@ print('  Input parameters: {0}'.format(input_params))
 print('  Optimized parameters: {0}'.format(popt))
 
 #
+# Mixture model
+#
+
+# Now a mixture model, which adds together a 2D distribution and a 
+# perfectly correlated 1D distribution.
+# Input parameters here a mu, sigma, rho for 2D (fixed to zero), 
+#   proportion positive, gamma positive, proportion 2D, 
+p0, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
+# Expected sfs
+popt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
+                               func_args=[s1, s2, PDFs.lognormal,
+                                          PDFs.biv_lognormal, theta],
+                               lower_bound=[None, 0.1,-1,0,None, 0],
+                               upper_bound=[None,None, 1,1,None, 1],
+                               # We fix both the rho assumed for the 2D distribution,
+                               # and the assumed value of positive selection.
+                               fixed_params=[None,None,0,None,1.2,None],
+                               verbose=30, multinom=False, maxiter=1)
+
+#
 # Test Godambe code for estimating uncertainties
 #
 input_params = [0.3,0.3,0.1,0.2,1.2]
 # Generate data in segments for future bootstrapping
-fs0 = s.integrate_symmetric_point_pos(input_params, None, sel_dist,
+fs0 = s2.integrate_symmetric_point_pos(input_params, None, sel_dist,
                                       theta/100., pts=None)
 # The multiplication of fs0 is to create a range of data size among
 # bootstrap chunks, which creates a range of thetas in the bootstrap
@@ -154,7 +174,7 @@ data_pieces = [(fs0*(0.5 + (1.5-0.5)/99*ii)).sample() for ii in range(100)]
 data = dadi.Spectrum(np.sum(data_pieces, axis=0))
 # Do the optimization
 popt = dadi.Inference.optimize([0.2,0.2,0.15,0.3,1.2], data,
-                               s.integrate_symmetric_point_pos,
+                               s2.integrate_symmetric_point_pos,
                                pts=None, func_args=[sel_dist, theta],
                                lower_bound=[-1,0.1,-1,0,0],
                                upper_bound=[1,1,1,1,None],
@@ -182,7 +202,7 @@ for boot_ii in range(100):
 def temp_func(pin, ns, pts):
     # Add in gammapos parameter
     params = np.concatenate([pin, [1.2]])
-    return s.integrate_symmetric_point_pos(params, None, sel_dist,
+    return s2.integrate_symmetric_point_pos(params, None, sel_dist,
                                            theta, pts=None)
 
 # Run the uncertainty analysis. Note that each bootstrap data set

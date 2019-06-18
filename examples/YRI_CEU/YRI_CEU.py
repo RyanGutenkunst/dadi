@@ -76,7 +76,7 @@ pylab.figure(1)
 dadi.Plotting.plot_2d_comp_multinom(model, data, vmin=1, resid_range=3,
                                     pop_ids =('YRI','CEU'), show=False)
 # Save the figure
-pylab.savefig('YRI_CEU.png', dpi=50)
+pylab.savefig('YRI_CEU.png', dpi=250)
 
 # Let's generate some data using ms, if you have it installed.
 mscore = demographic_models.prior_onegrow_mig_mscore(popt)

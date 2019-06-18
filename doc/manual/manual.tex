@@ -38,7 +38,7 @@ belowskip=0pt
 
 
 \begin{document}
-\title{\dadi user manual\\\normalsize  Corresponding to version 1.7.0}
+\title{\dadi user manual\\\normalsize  Corresponding to version 2.0.0}
 %\author{Ryan Gutenkunst}
 \date{}
 \maketitle
@@ -64,21 +64,17 @@ Together with a few examples, this manual will quickly get you productive with \
 
 \subsection{Getting help}
 
-Please join the \py{dadi-announce} and \py{dadi-user} Google groups, available from the \dadi homepage: \url{http://dadi.googlecode.com}.
-\py{dadi-announce} is a very low traffic list used only for alerting users to significant developments.
+Please join the \py{dadi-user} Google groups: \url{https://groups.google.com/group/dadi-user}.
 \py{dadi-user} is the preferred forum for asking questions and getting help.
-Before posting a question, take a moment to look through the \py{dadi-user} archives (\url{http://groups.google.com/group/dadi-user}) to see if your question has already been addressed.
-Additional detail on all the methods described here can be found in the API documentation, which is included with the source code distribution and available online at: \url{http://dadi.googlecode.com/svn/trunk/doc/api/index.html}.
-There are also example scripts available at: \url{http://dadi.googlecode.com/svn/trunk/examples}.
+Before posting a question, take a moment to look through the \py{dadi-user} archives to see if your question has already been addressed.
+There are example scripts included in the source distribution: \url{http://dadi.googlecode.com/svn/trunk/examples}.
 
 \subsection{Helping us}
 
 As we do our own research, \dadi is constantly improving.
 Our philosophy is to include in \dadi any code we develop for our own projects that may useful to others.
 Similarly, if you develop \dadi-related code that you think might be useful to others, please let us know so we can include it with the main distribution.
-
-If you discover a bug in \dadi, please submit an issue on the \dadi website: \url{http://code.google.com/p/dadi/issues}.
-Also, if you have particular needs that modification to \dadi may fulfill, please contact the developers and we may be able to help.
+If you have particular needs that modification to \dadi may fulfill, please contact the developers and we may be able to help.
 
 \section{Suggested workflow}
 
@@ -512,9 +508,9 @@ def IM(params, ns, pts):
 \begin{lstlisting}[caption={\textbf{Out-of-Africa model from Gutenkunst (2009):} This model involves a size change in the ancestral population, a split, another split, and then exponential growth of populations 1 and 2. (The \py{from dadi import} line imports those modules from the \py{dadi} namespace into the local namespace, so we don't have to type \py{dadi.} to access them.)}, float]
 from dadi import Numerics, PhiManip, Integration, Spectrum
 
-def OutOfAfrica((nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs, 
-                 mAfB, mAfEu, mAfAs, mEuAs, TAf, TB, TEuAs),
-                 (n1,n2,n3), pts):
+def OutOfAfrica(params, ns, pts):
+    nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs, 
+                 mAfB, mAfEu, mAfAs, mEuAs, TAf, TB, TEuAs = params
     xx = Numerics.default_grid(pts)
 
     phi = PhiManip.phi_1D(xx)
@@ -538,7 +534,8 @@ def OutOfAfrica((nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs,
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\textbf{Fixed $\boldsymbol{\theta}$:} A split demographic model function with a fixed value of $\theta$=137 for derived population 1. The free parameters are the sizes of the ancestral pop, \py{nuA}, and derived pop 2, \py{nu2}, (relative to derived pop 1), along with the divergence time \py{T} between the two derived pops.}, label={lst:fixed_theta}, float]
-def fixed_theta((nuA, nu2, T), ns, pts):
+def fixed_theta(params, ns, pts):
+    nuA, nu2, T = params
     theta1 = 137
     
     xx = dadi.Numerics.default_grid(pts)
@@ -556,10 +553,10 @@ def fixed_theta((nuA, nu2, T), ns, pts):
 \begin{lstlisting}[caption={\textbf{Settlement-of-New-World model from Gutenkunst (2009):} Because \dadi is limited to 3 simultaneous populations, we need to integrate out the African population, using \py{Numerics.trapz}. This model also employs a fixed $\theta$, and ancillary parameters passed in using the third argument.}, float, label={lst:new_world},basicstyle=\tt\footnotesize]
 from dadi import Numerics, PhiManip, Integration, Spectrum
 
-def NewWorld((nuEu0, nuEu, nuAs0, nuAs, nuMx0, nuMx,
-              mEuAs, TEuAs, TMx, fEuMx), ns, 
-             (theta0, nuAf, nuB, mAfB, mAfEu, mAfAs, TAf, TB),
-             pts):
+def NewWorld(params, ns, fixed_params, pts):
+    nuEu0, nuEu, nuAs0, nuAs, nuMx0, nuMx,
+              mEuAs, TEuAs, TMx, fEuMx = params
+    theta0, nuAf, nuB, mAfB, mAfEu, mAfAs, TAf, TB = fixed_params
     xx = Numerics.default_grid(pts)
 
     phi = PhiManip.phi_1D(xx)
@@ -609,9 +606,9 @@ def NewWorld((nuEu0, nuEu, nuAs0, nuAs, nuMx0, nuMx,
 To simulate the frequency spectrum, \dadi solves a partial differential equation, approximating the solution using a grid of points in population frequency space (the \py{phi} array).
 Importantly, a single evaluation of the frequency spectrum with a fixed grid size is apt to be inaccurate, because computational limits mean the grid must be relatively coarse.
 To overcome this, \dadi solves the problem at a series (typically 3) of grid sizes and extrapolates to an infinitely fine grid.
-To transform the demographic model function you have created (call it \py{my_demo_func}) into a function that does this extrapolation, wrap it using a call to \py{Numerics.make_extrap_log_function}, e.g.:
+To transform the demographic model function you have created (call it \py{my_demo_func}) into a function that does this extrapolation, wrap it using a call to \py{Numerics.make_extrap_func}, e.g.:
 \begin{lstlisting}
-my_extrap_func = Numerics.make_extrap_log_func(my_demo_func)
+my_extrap_func = Numerics.make_extrap_func(my_demo_func)
 \end{lstlisting}
 Having done this, the final argument to \py{my_extrap_func} is now a \emph{sequence} of grid sizes, which will be used for extrapolation.
 In our experience, good results are obtained by setting the smallest grid size slightly larger than the largest population sample size.
@@ -786,7 +783,7 @@ Entires below the minimum (and masked entries) are plotted as white.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{2d_comp}
+\includegraphics[scale=0.75]{../../examples/YRI_CEU/YRI_CEU}
 \caption{\textbf{2D model-data comparison plot:} The upper-left panel is the data, and the upper-right is the model. The lower two panels plot the residuals, and a histogram of the residuals.\label{fig:2d_comp}}
 \end{figure}
 
@@ -946,36 +943,126 @@ To build the Cython extensions, use the flag \py{--cython_triallele} when instal
 \py{sudo python setup.py install --cython_triallele}.\\
 If for some reason installation fails to build the Cython modules, \dadi can be installed without the Cythonized Triallele methods, and the Triallele methods will still be functional.
 
+
+\section{DFE Inference}
+
+Note: This section of the manual is adaptive from the fit$\partial$a$\partial$i manual written by Bernard Kim and Kirk Lohmueller.
+
+The code examples shown here are meant to work with the example dataset. For simplicity's sake, I have generated an example dataset with PReFerSIM \cite{ortega2016}. Furthermore, we will work with a relatively small sample size and simple demographic model so that the examples can be worked through quickly on a laptop. Lastly, all the example code is provided in the \texttt{example.py} script as well as in this document.
+
+Another important thing to note: $\partial$a$\partial$i characterizes genotype fitnesses as: $1$, $1+2sh$, and $1+2s$, where $1+2sh$ is the fitness of the heterozygote. Furthermore, the DFEs inferred are scaled in terms of the ancestral population size: $\gamma=2N_{A}s$. This means that the selection coefficients must sometimes be rescaled, for instance when using the program SLiM \cite{haller2016}.
+
+\subsection{Example dataset}
+The example dataset used in the example script was generated with forward simulations under the PRF model, with the simulation program PReFerSIM. Additionally, we will assume we know the true underlying demographic model rather than trying to fit one.
+
+This dataset is summarized with a site frequency spectrum, has sample size $2n=250$ (125 diploids), and is saved in the file \texttt{sample.sfs} file. It was generated with a single size change demography and an underlying gamma DFE. Specifically, a population of size $N=10,000$ diploids expands to $20,000$ diploids 1000 generations ago and the gamma DFE has shape parameter 0.186 and scale parameter 686.7. This is the same gamma DFE that we inferred from the 1000 Genomes EUR dataset, but the scale parameter has been rescaled to the ancestral population size of 10,000 diploids. Finally, the amount of diversity in the sample dataset matches $\theta_{NS}=4000=4N_A \mu L_{NS}$.
+
+\subsection{Demographic inference}
+
+Because the usage of $\partial$a$\partial$i for demographic inference is extensively documented, it will not be discussed in detail here. In practice, we find that, as long as the demographic model that fits the synonymous sites reasonably well also works well for inference of the DFE.  
+
+Briefly, we fit a demographic model to synonymous sites, which are assumed to be evolving in a neutral or nearly neutral manner. We believe this accurately represents the effects of linked selection and population structure, and condition upon this demographic model to fit the DFE. However, note the assumption of neutral synonymous variants may not hold for species with large population sizes, since this will increase the efficacy of selection on mutations with small fitness effects.
+
+Our sample dataset was generated with a two epoch (single size change) demography. We will assume we infer a 2-fold population expansion 0.05*2$N_A$ generations ago, where $N_A$ is the ancestral population size. Therefore, the parameter vector is: \texttt{[nu, T]}.
+
+\lstinputlisting[language=Python, firstline=13, lastline=14]{../../examples/DFE/example1D.py}
+
+Again, we assume that the population scaled nonsynonymous mutation rate, $\theta_{NS}=4,000$. In practice, we compute the synonymous mutation rate, $\theta_S$, by using the multinomial likelihood to fit the demographic model. Because this method only fits the proportional SFS, $\theta_S$ is estimated with the \texttt{dadi.Inference.optimal\_sfs\_scaling} method. Then, we multiply $\theta_S$ by 2.31 to get $\theta_{NS}$, $\theta_S * 2.31 = \theta_{NS}$. Remember that our sample size is 125 diploids (250 chromosomes).
+
+\subsection{Pre-computing of the SFS for many $\gamma$}
+
+Next, we must generate frequency spectra for a range of gammas. The demographic function is modified to allow for a single selection coefficient. Here, each selection coefficient is scaled with the ancestral population size, $\gamma=2N_As$. In other words, if \texttt{gamma=0}, this function is the same as the original demographic function.
+This function is defined as \texttt{two\_epoch} in \texttt{dadi.DFE.DemogSelModels.py}. Note the use of a Python decorator to easily define this as an extrapolating function.
+
+\lstinputlisting[language=Python, firstline=22, lastline=42]{../../dadi/DFE/DemogSelModels.py}
+
+Then, we generate the frequency spectra for a range of gammas. The following code generates expected frequency spectra, conditional on the demographic model fit to synonymous sites, over \texttt{gamma\_pts} log-spaced points over the range of \texttt{gamma\_bounds}. Additionally, the \texttt{mp=True} argument tells fit$\partial$a$\partial$i whether it should utilize multiple cores/threads, which is convenient since this step takes the longest. If the argument \texttt{cpus} is passed, it will utilize that many cores, but if \texttt{mp=True} and no \texttt{cpus} argument is passed, it will use \texttt{n-1} threads, where \texttt{n} is the number of threads available. If \texttt{mp=False}, each SFS will be computed in serial. This step should take 1-10 minutes depending on your CPU.
+
+\lstinputlisting[language=Python, firstline=18, lastline=21]{../../examples/DFE/example1D.py}
+
+Note, one error message that will come up often with very negative selection coefficients is: \\ \\
+\texttt{WARNING:Numerics:Extrapolation may have failed. Check resulting frequency spectrum for unexpected results.} \\
+
+One way to fix this is by increasing the \texttt{pts\_l} grid sizes -- this will need to increase as the sample size increases and/or if the integration is done over a range which includes stronger selection coefficients. \texttt{dadi.Numerics.make\_extrap\_func} is used to extrapolate the frequency spectra to infinitely many gridpoints, but will sometimes return tiny negative values (often $|X_i|<1e-50$) due to floating point rounding errors. Using \texttt{dadi.Numerics.make\_extrap\_log\_func} will sometimes return \texttt{Inf} values and is harder to work with. In practice, it seems that the tiny negative values do not affect the integration because they are insignificant, but if the error message appears it is good to manually double-check each SFS. Alternately, the small negative values can be manually approximated with 0. 
+
+In the example, the pre-computed SFSs are saved in the list \texttt{spectra.spectra}. For convenience's sake, the \texttt{spectra} object can be pickled.
+
+\lstinputlisting[language=Python, firstline=24, lastline=24]{../../examples/DFE/example1D.py}
+\lstinputlisting[language=Python, firstline=25, lastline=25]{../../examples/DFE/example1D.py}
+
+\subsection{Fitting a DFE}
+
+\subsubsection{Fitting simple DFEs}
+
+Fitting a DFE is the quickest part of this procedure, especially for simple distributions such as the gamma distribution. If you wish to get an SFS for a specific DFE, you can use the \texttt{integrate} method that is built into the spectra object: \texttt{spectra.integrate(sel\_params, None, sel\_dist, theta, None)}. \texttt{sel\_params} is a list containing the DFE parameters, \texttt{sel\_dist} is the distribution used for the DFE, and \texttt{theta} is $\theta_{NS}$. To compute the expected SFS for our simulations with the true parameter values, we would use \texttt{spectra.integrate([0.186, 686.7], None, Selection.gamma\_dist, 4000., None)}. (The \texttt{None} arguments are for \texttt{ns} and \texttt{pts}, which are ignored. These are useful to ensure compatibility with \dadi's optimization functions.)
+
+First, load the sample data:
+
+\lstinputlisting[language=Python, firstline=30, lastline=30]{../../examples/DFE/example1D.py}
+
+Similar to the way in which vanilla $\partial$a$\partial$i is used, you should have a starting guess at the parameters. Set an upper and lower bound. Perturb the parameters to select a random starting point, then fit the DFE. This should be done multiple times from different starting points. We use the \texttt{spectra.integrate} methods to generate the expected SFSs during each step of the optimization. The following lines of code fit a gamma DFE to the example data:
+
+\lstinputlisting[language=Python, firstline=34, lastline=41]{../../examples/DFE/example1D.py}
+
+If this runs correctly, you should infer something close to, but not exactly, the true DFE. The final results will be stored in \texttt{popt}.
+The expected SFS at the MLE can be computed with:
+
+\lstinputlisting[language=Python, firstline=44, lastline=44]{../../examples/DFE/example1D.py}
+
+\subsubsection{Fitting complex DFEs}
+
+Fitting complex distributions is similar to fitting simple DFEs, but requires a few additional steps. The following code can be used to fit a neutral+gamma mixture DFE to the data. Note that the gamma DFE should fit better if assessing model fit using AIC. Additionally, we assume that every selection coefficient $\gamma < 1e-4$ is effectively neutral. Since this is a mixture of two distributions, we infer the proportion of neutral mutations, $p_{neu}$, and assume the complement of that (i.e. $1-p_{neu}$) is the proportion of new mutations drawn from a gamma distribution. Therefore, the parameter vector should be: [$p_{neu}$,shape, scale]. The gamma DFE is still the true DFE.
+
+\lstinputlisting[language=Python, firstline=48, lastline=56]{../../examples/DFE/example1D.py}
+
+Fit the DFE as before, accounting for the extra parameter to describe the proportion of neutral new mutations. Note that $p_{neu}$ is explicitly bounded to be $0 < p_{neu} \leq 1$.
+
+\lstinputlisting[language=Python, firstline=58, lastline=66]{../../examples/DFE/example1D.py}
+
+For fitting with ancestral state misidentification or including a point mass of positive selection, see \texttt{example1D.py}.
+
+\subsection{Fitting joint DFEs}
+
+\dadi can also fit joint DFEs between populations, in a similar fashion to one-dimensional DFEs.
+
+Caching is similar to the one-dimensional case, although note that it is generally much more computationally expensive.
+\lstinputlisting[language=Python, firstline=44, lastline=50]{../../examples/DFE/example2D.py}
+
+\dadi currently includes a few simple models for joint DFEs in \texttt{dadi.DFE.PDFs}.
+Note that the semi-analytic integration of the distribution over the regime not covered by the cache is expensive.
+Therefore, C implementations of the PDFs can make a big difference in computational time, and we provide
+C implementations for the default PDFs.
+
+Calculating individual spectra is very similar to the 1D case.
+\lstinputlisting[language=Python, firstline=82, lastline=84]{../../examples/DFE/example2D.py}
+As is optimization.
+\lstinputlisting[language=Python, firstline=124, lastline=137]{../../examples/DFE/example2D.py}
+Note that when a point mass of positive selection is included in a 2D DFE, the assumed value for the positive $\gamma$ must be cached, otherwise evaluation would be too expensive.
+
+\dadi also implements mixture models, in which the total DFE is a sum of a 2D distribution plus a 1D distribution representing perfect correlation.
+These are implemented by \texttt{dadi.DFE.mixture}.
+\lstinputlisting[language=Python, firstline=152, lastline=153]{../../examples/DFE/example2D.py}
+Using a mixture model requires both a 1D and a 2D cache.
+
+For additional examples, see \texttt{examples/DFE/example2D.py} in the source distribution.
+
 \section{Installation}
 
 \subsection{Dependencies}
 
 \dadi depends on a number of Python libraries. The absolute dependencies are
 \begin{itemize}
-\item Python, version $\geq$ 2.5 (but not Python 3)
-\item NumPy, version $\geq$ 1.2.0
-\item SciPy, version $\geq$ 0.6.0
+\item Python 3
+\item NumPy
+\item SciPy
 \end{itemize}
 It is also recommended that you install
 \begin{itemize}
-\item matplotlib, version $\geq$ 0.98.1
-\item IPython, version $\geq$ 0.10
-\end{itemize}
-For 3D plotting, it is also suggested that you install
-\begin{itemize}
-\item MayaVi2
+\item matplotlib
+\item IPython
 \end{itemize}
 
-The easiest way to obtain all these dependencies is to install \href{http://www.enthought.com/products/epd.php}{Enthought's Python Distribution}, which is \href{http://www.enthought.com/products/edudownload.php}{free for academic use}.
-
-\subsection{Binary packages}
-
-The easiest way to get \dadi is to download and run one of the binary installers.
-Note that we still suggest downloading the source distribution to have access to tests, examples, and documentation.
-(The installation of Python that ships with OS X may not be detected by the binary installer.
-You'll typically be better off installing one of the \py{python.org} distributions.)
-Note that installers are specific to the minor version of Python. For example, a 2.5 installer will work on 2.5.1 and 2.5.4, but not on 2.6.
-If you need a binary installer for a particular version of Python, please ask on the \py{dadi-users} mailing list.
+The easiest way to obtain all these dependencies is to install the \href{https://www.anaconda.com/distribution/}{Anacond Python Distribution}.
 
 \subsection{Installing from source}
 
@@ -1025,21 +1112,8 @@ to 0 observations in all the populations.
 Our rule of thumb is to use the projection that maximizes the number of segregating SNPs.
 The number of segregating SNPs can be calculated as \py{fs.S()}.
 
-\item Can I use a likelihood-ratio-test to decide whether allowing a parameter to be non-zero yields a statistically significantly better model? (For example, migration versus no migration.)
-
-Yes, although assigning significance values can be computationally intensive.
-\dadi calculates a composite likelihood, which assumes all SNPs in the data are independent.
-This doesn't bias parameter inference for neutral models~\cite{bib:Wiuf2006}, but if your SNPs are actually linked, the standard likelihood-ratio test will be anti-conservative, i.e. it will reject the simpler model more often that it should.
-
-To overcome this, you need to calculate the null distribution, i.e. what improvements in likelihood would you expect if there really were no migration in the data, but your model included migration?
-To do this, generate simulated data sets with a coalescent simulator under your best-fit model without migration, replicating as closely as possible your sequencing strategy (size and linkage between sequenced regions).
-Then fit each data set using the no-migration model, and the migration model.
-The resulting distribution of likelihood differences is the null distribution, i.e. if there really is no migration, how much does
-adding the migration parameter improve the likelihood (because you're better fitting noise)?
-Compare the improvement from the real data with this null distribution to assign a p-value.
-
 \end{enumerate}
 
-\bibliography{popgen}
+\bibliography{popgen,refs}
 
 \end{document}
