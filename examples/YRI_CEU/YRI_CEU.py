@@ -74,7 +74,7 @@ print('Optimal value of theta: {0}'.format(theta))
 import pylab
 pylab.figure(1)
 dadi.Plotting.plot_2d_comp_multinom(model, data, vmin=1, resid_range=3,
-                                    pop_ids =('YRI','CEU'))
+                                    pop_ids =('YRI','CEU'), show=False)
 # Save the figure
 pylab.savefig('YRI_CEU.png', dpi=50)
 
@@ -94,7 +94,7 @@ if return_code == 0:
     msdata = dadi.Spectrum.from_ms_file('test.msout')
     pylab.figure(2)
     dadi.Plotting.plot_2d_comp_multinom(model, theta*msdata, vmin=1,
-                                        pop_ids=('YRI','CEU'))
+                                        pop_ids=('YRI','CEU'), show=False)
 
 # Estimate parameter uncertainties using the Godambe Information Matrix, to
 # account for linkage in the data. 
