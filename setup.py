@@ -84,12 +84,13 @@ numpy.distutils.core.setup(name='dadi',
                            author_email='rgutenk@email.arizona.edu',
                            url='http://dadi.googlecode.com',
                            ext_modules = [tridiag, int_c, pdfs],
-                           scripts=['scripts/ms_jsfs.py'],
                            packages=['dadi', 'dadi.Triallele', 'dadi.TwoLocus'], 
                            package_data = {'tests':['IM.fs'],
                                            # Copy Triallele extension modules
                                            'dadi.Triallele':['*.so'],
                                            # Copy TwoLocus extension modules
-                                           'dadi.TwoLocus':['*.so']},
+                                           'dadi.TwoLocus':['*.so'],
+                                           # Copy DFE extension modules,
+                                           'dadi.DFE':['*.so']},
                            license='BSD'
                            )
