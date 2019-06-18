@@ -58,7 +58,7 @@ print('Finshed optimization **************************************************')
 # These are the actual best-fit model parameters, which we found through
 # longer optimizations and confirmed by running multiple optimizations.
 # We'll work with them through the rest of this script.
-popt = [1.881, 0.0710, 1.845, 0.911, 0.355, 0.111]
+popt = [1.880, 0.0724, 1.764, 0.930, 0.363, 0.112]
 print('Best-fit parameters: {0}'.format(popt))
 
 # Calculate the best-fit model AFS.
@@ -75,9 +75,6 @@ import pylab
 pylab.figure(1)
 dadi.Plotting.plot_2d_comp_multinom(model, data, vmin=1, resid_range=3,
                                     pop_ids =('YRI','CEU'))
-# This ensures that the figure pops up. It may be unecessary if you are using
-# ipython.
-pylab.show()
 # Save the figure
 pylab.savefig('YRI_CEU.png', dpi=50)
 
@@ -98,12 +95,13 @@ if return_code == 0:
     pylab.figure(2)
     dadi.Plotting.plot_2d_comp_multinom(model, theta*msdata, vmin=1,
                                         pop_ids=('YRI','CEU'))
-    pylab.show()
 
 # Estimate parameter uncertainties using the Godambe Information Matrix, to
-# account for linkage in the data. To use the GIM approach, we need to have
-# spectra from bootstrapping our data.  Let's load the ones we've provided for
-# the example.  
+# account for linkage in the data. 
+import dadi.Godambe
+
+# To use the GIM approach, we need to have spectra from bootstrapping our 
+# data.  Let's load the ones we've provided for the example.  
 # (We're using Python list comprehension syntax to do this in one line.)
 all_boot = [dadi.Spectrum.from_file('bootstraps/{0:02d}.fs'.format(ii)) 
             for ii in range(100)]
@@ -123,11 +121,11 @@ print('Estimated parameter standard deviations from FIM: {0}'.format(uncerts_fim
 print('Factors by which FIM underestimates parameter uncertainties: {0}'.format(uncerts/uncerts_fim))
 
 # What if we fold the data?
-# These are the optimal parameters when the spectrum is folded. They can be
-# found simply by passing data.fold() to the above call to optimize_log. 
-popt_fold =  array([1.907,  0.073,  1.830,  0.899,  0.425,  0.113])
-uncerts_folded = dadi.Godambe.GIM_uncert(func_ex, pts_l, all_boot, popt_fold, 
-                                         data.fold(), multinom=True)
+# These are the optimal parameters when the spectrum is folded. 
+popt_fold = [1.910, 0.074, 1.787, 0.914, 0.439, 0.114]
+all_boot_fold = [_.fold() for _ in all_boot]
+uncerts_folded = dadi.Godambe.GIM_uncert(func_ex, pts_l, all_boot_fold,
+                                         popt_fold, data.fold(), multinom=True)
 print('Folding increases parameter uncertainties by factors of: {0}'.format(uncerts_folded/uncerts))
 
 # Let's do a likelihood-ratio test comparing models with and without migration.
@@ -159,3 +157,7 @@ print('Adjusted D statistic: {0:.4f}'.format(D_adj))
 # point percent function for a weighted sum of chi^2 dists.
 pval = dadi.Godambe.sum_chi2_ppf(D_adj, weights=(0.5,0.5))
 print('p-value for rejecting no-migration model: {0:.4f}'.format(pval))
+
+# This ensures that the figures pop up. It may be unecessary if you are using
+# ipython.
+pylab.show()
