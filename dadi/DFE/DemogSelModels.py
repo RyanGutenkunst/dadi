@@ -20,7 +20,7 @@ def equil(params, ns, pts):
     return Spectrum.from_phi(phi, ns, (xx,))
 
 @Numerics.make_extrap_func
-def two_epoch_sel(params, ns, pts):
+def two_epoch(params, ns, pts):
     """
     Instantaneous population size change, plus selection.
 
