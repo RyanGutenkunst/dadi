@@ -176,26 +176,26 @@ class DFETestCase(unittest.TestCase):
             dadi.DFE.mixture_symmetric_point_pos([-0.5,0.5,0.5,0.1,4.9,0.1],
                                                  None, s1, s2, PDFs.lognormal, PDFs.biv_lognormal, 1, None)
 
-    def test_plotting(self):
-        import matplotlib.pyplot as plt
-        sel_dist = PDFs.biv_lognormal
-        # Asymmteric
-        params = [0.5,-0.5,0.5,1,-0.8]
-        gammax = -np.logspace(-2, 1, 20)
-        gammay = -np.logspace(-1, 2, 30)
+    #def test_plotting(self):
+    #    import matplotlib.pyplot as plt
+    #    sel_dist = PDFs.biv_lognormal
+    #    # Asymmteric
+    #    params = [0.5,-0.5,0.5,1,-0.8]
+    #    gammax = -np.logspace(-2, 1, 20)
+    #    gammay = -np.logspace(-1, 2, 30)
 
-        fig = plt.figure(137, figsize=(4,3), dpi=150)
-        fig.clear()
-        ax = fig.add_subplot(1,1,1)
-        dadi.DFE.Plotting.plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=ax)
-        fig.tight_layout()
+    #    fig = plt.figure(137, figsize=(4,3), dpi=150)
+    #    fig.clear()
+    #    ax = fig.add_subplot(1,1,1)
+    #    dadi.DFE.Plotting.plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=ax)
+    #    fig.tight_layout()
 
-        # With positive selection
-        params = [0.5,-0.5,0.5,1,0.0,0.3,3,0.3,4]
-        fig = dadi.DFE.Plotting.plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params,
-                                                       fignum=23, rho=params[4])
+    #    # With positive selection
+    #    params = [0.5,-0.5,0.5,1,0.0,0.3,3,0.3,4]
+    #    fig = dadi.DFE.Plotting.plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params,
+    #                                                   fignum=23, rho=params[4])
 
-        plt.show()
+    #    plt.show()
 
 def generate_old_fitdadi_data():
     import Selection
@@ -224,11 +224,11 @@ def generate_old_fitdadi_data():
 suite=unittest.TestLoader().loadTestsFromTestCase(DFETestCase)
 
 if __name__ == '__main__':
-    #try:
-    #    generate_old_fitdadi_data()
-    #    print('Generated data for comparison with old fitdadi code.')
-    #except ImportError:
-    #    print('Failed to import old fitdadi code, using stored comparison results.')
-    #    pass
+    try:
+        generate_old_fitdadi_data()
+        print('Generated data for comparison with old fitdadi code.')
+    except ImportError:
+        print('Failed to import old fitdadi code, using stored comparison results.')
+        pass
 
     unittest.main()
