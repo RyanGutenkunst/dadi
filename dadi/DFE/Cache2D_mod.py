@@ -149,10 +149,8 @@ class Cache2D:
         weights_1low, weights_1high = 0*self.neg_gammas, 0*self.neg_gammas
         weights_2low, weights_2high = 0*self.neg_gammas, 0*self.neg_gammas
         for ii, gamma in enumerate(-self.neg_gammas):
-            marg1_func = lambda g1: sel_dist(np.array([[g1]]),
-                                             np.array([[gamma]]), params)
-            marg2_func = lambda g2: sel_dist(np.array([[gamma]]),
-                                             np.array([[g2]]), params)
+            marg1_func = lambda g1: sel_dist(g1, gamma, params)
+            marg2_func = lambda g2: sel_dist(gamma, g2, params)
             w_1low, err = scipy.integrate.quad(marg1_func, min_gamma, np.inf)
             w_1high, err = scipy.integrate.quad(marg1_func, 0, max_gamma)
             w_2low, err = scipy.integrate.quad(marg2_func, min_gamma, np.inf)

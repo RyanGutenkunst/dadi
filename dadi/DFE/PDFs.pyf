@@ -1,0 +1,26 @@
+python module PDFs_c
+interface
+    subroutine biv_lognormal(xx, yy, params, n, m, Nparams, output)
+        intent(c) biv_lognormal
+        intent(c)
+        double precision intent(in), dimension(n) :: xx
+        double precision intent(in), dimension(m) :: yy
+        double precision intent(in), dimension(Nparams) :: params
+        integer intent(hide), depend (xx) :: n=len(xx) 
+        integer intent(hide), depend (yy) :: m=len(yy) 
+        integer intent(hide), depend (Nparams) :: m=len(params) 
+        double precision intent(out), dimension(n,m) :: output
+    end subroutine biv_lognormal
+    subroutine biv_ind_gamma(xx, yy, params, n, m, Nparams, output)
+        intent(c) biv_ind_gamma
+        intent(c)
+        double precision intent(in), dimension(n) :: xx
+        double precision intent(in), dimension(m) :: yy
+        double precision intent(in), dimension(Nparams) :: params
+        integer intent(hide), depend (xx) :: n=len(xx) 
+        integer intent(hide), depend (yy) :: m=len(yy) 
+        integer intent(hide), depend (Nparams) :: m=len(params) 
+        double precision intent(out), dimension(n,m) :: output
+    end subroutine biv_ind_gamma
+end interface
+end python module PDFs_c

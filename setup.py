@@ -42,6 +42,9 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/integration_shared.c',
                                   'dadi/tridiag.c'],
                          extra_compile_args=extra_compile_args)
+pdfs = core.Extension(name = 'dadi.DFE.PDFs_c',
+                      sources = ['dadi/DFE/PDFs.pyf', 'dadi/DFE/PDFs.c'],
+                      extra_compile_args=extra_compile_args)
 
 if '--cython' in sys.argv:
     # Remove extra argument, so distutils doesn't complain
@@ -80,7 +83,7 @@ numpy.distutils.core.setup(name='dadi',
                            author='Ryan Gutenkunst',
                            author_email='rgutenk@email.arizona.edu',
                            url='http://dadi.googlecode.com',
-                           ext_modules = [tridiag, int_c],
+                           ext_modules = [tridiag, int_c, pdfs],
                            scripts=['scripts/ms_jsfs.py'],
                            packages=['dadi', 'dadi.Triallele', 'dadi.TwoLocus'], 
                            package_data = {'tests':['IM.fs'],
