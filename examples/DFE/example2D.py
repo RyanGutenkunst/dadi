@@ -80,7 +80,7 @@ fig.tight_layout()
 # the single-population case using very high correlation.
 #
 params = [-0.5,0.5,0.99, 0.1, 4.3]
-fs_biv = s2.integrate_symmetric_point_pos(params, None, sel_dist, theta,
+fs_biv = s2.integrate_symmetric_point_pos(params, None, PDFs.biv_lognormal, theta,
                                          pts=None)
 
 func_single_ex = DemogSelModels.IM_single_gamma
@@ -149,6 +149,8 @@ print('  Optimized parameters: {0}'.format(popt))
 #   proportion positive, gamma positive, proportion 2D, 
 p0, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
 # Expected sfs
+target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
+                                     PDFs.biv_lognormal, theta, None)
 popt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
                                func_args=[s1, s2, PDFs.lognormal,
                                           PDFs.biv_lognormal, theta],

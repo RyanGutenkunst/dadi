@@ -78,19 +78,39 @@ if '--cython' in sys.argv:
           script_args = ['build_ext', '--inplace'], 
           )
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 numpy.distutils.core.setup(name='dadi',
-                           version='1.7.0',
+                           version='1.9.93',
                            author='Ryan Gutenkunst',
                            author_email='rgutenk@email.arizona.edu',
-                           url='http://dadi.googlecode.com',
+                           url='https://bitbucket.org/gutenkunstlab/dadi',
                            ext_modules = [tridiag, int_c, pdfs],
-                           packages=['dadi', 'dadi.Triallele', 'dadi.TwoLocus'], 
-                           package_data = {'tests':['IM.fs'],
-                                           # Copy Triallele extension modules
-                                           'dadi.Triallele':['*.so'],
-                                           # Copy TwoLocus extension modules
-                                           'dadi.TwoLocus':['*.so'],
-                                           # Copy DFE extension modules,
-                                           'dadi.DFE':['*.so']},
-                           license='BSD'
+                           packages=setuptools.find_packages(),
+                           description="Fit population genetic models of demography and selection using diffusion approximations to the allele frequency spectrum",
+                           long_description_content_type="text/markdown",
+                           long_description=long_description,
+                           #package_data = {'tests':['IM.fs'],
+                           #                # Copy Triallele extension modules
+                           #                'dadi.Triallele':['*.so'],
+                           #                # Copy TwoLocus extension modules
+                           #                'dadi.TwoLocus':['*.so'],
+                           #                # Copy DFE extension modules,
+                           #                'dadi.DFE':['*.so']},
+                           classifiers=[
+                               "Programming Language :: Python :: 3",
+                               "License :: OSI Approved :: BSD License",
+                               "Operating System :: OS Independent",
+                               "Development Status :: 5 - Production/Stable",
+                               "Intended Audience :: Science/Research",
+                               "Natural Language :: English",
+                               "Topic :: Scientific/Engineering :: Bio-Informatics"
+                           ]
                            )
+
+# To distribute to PyPI
+# rm -rf dist
+# python3 setup.py sdist bdist_wheel
+# (Testing) python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+# (Final) python3 -m twine upload dist/*

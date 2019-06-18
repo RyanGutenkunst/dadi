@@ -1063,17 +1063,15 @@ It is also recommended that you install
 \end{itemize}
 
 The easiest way to obtain all these dependencies is to install the \href{https://www.anaconda.com/distribution/}{Anacond Python Distribution}.
+The easiest way to install \dadi is to install \texttt{pip} and run \texttt{python3 -m pip install dadi}.
+(Although note that this is not guaranteed to be the most up-to-date version.)
 
 \subsection{Installing from source}
 
-\dadi can be easily installed from source code, as long as you have \py{gcc} installed. (On OS X, you'll need to install the Developer Tools to get \py{gcc}.) To do so, first unpack the source code tarball, \py{unzip dadi-<version>.zip}.
+\dadi can be easily installed from source code, as long as you have an appropriate C compiler installed. (On OS X, you'll need to install the Developer Tools to get \py{gcc}.) To do so, first unpack the source code tarball, \py{unzip dadi-<version>.zip}.
 In the \py{dadi-<version>} directory, run \py{sudo python setup.py install}.
 This will compile the C modules \dadi uses and install those plus all \dadi Python files in your Python installation's \py{site-packages} directory.
 A (growing) series of tests can be run in the \py{tests} directory, via \py{python run_tests.py}
-
-\subsubsection{Windows}
-
-Installing \py{gcc} on Windows is somewhat troublesome. If you are running Python 2.6, \dadi can also be compiled on Windows if you have Microsoft Visual Studio 2008. There is a free ``Express'' version which includes the compiler available at \url{http://www.microsoft.com/express/Downloads/}.
 
 \section{Frequently asked questions}
 
