@@ -1,3 +1,6 @@
+"""
+Probability density functions for defining DFEs.
+"""
 import numpy as np
 import scipy.stats.distributions as ssd
 

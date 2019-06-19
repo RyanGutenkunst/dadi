@@ -1,9 +1,9 @@
 """
-Initial developed by Bernard Kim and published as fitdadi
-Kim, Huber, Lohmueller (2017) Genetics 
-Modified version of the script found at: https://doi.org/10.1534/genetics.116.197145
+Initially developed by Bernard Kim and published as fitdadi
+Kim, Huber, Lohmueller (2017) Genetics.
+Modified version of the script found at: https://doi.org/10.1534/genetics.116.197145 .
 Based on scripts from:
-https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc
+https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc.
 """
 
 import operator

@@ -108,9 +108,11 @@ numpy.distutils.core.setup(name='dadi',
                                "Topic :: Scientific/Engineering :: Bio-Informatics"
                            ]
                            )
-
+# To build completely
+# python setup.py build_ext --inplace --cython
+# To build API documention
+# rm -rf doc/api; pdoc -f --html -o doc/api dadi
 # To distribute to PyPI
-# rm -rf dist
-# python3 setup.py sdist bdist_wheel
+# rm -rf dist; python3 setup.py sdist bdist_wheel
 # (Testing) python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # (Final) python3 -m twine upload dist/*

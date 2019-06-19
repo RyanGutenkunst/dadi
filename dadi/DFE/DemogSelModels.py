@@ -1,3 +1,6 @@
+"""
+Input models of demography + selection.
+"""
 from dadi import Numerics, Integration, PhiManip, Spectrum
 
 @Numerics.make_extrap_func

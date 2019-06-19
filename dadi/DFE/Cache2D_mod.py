@@ -331,12 +331,6 @@ import dadi
 from dadi import Numerics, PhiManip, Integration
 from dadi.Spectrum_mod import Spectrum
 
-def trivial_fs(params, ns, pts):
-    """
-    For testing.
-    """
-    return Spectrum([1], mask_corners=False)
-
 def mixture(params, ns, s1, s2, sel_dist1, sel_dist2, theta, pts,
                   exterior_int=True):
     """

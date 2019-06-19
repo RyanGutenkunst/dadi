@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.2" />
+<title>dadi.Misc API documentation</title>
+<meta name="description" content="Miscellaneous utility functions. Including ms simulation." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Misc</code></h1>
+</header>
+<section id="section-intro">
+<p>Miscellaneous utility functions. Including ms simulation.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Miscellaneous utility functions. Including ms simulation.
+&#34;&#34;&#34;
+
+import collections,os,sys,time
+
+import numpy
+import scipy.linalg
+
+# Nucleotide order assumed in Q matrices.
+code = &#39;CGTA&#39;
+
+#: Storage for times at which each stream was flushed.
+__times_last_flushed = {}
+def delayed_flush(stream=sys.stdout, delay=1):
+    &#34;&#34;&#34;
+    Flush a stream, ensuring that it is only flushed every &#39;delay&#39; *minutes*.
+    Note that upon the first call to this method, the stream is not flushed.
+
+    stream: The stream to flush. For this to work with simple &#39;print&#39;
+            statements, the stream should be sys.stdout.
+    delay: Minimum time *in minutes* between flushes.
+
+    This function is useful to prevent I/O overload on the cluster.
+    &#34;&#34;&#34;
+    global __times_last_flushed
+
+    curr_time = time.time()
+    # If this is the first time this method has been called with this stream,
+    # we need to fill in the times_last_flushed dict. setdefault will do this
+    # without overwriting any entry that may be there already.
+    if stream not in __times_last_flushed:
+        __times_last_flushed[stream] = curr_time
+    last_flushed = __times_last_flushed[stream]
+
+    # Note that time.time() returns values in seconds, hence the factor of 60.
+    if (curr_time - last_flushed) &gt;= delay*60:
+        stream.flush()
+        __times_last_flushed[stream] = curr_time
+
+def ensure_1arg_func(var):
+    &#34;&#34;&#34;
+    Ensure that var is actually a one-argument function.
+
+    This is primarily used to convert arguments that are constants into
+    trivial functions of time for use in integrations where parameters are
+    allowed to change over time.
+    &#34;&#34;&#34;
+    if numpy.isscalar(var):
+        # If a constant was passed in, use lambda to make it a nice
+        #  simple function.
+        var_f = lambda t: var
+    else:
+        var_f = var
+    if not callable(var_f):
+        raise ValueError(&#39;Argument is not a constant or a function.&#39;)
+    try:
+        var_f(0.0)
+    except TypeError:
+        raise ValueError(&#39;Argument is not a constant or a one-argument &#39;
+                         &#39;function.&#39;)
+    return var_f
+
+def ms_command(theta, ns, core, iter, recomb=0, rsites=None, seeds=None):
+    &#34;&#34;&#34;
+    Generate ms command for simulation from core.
+
+    theta: Assumed theta
+    ns: Sample sizes
+    core: Core of ms command that specifies demography.
+    iter: Iterations to run ms
+    recomb: Assumed recombination rate
+    rsites: Sites for recombination. If None, default is 10*theta.
+    seeds: Seeds for random number generator. If None, ms default is used.
+           Otherwise, three integers should be passed. Example: (132, 435, 123)
+    &#34;&#34;&#34;
+    if len(ns) &gt; 1:
+        ms_command = &#34;ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i &#34;\
+                &#34;%(sample_sizes)s %(core)s&#34;
+    else:
+        ms_command = &#34;ms %(total_chrom)i %(iter)i -t %(theta)f  %(core)s&#34;
+
+    if recomb:
+        ms_command = ms_command + &#34; -r %(recomb)f %(rsites)i&#34;
+        if not rsites:
+            rsites = theta*10
+    sub_dict = {&#39;total_chrom&#39;: numpy.sum(ns), &#39;iter&#39;: iter, &#39;theta&#39;: theta,
+                &#39;numpops&#39;: len(ns), &#39;sample_sizes&#39;: &#39; &#39;.join(map(str, ns)),
+                &#39;core&#39;: core, &#39;recomb&#39;: recomb, &#39;rsites&#39;: rsites}
+
+    ms_command = ms_command % sub_dict
+
+    if seeds is not None:
+        seed_command = &#34; -seeds %i %i %i&#34; % (seeds[0], seeds[1], seeds[2])
+        ms_command = ms_command + seed_command
+    
+    return ms_command
+
+def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
+    &#34;&#34;&#34;
+    Generate a perturbed set of parameters.
+
+    Each element of params is radomly perturbed &lt;fold&gt; factors of 2 up or down.
+    fold: Number of factors of 2 to perturb by
+    lower_bound: If not None, the resulting parameter set is adjusted to have 
+                 all value greater than lower_bound.
+    upper_bound: If not None, the resulting parameter set is adjusted to have 
+                 all value less than upper_bound.
+    &#34;&#34;&#34;
+    pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
+    if lower_bound is not None:
+        for ii,bound in enumerate(lower_bound):
+            if bound is None:
+                lower_bound[ii] = -numpy.inf
+        pnew = numpy.maximum(pnew, 1.01*numpy.asarray(lower_bound))
+    if upper_bound is not None:
+        for ii,bound in enumerate(upper_bound):
+            if bound is None:
+                upper_bound[ii] = numpy.inf
+        pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
+    return pnew
+
+def make_fux_table(fid, ts, Q, tri_freq):
+    &#34;&#34;&#34;
+    Make file of 1-fux for use in ancestral misidentification correction.
+
+    fid: Filename to output to.
+    ts: Expected number of substitutions per site between ingroup and outgroup.
+    Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
+       which entries are ordered using the code CGTA -&gt; 0,1,2,3. For example, 
+       ACT -&gt; 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then 
+       entry 50,54.
+    tri_freq: Dictionary in which each entry maps a trinucleotide to its 
+              ancestral frequency. e.g. {&#39;AAA&#39;: 0.01, &#39;AAC&#39;:0.012...}
+              Note that should be the frequency in the entire region scanned
+              for variation, not just sites where there are SNPs.
+    &#34;&#34;&#34;
+    # Ensure that the *columns* of Q sum to zero.
+    # That is the correct condition when Q_{i,j} is the rate from i to j.
+    # This indicates a typo in Hernandez, Williamson, and Bustamante.
+    for ii in range(Q.shape[1]):
+        s = Q[:,ii].sum() - Q[ii,ii]
+        Q[ii,ii] = -s
+
+    eQhalf = scipy.linalg.matfuncs.expm(Q * ts/2.)
+    if not hasattr(fid, &#39;write&#39;):
+        newfile = True
+        fid = open(fid, &#39;w&#39;)
+
+    outlines = []
+    for first_ii,first in enumerate(code):
+        for x_ii,x in enumerate(code):
+            for third_ii,third in enumerate(code):
+                # This the index into Q and eQ
+                xind = 16*first_ii+4*x_ii+1*third_ii
+                for u_ii,u in enumerate(code):
+                    # This the index into Q and eQ
+                    uind = 16*first_ii+4*u_ii+1*third_ii
+
+                    ## Note that the Q terms factor out in our final
+                    ## calculation, because for both PMuUu and PMuUx the final
+                    ## factor in Eqn 2 is P(S={u,x}|M=u).
+                    #Qux = Q[uind,xind]
+                    #denomu = Q[uind].sum() - Q[uind,uind]
+
+                    PMuUu, PMuUx = 0,0
+                    # Equation 2 in HWB. We have to generalize slightly to
+                    # calculate PMuUx. In calculate PMuUx, we&#39;re summing over
+                    # alpha the probability that the MRCA was alpha, and it
+                    # substituted to x on the outgroup branch, and it
+                    # substituted to u on the ingroup branch, and it mutated to
+                    # x in the ingroup (conditional on it having mutated in the
+                    # ingroup). Note that the mutation to x condition cancels
+                    # in fux, so we don&#39;t bother to calculate it.
+                    for aa,alpha in enumerate(code):
+                        aind = 16*first_ii+4*aa+1*third_ii
+
+                        pia = tri_freq[first+alpha+third]
+                        Pau = eQhalf[aind,uind]
+                        Pax = eQhalf[aind,xind]
+
+                        PMuUu += pia * Pau*Pau
+                        PMuUx += pia * Pau*Pax
+
+                    # This is 1-fux. For a given SNP with actual ancestral state
+                    # u and derived allele x, this is 1 minus the probability
+                    # that the outgroup will have u.
+                    # Eqn 3 in HWB.
+                    res = 1 - PMuUu/(PMuUu + PMuUx)
+                    # These aren&#39;t SNPs, so we can arbitrarily set them to 0
+                    if u == x:
+                        res = 0
+                    
+                    outlines.append(&#39;%c%c%c %c %.6f&#39; % (first,x,third,u,res))
+
+    fid.write(os.linesep.join(outlines))
+    if newfile:
+        fid.close()
+
+def zero_diag(Q):
+    &#34;&#34;&#34;
+    Copy of Q altered such that diagonal entries are all 0.
+    &#34;&#34;&#34;
+    Q_nodiag = Q.copy()
+    for ii in range(Q.shape[0]):
+        Q_nodiag[ii,ii] = 0
+    return Q_nodiag
+
+def tri_freq_dict_to_array(tri_freq_dict):
+    &#34;&#34;&#34;
+    Convert dictionary of trinucleotide frequencies to array in correct order.
+    &#34;&#34;&#34;
+    tripi = numpy.zeros(64)
+    for ii,left in enumerate(code):
+        for jj,center in enumerate(code):
+            for kk,right in enumerate(code):
+                row = ii*16 + jj*4 + kk
+                tripi[row] = tri_freq_dict[left+center+right]
+    return tripi
+
+def total_instantaneous_rate(Q, pi):
+    &#34;&#34;&#34;
+    Total instantaneous substitution rate.
+    &#34;&#34;&#34;
+    Qzero = zero_diag(Q)
+    return numpy.dot(pi, Qzero).sum()
+
+def make_data_dict(filename):
+    &#34;&#34;&#34;
+    Parse SNP file and store info in a properly formatted dictionary.
+
+    filename: Name of file to work with.
+
+    This is specific to the particular data format described on the wiki. 
+    Modification for other formats should be straightforward.
+
+    The file can be zipped (extension .zip) or gzipped (extension .gz). If 
+    zipped, there must be only a single file in the zip archive.
+    &#34;&#34;&#34;
+    if os.path.splitext(filename)[1] == &#39;.gz&#39;:
+        import gzip
+        f = gzip.open(filename)
+    elif os.path.splitext(filename)[1] == &#39;.zip&#39;:
+        import zipfile
+        archive = zipfile.ZipFile(filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError(&#39;Must be only a single data file in zip &#39;
+                             &#39;archive: %s&#39; % filename)
+        f = archive.open(namelist[0])
+    else:
+        f = open(filename)
+
+    # Skip to the header
+    while True:
+        header = f.readline()
+        if not header.startswith(&#39;#&#39;):
+            break
+
+    allele2_index = header.split().index(&#39;Allele2&#39;)
+
+    # Pull out our pop ids
+    pops = header.split()[3:allele2_index]
+
+    # The empty data dictionary
+    data_dict = {}
+
+    # Now walk down the file
+    for SNP_ii, line in enumerate(f):
+        if line.startswith(&#39;#&#39;):
+            continue
+        # Split the into fields by whitespace
+        spl = line.split()
+
+        data_this_snp = {}
+
+        # We convert to upper case to avoid any issues with mixed case between
+        # SNPs.
+        data_this_snp[&#39;context&#39;] = spl[0].upper()
+        data_this_snp[&#39;outgroup_context&#39;] = spl[1].upper()
+        data_this_snp[&#39;outgroup_allele&#39;] = spl[1][1].upper()
+        data_this_snp[&#39;segregating&#39;] = spl[2].upper(),spl[allele2_index].upper()
+
+        calls_dict = {}
+        for ii,pop in enumerate(pops):
+            calls_dict[pop] = int(spl[3+ii]), int(spl[allele2_index+1+ii])
+        data_this_snp[&#39;calls&#39;] = calls_dict
+
+        # We name our SNPs using the final columns
+        snp_id = &#39;_&#39;.join(spl[allele2_index+1+len(pops):])
+        if snp_id == &#39;&#39;:
+            snp_id = &#39;SNP_{0}&#39;.format(SNP_ii)
+
+        data_dict[snp_id] = data_this_snp
+
+    return data_dict
+
+def count_data_dict(data_dict, pop_ids):
+    &#34;&#34;&#34;
+    Summarize data in data_dict by mapping SNP configurations to counts.
+
+    data_dict: data_dict formatted as in Misc.make_data_dict
+    pop_ids: IDs of populations to collect data for.
+
+    Returns a dictionary with keys (successful_calls, derived_calls,
+    polarized) mapping to counts of SNPs. Here successful_calls is a tuple
+    with the number of good calls per population, derived_calls is a tuple
+    of derived calls per pop, and polarized indicates whether that SNP was
+    polarized using an ancestral state.
+    &#34;&#34;&#34;
+    count_dict = collections.defaultdict(int)
+    for snp, snp_info in data_dict.items():
+        # Skip SNPs that aren&#39;t biallelic.
+        if len(snp_info[&#39;segregating&#39;]) != 2:
+            continue
+
+        allele1,allele2 = snp_info[&#39;segregating&#39;]
+        if &#39;outgroup_allele&#39; in snp_info and snp_info[&#39;outgroup_allele&#39;] != &#39;-&#39;\
+            and snp_info[&#39;outgroup_allele&#39;] in snp_info[&#39;segregating&#39;]:
+            outgroup_allele = snp_info[&#39;outgroup_allele&#39;]
+            this_snp_polarized = True
+        else:
+            outgroup_allele = allele1
+            this_snp_polarized = False
+
+        # Extract the allele calls for each population.
+        allele1_calls = [snp_info[&#39;calls&#39;][pop][0] for pop in pop_ids]
+        allele2_calls = [snp_info[&#39;calls&#39;][pop][1] for pop in pop_ids]
+        # How many chromosomes did we call successfully in each population?
+        successful_calls = [a1+a2 for (a1,a2)
+                            in zip(allele1_calls, allele2_calls)]
+
+        # Which allele is derived (different from outgroup)?
+        if allele1 == outgroup_allele:
+            derived_calls = allele2_calls
+        elif allele2 == outgroup_allele:
+            derived_calls = allele1_calls
+
+        # Update count_dict
+        count_dict[tuple(successful_calls),tuple(derived_calls),
+                   this_snp_polarized] += 1
+    return count_dict
+
+def dd_from_SLiM_files(fnames, mut_types=None):
+    &#34;&#34;&#34;
+    Create a data dictionary from a sequence of SLiM output files.
+
+    It is assumed that each file corresponds to samples from a different
+    population. For example, in SLiM:
+        p1.outputSample(10, filePath=&#39;p1.slimout&#39;);
+        p2.outputSample(10, filePath=&#39;p2.slimout&#39;);
+
+    The populations will be named 0,1,2,... corresponding
+    to their order in fnames.
+
+    TODO: Add filtering by mutation type.
+    &#34;&#34;&#34;
+    # Open all the files
+    try:
+        fids = [open(_) for _ in fnames]
+    except TypeError:
+        fids = fnames
+    # For each population, we&#39;ll first map the mutation ids used in the file to
+    # the simulation-level global mutation ids
+    mut_dicts = [{} for _ in fids]
+    for fid, mut_dict in zip(fids, mut_dicts):
+        fid.readline(); fid.readline()
+        line = fid.readline()
+        while not line.startswith(&#39;Genomes:&#39;):
+            local_id, global_id, mut_type, _ = line.split(None, 3)
+            if mut_types is None or mut_type in mut_types:
+                mut_dict[local_id] = global_id
+            line = fid.readline()
+
+    # Now for each population we count each mutation
+    mut_counts = [collections.defaultdict(int) for _ in fids]
+    # We also use this pass to measure the sample size for each pop.
+    sample_sizes = [0 for _ in fids]
+    for pop_ii, (fid, mut_count) in enumerate(zip(fids, mut_counts)):
+        # For each genome
+        for line in fid:
+            sample_sizes[pop_ii] += 1
+            mutations = line.split()[2:]
+            for m in mutations:
+                mut_count[m] += 1
+
+    # Now collect all mutations from all pops.
+    all_muts = set()
+    for mut_dict in mut_dicts:
+        all_muts.update(mut_dict.values())
+
+    # Create the empty data dictionary
+    dd = {}
+    for global_id in all_muts:
+        dd[global_id] = {&#39;segregating&#39;: [0,1],
+                         &#39;outgroup_allele&#39;: 0,
+                         &#39;calls&#39;: {}}
+        for pop_id, n in enumerate(sample_sizes):
+            # We initialize each entry to indicate that the allele is not
+            # segregating in the population, since in this case it&#39;s
+            # not reported in that population&#39;s file.
+            dd[global_id][&#39;calls&#39;][pop_id] = [n, 0]
+
+    # Now update the alleles that are segregating in each population.
+    for pop_ii, (mut_count, mut_dict)\
+            in enumerate(zip(mut_counts, mut_dicts)):
+        for local_id, count in mut_count.items():
+            try:
+                # Lookup in mut_dict will fail if mutation isn&#39;t of appropriate
+                # type to include in this run.
+                global_id = mut_dict[local_id]
+                dd[global_id][&#39;calls&#39;][pop_ii] = (sample_sizes[pop_ii]-count, count)
+            except KeyError:
+                pass
+
+    return dd, sample_sizes</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Misc.count_data_dict"><code class="name flex">
+<span>def <span class="ident">count_data_dict</span></span>(<span>data_dict, pop_ids)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Summarize data in data_dict by mapping SNP configurations to counts.</p>
+<p>data_dict: data_dict formatted as in Misc.make_data_dict
+pop_ids: IDs of populations to collect data for.</p>
+<p>Returns a dictionary with keys (successful_calls, derived_calls,
+polarized) mapping to counts of SNPs. Here successful_calls is a tuple
+with the number of good calls per population, derived_calls is a tuple
+of derived calls per pop, and polarized indicates whether that SNP was
+polarized using an ancestral state.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def count_data_dict(data_dict, pop_ids):
+    &#34;&#34;&#34;
+    Summarize data in data_dict by mapping SNP configurations to counts.
+
+    data_dict: data_dict formatted as in Misc.make_data_dict
+    pop_ids: IDs of populations to collect data for.
+
+    Returns a dictionary with keys (successful_calls, derived_calls,
+    polarized) mapping to counts of SNPs. Here successful_calls is a tuple
+    with the number of good calls per population, derived_calls is a tuple
+    of derived calls per pop, and polarized indicates whether that SNP was
+    polarized using an ancestral state.
+    &#34;&#34;&#34;
+    count_dict = collections.defaultdict(int)
+    for snp, snp_info in data_dict.items():
+        # Skip SNPs that aren&#39;t biallelic.
+        if len(snp_info[&#39;segregating&#39;]) != 2:
+            continue
+
+        allele1,allele2 = snp_info[&#39;segregating&#39;]
+        if &#39;outgroup_allele&#39; in snp_info and snp_info[&#39;outgroup_allele&#39;] != &#39;-&#39;\
+            and snp_info[&#39;outgroup_allele&#39;] in snp_info[&#39;segregating&#39;]:
+            outgroup_allele = snp_info[&#39;outgroup_allele&#39;]
+            this_snp_polarized = True
+        else:
+            outgroup_allele = allele1
+            this_snp_polarized = False
+
+        # Extract the allele calls for each population.
+        allele1_calls = [snp_info[&#39;calls&#39;][pop][0] for pop in pop_ids]
+        allele2_calls = [snp_info[&#39;calls&#39;][pop][1] for pop in pop_ids]
+        # How many chromosomes did we call successfully in each population?
+        successful_calls = [a1+a2 for (a1,a2)
+                            in zip(allele1_calls, allele2_calls)]
+
+        # Which allele is derived (different from outgroup)?
+        if allele1 == outgroup_allele:
+            derived_calls = allele2_calls
+        elif allele2 == outgroup_allele:
+            derived_calls = allele1_calls
+
+        # Update count_dict
+        count_dict[tuple(successful_calls),tuple(derived_calls),
+                   this_snp_polarized] += 1
+    return count_dict</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.dd_from_SLiM_files"><code class="name flex">
+<span>def <span class="ident">dd_from_SLiM_files</span></span>(<span>fnames, mut_types=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Create a data dictionary from a sequence of SLiM output files.</p>
+<p>It is assumed that each file corresponds to samples from a different
+population. For example, in SLiM:
+p1.outputSample(10, filePath='p1.slimout');
+p2.outputSample(10, filePath='p2.slimout');</p>
+<p>The populations will be named 0,1,2,&hellip; corresponding
+to their order in fnames.</p>
+<p>TODO: Add filtering by mutation type.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def dd_from_SLiM_files(fnames, mut_types=None):
+    &#34;&#34;&#34;
+    Create a data dictionary from a sequence of SLiM output files.
+
+    It is assumed that each file corresponds to samples from a different
+    population. For example, in SLiM:
+        p1.outputSample(10, filePath=&#39;p1.slimout&#39;);
+        p2.outputSample(10, filePath=&#39;p2.slimout&#39;);
+
+    The populations will be named 0,1,2,... corresponding
+    to their order in fnames.
+
+    TODO: Add filtering by mutation type.
+    &#34;&#34;&#34;
+    # Open all the files
+    try:
+        fids = [open(_) for _ in fnames]
+    except TypeError:
+        fids = fnames
+    # For each population, we&#39;ll first map the mutation ids used in the file to
+    # the simulation-level global mutation ids
+    mut_dicts = [{} for _ in fids]
+    for fid, mut_dict in zip(fids, mut_dicts):
+        fid.readline(); fid.readline()
+        line = fid.readline()
+        while not line.startswith(&#39;Genomes:&#39;):
+            local_id, global_id, mut_type, _ = line.split(None, 3)
+            if mut_types is None or mut_type in mut_types:
+                mut_dict[local_id] = global_id
+            line = fid.readline()
+
+    # Now for each population we count each mutation
+    mut_counts = [collections.defaultdict(int) for _ in fids]
+    # We also use this pass to measure the sample size for each pop.
+    sample_sizes = [0 for _ in fids]
+    for pop_ii, (fid, mut_count) in enumerate(zip(fids, mut_counts)):
+        # For each genome
+        for line in fid:
+            sample_sizes[pop_ii] += 1
+            mutations = line.split()[2:]
+            for m in mutations:
+                mut_count[m] += 1
+
+    # Now collect all mutations from all pops.
+    all_muts = set()
+    for mut_dict in mut_dicts:
+        all_muts.update(mut_dict.values())
+
+    # Create the empty data dictionary
+    dd = {}
+    for global_id in all_muts:
+        dd[global_id] = {&#39;segregating&#39;: [0,1],
+                         &#39;outgroup_allele&#39;: 0,
+                         &#39;calls&#39;: {}}
+        for pop_id, n in enumerate(sample_sizes):
+            # We initialize each entry to indicate that the allele is not
+            # segregating in the population, since in this case it&#39;s
+            # not reported in that population&#39;s file.
+            dd[global_id][&#39;calls&#39;][pop_id] = [n, 0]
+
+    # Now update the alleles that are segregating in each population.
+    for pop_ii, (mut_count, mut_dict)\
+            in enumerate(zip(mut_counts, mut_dicts)):
+        for local_id, count in mut_count.items():
+            try:
+                # Lookup in mut_dict will fail if mutation isn&#39;t of appropriate
+                # type to include in this run.
+                global_id = mut_dict[local_id]
+                dd[global_id][&#39;calls&#39;][pop_ii] = (sample_sizes[pop_ii]-count, count)
+            except KeyError:
+                pass
+
+    return dd, sample_sizes</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.delayed_flush"><code class="name flex">
+<span>def <span class="ident">delayed_flush</span></span>(<span>stream=<_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'>, delay=1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Flush a stream, ensuring that it is only flushed every 'delay' <em>minutes</em>.
+Note that upon the first call to this method, the stream is not flushed.</p>
+<p>stream: The stream to flush. For this to work with simple 'print'
+statements, the stream should be sys.stdout.
+delay: Minimum time <em>in minutes</em> between flushes.</p>
+<p>This function is useful to prevent I/O overload on the cluster.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def delayed_flush(stream=sys.stdout, delay=1):
+    &#34;&#34;&#34;
+    Flush a stream, ensuring that it is only flushed every &#39;delay&#39; *minutes*.
+    Note that upon the first call to this method, the stream is not flushed.
+
+    stream: The stream to flush. For this to work with simple &#39;print&#39;
+            statements, the stream should be sys.stdout.
+    delay: Minimum time *in minutes* between flushes.
+
+    This function is useful to prevent I/O overload on the cluster.
+    &#34;&#34;&#34;
+    global __times_last_flushed
+
+    curr_time = time.time()
+    # If this is the first time this method has been called with this stream,
+    # we need to fill in the times_last_flushed dict. setdefault will do this
+    # without overwriting any entry that may be there already.
+    if stream not in __times_last_flushed:
+        __times_last_flushed[stream] = curr_time
+    last_flushed = __times_last_flushed[stream]
+
+    # Note that time.time() returns values in seconds, hence the factor of 60.
+    if (curr_time - last_flushed) &gt;= delay*60:
+        stream.flush()
+        __times_last_flushed[stream] = curr_time</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.ensure_1arg_func"><code class="name flex">
+<span>def <span class="ident">ensure_1arg_func</span></span>(<span>var)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Ensure that var is actually a one-argument function.</p>
+<p>This is primarily used to convert arguments that are constants into
+trivial functions of time for use in integrations where parameters are
+allowed to change over time.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def ensure_1arg_func(var):
+    &#34;&#34;&#34;
+    Ensure that var is actually a one-argument function.
+
+    This is primarily used to convert arguments that are constants into
+    trivial functions of time for use in integrations where parameters are
+    allowed to change over time.
+    &#34;&#34;&#34;
+    if numpy.isscalar(var):
+        # If a constant was passed in, use lambda to make it a nice
+        #  simple function.
+        var_f = lambda t: var
+    else:
+        var_f = var
+    if not callable(var_f):
+        raise ValueError(&#39;Argument is not a constant or a function.&#39;)
+    try:
+        var_f(0.0)
+    except TypeError:
+        raise ValueError(&#39;Argument is not a constant or a one-argument &#39;
+                         &#39;function.&#39;)
+    return var_f</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.make_data_dict"><code class="name flex">
+<span>def <span class="ident">make_data_dict</span></span>(<span>filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Parse SNP file and store info in a properly formatted dictionary.</p>
+<p>filename: Name of file to work with.</p>
+<p>This is specific to the particular data format described on the wiki.
+Modification for other formats should be straightforward.</p>
+<p>The file can be zipped (extension .zip) or gzipped (extension .gz). If
+zipped, there must be only a single file in the zip archive.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def make_data_dict(filename):
+    &#34;&#34;&#34;
+    Parse SNP file and store info in a properly formatted dictionary.
+
+    filename: Name of file to work with.
+
+    This is specific to the particular data format described on the wiki. 
+    Modification for other formats should be straightforward.
+
+    The file can be zipped (extension .zip) or gzipped (extension .gz). If 
+    zipped, there must be only a single file in the zip archive.
+    &#34;&#34;&#34;
+    if os.path.splitext(filename)[1] == &#39;.gz&#39;:
+        import gzip
+        f = gzip.open(filename)
+    elif os.path.splitext(filename)[1] == &#39;.zip&#39;:
+        import zipfile
+        archive = zipfile.ZipFile(filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError(&#39;Must be only a single data file in zip &#39;
+                             &#39;archive: %s&#39; % filename)
+        f = archive.open(namelist[0])
+    else:
+        f = open(filename)
+
+    # Skip to the header
+    while True:
+        header = f.readline()
+        if not header.startswith(&#39;#&#39;):
+            break
+
+    allele2_index = header.split().index(&#39;Allele2&#39;)
+
+    # Pull out our pop ids
+    pops = header.split()[3:allele2_index]
+
+    # The empty data dictionary
+    data_dict = {}
+
+    # Now walk down the file
+    for SNP_ii, line in enumerate(f):
+        if line.startswith(&#39;#&#39;):
+            continue
+        # Split the into fields by whitespace
+        spl = line.split()
+
+        data_this_snp = {}
+
+        # We convert to upper case to avoid any issues with mixed case between
+        # SNPs.
+        data_this_snp[&#39;context&#39;] = spl[0].upper()
+        data_this_snp[&#39;outgroup_context&#39;] = spl[1].upper()
+        data_this_snp[&#39;outgroup_allele&#39;] = spl[1][1].upper()
+        data_this_snp[&#39;segregating&#39;] = spl[2].upper(),spl[allele2_index].upper()
+
+        calls_dict = {}
+        for ii,pop in enumerate(pops):
+            calls_dict[pop] = int(spl[3+ii]), int(spl[allele2_index+1+ii])
+        data_this_snp[&#39;calls&#39;] = calls_dict
+
+        # We name our SNPs using the final columns
+        snp_id = &#39;_&#39;.join(spl[allele2_index+1+len(pops):])
+        if snp_id == &#39;&#39;:
+            snp_id = &#39;SNP_{0}&#39;.format(SNP_ii)
+
+        data_dict[snp_id] = data_this_snp
+
+    return data_dict</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.make_fux_table"><code class="name flex">
+<span>def <span class="ident">make_fux_table</span></span>(<span>fid, ts, Q, tri_freq)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Make file of 1-fux for use in ancestral misidentification correction.</p>
+<p>fid: Filename to output to.
+ts: Expected number of substitutions per site between ingroup and outgroup.
+Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
+which entries are ordered using the code CGTA -&gt; 0,1,2,3. For example,
+ACT -&gt; 3<em>16+0</em>4+2*1=50. The transition rate from ACT to AGT is then
+entry 50,54.
+tri_freq: Dictionary in which each entry maps a trinucleotide to its
+ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012&hellip;}
+Note that should be the frequency in the entire region scanned
+for variation, not just sites where there are SNPs.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def make_fux_table(fid, ts, Q, tri_freq):
+    &#34;&#34;&#34;
+    Make file of 1-fux for use in ancestral misidentification correction.
+
+    fid: Filename to output to.
+    ts: Expected number of substitutions per site between ingroup and outgroup.
+    Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
+       which entries are ordered using the code CGTA -&gt; 0,1,2,3. For example, 
+       ACT -&gt; 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then 
+       entry 50,54.
+    tri_freq: Dictionary in which each entry maps a trinucleotide to its 
+              ancestral frequency. e.g. {&#39;AAA&#39;: 0.01, &#39;AAC&#39;:0.012...}
+              Note that should be the frequency in the entire region scanned
+              for variation, not just sites where there are SNPs.
+    &#34;&#34;&#34;
+    # Ensure that the *columns* of Q sum to zero.
+    # That is the correct condition when Q_{i,j} is the rate from i to j.
+    # This indicates a typo in Hernandez, Williamson, and Bustamante.
+    for ii in range(Q.shape[1]):
+        s = Q[:,ii].sum() - Q[ii,ii]
+        Q[ii,ii] = -s
+
+    eQhalf = scipy.linalg.matfuncs.expm(Q * ts/2.)
+    if not hasattr(fid, &#39;write&#39;):
+        newfile = True
+        fid = open(fid, &#39;w&#39;)
+
+    outlines = []
+    for first_ii,first in enumerate(code):
+        for x_ii,x in enumerate(code):
+            for third_ii,third in enumerate(code):
+                # This the index into Q and eQ
+                xind = 16*first_ii+4*x_ii+1*third_ii
+                for u_ii,u in enumerate(code):
+                    # This the index into Q and eQ
+                    uind = 16*first_ii+4*u_ii+1*third_ii
+
+                    ## Note that the Q terms factor out in our final
+                    ## calculation, because for both PMuUu and PMuUx the final
+                    ## factor in Eqn 2 is P(S={u,x}|M=u).
+                    #Qux = Q[uind,xind]
+                    #denomu = Q[uind].sum() - Q[uind,uind]
+
+                    PMuUu, PMuUx = 0,0
+                    # Equation 2 in HWB. We have to generalize slightly to
+                    # calculate PMuUx. In calculate PMuUx, we&#39;re summing over
+                    # alpha the probability that the MRCA was alpha, and it
+                    # substituted to x on the outgroup branch, and it
+                    # substituted to u on the ingroup branch, and it mutated to
+                    # x in the ingroup (conditional on it having mutated in the
+                    # ingroup). Note that the mutation to x condition cancels
+                    # in fux, so we don&#39;t bother to calculate it.
+                    for aa,alpha in enumerate(code):
+                        aind = 16*first_ii+4*aa+1*third_ii
+
+                        pia = tri_freq[first+alpha+third]
+                        Pau = eQhalf[aind,uind]
+                        Pax = eQhalf[aind,xind]
+
+                        PMuUu += pia * Pau*Pau
+                        PMuUx += pia * Pau*Pax
+
+                    # This is 1-fux. For a given SNP with actual ancestral state
+                    # u and derived allele x, this is 1 minus the probability
+                    # that the outgroup will have u.
+                    # Eqn 3 in HWB.
+                    res = 1 - PMuUu/(PMuUu + PMuUx)
+                    # These aren&#39;t SNPs, so we can arbitrarily set them to 0
+                    if u == x:
+                        res = 0
+                    
+                    outlines.append(&#39;%c%c%c %c %.6f&#39; % (first,x,third,u,res))
+
+    fid.write(os.linesep.join(outlines))
+    if newfile:
+        fid.close()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.ms_command"><code class="name flex">
+<span>def <span class="ident">ms_command</span></span>(<span>theta, ns, core, iter, recomb=0, rsites=None, seeds=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generate ms command for simulation from core.</p>
+<p>theta: Assumed theta
+ns: Sample sizes
+core: Core of ms command that specifies demography.
+iter: Iterations to run ms
+recomb: Assumed recombination rate
+rsites: Sites for recombination. If None, default is 10*theta.
+seeds: Seeds for random number generator. If None, ms default is used.
+Otherwise, three integers should be passed. Example: (132, 435, 123)</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def ms_command(theta, ns, core, iter, recomb=0, rsites=None, seeds=None):
+    &#34;&#34;&#34;
+    Generate ms command for simulation from core.
+
+    theta: Assumed theta
+    ns: Sample sizes
+    core: Core of ms command that specifies demography.
+    iter: Iterations to run ms
+    recomb: Assumed recombination rate
+    rsites: Sites for recombination. If None, default is 10*theta.
+    seeds: Seeds for random number generator. If None, ms default is used.
+           Otherwise, three integers should be passed. Example: (132, 435, 123)
+    &#34;&#34;&#34;
+    if len(ns) &gt; 1:
+        ms_command = &#34;ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i &#34;\
+                &#34;%(sample_sizes)s %(core)s&#34;
+    else:
+        ms_command = &#34;ms %(total_chrom)i %(iter)i -t %(theta)f  %(core)s&#34;
+
+    if recomb:
+        ms_command = ms_command + &#34; -r %(recomb)f %(rsites)i&#34;
+        if not rsites:
+            rsites = theta*10
+    sub_dict = {&#39;total_chrom&#39;: numpy.sum(ns), &#39;iter&#39;: iter, &#39;theta&#39;: theta,
+                &#39;numpops&#39;: len(ns), &#39;sample_sizes&#39;: &#39; &#39;.join(map(str, ns)),
+                &#39;core&#39;: core, &#39;recomb&#39;: recomb, &#39;rsites&#39;: rsites}
+
+    ms_command = ms_command % sub_dict
+
+    if seeds is not None:
+        seed_command = &#34; -seeds %i %i %i&#34; % (seeds[0], seeds[1], seeds[2])
+        ms_command = ms_command + seed_command
+    
+    return ms_command</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.perturb_params"><code class="name flex">
+<span>def <span class="ident">perturb_params</span></span>(<span>params, fold=1, lower_bound=None, upper_bound=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generate a perturbed set of parameters.</p>
+<p>Each element of params is radomly perturbed <fold> factors of 2 up or down.
+fold: Number of factors of 2 to perturb by
+lower_bound: If not None, the resulting parameter set is adjusted to have
+all value greater than lower_bound.
+upper_bound: If not None, the resulting parameter set is adjusted to have
+all value less than upper_bound.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
+    &#34;&#34;&#34;
+    Generate a perturbed set of parameters.
+
+    Each element of params is radomly perturbed &lt;fold&gt; factors of 2 up or down.
+    fold: Number of factors of 2 to perturb by
+    lower_bound: If not None, the resulting parameter set is adjusted to have 
+                 all value greater than lower_bound.
+    upper_bound: If not None, the resulting parameter set is adjusted to have 
+                 all value less than upper_bound.
+    &#34;&#34;&#34;
+    pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
+    if lower_bound is not None:
+        for ii,bound in enumerate(lower_bound):
+            if bound is None:
+                lower_bound[ii] = -numpy.inf
+        pnew = numpy.maximum(pnew, 1.01*numpy.asarray(lower_bound))
+    if upper_bound is not None:
+        for ii,bound in enumerate(upper_bound):
+            if bound is None:
+                upper_bound[ii] = numpy.inf
+        pnew = numpy.minimum(pnew, 0.99*numpy.asarray(upper_bound))
+    return pnew</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.total_instantaneous_rate"><code class="name flex">
+<span>def <span class="ident">total_instantaneous_rate</span></span>(<span>Q, pi)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Total instantaneous substitution rate.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def total_instantaneous_rate(Q, pi):
+    &#34;&#34;&#34;
+    Total instantaneous substitution rate.
+    &#34;&#34;&#34;
+    Qzero = zero_diag(Q)
+    return numpy.dot(pi, Qzero).sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.tri_freq_dict_to_array"><code class="name flex">
+<span>def <span class="ident">tri_freq_dict_to_array</span></span>(<span>tri_freq_dict)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Convert dictionary of trinucleotide frequencies to array in correct order.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def tri_freq_dict_to_array(tri_freq_dict):
+    &#34;&#34;&#34;
+    Convert dictionary of trinucleotide frequencies to array in correct order.
+    &#34;&#34;&#34;
+    tripi = numpy.zeros(64)
+    for ii,left in enumerate(code):
+        for jj,center in enumerate(code):
+            for kk,right in enumerate(code):
+                row = ii*16 + jj*4 + kk
+                tripi[row] = tri_freq_dict[left+center+right]
+    return tripi</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.zero_diag"><code class="name flex">
+<span>def <span class="ident">zero_diag</span></span>(<span>Q)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Copy of Q altered such that diagonal entries are all 0.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def zero_diag(Q):
+    &#34;&#34;&#34;
+    Copy of Q altered such that diagonal entries are all 0.
+    &#34;&#34;&#34;
+    Q_nodiag = Q.copy()
+    for ii in range(Q.shape[0]):
+        Q_nodiag[ii,ii] = 0
+    return Q_nodiag</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Misc.count_data_dict" href="#dadi.Misc.count_data_dict">count_data_dict</a></code></li>
+<li><code><a title="dadi.Misc.dd_from_SLiM_files" href="#dadi.Misc.dd_from_SLiM_files">dd_from_SLiM_files</a></code></li>
+<li><code><a title="dadi.Misc.delayed_flush" href="#dadi.Misc.delayed_flush">delayed_flush</a></code></li>
+<li><code><a title="dadi.Misc.ensure_1arg_func" href="#dadi.Misc.ensure_1arg_func">ensure_1arg_func</a></code></li>
+<li><code><a title="dadi.Misc.make_data_dict" href="#dadi.Misc.make_data_dict">make_data_dict</a></code></li>
+<li><code><a title="dadi.Misc.make_fux_table" href="#dadi.Misc.make_fux_table">make_fux_table</a></code></li>
+<li><code><a title="dadi.Misc.ms_command" href="#dadi.Misc.ms_command">ms_command</a></code></li>
+<li><code><a title="dadi.Misc.perturb_params" href="#dadi.Misc.perturb_params">perturb_params</a></code></li>
+<li><code><a title="dadi.Misc.total_instantaneous_rate" href="#dadi.Misc.total_instantaneous_rate">total_instantaneous_rate</a></code></li>
+<li><code><a title="dadi.Misc.tri_freq_dict_to_array" href="#dadi.Misc.tri_freq_dict_to_array">tri_freq_dict_to_array</a></code></li>
+<li><code><a title="dadi.Misc.zero_diag" href="#dadi.Misc.zero_diag">zero_diag</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

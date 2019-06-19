@@ -1151,8 +1151,17 @@ def optimize_grid(data, model_func, pts, grid,
         return xopt, fopt, grid, fout, thetas
 
 def add_misid_param(func):
+    """
+    Add parameter to model ancestral state misidentification.
+
+    The returned function will have an additional element of the params
+    list, which is the proportion of segregating sites whose ancestral state
+    were misidentified.
+    """
     def misid_func(params, *args, **kwargs):
         misid = params[-1]
         fs = func(params[:-1], *args, **kwargs)
         return (1-misid)*fs + misid*Numerics.reverse_array(fs)
+    misid_func.__name__ = func.__name__
+    misid_func.__doc__ = func.__doc__
     return misid_func
