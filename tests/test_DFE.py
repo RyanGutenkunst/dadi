@@ -22,13 +22,16 @@ class DFETestCase(unittest.TestCase):
                               gamma_bounds=(1e-4, 20), gamma_pts=2,
                               additional_gammas=[2])
         # Basic integration
-        s1.integrate([1], None, PDFs.exponential, 1.0, None, True)
+        s1.integrate([1], None, PDFs.exponential, 1.0)
         # Case in which gammapos has been cached
         s1.integrate_point_pos(
-            [1, 0.1, 2], None, PDFs.exponential, 1.0, DemogSelModels.equil, None, True)
+            [1, 0.1, 2], None, PDFs.exponential, 1.0, DemogSelModels.equil)
         # Case in which gammapos has not been cached
         s1.integrate_point_pos(
-            [1, 0.1, 1.21], None, PDFs.exponential, 1.0, DemogSelModels.equil, None, True)
+            [1, 0.1, 1.21], None, PDFs.exponential, 1.0, DemogSelModels.equil)
+        # Case in which one gammapos has not been cached
+        s1.integrate_point_pos(
+            [1, 0.1, 1.21, 0.3, 4.3], None, PDFs.exponential, 1.0, DemogSelModels.equil, 2)
 
     def test_1D_optimization(self):
         """
@@ -82,7 +85,7 @@ class DFETestCase(unittest.TestCase):
         assert(np.allclose(fs, comp))
 
         fs = s1.integrate_point_pos([-0.5, 0.5, 0.1, 4.3], None, PDFs.lognormal,
-                                    1e5, DemogSelModels.IM_single_gamma, None)
+                                    1e5, DemogSelModels.IM_single_gamma)
         comp = dadi.Spectrum.from_file(
             'test_data/fitdadi.IM_point_pos_test.fs')
         assert(np.allclose(fs, comp))

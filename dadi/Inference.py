@@ -1016,6 +1016,120 @@ def optimize_lbfgsb(p0, data, model_func, pts,
     else:
         return xopt, fopt, info_dict
 
+def optimize_cons(p0, data, model_func, pts,
+                  eq_constraint=None, ieq_constraint=None,
+                  lower_bound=None, upper_bound=None, 
+                  verbose=0, flush_delay=0.5, epsilon=1e-4,
+                  gtol=1e-5, multinom=True, maxiter=None,
+                  full_output=False, func_args=[], func_kwargs={},
+                  fixed_params=None, ll_scale=1, output_file=None):
+    """
+    Optimize params to fit model to data using constrainted optimization.
+
+    This method will ensure parameter constraints are satisfied.
+    For example, you might constrain than one parameter is larger than other,
+     or that the sum of several parameters is a particular value.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    eq_constraint: Function that returns a 1D array in which each element must
+                   equal to 0 in a successful result.
+                   For example, to constraint p[1] + p[2] = 1 and p[3] - p[2] = 3,
+                   def eq_constraint(p): return [p[1]+p[2]-1, p[3]-p[2]-3]
+    ieq_constraint: Function that returns a 1D array in which each element must
+                    greater than or equal to 0 in a successful result.
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If > 0, print optimization status every <verbose> steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every <flush_delay>
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_slsqp)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func's first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale > 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you'll probably want to
+              re-optimize with ll_scale=1.
+    """
+    if output_file:
+        output_stream = file(output_file, 'w')
+    else:
+        output_stream = sys.stdout
+    
+    args = (data, model_func, pts, None, None, verbose, 
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    if (lower_bound is not None) and (upper_bound is not None):
+        bnds = tuple(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_slsqp(_object_func, 
+        p0, bounds = bnds, args = args,
+        f_eqcons = eq_constraint, f_ieqcons = ieq_constraint,
+        epsilon = epsilon,
+        iter = maxiter, full_output = True,
+        disp = False)
+    xopt, fopt, func_calls, grad_calls, warnflag = outputs
+
+    xopt = _project_params_up(xopt, fixed_params)
+    
+    if output_file:
+        output_stream.close()
+    
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, func_calls, grad_calls, warnflag
+
 def _project_params_down(pin, fixed_params):
     """
     Eliminate fixed parameters from pin.

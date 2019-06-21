@@ -101,7 +101,7 @@ class Cache1D:
         self.neu_spec = demo_sel_func(tuple(params)+(0,), ns, pts_l)
         self.spectra = np.array(self.spectra)
 
-    def integrate(self, params, ns, sel_dist, theta, pts, exterior_int=True):
+    def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
         """
         Integrate spectra over a univariate prob. dist. for negative gammas.
 
@@ -149,20 +149,22 @@ class Cache1D:
         return Spectrum(theta*fs)
 
     def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func=None, 
-                            pts=None, exterior_int=True):
+                            Npos=1, pts=None, exterior_int=True):
         """
         Integrate spectra over a univariate prob. dist. for negative gammas,
-        plus a point mass of positive selection.
+        plus one or more point masses of positive selection.
 
-        params: Parameters. The last two are assumed to be the proportion of
-                positive selection and the gamma for the point mass. The
-                remaining parameters are for the continuous point mass.
+        params: Parameters. The last Npos*2 are assumed to be the proportion of
+                positive selection and the gamma for each point mass, in the order
+                (ppos1, gammapos1, ppos2, gammapos2, ...).
+                The remaining parameters are for the continuous point mass.
         ns: Ignored
         sel_dist: Univariate probability distribution,
                   taking in arguments (xx, params)
         theta: Population-scaled mutation rate
         demo_sel_func: DaDi demographic function with selection. 
                        gamma must be the last argument.
+        Npos: Number of positive point masses to model.
         pts: Ignored, evaluation of demo_self_func will use pts_l from orignal
                caching.
         exterior_int: If False, do not integrate outside sampled domain.
@@ -170,27 +172,26 @@ class Cache1D:
         Note also that the ns and pts arguments are ignored. They are only
         present for compatibility with other dadi functions that apply to
         demographic models.
-        Integrate including a term for point mass positive selection.
-
-        The last two terms are assumed to be the proportion of positive
-        selection and the gamma for that point mass, respectively. The remaining
-        parameters are for the continuous sel_dist.
         """
-        pdf_params, ppos, gammapos = params[:-2], params[-2], params[-1]
+        pdf_params, ppos, gammapos = params[:-2*Npos], params[-2], params[-1]
+        ppos_l, gammapos_l = params[-2*Npos::2], params[-2*Npos+1::2]
 
         pdf_fs = self.integrate(pdf_params, None, sel_dist, theta, None,
                                 exterior_int=exterior_int)
+        result = (1-np.sum(ppos_l))*pdf_fs
 
-        if gammapos not in self.gammas:
-            if demo_sel_func is None:
-                raise IndexError('Failed to find requested gammapos={0:.4f} '
-                                 'in Cache1D spectra. Was it included in '
-                                 'additional_gammas during cache generation?'.format(gammapos))
-            pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
-                                         self.ns, self.pts_l)
-            self.gammas = np.append(self.gammas, gammapos)
-            self.spectra = np.append(self.spectra, [pos_fs.data], axis=0)
-        ii = list(self.gammas).index(gammapos)
-        pos_fs = Spectrum(self.spectra[ii])
+        for ppos, gammapos in zip(ppos_l, gammapos_l):
+            if gammapos not in self.gammas:
+                if demo_sel_func is None:
+                    raise IndexError('Failed to find requested gammapos={0:.4f} '
+                                     'in Cache1D spectra. Was it included in '
+                                     'additional_gammas during cache generation?'.format(gammapos))
+                pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
+                                             self.ns, self.pts_l)
+                self.gammas = np.append(self.gammas, gammapos)
+                self.spectra = np.append(self.spectra, [pos_fs.data], axis=0)
+            ii = list(self.gammas).index(gammapos)
+            pos_fs = Spectrum(self.spectra[ii])
+            result += ppos*pos_fs
 
-        return (1-ppos)*pdf_fs + ppos*pos_fs
+        return result
