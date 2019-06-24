@@ -426,21 +426,21 @@ def combine_pops(fs, idx=[0,1]):
     """
     ns = fs.sample_sizes
     if len(ns) == 3:
-        fs_tmp = np.array(fs)
+        fs_tmp = numpy.array(fs)
         if idx == [0,1]:
-            fs2 = np.zeros((ns[0]+ns[1]+1,ns[2]+1))
+            fs2 = numpy.zeros((ns[0]+ns[1]+1,ns[2]+1))
             for ii in range(ns[0]+1):
                 for jj in range(ns[1]+1):
                     for kk in range(ns[2]+1):
                         fs2[ii+jj,kk] += fs_tmp[ii,jj,kk]
         elif idx == [0,2]:
-            fs2 = np.zeros((ns[0]+ns[2]+1,ns[1]+1))
+            fs2 = numpy.zeros((ns[0]+ns[2]+1,ns[1]+1))
             for ii in range(ns[0]+1):
                 for jj in range(ns[2]+1):
                     for kk in range(ns[1]+1):
                         fs2[ii+kk,jj] += fs_tmp[ii,jj,kk]
         elif idx == [1,2]:
-            fs2 = np.zeros((ns[1]+ns[2]+1,ns[0]+1))
+            fs2 = numpy.zeros((ns[1]+ns[2]+1,ns[0]+1))
             for ii in range(ns[1]+1):
                 for jj in range(ns[2]+1):
                     for kk in range(ns[0]+1):
@@ -449,12 +449,12 @@ def combine_pops(fs, idx=[0,1]):
             print("Error: did not recognize population indices: {}".format(idx))
             exit(-1)
     elif len(ns) == 2:
-        fs_tmp = np.array(fs)
-        fs2    = np.zeros((ns[0]+ns[1]+1,))
+        fs_tmp = numpy.array(fs)
+        fs2    = numpy.zeros((ns[0]+ns[1]+1,))
         for ii in range(ns[0]+1):
             for jj in range(ns[1]+1):
                 fs2[ii+jj] += fs_tmp[ii,jj]
     else:
         print("Error: could not combine populations.")
         exit(-1)
-    return dadi.Spectrum(fs2)
+    return fs2
