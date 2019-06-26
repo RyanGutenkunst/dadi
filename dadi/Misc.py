@@ -422,7 +422,9 @@ def combine_pops(fs, idx=[0,1]):
         idx: Indices for populations being collapsed. (defaul=[0,1])
     
     The function will always return the combined populations along the
-    first axis of the sfs.
+    first axis of the sfs. The resulting spectrum is also returned
+    as a numpy array, but can be converted to a Spectrum object
+    using the dadi.Spectrum() function.
     """
     ns = fs.sample_sizes
     if len(ns) == 3:

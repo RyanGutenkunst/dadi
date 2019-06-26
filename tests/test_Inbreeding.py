@@ -1,7 +1,5 @@
 import unittest
-import numpy as np
 import dadi
-import os
 
 class InbreedingTestCase(unittest.TestCase):
     def test_inbreeding_sfs(self):
