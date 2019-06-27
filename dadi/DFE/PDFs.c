@@ -37,6 +37,9 @@ void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
             output[ii*m+jj] = exp(-q/2.)/norm;
         }
     }
+
+    free(delx);
+    free(dely);
 }
 
 void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
@@ -71,4 +74,7 @@ void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
             output[ii*m+jj] = margx[ii]*margy[jj];
         }
     }
+
+    free(margx);
+    free(margy);
 }
