@@ -414,3 +414,49 @@ def dd_from_SLiM_files(fnames, mut_types=None):
                 pass
 
     return dd, sample_sizes
+
+def combine_pops(fs, idx=[0,1]):
+    """
+    Combine the frequency spectra of two populations.
+        fs:  Spectrum object (2D or 3D).
+        idx: Indices for populations being collapsed. (defaul=[0,1])
+    
+    The function will always return the combined populations along the
+    first axis of the sfs. The resulting spectrum is also returned
+    as a numpy array, but can be converted to a Spectrum object
+    using the dadi.Spectrum() function.
+    """
+    ns = fs.sample_sizes
+    if len(ns) == 3:
+        fs_tmp = numpy.array(fs)
+        if idx == [0,1]:
+            fs2 = numpy.zeros((ns[0]+ns[1]+1,ns[2]+1))
+            for ii in range(ns[0]+1):
+                for jj in range(ns[1]+1):
+                    for kk in range(ns[2]+1):
+                        fs2[ii+jj,kk] += fs_tmp[ii,jj,kk]
+        elif idx == [0,2]:
+            fs2 = numpy.zeros((ns[0]+ns[2]+1,ns[1]+1))
+            for ii in range(ns[0]+1):
+                for jj in range(ns[2]+1):
+                    for kk in range(ns[1]+1):
+                        fs2[ii+kk,jj] += fs_tmp[ii,jj,kk]
+        elif idx == [1,2]:
+            fs2 = numpy.zeros((ns[1]+ns[2]+1,ns[0]+1))
+            for ii in range(ns[1]+1):
+                for jj in range(ns[2]+1):
+                    for kk in range(ns[0]+1):
+                        fs2[jj+kk,ii] += fs_tmp[ii,jj,kk]
+        else:
+            print("Error: did not recognize population indices: {}".format(idx))
+            exit(-1)
+    elif len(ns) == 2:
+        fs_tmp = numpy.array(fs)
+        fs2    = numpy.zeros((ns[0]+ns[1]+1,))
+        for ii in range(ns[0]+1):
+            for jj in range(ns[1]+1):
+                fs2[ii+jj] += fs_tmp[ii,jj]
+    else:
+        print("Error: could not combine populations.")
+        exit(-1)
+    return fs2

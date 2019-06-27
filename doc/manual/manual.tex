@@ -1046,6 +1046,71 @@ Using a mixture model requires both a 1D and a 2D cache.
 
 For additional examples, see \texttt{examples/DFE/example2D.py} in the source distribution.
 
+\section{Inbreeding}
+
+When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population.
+For high levels of inbreeding ($F_{IS} \approx 0.5$ or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. 
+However, lower levels of inbreeding can still bias estimates of demography despite not have such a dramatic effect on the SFS.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{InbreedingSFS}
+\caption{\textbf{SFS with Inbreeding:} $F_{IS}=0.8$.\label{fig:inbreeding_sfs}}
+\end{figure}
+
+To accommodate this, inbreeding can be estimated as part of a demographic model by using the \py{from_phi_inbreeding} function in the \py{Spectrum} class.
+This can be done by including additional parameters for the inbreeding coefficients (one for each population) in the model and passing them
+to the \py{from_phi_inbreeding} function in the demographic model:
+
+\begin{lstlisting}[caption={\textbf{Inbreeding:} Standard neutral model for a diploid population with inbreeding level \py{F}.}]
+def snm_inbreeding(params, ns, pts):
+    F = params[0]
+    xx = dadi.Numerics.default_grid(pts)
+    phi = dadi.PhiManip.phi_1D(xx)
+    fs = dadi.Spectrum.from_phi_inbreeding(phi, ns, (xx,),
+                                           (F,), (2,))
+    return fs
+\end{lstlisting}
+
+The \py{from_phi_inbreeding} function also requires the ploidy levels of the populations being analyzed, so it can naturally handle autopolyploids as well:
+
+\begin{lstlisting}[caption={\textbf{Diploid-Tetraploid Isolation Model:} An ancestral population splits at time \py{T} into a diploid (pop 1) and autotetraploid (pop 2) population of sizes \py{nu1} and \py{nu2}, respectively. The populations have separate inbreeding coefficients \py{F1} and \py{F2}.}]
+def iso_inbreeding(params, ns, pts):
+    T, nuA, nuB, F1, F2 = params
+    xx = dadi.Numerics.default_grid(pts)
+    phi = dadi.PhiManip.phi_1D(xx)
+    phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+    phi = phi.Integration.two_pops(phi, xx, T, nu1, nu2)
+    fs = dadi.Spectrum.from_phi_inbreeding(phi, ns, (xx,xx),
+                                           (F1,F2), (2,4))
+    return fs
+\end{lstlisting}
+
+\section{Polyploid Subgenomes}
+
+To model polyploid lineages, a demographic model for their subgenomes can be created. This is done by treating the subgenomes as analogous to populations, and then combining their frequency spectra into a single, polyploid SFS.
+Including a migration parameter between the subgenomes can act as a proxy for allelic exchange (homoeologous recombination), which allows both autopolyploids and allopolyploids to be modeled.
+The input for a single polyploid lineage is a one-dimensional SFS, so there is no need to predetermine if the lineage is auto- or allopolploid. There is also no need to try and separate SNP calls
+between subgenomes because fixed heterozygosity is naturally accommodated by this model.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{TetraploidSFS}
+\caption{\textbf{Tetraploid SFS:} $F_{IS}=0.8$.\label{fig:tetraploid_sfs}}
+\end{figure}
+
+\begin{lstlisting}[caption={\textbf{Two subgenomes:} At time \py{T} in the past, an equilibrium population duplicates (autopolyploidy) and the subgenomes exchange genes symmetrically at a rate of \py{m}. The SFS for the subgenomes are then combined with the \py{combine_pops} function to create a single, polyploid SFS.}]
+def two_subgenomes(params, ns, pts):
+    T, m = params
+    xx = dadi.Numerics.default_grid(pts)
+    phi = dadi.PhiManip.phi_1D(xx)
+    phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+    phi = dadi.Integration.two_pops(phi, xx, T, 1.0, 1.0, m, m)
+    fs = dadi.Spectrum.from_phi(phi, ns, (xx,xx)
+    fs2 = dadi.Spectrum(dadi.Misc.combine_pops(fs))
+    return fs2
+\end{lstlisting}
+
 \section{Installation}
 
 \subsection{Dependencies}
