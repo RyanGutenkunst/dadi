@@ -152,7 +152,7 @@ input_params, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
 target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
                                      PDFs.biv_lognormal, theta)
 p0 = [0.3,0.3,0,0.2,1.2,0.3]
-popt, fopt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
+popt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
         func_args=[s1, s2, PDFs.lognormal,
             PDFs.biv_lognormal, theta],
         lower_bound=[None, 0.1,-1,0,None, 0],
