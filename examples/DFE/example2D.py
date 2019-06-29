@@ -46,7 +46,7 @@ except IOError:
                  additional_gammas=[1.2, 4.3])
     # Save spectra2d object
     fid = open('test.spectra2d.bpkl', 'wb')
-    pickle.dump(s, fid, protocol=2)
+    pickle.dump(s2, fid, protocol=2)
     fid.close()
 
 # Generate test data set to fit
@@ -95,11 +95,11 @@ except IOError:
     fid.close()
 
 fs1 = s1.integrate_point_pos([-0.5,0.5,0.1,4.3], None, PDFs.lognormal,
-                             1e5, func_single_ex, None)
+                             1e5, func_single_ex)
 
 fig = dadi.Plotting.pylab.figure(229)
 fig.clear()
-dadi.Plotting.plot_2d_comp_Poisson(fs1, fs_biv)
+dadi.Plotting.plot_2d_comp_Poisson(fs1, fs_biv, show=False)
 
 #
 # Test optimization of point mass positive selection.
@@ -147,19 +147,20 @@ print('  Optimized parameters: {0}'.format(popt))
 # perfectly correlated 1D distribution.
 # Input parameters here a mu, sigma, rho for 2D (fixed to zero), 
 #   proportion positive, gamma positive, proportion 2D, 
-p0, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
+input_params, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
 # Expected sfs
 target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
-                                     PDFs.biv_lognormal, theta, None)
-popt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
-                               func_args=[s1, s2, PDFs.lognormal,
-                                          PDFs.biv_lognormal, theta],
-                               lower_bound=[None, 0.1,-1,0,None, 0],
-                               upper_bound=[None,None, 1,1,None, 1],
-                               # We fix both the rho assumed for the 2D distribution,
-                               # and the assumed value of positive selection.
-                               fixed_params=[None,None,0,None,1.2,None],
-                               verbose=30, multinom=False, maxiter=1)
+                                     PDFs.biv_lognormal, theta)
+p0 = [0.3,0.3,0,0.2,1.2,0.3]
+popt, fopt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
+        func_args=[s1, s2, PDFs.lognormal,
+            PDFs.biv_lognormal, theta],
+        lower_bound=[None, 0.1,-1,0,None, 0],
+        upper_bound=[None,None, 1,1,None, 1],
+        # We fix both the rho assumed for the 2D distribution,
+        # and the assumed value of positive selection.
+        fixed_params=[None,None,0,None,1.2,None],
+        verbose=30, multinom=False, maxiter=1)
 
 #
 # Test Godambe code for estimating uncertainties

@@ -386,7 +386,7 @@ def mixture_symmetric_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
     rho, ppos, gamma_pos, p2d = params[-4:]
 
     params1 = list(pdf_params) + [ppos, gamma_pos]
-    fs1 = s1.integrate_point_pos(params1, None, sel_dist1, theta, pts=None)
+    fs1 = s1.integrate_point_pos(params1, None, sel_dist1, theta, Npos=1, pts=None)
     params2 = list(pdf_params) + [rho, ppos, gamma_pos]
     fs2 = s2.integrate_symmetric_point_pos(params2, None, sel_dist2, theta, None)
     return (1-p2d)*fs1 + p2d*fs2
