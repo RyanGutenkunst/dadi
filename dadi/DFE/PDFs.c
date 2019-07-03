@@ -3,7 +3,12 @@
 
 void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
                    int Nparams, double *output){
-    double mu1=0,mu2=0,sigma1=0,sigma2=0,rho=0;
+    double mu1,mu2,sigma1,sigma2,rho;
+    double *delx, *dely;
+    int ii, jj;
+    double norm, q, pre;
+
+    mu1=0;mu2=0;sigma1=0;sigma2=0;rho=0;
     if (Nparams == 3){
         mu1 = params[0];
         mu2 = params[0];
@@ -17,10 +22,9 @@ void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
         sigma2 = params[3];
         rho = params[4];
     }
+    delx = malloc(n * sizeof(*xx));
+    dely = malloc(m * sizeof(*yy));
 
-    double *delx = malloc(n * sizeof(*xx));
-    double *dely = malloc(m * sizeof(*yy));
-    int ii,jj;
     for(ii=0; ii<n; ii++){
         delx[ii] = (log(xx[ii]) - mu1)/sigma1;
     }
@@ -28,8 +32,7 @@ void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
         dely[jj] = (log(yy[jj]) - mu2)/sigma2;
     }
 
-    double norm, q;
-    double pre = 2*M_PI * sigma1*sigma2 * sqrt(1.-rho*rho);
+    pre = 2*M_PI * sigma1*sigma2 * sqrt(1.-rho*rho);
     for(ii=0; ii<n; ii++){
         for (jj=0; jj<m; jj++){
             norm = pre * xx[ii]*yy[jj];
@@ -44,7 +47,12 @@ void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
 
 void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
                    int Nparams, double *output){
-    double alpha1=0, alpha2=0, beta1=0, beta2=0;                   
+    double alpha1, alpha2, beta1, beta2;
+    double *margx, *margy;
+    int ii, jj;
+    double cx, cy;
+
+    alpha1=0; alpha2=0; beta1=0; beta2=0;
     if (Nparams == 2){
         alpha1 = params[0];
         alpha2 = params[0];
@@ -57,14 +65,14 @@ void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
         beta2 = params[3];
     }
 
-    double *margx = malloc(n * sizeof(*xx));
-    double *margy = malloc(m * sizeof(*yy));
-    int ii,jj;
-    double cx = pow(beta1, alpha1) * tgamma(alpha1);
+    margx = malloc(n * sizeof(*xx));
+    margy = malloc(m * sizeof(*yy));
+
+    cx = pow(beta1, alpha1) * tgamma(alpha1);
     for(ii=0; ii<n; ii++){
         margx[ii] = pow(xx[ii], alpha1-1.) * exp(-xx[ii]/beta1) / cx;
     }
-    double cy = pow(beta2, alpha2) * tgamma(alpha2);
+    cy = pow(beta2, alpha2) * tgamma(alpha2);
     for(jj=0; jj<m; jj++){
         margy[jj] = pow(yy[jj], alpha2-1.) * exp(-yy[jj]/beta2) / cy;
     }
