@@ -8,9 +8,15 @@ interface
         double precision intent(in), dimension(Nparams) :: params
         integer intent(hide), depend (xx) :: n=len(xx) 
         integer intent(hide), depend (yy) :: m=len(yy) 
-        integer intent(hide), depend (Nparams) :: Nparams=len(params) 
+        integer intent(hide), depend (params) :: Nparams=len(params) 
         double precision intent(out), dimension(n,m) :: output
     end subroutine biv_lognormal
+    function gamma_func(z) result (y)
+        intent(c) gamma_func
+        intent(c)
+        double precision intent(in) :: z
+        double precision intent(out) :: y
+    end function gamma_func
     subroutine biv_ind_gamma(xx, yy, params, n, m, Nparams, output)
         intent(c) biv_ind_gamma
         intent(c)
@@ -19,7 +25,7 @@ interface
         double precision intent(in), dimension(Nparams) :: params
         integer intent(hide), depend (xx) :: n=len(xx) 
         integer intent(hide), depend (yy) :: m=len(yy) 
-        integer intent(hide), depend (Nparams) :: Nparams=len(params) 
+        integer intent(hide), depend (params) :: Nparams=len(params) 
         double precision intent(out), dimension(n,m) :: output
     end subroutine biv_ind_gamma
 end interface
