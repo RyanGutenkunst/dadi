@@ -1,6 +1,13 @@
-#define _USE_MATH_DEFINES
 #include <stdlib.h>
 #include <math.h>
+/* Define M_PI here, since it seems undefined in some Microsoft compilers */
+#define M_PI 3.14159265358979323846264338327950288
+
+void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
+                   int Nparams, double *output);
+double gamma_func(double z);
+void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
+                   int Nparams, double *output);
 
 void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
                    int Nparams, double *output){
@@ -46,6 +53,34 @@ void biv_lognormal(double *xx, double *yy, double *params, int n, int m,
     free(dely);
 }
 
+double gamma_func(double z){
+    /* Based on code at https://en.wikipedia.org/wiki/Lanczos_approximation */
+    int ii;
+    double t,x,y;
+    double p[8] = {676.5203681218851,
+	    -1259.1392167224028,
+	    771.32342877765313,
+	    -176.61502916214059,
+	    12.507343278686905,
+	    -0.13857109526572012,
+	    9.9843695780195716e-6,
+	    1.5056327351493116e-7
+    };
+
+    if (z < 0.5){
+        y = M_PI / (sin(M_PI*z) * gamma_func(1.-z));
+    } else {
+        z -= 1;
+        x = 0.99999999999980993;
+        for (ii=0; ii<8; ii++){
+            x += p[ii] / (z+ii+1);
+	}
+        t = z + 8 - 0.5;
+        y = sqrt(2*M_PI) * pow(t, z+0.5) * exp(-t) * x;
+    }
+    return y;
+}
+
 void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
                    int Nparams, double *output){
     double alpha1, alpha2, beta1, beta2;
@@ -69,11 +104,11 @@ void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
     margx = malloc(n * sizeof(*xx));
     margy = malloc(m * sizeof(*yy));
 
-    cx = pow(beta1, alpha1) * tgamma(alpha1);
+    cx = pow(beta1, alpha1) * gamma_func(alpha1);
     for(ii=0; ii<n; ii++){
         margx[ii] = pow(xx[ii], alpha1-1.) * exp(-xx[ii]/beta1) / cx;
     }
-    cy = pow(beta2, alpha2) * tgamma(alpha2);
+    cy = pow(beta2, alpha2) * gamma_func(alpha2);
     for(jj=0; jj<m; jj++){
         margy[jj] = pow(yy[jj], alpha2-1.) * exp(-yy[jj]/beta2) / cy;
     }
