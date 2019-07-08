@@ -71,32 +71,33 @@ class Cache1D:
                         print('{0}: {1}'.format(ii, gamma))
                     outlist.append((ii, sfs))
 
-            manager = multiprocessing.Manager()
-            if cpus is None:
-                cpus = multiprocessing.cpu_count()
-            work = manager.Queue(cpus-1)
-            results = manager.list()
+            if __name__ ==  '__main__':        
+                manager = multiprocessing.Manager()
+                if cpus is None:
+                    cpus = multiprocessing.cpu_count()
+                work = manager.Queue(cpus-1)
+                results = manager.list()
 
-            # Assemble pool of workers
-            pool = []
-            for ii in range(cpus):
-                p = multiprocessing.Process(target=worker_sfs,
-                                            args=(work, results, demo_sel_func, params, ns, pts_l))
-                p.start()
-                pool.append(p)
+                # Assemble pool of workers
+                pool = []
+                for ii in range(cpus):
+                    p = multiprocessing.Process(target=worker_sfs,
+                                                args=(work, results, demo_sel_func, params, ns, pts_l))
+                    p.start()
+                    pool.append(p)
 
-            # Put all jobs on queue
-            for ii, gamma in enumerate(self.gammas):
-                work.put((ii, gamma))
-            # Put commands on queue to close out workers
-            for jj in range(cpus):
-                work.put(None)
-            # Start work
-            for p in pool:
-                p.join()
-            # Collect results
-            for ii, sfs in results:
-                self.spectra[ii] = sfs
+                # Put all jobs on queue
+                for ii, gamma in enumerate(self.gammas):
+                    work.put((ii, gamma))
+                # Put commands on queue to close out workers
+                for jj in range(cpus):
+                    work.put(None)
+                # Start work
+                for p in pool:
+                    p.join()
+                # Collect results
+                for ii, sfs in results:
+                    self.spectra[ii] = sfs
 
         self.neu_spec = demo_sel_func(tuple(params)+(0,), ns, pts_l)
         self.spectra = np.array(self.spectra)

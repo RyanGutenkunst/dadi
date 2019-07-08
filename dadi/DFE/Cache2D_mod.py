@@ -73,33 +73,34 @@ class Cache2D:
                         print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
                     outlist.append((ii,jj,sfs))
 
-            manager = multiprocessing.Manager()
-            if cpus is None:
-                cpus = multiprocessing.cpu_count()
-            work = manager.Queue(cpus-1)
-            results = manager.list()
+            if __name__ == '__main__':
+                manager = multiprocessing.Manager()
+                if cpus is None:
+                    cpus = multiprocessing.cpu_count()
+                work = manager.Queue(cpus-1)
+                results = manager.list()
+                
+                # Assemble pool of workers
+                pool = []
+                for i in range(cpus):
+                    p = multiprocessing.Process(target=worker_sfs,
+                                                args=(work, results, demo_sel_func,
+                                                      params, ns, pts))
+                    p.start()
+                    pool.append(p)
 
-            # Assemble pool of workers
-            pool = []
-            for i in range(cpus):
-                p = multiprocessing.Process(target=worker_sfs,
-                                            args=(work, results, demo_sel_func,
-                                                  params, ns, pts))
-                p.start()
-                pool.append(p)
-
-            # Put all jobs on queue
-            for ii, gamma in enumerate(self.gammas):
-                for jj, gamma2 in enumerate(self.gammas):
-                    work.put((ii,jj, gamma,gamma2))
-            # Put commands on queue to close out workers
-            for jj in range(cpus):
-                work.put(None)
-            # Start work
-            for p in pool:
-                p.join()
-            for ii,jj, sfs in results:
-                self.spectra[ii][jj] = sfs
+                # Put all jobs on queue
+                for ii, gamma in enumerate(self.gammas):
+                    for jj, gamma2 in enumerate(self.gammas):
+                        work.put((ii,jj, gamma,gamma2))
+                # Put commands on queue to close out workers
+                for jj in range(cpus):
+                    work.put(None)
+                # Start work
+                for p in pool:
+                    p.join()
+                for ii,jj, sfs in results:
+                    self.spectra[ii][jj] = sfs
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
