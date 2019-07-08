@@ -4,21 +4,6 @@ Developed by the Gutenkunst group, building off of the fitdadi code.
 import numpy as np
 import scipy.integrate
 
-def _worker_sfs(in_queue, outlist, demo_sel_func, params, ns, pts, verbose):
-    """
-    Worker function -- used to generate SFSes for
-    pairs of gammas.
-    """
-    while True:
-        item = in_queue.get()
-        if item is None:
-            return
-        ii, jj, gamma, gamma2 = item
-        sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
-        if verbose:
-            print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
-        outlist.append((ii,jj,sfs))
-
 class Cache2D:
     def __init__(self, params, ns, demo_sel_func, pts,
                  gamma_bounds=(1e-4, 2000.), gamma_pts=100,
@@ -73,6 +58,21 @@ class Cache2D:
             # Would like to simply use Pool.map here, but difficult to
             # pass dynamic demo_sel_func that way.
 
+            def worker_sfs(in_queue, outlist, demo_sel_func, params, ns, pts):
+                """
+                Worker function -- used to generate SFSes for
+                pairs of gammas.
+                """
+                while True:
+                    item = in_queue.get()
+                    if item is None:
+                        return
+                    ii, jj, gamma, gamma2 = item
+                    sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
+                    if verbose:
+                        print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
+                    outlist.append((ii,jj,sfs))
+
             manager = multiprocessing.Manager()
             if cpus is None:
                 cpus = multiprocessing.cpu_count()
@@ -82,9 +82,9 @@ class Cache2D:
             # Assemble pool of workers
             pool = []
             for i in range(cpus):
-                p = multiprocessing.Process(target=_worker_sfs,
+                p = multiprocessing.Process(target=worker_sfs,
                                             args=(work, results, demo_sel_func,
-                                                  params, ns, pts, verbose))
+                                                  params, ns, pts))
                 p.start()
                 pool.append(p)
 

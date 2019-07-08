@@ -12,22 +12,6 @@ import scipy.stats.distributions
 import scipy.integrate
 from dadi import Numerics, Spectrum
 
-def _worker_sfs(in_queue, outlist, popn_func_ex, params, ns,
-        pts_l, verbose):
-    """
-    Worker function -- used to generate SFSes for
-    single values of gamma.
-    """
-    while True:
-        item = in_queue.get()
-        if item is None:
-            return
-        ii, gamma = item
-        sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
-        if verbose:
-            print('{0}: {1}'.format(ii, gamma))
-        outlist.append((ii, sfs))
-
 class Cache1D:
     def __init__(self, params, ns, demo_sel_func, pts_l, 
                  gamma_bounds=(1e-4, 2000), gamma_pts=500, 
@@ -71,6 +55,21 @@ class Cache1D:
             import multiprocessing
             if cpus is None:
                 cpus = multiprocessing.cpu_count() - 1
+            def worker_sfs(in_queue, outlist, popn_func_ex, params, ns,
+                           pts_l):
+                """
+                Worker function -- used to generate SFSes for
+                single values of gamma.
+                """
+                while True:
+                    item = in_queue.get()
+                    if item is None:
+                        return
+                    ii, gamma = item
+                    sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
+                    if verbose:
+                        print('{0}: {1}'.format(ii, gamma))
+                    outlist.append((ii, sfs))
 
             manager = multiprocessing.Manager()
             if cpus is None:
@@ -81,8 +80,8 @@ class Cache1D:
             # Assemble pool of workers
             pool = []
             for ii in range(cpus):
-                p = multiprocessing.Process(target=_worker_sfs,
-                                            args=(work, results, demo_sel_func, params, ns, pts_l, verbose))
+                p = multiprocessing.Process(target=worker_sfs,
+                                            args=(work, results, demo_sel_func, params, ns, pts_l))
                 p.start()
                 pool.append(p)
 
