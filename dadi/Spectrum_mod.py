@@ -2126,7 +2126,11 @@ def %(method)s(self, other):
 
 # Allow spectrum objects to be pickled. 
 # See http://effbot.org/librarybook/copy-reg.htm
-import copyreg
+try:
+    import copyreg
+except:
+    # For Python 2.x compatibility
+    import copy_reg as copyreg
 def Spectrum_unpickler(data, mask, data_folded, pop_ids, extrap_x):
     return dadi.Spectrum(data, mask, mask_corners=False, data_folded=data_folded, check_folding=False, pop_ids=pop_ids, extrap_x=extrap_x)
 def Spectrum_pickler(fs):

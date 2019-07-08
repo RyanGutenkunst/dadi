@@ -402,7 +402,11 @@ def %(method)s(self, other):
 
 # Allow TLSpectrum objects to be pickled. 
 # See http://effbot.org/librarybook/copy-reg.htm
-import copyreg
+try:
+    import copyreg
+except:
+    # For Python 2.x compatibility
+    import copy_reg as copyreg
 def TLSpectrum_pickler(fs):
     # Collect all the info necessary to save the state of a TLSpectrum
     return TLSpectrum_unpickler, (fs.data, fs.mask, fs.folded,
