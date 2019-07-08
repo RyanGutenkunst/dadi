@@ -91,13 +91,13 @@ numpy.distutils.core.setup(name='dadi',
                            description="Fit population genetic models of demography and selection using diffusion approximations to the allele frequency spectrum",
                            long_description_content_type="text/markdown",
                            long_description=long_description,
-                           #package_data = {'tests':['IM.fs'],
+                           package_data = {'tests':['IM.fs'],
                            #                # Copy Triallele extension modules
-                           #                'dadi.Triallele':['*.so'],
+                                           'dadi.Triallele':['*.so', '*.pyd'],
                            #                # Copy TwoLocus extension modules
-                           #                'dadi.TwoLocus':['*.so'],
+                                           'dadi.TwoLocus':['*.so', '*.pyd'],
                            #                # Copy DFE extension modules,
-                           #                'dadi.DFE':['*.so']},
+                                           'dadi.DFE':['*.so', '*.pyd']},
                            classifiers=[
                                "Programming Language :: Python :: 3",
                                "License :: OSI Approved :: BSD License",
