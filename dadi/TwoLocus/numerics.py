@@ -1633,14 +1633,14 @@ def condition(F,i):
 
 # Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.
 try:
-    from transition1D import transition1D
-    from transition1 import transition1
-    from transition2 import transition2
-    from transition3 import transition3
-    from transition12 import transition12
-    from transition13 import transition13
-    from transition23 import transition23
-    from surface_interaction import surface_interaction
+    from .transition1D import transition1D
+    from .transition1 import transition1
+    from .transition2 import transition2
+    from .transition3 import transition3
+    from .transition12 import transition12
+    from .transition13 import transition13
+    from .transition23 import transition23
+    from .surface_interaction import surface_interaction
 except ImportError:
     print("using numpy versions")
     pass
