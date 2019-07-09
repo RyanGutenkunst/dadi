@@ -9,7 +9,7 @@ from dadi.Spectrum_mod import Spectrum
 print("""If you use the Godambe methods in your published research, please cite Coffman et al. (2016) in addition to the main dadi paper Gutenkunst et al. (2009).
 AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591-593 (2016)""")
 
-def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
+def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
     """
     Calculate element [ii][jj] of the Hessian matrix, a matrix
     of partial second derivatives w.r.t. to parameters ii and jj
@@ -20,12 +20,17 @@ def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
     eps: List of absolute step sizes to use for each parameter when taking
          finite differences.
     args: Additional arguments to func
+    one_sided: Optionally, pass in a sequence of length p0 that determines
+               whether a one-sided derivative will be used for each parameter.
     """
     # Note that we need to specify dtype=float, to avoid this being an integer
     # array which will silently fail when adding fractional eps.
+    if one_sided is None:
+        one_sided = [False]*len(p0)
+
     pwork = numpy.array(p0, copy=True, dtype=float)
     if ii == jj:
-        if pwork[ii] != 0:
+        if pwork[ii] != 0 and not one_sided[ii]:
             pwork[ii] = p0[ii] + eps[ii]
             fp = func(pwork, *args)
             
@@ -33,7 +38,7 @@ def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
             fm = func(pwork, *args)
             
             element = (fp - 2*f0 + fm)/eps[ii]**2
-        if pwork[ii] == 0:
+        else:
             pwork[ii] = p0[ii] + 2*eps[ii]
             fpp = func(pwork, *args)
             
@@ -42,7 +47,7 @@ def hessian_elem(func, f0, p0, ii, jj, eps, args=()):
 
             element = (fpp - 2*fp + f0)/eps[ii]**2
     else:
-        if pwork[ii] != 0 and pwork[jj] != 0:
+        if pwork[ii] != 0 and pwork[jj] != 0 and not one_sided[ii] and not one_sided[jj]:
             # f(xi + hi, xj + h)
             pwork[ii] = p0[ii] + eps[ii]
             pwork[jj] = p0[jj] + eps[jj]
@@ -99,12 +104,13 @@ def get_hess(func, p0, eps, args=()):
     # Calculate step sizes for finite-differences.
     eps_in = eps
     eps = numpy.empty([len(p0)])
+    one_sided = [False]*len(p0)
     for i, pval in enumerate(p0):
         if pval != 0:
             # Account for floating point arithmetic issues
             if pval*eps_in < 1e-6:
                 eps[i] = eps_in
-                p0[i] = 0
+                one_sided[i] = True
             else:
                 eps[i] = eps_in*pval
         else:
@@ -115,7 +121,7 @@ def get_hess(func, p0, eps, args=()):
     hess = numpy.empty((len(p0), len(p0)))
     for ii in range(len(p0)):
         for jj in range(ii, len(p0)):
-            hess[ii][jj] = hessian_elem(func, f0, p0, ii, jj, eps, args=args)
+            hess[ii][jj] = hessian_elem(func, f0, p0, ii, jj, eps, args=args, one_sided=one_sided)
             hess[jj][ii] = hess[ii][jj]
     return hess
 
@@ -134,12 +140,13 @@ def get_grad(func, p0, eps, args=()):
     # Calculate step sizes for finite-differences.
     eps_in = eps
     eps = numpy.empty([len(p0)])
+    one_sided = [False]*len(p0)
     for i, pval in enumerate(p0):
         if pval != 0:
             # Account for floating point arithmetic issues
             if pval*eps_in < 1e-6:
                 eps[i] = eps_in
-                p0[i] = 0
+                one_sided[i] = True
             else:
                 eps[i] = eps_in*pval
         else:
@@ -150,7 +157,7 @@ def get_grad(func, p0, eps, args=()):
     for ii in range(len(p0)):
         pwork = numpy.array(p0, copy=True, dtype=float)
 
-        if p0[ii] != 0:
+        if p0[ii] != 0 and not one_sided[ii]:
             pwork[ii] = p0[ii] + eps[ii]
             fp = func(pwork, *args)
 
