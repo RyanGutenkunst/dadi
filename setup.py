@@ -82,7 +82,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 numpy.distutils.core.setup(name='dadi',
-                           version='2.0.0',
+                           version='2.0.1',
                            author='Ryan Gutenkunst',
                            author_email='rgutenk@email.arizona.edu',
                            url='https://bitbucket.org/gutenkunstlab/dadi',

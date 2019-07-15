@@ -1658,14 +1658,14 @@ def condition(F,i):
 
 # Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.
 try:
-    from transition1D import transition1D
-    from transition1 import transition1
-    from transition2 import transition2
-    from transition3 import transition3
-    from transition12 import transition12
-    from transition13 import transition13
-    from transition23 import transition23
-    from surface_interaction import surface_interaction
+    from .transition1D import transition1D
+    from .transition1 import transition1
+    from .transition2 import transition2
+    from .transition3 import transition3
+    from .transition12 import transition12
+    from .transition13 import transition13
+    from .transition23 import transition23
+    from .surface_interaction import surface_interaction
 except ImportError:
     print(&#34;using numpy versions&#34;)
     pass</code></pre>
@@ -3056,82 +3056,6 @@ here, we have x3 lost</p></section>
     return phi</code></pre>
 </details>
 </dd>
-<dt id="dadi.TwoLocus.numerics.surface_interaction"><code class="name flex">
-<span>def <span class="ident">surface_interaction</span></span>(<span>phi, x, Psurf)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>density that should be moved to surface</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def surface_interaction(phi,x,Psurf):
-    &#34;&#34;&#34;
-    density that should be moved to surface
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    for ii in range(len(x))[:len(x)-1]:
-        for jj in range(len(x))[:len(x)-1-ii]:
-            for kk in range(len(x))[:len(x)-1-ii-jj]:
-                if ii == 0 and jj == 0:
-                    continue
-                if ii == 0 and kk == 0:
-                    continue
-                if jj == 0 and kk == 0:
-                    continue
-                if ii == 0:
-                    amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (jj+kk))//2
-                    rmdr = (len(x)-1 - (jj+kk))%2
-                    if rmdr == 0:
-                        phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
-                        phi[ii,jj,kk] *= (1-amnt)
-                    elif rmdr == 1:
-                        phi[ii,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
-                        phi[ii,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
-                        phi[ii,jj,kk] *= (1-amnt)
-                elif jj == 0:
-                    amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+kk))//2
-                    rmdr = (len(x)-1 - (ii+kk))%2
-                    if rmdr == 0:
-                        phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
-                        phi[ii,jj,kk] *= (1-amnt)
-                    elif rmdr == 1:
-                        phi[ii+dist+1,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
-                        phi[ii+dist,jj,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
-                        phi[ii,jj,kk] *= (1-amnt)
-                elif kk == 0:
-                    amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj))//2
-                    rmdr = (len(x)-1 - (ii+jj))%2
-                    if rmdr == 0:
-                        phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
-                        phi[ii,jj,kk] *= (1-amnt)
-                    elif rmdr == 1:
-                        phi[ii+dist+1,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2/2.
-                        phi[ii+dist,jj+dist+1,kk] += amnt * phi[ii,jj,kk] * 2/2.
-                        phi[ii,jj,kk] *= (1-amnt)
-                else:
-                    amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj+kk))//3
-                    rmdr = (len(x)-1 - (ii+jj+kk))%3
-                    if rmdr == 0: # in line with boundary grid point
-                        phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
-                        phi[ii,jj,kk] *= (1-amnt)
-                    elif rmdr == 1:
-                        phi[ii+dist+1,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
-                        phi[ii+dist,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
-                        phi[ii+dist,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
-                        phi[ii,jj,kk] *= (1-amnt)
-                    elif rmdr == 2:
-                        phi[ii+dist+1,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
-                        phi[ii+dist+1,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
-                        phi[ii+dist,jj+dist+1,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
-                        phi[ii,jj,kk] *= (1-amnt)
-
-    return phi</code></pre>
-</details>
-</dd>
 <dt id="dadi.TwoLocus.numerics.surface_interaction_b"><code class="name flex">
 <span>def <span class="ident">surface_interaction_b</span></span>(<span>phi, x, Psurf)</span>
 </code></dt>
@@ -3258,147 +3182,6 @@ here, we have x3 lost</p></section>
     return fsA,fsB</code></pre>
 </details>
 </dd>
-<dt id="dadi.TwoLocus.numerics.transition1"><code class="name flex">
-<span>def <span class="ident">transition1</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Transition matrix for ADI method along first axis</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition1(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
-    &#34;&#34;&#34;
-    Transition matrix for ADI method along first axis
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    P = np.zeros((len(x),len(x),3,len(x)))
-    for jj in range(len(x)):
-        for kk in range(len(x)):
-            if len(np.where(U01[:,jj,kk] == 1)[0]) &lt;= 2:
-                continue
-            A = np.zeros((len(x),len(x)))
-            # drift
-            if (jj &gt; 0 or kk &gt; 0) and x[jj] + x[kk] &lt; 1 - tol:
-                V = x*(1-x)/nu
-                for ii in np.where(U01[:,jj,kk] == 1)[0][:-1]:
-                    if ii == 0:
-                        A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
-                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
-                    elif ii == np.where(U01[:,jj,kk] == 1)[0][:-1][-1]:
-                        A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
-                        A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
-                    else:
-                        A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
-                        A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
-                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
-                
-                x2 = x[jj]
-                x3 = x[kk]
-                M = 2*gammaA * x*(1-x-x2)*(hA+(x+x2)*(1-2*hA)) + 2*gammaB * x*(1-x-x3)*(hB+(x+x3)*(1-2*hB)) - rho/2. * (x*(1-x-x2-x3) - x2*x3)
-                for ii in np.where(U01[:,jj,kk] == 1)[0][:-1]:
-                    if ii == 0:
-                        A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
-                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
-                    elif ii == np.where(U01[:,jj,kk] == 1)[0][:-1][-1]:
-                        A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
-                        A[ii,ii] += 1/dx[ii] * ( - M[ii] ) / 2
-                    else:
-                        A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
-                        A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
-                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
-
-
-            if jj == 0 and kk == 0:
-                V = x*(1-x)/nu
-                for ii in range(len(x)):
-                    if ii == 0:
-                        A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
-                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
-                    elif ii == len(x)-1:
-                        A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
-                        A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
-                    else:
-                        A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
-                        A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
-                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
-                
-                x2 = x[jj]
-                x3 = x[kk]
-                M = 2*gammaA * x*(1-x-x2)*(hA+(x+x2)*(1-2*hA)) + 2*gammaB * x*(1-x-x3)*(hB+(x+x3)*(1-2*hB)) - rho/2. * (x*(1-x-x2-x3) - x2*x3)
-                for ii in range(len(x)):
-                    if ii == 0:
-                        A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
-                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
-                    elif ii == len(x)-1:
-                        A[ii,ii-1] += 1/dx[ii]*2 * ( - M[ii-1] ) / 2
-                        A[ii,ii] += 1/dx[ii]*2 * ( - M[ii] ) / 2
-                    else:
-                        A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
-                        A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
-                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
-
-            
-            P[jj,kk,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
-            P[jj,kk,1,:] = np.diagonal(A)
-            P[jj,kk,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
-    return P</code></pre>
-</details>
-</dd>
-<dt id="dadi.TwoLocus.numerics.transition12"><code class="name flex">
-<span>def <span class="ident">transition12</span></span>(<span>x, dx, U01)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Covariance discretization for slice along axes 1 and 2</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition12(x, dx, U01):
-    &#34;&#34;&#34;
-    Covariance discretization for slice along axes 1 and 2
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    P = []*len(x)
-    for kk in range(len(x)):
-        C = lil_matrix((len(x)**2,len(x)**2))
-        if kk &lt; len(x) - 4:
-            for ii in range(len(x)-1)[:-1]:
-                for jj in range(len(x)-1)[:-1]:
-                    if U01[ii+2,jj+2,kk] == 1 or U01[ii+1,jj+2,kk] == 1 or U01[ii+2,jj+1,kk] == 1:
-                        if ii+1 &lt; len(x)-kk and jj+1 &lt; len(x)-kk and U01[ii+1,jj+1,kk] == 1:
-                            C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
-                            
-                        if ii+1 &lt; len(x)-kk and jj-1 &gt;= 0 and U01[ii+1,jj-1,kk] == 1:
-                            C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
-                        
-                        if ii-1 &gt;= 0 and jj+1 &lt; len(x)-kk and U01[ii-1,jj+1,kk] == 1:
-                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
-                            
-                        if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1,kk] == 1:
-                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
-                    
-                    elif U01[ii+1,jj+1,kk] == 1 or U01[ii+1,jj,kk] == 1 or U01[ii,jj+1,kk] == 1:
-                        if ii+1 &lt; len(x)-kk and jj-1 &gt;= 0 and U01[ii+1,jj-1,kk] == 1:
-                            C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
-                        
-                        if ii-1 &gt;= 0 and jj+1 &lt; len(x)-kk and U01[ii-1,jj+1,kk] == 1:
-                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
-                            
-                        if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1,kk] == 1:
-                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
-        
-        if kk == 0:
-            ii = 0
-            jj = len(x)-2-kk
-            C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
-            
-            ii = len(x)-2-kk
-            jj = 0
-            C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
-        
-        P.append(C)
-    return P</code></pre>
-</details>
-</dd>
 <dt id="dadi.TwoLocus.numerics.transition12_surf"><code class="name flex">
 <span>def <span class="ident">transition12_surf</span></span>(<span>x, dx, U01)</span>
 </code></dt>
@@ -3442,97 +3225,6 @@ here, we have x3 lost</p></section>
     jj = 0
     C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
     return C</code></pre>
-</details>
-</dd>
-<dt id="dadi.TwoLocus.numerics.transition13"><code class="name flex">
-<span>def <span class="ident">transition13</span></span>(<span>x, dx, U01)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Covariance discretization for slice along axes 1 and 3</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition13(x, dx, U01):
-    &#34;&#34;&#34;
-    Covariance discretization for slice along axes 1 and 3
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    P = []*len(x)
-    for jj in range(len(x)):
-        C = lil_matrix((len(x)**2,len(x)**2))
-        if jj &lt; len(x) - 4:
-            for ii in range(len(x)-1)[:-1]:
-                for kk in range(len(x)-1)[:-1]:
-                    if U01[ii+2,jj,kk+2] == 1 or U01[ii+1,jj,kk+2] == 1 or U01[ii+2,jj,kk+1] == 1:
-                        if ii+1 &lt; len(x)-jj and kk+1 &lt; len(x)-jj and U01[ii+1,jj,kk+1] == 1:
-                            C[ii*len(x)+kk,(ii+1)*len(x)+(kk+1)] += 1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk+1])
-                            
-                        if ii+1 &lt; len(x)-jj and kk-1 &gt;= 0 and U01[ii+1,jj,kk-1] == 1:
-                            C[ii*len(x)+kk,(ii+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk-1])
-                        
-                        if ii-1 &gt;= 0 and kk+1 &lt; len(x)-jj and U01[ii-1,jj,kk+1] == 1:
-                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk+1])
-                            
-                        if ii-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii-1,jj,kk-1] == 1:
-                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk-1])
-                    
-                    elif U01[ii+1,jj,kk+1] == 1 or U01[ii+1,jj,kk] == 1 or U01[ii,jj,kk+1] == 1:
-                        if ii+1 &lt; len(x)-jj and kk-1 &gt;= 0 and U01[ii+1,jj,kk-1] == 1:
-                            C[ii*len(x)+kk,(ii+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk-1]) / 2
-                        
-                        if ii-1 &gt;= 0 and kk+1 &lt; len(x)-jj and U01[ii-1,jj,kk+1] == 1:
-                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk+1]) / 2
-                            
-                        if ii-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii-1,jj,kk-1] == 1:
-                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk-1])
-        
-        if jj == 0:
-            ii = 0
-            kk = len(x)-2-jj
-            C[ii*len(x)+kk,(ii+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk-1]) / 2
-            
-            ii = len(x)-2-jj
-            kk = 0
-            C[ii*len(x)+kk,(ii-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk+1]) / 2
-        
-        P.append(C)
-    return P</code></pre>
-</details>
-</dd>
-<dt id="dadi.TwoLocus.numerics.transition1D"><code class="name flex">
-<span>def <span class="ident">transition1D</span></span>(<span>x, dx, dt, gamma, nu)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>transition matrix for one dimenional density function
-x - grid
-dx - grid spacing
-dt - timestep of integration
-gamma - scaled selection coefficients
-nu - relative size of population</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition1D(x, dx, dt, gamma, nu):
-    &#34;&#34;&#34;
-    transition matrix for one dimenional density function
-    x - grid
-    dx - grid spacing
-    dt - timestep of integration
-    gamma - scaled selection coefficients
-    nu - relative size of population
-    &#34;&#34;&#34;
-    P = np.zeros((len(x),len(x)))
-    for ii in range(len(x)):
-        if ii == 0:
-            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
-            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + gamma * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
-        elif ii == len(x) - 1:
-            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - gamma * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
-            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
-        else:
-            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - gamma * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
-            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
-            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + gamma * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
-    return P</code></pre>
 </details>
 </dd>
 <dt id="dadi.TwoLocus.numerics.transition1_surf"><code class="name flex">
@@ -3611,147 +3303,6 @@ nu - relative population size</p></section>
     return P</code></pre>
 </details>
 </dd>
-<dt id="dadi.TwoLocus.numerics.transition2"><code class="name flex">
-<span>def <span class="ident">transition2</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Transition matrix for ADI method along second axis</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition2(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
-    &#34;&#34;&#34;
-    Transition matrix for ADI method along second axis
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    P = np.zeros((len(x),len(x),3,len(x)))
-    for ii in range(len(x)):
-        for kk in range(len(x)):
-            if len(np.where(U01[ii,:,kk] == 1)[0]) &lt;= 2:
-                continue
-            A = np.zeros((len(x),len(x)))
-            # drift
-            if (ii &gt; 0 or kk &gt; 0) and x[ii] + x[kk] &lt; 1 - tol:
-                V = x*(1-x)/nu
-                for jj in np.where(U01[ii,:,kk] == 1)[0][:-1]:
-                    if jj == 0:
-                        A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
-                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
-                    elif jj == np.where(U01[ii,:,kk] == 1)[0][:-1][-1]:
-                        A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
-                        A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
-                    else:
-                        A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
-                        A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
-                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
-                
-                x1 = x[ii]
-                x3 = x[kk]
-                M = 2*gammaA * x*(1-x1-x)*(hA+(x1+x)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
-                for jj in np.where(U01[ii,:,kk] == 1)[0][:-1]:
-                    if jj == 0:
-                        A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
-                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
-                    elif jj == np.where(U01[ii,:,kk] == 1)[0][:-1][-1]:
-                        A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
-                        A[jj,jj] += 1/dx[jj] * ( - M[jj] ) / 2
-                    else:
-                        A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
-                        A[jj,jj] += 0 #1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
-                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
-
-
-            if ii == 0 and kk == 0:
-                V = x*(1-x)/nu
-                for jj in range(len(x)):
-                    if jj == 0:
-                        A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
-                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
-                    elif jj == len(x)-1:
-                        A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
-                        A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
-                    else:
-                        A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
-                        A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
-                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
-                
-                x1 = x[ii]
-                x3 = x[kk]
-                M = 2*gammaA * x*(1-x1-x)*(hA+(x1+x)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
-                for jj in range(len(x)):
-                    if jj == 0:
-                        A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
-                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
-                    elif jj == len(x)-1:
-                        A[jj,jj-1] += 1/dx[jj]*2 * ( - M[jj-1] ) / 2
-                        A[jj,jj] += 1/dx[jj]*2 * ( - M[jj] ) / 2
-                    else:
-                        A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
-                        A[jj,jj] += 0 #1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
-                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
-
-            
-            P[ii,kk,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
-            P[ii,kk,1,:] = np.diagonal(A)
-            P[ii,kk,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
-    return P</code></pre>
-</details>
-</dd>
-<dt id="dadi.TwoLocus.numerics.transition23"><code class="name flex">
-<span>def <span class="ident">transition23</span></span>(<span>x, dx, U01)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Covariance discretization for slice along axes 2 and 3</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition23(x, dx, U01):
-    &#34;&#34;&#34;
-    Covariance discretization for slice along axes 2 and 3
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    P = []*len(x)
-    for ii in range(len(x)):
-        C = lil_matrix((len(x)**2,len(x)**2))
-        if ii &lt; len(x) - 4:
-            for jj in range(len(x)-1)[:-1]:
-                for kk in range(len(x)-1)[:-1]:
-                    if U01[ii,jj+2,kk+2] == 1 or U01[ii,jj+1,kk+2] == 1 or U01[ii,jj+2,kk+1] == 1:
-                        if jj+1 &lt; len(x)-ii and kk+1 &lt; len(x)-ii and U01[ii,jj+1,kk+1] == 1:
-                            C[jj*len(x)+kk,(jj+1)*len(x)+(kk+1)] += 1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk+1])
-                            
-                        if jj+1 &lt; len(x)-ii and kk-1 &gt;= 0 and U01[ii,jj+1,kk-1] == 1:
-                            C[jj*len(x)+kk,(jj+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk-1])
-                        
-                        if jj-1 &gt;= 0 and kk+1 &lt; len(x)-ii and U01[ii,jj-1,kk+1] == 1:
-                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk+1])
-                            
-                        if jj-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii,jj-1,kk-1] == 1:
-                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk-1])
-                    
-                    elif U01[ii,jj+1,kk+1] == 1 or U01[ii,jj+1,kk] == 1 or U01[ii,jj,kk+1] == 1:
-                        if jj+1 &lt; len(x)-ii and kk-1 &gt;= 0 and U01[ii,jj+1,kk-1] == 1:
-                            C[jj*len(x)+kk,(jj+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk-1]) / 2
-                        
-                        if jj-1 &gt;= 0 and kk+1 &lt; len(x)-ii and U01[ii,jj-1,kk+1] == 1:
-                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk+1]) / 2
-                            
-                        if jj-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii,jj-1,kk-1] == 1:
-                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk-1])
-        
-        if ii == 0:
-            jj = 0
-            kk = len(x)-2-ii
-            C[jj*len(x)+kk,(jj+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk-1]) / 2
-            
-            jj = len(x)-2-ii
-            kk = 0
-            C[jj*len(x)+kk,(jj-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk+1]) / 2
-        
-        P.append(C)
-    return P</code></pre>
-</details>
-</dd>
 <dt id="dadi.TwoLocus.numerics.transition2_surf"><code class="name flex">
 <span>def <span class="ident">transition2_surf</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
 </code></dt>
@@ -3822,92 +3373,6 @@ nu - relative population size</p></section>
         P[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
         P[ii,1,:] = np.diagonal(A)
         P[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
-    return P</code></pre>
-</details>
-</dd>
-<dt id="dadi.TwoLocus.numerics.transition3"><code class="name flex">
-<span>def <span class="ident">transition3</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Transition matrix for ADI method along third axis</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def transition3(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
-    &#34;&#34;&#34;
-    Transition matrix for ADI method along third axis
-    &#34;&#34;&#34;
-    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
-    #        this version and the cython version together.
-    P = np.zeros((len(x),len(x),3,len(x)))
-    for ii in range(len(x)):
-        for jj in range(len(x)):
-            if len(np.where(U01[ii,jj,:] == 1)[0]) &lt;= 2:
-                continue
-            A = np.zeros((len(x),len(x)))
-            # drift
-            if (ii &gt; 0 or jj &gt; 0) and x[ii] + x[jj] &lt; 1 - tol:
-                V = x*(1-x)/nu
-                for kk in np.where(U01[ii,jj,:] == 1)[0][:-1]:
-                    if kk == 0:
-                        A[kk,kk] =  - 1/(2*dx[kk]) * ( -V[kk]/(x[kk+1]-x[kk]) )
-                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
-                    elif kk == np.where(U01[ii,jj,:] == 1)[0][:-1][-1]:
-                        A[kk,kk-1] = - 1/(2*dx[kk]) * ( V[kk-1]/(x[kk]-x[kk-1]) )
-                        A[kk,kk] = - 1/(2*dx[kk]) * ( -V[kk]/(x[kk]-x[kk-1]) )
-                    else:
-                        A[kk,kk-1] = - 1/(2*dx[kk]) * ( V[kk-1]/(x[kk]-x[kk-1]) )
-                        A[kk,kk] = - 1/(2*dx[kk]) * ( -V[kk]/(x[kk]-x[kk-1]) -V[kk]/(x[kk+1]-x[kk]) )
-                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
-                
-                x1 = x[ii]
-                x2 = x[jj]
-                M = - 2*gammaA * x*(x1+x2)*(hA+(x1+x2)*(1-2*hA)) + 2*gammaB * x*(1-x1-x)*(hB+(x1+x)*(1-2*hB)) + rho/2. * (x1*(1-x1-x2-x) - x2*x)
-                for kk in np.where(U01[ii,jj,:] == 1)[0][:-1]:
-                    if kk == 0:
-                        A[kk,kk] += 1/dx[kk] * ( M[kk] ) / 2
-                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
-                    elif kk == np.where(U01[ii,jj,:] == 1)[0][:-1][-1]:
-                        A[kk,kk-1] += 1/dx[kk] * ( - M[kk-1] ) / 2
-                        A[kk,kk] += 1/dx[kk] * ( - M[kk] ) / 2
-                    else:
-                        A[kk,kk-1] += 1/dx[kk] * ( - M[kk-1] ) / 2
-                        A[kk,kk] += 0 #1/dx[kk] * ( M[kk] - M[kk-1] ) / 2
-                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
-
-
-            if ii == 0 and jj == 0:
-                V = x*(1-x)/nu
-                for kk in range(len(x)):
-                    if kk == 0:
-                        A[kk,kk] =  - 1/(2*dx[kk]) * ( -V[kk]/(x[kk+1]-x[kk]) )
-                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
-                    elif kk == len(x)-1:
-                        A[kk,kk-1] = - 1/(2*dx[kk])*2 * ( V[kk-1]/(x[kk]-x[kk-1]) )
-                        A[kk,kk] = - 1/(2*dx[kk])*2 * ( -V[kk]/(x[kk]-x[kk-1]) )
-                    else:
-                        A[kk,kk-1] = - 1/(2*dx[kk]) * ( V[kk-1]/(x[kk]-x[kk-1]) )
-                        A[kk,kk] = - 1/(2*dx[kk]) * ( -V[kk]/(x[kk]-x[kk-1]) -V[kk]/(x[kk+1]-x[kk]) )
-                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
-                
-                x1 = x[ii]
-                x2 = x[jj]
-                M = - 2*gammaA * x*(x1+x2)*(hA+(x1+x2)*(1-2*hA)) + 2*gammaB * x*(1-x1-x)*(hB+(x1+x)*(1-2*hB)) + rho/2. * (x1*(1-x1-x2-x) - x2*x)
-                for kk in range(len(x)):
-                    if kk == 0:
-                        A[kk,kk] += 1/dx[kk] * ( M[kk] ) / 2
-                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
-                    elif kk == len(x)-1:
-                        A[kk,kk-1] += 1/dx[kk]*2 * ( - M[kk-1] ) / 2
-                        A[kk,kk] += 1/dx[kk]*2 * ( - M[kk] ) / 2
-                    else:
-                        A[kk,kk-1] += 1/dx[kk] * ( - M[kk-1] ) / 2
-                        A[kk,kk] += 0 #1/dx[kk] * ( M[kk] - M[kk-1] ) / 2
-                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
-
-            
-            P[ii,jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
-            P[ii,jj,1,:] = np.diagonal(A)
-            P[ii,jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
     return P</code></pre>
 </details>
 </dd>
@@ -3983,20 +3448,12 @@ nu - relative population size</p></section>
 <li><code><a title="dadi.TwoLocus.numerics.quadrinomial" href="#dadi.TwoLocus.numerics.quadrinomial">quadrinomial</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.sample_cached" href="#dadi.TwoLocus.numerics.sample_cached">sample_cached</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.surf_to_phi" href="#dadi.TwoLocus.numerics.surf_to_phi">surf_to_phi</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.surface_interaction" href="#dadi.TwoLocus.numerics.surface_interaction">surface_interaction</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.surface_interaction_b" href="#dadi.TwoLocus.numerics.surface_interaction_b">surface_interaction_b</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.surface_recombination" href="#dadi.TwoLocus.numerics.surface_recombination">surface_recombination</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.to_single_locus" href="#dadi.TwoLocus.numerics.to_single_locus">to_single_locus</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition1" href="#dadi.TwoLocus.numerics.transition1">transition1</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition12" href="#dadi.TwoLocus.numerics.transition12">transition12</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.transition12_surf" href="#dadi.TwoLocus.numerics.transition12_surf">transition12_surf</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition13" href="#dadi.TwoLocus.numerics.transition13">transition13</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition1D" href="#dadi.TwoLocus.numerics.transition1D">transition1D</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.transition1_surf" href="#dadi.TwoLocus.numerics.transition1_surf">transition1_surf</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition2" href="#dadi.TwoLocus.numerics.transition2">transition2</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition23" href="#dadi.TwoLocus.numerics.transition23">transition23</a></code></li>
 <li><code><a title="dadi.TwoLocus.numerics.transition2_surf" href="#dadi.TwoLocus.numerics.transition2_surf">transition2_surf</a></code></li>
-<li><code><a title="dadi.TwoLocus.numerics.transition3" href="#dadi.TwoLocus.numerics.transition3">transition3</a></code></li>
 </ul>
 </li>
 </ul>
