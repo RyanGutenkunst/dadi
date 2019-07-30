@@ -82,7 +82,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 numpy.distutils.core.setup(name='dadi',
-                           version='2.0.1',
+                           version='2.0.2',
                            author='Ryan Gutenkunst',
                            author_email='rgutenk@email.arizona.edu',
                            url='https://bitbucket.org/gutenkunstlab/dadi',
@@ -115,4 +115,7 @@ numpy.distutils.core.setup(name='dadi',
 # To distribute to PyPI
 # rm -rf dist; python3 setup.py sdist bdist_wheel
 # (Testing) python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-# (Final) python3 -m twine upload dist/*
+# (Final) python3 -m twine upload dist/*   # Username is RyanGutenkunst
+# To distribute to Conda
+# Update recipe meta.yaml with new version number and sha256. (To generate sha256, use openssl dgst -sha256 dist/dadi-<version>.tar.gz
+# Push recipe and submit pull request
