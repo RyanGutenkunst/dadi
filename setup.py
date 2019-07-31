@@ -119,3 +119,4 @@ numpy.distutils.core.setup(name='dadi',
 # To distribute to Conda
 # Update recipe meta.yaml with new version number and sha256. (To generate sha256, use openssl dgst -sha256 dist/dadi-<version>.tar.gz
 # Push recipe and submit pull request
+# To test BioConda, I used bootstrap method on https://bioconda.github.io/contributor/building-locally.html

@@ -11,8 +11,7 @@
 \bibliographystyle{plos2009}
 
 \usepackage{xspace}
-\newcommand{\dadi}{$\partial$a$\partial$i\xspace}
-\newcommand{\bolddadi}{$\boldsymbol{\partial}$a$\boldsymbol{\partial}$i\xspace}
+\newcommand{\dadi}{dadi\xspace}
 \newcommand{\Nref}{\ensuremath{N_\text{ref}}\xspace}
 \newcommand{\ms}{\emph{ms}\xspace}
 \usepackage{color}
@@ -38,7 +37,7 @@ belowskip=0pt
 
 
 \begin{document}
-\title{\dadi user manual\\\normalsize  Corresponding to version 2.0.0}
+\title{\dadi user manual\\\normalsize  Corresponding to version 2.0.3}
 %\author{Ryan Gutenkunst}
 \date{}
 \maketitle
@@ -67,7 +66,7 @@ Together with a few examples, this manual will quickly get you productive with \
 Please join the \py{dadi-user} Google groups: \url{https://groups.google.com/group/dadi-user}.
 \py{dadi-user} is the preferred forum for asking questions and getting help.
 Before posting a question, take a moment to look through the \py{dadi-user} archives to see if your question has already been addressed.
-There are example scripts included in the source distribution: \url{http://dadi.googlecode.com/svn/trunk/examples}.
+There are example scripts included in the source distribution: \url{https://bitbucket.org/gutenkunstlab/dadi/src/master/examples/}.
 
 \subsection{Helping us}
 
@@ -1128,8 +1127,9 @@ It is also recommended that you install
 \end{itemize}
 
 The easiest way to obtain all these dependencies is to install the \href{https://www.anaconda.com/distribution/}{Anacond Python Distribution}.
-The easiest way to install \dadi is to install \texttt{pip} and run \texttt{python3 -m pip install dadi}.
-(Although note that this is not guaranteed to be the most up-to-date version.)
+The easiest way to install \dadi is then via \texttt{conda}, using the command \texttt{conda install -c bioconda dadi  install}.
+\dadi can also be installed via \texttt{pip}, using the command \texttt{python3 -m pip install dadi}.
+%(Although note that this is not guaranteed to be the most up-to-date version.)
 
 \subsection{Installing from source}
 
