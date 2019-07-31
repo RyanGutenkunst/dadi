@@ -1,6 +1,6 @@
 include MANIFEST.in
 include LICENSE.txt
-recursive-include dadi *.pyf
+recursive-include dadi *.pyf *.pyx
 recursive-include doc manual.pdf *.tex *.bib
 recursive-include examples *
 recursive-include tests *
