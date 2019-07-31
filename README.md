@@ -12,4 +12,4 @@ See the manual (https://bitbucket.org/gutenkunstlab/dadi/src/master/doc/manual/m
 
 Also, please sign up for our mailing list, where we help the community with ∂a∂i. Please do search the archives before posting. Many questions come up repeatedly. (http://groups.google.com/group/dadi-user)
 
-The easiest way to install dadi is via conda, `conda install -c bioconda dadi  install`.
+The easiest way to install dadi is via conda, `conda install -c bioconda dadi`.
