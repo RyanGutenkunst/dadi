@@ -3,7 +3,6 @@ import numpy as np
 import dadi.DFE
 from dadi.DFE import PDFs, DemogSelModels
 
-
 class DFETestCase(unittest.TestCase):
     def test_Cache1D_generation(self):
         """
@@ -11,8 +10,10 @@ class DFETestCase(unittest.TestCase):
         """
         dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
                          gamma_bounds=(1e-4, 20), gamma_pts=2)
-        dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
+        s1 = dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
                          gamma_bounds=(1e-4, 20), gamma_pts=10, mp=True)
+        s1.integrate([-0.5, 0.5], None, PDFs.lognormal,
+                1e5, None, exterior_int=False)
 
     def test_1D_integration(self):
         """
@@ -39,7 +40,7 @@ class DFETestCase(unittest.TestCase):
         """
         ns = [10]
         theta = 10.
-        data = theta*DemogSelModels.equil([-1], ns, [40, 50, 60])
+        data = theta*DemogSelModels.equil([-1], ns, 60)
         s1 = dadi.DFE.Cache1D([], ns, DemogSelModels.equil, [20, 30, 40],
                               gamma_bounds=(1e-4, 20), gamma_pts=2,
                               additional_gammas=[2])
@@ -97,8 +98,9 @@ class DFETestCase(unittest.TestCase):
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
         dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=2)
-        dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
+        s2.integrate([2, 1, 0.4], None, PDFs.biv_lognormal, 1, None)
 
     def test_2D_integration(self):
         """
@@ -123,7 +125,7 @@ class DFETestCase(unittest.TestCase):
         """
         demo_params = [0.5, 2, 0.5, 0.03, 1, 2]
         ns, pts_l, theta = [3, 3], [20, 30, 40], 10
-        data = theta*DemogSelModels.IM(demo_params+[-2, -3], ns, pts_l)
+        data = theta*DemogSelModels.IM(demo_params+[-2, -3], ns, pts_l[-1])
         s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM, pts_l,
                               gamma_bounds=(1e-4, 2), gamma_pts=2,
                               additional_gammas=[0.2])
@@ -227,11 +229,16 @@ def generate_old_fitdadi_data():
 suite=unittest.TestLoader().loadTestsFromTestCase(DFETestCase)
 
 if __name__ == '__main__':
-    try:
-        generate_old_fitdadi_data()
-        print('Generated data for comparison with old fitdadi code.')
-    except ImportError:
-        print('Failed to import old fitdadi code, using stored comparison results.')
-        pass
+    #try:
+    #    generate_old_fitdadi_data()
+    #    print('Generated data for comparison with old fitdadi code.')
+    #except ImportError:
+    #    print('Failed to import old fitdadi code, using stored comparison results.')
+    #    pass
+
+    # Run tests using Windows-style multiprocessing. This is more fragile, so
+    # we test against it.
+    import multiprocessing
+    multiprocessing.set_start_method('spawn')
 
     unittest.main()

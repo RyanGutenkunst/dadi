@@ -32,6 +32,7 @@ class Cache2D:
         self.ns = ns
         self.pts = pts
         self.func_name = demo_sel_func.__name__
+        self.demo_sel_func = demo_sel_func
         self.params = params
 
         # Create a vector of gammas that are log-spaced over sequential 
@@ -47,65 +48,72 @@ class Cache2D:
         self.spectra = [[None]*len(self.gammas) for _ in self.gammas]
 
         if not mp: #for running with a single thread
-            for ii,gamma in enumerate(self.gammas):
-                for jj, gamma2 in enumerate(self.gammas):
-                    self.spectra[ii][jj] = demo_sel_func(tuple(params)+(gamma,gamma2),
-                                                   ns, pts)
-                    if verbose:
-                        print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
+            self._single_process(verbose)
         else: #for running with with multiple cores
-            import multiprocessing
-            # Would like to simply use Pool.map here, but difficult to
-            # pass dynamic demo_sel_func that way.
-
-            def worker_sfs(in_queue, outlist, demo_sel_func, params, ns, pts):
-                """
-                Worker function -- used to generate SFSes for
-                pairs of gammas.
-                """
-                while True:
-                    item = in_queue.get()
-                    if item is None:
-                        return
-                    ii, jj, gamma, gamma2 = item
-                    sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
-                    if verbose:
-                        print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
-                    outlist.append((ii,jj,sfs))
-
-            if __name__ == '__main__':
-                manager = multiprocessing.Manager()
-                if cpus is None:
-                    cpus = multiprocessing.cpu_count()
-                work = manager.Queue(cpus-1)
-                results = manager.list()
-                
-                # Assemble pool of workers
-                pool = []
-                for i in range(cpus):
-                    p = multiprocessing.Process(target=worker_sfs,
-                                                args=(work, results, demo_sel_func,
-                                                      params, ns, pts))
-                    p.start()
-                    pool.append(p)
-
-                # Put all jobs on queue
-                for ii, gamma in enumerate(self.gammas):
-                    for jj, gamma2 in enumerate(self.gammas):
-                        work.put((ii,jj, gamma,gamma2))
-                # Put commands on queue to close out workers
-                for jj in range(cpus):
-                    work.put(None)
-                # Start work
-                for p in pool:
-                    p.join()
-                for ii,jj, sfs in results:
-                    self.spectra[ii][jj] = sfs
+            self._multiple_processes(cpus, verbose)
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
         # are the spectra themselves.
         self.spectra = np.array(self.spectra)
+        
+    def _single_process(self, verbose):
+        self.demo_sel_func = Numerics.make_extrap_func(self.demo_sel_func)
+        for ii,gamma in enumerate(self.gammas):
+                for jj, gamma2 in enumerate(self.gammas):
+                    self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
+                                                   self.ns, self.pts)
+                    if verbose:
+                        print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
+                        
+    def _multiple_processes(self, cpus, verbose):
+        from multiprocessing import Manager, Process, cpu_count
+        # Would like to simply use Pool.map here, but difficult to
+        # pass dynamic demo_sel_func that way.
+            
+        if cpus is None:
+            cpus = cpu_count() - 1
+        
+        with Manager() as manager:
+            work = manager.Queue(cpus)
+            results = manager.list()
+                
+            # Assemble pool of workers
+            pool = []
+            for i in range(cpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose))
+                p.start()
+                pool.append(p)
+
+            # Put all jobs on queue
+            for ii, gamma in enumerate(self.gammas):
+                for jj, gamma2 in enumerate(self.gammas):
+                    work.put((ii,jj, gamma,gamma2))
+            # Put commands on queue to close out workers
+            for jj in range(cpus):
+                work.put(None)
+            # Stop workers
+            for p in pool:
+                p.join()
+            for ii,jj, sfs in results:
+                self.spectra[ii][jj] = sfs
+                    
+    def _worker_sfs(self, in_queue, outlist, demo_sel_func, params, ns, pts, verbose):
+        """
+        Worker function -- used to generate SFSes for
+        pairs of gammas.
+        """
+        while True:
+            item = in_queue.get()
+            if item is None:
+                return
+            ii, jj, gamma, gamma2 = item
+            demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
+            sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
+            if verbose:
+                print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
+            outlist.append((ii,jj,sfs))
 
     def integrate(self, params, ns, sel_dist, theta, pts,
                   exterior_int=True):

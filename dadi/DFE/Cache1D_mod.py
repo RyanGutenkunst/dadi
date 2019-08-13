@@ -44,63 +44,74 @@ class Cache1D:
         # Add additional gammas to cache
         self.gammas = np.concatenate((self.gammas, additional_gammas))
         self.spectra = [None]*len(self.gammas)
+        self.demo_sel_func = demo_sel_func
+        self.params = params
+        self.ns = ns
+        self.pts_l = pts_l
 
         if not mp: #for running with a single thread
-            for ii, gamma in enumerate(self.gammas):
-                self.spectra[ii] = demo_sel_func(tuple(params)+(gamma,), self.ns,
-                                                 self.pts_l)
-                if verbose:
-                   print('{0}: {1}'.format(ii, gamma))
+            self._single_process(verbose)
         else: #for running with with multiple cores
-            import multiprocessing
-            if cpus is None:
-                cpus = multiprocessing.cpu_count() - 1
-            def worker_sfs(in_queue, outlist, popn_func_ex, params, ns,
-                           pts_l):
-                """
-                Worker function -- used to generate SFSes for
-                single values of gamma.
-                """
-                while True:
-                    item = in_queue.get()
-                    if item is None:
-                        return
-                    ii, gamma = item
-                    sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
-                    if verbose:
-                        print('{0}: {1}'.format(ii, gamma))
-                    outlist.append((ii, sfs))
+            self._multiple_processes(cpus, verbose)
 
-            if __name__ ==  '__main__':        
-                manager = multiprocessing.Manager()
-                if cpus is None:
-                    cpus = multiprocessing.cpu_count()
-                work = manager.Queue(cpus-1)
-                results = manager.list()
-
-                # Assemble pool of workers
-                pool = []
-                for ii in range(cpus):
-                    p = multiprocessing.Process(target=worker_sfs,
-                                                args=(work, results, demo_sel_func, params, ns, pts_l))
-                    p.start()
-                    pool.append(p)
-
-                # Put all jobs on queue
-                for ii, gamma in enumerate(self.gammas):
-                    work.put((ii, gamma))
-                # Put commands on queue to close out workers
-                for jj in range(cpus):
-                    work.put(None)
-                # Start work
-                for p in pool:
-                    p.join()
-                # Collect results
-                for ii, sfs in results:
-                    self.spectra[ii] = sfs
-
-        self.neu_spec = demo_sel_func(tuple(params)+(0,), ns, pts_l)
+        demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
+        self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts_l)
         self.spectra = np.array(self.spectra)
+
+    def _single_process(self, verbose):
+        demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
+        for ii, gamma in enumerate(self.gammas):
+            self.spectra[ii] = demo_sel_extrap_func(tuple(self.params)+(gamma,), self.ns,
+                                             self.pts_l)
+            if verbose:
+               print('{0}: {1}'.format(ii, gamma))
+
+    def _multiple_processes(self, cpus, verbose):
+        from multiprocessing import Manager, Process, cpu_count
+           
+        if cpus is None:
+            cpus = cpu_count() - 1
+
+        with Manager() as manager:
+            work = manager.Queue(cpus)
+            results = manager.list()
+
+            # Assemble pool of workers
+            pool = []
+            for ii in range(cpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts_l, verbose))
+                p.start()
+                pool.append(p)
+
+            # Put all jobs on queue
+            for ii, gamma in enumerate(self.gammas):
+                work.put((ii, gamma))
+            # Put commands on queue to close out workers
+            for jj in range(cpus):
+                work.put(None)
+            # Stop workers
+            for p in pool:
+                p.join()    
+            # Collect results
+            for ii, sfs in results:
+                self.spectra[ii] = sfs
+
+    def _worker_sfs(self, in_queue, outlist, popn_func_ex, params, ns, pts_l, verbose):
+        """
+        Worker function -- used to generate SFSes for
+        single values of gamma.
+        """
+        popn_func_ex = Numerics.make_extrap_func(popn_func_ex)
+        while True:
+            item = in_queue.get()
+            if item is None:
+                return
+            ii, gamma = item
+            sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
+            if verbose:
+                print('{0}: {1}'.format(ii, gamma))
+            outlist.append((ii, sfs))
 
     def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
         """
@@ -180,6 +191,9 @@ class Cache1D:
         pdf_fs = self.integrate(pdf_params, None, sel_dist, theta, None,
                                 exterior_int=exterior_int)
         result = (1-np.sum(ppos_l))*pdf_fs
+        
+        if demo_sel_func is not None:
+            demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
 
         for ppos, gammapos in zip(ppos_l, gammapos_l):
             if gammapos not in self.gammas:

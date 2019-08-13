@@ -3,7 +3,6 @@ Input models of demography + selection.
 """
 from dadi import Numerics, Integration, PhiManip, Spectrum
 
-@Numerics.make_extrap_func
 def equil(params, ns, pts):
     """
     Equilibrium demography, plus selection.
@@ -12,8 +11,8 @@ def equil(params, ns, pts):
     ns: Sample sizes
     pts: Grid point settings for integration
 
-    Note that this function is defined using a decorator with make_extrap_func.
-    So there is no need to make it extrapolate again.
+    Note that DFE methods internally apply make_extrap_func,
+    so there is no need to make it extrapolate again.
     """
     gamma = params[0]
 
@@ -22,7 +21,6 @@ def equil(params, ns, pts):
 
     return Spectrum.from_phi(phi, ns, (xx,))
 
-@Numerics.make_extrap_func
 def two_epoch(params, ns, pts):
     """
     Instantaneous population size change, plus selection.
@@ -31,7 +29,7 @@ def two_epoch(params, ns, pts):
     ns: Sample sizes
     pts: Grid point settings for integration
 
-    Note that this function is defined using a decorator with make_extrap_func.
+    Note that DFE methods internally apply make_extrap_func,
     So there is no need to make it extrapolate again.
 
     nu: Final population size
@@ -44,7 +42,6 @@ def two_epoch(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 
-@Numerics.make_extrap_func
 def IM_pre(params, ns, pts):
     """
     Isolation-with-migration model with exponential pop growth, a size change
@@ -54,7 +51,7 @@ def IM_pre(params, ns, pts):
     ns: Sample sizes
     pts: Grid point settings for integration
 
-    Note that this function is defined using a decorator with make_extrap_func.
+    Note that DFE methods internally apply make_extrap_func,
     So there is no need to make it extrapolate again.
 
     Note also: Selection in contemporary population 1 is assumed to equil
@@ -134,7 +131,6 @@ def IM_single_gamma(params, ns, pts):
     s,nu1,nu2,T,m12,m21,gamma = params
     return IM((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
 
-@Numerics.make_extrap_func
 def split_mig(params, ns, pts):
     """
     Instantaneous split into two populations of specified size, with symmetric migration.
@@ -143,7 +139,7 @@ def split_mig(params, ns, pts):
     ns: Sample sizes
     pts: Grid point settings for integration
 
-    Note that this function is defined using a decorator with make_extrap_func.
+    Note that DFE methods internally apply make_extrap_func,
     So there is no need to make it extrapolate again.
 
     Note also: Selection in contemporary population 1 is assumed to equal
