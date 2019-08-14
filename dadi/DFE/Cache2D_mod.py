@@ -60,11 +60,11 @@ class Cache2D:
     def _single_process(self, verbose):
         self.demo_sel_func = Numerics.make_extrap_func(self.demo_sel_func)
         for ii,gamma in enumerate(self.gammas):
-                for jj, gamma2 in enumerate(self.gammas):
-                    self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
-                                                   self.ns, self.pts)
-                    if verbose:
-                        print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
+            for jj, gamma2 in enumerate(self.gammas):
+                self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
+                        self.ns, self.pts)
+                if verbose:
+                    print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
                         
     def _multiple_processes(self, cpus, verbose):
         from multiprocessing import Manager, Process, cpu_count
@@ -104,12 +104,12 @@ class Cache2D:
         Worker function -- used to generate SFSes for
         pairs of gammas.
         """
+        demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
         while True:
             item = in_queue.get()
             if item is None:
                 return
             ii, jj, gamma, gamma2 = item
-            demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
             sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
             if verbose:
                 print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
