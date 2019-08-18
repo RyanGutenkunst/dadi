@@ -962,7 +962,7 @@ class Spectrum(numpy.ma.masked_array):
         # records the indices of the entry. 
         # For example, counts_per_pop[4,19,8] = [4,19,8]
         counts_per_pop = numpy.indices(self.shape)
-        counts_per_pop = numpy.transpose(counts_per_pop, axes=range(1,r+1)+[0])
+        counts_per_pop = numpy.transpose(counts_per_pop, axes=list(range(1,r+1))+[0])
     
         # The last axis of ptwiddle is now the relative frequency of SNPs in
         # that bin in each of the populations.
@@ -974,7 +974,7 @@ class Spectrum(numpy.ma.masked_array):
         # We need to use 'this_slice' to get the proper aligment between
         # ptwiddle and pbar.
         this_slice = [slice(None)]*r + [numpy.newaxis]
-        s2 = numpy.sum(ns * (ptwiddle - pbar[this_slice])**2, axis=-1)/((r-1)*nbar)
+        s2 = numpy.sum(ns * (ptwiddle - pbar[tuple(this_slice)])**2, axis=-1)/((r-1)*nbar)
     
         # Note that this 'a' differs from equation 2, because we've used
         # equation 3 and b = 0 to solve for hbar.
