@@ -102,6 +102,7 @@ class DFETestCase(unittest.TestCase):
                          gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
         s2.integrate([2, 1, 0.4], None, PDFs.biv_lognormal, 1, None)
 
+        # Merging of separate caches
         s2a = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
                 gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
                 split_jobs=3, this_job_id=0)
@@ -111,10 +112,12 @@ class DFETestCase(unittest.TestCase):
         s2c = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
                 gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
                 split_jobs=3, this_job_id=2)
-        s2a.merge([s2b,s2c])
-        assert(np.allclose(s2.spectra, s2a.spectra))
+        # Merge caches
+        s2m = dadi.DFE.Cache2D.merge([s2a,s2b,s2c])
+        assert(np.allclose(s2.spectra, s2m.spectra))
+        # Incomplete merge
         with self.assertRaises(ValueError):
-            s2b.merge([s2c])
+            dadi.DFE.Cache2D.merge([s2a,s2b])
 
     def test_2D_integration(self):
         """

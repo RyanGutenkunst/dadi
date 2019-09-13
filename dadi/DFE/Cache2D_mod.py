@@ -27,6 +27,13 @@ class Cache2D:
             machine.
         cpus: For multiprocessing, number of jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
+        split_jobs: To split cache generation across multiple computing jobs,
+                    set split_jobs > 1 and this_job_id.
+        this_job_id: Defines which entry in split_jobs this run will create.
+                     (Indexed from 0.)
+        For example, to split Cache2D generation over 3 independent jobs, set
+            split_jobs=3 and create jobs with this_job_id=0,1,2.
+            Then use Cache2D.merge to combine the outputs.
         """
         # Store details regarding how this cache was generated. May be useful
         # for keeping track of pickled caches.
@@ -342,21 +349,35 @@ class Cache2D:
         return self.integrate_point_pos(params, ns, biv_seldist, theta,
                                         rho=rho, pts=None)
 
-    def merge(self, other_caches):
-        for other in other_caches:
+    @staticmethod
+    def merge(caches):
+        """
+        Merge caches generated with split_jobs.
+
+        caches: Cache2D objects to merge
+
+        Note: Will fail if caches conflict or do not merge into a complete cache.
+        """
+        import copy
+        # Copy our first cache to start the output
+        new_cache = copy.deepcopy(caches[0])
+        for other in caches[1:]:
             for ii, row in enumerate(other.spectra):
                 for jj, fs in enumerate(row):
                     if fs is not None:
-                        if self.spectra[ii][jj] is not None \
-                                and not np.all(self.spectra[ii][jj] == fs):
+                        if new_cache.spectra[ii][jj] is not None \
+                                and not np.all(new_cache.spectra[ii][jj] == fs):
                             raise ValueError("Merged cached conflicts with current.")
-                        self.spectra[ii][jj] = fs
-        for ii, row in enumerate(self.spectra):
+                        new_cache.spectra[ii][jj] = fs
+        # Check that new cache is complete
+        for ii, row in enumerate(new_cache.spectra):
             for jj, fs in enumerate(row):
                 if fs is None:
                     raise ValueError("Cache is incomplete after merging. "
                             "First missing entry is {0},{1}.".format(ii,jj))
-        self.spectra = np.array(self.spectra)
+        # Convert cache spectra to array
+        new_cache.spectra = np.array(new_cache.spectra)
+        return new_cache
 #
 # Example demography + selection functions
 #

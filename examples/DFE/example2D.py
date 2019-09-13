@@ -51,6 +51,24 @@ if __name__ == '__main__':
         fid = open('test.spectra2d.bpkl', 'wb')
         pickle.dump(s2, fid, protocol=2)
         fid.close()
+
+        ## Cache generation can be very computationally expensive, even
+        ## with multiprocessing. If you need to split the work across multiple
+        ## compute nodes, use the split_jobs and this_job_id arguments, then
+        ## merge the partial caches.
+        ## In this example, the 3 partial caches could be generate on independent
+        ## nodes, then s2a,s2b,s2c would be saved to separate files, then loaded
+        ## and combined later.
+        #s2a = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=0)
+        #s2b = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=1)
+        #s2c = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=2)
+        #s2 = Cache2D.merge([s2a, s2b, s2c])
     
     # Generate test data set to fit
     input_params, theta = [0.5,0.5,-0.8], 1e5
