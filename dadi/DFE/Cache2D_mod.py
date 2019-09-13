@@ -8,7 +8,8 @@ class Cache2D:
     def __init__(self, params, ns, demo_sel_func, pts,
                  gamma_bounds=(1e-4, 2000.), gamma_pts=100,
                  additional_gammas=[],
-                 mp=False, cpus=None, verbose=False):
+                 mp=False, cpus=None, verbose=False,
+                 split_jobs=1, this_job_id=0):
         """
         params: Optimized demographic parameters
         ns: Sample sizes for cached spectra
@@ -48,25 +49,29 @@ class Cache2D:
         self.spectra = [[None]*len(self.gammas) for _ in self.gammas]
 
         if not mp: #for running with a single thread
-            self._single_process(verbose)
+            self._single_process(verbose, split_jobs, this_job_id)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, verbose)
+            self._multiple_processes(cpus, verbose, split_jobs, this_job_id)
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
         # are the spectra themselves.
-        self.spectra = np.array(self.spectra)
+        if split_jobs == 1:
+            self.spectra = np.array(self.spectra)
         
-    def _single_process(self, verbose):
+    def _single_process(self, verbose, split_jobs, this_job_id):
         self.demo_sel_func = Numerics.make_extrap_func(self.demo_sel_func)
+
+        this_eval = 0
         for ii,gamma in enumerate(self.gammas):
             for jj, gamma2 in enumerate(self.gammas):
-                self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
-                        self.ns, self.pts)
-                if verbose:
-                    print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
+                if this_eval % split_jobs == this_job_id:
+                    self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
+                            self.ns, self.pts)
+                    if verbose: print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
+                this_eval += 1
                         
-    def _multiple_processes(self, cpus, verbose):
+    def _multiple_processes(self, cpus, verbose, split_jobs, this_job_id):
         from multiprocessing import Manager, Process, cpu_count
         # Would like to simply use Pool.map here, but difficult to
         # pass dynamic demo_sel_func that way.
@@ -87,9 +92,12 @@ class Cache2D:
                 pool.append(p)
 
             # Put all jobs on queue
+            this_eval = 0
             for ii, gamma in enumerate(self.gammas):
                 for jj, gamma2 in enumerate(self.gammas):
-                    work.put((ii,jj, gamma,gamma2))
+                    if this_eval % split_jobs == this_job_id:
+                        work.put((ii,jj, gamma,gamma2))
+                    this_eval += 1
             # Put commands on queue to close out workers
             for jj in range(cpus):
                 work.put(None)
@@ -333,6 +341,22 @@ class Cache2D:
 
         return self.integrate_point_pos(params, ns, biv_seldist, theta,
                                         rho=rho, pts=None)
+
+    def merge(self, other_caches):
+        for other in other_caches:
+            for ii, row in enumerate(other.spectra):
+                for jj, fs in enumerate(row):
+                    if fs is not None:
+                        if self.spectra[ii][jj] is not None \
+                                and not np.all(self.spectra[ii][jj] == fs):
+                            raise ValueError("Merged cached conflicts with current.")
+                        self.spectra[ii][jj] = fs
+        for ii, row in enumerate(self.spectra):
+            for jj, fs in enumerate(row):
+                if fs is None:
+                    raise ValueError("Cache is incomplete after merging. "
+                            "First missing entry is {0},{1}.".format(ii,jj))
+        self.spectra = np.array(self.spectra)
 #
 # Example demography + selection functions
 #

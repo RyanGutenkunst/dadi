@@ -102,6 +102,20 @@ class DFETestCase(unittest.TestCase):
                          gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
         s2.integrate([2, 1, 0.4], None, PDFs.biv_lognormal, 1, None)
 
+        s2a = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+                gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
+                split_jobs=3, this_job_id=0)
+        s2b = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+                gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
+                split_jobs=3, this_job_id=1)
+        s2c = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+                gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
+                split_jobs=3, this_job_id=2)
+        s2a.merge([s2b,s2c])
+        assert(np.allclose(s2.spectra, s2a.spectra))
+        with self.assertRaises(ValueError):
+            s2b.merge([s2c])
+
     def test_2D_integration(self):
         """
         Trivial test that Cache2D integration doesn't crash.
@@ -238,7 +252,7 @@ if __name__ == '__main__':
 
     # Run tests using Windows-style multiprocessing. This is more fragile, so
     # we test against it.
-    import multiprocessing
-    multiprocessing.set_start_method('spawn')
+    #import multiprocessing
+    #multiprocessing.set_start_method('spawn')
 
     unittest.main()
