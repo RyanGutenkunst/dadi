@@ -23,7 +23,7 @@ def _object_func(params, data, model_func, pts,
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
                  func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-                 output_stream=sys.stdout, store_thetas=False):
+                 output_stream=sys.stdout, stopval=0):
     """
     Objective function for optimization.
     """
@@ -55,9 +55,9 @@ def _object_func(params, data, model_func, pts,
     else:
         result = ll(sfs, data)
 
-    if store_thetas:
-        global _theta_store
-        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+    #if store_thetas:
+    #    global _theta_store
+    #    _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
 
     # Bad result
     if numpy.isnan(result):
@@ -68,6 +68,9 @@ def _object_func(params, data, model_func, pts,
         output_stream.write('%-8i, %-12g, %s%s' % (_counter, result, param_str,
                                                    os.linesep))
         Misc.delayed_flush(delay=flush_delay)
+
+    if -abs(result) >= stopval:
+        raise StopIteration((-abs(result), params_up))
 
     return -result/ll_scale
 
@@ -81,7 +84,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
                  func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-                 output_file=None):
+                 output_file=None, stopval=0):
     """
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -154,7 +157,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -338,7 +341,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
                         pgtol=1e-5, multinom=True, maxiter=1e5, 
                         full_output=False,
                         func_args=[], func_kwargs={}, fixed_params=None, 
-                        ll_scale=1, output_file=None):
+                        ll_scale=1, output_file=None, stopval=0):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -415,7 +418,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -679,7 +682,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                       multinom=True, maxiter=None, 
                       full_output=False, func_args=[], 
                       func_kwargs={},
-                      fixed_params=None, output_file=None):
+                      fixed_params=None, output_file=None, stopval=0):
     """
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
@@ -735,7 +738,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
@@ -757,7 +760,8 @@ def optimize_log_powell(p0, data, model_func, pts,
                       multinom=True, maxiter=None,
                       full_output=False, func_args=[],
                       func_kwargs={},
-                      fixed_params=None, output_file=None):
+                      fixed_params=None, output_file=None,
+                      stopval=0):
     """
     Optimize log(params) to fit model to data using Powell's method.
         
@@ -808,7 +812,7 @@ def optimize_log_powell(p0, data, model_func, pts,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_powell(_object_func_log, numpy.log(p0), args = args,
@@ -828,7 +832,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
              func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-             output_file=None):
+             output_file=None, stopval=0):
     """
     Optimize params to fit model to data using the BFGS method.
 
@@ -887,7 +891,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
@@ -913,7 +917,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
                     verbose=0, flush_delay=0.5, epsilon=1e-3, 
                     pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
                     func_args=[], func_kwargs={}, fixed_params=None, 
-                    ll_scale=1, output_file=None):
+                    ll_scale=1, output_file=None, stopval=0):
     """
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -986,7 +990,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -1022,7 +1026,8 @@ def optimize_cons(p0, data, model_func, pts,
                   verbose=0, flush_delay=0.5, epsilon=1e-4,
                   gtol=1e-5, multinom=True, maxiter=None,
                   full_output=False, func_args=[], func_kwargs={},
-                  fixed_params=None, ll_scale=1, output_file=None):
+                  fixed_params=None, ll_scale=1, output_file=None,
+                  stopval=0):
     """
     Optimize params to fit model to data using constrainted optimization.
 
@@ -1099,7 +1104,7 @@ def optimize_cons(p0, data, model_func, pts,
     
     args = (data, model_func, pts, None, None, verbose, 
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     if lower_bound is None:
         lower_bound = [None] * len(p0)
@@ -1173,7 +1178,7 @@ def optimize_grid(data, model_func, pts, grid,
                   verbose=0, flush_delay=0.5,
                   multinom=True, full_output=False,
                   func_args=[], func_kwargs={}, fixed_params=None,
-                  output_file=None):
+                  output_file=None, stopval=0):
     """
     Optimize params to fit model to data using brute force search over a grid.
 
@@ -1233,7 +1238,7 @@ def optimize_grid(data, model_func, pts, grid,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream, full_output)
+            output_stream, full_output, stopval)
 
     if full_output:
         global _theta_store
