@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.2" />
+<meta name="generator" content="pdoc 0.7.2" />
 <title>dadi.PhiManip API documentation</title>
 <meta name="description" content="Manipulating population frequency spectra phi. e.g. population splittings and
 admixture" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -24,7 +24,9 @@ admixture" />
 <p>Manipulating population frequency spectra phi. e.g. population splittings and
 admixture</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">&#34;&#34;&#34;
 Manipulating population frequency spectra phi. e.g. population splittings and
 admixture
@@ -386,7 +388,7 @@ def phi_2D_admix_1_into_2(phi, f, xx,yy):
     for ii in range(phi.shape[0]):
         phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
         # Use fancy indexing to avoid the commented out loop.
-        #for jj in xrange(len(yy)):
+        #for jj in range(len(yy)):
         #    phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
         #    phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
         phi_int[idx_j, lower_z_index[ii]] = lower_cont[ii]
@@ -414,7 +416,7 @@ def phi_2D_admix_2_into_1(phi, f, xx,yy):
     idx_i = numpy.arange(phi.shape[0])
     lower_cont = frac_lower*norm
     upper_cont = frac_upper*norm
-    for jj in xrange(len(yy)):
+    for jj in range(len(yy)):
         phi_int = numpy.zeros((len(xx), len(xx)))
         phi_int[idx_i, lower_z_index[:,jj]] = lower_cont[:,jj]
         phi_int[idx_i, upper_z_index[:,jj]] = upper_cont[:,jj]
@@ -443,8 +445,8 @@ def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
     # Basically, we&#39;re splitting into a fourth ww population, then integrating
     # over zz to be left with the two populations we care about.
     idx_k = numpy.arange(phi.shape[2])
-    for ii in xrange(phi.shape[0]):
-        for jj in xrange(phi.shape[1]):
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
             phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
             phi_int[idx_k, lower_w_index[ii,jj]] = lower_cont[ii,jj]
             phi_int[idx_k, upper_w_index[ii,jj]] = upper_cont[ii,jj]
@@ -473,8 +475,8 @@ def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
     # Basically, we&#39;re splitting into a fourth ww population, then integrating
     # over yy to be left with the two populations we care about.
     idx_j = numpy.arange(phi.shape[1])
-    for ii in xrange(phi.shape[0]):
-        for kk in xrange(phi.shape[2]):
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
             phi_int[idx_j, lower_w_index[ii,:,kk]] = lower_cont[ii,:,kk]
             phi_int[idx_j, upper_w_index[ii,:,kk]] = upper_cont[ii,:,kk]
@@ -503,8 +505,8 @@ def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
     # Basically, we&#39;re splitting into a fourth ww population, then integrating
     # over yy to be left with the two populations we care about.
     idx_i = numpy.arange(phi.shape[0])
-    for jj in xrange(phi.shape[1]):
-        for kk in xrange(phi.shape[2]):
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
             phi_int[idx_i, lower_w_index[:,jj,kk]] = lower_cont[:,jj,kk]
             phi_int[idx_i, upper_w_index[:,jj,kk]] = upper_cont[:,jj,kk]
@@ -586,7 +588,9 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
 <dd>
 <section class="desc"><p>Check whether xx is monotonically increasing from 0 to 1.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def check_xx(xx):
     &#34;&#34;&#34;
     Check whether xx is monotonically increasing from 0 to 1. 
@@ -618,7 +622,9 @@ theta: deprecated in favor of distinct nu and theta0 arguments, for
 consistency with Integration functions.</p>
 <p>Returns a new phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
     &#34;&#34;&#34;
     One-dimensional phi for a constant-sized population with genic selection.
@@ -731,7 +737,9 @@ aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
 1+2s. h = 0.5 corresonds to genic selection.</p>
 <p>Returns a new phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
     &#34;&#34;&#34;
     One-dimensional phi for a constant-sized population with genic selection.
@@ -797,7 +805,9 @@ theta: deprecated in favor of distinct nu and theta0 arguments, for
 consistency with Integration functions.</p>
 <p>Returns a new phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
     &#34;&#34;&#34;
     One-dimensional phi for a constant-sized population with genic selection.
@@ -866,7 +876,9 @@ theta: deprecated in favor of distinct nu and theta0 arguments, for
 consistency with Integration functions.</p>
 <p>Returns a new phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
     &#34;&#34;&#34;
     Standard neutral one-dimensional probability density.
@@ -905,7 +917,9 @@ consistency with Integration functions.</p>
 phi1D: initial probability density</p>
 <p>Returns a new two-dimensional phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_1D_to_2D(xx, phi_1D):
     &#34;&#34;&#34;
     Implement a one-to-two population split.
@@ -937,7 +951,9 @@ Fraction of updated population 2 to be derived from population 1.
 (A fraction 1-f will be derived from the original population 2.)
 xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_2D_admix_1_into_2(phi, f, xx,yy):
     &#34;&#34;&#34;
     Admix population 1 into population 2.
@@ -964,7 +980,7 @@ xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.</p></sect
     for ii in range(phi.shape[0]):
         phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
         # Use fancy indexing to avoid the commented out loop.
-        #for jj in xrange(len(yy)):
+        #for jj in range(len(yy)):
         #    phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
         #    phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
         phi_int[idx_j, lower_z_index[ii]] = lower_cont[ii]
@@ -987,7 +1003,9 @@ Fraction of updated population 1 to be derived from population 2.
 (A fraction 1-f will be derived from the original population 1.)
 xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_2D_admix_2_into_1(phi, f, xx,yy):
     &#34;&#34;&#34;
     Admix population 2 into population 1.
@@ -1007,7 +1025,7 @@ xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.</p></sect
     idx_i = numpy.arange(phi.shape[0])
     lower_cont = frac_lower*norm
     upper_cont = frac_upper*norm
-    for jj in xrange(len(yy)):
+    for jj in range(len(yy)):
         phi_int = numpy.zeros((len(xx), len(xx)))
         phi_int[idx_i, lower_z_index[:,jj]] = lower_cont[:,jj]
         phi_int[idx_i, upper_z_index[:,jj]] = upper_cont[:,jj]
@@ -1031,7 +1049,9 @@ xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
 zz:
 Frequency mapping that will be used along population 3 axis.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_2D_to_3D_admix(phi, f, xx,yy,zz):
     &#34;&#34;&#34;
     Create population 3 admixed from populations 1 and 2.
@@ -1073,7 +1093,9 @@ Frequency mapping that will be used along population 3 axis.</p></section>
 phi2D: initial probability density</p>
 <p>Returns a new three-dimensional phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_2D_to_3D_split_1(xx, phi_2D):
     &#34;&#34;&#34;
     Split population 1 into populations 1 and 3.
@@ -1097,7 +1119,9 @@ phi2D: initial probability density</p>
 phi2D: initial probability density</p>
 <p>Returns a new three-dimensional phi array.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_2D_to_3D_split_2(xx, phi_2D):
     &#34;&#34;&#34;
     Split population 2 into populations 2 and 3.
@@ -1127,7 +1151,9 @@ Fraction of updated population 3 to be derived from population 2.
 A fraction (1-f1-f2) will be derived from the original pop 3.
 xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
     &#34;&#34;&#34;
     Admix populations 1 and 2 into population 3.
@@ -1149,8 +1175,8 @@ xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p><
     # Basically, we&#39;re splitting into a fourth ww population, then integrating
     # over zz to be left with the two populations we care about.
     idx_k = numpy.arange(phi.shape[2])
-    for ii in xrange(phi.shape[0]):
-        for jj in xrange(phi.shape[1]):
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
             phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
             phi_int[idx_k, lower_w_index[ii,jj]] = lower_cont[ii,jj]
             phi_int[idx_k, upper_w_index[ii,jj]] = upper_cont[ii,jj]
@@ -1174,7 +1200,9 @@ Fraction of updated population 2 to be derived from population 3.
 A fraction (1-f1-f3) will be derived from the original pop 2.
 xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
     &#34;&#34;&#34;
     Admix populations 1 and 3 into population 2.
@@ -1196,8 +1224,8 @@ xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p><
     # Basically, we&#39;re splitting into a fourth ww population, then integrating
     # over yy to be left with the two populations we care about.
     idx_j = numpy.arange(phi.shape[1])
-    for ii in xrange(phi.shape[0]):
-        for kk in xrange(phi.shape[2]):
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
             phi_int[idx_j, lower_w_index[ii,:,kk]] = lower_cont[ii,:,kk]
             phi_int[idx_j, upper_w_index[ii,:,kk]] = upper_cont[ii,:,kk]
@@ -1221,7 +1249,9 @@ Fraction of updated population 1 to be derived from population 3.
 A fraction (1-f2-f3) will be derived from the original pop 1.
 xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
     &#34;&#34;&#34;
     Admix populations 2 and 3 into population 1.
@@ -1243,8 +1273,8 @@ xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p><
     # Basically, we&#39;re splitting into a fourth ww population, then integrating
     # over yy to be left with the two populations we care about.
     idx_i = numpy.arange(phi.shape[0])
-    for jj in xrange(phi.shape[1]):
-        for kk in xrange(phi.shape[2]):
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
             phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
             phi_int[idx_i, lower_w_index[:,jj,kk]] = lower_cont[:,jj,kk]
             phi_int[idx_i, upper_w_index[:,jj,kk]] = upper_cont[:,jj,kk]
@@ -1263,7 +1293,9 @@ xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p><
 xx: Mapping of points in phi to frequencies in population to be removed
 popnum: Population number to remove, numbering from 1.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def remove_pop(phi, xx, popnum):
     &#34;&#34;&#34;
     Remove a population from phi.
@@ -1316,7 +1348,7 @@ popnum: Population number to remove, numbering from 1.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

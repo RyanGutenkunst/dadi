@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.2" />
+<meta name="generator" content="pdoc 0.7.2" />
 <title>dadi.Spectrum_mod API documentation</title>
 <meta name="description" content="Contains Spectrum object, which represents frequency spectra." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -22,7 +22,9 @@
 <section id="section-intro">
 <p>Contains Spectrum object, which represents frequency spectra.</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">&#34;&#34;&#34;
 Contains Spectrum object, which represents frequency spectra.
 &#34;&#34;&#34;
@@ -987,7 +989,7 @@ class Spectrum(numpy.ma.masked_array):
         # records the indices of the entry. 
         # For example, counts_per_pop[4,19,8] = [4,19,8]
         counts_per_pop = numpy.indices(self.shape)
-        counts_per_pop = numpy.transpose(counts_per_pop, axes=range(1,r+1)+[0])
+        counts_per_pop = numpy.transpose(counts_per_pop, axes=list(range(1,r+1))+[0])
     
         # The last axis of ptwiddle is now the relative frequency of SNPs in
         # that bin in each of the populations.
@@ -999,7 +1001,7 @@ class Spectrum(numpy.ma.masked_array):
         # We need to use &#39;this_slice&#39; to get the proper aligment between
         # ptwiddle and pbar.
         this_slice = [slice(None)]*r + [numpy.newaxis]
-        s2 = numpy.sum(ns * (ptwiddle - pbar[this_slice])**2, axis=-1)/((r-1)*nbar)
+        s2 = numpy.sum(ns * (ptwiddle - pbar[tuple(this_slice)])**2, axis=-1)/((r-1)*nbar)
     
         # Note that this &#39;a&#39; differs from equation 2, because we&#39;ve used
         # equation 3 and b = 0 to solve for hbar.
@@ -2176,7 +2178,9 @@ copyreg.pickle(Spectrum, Spectrum_pickler, Spectrum_unpickler)</code></pre>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Spectrum_pickler(fs):
     return Spectrum_unpickler, (fs.data, fs.mask, fs.folded, fs.pop_ids, fs.extrap_x)</code></pre>
 </details>
@@ -2187,7 +2191,9 @@ copyreg.pickle(Spectrum, Spectrum_pickler, Spectrum_unpickler)</code></pre>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Spectrum_unpickler(data, mask, data_folded, pop_ids, extrap_x):
     return dadi.Spectrum(data, mask, mask_corners=False, data_folded=data_folded, check_folding=False, pop_ids=pop_ids, extrap_x=extrap_x)</code></pre>
 </details>
@@ -2230,7 +2236,9 @@ extrap_x: Optional floating point value specifying x value to use
           for extrapolation.
 </code></pre></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">class Spectrum(numpy.ma.masked_array):
     &#34;&#34;&#34;
     Represents a frequency spectrum.
@@ -3176,7 +3184,7 @@ extrap_x: Optional floating point value specifying x value to use
         # records the indices of the entry. 
         # For example, counts_per_pop[4,19,8] = [4,19,8]
         counts_per_pop = numpy.indices(self.shape)
-        counts_per_pop = numpy.transpose(counts_per_pop, axes=range(1,r+1)+[0])
+        counts_per_pop = numpy.transpose(counts_per_pop, axes=list(range(1,r+1))+[0])
     
         # The last axis of ptwiddle is now the relative frequency of SNPs in
         # that bin in each of the populations.
@@ -3188,7 +3196,7 @@ extrap_x: Optional floating point value specifying x value to use
         # We need to use &#39;this_slice&#39; to get the proper aligment between
         # ptwiddle and pbar.
         this_slice = [slice(None)]*r + [numpy.newaxis]
-        s2 = numpy.sum(ns * (ptwiddle - pbar[this_slice])**2, axis=-1)/((r-1)*nbar)
+        s2 = numpy.sum(ns * (ptwiddle - pbar[tuple(this_slice)])**2, axis=-1)/((r-1)*nbar)
     
         # Note that this &#39;a&#39; differs from equation 2, because we&#39;ve used
         # equation 3 and b = 0 to solve for hbar.
@@ -4347,7 +4355,15 @@ def %(method)s(self, other):
 <dl>
 <dt id="dadi.Spectrum_mod.Spectrum.method"><code class="name">var <span class="ident">method</span></code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
 </dd>
 </dl>
 <h3>Static methods</h3>
@@ -4380,7 +4396,9 @@ The 'calls' entry gives the successful calls in each population, in the
 order that the alleles are specified in 'segregating'.
 Non-diallelic polymorphisms are skipped.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_data_dict(data_dict, pop_ids, projections, mask_corners=True,
                    polarized=True):
@@ -4460,7 +4478,9 @@ includes the aligned bases in the outgroup.</p>
 <p>This method skips entries for which the correction cannot be applied.
 Most commonly this is because of missing or non-constant context.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_data_dict_corrected(data_dict, pop_ids, projections,
                              fux_filename, force_pos=True,
@@ -4572,7 +4592,9 @@ comments is a list of strings containing the comments
 from the file (without #'s).</p>
 <p>See to_file method for details on the file format.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_file(fname, mask_corners=True, return_comments=False):
     &#34;&#34;&#34;
@@ -4671,7 +4693,9 @@ the data will be broken up into that many segments
 based on SNP position. Instead of single FS, a list
 of spectra will be returned, one for each segment.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_ms_file(fid, average=True, mask_corners=True, return_header=False,
                  pop_assignments=None, pop_ids=None, bootstrap_segments=1):
@@ -4891,7 +4915,9 @@ force_direct: Forces integration to use older direct integration method,
 rather than using analytic integration of sampling
 formula.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_phi(phi, ns, xxs, mask_corners=True, 
              pop_ids=None, admix_props=None, het_ascertained=None, 
@@ -5038,7 +5064,9 @@ force_direct: Forces integration to use older direct integration method,
 rather than using analytic integration of sampling
 formula.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_phi_inbreeding(phi, ns, xxs, Fs, ploidys, mask_corners=True, 
                         pop_ids=None, admix_props=None,
@@ -5147,7 +5175,9 @@ commandline and the seeds used.
 pop_ids: Optional list of strings containing the population labels.
 If pop_ids is None, labels will be "pop0", "pop1", &hellip;</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_sfscode_file(fid, sites=&#39;all&#39;, average=True, mask_corners=True, 
                       return_header=False, pop_ids=None):
@@ -5308,7 +5338,9 @@ comments is a list of strings containing the comments
 from the file (without #'s).</p>
 <p>See to_file method for details on the file format.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">@staticmethod
 def from_file(fname, mask_corners=True, return_comments=False):
     &#34;&#34;&#34;
@@ -5388,7 +5420,9 @@ def from_file(fname, mask_corners=True, return_comments=False):
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def _get_Npop(self):
     return self.ndim</code></pre>
 </details>
@@ -5397,7 +5431,9 @@ def from_file(fname, mask_corners=True, return_comments=False):
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def _get_sample_sizes(self):
     return numpy.asarray(self.shape) - 1</code></pre>
 </details>
@@ -5418,7 +5454,9 @@ For a single SNP, the relevant formula is at the top of page
 1363. To combine results between SNPs, we use the weighted average
 indicated by equation 10.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Fst(self):
     &#34;&#34;&#34;
     Wright&#39;s Fst between the populations represented in the fs.
@@ -5445,7 +5483,7 @@ indicated by equation 10.</p></section>
     # records the indices of the entry. 
     # For example, counts_per_pop[4,19,8] = [4,19,8]
     counts_per_pop = numpy.indices(self.shape)
-    counts_per_pop = numpy.transpose(counts_per_pop, axes=range(1,r+1)+[0])
+    counts_per_pop = numpy.transpose(counts_per_pop, axes=list(range(1,r+1))+[0])
 
     # The last axis of ptwiddle is now the relative frequency of SNPs in
     # that bin in each of the populations.
@@ -5457,7 +5495,7 @@ indicated by equation 10.</p></section>
     # We need to use &#39;this_slice&#39; to get the proper aligment between
     # ptwiddle and pbar.
     this_slice = [slice(None)]*r + [numpy.newaxis]
-    s2 = numpy.sum(ns * (ptwiddle - pbar[this_slice])**2, axis=-1)/((r-1)*nbar)
+    s2 = numpy.sum(ns * (ptwiddle - pbar[tuple(this_slice)])**2, axis=-1)/((r-1)*nbar)
 
     # Note that this &#39;a&#39; differs from equation 2, because we&#39;ve used
     # equation 3 and b = 0 to solve for hbar.
@@ -5477,7 +5515,9 @@ indicated by equation 10.</p></section>
 <dd>
 <section class="desc"><p>Segregating sites.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def S(self):
     &#34;&#34;&#34;
     Segregating sites.
@@ -5496,7 +5536,9 @@ indicated by equation 10.</p></section>
 <section class="desc"><p>Tajima's D.</p>
 <p>Following Gillespie "Population Genetics: A Concise Guide" pg. 45</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Tajima_D(self):
     &#34;&#34;&#34;
     Tajima&#39;s D.
@@ -5531,7 +5573,9 @@ indicated by equation 10.</p></section>
 <section class="desc"><p>Watterson's estimator of theta.</p>
 <p>Note that is only sensible for 1-dimensional spectra.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Watterson_theta(self):
     &#34;&#34;&#34;
     Watterson&#39;s estimator of theta.
@@ -5556,7 +5600,9 @@ indicated by equation 10.</p></section>
 <p>From Zeng et al. "Statistical Tests for Detecting Positive Selection by
 Utilizing High-Frequency Variants" (2006) Genetics</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Zengs_E(self):
     &#34;&#34;&#34;
     Zeng et al.&#39;s E statistic.
@@ -5595,7 +5641,9 @@ Utilizing High-Frequency Variants" (2006) Genetics</p></section>
 only_nonmasked: If True, only SNPs from non-masked will be resampled.
 Otherwise, all SNPs will be used.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def fixed_size_sample(self, nsamples, only_nonmasked=False):
     &#34;&#34;&#34;
     Generate a resampled fs from the current one.
@@ -5631,7 +5679,9 @@ destination cell is masked as well.</p>
 <p>Note also that folding is not done in-place. The return value is a new
 Spectrum object.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def fold(self):
     &#34;&#34;&#34;
     Folded frequency spectrum
@@ -5694,7 +5744,9 @@ Spectrum object.</p></section>
 <p>Only necessary because numpy.ma.log now fails to propagate extra
 attributes after numpy 1.10.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def log(self):
     &#34;&#34;&#34;
     Return the natural logarithm of the entries of the frequency spectrum.
@@ -5719,7 +5771,9 @@ populations 0 and 2.
 mask_corners: If True, the typical corners of the resulting fs will be
 masked</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def marginalize(self, over, mask_corners=True):
     &#34;&#34;&#34;
     Reduced dimensionality spectrum summing over some populations.
@@ -5771,7 +5825,9 @@ masked</p></section>
 <dd>
 <section class="desc"><p>Mask the 'seen in 0 samples' and 'seen in all samples' entries.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def mask_corners(self):
     &#34;&#34;&#34;
     Mask the &#39;seen in 0 samples&#39; and &#39;seen in all samples&#39; entries.
@@ -5788,7 +5844,9 @@ chromosomes in the population.</p>
 <p>Note that this estimate includes a factor of sample_size/(sample_size-1)
 to make E(\hat{pi}) = theta.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def pi(self):
     r&#34;&#34;&#34;
     Estimated expected number of pairwise differences between two
@@ -5815,7 +5873,9 @@ to make E(\hat{pi}) = theta.</p></section>
 <section class="desc"><p>Project to smaller sample size.</p>
 <p>ns: Sample sizes for new spectrum.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def project(self, ns):
     &#34;&#34;&#34;
     Project to smaller sample size.
@@ -5862,7 +5922,9 @@ to make E(\hat{pi}) = theta.</p></section>
 <p>Note: Entries where the current fs is masked or 0 will be masked in the
 output sampled fs.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def sample(self):
     &#34;&#34;&#34;
     Generate a Poisson-sampled fs from the current one.
@@ -5901,7 +5963,9 @@ generates new populations of random individuals (without replacement)
 from that pool. If this fs is significantly different from the
 original, that implies population structure.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def scramble_pop_ids(self, mask_corners=True):
     &#34;&#34;&#34;
     Spectrum corresponding to scrambling individuals among populations.
@@ -5961,7 +6025,9 @@ Positive Selection by Utilizing High-Frequency Variants" (2006)
 Genetics</p>
 <p>Note that is only sensible for 1-dimensional spectra.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def theta_L(self):
     &#34;&#34;&#34;
     theta_L as defined by Zeng et al. &#34;Statistical Tests for Detecting
@@ -6006,7 +6072,9 @@ e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;
 A single line giving the elements of the mask in the same order as
 the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def to_file(self, fname, precision=16, comment_lines = [], 
             foldmaskinfo=True):
     &#34;&#34;&#34;
@@ -6105,7 +6173,9 @@ e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;
 A single line giving the elements of the mask in the same order as
 the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def to_file(self, fname, precision=16, comment_lines = [], 
             foldmaskinfo=True):
     &#34;&#34;&#34;
@@ -6185,7 +6255,9 @@ ancestral.</p>
 <p>Note also that unfolding is not done in-place. The return value is a new
 Spectrum object.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def unfold(self):
     &#34;&#34;&#34;
     Unfolded frequency spectrum
@@ -6226,7 +6298,9 @@ Spectrum object.</p></section>
 <dd>
 <section class="desc"><p>Unmask all values.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def unmask_all(self):
     &#34;&#34;&#34;
     Unmask all values.
@@ -6299,7 +6373,7 @@ Spectrum object.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

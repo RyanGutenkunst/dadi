@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.2" />
+<meta name="generator" content="pdoc 0.7.2" />
 <title>dadi.Inference API documentation</title>
 <meta name="description" content="Comparison and optimization of model spectra to data." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -22,7 +22,9 @@
 <section id="section-intro">
 <p>Comparison and optimization of model spectra to data.</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">&#34;&#34;&#34;
 Comparison and optimization of model spectra to data.
 &#34;&#34;&#34;
@@ -48,7 +50,7 @@ def _object_func(params, data, model_func, pts,
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
                  func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-                 output_stream=sys.stdout, store_thetas=False):
+                 output_stream=sys.stdout, stopval=0):
     &#34;&#34;&#34;
     Objective function for optimization.
     &#34;&#34;&#34;
@@ -80,9 +82,9 @@ def _object_func(params, data, model_func, pts,
     else:
         result = ll(sfs, data)
 
-    if store_thetas:
-        global _theta_store
-        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+    #if store_thetas:
+    #    global _theta_store
+    #    _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
 
     # Bad result
     if numpy.isnan(result):
@@ -93,6 +95,9 @@ def _object_func(params, data, model_func, pts,
         output_stream.write(&#39;%-8i, %-12g, %s%s&#39; % (_counter, result, param_str,
                                                    os.linesep))
         Misc.delayed_flush(delay=flush_delay)
+
+    if -abs(result) &gt;= stopval:
+        raise StopIteration((-abs(result), params_up))
 
     return -result/ll_scale
 
@@ -106,7 +111,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
                  func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-                 output_file=None):
+                 output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -179,7 +184,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -195,7 +200,7 @@ def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
@@ -353,7 +358,7 @@ def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return fopt, xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
@@ -363,7 +368,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
                         pgtol=1e-5, multinom=True, maxiter=1e5, 
                         full_output=False,
                         func_args=[], func_kwargs={}, fixed_params=None, 
-                        ll_scale=1, output_file=None):
+                        ll_scale=1, output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -440,7 +445,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -472,7 +477,7 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, info_dict
 
@@ -704,7 +709,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
                       multinom=True, maxiter=None, 
                       full_output=False, func_args=[], 
                       func_kwargs={},
-                      fixed_params=None, output_file=None):
+                      fixed_params=None, output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
@@ -760,7 +765,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
@@ -772,7 +777,7 @@ def optimize_log_fmin(p0, data, model_func, pts,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, iter, funcalls, warnflag
 
@@ -782,7 +787,8 @@ def optimize_log_powell(p0, data, model_func, pts,
                       multinom=True, maxiter=None,
                       full_output=False, func_args=[],
                       func_kwargs={},
-                      fixed_params=None, output_file=None):
+                      fixed_params=None, output_file=None,
+                      stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using Powell&#39;s method.
         
@@ -833,7 +839,7 @@ def optimize_log_powell(p0, data, model_func, pts,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_powell(_object_func_log, numpy.log(p0), args = args,
@@ -845,7 +851,7 @@ def optimize_log_powell(p0, data, model_func, pts,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, direc, iter, funcalls, warnflag
 
@@ -853,7 +859,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
              func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-             output_file=None):
+             output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize params to fit model to data using the BFGS method.
 
@@ -912,7 +918,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
@@ -928,7 +934,7 @@ def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
@@ -938,7 +944,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
                     verbose=0, flush_delay=0.5, epsilon=1e-3, 
                     pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
                     func_args=[], func_kwargs={}, fixed_params=None, 
-                    ll_scale=1, output_file=None):
+                    ll_scale=1, output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -1011,7 +1017,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -1037,7 +1043,7 @@ def optimize_lbfgsb(p0, data, model_func, pts,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, info_dict
 
@@ -1047,7 +1053,8 @@ def optimize_cons(p0, data, model_func, pts,
                   verbose=0, flush_delay=0.5, epsilon=1e-4,
                   gtol=1e-5, multinom=True, maxiter=None,
                   full_output=False, func_args=[], func_kwargs={},
-                  fixed_params=None, ll_scale=1, output_file=None):
+                  fixed_params=None, ll_scale=1, output_file=None,
+                  stopval=0):
     &#34;&#34;&#34;
     Optimize params to fit model to data using constrainted optimization.
 
@@ -1124,7 +1131,7 @@ def optimize_cons(p0, data, model_func, pts,
     
     args = (data, model_func, pts, None, None, verbose, 
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     if lower_bound is None:
         lower_bound = [None] * len(p0)
@@ -1151,7 +1158,7 @@ def optimize_cons(p0, data, model_func, pts,
         output_stream.close()
     
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, func_calls, grad_calls, warnflag
 
@@ -1198,7 +1205,7 @@ def optimize_grid(data, model_func, pts, grid,
                   verbose=0, flush_delay=0.5,
                   multinom=True, full_output=False,
                   func_args=[], func_kwargs={}, fixed_params=None,
-                  output_file=None):
+                  output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize params to fit model to data using brute force search over a grid.
 
@@ -1258,7 +1265,7 @@ def optimize_grid(data, model_func, pts, grid,
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream, full_output)
+            output_stream, full_output, stopval)
 
     if full_output:
         global _theta_store
@@ -1285,7 +1292,7 @@ def optimize_grid(data, model_func, pts, grid,
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, grid, fout, thetas
 
@@ -1330,7 +1337,9 @@ models" Journal of the American Statistical Association, 81(396)977-986
 <p>Note that I tried implementing the "adjusted deviance" residuals, but they
 always looked very biased for the cases where the data was 0.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def Anscombe_Poisson_residual(model, data, mask=None):
     &#34;&#34;&#34;
     Return the Anscombe Poisson residuals between model and data.
@@ -1389,7 +1398,9 @@ always looked very biased for the cases where the data was 0.</p></section>
 list, which is the proportion of segregating sites whose ancestral state
 were misidentified.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def add_misid_param(func):
     &#34;&#34;&#34;
     Add parameter to model ancestral state misidentification.
@@ -1419,7 +1430,9 @@ defined.</p>
 residuals are normally distributed. (If the mean is small, the Anscombe
 residuals are better.)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def linear_Poisson_residual(model, data, mask=None):
     &#34;&#34;&#34;
     Return the Poisson residuals, (model - data)/sqrt(model), of model and data.
@@ -1460,7 +1473,9 @@ P(k) = exp(-model) * model**k / k!</p>
 <p>Note: If either the model or the data is a masked array, the return ll will
 ignore any elements that are masked in <em>either</em> the model or the data.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ll(model, data):
     &#34;&#34;&#34;
     The log-likelihood of the data given the model sfs.
@@ -1490,7 +1505,9 @@ P(k) = exp(-model) * model**k / k!</p>
 <p>Note: If either the model or the data is a masked array, the return ll will
 ignore any elements that are masked in <em>either</em> the model or the data.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ll_multinom(model, data):
     &#34;&#34;&#34;
     Log-likelihood of the data given the model, with optimal rescaling.
@@ -1516,7 +1533,9 @@ ignore any elements that are masked in <em>either</em> the model or the data.</p
 <section class="desc"><p>Mutlinomial log-likelihood of each entry in the data given the model.</p>
 <p>Scales the model sfs to have the optimal theta for comparison with the data.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ll_multinom_per_bin(model, data):
     &#34;&#34;&#34;
     Mutlinomial log-likelihood of each entry in the data given the model.
@@ -1537,7 +1556,9 @@ FS that cannot be stable calculated. If these entries
 involve a fraction of the data larger than
 missing_model_cutoff, a warning is printed.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ll_per_bin(model, data, missing_model_cutoff=1e-6):
     &#34;&#34;&#34;
     The Poisson log-likelihood of each entry in the data given the model sfs.
@@ -1609,7 +1630,9 @@ missing_model_cutoff, a warning is printed.</p></section>
 <dd>
 <section class="desc"><p>The negative of the log-likelihood of the data given the model sfs.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def minus_ll(model, data):
     &#34;&#34;&#34;
     The negative of the log-likelihood of the data given the model sfs.
@@ -1624,7 +1647,9 @@ missing_model_cutoff, a warning is printed.</p></section>
 <section class="desc"><p>The negative of the log-likelihood of the data given the model sfs.</p>
 <p>Return a double that is -(log-likelihood)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def minus_ll_multinom(model, data):
     &#34;&#34;&#34;
     The negative of the log-likelihood of the data given the model sfs.
@@ -1642,7 +1667,9 @@ missing_model_cutoff, a warning is printed.</p></section>
 <p>This scaling is based on only those entries that are masked in neither
 model nor data.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimal_sfs_scaling(model, data):
     &#34;&#34;&#34;
     Optimal multiplicative scaling factor between model and data.
@@ -1670,7 +1697,9 @@ model nor data.</p></section>
 <section class="desc"><p>Optimially scale model sfs to data sfs.</p>
 <p>Returns a new scaled model sfs.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimally_scaled_sfs(model, data):
     &#34;&#34;&#34;
     Optimially scale model sfs to data sfs.
@@ -1681,7 +1710,7 @@ model nor data.</p></section>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize"><code class="name flex">
-<span>def <span class="ident">optimize</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+<span>def <span class="ident">optimize</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize params to fit model to data using the BFGS method.</p>
@@ -1732,12 +1761,14 @@ simply reduce the magnitude of the log-likelihood. Once in a
 region of reasonable likelihood, you'll probably want to
 re-optimize with ll_scale=1.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
              verbose=0, flush_delay=0.5, epsilon=1e-3, 
              gtol=1e-5, multinom=True, maxiter=None, full_output=False,
              func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-             output_file=None):
+             output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize params to fit model to data using the BFGS method.
 
@@ -1796,7 +1827,7 @@ re-optimize with ll_scale=1.</p></section>
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
@@ -1812,13 +1843,13 @@ re-optimize with ll_scale=1.</p></section>
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_cons"><code class="name flex">
-<span>def <span class="ident">optimize_cons</span></span>(<span>p0, data, model_func, pts, eq_constraint=None, ieq_constraint=None, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.0001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+<span>def <span class="ident">optimize_cons</span></span>(<span>p0, data, model_func, pts, eq_constraint=None, ieq_constraint=None, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.0001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize params to fit model to data using constrainted optimization.</p>
@@ -1887,14 +1918,17 @@ simply reduce the magnitude of the log-likelihood. Once in a
 region of reasonable likelihood, you'll probably want to
 re-optimize with ll_scale=1.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_cons(p0, data, model_func, pts,
                   eq_constraint=None, ieq_constraint=None,
                   lower_bound=None, upper_bound=None, 
                   verbose=0, flush_delay=0.5, epsilon=1e-4,
                   gtol=1e-5, multinom=True, maxiter=None,
                   full_output=False, func_args=[], func_kwargs={},
-                  fixed_params=None, ll_scale=1, output_file=None):
+                  fixed_params=None, ll_scale=1, output_file=None,
+                  stopval=0):
     &#34;&#34;&#34;
     Optimize params to fit model to data using constrainted optimization.
 
@@ -1971,7 +2005,7 @@ re-optimize with ll_scale=1.</p></section>
     
     args = (data, model_func, pts, None, None, verbose, 
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     if lower_bound is None:
         lower_bound = [None] * len(p0)
@@ -1998,13 +2032,13 @@ re-optimize with ll_scale=1.</p></section>
         output_stream.close()
     
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, func_calls, grad_calls, warnflag</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_grid"><code class="name flex">
-<span>def <span class="ident">optimize_grid</span></span>(<span>data, model_func, pts, grid, verbose=0, flush_delay=0.5, multinom=True, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None)</span>
+<span>def <span class="ident">optimize_grid</span></span>(<span>data, model_func, pts, grid, verbose=0, flush_delay=0.5, multinom=True, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize params to fit model to data using brute force search over a grid.</p>
@@ -2056,12 +2090,14 @@ the 11j in the second parameter range specification.) Note that the grid
 list should include only parameters that are optimized over, not fixed
 parameter values.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_grid(data, model_func, pts, grid,
                   verbose=0, flush_delay=0.5,
                   multinom=True, full_output=False,
                   func_args=[], func_kwargs={}, fixed_params=None,
-                  output_file=None):
+                  output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize params to fit model to data using brute force search over a grid.
 
@@ -2121,7 +2157,7 @@ parameter values.</p></section>
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream, full_output)
+            output_stream, full_output, stopval)
 
     if full_output:
         global _theta_store
@@ -2148,13 +2184,13 @@ parameter values.</p></section>
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, grid, fout, thetas</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_lbfgsb"><code class="name flex">
-<span>def <span class="ident">optimize_lbfgsb</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+<span>def <span class="ident">optimize_lbfgsb</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize log(params) to fit model to data using the L-BFGS-B method.</p>
@@ -2218,13 +2254,15 @@ Statistical Computing , 16, 5, pp. 1190-1208.
 FORTRAN routines for large scale bound constrained optimization (1997),
 ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_lbfgsb(p0, data, model_func, pts, 
                     lower_bound=None, upper_bound=None,
                     verbose=0, flush_delay=0.5, epsilon=1e-3, 
                     pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
                     func_args=[], func_kwargs={}, fixed_params=None, 
-                    ll_scale=1, output_file=None):
+                    ll_scale=1, output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -2297,7 +2335,7 @@ ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></sec
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -2323,13 +2361,13 @@ ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></sec
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, info_dict</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_log"><code class="name flex">
-<span>def <span class="ident">optimize_log</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+<span>def <span class="ident">optimize_log</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize log(params) to fit model to data using the BFGS method.</p>
@@ -2393,12 +2431,14 @@ simply reduce the magnitude of the log-likelihood. Once in a
 region of reasonable likelihood, you'll probably want to
 re-optimize with ll_scale=1.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
                  func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
-                 output_file=None):
+                 output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using the BFGS method.
 
@@ -2471,7 +2511,7 @@ re-optimize with ll_scale=1.</p></section>
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
@@ -2487,13 +2527,13 @@ re-optimize with ll_scale=1.</p></section>
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_log_fmin"><code class="name flex">
-<span>def <span class="ident">optimize_log_fmin</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None)</span>
+<span>def <span class="ident">optimize_log_fmin</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize log(params) to fit model to data using Nelder-Mead. </p>
@@ -2540,14 +2580,16 @@ in; values corresponding to fixed parameters are ignored.
 (See help(dadi.Inference.optimize_log for examples of func_args and
 fixed_params usage.)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_log_fmin(p0, data, model_func, pts, 
                       lower_bound=None, upper_bound=None,
                       verbose=0, flush_delay=0.5, 
                       multinom=True, maxiter=None, 
                       full_output=False, func_args=[], 
                       func_kwargs={},
-                      fixed_params=None, output_file=None):
+                      fixed_params=None, output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using Nelder-Mead. 
 
@@ -2603,7 +2645,7 @@ fixed_params usage.)</p></section>
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
@@ -2615,13 +2657,13 @@ fixed_params usage.)</p></section>
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, iter, funcalls, warnflag</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_log_lbfgsb"><code class="name flex">
-<span>def <span class="ident">optimize_log_lbfgsb</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+<span>def <span class="ident">optimize_log_lbfgsb</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize log(params) to fit model to data using the L-BFGS-B method.</p>
@@ -2687,14 +2729,16 @@ Statistical Computing , 16, 5, pp. 1190-1208.
 FORTRAN routines for large scale bound constrained optimization (1997),
 ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_log_lbfgsb(p0, data, model_func, pts, 
                         lower_bound=None, upper_bound=None,
                         verbose=0, flush_delay=0.5, epsilon=1e-3, 
                         pgtol=1e-5, multinom=True, maxiter=1e5, 
                         full_output=False,
                         func_args=[], func_kwargs={}, fixed_params=None, 
-                        ll_scale=1, output_file=None):
+                        ll_scale=1, output_file=None, stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using the L-BFGS-B method.
 
@@ -2771,7 +2815,7 @@ ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></sec
 
     args = (data, model_func, pts, None, None, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 
-            ll_scale, output_stream)
+            ll_scale, output_stream, stopval)
 
     # Make bounds list. For this method it needs to be in terms of log params.
     if lower_bound is None:
@@ -2803,13 +2847,13 @@ ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></sec
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, info_dict</code></pre>
 </details>
 </dd>
 <dt id="dadi.Inference.optimize_log_powell"><code class="name flex">
-<span>def <span class="ident">optimize_log_powell</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None)</span>
+<span>def <span class="ident">optimize_log_powell</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None, stopval=0)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Optimize log(params) to fit model to data using Powell's method.</p>
@@ -2852,14 +2896,17 @@ in; values corresponding to fixed parameters are ignored.
 (See help(dadi.Inference.optimize_log for examples of func_args and
 fixed_params usage.)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_log_powell(p0, data, model_func, pts,
                       lower_bound=None, upper_bound=None,
                       verbose=0, flush_delay=0.5,
                       multinom=True, maxiter=None,
                       full_output=False, func_args=[],
                       func_kwargs={},
-                      fixed_params=None, output_file=None):
+                      fixed_params=None, output_file=None,
+                      stopval=0):
     &#34;&#34;&#34;
     Optimize log(params) to fit model to data using Powell&#39;s method.
         
@@ -2910,7 +2957,7 @@ fixed_params usage.)</p></section>
 
     args = (data, model_func, pts, lower_bound, upper_bound, verbose,
             multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
-            output_stream)
+            output_stream, stopval)
 
     p0 = _project_params_down(p0, fixed_params)
     outputs = scipy.optimize.fmin_powell(_object_func_log, numpy.log(p0), args = args,
@@ -2922,7 +2969,7 @@ fixed_params usage.)</p></section>
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return xopt
     else:
         return xopt, fopt, direc, iter, funcalls, warnflag</code></pre>
 </details>
@@ -2994,7 +3041,9 @@ simply reduce the magnitude of the log-likelihood. Once in a
 region of reasonable likelihood, you'll probably want to
 re-optimize with ll_scale=1.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None, upper_bound=None,
                  verbose=0, flush_delay=0.5, epsilon=1e-3, 
                  gtol=1e-5, multinom=True, maxiter=None, full_output=False,
@@ -3090,7 +3139,7 @@ re-optimize with ll_scale=1.</p></section>
         output_stream.close()
 
     if not full_output:
-        return xopt, fopt
+        return fopt, xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag</code></pre>
 </details>
@@ -3139,7 +3188,7 @@ re-optimize with ll_scale=1.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

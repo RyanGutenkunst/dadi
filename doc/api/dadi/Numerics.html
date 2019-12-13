@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.2" />
+<meta name="generator" content="pdoc 0.7.2" />
 <title>dadi.Numerics API documentation</title>
 <meta name="description" content="Numerically useful functions, including extrapolation and default grid." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -22,7 +22,9 @@
 <section id="section-intro">
 <p>Numerically useful functions, including extrapolation and default grid.</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">&#34;&#34;&#34;
 Numerically useful functions, including extrapolation and default grid.
 &#34;&#34;&#34;
@@ -707,7 +709,9 @@ def quintic_extrap(ys, xs):
 n beta binomial random variables with equal alpha,
 beta, and number of trials.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
     &#34;&#34;&#34;
     Returns the probability of observing i &#39;successes&#39; across
@@ -740,7 +744,9 @@ beta, and number of trials.</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def BetaBinomln(i,n,a,b):
     if (i,n,a,b) not in _BetaBinomln_cache:
         _BetaBinomln_cache[i,n,a,b] = _lncomb(n,i) + betaln(i+a,n-i+b) - betaln(a,b)
@@ -756,7 +762,9 @@ beta, and number of trials.</p></section>
 p_misid: Fraction of sites assumed to suffer from ancestral
 state misidentification.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def apply_anc_state_misid(fs, p_misid):
     &#34;&#34;&#34;
     Model ancestral state misidentification in a frequency spectrum.
@@ -785,7 +793,9 @@ array. So this line would be '5 5 3' for an SFS that was 5x5x3.
 A single line giving the array elements. The order of elements is
 e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def array_from_file(fid, return_comments=False):
     &#34;&#34;&#34;
     Read array from file.
@@ -853,7 +863,9 @@ array. So this line would be '5 5 3' for an SFS that was 5x5x3.
 A single line giving the array elements. The order of elements is
 e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def array_to_file(data, fid, precision=16, comment_lines = []):
     &#34;&#34;&#34;
     Write array to file.
@@ -914,7 +926,9 @@ n: number of partition entries.
 minval: minimum value allowed for partition entries.
 maxval: maximum value allowed for partition entries.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cached_part(x,n,minval=0,maxval=2):
     &#34;&#34;&#34;
     Returns the integer partition summing to x with n entries and
@@ -941,7 +955,9 @@ maxval: maximum value allowed for partition entries.</p></section>
 xs: x values from x,y pairs. These should be scalars.</p>
 <p>Returns extrapolated y at x=0.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cubic_extrap(ys, xs):
     &#34;&#34;&#34;
     Cubically extrapolate from three x,y pairs to x = 0.
@@ -969,7 +985,9 @@ systems. See estimate_best_exp_grid_crwd for some empirical optimizations
 beyond this.</p>
 <p>This grid was contributed by Simon Gravel.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def exponential_grid(pts, crwd=8.):
     &#34;&#34;&#34;
     An exponentially spaced grid. This is now the default grid.
@@ -1001,7 +1019,9 @@ yy[:5]). ret[1] is the coefficients for the derivative at xx[-1]. It can be
 used by deriv = dot(ret[1][::-1], yy[-5:]). (Note that we need to reverse
 the coefficient array here.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def end_point_first_derivs(xx):
     &#34;&#34;&#34;
     Coefficients for a 5-point one-sided approximation of the first derivative.
@@ -1054,7 +1074,9 @@ max(ns)+10, max(ns)+20] was most accurate.</p>
 model. It does seem broadly true that the optimal value of crwd increases
 with system size, up to a point.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def estimate_best_exp_grid_crwd(ns):
     &#34;&#34;&#34;
     Emperical &#34;best&#34; values for exponential grid crowding.
@@ -1089,7 +1111,9 @@ systems. See estimate_best_exp_grid_crwd for some empirical optimizations
 beyond this.</p>
 <p>This grid was contributed by Simon Gravel.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def exponential_grid(pts, crwd=8.):
     &#34;&#34;&#34;
     An exponentially spaced grid. This is now the default grid.
@@ -1117,7 +1141,9 @@ beyond this.</p>
 <p>If neither m1 or m2 is masked, just returns m1 and m2. Otherwise returns
 m1 and m2 wrapped as masked_arrays with identical masks.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def intersect_masks(m1, m2):
     &#34;&#34;&#34;
     Versions of m1 and m2 that are masked where either m1 or m2 were masked.
@@ -1148,7 +1174,9 @@ m1 and m2 wrapped as masked_arrays with identical masks.</p></section>
 xs: x values from x,y pairs. These should be scalars.</p>
 <p>Returns extrapolated y at x=0.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def linear_extrap(ys, xs):
     &#34;&#34;&#34;
     Linearly extrapolate from two x,y pairs to x = 0.
@@ -1175,7 +1203,9 @@ vector, to which the misidentification parameter will be added.</p>
 longer than the original function. The fraction misidentification will
 be the last entry in the new params vector.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def make_anc_state_misid_func(func):
     &#34;&#34;&#34;
     Generate a version of func accounting for ancestral state misidentification.
@@ -1225,7 +1255,9 @@ from the smallest x input result.</p>
 points and that returns a result extrapolated to infinitely many grid
 points.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
     &#34;&#34;&#34;
     Generate a version of func that extrapolates to infinitely many gridpoints.
@@ -1383,7 +1415,9 @@ want to override this behavior for testing.</p>
 points and that returns a result extrapolated to infinitely many grid
 points.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def make_extrap_log_func(func, extrap_x_l=None):
     &#34;&#34;&#34;
     Generate a version of func that extrapolates to infinitely many gridpoints.
@@ -1416,7 +1450,9 @@ points.</p></section>
 <section class="desc"><p>Get the multinomial coefficient for an array N.</p>
 <p>N: array of integers.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def multinomln(N):
     &#34;&#34;&#34;
     Get the multinomial coefficient for an array N.
@@ -1443,7 +1479,9 @@ n: number of partition entries.
 minval: minimum value allowed for partition entries.
 maxval: maximum value allowed for partition entries.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def part(x, n, minval=0, maxval=2):
     &#34;&#34;&#34;
     Returns the integer partition summing to x with n entries and
@@ -1473,7 +1511,9 @@ maxval: maximum value allowed for partition entries.</p></section>
 xs: x values from x,y pairs. These should be scalars.</p>
 <p>Returns extrapolated y at x=0.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def quadratic_extrap(ys, xs):
     &#34;&#34;&#34;
     Quadratically extrapolate from three x,y pairs to x = 0.
@@ -1498,7 +1538,9 @@ xs: x values from x,y pairs. These should be scalars.</p>
 population genetic simulations. In between, it smoothly increases and
 then decreases the step size.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def quadratic_grid(num_pts):
     &#34;&#34;&#34;
     A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.
@@ -1545,7 +1587,9 @@ then decreases the step size.</p></section>
 x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 <p>Returns extrapolated y at x=0.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def quartic_extrap(ys, xs):
     &#34;&#34;&#34;
     Quartically extrapolate from three x,y pairs to x = 0.
@@ -1571,7 +1615,9 @@ x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 <p>Returns extrapolated y at x=0.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def quintic_extrap(ys, xs):
     &#34;&#34;&#34;
     Quintic extrapolate from three x,y pairs to x = 0.
@@ -1594,7 +1640,9 @@ x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 <dd>
 <section class="desc"><p>Reverse an array along all axes, so arr[i,j] -&gt; arr[-(i+1),-(j+1)].</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def reverse_array(arr):
     &#34;&#34;&#34;
     Reverse an array along all axes, so arr[i,j] -&gt; arr[-(i+1),-(j+1)].
@@ -1611,7 +1659,9 @@ x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 <p>xx must be one-dimensional and len(xx) must equal yy.shape[axis].</p>
 <p>This is modified from the SciPy version to work with n-D yy and 1-D xx.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def trapz(yy, xx=None, dx=None, axis=-1):
     &#34;&#34;&#34;
     Integrate yy(xx) along given axis using the composite trapezoidal rule.
@@ -1692,7 +1742,7 @@ x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

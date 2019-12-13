@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.2" />
+<meta name="generator" content="pdoc 0.7.2" />
 <title>dadi.TwoLocus.numerics API documentation</title>
 <meta name="description" content="methods for numerics of two locus diffusion - grids, transition matrices, etc" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -22,7 +22,9 @@
 <section id="section-intro">
 <p>methods for numerics of two locus diffusion - grids, transition matrices, etc</p>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">&#34;&#34;&#34;
 methods for numerics of two locus diffusion - grids, transition matrices, etc
 &#34;&#34;&#34;
@@ -1687,7 +1689,9 @@ except ImportError:
 <p>Returns (D, r2). Both are TLSpectrum objects in which each entry is the
 value of D or r^2 for that combination of haplotypes.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def LD_per_bin(ns):
     &#34;&#34;&#34;
     LD statistics per bin for a TLSpectrum.
@@ -1718,7 +1722,9 @@ value of D or r^2 for that combination of haplotypes.</p></section>
 u - 1D density function
 P - transition matrix</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance1D(u,P):
     &#34;&#34;&#34;
     Given transition matrix P, use dadi&#39;s triagonal solver to integrate in 1D
@@ -1742,7 +1748,9 @@ U01 - domain markers
 P1/P2/P3 - ADI transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_adi(phi,U01,P1,P2,P3,x,ii):
     &#34;&#34;&#34;
     Combined ADI integration of phi
@@ -1778,7 +1786,9 @@ U01 - domain markers
 P1 - ADI transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_adi1(phi,U01,P1,x):
     &#34;&#34;&#34;
     ADI integration along axis 1 of phi
@@ -1806,7 +1816,9 @@ U01 - domain markers
 P2 - ADI transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_adi2(phi,U01,P2,x):
     &#34;&#34;&#34;
     ADI integration along axis 2 of phi
@@ -1834,7 +1846,9 @@ U01 - domain markers
 P3 - ADI transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_adi3(phi,U01,P3,x):
     &#34;&#34;&#34;
     ADI integration along axis 3 of phi
@@ -1861,7 +1875,9 @@ phi - density function
 C12/C13/C23 - transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_cov(phi,C12,C13,C23,x,ii):
     &#34;&#34;&#34;
     Combined integration for the covariance terms
@@ -1894,7 +1910,9 @@ phi - density function
 C12 - transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_cov12(phi,C12,x):
     &#34;&#34;&#34;
     Explicit integration of covariance term in the 1/2 axes planes
@@ -1917,7 +1935,9 @@ phi - density function
 C13 - transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_cov13(phi,C13,x):
     &#34;&#34;&#34;
     Explicit integration of covariance term in the 1/3 axes planes
@@ -1940,7 +1960,9 @@ phi - density function
 C23 - transition matrices
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_cov23(phi,C23,x):
     &#34;&#34;&#34;
     Explicit integration of covariance term in the 2/3 axes planes
@@ -1964,7 +1986,9 @@ U01surf - domain markers along grid
 P1surf - adi transition matrix
 x - uniform grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_surf_adi1(surf,U01surf,P1surf,x):
     &#34;&#34;&#34;
     Advance the adi method along first axis one of surface domain
@@ -1989,7 +2013,9 @@ U01surf - domain markers along grid
 P2surf - adi transition matrix
 x - uniform grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_surf_adi2(surf,U01surf,P2surf,x):
     &#34;&#34;&#34;
     Advance the adi method along second axis one of surface domain
@@ -2013,7 +2039,9 @@ surf - density function along the surface
 Csurf - transition matrix
 x - grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_surf_cov(surf,Csurf,x):
     &#34;&#34;&#34;
     Explicit integration of the covariance term, using scipy&#39;s sparse matrix for Csurf
@@ -2036,7 +2064,9 @@ Csurf - covarance transition matrix
 Pline - transition matrix for diagonal boundary of triallele surface
 P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
     &#34;&#34;&#34;
     phi - full density function
@@ -2065,7 +2095,9 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <dd>
 <section class="desc"><p>now handled by TLSpectrum_mod.TLSpectrum</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def array_to_spectrum(phi):
     &#34;&#34;&#34;
     now handled by TLSpectrum_mod.TLSpectrum
@@ -2095,7 +2127,9 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def binom(n,k):
     return math.factorial(n)/math.factorial(k)/math.factorial(n-k)</code></pre>
 </details>
@@ -2106,7 +2140,9 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cached_genotype_exact_projection(n,haplotype_counts):
     key = (n,haplotype_counts)
     try:
@@ -2132,7 +2168,9 @@ proj_to: Number of samples to project down to
 proj_from: Number of samples to project from
 hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cached_projection(proj_to, proj_from, hits):
     &#34;&#34;&#34;
     Coefficients for projection from a larger size to smaller
@@ -2171,7 +2209,9 @@ hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)</p></secti
 Fcond[i,j]: i - number AB, j - number of aB
 i ranges from 0 to i, j ranges from 0 to n-i</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def condition(F,i):
     &#34;&#34;&#34;
     condition on seeing nA = i
@@ -2197,7 +2237,9 @@ i ranges from 0 to i, j ranges from 0 to n-i</p></section>
 Has a 1 if grid point lies in domain, 0 if outside domain
 x - 1D grid</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def domain(x):
     &#34;&#34;&#34;
     Array of same dimension as density function discretization
@@ -2217,7 +2259,9 @@ x - 1D grid</p></section>
 <dd>
 <section class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def domain_surf(x):
     &#34;&#34;&#34;
     Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
@@ -2235,7 +2279,9 @@ x - 1D grid</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def extrap_dt_pts(temps):
     # in form of temps[dt][numpts]
     dts = sorted(temps.keys())[::-1]
@@ -2253,7 +2299,9 @@ x - 1D grid</p></section>
 <dd>
 <section class="desc"><p>Takes an unfolded two locus frequency spectrum and folds it (assume don't konw ancestral state)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def fold_ancestral(F):
     &#34;&#34;&#34;
     Takes an unfolded two locus frequency spectrum and folds it (assume don&#39;t konw ancestral state)
@@ -2288,7 +2336,9 @@ x - 1D grid</p></section>
 <dd>
 <section class="desc"><p>Takes an unfolded two locus spectrum and folds based on left/right allele</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def fold_lr(F):
     &#34;&#34;&#34;
     Takes an unfolded two locus spectrum and folds based on left/right allele
@@ -2313,7 +2363,9 @@ x - 1D grid</p></section>
 <section class="desc"><p>return 1D spectra, to perform likelihood calcs
 so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def genotype_exp_data_to_arrays(G_exp,G_data):
     &#34;&#34;&#34;
     return 1D spectra, to perform likelihood calcs
@@ -2345,7 +2397,9 @@ so given two dicts, one for genotype freq expectations, one for data, returns sp
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def genotype_spectrum_from_F(F):
     n = len(F)-1
     ng = n/2
@@ -2370,7 +2424,9 @@ so given two dicts, one for genotype freq expectations, one for data, returns sp
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def genotypes_prob_4(n,colors,hits):
     (nR,nG,nB,nY) = colors
     (nRR,nGG,nBB,nYY,nRG,nRB,nRY,nGB,nGY,nBY) = hits
@@ -2386,7 +2442,9 @@ so given two dicts, one for genotype freq expectations, one for data, returns sp
 Here, delta_x = 1./numpts
 numpts - number of grid points (less one)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid(numpts):
     &#34;&#34;&#34;
     Default grid is uniform, so that grid points lie directly on the boundaries
@@ -2402,7 +2460,9 @@ numpts - number of grid points (less one)</p></section>
 <dd>
 <section class="desc"><p>Given 1D grid x, this returns the 1D grid spacing for x</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid_dx(x):
     &#34;&#34;&#34;
     Given 1D grid x, this returns the 1D grid spacing for x
@@ -2418,7 +2478,9 @@ numpts - number of grid points (less one)</p></section>
 x - 1D grid
 dx - 1D grid spacing</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid_dx3(x,dx):
     &#34;&#34;&#34;
     For integrating over the 3D domain (see int3)
@@ -2439,7 +2501,9 @@ dx - 1D grid spacing</p></section>
 <section class="desc"><p>The two dimensional grid spacing over the domain.
 Grid points lie along the diagonal boundary, and Delta for those points is halved</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid_dx_2d(x,dx):
     &#34;&#34;&#34;
     The two dimensional grid spacing over the domain.
@@ -2463,7 +2527,9 @@ yA - biallelic frequency spectrum integrated by dadi
 phi - density function
 thetaA - scaled mutation rate</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def injectA(x,dx,dt,yB,phi,thetaA):
     &#34;&#34;&#34;
     Injection new derived mutations A onto background of B/b
@@ -2492,7 +2558,9 @@ yB - biallelic frequency spectrum integrated by dadi
 phi - density function
 thetaB - scaled mutation rate</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def injectB(x,dx,dt,yA,phi,thetaB):
     &#34;&#34;&#34;
     Injection new derived mutations B onto background of A/a
@@ -2517,7 +2585,9 @@ thetaB - scaled mutation rate</p></section>
 DXX - two dimensional grid
 U - density function</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def int2(DXX,U):
     &#34;&#34;&#34;
     Integrate the density function over the domain
@@ -2535,7 +2605,9 @@ U - density function</p></section>
 phi - density function
 DX - 3D grid spacing for integration weights</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def int3(DX,U):
     &#34;&#34;&#34;
     Numerically integrate the density function phi
@@ -2551,7 +2623,9 @@ DX - 3D grid spacing for integration weights</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ln_binomial(n,k):
     return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)</code></pre>
 </details>
@@ -2562,7 +2636,9 @@ DX - 3D grid spacing for integration weights</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def mean_r2(F):
     ns = len(F)-1
     tot = np.sum(F)
@@ -2591,7 +2667,9 @@ with prob p(1-p) A -&gt; a but B correct
 with prob p(1-p) B -&gt; b but A correct
 with prob p^2 A -&gt; a and B -&gt; b</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def misidentification(F,p):
     &#34;&#34;&#34;
     with probability p, ancestral state is misidentified
@@ -2623,7 +2701,9 @@ with prob p^2 A -&gt; a and B -&gt; b</p></section>
 with prob p(1-p), AA -&gt; aa, aa -&gt; AA, Aa stays the same, B/b stay same
 with prob p(1-p),</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def misidentification_genotype_dict(G,p):
     &#34;&#34;&#34;
     same misidentification probabilities as misidentification(F,p)
@@ -2656,7 +2736,9 @@ dx - grid spacing
 dt - timestep of integration
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def move_density_to_surface(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
     &#34;&#34;&#34;
     for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
@@ -2705,7 +2787,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"><p>This is an absorbing boundary, so we'll just remove that density and not worry about integrating along that diagonal</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def move_surf_density_to_bdry(x,surf,P):
     &#34;&#34;&#34;
     This is an absorbing boundary, so we&#39;ll just remove that density and not worry about integrating along that diagonal
@@ -2728,7 +2812,9 @@ dt - timestep of integration
 gammaA/gammaB - scaled selection coefficients
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def move_surf_to_line(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
     &#34;&#34;&#34;
     for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
@@ -2759,7 +2845,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def multinomial(n,i,j,k):
     if i+j+k != n:
         return &#34;nein&#34;
@@ -2772,7 +2860,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"><p>Gdict has keys n (num individuals in sample), observed genotypes</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def observed_genotype_spectrum_dict_from_F(F):
     &#34;&#34;&#34;
     Gdict has keys n (num individuals in sample), observed genotypes
@@ -2804,7 +2894,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def observed_genotype_spectrum_from_F(F):
     n = len(F)-1
     ng = n/2
@@ -2829,7 +2921,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def pairings(n):
     return math.factorial(n)/(math.factorial(n/2)*2**(n/2))</code></pre>
 </details>
@@ -2845,7 +2939,9 @@ if x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either 
 thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don't have to worry about that density anymore
 here, we have x3 lost</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def phi_to_surf(phi,x):
     &#34;&#34;&#34;
     non-square  mapped to triallelic domain
@@ -2868,7 +2964,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def possible_genotypes_4(n,colors):
     nR,nG,nB,nY = colors
     gl = []
@@ -2898,7 +2996,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def project(F_from, proj_to):
     proj_from = len(F_from)-1
     if proj_to == proj_from:
@@ -2925,7 +3025,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"><p>n_from and n_to are the individual counts, not haplotype counts (so ns/2)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def project_Gdict(G,n_from,n_to):
     &#34;&#34;&#34; n_from and n_to are the individual counts, not haplotype counts (so ns/2) &#34;&#34;&#34;
     G_to = {}
@@ -2946,7 +3048,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def projection_cache_Gdict(n_from,n_to,hits):
     key = (n_from,n_to,hits)
     try:
@@ -2984,7 +3088,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"><p>returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def quadrinomial(ns,ii,jj,kk):
     &#34;&#34;&#34;
     returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)
@@ -2998,7 +3104,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def sample_cached(phi, ns, x):
     dx = grid_dx(x)
     dx3 = grid_dx3(x,dx)
@@ -3044,7 +3152,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"><p>move the surf density back to the full phi density function</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def surf_to_phi(surf,phi,x):
     &#34;&#34;&#34;
     move the surf density back to the full phi density function
@@ -3062,7 +3172,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def surface_interaction_b(phi,x,Psurf):
     for ii in range(len(x))[:len(x)-1]:
         for jj in range(len(x))[:len(x)-1-ii]:
@@ -3133,7 +3245,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"><p>recombination pushes density from surface back into interior of domain</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def surface_recombination(phi,x,rho,dt):
     &#34;&#34;&#34;
     recombination pushes density from surface back into interior of domain
@@ -3165,7 +3279,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def to_single_locus(phi):
     ns = len(phi)-1
     fsA = dadi.Spectrum(np.zeros(ns+1))
@@ -3188,7 +3304,9 @@ here, we have x3 lost</p></section>
 <dd>
 <section class="desc"><p>transition matrix for explicit integration of mixed derivative term along surface</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition12_surf(x,dx,U01):
     &#34;&#34;&#34;
     transition matrix for explicit integration of mixed derivative term along surface
@@ -3239,7 +3357,9 @@ U01 - surface domain marker
 gammaA/B - scaled selection coefficients
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition1_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
     &#34;&#34;&#34;
     adi transition matrix for x1 on surface
@@ -3314,7 +3434,9 @@ U01 - surface domain marker
 gammaA/B - scaled selection coefficients
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition2_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
     &#34;&#34;&#34;
     adi transition matrix for x2 on surface
@@ -3460,7 +3582,7 @@ nu - relative population size</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

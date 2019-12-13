@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.6.2" />
+<meta name="generator" content="pdoc 0.7.2" />
 <title>dadi.Triallele.numerics API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
@@ -21,7 +21,9 @@
 </header>
 <section id="section-intro">
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">import numpy as np
 from scipy.sparse import lil_matrix
 from scipy.sparse import identity
@@ -688,7 +690,9 @@ except ImportError:
 u - density along that diagonal
 P - transition matrix</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance1D(u,P):
     &#34;&#34;&#34;
     tridiag breakdown for integration along the diagonal boundary
@@ -712,7 +716,9 @@ U01 - stores which points are in the domain
 P1,P2 - transition matrices
 ii - count of integration step</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_adi(U,U01,P1,P2,x,ii):
     &#34;&#34;&#34;
     Integrate the ADI components forward in time, alternating which direction occurs first
@@ -746,7 +752,9 @@ ii - count of integration step</p></section>
 U - density function
 C - transition matrix</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_cov(U,C,x,dx):
     &#34;&#34;&#34;
     Explicit integration of the covariance term, using scipy&#39;s sparse matrix for C
@@ -764,7 +772,9 @@ C - transition matrix</p></section>
 <section class="desc"><p>Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
 P - one dimensional transition matrix for the diagonal boundary</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def advance_line(x,phi,P):
     &#34;&#34;&#34;
     Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
@@ -784,7 +794,9 @@ P - one dimensional transition matrix for the diagonal boundary</p></section>
 <section class="desc"><p>mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
 We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def bivariate_lognormal_pdf(xx, params):
     &#34;&#34;&#34;
     mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
@@ -807,7 +819,9 @@ proj_to: Number of samples to project down to
 proj_from: Number of samples to project from
 hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cached_projection(proj_to,proj_from,hits):
     &#34;&#34;&#34;
     Coefficients for projection from a larger size to smaller
@@ -842,7 +856,9 @@ hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def cached_transition1D(numpts,sig):
     key = (numpts,sig)
     try:
@@ -862,7 +878,9 @@ hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <dd>
 <section class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def domain(x):
     &#34;&#34;&#34;
     Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
@@ -881,7 +899,9 @@ hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <section class="desc"><p>Note: this is now handled in the TriSpectrum class
 Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def fold(spectrum):
     &#34;&#34;&#34;
     Note: this is now handled in the TriSpectrum class
@@ -911,7 +931,9 @@ Given a frequency spectrum over the full domain, fold into a spectrum with major
 Don't know ancestral state, so track minor frequencies
 Store spectrum of two minor allele frequencies</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def fold_ancestral(F):
     &#34;&#34;&#34;
     Note: this is now handled by the TriSpectrum class
@@ -956,7 +978,9 @@ Store spectrum of two minor allele frequencies</p></section>
 <section class="desc"><p>We use uniform grids in x, using np.linspace(0,1,numpts)
 Grid spacing Delta, which is halved at the first and last grid points.</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid_dx(x):
     &#34;&#34;&#34;
     We use uniform grids in x, using np.linspace(0,1,numpts)
@@ -972,7 +996,9 @@ Grid spacing Delta, which is halved at the first and last grid points.</p></sect
 <section class="desc"><p>The two dimensional grid spacing over the domain.
 Grid points lie along the diagonal boundary, and Delta for those points is halved</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def grid_dx_2d(x,dx):
     &#34;&#34;&#34;
     The two dimensional grid spacing over the domain.
@@ -992,7 +1018,9 @@ Grid points lie along the diagonal boundary, and Delta for those points is halve
 DXX - two dimensional grid
 U - density function</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def int2(DXX,U):
     &#34;&#34;&#34;
     Integrate the density function over the domain
@@ -1008,7 +1036,9 @@ U - density function</p></section>
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ln_binomial(n,k):
     return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)</code></pre>
 </details>
@@ -1020,7 +1050,9 @@ U - density function</p></section>
 <section class="desc"><p>Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
 Then refold to return folded spectrum</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def misidentification(F, p):
     &#34;&#34;&#34;
     Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
@@ -1045,7 +1077,9 @@ Then refold to return folded spectrum</p></section>
 Take that density and instead of deleting it, move straight to boundary
 P - stores how much denstity from each grid point should be moved to diagonal</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def move_density_to_bdry(x,phi,P):
     &#34;&#34;&#34;
     P tells us how much should be removed, by multiplying phi*P
@@ -1090,7 +1124,9 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <dd>
 <section class="desc"><p>convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def ms_demo_params_to_dadi(nu_ms,tau_ms):
     &#34;&#34;&#34;
     convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)
@@ -1104,7 +1140,9 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def optimal_sfs_scaling(model,data):
     data = numerics.fold(data)
     model = numerics.fold(data)
@@ -1118,7 +1156,9 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <dd>
 <section class="desc"></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def project(F_from, proj_to):
     proj_from = len(F_from)-1
     if proj_to == proj_from:
@@ -1151,7 +1191,9 @@ dt - time step of integration
 nu - relative population size
 sig1,sig2 - selection coefficients</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     &#34;&#34;&#34;
     Numerically determine the amount of density that should be lost to the diagonal boundary.
@@ -1205,7 +1247,9 @@ sig1,sig2 - selection coefficients</p></section>
 <dd>
 <section class="desc"><p>Obtain the expected sample frequency spectrum from the density function</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def sample(phi, ns, x):
     &#34;&#34;&#34;
     Obtain the expected sample frequency spectrum from the density function
@@ -1263,7 +1307,9 @@ U01 - domain markers
 sig1/2 - population scaled selection coefficients
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition1(x, dx, U01, sig1, sig2):
     &#34;&#34;&#34;
     Implicit transition matrix for the ADI components of the discretization of the diffusion
@@ -1348,7 +1394,9 @@ x - grid
 dx - grid spacing
 U01 - domain markers</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition12(x, dx, U01):
     &#34;&#34;&#34;
     Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x*y*phi)
@@ -1404,7 +1452,9 @@ dt - timestep for integration
 sig - selection coefficient
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition1D(x, dx, sig):
     &#34;&#34;&#34;
     transition matrix for one dimensional integration
@@ -1449,7 +1499,9 @@ U01 - domain markers
 sig1/2 - population scaled selection coefficients
 nu - relative population size</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def transition2(x, dx, U01, sig1, sig2):
     &#34;&#34;&#34;
     Implicit transition matrix for the ADI components of the discretization of the diffusion
@@ -1529,7 +1581,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"><p>Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def trinomial(ns,ii,jj):
     &#34;&#34;&#34;
     Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values
@@ -1543,7 +1597,9 @@ nu - relative population size</p></section>
 <dd>
 <section class="desc"><p>Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))</p></section>
 <details class="source">
-<summary>Source code</summary>
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def univariate_lognormal_pdf(x,sigma,mu):
     &#34;&#34;&#34;
     Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))
@@ -1602,7 +1658,7 @@ nu - relative population size</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
