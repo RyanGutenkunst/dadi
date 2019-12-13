@@ -82,7 +82,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 numpy.distutils.core.setup(name='dadi',
-                           version='2.0.4',
+                           version='2.0.5',
                            author='Ryan Gutenkunst',
                            author_email='rgutenk@email.arizona.edu',
                            url='https://bitbucket.org/gutenkunstlab/dadi',
@@ -109,8 +109,9 @@ numpy.distutils.core.setup(name='dadi',
                            ]
                            )
 # To build completely
+# rm -rf build dist */*.so */*/*.so */*module.c */*/*module.c
 # python setup.py build_ext --inplace --cython
-# To build API documention
+# To build API documention (https://pdoc3.github.io/pdoc/)
 # rm -rf doc/api; pdoc -f --html -o doc/api dadi
 # To distribute to PyPI
 # rm -rf dist; python3 setup.py sdist bdist_wheel
