@@ -328,7 +328,7 @@ def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None
         output_stream.close()
 
     if not full_output:
-        return fopt, xopt
+        return xopt
     else:
         return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
 
