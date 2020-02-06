@@ -15,6 +15,7 @@ dist
 dadi.egg-info
 examples/YRI_CEU/seedms
 examples/YRI_CEU/test.msout
+!examples/fs_from_data/example.vcf.gz
 dadi/Triallele/*.c
 dadi/TwoLocus/*.c
 .vscode*

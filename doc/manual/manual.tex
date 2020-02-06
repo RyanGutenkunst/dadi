@@ -83,7 +83,7 @@ If you intend to use \dadi's plotting commands, which rely on \py{matplotlib}, t
 
 My preferred workflow involves one window editing a Python script (e.g. \py{script.py}) and another running an IPython session (started as \py{ipython -pylab}).
 In the IPython session I can interactively use \dadi, while I record my work in \py{script.py}.
-IPython's \py{\%run script.py} magic command lets me apply changes I've made to \py{script.py} to my interactive session. 
+IPython's \py{\%run script.py} magic command lets me apply changes I've made to \py{script.py} to my interactive session.
 (Note that you will need to reload other Python modules used by your script if you change them.)
 Once I'm sure I've defined my model correctly and have a useful script, I run that from the command line (\py{python script.py}) for extended optimizations and other long computations.
 
@@ -95,7 +95,7 @@ Moreover the \py{numpy}, \py{scipy}, and \py{matplotlib} packages replicate much
 \section{Importing data}
 
 \dadi represents frequency spectra using \py{dadi.Spectrum} objects.
-As described in section~\ref{sec:manip}, \py{Spectrum} objects are subclassed from \py{numpy.masked_array} and thus can be constructed similarly
+As described in section~\ref{sec:manip}, \py{Spectrum} objects are subclassed from \py{numpy.masked_array} and thus can be constructed similarly.
 The most basic way to create a \py{Spectrum} is manually:
 \begin{lstlisting}
 fs = dadi.Spectrum([0,100,20,10,1,0])
@@ -103,12 +103,13 @@ fs = dadi.Spectrum([0,100,20,10,1,0])
 This creates a \py{Spectrum} object representing the FS from a single population, from which we have 5 samples.
 (The first and last entries in \py{fs} correspond to mutations observed in zero or all samples. These are thus not polymorphisms, and by default \dadi masks out those entries so they are ignored.)
 
-For nontrivial data sets, entering the FS manually infeasible, so we will focus on automatic methods of generating a \py{Spectrum} object.
+For nontrivial data sets, entering the FS manually is infeasible, so we will focus on automatic methods of generating a \py{Spectrum} object.
 The most direct way is to load a pre-generated FS from a file, using
 \begin{lstlisting}
 fs = dadi.Spectrum.from_file(filename)
 \end{lstlisting}
 The appropriate file format is detailed in the next section.
+We have also added function to generate the FS from a VCF file (\ref{fs:vcf}).
 
 \subsection{Frequency spectrum file format}
 
@@ -131,7 +132,7 @@ fs.to_file(filename)
 
 As a convenience, \dadi includes several methods for generating frequency spectra directly from SNP data.
 That relevant SNP file format is described here.
-An large example can be found in the \py{examples/fs_from_data/data.txt} file included with the \dadi source distribution, and a small example is shown in Listing~\ref{lst:SNP_data}.
+A large example can be found in the \py{examples/fs_from_data/data.txt} file included with the \dadi source distribution, and a small example is shown in Listing~\ref{lst:SNP_data}.
 
 \begin{lstlisting}[caption={Example of SNP file format}, float, label={lst:SNP_data}]
 Human Chimp Allele1 YRI  CEU  Allele2 YRI CEU Gene  Position
@@ -200,6 +201,69 @@ The correction uses the expected number of substitutions per site, the trinucleo
 These are summarized in a table of misidentification probabilities that can be calculated using \py{Misc.make_fux_table}.
 (It should also be possible to develop a correction using only the single-site transition matrix.
 If this would be helpful, please contact the developers of \dadi.)
+
+\subsection{Frequency spectra from VCF files}\label{fs:vcf}
+
+In newer versions of \dadi ($\geq$ 2.0.5), we have included functions for generating frequency spectra from VCF files directly.
+The main function for accomplishing this is \py{make_data_dict_vcf} in the \py{dadi.Misc} submodule.
+The function has two required arguments: (1) the name of the VCF file (can be gzipped [*.vcf.gz]) and
+(2) the name of a file describing how individuals map to populations. This second file is a plain-text, two-column
+file containing the individual names in column one and their respective populations in column two:
+\smallskip
+
+\begin{lstlisting}
+i0 pop0
+i1 pop0
+i2 pop0
+...
+iN pop2
+\end{lstlisting}
+\smallskip
+
+\noindent Examples of these files can be found in the \py{examples/fs_from_data/} folder.
+Generating a frequency spectrum with these files can then be achieved through the creation of
+a data dictionary with the following two lines of code:
+\smallskip
+
+\begin{lstlisting}
+dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz",
+                                  "popfile.txt")
+fs = dadi.Spectrum.from_data_dict(dd, ['pop0','pop1'],
+                                      projections=[20,30],
+                                      polarized=False)
+\end{lstlisting}
+\smallskip
+
+The default version of the \py{make_data_dict_vcf} function will only include sites
+that don't have any missing data. Because of this, we have included an option to take
+a smaller subsample of individuals from a population at each site so that variants
+with less missing data than the specified subsampling size are not completely ignored.
+To specify how many individuals should be subsampled, the function takes an additional
+dictionary as an argument, where the dictionary simply maps the population names to the
+desired number of individuals to subsample.
+\smallskip
+
+\begin{lstlisting}
+# create the subsample dictionary
+ss = {'pop0':5, 'pop1':10}
+# pass it as an additional argument
+dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz",
+                                  "popfile.txt",
+                                  subsample=ss)
+fs = dadi.Spectrum.from_data_dict(dd, ['pop0','pop1'],
+                                      projections=[10,20],
+                                      polarized=False)
+\end{lstlisting}
+\smallskip
+
+Subsampling offers an alternative to down projecting your data that preserves individual
+genotypes. Projecting will consider sampled chromosomes/alleles as exchangeable across all individuals,
+which is usually OK for a randomly mating population. However, if you want to include
+inbreeding in your model (see section \ref{inbreeding}), then projecting will erase the
+signal of excess homozygosity that inbreeding creates by sampling chromosomes
+instead of individuals. When generating a frequency spectrum from a subsampled data
+dictionary, be sure to set the projections argument to 2 times the subsample size you specified
+for each population so that no down projecting is done.
 
 \section{Manipulating spectra}\label{sec:manip}
 
@@ -448,7 +512,7 @@ In this case, you likely want to run a model that explicitly includes $\theta$ a
 def bottleneck(params, ns, pts):
     nuB,nuF,TB,TF = params
     xx = Numerics.default_grid(pts)
-    
+
     phi = PhiManip.phi_1D(xx)
     phi = Integration.one_pop(phi, xx, TB, nuB)
     phi = Integration.one_pop(phi, xx, TF, nuF)
@@ -508,7 +572,7 @@ def IM(params, ns, pts):
 from dadi import Numerics, PhiManip, Integration, Spectrum
 
 def OutOfAfrica(params, ns, pts):
-    nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs, 
+    nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs,
                  mAfB, mAfEu, mAfAs, mEuAs, TAf, TB, TEuAs = params
     xx = Numerics.default_grid(pts)
 
@@ -516,15 +580,15 @@ def OutOfAfrica(params, ns, pts):
     phi = Integration.one_pop(phi, xx, TAf, nu=nuAf)
 
     phi = PhiManip.phi_1D_to_2D(xx, phi)
-    phi = Integration.two_pops(phi, xx, TB, nu1=nuAf, nu2=nuB, 
+    phi = Integration.two_pops(phi, xx, TB, nu1=nuAf, nu2=nuB,
                                m12=mAfB, m21=mAfB)
 
     phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
 
     nuEu_func = lambda t: nuEu0*(nuEu/nuEu0)**(t/TEuAs)
     nuAs_func = lambda t: nuAs0*(nuAs/nuAs0)**(t/TEuAs)
-    phi = Integration.three_pops(phi, xx, TEuAs, nu1=nuAf, 
-                                 nu2=nuEu_func, nu3=nuAs_func, 
+    phi = Integration.three_pops(phi, xx, TEuAs, nu1=nuAf,
+                                 nu2=nuEu_func, nu3=nuAs_func,
                                  m12=mAfEu, m13=mAfAs, m21=mAfEu,
                                  m23=mEuAs, m31=mAfAs, m32=mEuAs)
 
@@ -536,14 +600,14 @@ def OutOfAfrica(params, ns, pts):
 def fixed_theta(params, ns, pts):
     nuA, nu2, T = params
     theta1 = 137
-    
+
     xx = dadi.Numerics.default_grid(pts)
-    
+
     phi = dadi.PhiManip.phi_1D(xx, nu=nuA, theta0=theta1)
     phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
     phi = dadi.Integration.two_pops(phi, xx, T, nu1=1, nu2=nu2,
                                     theta0=theta1)
-                                    
+
     fs = dadi.Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 \end{lstlisting}
@@ -562,7 +626,7 @@ def NewWorld(params, ns, fixed_params, pts):
     phi = Integration.one_pop(phi, xx, TAf, nu=nuAf)
 
     phi = PhiManip.phi_1D_to_2D(xx, phi)
-    phi = Integration.two_pops(phi, xx, TB, nu1=nuAf, nu2=nuB, 
+    phi = Integration.two_pops(phi, xx, TB, nu1=nuAf, nu2=nuB,
                                m12=mAfB, m21=mAfB)
 
     # Integrate out the YRI population
@@ -571,8 +635,8 @@ def NewWorld(params, ns, fixed_params, pts):
     phi = PhiManip.phi_1D_to_2D(xx, phi)
     nuEu_func = lambda t: nuEu0*(nuEu/nuEu0)**(t/(TEuAs+TMx))
     nuAs_func = lambda t: nuAs0*(nuAs/nuAs0)**(t/(TEuAs+TMx))
-    phi = Integration.two_pops(phi, xx, TEuAs, 
-                               nu1=nuEu_func, nu2=nuAs_func, 
+    phi = Integration.two_pops(phi, xx, TEuAs,
+                               nu1=nuEu_func, nu2=nuAs_func,
                                m12=mEuAs, m21=mEuAs)
     phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
 
@@ -582,8 +646,8 @@ def NewWorld(params, ns, fixed_params, pts):
     nuEu_func = lambda t: nuEu0*(nuEu/nuEu0)**(t/TMx)
     nuAs_func = lambda t: nuAs0*(nuAs/nuAs0)**(t/TMx)
     nuMx_func = lambda t: nuMx0*(nuMx/nuMx0)**(t/TMx)
-    phi = Integration.three_pops(phi, xx, TMx, 
-                                 nu1=nuEu_func, nu2=nuAs_func, 
+    phi = Integration.three_pops(phi, xx, TMx,
+                                 nu1=nuEu_func, nu2=nuAs_func,
                                  nu3=nuMx_func,
                                  m12=mEuAs, m21=mEuAs,
                                  m23=mAsMx, m32=mAsMx)
@@ -591,7 +655,7 @@ def NewWorld(params, ns, fixed_params, pts):
                                                xx,xx,xx)
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx,xx))
-    # Apply our theta0. (All previous methods default to 
+    # Apply our theta0. (All previous methods default to
     # theta0=1.)
     return theta0*fs
 \end{lstlisting}
@@ -876,7 +940,7 @@ If the GIM uncertainties are large compared to the parameter values (for example
 
 Parameter uncertainties for correlated parameters can also be determined using the GIM with uncertainty propagation techniques.
 An example of this would be if one wanted to know the uncertainty in the total time of a demographic model, ${T_{total}}=T1+T2$ that contains two events occurring at times ${T1}$ and ${T2}$.
-If the variance for $T1$ and $T2$ are given by $\sigma_{T_1}^2$and $\sigma_{T_2}^2$, with a covariance term between the two $\sigma_{T_1T_2}$, then the uncertainty in ${T_{total}}$ is 
+If the variance for $T1$ and $T2$ are given by $\sigma_{T_1}^2$and $\sigma_{T_2}^2$, with a covariance term between the two $\sigma_{T_1T_2}$, then the uncertainty in ${T_{total}}$ is
 \begin{equation}
 \sigma_{T_{total}}=\sqrt{\sigma_{T_1}^2+\sigma_{T_2}^2+2\sigma_{T_1T_2}}.
 \end{equation}
@@ -899,7 +963,7 @@ Model selection is then performed by comparing this test statistic to a $\chi^2$
 To perform likelihood ratio tests using composite likelihoods, a multiplicative adjustment to the likelihood ratio test statistic shown above is needed.
 \dadi can calculate this adjustment, using the function.
 \begin{lstlisting}
-adj = dadi.Godambe.LRT_adjust(func_ex, grid_pts, all_boot, p0, 
+adj = dadi.Godambe.LRT_adjust(func_ex, grid_pts, all_boot, p0,
 			  data, nested_indices, multinom=True, eps)
 \end{lstlisting}
 The parameters have the same meaning as for \py{Godambe.GIM_uncert}, where \py{func_ex} is the complex model function and \py{p0} is the best-fit parameters.
@@ -958,7 +1022,7 @@ This dataset is summarized with a site frequency spectrum, has sample size $2n=2
 
 \subsection{Demographic inference}
 
-Because the usage of $\partial$a$\partial$i for demographic inference is extensively documented, it will not be discussed in detail here. In practice, we find that, as long as the demographic model that fits the synonymous sites reasonably well also works well for inference of the DFE.  
+Because the usage of $\partial$a$\partial$i for demographic inference is extensively documented, it will not be discussed in detail here. In practice, we find that, as long as the demographic model that fits the synonymous sites reasonably well also works well for inference of the DFE.
 
 Briefly, we fit a demographic model to synonymous sites, which are assumed to be evolving in a neutral or nearly neutral manner. We believe this accurately represents the effects of linked selection and population structure, and condition upon this demographic model to fit the DFE. However, note the assumption of neutral synonymous variants may not hold for species with large population sizes, since this will increase the efficacy of selection on mutations with small fitness effects.
 
@@ -982,7 +1046,7 @@ Then, we generate the frequency spectra for a range of gammas. The following cod
 Note, one error message that will come up often with very negative selection coefficients is: \\ \\
 \texttt{WARNING:Numerics:Extrapolation may have failed. Check resulting frequency spectrum for unexpected results.} \\
 
-One way to fix this is by increasing the \texttt{pts\_l} grid sizes -- this will need to increase as the sample size increases and/or if the integration is done over a range which includes stronger selection coefficients. \texttt{dadi.Numerics.make\_extrap\_func} is used to extrapolate the frequency spectra to infinitely many gridpoints, but will sometimes return tiny negative values (often $|X_i|<1e-50$) due to floating point rounding errors. Using \texttt{dadi.Numerics.make\_extrap\_log\_func} will sometimes return \texttt{Inf} values and is harder to work with. In practice, it seems that the tiny negative values do not affect the integration because they are insignificant, but if the error message appears it is good to manually double-check each SFS. Alternately, the small negative values can be manually approximated with 0. 
+One way to fix this is by increasing the \texttt{pts\_l} grid sizes -- this will need to increase as the sample size increases and/or if the integration is done over a range which includes stronger selection coefficients. \texttt{dadi.Numerics.make\_extrap\_func} is used to extrapolate the frequency spectra to infinitely many gridpoints, but will sometimes return tiny negative values (often $|X_i|<1e-50$) due to floating point rounding errors. Using \texttt{dadi.Numerics.make\_extrap\_log\_func} will sometimes return \texttt{Inf} values and is harder to work with. In practice, it seems that the tiny negative values do not affect the integration because they are insignificant, but if the error message appears it is good to manually double-check each SFS. Alternately, the small negative values can be manually approximated with 0.
 
 In the example, the pre-computed SFSs are saved in the list \texttt{spectra.spectra}. For convenience's sake, the \texttt{spectra} object can be pickled.
 
@@ -1045,10 +1109,10 @@ Using a mixture model requires both a 1D and a 2D cache.
 
 For additional examples, see \texttt{examples/DFE/example2D.py} in the source distribution.
 
-\section{Inbreeding}
+\section{Inbreeding}\label{inbreeding}
 
 When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population.
-For high levels of inbreeding ($F_{IS} \approx 0.5$ or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. 
+For high levels of inbreeding ($F_{IS} \approx 0.5$ or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries.
 However, lower levels of inbreeding can still bias estimates of demography despite not have such a dramatic effect on the SFS.
 
 \begin{figure}[h]

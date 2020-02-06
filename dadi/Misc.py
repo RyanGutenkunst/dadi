@@ -93,7 +93,7 @@ def ms_command(theta, ns, core, iter, recomb=0, rsites=None, seeds=None):
     if seeds is not None:
         seed_command = " -seeds %i %i %i" % (seeds[0], seeds[1], seeds[2])
         ms_command = ms_command + seed_command
-    
+
     return ms_command
 
 def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
@@ -102,9 +102,9 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
 
     Each element of params is radomly perturbed <fold> factors of 2 up or down.
     fold: Number of factors of 2 to perturb by
-    lower_bound: If not None, the resulting parameter set is adjusted to have 
+    lower_bound: If not None, the resulting parameter set is adjusted to have
                  all value greater than lower_bound.
-    upper_bound: If not None, the resulting parameter set is adjusted to have 
+    upper_bound: If not None, the resulting parameter set is adjusted to have
                  all value less than upper_bound.
     """
     pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
@@ -127,10 +127,10 @@ def make_fux_table(fid, ts, Q, tri_freq):
     fid: Filename to output to.
     ts: Expected number of substitutions per site between ingroup and outgroup.
     Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
-       which entries are ordered using the code CGTA -> 0,1,2,3. For example, 
-       ACT -> 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then 
+       which entries are ordered using the code CGTA -> 0,1,2,3. For example,
+       ACT -> 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then
        entry 50,54.
-    tri_freq: Dictionary in which each entry maps a trinucleotide to its 
+    tri_freq: Dictionary in which each entry maps a trinucleotide to its
               ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
               Note that should be the frequency in the entire region scanned
               for variation, not just sites where there are SNPs.
@@ -190,7 +190,7 @@ def make_fux_table(fid, ts, Q, tri_freq):
                     # These aren't SNPs, so we can arbitrarily set them to 0
                     if u == x:
                         res = 0
-                    
+
                     outlines.append('%c%c%c %c %.6f' % (first,x,third,u,res))
 
     fid.write(os.linesep.join(outlines))
@@ -231,10 +231,10 @@ def make_data_dict(filename):
 
     filename: Name of file to work with.
 
-    This is specific to the particular data format described on the wiki. 
+    This is specific to the particular data format described on the wiki.
     Modification for other formats should be straightforward.
 
-    The file can be zipped (extension .zip) or gzipped (extension .gz). If 
+    The file can be zipped (extension .zip) or gzipped (extension .gz). If
     zipped, there must be only a single file in the zip archive.
     """
     if os.path.splitext(filename)[1] == '.gz':
@@ -415,12 +415,418 @@ def dd_from_SLiM_files(fnames, mut_types=None):
 
     return dd, sample_sizes
 
+def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=True,
+                       flanking_info=[None, None]):
+    """
+    Parse a VCF file containing genomic sequence information, along with a file
+    identifying the population of each sample, and store the information in
+    a properly formatted dictionary.
+
+    Each file may be zipped (.zip) or gzipped (.gz). If a file is zipped,
+    it must be the only file in the archive, and the two files cannot be zipped
+    together. Both files must be present for the function to work.
+
+    vcf_filename : Name of VCF file to work with. The function currently works
+                   for biallelic SNPs only, so if REF or ALT is anything other
+                   than a single base pair (A, C, T, or G), the allele will be
+                   skipped. Additionally, genotype information must be present
+                   in the FORMAT field GT, and genotype info must be known for
+                   every sample, else the SNP will be skipped. If the ancestral
+                   allele is known it should be specified in INFO field 'AA'.
+                   Otherwise, it will be set to '-'.
+
+    popinfo_filename : Name of file containing the population assignments for
+                       each sample in the VCF. If a sample in the VCF file does
+                       not have a corresponding entry in this file, it will be
+                       skipped. See _get_popinfo for information on how this
+                       file must be formatted.
+
+    subsample : Dictionary with population names used in the popinfo_filename
+                as keys and the desired sample size (in number of individuals)
+                for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
+                two populations.
+
+    filter : If set to True, alleles will be skipped if they have not passed
+             all filters (i.e. either 'PASS' or '.' must be present in FILTER
+             column.
+
+    flanking_info : Flanking information for the reference and/or ancestral
+                    allele can be provided as field(s) in the INFO column. To
+                    add this information to the dict, flanking_info should
+                    specify the names of the fields that contain this info as a
+                    list (e.g. ['RFL', 'AFL'].) If context info is given for
+                    only one allele, set the other item in the list to None,
+                    (e.g. ['RFL', None]). Information can be provided as a 3
+                    base-pair sequence or 2 base-pair sequence, where the first
+                    base-pair is the one immediately preceding the SNP, and the
+                    last base-pair is the one immediately following the SNP.
+    """
+    if subsample is not None:
+        print("\n\n** Note on subsampling: Because you are subsampling individuals, please make sure not to project")
+        print("**                      down your data in future steps of your analysis.\n\n")
+        return _make_dd_subsample_vcf(vcf_filename, popinfo_filename, subsample, filter,
+                                      flanking_info)
+    else:
+        return _make_dd_vcf(vcf_filename, popinfo_filename, filter,
+                            flanking_info)
+
+def _make_dd_vcf(vcf_filename, popinfo_filename, filter=True, flanking_info=[None,None]):
+    """
+    Internal function for getting a data dictionary from a VCF file
+    and a population mapping file. See argument descriptions in the
+    function make_data_dict_vcf for more details.
+    """
+    # Read population information from file based on extension
+    if os.path.splitext(popinfo_filename)[1] == '.gz':
+        import gzip
+        popinfo_file = gzip.open(popinfo_filename)
+    elif os.path.splitext(popinfo_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(popinfo_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single popinfo file in zip "
+                             "archive: {}".format(popinfo_filename))
+        popinfo_file = archive.open(namelist[0])
+    else:
+        popinfo_file = open(popinfo_filename)
+    # pop_dict has key, value pairs of "SAMPLE_NAME" : "POP_NAME"
+    popinfo_dict = _get_popinfo(popinfo_file)
+    popinfo_file.close()
+
+    # Open VCF file
+    if os.path.splitext(vcf_filename)[1] == '.gz':
+        import gzip
+        vcf_file = gzip.open(vcf_filename)
+    elif os.path.splitext(vcf_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(vcf_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single vcf file in zip "
+                             "archive: {}".format(vcf_filename))
+        vcf_file = archive.open(namelist[0])
+    else:
+        vcf_file = open(vcf_filename)
+
+    data_dict = {}
+    for line in vcf_file:
+        # decoding lines for Python 3 - probably a better way to handle this
+        try:
+            line = line.decode()
+        except AttributeError:
+            pass
+        # Skip metainformation
+        if line.startswith('##'):
+            continue
+        # Read header
+        if line.startswith('#'):
+            header_cols = line.split()
+            # Ensure there is at least one sample
+            if len(header_cols) <= 9:
+                raise ValueError("No samples in VCF file")
+            # Use popinfo_dict to get the order of populations present in VCF
+            poplist = [popinfo_dict[sample] if sample in popinfo_dict else None
+                       for sample in header_cols[9:]]
+            continue
+
+        # Read SNP data
+        cols = line.split()
+        snp_id = '_'.join(cols[:2]) # CHROM_POS
+        snp_dict = {}
+
+        # Skip SNP if filter is set to True and it fails a filter test
+        if filter and cols[6] != 'PASS' and cols[6] != '.':
+            continue
+
+        # Add reference and alternate allele info to dict
+        ref, alt = (allele.upper() for allele in cols[3:5])
+        if ref not in ['A', 'C', 'G', 'T'] or alt not in ['A', 'C', 'G', 'T']:
+            # Skip line if site is not an SNP
+            continue
+        snp_dict['segregating'] = (ref, alt)
+        snp_dict['context'] = '-' + ref + '-'
+
+        # Add ancestral allele information if available
+        info = cols[7].split(';')
+        for field in info:
+            if field.startswith('AA'):
+                outgroup_allele = field[3:].upper()
+                if outgroup_allele not in ['A','C','G','T']:
+                    # Skip if ancestral not single base A, C, G, or T
+                    outgroup_allele = '-'
+                break
+        else:
+            outgroup_allele = '-'
+        snp_dict['outgroup_allele'] = outgroup_allele
+        snp_dict['outgroup_context'] = '-' + outgroup_allele + '-'
+
+        # Add flanking info if it is present
+        rflank, aflank = flanking_info
+        for field in info:
+            if rflank and field.startswith(rflank):
+                flank = field[len(rflank+1):].upper()
+                if not (len(flank) == 2 or len(flank) == 3):
+                    continue
+                prevb, nextb = flank[0], flank[-1]
+                if prevb not in ['A','C','T','G']:
+                    prevb = '-'
+                if nextb not in ['A','C','T','G']:
+                    nextb = '-'
+                snp_dict['context'] = prevb + ref + nextb
+                continue
+            if aflank and field.startswith(aflank):
+                flank = field[len(aflank+1):].upper()
+                if not (len(flank) == 2 or len(flank) == 3):
+                    continue
+                prevb, nextb = flank[0], flank[-1]
+                if prevb not in ['A','C','T','G']:
+                    prevb = '-'
+                if nextb not in ['A','C','T','G']:
+                    nextb = '-'
+                snp_dict['outgroup_context'] = prevb + outgroup_allele + nextb
+
+        # Add reference and alternate allele calls for each population
+        calls_dict = {}
+        full_info = True
+        gtindex = cols[8].split(':').index('GT')
+        for pop, sample in zip(poplist, cols[9:]):
+            if pop is None:
+                continue
+            gt = sample.split(':')[gtindex]
+            g1, g2 = gt[0], gt[2]
+            if g1 == '.' or g2 == '.':
+                full_info = False
+                break
+
+            if pop not in calls_dict:
+                calls_dict[pop] = (0,0)
+            refcalls, altcalls = calls_dict[pop]
+            refcalls += int(g1 == '0') + int(g2 == '0')
+            altcalls += int(g1 == '1') + int(g2 == '1')
+            calls_dict[pop] = (refcalls, altcalls)
+        if not full_info:
+            continue
+        snp_dict['calls'] = calls_dict
+        data_dict[snp_id] = snp_dict
+
+    vcf_file.close()
+    return data_dict
+
+def _make_dd_subsample_vcf(vcf_filename, popinfo_filename, subsample, filter=True,
+                           flanking_info=[None, None]):
+    """
+    Internal function for getting a data dictionary from a VCF file
+    and a population mapping file that allows for subsampling individuals
+    from within each population. See argument descriptions in the
+    function make_data_dict_vcf for more details.
+    """
+    # Read population information from file based on extension
+    if os.path.splitext(popinfo_filename)[1] == '.gz':
+        import gzip
+        popinfo_file = gzip.open(popinfo_filename)
+    elif os.path.splitext(popinfo_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(popinfo_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single popinfo file in zip "
+                             "archive: {}".format(popinfo_filename))
+        popinfo_file = archive.open(namelist[0])
+    else:
+        popinfo_file = open(popinfo_filename)
+    # pop_dict has key, value pairs of "SAMPLE_NAME" : "POP_NAME"
+    popinfo_dict = _get_popinfo(popinfo_file)
+    popinfo_file.close()
+
+    # Open VCF file
+    if os.path.splitext(vcf_filename)[1] == '.gz':
+        import gzip
+        vcf_file = gzip.open(vcf_filename)
+    elif os.path.splitext(vcf_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(vcf_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single vcf file in zip "
+                             "archive: {}".format(vcf_filename))
+        vcf_file = archive.open(namelist[0])
+    else:
+        vcf_file = open(vcf_filename)
+
+    data_dict = {}
+    for line in vcf_file:
+        # decoding lines for Python 3 - probably a better way to handle this
+        try:
+            line = line.decode()
+        except AttributeError:
+            pass
+        # Skip metainformation
+        if line.startswith('##'):
+            continue
+        # Read header
+        if line.startswith('#'):
+            header_cols = line.split()
+            # Ensure there is at least one sample
+            if len(header_cols) <= 9:
+                raise ValueError("No samples in VCF file")
+            # Use popinfo_dict to get the order of populations present in VCF
+            poplist = [popinfo_dict[sample] if sample in popinfo_dict else None
+                       for sample in header_cols[9:]]
+            continue
+
+        # Read SNP data
+        cols = line.split()
+        snp_id = '_'.join(cols[:2]) # CHROM_POS
+        snp_dict = {}
+
+        # Skip SNP if filter is set to True and it fails a filter test
+        if filter and cols[6] != 'PASS' and cols[6] != '.':
+            continue
+
+        # Add reference and alternate allele info to dict
+        ref, alt = (allele.upper() for allele in cols[3:5])
+        if ref not in ['A', 'C', 'G', 'T'] or alt not in ['A', 'C', 'G', 'T']:
+            # Skip line if site is not an SNP
+            continue
+        snp_dict['segregating'] = (ref, alt)
+        snp_dict['context'] = '-' + ref + '-'
+
+        # Add ancestral allele information if available
+        info = cols[7].split(';')
+        for field in info:
+            if field.startswith('AA'):
+                outgroup_allele = field[3:].upper()
+                if outgroup_allele not in ['A','C','G','T']:
+                    # Skip if ancestral not single base A, C, G, or T
+                    outgroup_allele = '-'
+                break
+        else:
+            outgroup_allele = '-'
+        snp_dict['outgroup_allele'] = outgroup_allele
+        snp_dict['outgroup_context'] = '-' + outgroup_allele + '-'
+
+        # Add flanking info if it is present
+        rflank, aflank = flanking_info
+        for field in info:
+            if rflank and field.startswith(rflank):
+                flank = field[len(rflank+1):].upper()
+                if not (len(flank) == 2 or len(flank) == 3):
+                    continue
+                prevb, nextb = flank[0], flank[-1]
+                if prevb not in ['A','C','T','G']:
+                    prevb = '-'
+                if nextb not in ['A','C','T','G']:
+                    nextb = '-'
+                snp_dict['context'] = prevb + ref + nextb
+                continue
+            if aflank and field.startswith(aflank):
+                flank = field[len(aflank+1):].upper()
+                if not (len(flank) == 2 or len(flank) == 3):
+                    continue
+                prevb, nextb = flank[0], flank[-1]
+                if prevb not in ['A','C','T','G']:
+                    prevb = '-'
+                if nextb not in ['A','C','T','G']:
+                    nextb = '-'
+                snp_dict['outgroup_context'] = prevb + outgroup_allele + nextb
+
+        # Add reference and alternate allele calls for each population
+        calls_dict = {}
+        subsample_dict = {}
+        full_info = True
+        gtindex = cols[8].split(':').index('GT')
+        for pop, sample in zip(poplist, cols[9:]):
+            if pop is None:
+                continue
+            gt = sample.split(':')[gtindex]
+            g1, g2 = gt[0], gt[2]
+            if g1 == '.' or g2 == '.':
+                continue
+            if pop not in subsample_dict:
+                subsample_dict[pop] = []
+            subsample_dict[pop].append((g1, g2))
+
+        # key-value pairs here are population names
+        # and a list of genotypes to subsample from
+        for k,v in subsample_dict.items():
+            if k not in calls_dict:
+                calls_dict[k] = (0, 0)
+            if len(v) < subsample[k]:
+                full_info = False
+                break
+            idx = numpy.random.choice([i for i in range(0,len(v))],subsample[k],replace=False)
+            for i in idx:
+                refcalls, altcalls = calls_dict[k]
+                refcalls += int(v[i][0] == '0') + int(v[i][1] == '0')
+                altcalls += int(v[i][0] == '1') + int(v[i][1] == '1')
+                calls_dict[k] = (refcalls, altcalls)
+        if not full_info:
+            continue
+        snp_dict['calls'] = calls_dict
+        data_dict[snp_id] = snp_dict
+
+    vcf_file.close()
+    return data_dict
+
+def _get_popinfo(popinfo_file):
+    """
+    Helper function for make_data_dict_vcf. Takes an open file that contains
+    information on the population designations of each sample within a VCF file,
+    and returns a dictionary containing {"SAMPLE_NAME" : "POP_NAME"} pairs.
+
+    The file should be formatted as a table, with columns delimited by
+    whitespace, and rows delimited by new lines. Lines beginning with '#' are
+    considered comments and will be ignored. Each sample must appear on its own
+    line. If no header information is provided, the first column will be assumed
+    to be the SAMPLE_NAME column, while the second column will be assumed to be
+    the POP_NAME column. If a header is present, it must be the first
+    non-comment line of the file. The column positions of the words "SAMPLE" and
+    "POP" (ignoring case) in this header will be used to determine proper
+    positions of the SAMPLE_NAME and POP_NAME columns in the table.
+
+    popinfo_file : An open text file of the format described above.
+    """
+    popinfo_dict = {}
+    sample_col = 0
+    pop_col = 1
+    header = False
+
+    # check for header info
+    for line in popinfo_file:
+        if line.startswith('#'):
+            continue
+        cols = [col.lower() for col in line.split()]
+        if 'sample' in cols:
+            header = True
+            sample_col = cols.index('sample')
+        if 'pop' in cols:
+            header = True
+            pop_col = cols.index('pop')
+        break
+
+    # read in population information for each sample
+    popinfo_file.seek(0)
+    for line in popinfo_file:
+        if line.startswith('#'):
+            continue
+        cols = line.split()
+        sample = cols[sample_col]
+        pop = cols[pop_col]
+        # avoid adding header to dict
+        if (sample.lower() == 'sample' or pop.lower() == 'pop') and header:
+            header = False
+            continue
+        popinfo_dict[sample] = pop
+
+    return popinfo_dict
+
 def combine_pops(fs, idx=[0,1]):
     """
     Combine the frequency spectra of two populations.
         fs:  Spectrum object (2D or 3D).
         idx: Indices for populations being collapsed. (defaul=[0,1])
-    
+
     The function will always return the combined populations along the
     first axis of the sfs. The resulting spectrum is also returned
     as a numpy array, but can be converted to a Spectrum object
