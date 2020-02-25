@@ -65,8 +65,8 @@ def IM_pre(params, ns, pts):
     T: Time in the past of split (in units of 2*Na generations) 
     m12: Migration from pop 2 to pop 1 (2*Na*m12)
     m21: Migration from pop 1 to pop 2
-    gamma1: Selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Selection coefficient in pop 2
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
 
@@ -116,8 +116,8 @@ def IM(params, ns, pts):
     T: Time in the past of split (in units of 2*Na generations) 
     m12: Migration from pop 2 to pop 1 (2*Na*m12)
     m21: Migration from pop 1 to pop 2
-    gamma1: Selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Selection coefficient in pop 2
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
     """
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
     return IM_pre((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
@@ -149,8 +149,8 @@ def split_mig(params, ns, pts):
     nu2: Size of population 2 after split.
     T: Time in the past of split (in units of 2*Na generations) 
     m: Migration rate between populations (2*Na*m)
-    gamma1: Selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Selection coefficient in pop 2
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
     """
     nu1,nu2,T,m,gamma1,gamma2 = params
 
