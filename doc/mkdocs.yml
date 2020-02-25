@@ -1,0 +1,35 @@
+site_name: dadi
+markdown_extensions:
+  - extra
+  - tables
+  - fenced_code
+extra_javascript:
+  - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
+nav:
+- Home: 'index.md'
+- User Guide:
+        - 'Installation': 'user-guide/installation.md'
+        - 'Importing data': 'user-guide/importing-data.md'
+        - 'Manipulating spectra': 'user-guide/manipulating-spectra.md'
+        - 'Specifying a model': 'user-guide/specifying-a-model.md'
+        - 'Simulation and fitting': 'user-guide/simulation-and-fitting.md'
+        - 'Plotting': 'user-guide/plotting.md'
+        - 'Bootstrapping': 'user-guide/bootstrapping.md'
+        - 'Uncertainty analysis': 'user-guide/uncertainty-analysis.md'
+        - 'Likelihood ratio test': 'user-guide/likelihood-ratio-test.md'
+        - 'Triallelic spectra': 'user-guide/triallelic-spectra.md'
+        - 'DFE inference': 'user-guide/dfe-inference.md'
+        - 'Inbreeding': 'user-guide/inbreeding.md'
+        - 'Polyploid subgenomes': 'user-guide/polyploid-subgenomes.md'
+        - 'Frequently asked questions': 'user-guide/frequently-asked-questions.md'
+        - 'References': 'user-guide/references.md'
+- Examples:
+        - 'Frequency spectrum from data': 'examples/fs_from_data/fs_from_data.md'
+        - 'Demography inference for YRI and CEU': 'examples/YRI_CEU/YRI_CEU.md'
+        - 'Triallele statistic': 'examples/Triallele/TrialleleStatistic.md'
+        - 'Two Locus statistic': 'examples/TwoLocus/TwoLocusStatistic.md'
+        - 'DFE inference': 'examples/DFE/DFE.md'
+- About:
+        - 'License': 'about/license.md'
+        - 'Release Notes': 'about/release-notes.md'
+- API: 'api/dadi/index.html'
