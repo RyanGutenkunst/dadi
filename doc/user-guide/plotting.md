@@ -14,13 +14,13 @@ One quirk of `matplotlib` is that your plots may not show up immediately upon ca
 
 ### 1D comparison
 
-<img src="1d_comp.png" width=400/>
+![1D comparison example](1d_comp.png)
 
 `dadi.Plotting.plot_1d_comp_Poisson` and `dadi.Plotting.plot_1d_comp_multinomial` plot a comparison between a one-dimensional model and data FS. In the `_multinomial` method, the model is optimally scaled to match the data. The plot is illustrated in above. The top plot shows the model and data frequency spectra, while the bottom shows the residuals between model and data. A positive residuals means the model predicts too many SNPs in that entry. For an explanation of the residuals, see the Residuals section.
 
 ### 2D spectra
 
-<img src="2d_single.png" width=400/>
+![2D SFS example](2d_single.png)
 
 `dadi.Plotting.plot_single_2d_sfs` will plot a single two-dimensional frequency spectrum, as a logarithmic colormap. Each entry in the FS is colored according to the logarithm of the number of variants within it. This is illustrated above, which is the result of 
 
@@ -39,7 +39,7 @@ Unfortunately, nice portable 3D plotting is difficult in Python. We have develop
 
 ### 3D comparison
 
-<img src="3d_comp.png" width=400/>
+![3D SFS comparison example](3d_comp.png)
 
 `dadi.Plotting.plot_3d_comp_Poisson` and `dadi.Plotting.plot_3d_comp_multinomial` plot comparisons between 3D models and data. The comparison is based on the three 2D marginal spectra.
 

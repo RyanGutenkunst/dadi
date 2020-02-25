@@ -18,10 +18,10 @@ Here `ns` is the sequenc of sample sizes for the populations in the model, `para
 
 As of version 1.5.0, the default grid in dadi has points exponentially clustered toward \\(x = 0\\) and \\(x = 1\\). This grid was suggested by Simon Gravel. The parameter `crwd` controls how closely grid points crowd the endpoints of the interval.
 
-<img width=400 src="opt_crwd_1d.png">
-<img width=400 src="opt_crwd_2d.png">
+![1D crwd analysis](opt_crwd_1d.png)
+![2D crwd analysis](opt_crwd_2d.png)
 
-<img width=400 src="consistent_crwd.png">
+![Further crwd analysis](consistent_crwd.png)
 
 We have performed some empirical investigations of the best value for `crwd`, although these results cannot be considered definitive. We ran simulations for a variety of models and parameter values for a variety of sample sizes. Denoting the largest sample size as `n`, we asked which value of `crwd` yielded the most accurate FS with `pts_l = [n, n+10, n+20]`. Results are shown in above. It is evident that the best value for `crwd` is lower for smaller sample sizes. The red lines are empirical functions which approximate the optimum. These are implemented in `Numerics.estimate_best_exp_grid_crwd`. The lower figure demonstrates that the optimum value of `crwd` doesn't depend strongly on the number of grid points used for integration. Unless you need absolute top performance, the default value of `crwd = 8` will probably be sufficient.
 

@@ -2,7 +2,7 @@
 
 When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population. For high levels of inbreeding (*F<sub>IS</sub>* ≈ 0.5 or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. However, lower levels of inbreeding can still bias estimates of demograpy despite not have such a dramatic effect on the SFS.
 
-<img src="InbreedingSFS.png" width=400>
+![Inbred SFS example](InbreedingSFS.png)
 
 To accommodate this, inbreeding can be estimated as part of a demographic model by using the `from_phi_inbreeding` function in the `Spectrum` class. This can be done by including additional parameters for the inbreeding coefficients (one for each population) in the model and passing them to the `from_phi_inbreeding` function in the demographic model:
 

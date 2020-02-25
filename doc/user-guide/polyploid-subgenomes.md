@@ -2,9 +2,7 @@
 
 To model polyploid lineages, a demographic model for their subgenomes can be created. This is done by treating the subgenomes as analogous to populations, and then combining their frequency spectra into a single, polyploid SFS. Including a migration parameter between the subgenomes can act as a proxy for allelic exchange (homoeologous recombination), which allows both autopolyploids and allopolyploids to be modeled. The input for a single polyploid lineage is a one-dimensional SFS, so there is no need to predetermine if the lineage is auto- or allopolploid. There is also no need to try and separate SNP calls between subgenomes because fixed heterozygosity is naturally accommodated by this model.
 
-<img src="TetraploidSFS.png" width=400 >
-
-![Screenshot](TetraploidSFS.png)
+![Tetraploid example SFS](TetraploidSFS.png)
 
 	def two_subgenomes(params, ns, pts):
 		T, m = params
