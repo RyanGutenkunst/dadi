@@ -8,7 +8,7 @@ If you use dadi in your research, please cite RN Gutenkunst, RD Hernandez, SH Wi
 
 **Getting started**
 
-See the manual (https://bitbucket.org/gutenkunstlab/dadi/src/master/doc/manual/manual.pdf) and the example files in the source distribution. Full API documenation is available (https://bb.githack.com/gutenkunstlab/dadi/raw/master/doc/api/dadi/index.html) and is in the source distribution, under doc/api/dadi/index.html .
+See the manual (https://dadi.readthedocs.io) and the example files in the source distribution. Full API documenation is available (https://dadi.readthedocs.io/en/latest/api/dadi/) and is in the source distribution, under doc/api/dadi/index.html .
 
 Also, please sign up for our mailing list, where we help the community with ∂a∂i. Please do search the archives before posting. Many questions come up repeatedly. (http://groups.google.com/group/dadi-user)
 
