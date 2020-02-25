@@ -14,11 +14,15 @@ One quirk of `matplotlib` is that your plots may not show up immediately upon ca
 
 ### 1D comparison
 
-`dadi.Plotting.plot_1d_comp_Poisson` and `dadi.Plotting.plot_1d_comp_multinomial` plot a comparison between a one-dimensional model and data FS. In the `_multinomial` method, the model is optimally scaled to match the data. The plot is illustrated in Fig. 3. The top plot shows the model and data frequency spectra, while the bottom shows the residuals between model and data. A positive residuals means the model predicts too many SNPs in that entry. For an explanation of the residuals, see the Residuals section.
+<img src="1d_comp.png" width=400/>
+
+`dadi.Plotting.plot_1d_comp_Poisson` and `dadi.Plotting.plot_1d_comp_multinomial` plot a comparison between a one-dimensional model and data FS. In the `_multinomial` method, the model is optimally scaled to match the data. The plot is illustrated in above. The top plot shows the model and data frequency spectra, while the bottom shows the residuals between model and data. A positive residuals means the model predicts too many SNPs in that entry. For an explanation of the residuals, see the Residuals section.
 
 ### 2D spectra
 
-`dadi.Plotting.plot_single_2d_sfs` will plot a single two-dimensional frequency spectrum, as a logarithmic colormap. This is illustrated in Fig. 4, which is the result of 
+<img src="2d_single.png" width=400/>
+
+`dadi.Plotting.plot_single_2d_sfs` will plot a single two-dimensional frequency spectrum, as a logarithmic colormap. Each entry in the FS is colored according to the logarithm of the number of variants within it. This is illustrated above, which is the result of 
 
 	dadi.Plotting.plot_single_2d_sfs(data, vmin = 1)
 
@@ -27,12 +31,15 @@ Here `vmin` indicates the minimum value to plot, because in  a logarithmic plot 
 ### 2D comparison
 
 `dadi.Plotting.plot_2d_comp_Poisson` and `dadi.Plotting.plot_2d_comp_multinomial` plot comparisons between 2D models and data.
+The upper-left panel is the data, and the upper-right is the model. The lower two panels plot the residuals, and a histogram of the residuals.
 
 ### 3D spectra
 
-Unfortunately, nice portable 3D plotting is difficult in Python. We have developed a Mathematica script that will do such plotting (as in Fig. 2(A) of [3](./references.md)) Please contact the authors `dadi-user` and we will send you a copy.
+Unfortunately, nice portable 3D plotting is difficult in Python. We have developed a Mathematica script that will do such plotting (as in Fig. 2(A) of [3](./references.md)) Please contact the authors on `dadi-user`, and we will send you a copy.
 
 ### 3D comparison
+
+<img src="3d_comp.png" width=400/>
 
 `dadi.Plotting.plot_3d_comp_Poisson` and `dadi.Plotting.plot_3d_comp_multinomial` plot comparisons between 3D models and data. The comparison is based on the three 2D marginal spectra.
 
