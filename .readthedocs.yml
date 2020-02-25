@@ -10,7 +10,7 @@ formats: all
 
 # Build documentation with MkDocs
 mkdocs:
-  configuration: doc/mkdocs.yml
+  configuration: mkdocs.yml
   fail_on_warning: true
 
 # Optionally set the version of Python and requirements required to build your docs

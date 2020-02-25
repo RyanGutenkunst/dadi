@@ -113,6 +113,8 @@ numpy.distutils.core.setup(name='dadi',
 # python setup.py build_ext --inplace --cython
 # To build API documention (https://pdoc3.github.io/pdoc/)
 # rm -rf doc/api; pdoc -f --html -o doc/api dadi
+# To build test mkdocs documentation in site/index.hml
+# python -m mkdocs build --clean --no-directory-urls --config-file mkdocs.yml
 # To distribute to PyPI
 # rm -rf dist; python3 setup.py sdist bdist_wheel
 # (Testing) python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*

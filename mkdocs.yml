@@ -1,4 +1,5 @@
 site_name: dadi
+docs_dir: 'doc'
 markdown_extensions:
   - extra
   - tables
@@ -26,10 +27,7 @@ nav:
 - Examples:
         - 'Frequency spectrum from data': 'examples/fs_from_data/fs_from_data.md'
         - 'Demography inference for YRI and CEU': 'examples/YRI_CEU/YRI_CEU.md'
-        - 'Triallele statistic': 'examples/Triallele/TrialleleStatistic.md'
-        - 'Two Locus statistic': 'examples/TwoLocus/TwoLocusStatistic.md'
         - 'DFE inference': 'examples/DFE/DFE.md'
-- About:
-        - 'License': 'about/license.md'
-        - 'Release Notes': 'about/release-notes.md'
+        - 'Triallelic model': 'examples/Triallele/TrialleleStatistic.md'
+        - 'Two Locus model': 'examples/TwoLocus/TwoLocusStatistic.md'
 - API: 'api/dadi/index.html'
