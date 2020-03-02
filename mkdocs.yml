@@ -1,4 +1,6 @@
 site_name: dadi
+repo_url: https://bitbucket.org/gutenkunstlab/dadi/
+edit_url: ""
 docs_dir: 'doc'
 markdown_extensions:
   - extra
