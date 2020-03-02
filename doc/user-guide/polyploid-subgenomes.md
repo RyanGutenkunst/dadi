@@ -4,6 +4,8 @@ To model polyploid lineages, a demographic model for their subgenomes can be cre
 
 ![Tetraploid example SFS](TetraploidSFS.png)
 
+<p align="center"><strong>Figure 8 Tetraploid SFS:</strong> <i>F<sub><i>IS</i></sub></i> = 0.8.</p>
+
 	def two_subgenomes(params, ns, pts):
 		T, m = params
 		xx = dadi.Numerics.default_grid(pts)

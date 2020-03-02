@@ -4,6 +4,8 @@ When populations are inbred, the excess homozygosity can distort the SFS such th
 
 ![Inbred SFS example](InbreedingSFS.png)
 
+<p align="center"><strong>Figure 7 SFS with Inbreeding:</strong> <i>F<sub><i>IS</i></sub></i> = 0.8.</p>
+
 To accommodate this, inbreeding can be estimated as part of a demographic model by using the `from_phi_inbreeding` function in the `Spectrum` class. This can be done by including additional parameters for the inbreeding coefficients (one for each population) in the model and passing them to the `from_phi_inbreeding` function in the demographic model:
 
 	def snm_inbreeding(params, ns, pts):

@@ -4,13 +4,13 @@ Note: This section is adaptive from the fit∂a∂i manual written by Bernard Ki
 
 The code examples shown here are meant to work with the example dataset. For simplicity's sake, I have generated an example dataset with PReFerSIM<sup>[9](./references.md)</sup>. Furthermore, we will work with a relatively small sample size and simple demographic model so that the examples can be worked through quickly on a laptop. Lastly, all the example code is provided in the `example.py` script as well as in this document.
 
-Another important thing to note: dadi characterizes genotype fitnesses as: 1, 1 + 2*sh*, and 1 + 2*s*, where 1 + 2*sh* is the fitness of the heterozygote. Furthermore, the DFEs inferred and scaled in terms of the ancestral population size: γ = 2*N*<sub><i>A</i></sub>*s*. This means that the selection coefficients must sometimes be rescaled, for instance when using the program SLiM<sup>[10](./references.md)</sup>. 
+Another important thing to note: dadi characterizes genotype fitnesses as: \\(1\\), \\(1 + 2sh\\), and \\(1 + 2s\\), where \\(1 + 2sh\\) is the fitness of the heterozygote. Furthermore, the DFEs inferred and scaled in terms of the ancestral population size: \\(\gamma = 2N_As\\). This means that the selection coefficients must sometimes be rescaled, for instance when using the program SLiM<sup>[10](./references.md)</sup>. 
 
 ### Example dataset
 
 The example dataset used in the example script was generated with forward simulations under the PRF model, with the simulation program PReFerSIM. Additionally, we will assume we know the true underlying demographic model rather than trying to fit one.
 
-This dataset is summarized with a site frequency spectrum, has sample size 2*n* = 250 (125 diploids), and is saved in the file `sample.sfs` file. It was generated with a single size change demography and an underlying gamma DFE. Specifically, a population of size *N* = 10,000 diploids expands to 20,000 diploids 1000 generations ago and the gamma DFE has shape parameter 0.186 and scale parameter 686.7. This is the same gamma DFE that we inferred from the 1000 Genomes EUR dataset, but the scale parameter has been rescaled to the ancestral population size of 10,000 diploids. Finally, the amount of diversity in the sample dataset matches *θ*<sub><i>NS</i></sub> = 4000 = 4*N*<sub><i>A</i></sub>*μL*<sub><i>NS</i></sub>.
+This dataset is summarized with a site frequency spectrum, has sample size \\(2n = 250\\) (125 diploids), and is saved in the file `sample.sfs` file. It was generated with a single size change demography and an underlying gamma DFE. Specifically, a population of size \\(N = 10,000\\) diploids expands to 20,000 diploids 1000 generations ago and the gamma DFE has shape parameter 0.186 and scale parameter 686.7. This is the same gamma DFE that we inferred from the 1000 Genomes EUR dataset, but the scale parameter has been rescaled to the ancestral population size of 10,000 diploids. Finally, the amount of diversity in the sample dataset matches \\(\theta_{NS} = 4000 = 4N_A\mu L_{NS}\\).
 
 ### Demographic inference
 
@@ -18,13 +18,13 @@ Because the usage of dadi for demographic inference is extensively documented, i
 
 Briefly, we fit a demographic model to synonymous sites, which are assumed to be evolving in a neutral or nearly neutral manner. We believe this accurately represents the effects of linked selection and population structure, and condition upon this demographic model to fit the DFE. However, note the assumption of neutral synonymous variants may not hold for species with large population sizes, since this will increase the efficacy of selection on mutations with small fitness effects.
 
-Our sample dataset was generated with a two epoch (single size change) demography. We will assume we infer a 2-fold population expansion 0.05 * 2*N*<sub><i>A</i></sub> generations ago, where *N*<sub><i>A</i></sub> is the ancestral population size. Therefore, the parameter vector is: `[nu, T]`.
+Our sample dataset was generated with a two epoch (single size change) demography. We will assume we infer a 2-fold population expansion \\(0.05 * 2N_A\\)generations ago, where \\(N_A\\)is the ancestral population size. Therefore, the parameter vector is: `[nu, T]`.
 
-Again, we assume that the population scaled nonsynonymous mutation rate, *θ*<sub><i>NS</i></sub> = 4000. In practice, we compute the synonymous mutation rate, *θ*<sub><i>S</i></sub>, by using the multinomial likelihood to fit the demographic model. Because this method only fits the proportional SFS, *θ*<sub><i>S</i></sub> is estimated with the `dadi.Inference.optimal_sfs_scaling` method. Then, we multiply *θ*<sub><i>S</i></sub> by 2.31 to get *θ*<sub><i>NS</i></sub>, *θ*<sub><i>S</i></sub> * 2.31 = *θ*<sub><i>NS</i></sub>. Remember that our sample size is 125 diploids (250 chromosomes).
+Again, we assume that the population scaled nonsynonymous mutation rate, \\(\theta_{NS} = 4000\\). In practice, we compute the synonymous mutation rate, \\(\theta_S\\), by using the multinomial likelihood to fit the demographic model. Because this method only fits the proportional SFS, \\(\theta_S\\) is estimated with the `dadi.Inference.optimal_sfs_scaling` method. Then, we multiply \\(\theta_S\\) by 2.31 to get \\(\theta_{NS}\\), i.e. \\(\theta_S * 2.31 = \\theta_{NS}\\). Remember that our sample size is 125 diploids (250 chromosomes).
 
-### Pre-computing of the SFS for many γ
+### Pre-computing of the SFS for many \\(\gamma\\)
 
-Next, we must generate frequency spectra for a range of gammas. The demographic function is modified to allow for a single selection coefficient. Here, each selection coefficient is scaled with the ancestral population size, γ = 2*N*<sub><i>A</i></sub>*s*. In other words, if `gamma = 0`, this function is the same as the original demographic function. This function is defined as `two_epoch` in `dadi.DFE.DemogSelModels.py`.
+Next, we must generate frequency spectra for a range of gammas. The demographic function is modified to allow for a single selection coefficient. Here, each selection coefficient is scaled with the ancestral population size, \\(\gamma = 2N_As\\). In other words, if `gamma = 0`, this function is the same as the original demographic function. This function is defined as `two_epoch` in `dadi.DFE.DemogSelModels.py`.
 
 	def two_epoch(params, ns, pts):
 		nu, T, gamma = params
@@ -45,7 +45,7 @@ Then, we generate the frequency spectra for a range of gammas. The following cod
 Note, one error message that will come up often with very negative selection coefficients is:
 `WARNING:Numerics:Extrapolation may have failed. Check resulting frequency spectrum for unexpected results.`
 
-One way to fix this is by increasing the `pts_l` grid sizes -- this will need to increase as the sample size increases and/or if the integration is done over a range which includes stronger selection coefficients. `dadi.Numerics.make_extrap_func` is used to extrapolate the frequency spectra to infinitely many gridpoints, but will sometimes return tiny negative values (often \(|X<sub>i</sub>|<1e-50\)) due to floating point rounding errors. In practice, it seems that the tiny negative values do not affect the integration because they are insignificant, but if the error message appears it is good to manually double-check each SFS. Alternately, the small negative values can be manually approximated with 0.
+One way to fix this is by increasing the `pts_l` grid sizes -- this will need to increase as the sample size increases and/or if the integration is done over a range which includes stronger selection coefficients. `dadi.Numerics.make_extrap_func` is used to extrapolate the frequency spectra to infinitely many gridpoints, but will sometimes return tiny negative values (often \\(|X_i|<1\text{e}^{-50}\\)) due to floating point rounding errors. In practice, it seems that the tiny negative values do not affect the integration because they are insignificant, but if the error message appears it is good to manually double-check each SFS. Alternately, the small negative values can be manually approximated with 0.
 
 In the example, the pre-computed SFSs are saved in the list `spectra.spectra`. For convenience's sake, the `spectra` object can be pickled.
 
@@ -56,7 +56,7 @@ In the example, the pre-computed SFSs are saved in the list `spectra.spectra`. F
 
 #### Fitting simple DFEs
 
-Fitting a DFE is the quickest part of this procedure, especially for simple distributions such as the gamma distribution. If you wish to get an SFS for a specific DFE, you can use the `integrate` method that is built into the spectra object: `spectra.integrate(sel_params, None, sel_dist, theta, None)`. `sel_params` is a list containing the DFE parameters, `sel_dist` is the distribution used for the DFE, and `theta` is \(\theta<sub>NS</sub>\). To compute the expected SFS for our simulations with the true parameter values, we would use `spectra.integrate([0.186, 686.7], None, Selection.gamma_dist, 4000., None)`. (The `None` arguments are for `ns` and `pts`, which are ignored. These are useful to ensure compatibility with dadi's optimization functions.)
+Fitting a DFE is the quickest part of this procedure, especially for simple distributions such as the gamma distribution. If you wish to get an SFS for a specific DFE, you can use the `integrate` method that is built into the spectra object: `spectra.integrate(sel_params, None, sel_dist, theta, None)`. `sel_params` is a list containing the DFE parameters, `sel_dist` is the distribution used for the DFE, and `theta` is \\(\theta_{NS}\\). To compute the expected SFS for our simulations with the true parameter values, we would use `spectra.integrate([0.186, 686.7], None, Selection.gamma_dist, 4000., None)`. (The `None` arguments are for `ns` and `pts`, which are ignored. These are useful to ensure compatibility with dadi's optimization functions.)
 
 First, load the sample data:
 
@@ -80,7 +80,7 @@ The expected SFS at the MLE can be computed with:
 
 #### Fitting complex DFEs
 
-Fitting complex distributions is similar to fitting simple DFEs, but requires a few additional steps. The following code can be used to fit a neutral+gamma mixture DFE to the data. Note that the gamma DFE should fit better if assessing model fit using AIC. Additionally, we assume that every selection coefficient \(γ < 1e-4\) is effectively neutral. Since this is a mixture of two distributions, we infer the proportion of neutral mutations, p<sub>neu</sub>, and assume the complement of that (i.e. 1-p<sub>neu</sub>) is the proportion of new mutations drawn from a gamma distribution. Therefore, the parameter vector should be: [p<sub>neu</sub>,shape, scale]. The gamma DFE is still the true DFE.
+Fitting complex distributions is similar to fitting simple DFEs, but requires a few additional steps. The following code can be used to fit a neutral+gamma mixture DFE to the data. Note that the gamma DFE should fit better if assessing model fit using AIC. Additionally, we assume that every selection coefficient \\(\gamma < 1\text{e}^{-4}\\) is effectively neutral. Since this is a mixture of two distributions, we infer the proportion of neutral mutations, \\(p_\text{neu}\\), and assume the complement of that (i.e. \\(1-p_\text{neu}\\)) is the proportion of new mutations drawn from a gamma distribution. Therefore, the parameter vector should be: [\\(p_\text{neu}\\),shape, scale]. The gamma DFE is still the true DFE.
 
     def neugamma(xx, params):
         pneu, alpha, beta = params
@@ -91,7 +91,7 @@ Fitting complex distributions is similar to fitting simple DFEs, but requires a 
         # Reduce xx back to scalar if it's possible
         return np.squeeze(out)
 
-Fit the DFE as before, accounting for the extra parameter to describe the proportion of neutral new mutations. Note that p<sub>neu</sub> is explicitly bounded to be \(0 < p<sub>neu</sub> ≤ 1\).
+Fit the DFE as before, accounting for the extra parameter to describe the proportion of neutral new mutations. Note that \\(p_\text{neu}\\) is explicitly bounded to be \\(0 < p_\text{neu} \leq 1\\).
 
     sel_params = [0.2, 0.2, 1000.]
     lower_bound, upper_bound = [1e-3, 1e-3, 1e-2], [1, 1, 50000.]
@@ -135,7 +135,7 @@ As is optimization.
                                    upper_bound=[None,None,1],
                                    verbose=30, multinom=False)
 
-Note that when a point mass of positive selection is included in a 2D DFE, the assumed value for the positive \(\gamma\) must be cached, otherwise evaluation would be too expensive.
+Note that when a point mass of positive selection is included in a 2D DFE, the assumed value for the positive \\(\gamma\\) must be cached, otherwise evaluation would be too expensive.
 
 dadi also implements mixture models, in which the total DFE is a sum of a 2D distribution plus a 1D distribution representing perfect correlation.
 These are implemented by `dadi.DFE.mixture`.
