@@ -30,6 +30,6 @@ nav:
         - 'Frequency spectrum from data': 'examples/fs_from_data/fs_from_data.md'
         - 'Demography inference for YRI and CEU': 'examples/YRI_CEU/YRI_CEU.md'
         - 'DFE inference': 'examples/DFE/DFE.md'
-        - 'Triallelic model': 'examples/Triallele/TrialleleStatistic.md'
-        - 'Two Locus model': 'examples/TwoLocus/TwoLocusStatistic.md'
+        - 'Triallelic model': 'examples/Triallele/TrialleleModel.md'
+        - 'Two Locus model': 'examples/TwoLocus/TwoLocusModel.md'
 - API: 'api/dadi/index.html'

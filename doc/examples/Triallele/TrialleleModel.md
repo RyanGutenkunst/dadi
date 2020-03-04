@@ -1,4 +1,4 @@
-# Triallele statistic
+# Triallele Model
 
 An example of obtaining the sample triallelic frequency spectrum for a simple two epoch demography, with selection
 

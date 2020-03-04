@@ -1,4 +1,4 @@
-# Two Locus Statistic
+# Two Locus Model
 
 
 ```python
