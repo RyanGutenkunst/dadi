@@ -35,6 +35,8 @@ Here `vmin` indicates the minimum value to plot, because in  a logarithmic plot 
 ### 2D comparison
 
 
+![2D comparison example](2d_comp.png)
+
 <p><strong>Figure 5 2D model-data comparison plot:</strong> The upper-left panel is the data, and the upper-right is the model. The lower two panels plot the residuals, and a histogram of the residuals.</p>
 
 `dadi.Plotting.plot_2d_comp_Poisson` and `dadi.Plotting.plot_2d_comp_multinomial` plot comparisons between 2D models and data.
