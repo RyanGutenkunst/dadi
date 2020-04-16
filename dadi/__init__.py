@@ -26,3 +26,18 @@ except ImportError:
 # check results, but for our use case I think it's the better default.
 import numpy
 numpy.seterr(all='ignore')
+
+def enable_cuda(toggle=True):
+    """
+    Enable or disable cuda execution
+    """
+    if toggle == True:
+        try:
+            from . import cuda
+            Integration.cuda_enabled = True
+        except ImportError:
+            print("Failed to import dadi.cuda")
+    elif toggle == False:
+        Integration.cuda_enabled = False
+    else:
+        raise ValueError("toggle must be True or False")
