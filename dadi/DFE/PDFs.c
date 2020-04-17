@@ -89,12 +89,12 @@ void biv_ind_gamma(double *xx, double *yy, double *params, int n, int m,
     double cx, cy;
 
     alpha1=0; alpha2=0; beta1=0; beta2=0;
-    if (Nparams == 2){
+    if (Nparams == 2 || Nparams == 3){
         alpha1 = params[0];
         alpha2 = params[0];
         beta1 = params[1];
         beta2 = params[1];
-    } else if (Nparams == 4){
+    } else if (Nparams == 4 || Nparams == 5){
         alpha1 = params[0];
         alpha2 = params[1];
         beta1 = params[2];
