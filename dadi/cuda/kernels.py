@@ -1,10 +1,7 @@
+import os
 from pycuda.compiler import SourceModule
+import dadi
 
-mod = SourceModule("""
-  __global__ void inject_mutations_2D(double *phi, int M, double val01, double val10)
-  {
-    phi[1] += val01;
-    phi[M] += val10;
-  }
-  """)
+sourcefile = os.path.join(dadi.__path__[0], "cuda/kernels.cu")
+mod = SourceModule(open(sourcefile).read())
 _inject_mutations_2D_vals = mod.get_function("inject_mutations_2D")
