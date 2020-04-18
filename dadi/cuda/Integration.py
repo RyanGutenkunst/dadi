@@ -19,6 +19,7 @@ import pycuda.gpuarray as gpuarray
 from skcuda.cusparse import cusparseDgtsvInterleavedBatch_bufferSizeExt,\
     cusparseDgtsv2StridedBatch_bufferSizeExt, cusparseDgtsvInterleavedBatch, cusparseDgtsv2StridedBatch
 
+import dadi.cuda
 from dadi.cuda import cusparse_handle
 from . import kernels
 
@@ -29,15 +30,17 @@ def _two_pops_const_params(phi, xx, yy,
     ax_gpu = gpuarray.to_gpu(ax)
     bx_gpu = gpuarray.to_gpu(bx)
     cx_gpu = gpuarray.to_gpu(cx)
-    ay_gpu = gpuarray.to_gpu(ay)
-    by_gpu = gpuarray.to_gpu(by)
-    cy_gpu = gpuarray.to_gpu(cy)
+    ay_gpu = gpuarray.to_gpu(ay.transpose().copy())
+    by_gpu = gpuarray.to_gpu(by.transpose().copy())
+    cy_gpu = gpuarray.to_gpu(cy.transpose().copy())
 
-    # dux is modified when InterleavedBatch runs.
+    # du is modified when InterleavedBatch runs.
     # Save a copy on the GPU to refill after each call.
     cx_saved_gpu = gpuarray.to_gpu(cx)
+    cy_saved_gpu = gpuarray.to_gpu(cy.transpose().copy())
 
     phi_gpu = gpuarray.to_gpu(phi)
+    phiT_gpu = gpuarray.empty(phi.shape[::-1], phi.dtype)
 
     # Calculate necessary buffer size
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
@@ -72,12 +75,18 @@ def _two_pops_const_params(phi, xx, yy,
                 len(xx), pBuffer)
 
         if not frozen2:
+            # Restore from saved version of dux
+            pycuda.driver.memcpy_dtod(cy_gpu.gpudata, cy_saved_gpu.gpudata,
+                                      cy_saved_gpu.nbytes)
             by_gpu += (1./this_dt - 1./last_dt)
-            phi_gpu /= this_dt
+            
+            dadi.cuda.transpose_gpuarray(phi_gpu, phiT_gpu)
+            phiT_gpu /= this_dt
 
-            cusparseDgtsv2StridedBatch(cusparse_handle, len(yy),
-                ay_gpu.gpudata, by_gpu.gpudata, cy_gpu.gpudata, phi_gpu.gpudata,
-                len(yy), len(yy), pBuffer)
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, len(yy),
+                ay_gpu.gpudata, by_gpu.gpudata, cy_gpu.gpudata, phiT_gpu.gpudata,
+                len(yy), pBuffer)
+            dadi.cuda.transpose_gpuarray(phiT_gpu, phi_gpu)
 
         last_dt = this_dt
         current_t += this_dt
