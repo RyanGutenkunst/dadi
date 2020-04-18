@@ -46,10 +46,7 @@ def _two_pops_const_params(phi, xx, yy,
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
         cusparse_handle, 0, len(xx), ax_gpu.gpudata, bx_gpu.gpudata,
         cx_gpu.gpudata, phi_gpu.gpudata, len(xx))
-    bsize_str = cusparseDgtsv2StridedBatch_bufferSizeExt(
-        cusparse_handle, len(yy), ay_gpu.gpudata, by_gpu.gpudata,
-        cy_gpu.gpudata, phi_gpu.gpudata, len(yy), len(yy))
-    pBuffer = pycuda.driver.mem_alloc(max(bsize_int,bsize_str))
+    pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
     last_dt = np.inf
     while current_t < T:
