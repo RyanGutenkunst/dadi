@@ -12,7 +12,7 @@ def _inject_mutations_2D_valcalc(dt, xx, yy, theta0, frozen1, frozen2,
     # Population 2
     if not frozen2 and not nomut2:
         val01= dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
-    return val10,val01
+    return np.float64(val10),np.float64(val01)
 
 import pycuda
 import pycuda.gpuarray as gpuarray
@@ -52,11 +52,11 @@ def _two_pops_const_params(phi, xx, yy,
     while current_t < T:
         this_dt = min(dt, T - current_t)
 
-        val01, val10 = _inject_mutations_2D_valcalc(this_dt, xx, yy, theta0, frozen1, frozen2,
+        val10, val01 = _inject_mutations_2D_valcalc(this_dt, xx, yy, theta0, frozen1, frozen2,
                                                     nomut1, nomut2)
         # Use a single thread to update the two necessary values in phi
         kernels._inject_mutations_2D_vals(phi_gpu, np.int32(len(xx)),
-                                  np.float64(val01), np.float64(val10), block=(1,1,1))
+                                  val01, val10, block=(1,1,1))
 
         if not frozen1:
             # Restore from saved version of dux
