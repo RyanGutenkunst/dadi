@@ -10,7 +10,7 @@ cublas_handle = cublasCreate()
 
 from . import Integration
 
-def tranpose_gpuarray(in_gpu, out_gpu):
+def transpose_gpuarray(in_gpu, out_gpu):
     L,M = in_gpu.shape
     if out_gpu.shape != (M,L):
         raise ValueError

@@ -10,7 +10,7 @@ class CUDATestCase(unittest.TestCase):
         a = np.random.uniform(size=(2, 3))
         a_gpu = gpuarray.to_gpu(a)
         aT_gpu = gpuarray.empty(a.shape[::-1], dtype=a_gpu.dtype)
-        dadi.cuda.tranpose_gpuarray(a_gpu, aT_gpu)
+        dadi.cuda.transpose_gpuarray(a_gpu, aT_gpu)
 
         self.assertTrue(np.allclose(aT_gpu.get(), a.transpose()))
 
