@@ -8,6 +8,13 @@ ctx = make_default_context()
 cusparse_handle = cusparseCreate()
 cublas_handle = cublasCreate()
 
+BLOCKSIZE = 256
+
+def _grid(size):
+    return ((int(size) + BLOCKSIZE-1)//BLOCKSIZE, 1)
+def _block():
+    return (BLOCKSIZE,1,1)
+
 from . import Integration
 
 def transpose_gpuarray(in_gpu, out_gpu):

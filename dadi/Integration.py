@@ -272,6 +272,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     h2_f = Misc.ensure_1arg_func(h2)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
+                frozen1, frozen2, nomut1, nomut2)
+        return phi
+
     current_t = initial_t
     nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
     m12,m21 = m12_f(current_t), m21_f(current_t)
@@ -601,16 +608,17 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
         phi = dadi.cuda.Integration._two_pops_const_params(phi, xx, yy,
                 theta0, frozen1, frozen2, nomut1, nomut2, ax, bx, cx, ay,
                 by, cy, current_t, dt, T)
-    else:
-        while current_t < T:
-            this_dt = min(dt, T - current_t)
-            _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
-                                nomut1, nomut2)
-            if not frozen1:
-                phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
-            if not frozen2:
-                phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
-            current_t += this_dt
+        return phi
+
+    while current_t < T:
+        this_dt = min(dt, T - current_t)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
+                            nomut1, nomut2)
+        if not frozen1:
+            phi = int_c.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            phi = int_c.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
+        current_t += this_dt
 
     return phi
 

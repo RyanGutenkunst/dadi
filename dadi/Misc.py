@@ -49,9 +49,11 @@ def ensure_1arg_func(var):
     if numpy.isscalar(var):
         # If a constant was passed in, use lambda to make it a nice
         #  simple function.
-        var_f = lambda t: var
+        var_f_tmp = lambda t: var
     else:
-        var_f = var
+        var_f_tmp = var
+    # Wrapping arguments in float64 eases working with CUDA
+    var_f = lambda t: numpy.float64(var_f_tmp(t))
     if not callable(var_f):
         raise ValueError('Argument is not a constant or a function.')
     try:

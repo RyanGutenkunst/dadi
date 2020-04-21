@@ -20,7 +20,7 @@ from skcuda.cusparse import cusparseDgtsvInterleavedBatch_bufferSizeExt,\
     cusparseDgtsv2StridedBatch_bufferSizeExt, cusparseDgtsvInterleavedBatch, cusparseDgtsv2StridedBatch
 
 import dadi.cuda
-from dadi.cuda import cusparse_handle
+from dadi.cuda import cusparse_handle, _grid, _block
 from . import kernels
 
 def _two_pops_const_params(phi, xx, yy,
@@ -90,3 +90,112 @@ def _two_pops_const_params(phi, xx, yy,
 
     phi = phi_gpu.get().reshape((len(xx),len(yy)))
     return phi
+
+def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f, gamma1_f,
+            gamma2_f, h1_f, h2_f, theta0_f, frozen1, frozen2, nomut1, nomut2):
+    current_t = initial_t
+    nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
+    m12,m21 = m12_f(current_t), m21_f(current_t)
+    gamma1,gamma2 = gamma1_f(current_t), gamma2_f(current_t)
+    h1,h2 = h1_f(current_t), h2_f(current_t)
+
+    if dadi.Integration.use_delj_trick:
+        raise ValueError("delj trick not currently supported in CUDA execution")
+
+    yy = xx
+    dx = dy = np.diff(xx)
+    dfactor = dadi.Integration._compute_dfactor(dx)
+    xInt = (xx[:-1] + xx[1:])*0.5
+
+    L = M = np.int32(len(xx))
+
+    xx_gpu = yy_gpu = gpuarray.to_gpu(xx)
+    dx_gpu = gpuarray.to_gpu(dx)
+    dfactor_gpu = gpuarray.to_gpu(dfactor)
+    xInt_gpu = gpuarray.to_gpu(xInt)
+
+    phi_gpu = gpuarray.to_gpu(phi)
+    phiT_gpu = gpuarray.empty(phi.shape[::-1], phi.dtype)
+
+    Vx_gpu = gpuarray.empty(L, np.float64)
+    VIntx_gpu = gpuarray.empty(L-1, np.float64)
+    MIntx_gpu = gpuarray.empty((L-1,M), np.float64)
+
+    ax_gpu = gpuarray.zeros((L,M), np.float64)
+    bx_gpu = gpuarray.empty((L,M), np.float64)
+    cx_gpu = gpuarray.zeros((L,M), np.float64)
+
+    bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
+        cusparse_handle, 0, L, ax_gpu.gpudata, bx_gpu.gpudata,
+        cx_gpu.gpudata, phi_gpu.gpudata, L)
+    pBuffer = pycuda.driver.mem_alloc(bsize_int)
+
+    while current_t < T:
+        dt = min(dadi.Integration._compute_dt(dx,nu1,[m12],gamma1,h1),
+                 dadi.Integration._compute_dt(dy,nu2,[m21],gamma2,h2))
+        this_dt = np.float64(min(dt, T - current_t))
+
+        next_t = current_t + this_dt
+
+        nu1,nu2 = nu1_f(next_t), nu2_f(next_t)
+        m12,m21 = m12_f(next_t), m21_f(next_t)
+        gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
+        h1,h2 = h1_f(next_t), h2_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        val10, val01 = dadi.cuda.Integration._inject_mutations_2D_valcalc(this_dt, xx, yy, theta0, frozen1, frozen2,
+                                                                          nomut1, nomut2)
+        kernels._inject_mutations_2D_vals(phi_gpu, L, np.float64(val01), np.float64(val10), 
+                                          block=(1, 1, 1))
+
+        if not frozen1:
+            kernels._Vfunc(xx_gpu, nu1, L, Vx_gpu, 
+                           grid=_grid(L), block=_block())
+            kernels._Vfunc(xInt_gpu, nu1, L-1, VIntx_gpu, 
+                           grid=_grid(L-1), block=_block())
+            kernels._Mfunc2D(xInt_gpu, yy_gpu, m12, gamma1, h1,
+                             L-1, M, MIntx_gpu,
+                             grid=_grid((L-1)*M), block=_block())
+
+            kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
+            bx_gpu.fill(1./this_dt)
+            kernels._compute_abc_nobc(dx_gpu, dfactor_gpu, 
+                MIntx_gpu, Vx_gpu, this_dt, L, M,
+                ax_gpu, bx_gpu, cx_gpu,
+                grid=_grid((L-1)*M), block=_block())
+            kernels._include_bc(dx_gpu, nu1, m12, gamma1, h1, L, M,
+                bx_gpu, block=(1,1,1))
+
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
+                ax_gpu.gpudata, bx_gpu.gpudata, cx_gpu.gpudata, phi_gpu.gpudata,
+                L, pBuffer)
+        if not frozen2:
+            kernels._Vfunc(xx_gpu, nu2, L, Vx_gpu, 
+                           grid=_grid(L), block=_block())
+            kernels._Vfunc(xInt_gpu, nu2, L-1, VIntx_gpu, 
+                           grid=_grid(L-1), block=_block())
+            kernels._Mfunc2D(xInt_gpu, yy_gpu, m21, gamma2, h2,
+                             L-1, M, MIntx_gpu,
+                             grid=_grid((L-1)*M), block=_block())
+            kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
+            bx_gpu.fill(1./this_dt)
+            kernels._compute_abc_nobc(dx_gpu, dfactor_gpu, 
+                MIntx_gpu, Vx_gpu, this_dt, L, M,
+                ax_gpu, bx_gpu, cx_gpu,
+                grid=_grid((L-1)*M), block=_block())
+            kernels._include_bc(dx_gpu, nu2, m21, gamma2, h2, L, M,
+                bx_gpu, block=(1,1,1))
+
+            dadi.cuda.transpose_gpuarray(phi_gpu, phiT_gpu)
+            phiT_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
+                ax_gpu.gpudata, bx_gpu.gpudata, cx_gpu.gpudata, phiT_gpu.gpudata,
+                L, pBuffer)
+            dadi.cuda.transpose_gpuarray(phiT_gpu, phi_gpu)
+
+        current_t = next_t
+
+    return phi_gpu.get()
