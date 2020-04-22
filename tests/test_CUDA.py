@@ -19,7 +19,7 @@ class CUDATestCase(unittest.TestCase):
         """
         args = [0.1,0.1,2,0.3,0.5,-0.2,2,0.1,0.9,2]
 
-        pts = 10
+        pts = 20
         xx = np.linspace(0, 1, pts)
         phi = np.random.uniform(size=((pts, pts)))
 
@@ -38,7 +38,7 @@ class CUDATestCase(unittest.TestCase):
         m21 = lambda t: 3-20*t
         args = [0.1,nu1,2,0.3,m21,-0.2,2,0.1,0.9,2]
 
-        pts = 10
+        pts = 20
         xx = np.linspace(0, 1, pts)
         phi = np.random.uniform(size=((pts, pts)))
 

@@ -15,8 +15,8 @@ __device__ double _Mfunc2D(double x, double y, double m, double gamma, double h)
 }
 
 __global__ void Mfunc2D(double *x, double *y, double m, double gamma, double h, int L, int M, double *output){
-    int ii = blockIdx.x*blockDim.x + threadIdx.x / M;
-    int jj = blockIdx.x*blockDim.x + threadIdx.x % M;
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / M;
+    int jj = (blockIdx.x*blockDim.x + threadIdx.x) % M;
     if(ii < L){
         output[ii*M + jj] = _Mfunc2D(x[ii], y[jj], m, gamma, h);
     }
@@ -43,18 +43,28 @@ __global__ void include_bc(double*dx, double nu1, double m, double gamma, double
     }
 }
 
-__global__ void compute_abc_nobc(double *dx, double *dfactor, 
+__global__ void compute_ab_nobc(double *dx, double *dfactor, 
         double *MInt, double *V, double dt, int L, int M,
-        double *a, double *b, double *c){
-    int ii = blockIdx.x*blockDim.x + threadIdx.x / M;
-    int jj = blockIdx.x*blockDim.x + threadIdx.x % M;
-    double atemp, ctemp;
+        double *a, double *b){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / M;
+    int jj = (blockIdx.x*blockDim.x + threadIdx.x) % M;
+    double atemp;
 
     if(ii < L-1){
         atemp = MInt[ii*M + jj] * 0.5 + V[ii]/(2*dx[ii]);
         a[(ii+1)*M + jj] = -dfactor[ii+1]*atemp;
         b[ii*M + jj] += dfactor[ii]*atemp;
+    }
+}
 
+__global__ void compute_bc_nobc(double *dx, double *dfactor, 
+        double *MInt, double *V, double dt, int L, int M,
+        double *b, double *c){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / M;
+    int jj = (blockIdx.x*blockDim.x + threadIdx.x) % M;
+    double ctemp;
+
+    if(ii < L-1){
         ctemp = -MInt[ii*M + jj] * 0.5 + V[ii+1]/(2*dx[ii]);
         b[(ii+1)*M + jj] += dfactor[ii+1]*ctemp;
         c[ii*M + jj] = -dfactor[ii]*ctemp;

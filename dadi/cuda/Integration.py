@@ -159,9 +159,13 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
 
             kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
             bx_gpu.fill(1./this_dt)
-            kernels._compute_abc_nobc(dx_gpu, dfactor_gpu, 
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
                 MIntx_gpu, Vx_gpu, this_dt, L, M,
-                ax_gpu, bx_gpu, cx_gpu,
+                ax_gpu, bx_gpu,
+                grid=_grid((L-1)*M), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MIntx_gpu, Vx_gpu, this_dt, L, M,
+                bx_gpu, cx_gpu,
                 grid=_grid((L-1)*M), block=_block())
             kernels._include_bc(dx_gpu, nu1, m12, gamma1, h1, L, M,
                 bx_gpu, block=(1,1,1))
@@ -181,9 +185,13 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
                              grid=_grid((L-1)*M), block=_block())
             kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
             bx_gpu.fill(1./this_dt)
-            kernels._compute_abc_nobc(dx_gpu, dfactor_gpu, 
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
                 MIntx_gpu, Vx_gpu, this_dt, L, M,
-                ax_gpu, bx_gpu, cx_gpu,
+                ax_gpu, bx_gpu,
+                grid=_grid((L-1)*M), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MIntx_gpu, Vx_gpu, this_dt, L, M,
+                bx_gpu, cx_gpu,
                 grid=_grid((L-1)*M), block=_block())
             kernels._include_bc(dx_gpu, nu2, m21, gamma2, h2, L, M,
                 bx_gpu, block=(1,1,1))
