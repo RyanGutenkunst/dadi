@@ -252,7 +252,7 @@ def _three_pops_const_params(phi, xx,
 
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
         cusparse_handle, 0, L, ax_gpu.gpudata, bx_gpu.gpudata,
-        cx_gpu.gpudata, phi_gpu.gpudata, L*L)
+        cx_saved_gpu.gpudata, phi_gpu.gpudata, L*L)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
     last_dt = np.inf

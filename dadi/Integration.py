@@ -722,6 +722,15 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
              _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
              _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
     current_t = initial_t
+
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._three_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, frozen3, 
+                ax, bx, cx, ay, by, cy, az, bz, cz,
+                current_t, dt, T)
+        return phi
+
     while current_t < T:    
         this_dt = min(dt, T - current_t)
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
