@@ -15,8 +15,6 @@ def _grid(size):
 def _block():
     return (BLOCKSIZE,1,1)
 
-from . import Integration
-
 def transpose_gpuarray(in_gpu, out_gpu):
     L,M = in_gpu.shape
     if out_gpu.shape != (M,L):
@@ -24,6 +22,8 @@ def transpose_gpuarray(in_gpu, out_gpu):
     cublasDgeam(cublas_handle, 'T', 0,
                 L, M, 1., in_gpu.gpudata,
                 M, 0., 0, L, out_gpu.gpudata, L)
+
+from . import Integration
 
 atexit.register(cublasDestroy, cublas_handle)
 atexit.register(cusparseDestroy, cusparse_handle)

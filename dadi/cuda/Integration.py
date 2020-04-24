@@ -14,6 +14,24 @@ def _inject_mutations_2D_valcalc(dt, xx, yy, theta0, frozen1, frozen2,
         val01 = dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
     return np.float64(val10),np.float64(val01)
 
+def _inject_mutations_3D_valcalc(dt, xx, yy, zz, theta0, frozen1, frozen2, frozen3):
+    """
+    Inject novel mutations for a timestep.
+    """
+    # Population 1
+    # Normalization based on the multi-dimensional trapezoid rule is 
+    # implemented                      ************** here ***************
+    val100, val010, val001 = 0, 0, 0
+    if not frozen1:
+        val100 = dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+    # Population 2
+    if not frozen2:
+        val010 = dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+    # Population 3
+    if not frozen3:
+        val001 = dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+    return np.float64(val100), np.float64(val010), np.float64(val001)
+
 import pycuda
 import pycuda.gpuarray as gpuarray
 from skcuda.cusparse import cusparseDgtsvInterleavedBatch_bufferSizeExt, cusparseDgtsvInterleavedBatch
@@ -208,3 +226,84 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
         current_t = next_t
 
     return phi_gpu.get()
+
+def _three_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, frozen3, 
+                ax, bx, cx, ay, by, cy, az, bz, cz,
+                current_t, dt, T):
+
+    L = np.int32(len(xx))
+
+    ax_gpu = gpuarray.to_gpu(ax.reshape(L,L**2))
+    bx_gpu = gpuarray.to_gpu(bx.reshape(L,L**2))
+    cx_gpu = gpuarray.to_gpu(cx.reshape(L,L**2))
+
+    ay_gpu = gpuarray.to_gpu(ay.reshape(L,L**2).transpose().copy())
+    by_gpu = gpuarray.to_gpu(by.reshape(L,L**2).transpose().copy())
+    cy_gpu = gpuarray.to_gpu(cy.reshape(L,L**2).transpose().copy())
+
+    az_gpu = gpuarray.to_gpu(az.reshape(L,L**2).transpose().reshape(L,L**2).transpose().copy())
+    bz_gpu = gpuarray.to_gpu(bz.reshape(L,L**2).transpose().reshape(L,L**2).transpose().copy())
+    cz_gpu = gpuarray.to_gpu(cz.reshape(L,L**2).transpose().reshape(L,L**2).transpose().copy())
+
+    cx_saved_gpu = gpuarray.to_gpu(cx_gpu)
+    cy_saved_gpu = gpuarray.to_gpu(cy_gpu)
+    cz_saved_gpu = gpuarray.to_gpu(cz_gpu)
+
+    phi_gpu = gpuarray.to_gpu(phi.reshape(L,L**2))
+    phi_buf_gpu = gpuarray.to_gpu(phi.reshape(L**2,L))
+
+    bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
+        cusparse_handle, 0, L, ax_gpu.gpudata, bx_gpu.gpudata,
+        cx_gpu.gpudata, phi_gpu.gpudata, L)
+    pBuffer = pycuda.driver.mem_alloc(bsize_int)
+
+    last_dt = np.inf
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
+
+        val100, val010, val001 = \
+            _inject_mutations_3D_valcalc(this_dt, xx, xx, xx, theta0, 
+                                         frozen1, frozen2, frozen3)
+        kernels._inject_mutations_3D_vals(phi_gpu, L,
+                                          val001, val010, val100, block=(1,1,1))
+        if not frozen1:
+            pycuda.driver.memcpy_dtod(cx_gpu.gpudata, cx_saved_gpu.gpudata,
+                                      cx_saved_gpu.nbytes)
+
+            bx_gpu += (1./this_dt - 1./last_dt)
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
+                ax_gpu.gpudata, bx_gpu.gpudata, cx_gpu.gpudata, phi_gpu.gpudata,
+                L**2, pBuffer)
+
+        transpose_gpuarray(phi_gpu, phi_buf_gpu)
+        phi_gpu, phi_buf_gpu = phi_buf_gpu.reshape(L,L**2), phi_gpu.reshape(L**2,L)
+        if not frozen2:
+            pycuda.driver.memcpy_dtod(cy_gpu.gpudata, cy_saved_gpu.gpudata,
+                                      cy_saved_gpu.nbytes)
+            by_gpu += (1./this_dt - 1./last_dt)
+            phi_gpu /= this_dt
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
+                ay_gpu.gpudata, by_gpu.gpudata, cy_gpu.gpudata, phi_gpu.gpudata,
+                L**2, pBuffer)
+
+        transpose_gpuarray(phi_gpu, phi_buf_gpu)
+        phi_gpu, phi_buf_gpu = phi_buf_gpu.reshape(L,L**2), phi_gpu.reshape(L**2,L)
+        if not frozen3:
+            pycuda.driver.memcpy_dtod(cz_gpu.gpudata, cz_saved_gpu.gpudata,
+                                      cz_saved_gpu.nbytes)
+            bz_gpu += (1./this_dt - 1./last_dt)
+            phi_gpu /= this_dt
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
+                az_gpu.gpudata, bz_gpu.gpudata, cz_gpu.gpudata, phi_gpu.gpudata,
+                L**2, pBuffer)
+
+        transpose_gpuarray(phi_gpu, phi_buf_gpu)
+        phi_gpu, phi_buf_gpu = phi_buf_gpu.reshape(L,L**2), phi_gpu.reshape(L**2,L)
+
+        last_dt = this_dt
+        current_t += this_dt
+
+    return phi_gpu.get().reshape(L,L,L)

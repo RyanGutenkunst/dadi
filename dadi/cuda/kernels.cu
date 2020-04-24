@@ -3,6 +3,12 @@ __global__ void inject_mutations_2D(double *phi, int L, double val01, double val
     phi[L] += val10;
 }
 
+__global__ void inject_mutations_3D(double *phi, int L, double val001, double val010, double val100){
+    phi[1] += val001;
+    phi[L] += val010;
+    phi[L*L] += val100;
+}
+
 __global__ void Vfunc(double *x, double nu, int L, double *output){
     int ii = blockIdx.x*blockDim.x + threadIdx.x;
     if(ii < L){

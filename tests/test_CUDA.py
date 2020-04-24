@@ -50,6 +50,58 @@ class CUDATestCase(unittest.TestCase):
 
         self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
+    def test_3d_const_params(self):
+        pts = 13
+
+        nu1, nu2, nu3 = [2,1,0.1]
+        m12, m13, m21, m23, m31, m32 = [0.1,3,10,0,0.3,0.1]
+        gamma1, gamma2, gamma3 = [-1,2.0,0.1]
+        h1, h2, h3 = [0.2,0.3,0.9]
+        theta0, initial_t, T = [10.2, 0.1, 0.1+0.1]
+        frozen1, frozen2, frozen3 = False, False, False
+
+        xx = np.linspace(0,1,pts)
+        np.random.seed(213)
+        phi = np.random.uniform(size=(pts,pts,pts))
+
+        dadi.enable_cuda(False)
+        phi_cpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
+                       m12, m13, m21, m23, m31, m32,
+                       gamma1, gamma2, gamma3, h1, h2, h3,
+                       theta0, initial_t, frozen1, frozen2,
+                       frozen3)
+
+        dadi.enable_cuda()
+        phi_gpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
+                       m12, m13, m21, m23, m31, m32,
+                       gamma1, gamma2, gamma3, h1, h2, h3,
+                       theta0, initial_t, frozen1, frozen2,
+                       frozen3)
+        
+        self.assertTrue(np.allclose(phi_cpu, phi_gpu))
+
+        # Need to handle frozen populations carefully in the function,
+        # so we test all cases here.
+        m12, m13, m21, m23, m31, m32 = [0]*6
+        for frozen1 in [True, False]:
+            for frozen2 in [True, False]:
+                for frozen3 in [True, False]:
+                    dadi.enable_cuda(False)
+                    phi_cpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
+                                   m12, m13, m21, m23, m31, m32,
+                                   gamma1, gamma2, gamma3, h1, h2, h3,
+                                   theta0, initial_t, frozen1, frozen2,
+                                   frozen3)
+
+                    dadi.enable_cuda()
+                    phi_gpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
+                                   m12, m13, m21, m23, m31, m32,
+                                   gamma1, gamma2, gamma3, h1, h2, h3,
+                                   theta0, initial_t, frozen1, frozen2,
+                                   frozen3)
+        
+                    self.assertTrue(np.allclose(phi_cpu, phi_gpu))
+
 suite=unittest.TestLoader().loadTestsFromTestCase(CUDATestCase)
 
 if __name__ == '__main__':
