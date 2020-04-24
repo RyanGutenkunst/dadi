@@ -605,7 +605,7 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
 
     if cuda_enabled:
         import dadi.cuda
-        phi = dadi.cuda.Integration._two_pops_const_params(phi, xx, yy,
+        phi = dadi.cuda.Integration._two_pops_const_params(phi, xx,
                 theta0, frozen1, frozen2, nomut1, nomut2, ax, bx, cx, ay,
                 by, cy, current_t, dt, T)
         return phi
