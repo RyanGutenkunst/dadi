@@ -112,7 +112,7 @@ class CUDATestCase(unittest.TestCase):
         gamma1, gamma2, gamma3 = [-1,2.0,0.1]
         gamma3 = lambda t: t
         h1, h2, h3 = [0.2,0.3,0.9]
-        h3_t = lambda t: 0.1+2*t
+        h3 = lambda t: 0.1+2*t
         theta0, initial_t, T = [10.2, 0.1, 0.1+0.1]
         frozen1, frozen2, frozen3 = False, False, False
 
