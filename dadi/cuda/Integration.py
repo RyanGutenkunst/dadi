@@ -186,7 +186,7 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
                 MIntx_gpu, Vx_gpu, this_dt, L, M,
                 bx_gpu, cx_gpu,
                 grid=_grid((L-1)*M), block=_block())
-            kernels._include_bc(dx_gpu, nu1, m12, gamma1, h1, L, M,
+            kernels._include_bc(dx_gpu, nu1, gamma1, h1, L, M,
                 bx_gpu, block=(1,1,1))
 
             phi_gpu /= this_dt
@@ -212,7 +212,7 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
                 MIntx_gpu, Vx_gpu, this_dt, L, M,
                 bx_gpu, cx_gpu,
                 grid=_grid((L-1)*M), block=_block())
-            kernels._include_bc(dx_gpu, nu2, m21, gamma2, h2, L, M,
+            kernels._include_bc(dx_gpu, nu2, gamma2, h2, L, M,
                 bx_gpu, block=(1,1,1))
 
             transpose_gpuarray(phi_gpu, phiT_gpu)

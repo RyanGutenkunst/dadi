@@ -35,15 +35,15 @@ __global__ void cx0(double *cx, int L, int M){
     }
 }
 
-__global__ void include_bc(double*dx, double nu1, double m, double gamma, double h, int L, int M, double *b){
+__global__ void include_bc(double*dx, double nu1, double gamma, double h, int L, int M, double *b){
     double Mfirst, Mlast;
     // 0,0 entry
-    Mfirst = _Mfunc2D(0, 0, m, gamma, h);
+    Mfirst = _Mfunc2D(0, 0, 0, gamma, h);
     if(Mfirst <= 0){
         b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
     }
     // -1,-1 entry
-    Mlast = _Mfunc2D(1, 1, m, gamma, h);
+    Mlast = _Mfunc2D(1, 1, 0, gamma, h);
     if(Mlast >= 0){
         b[L*M-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
     }
