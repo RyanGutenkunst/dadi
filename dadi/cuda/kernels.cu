@@ -28,6 +28,20 @@ __global__ void Mfunc2D(double *x, double *y, double m, double gamma, double h, 
     }
 }
 
+__device__ double _Mfunc3D(double x, double y, double z, double mxy, double mxz,
+        double gamma, double h){
+    return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
+}
+
+__global__ void Mfunc3D(double *x, double *y, double *z, double mxy, double mxz, double gamma, double h, int L, int M, int N, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / N) % M;
+    int kk = (blockIdx.x*blockDim.x + threadIdx.x) % N;
+    if(ii < L){
+        output[ii*(M*N) + jj*N + kk] = _Mfunc3D(x[ii], y[jj], z[kk], mxy, mxz, gamma, h);
+    }
+}
+
 __global__ void cx0(double *cx, int L, int M){
     int jj = blockIdx.x*blockDim.x + threadIdx.x;
     if(jj < M){
