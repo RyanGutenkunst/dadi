@@ -397,10 +397,6 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     gamma3 = gamma3_f(current_t)
     h1,h2,h3 = h1_f(current_t), h2_f(current_t), h3_f(current_t)
     dx,dy,dz = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz)
-    dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
-             _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
-             _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
-    steps = 0
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
                  _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
@@ -408,7 +404,6 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         this_dt = min(dt, T - current_t)
 
         next_t = current_t + this_dt
-        steps += 1
 
         nu1,nu2,nu3 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t)
         m12,m13 = m12_f(next_t), m13_f(next_t)
