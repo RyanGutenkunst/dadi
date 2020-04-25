@@ -42,6 +42,9 @@ __global__ void Mfunc3D(double *x, double *y, double *z, double mxy, double mxz,
     }
 }
 
+// We need an additional simple kernel to zero out the necessary
+// values of the c array, because the Interleaved tridiagonal
+// solver alters the c array.
 __global__ void cx0(double *cx, int L, int M){
     int jj = blockIdx.x*blockDim.x + threadIdx.x;
     if(jj < M){
@@ -49,6 +52,8 @@ __global__ void cx0(double *cx, int L, int M){
     }
 }
 
+// This function works for 2D and 3D cases, because migration terms
+// don't matter at the 0,0,0 and 1,1,1 corners of the regime.
 __global__ void include_bc(double*dx, double nu1, double gamma, double h, int L, int M, double *b){
     double Mfirst, Mlast;
     // 0,0 entry
@@ -63,6 +68,9 @@ __global__ void include_bc(double*dx, double nu1, double gamma, double h, int L,
     }
 }
 
+// Compared to the C code, we need to separate ab and bc
+// calculations, to avoid a race condition due to multiple
+// theads writing to the same elements of b.
 __global__ void compute_ab_nobc(double *dx, double *dfactor, 
         double *MInt, double *V, double dt, int L, int M,
         double *a, double *b){
