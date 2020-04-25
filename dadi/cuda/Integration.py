@@ -3,7 +3,7 @@ import numpy as np
 def _inject_mutations_2D_valcalc(dt, xx, yy, theta0, frozen1, frozen2,
                                  nomut1, nomut2):
     """
-    Inject novel mutations for a timestep.
+    Calculate mutations that need to be injected.
     """
     val10, val01 = 0, 0
     # Population 1
@@ -16,7 +16,7 @@ def _inject_mutations_2D_valcalc(dt, xx, yy, theta0, frozen1, frozen2,
 
 def _inject_mutations_3D_valcalc(dt, xx, yy, zz, theta0, frozen1, frozen2, frozen3):
     """
-    Inject novel mutations for a timestep.
+    Calculate mutations that need to be injected.
     """
     # Population 1
     # Normalization based on the multi-dimensional trapezoid rule is 
@@ -91,11 +91,12 @@ def _two_pops_const_params(phi, xx,
                 L, pBuffer)
 
         if not frozen2:
-            # Restore from saved version of dux
             pycuda.driver.memcpy_dtod(cy_gpu.gpudata, cy_saved_gpu.gpudata,
                                       cy_saved_gpu.nbytes)
             by_gpu += (1./this_dt - 1./last_dt)
             
+            # We tranpose here and use InterleavedBatch (rather than StridedBatch)
+            # because it is notably faster.
             transpose_gpuarray(phi_gpu, phiT_gpu)
             phiT_gpu /= this_dt
 
@@ -133,6 +134,8 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
     dfactor_gpu = gpuarray.to_gpu(dfactor)
     xInt_gpu = gpuarray.to_gpu(xInt)
 
+    # By transposing phi, we can use the same functions to generate
+    # the a,b,c matrices for both x and y.
     phi_gpu = gpuarray.to_gpu(phi)
     phiT_gpu = gpuarray.empty(phi.shape[::-1], phi.dtype)
 
@@ -243,10 +246,14 @@ def _three_pops_const_params(phi, xx,
     by_gpu = gpuarray.to_gpu(by.reshape(L,L**2).transpose().copy())
     cy_saved_gpu = gpuarray.to_gpu(cy.reshape(L,L**2).transpose().copy())
 
+    # There is probably a cleaner way to write this, but this matches
+    # the transformations we'll be making to phi.
     az_gpu = gpuarray.to_gpu(az.reshape(L,L**2).transpose().reshape(L,L**2).transpose().copy())
     bz_gpu = gpuarray.to_gpu(bz.reshape(L,L**2).transpose().reshape(L,L**2).transpose().copy())
     cz_saved_gpu = gpuarray.to_gpu(cz.reshape(L,L**2).transpose().reshape(L,L**2).transpose().copy())
 
+    # To save memory, in this 3D method we'll be using the c_gpu matrix
+    # as the buffer for transposing.
     phi_gpu = gpuarray.to_gpu(phi.reshape(L,L**2))
 
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
@@ -274,6 +281,8 @@ def _three_pops_const_params(phi, xx,
                 ax_gpu.gpudata, bx_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
                 L**2, pBuffer)
 
+        # We transpose into the c_gpu memory buffer.
+        # Then we switch the names of the phi_gpu and c_gpu buffers.
         transpose_gpuarray(phi_gpu, c_gpu.reshape(L**2,L))
         phi_gpu, c_gpu = c_gpu.reshape(L,L**2), phi_gpu
         if not frozen2:
@@ -409,6 +418,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                            grid=_grid(M), block=_block())
             kernels._Vfunc(xInt_gpu, nu2, M-1, VInt_gpu, 
                            grid=_grid(M-1), block=_block())
+            # Note the order of the m23, m21 arguments here.
             kernels._Mfunc3D(xInt_gpu, xx_gpu, xx_gpu, m23, m21, gamma2, h2,
                              M-1, N, L, MInt_gpu,
                              grid=_grid((M-1)*L*N), block=_block())

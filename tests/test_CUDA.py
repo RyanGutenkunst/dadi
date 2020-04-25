@@ -132,8 +132,6 @@ class CUDATestCase(unittest.TestCase):
         
         self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
-        # Need to handle frozen populations carefully in the function,
-        # so we test all cases here.
         m12, m13, m21, m23, m31, m32 = [0]*6
         for frozen1 in [True, False]:
             for frozen2 in [True, False]:
