@@ -15,6 +15,9 @@ def _grid(size):
 def _block():
     return (BLOCKSIZE,1,1)
 
+# Note: skcuda.linalg has a transpose function that only takes one argument,
+# but it uses exactly this method, so it's not in-place. We rather track
+# the extra buffer, to minimize memory allocation.
 def transpose_gpuarray(in_gpu, out_gpu):
     L,M = in_gpu.shape
     if out_gpu.shape != (M,L):
