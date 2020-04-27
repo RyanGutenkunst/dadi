@@ -18,6 +18,23 @@ from scipy.special import betainc
 import dadi.Numerics
 from dadi.Numerics import reverse_array, _cached_projection, _lncomb, BetaBinomConvolution
 
+_dbeta_cache = {}
+def cached_dbeta(nx, xx):
+    key = nx, tuple(xx)
+
+    xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+    if key not in _dbeta_cache:
+        dbeta1 = np.empty((nx+1,len(xx)-1))
+        dbeta2 = np.empty((nx+1,len(xx)-1))
+        for ii in range(0, nx+1):
+            b = betainc(ii+1,nx-ii+1,xx)
+            dbeta1[ii] = b[1:]-b[:-1]
+            b = betainc(ii+2,nx-ii+1,xx)
+            dbeta2[ii] = b[1:]-b[:-1]
+        _dbeta_cache[key] = dbeta1, dbeta2
+    dbeta1, dbeta2 = _dbeta_cache[key]
+    return dbeta1, dbeta2
+
 class Spectrum(numpy.ma.masked_array):
     """
     Represents a frequency spectrum.
@@ -1354,27 +1371,8 @@ class Spectrum(numpy.ma.masked_array):
 
         See from_phi for explanation of arguments.
         """
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-
-        # Could consider caching these, but since they're
-        # one-dimensional, I don't think these calculations
-        # are a large fraction of the cost.
-        dbeta1_xx = np.empty((nx+1,len(xx)-1))
-        dbeta2_xx = np.empty((nx+1,len(xx)-1))
-        for ii in range(0, nx+1):
-            b = betainc(ii+1,nx-ii+1,xx)
-            dbeta1_xx[ii] = b[1:]-b[:-1]
-            b = betainc(ii+2,nx-ii+1,xx)
-            dbeta2_xx[ii] = b[1:]-b[:-1]
-
-        dbeta1_yy = np.empty((ny+1,len(yy)-1))
-        dbeta2_yy = np.empty((ny+1,len(yy)-1))
-        for ii in range(0, ny+1):
-            b = betainc(ii+1,ny-ii+1,yy)
-            dbeta1_yy[ii] = b[1:]-b[:-1]
-            b = betainc(ii+2,ny-ii+1,yy)
-            dbeta2_yy[ii] = b[1:]-b[:-1]
+        dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
+        dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
 
         s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
         c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
@@ -1392,7 +1390,7 @@ class Spectrum(numpy.ma.masked_array):
         data = term1_all + term2_all*np.arange(1,nx+2)[:,np.newaxis]/((nx+1)*(nx+2))
 
         fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return fs
+        return data
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
