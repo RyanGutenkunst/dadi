@@ -1319,8 +1319,50 @@ class Spectrum(numpy.ma.masked_array):
         fs.extrap_x = xx[1]
         return fs
 
+    #@staticmethod
+    #def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+    #    """
+    #    Compute sample Spectrum from population frequency distribution phi.
+
+    #    This function uses analytic formulae for integrating over a 
+    #    piecewise-linear approximation to phi.
+
+    #    See from_phi for explanation of arguments.
+    #    """
+    #    data = numpy.zeros((nx+1,ny+1))
+
+    #    xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+    #    yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
+
+    #    beta_cache_xx = {}
+    #    for ii in range(0, nx+1):
+    #        beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
+    #        beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
+
+    #    s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+    #    c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
+    #    for jj in range(0, ny+1):
+    #        c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
+    #        beta1_yy = betainc(jj+1,ny-jj+1,yy)
+    #        beta2_yy = betainc(jj+2,ny-jj+1,yy)
+    #        over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
+    #                           + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
+    #                           axis=-1)
+
+    #        s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
+    #        c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
+    #        for ii in range(0, nx+1):
+    #            c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
+    #            beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
+    #            beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
+    #            value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
+    #                              + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
+    #            data[ii,jj] = value
+    #    fs = dadi.Spectrum(data, mask_corners=mask_corners)
+    #    return fs
+
     @staticmethod
-    def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+    def _from_phi_2D_linalg(nx, ny, xx, yy, phi, mask_corners=True):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1329,68 +1371,29 @@ class Spectrum(numpy.ma.masked_array):
 
         See from_phi for explanation of arguments.
         """
-        data = numpy.zeros((nx+1,ny+1))
-
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-
-        beta_cache_xx = {}
-        for ii in range(0, nx+1):
-            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
-            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
-
-        s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
-        c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
-        for jj in range(0, ny+1):
-            c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
-            beta1_yy = betainc(jj+1,ny-jj+1,yy)
-            beta2_yy = betainc(jj+2,ny-jj+1,yy)
-            over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
-                               + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
-                               axis=-1)
-
-            s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
-            c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
-            for ii in range(0, nx+1):
-                c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
-                beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
-                beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
-                value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
-                                  + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
-                data[ii,jj] = value
-        fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return fs
-
-    @staticmethod
-    def _from_phi_2D_linalg(nx, ny, xx, yy, phi, mask_corners=True):
-        """
-        Compute sample Spectrum from population frequency distribution phi.
-
-        This function uses linear algebra implementatios of the analytic
-        formulae in _from_phi_2D_analytic.
-
-        See from_phi for explanation of arguments.
-        """
         dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
         dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
 
-        s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+        # For a somewhat less terse example of this code, see the
+        # (archived) _from_phi_2D_analytic function.
+        s_yy = (phi[:,1:] - phi[:,:-1])/(yy[nuax,1:] - yy[nuax,:-1])
         c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
 
         term1_yy = np.dot(dbeta1_yy,c1_yy.T)
-        term2_yy = np.dot(dbeta2_yy, s_yy.T)*np.arange(1,ny+2)[:,np.newaxis]/((ny+1)*(ny+2))
+        term2_yy = np.dot(dbeta2_yy, s_yy.T)
+        term2_yy *= np.arange(1,ny+2)[:,np.newaxis]/((ny+1)*(ny+2))
         over_y_all = term1_yy + term2_yy
 
-        s_xx_all = (over_y_all[:,1:]-over_y_all[:,:-1])/(xx[1:]-xx[:-1])
+        s_xx_all = (over_y_all[:,1:] - over_y_all[:,:-1])/(xx[1:]-xx[:-1])
         c1_xx_all = (over_y_all[:,:-1] - s_xx_all*xx[:-1])/(nx+1)
 
         term1_all = np.dot(dbeta1_xx, c1_xx_all.T)
         term2_all = np.dot(dbeta2_xx, s_xx_all.T)
+        term2_all *=  np.arange(1,nx+2)[:,np.newaxis]/((nx+1)*(nx+2))
 
-        data = term1_all + term2_all*np.arange(1,nx+2)[:,np.newaxis]/((nx+1)*(nx+2))
+        data = term1_all + term2_all
 
-        fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return data
+        return dadi.Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
@@ -1565,7 +1568,7 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def _from_phi_3D_analytic(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+    def _from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1576,46 +1579,41 @@ class Spectrum(numpy.ma.masked_array):
         """
         data = numpy.zeros((nx+1,ny+1,nz+1))
 
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-        zz = numpy.minimum(numpy.maximum(zz, 0), 1.0)
+        dbeta1_zz, dbeta2_zz = cached_dbeta(nz, zz)
+        dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
+        dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
 
-        beta_cache_xx = {}
-        for ii in range(0, nx+1):
-            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
-            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
-        beta_cache_yy = {}
-        for jj in range(0, ny+1):
-            beta_cache_yy[jj+1,ny-jj+1] = betainc(jj+1,ny-jj+1,yy)
-            beta_cache_yy[jj+2,ny-jj+1] = betainc(jj+2,ny-jj+1,yy)
-
+        # Quick testing suggests that doing the x direction first for better
+        # memory alignment isn't worth much.
         s_zz = (phi[:,:,1:]-phi[:,:,:-1])/(zz[nuax,nuax,1:]-zz[nuax,nuax,:-1])
         c1_zz = (phi[:,:,:-1] - s_zz*zz[nuax,nuax,:-1])/(nz+1)
+        # These calculations can be done without this for loop, but the
+        # four-dimensional intermediate results consume massive amounts of RAM,
+        # which makes the for loop faster for large systems.
         for kk in range(0, nz+1):
-            c2_zz = s_zz*(kk+1)/((nz+1)*(nz+2))
-            beta1_zz = betainc(kk+1,nz-kk+1,zz)
-            beta2_zz = betainc(kk+2,nz-kk+1,zz)
-            over_z = numpy.sum(c1_zz*(beta1_zz[nuax,nuax,1:]-beta1_zz[nuax,nuax,:-1]) + c2_zz*(beta2_zz[nuax,nuax,1:]-beta2_zz[nuax,nuax,:-1]), axis=-1)
+            # In testing, these two np.dot lines occupy 2/3 the time, so further
+            # speedup will be difficult
+            term1 = np.dot(c1_zz, dbeta1_zz[kk])
+            term2 = np.dot(s_zz, dbeta2_zz[kk])
+            term2 *= (kk+1)/((nz+1)*(nz+2))
+            over_z = term1 + term2
 
             s_yy = (over_z[:,1:]-over_z[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
             c1_yy = (over_z[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
-            for jj in range(0, ny+1):
-                c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
-                beta1_yy = beta_cache_yy[jj+1,ny-jj+1]
-                beta2_yy = beta_cache_yy[jj+2,ny-jj+1]
-                over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1]) + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]), axis=-1)
-        
-                s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
-                c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
-                for ii in range(0, nx+1):
-                    c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
-                    beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
-                    beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
-                    value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1]) + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
-                    data[ii,jj,kk] = value
+            term1_yy = np.dot(dbeta1_yy, c1_yy.T)
+            term2_yy = np.dot(dbeta2_yy, s_yy.T) * (np.arange(1,ny+2)[:,np.newaxis]/((ny+1)*(ny+2)))
+            over_y_all = term1_yy + term2_yy
+
+            s_xx_all = (over_y_all[:,1:]-over_y_all[:,:-1])/(xx[1:]-xx[:-1])
+            c1_xx_all = (over_y_all[:,:-1] - s_xx_all*xx[:-1])/(nx+1)
+
+            term1_all = np.dot(dbeta1_xx, c1_xx_all.T)
+            term2_all = np.dot(dbeta2_xx, s_xx_all.T) * (np.arange(1,nx+2)[:,np.newaxis]/((nx+1)*(nx+2)))
+
+            data[:,:,kk] = term1_all + term2_all
+
         fs = dadi.Spectrum(data, mask_corners=mask_corners)
         return fs
-
 
     @staticmethod
     def from_phi(phi, ns, xxs, mask_corners=True, 
@@ -1697,9 +1695,9 @@ class Spectrum(numpy.ma.masked_array):
                                                       admix_props)
         elif phi.ndim == 3:
             if not het_ascertained and not admix_props and not force_direct:
-                fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
-                                                    xxs[0], xxs[1], xxs[2], 
-                                                    phi, mask_corners)
+                fs = Spectrum._from_phi_3D_linalg(ns[0], ns[1], ns[2], 
+                                                  xxs[0], xxs[1], xxs[2],
+                                                  phi, mask_corners)
             elif not admix_props:
                 fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                                   xxs[0], xxs[1], xxs[2], 
