@@ -152,11 +152,11 @@ class CUDATestCase(unittest.TestCase):
         
                     self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
-suite=unittest.TestLoader().loadTestsFromTestCase(CUDATestCase)
+if dadi.enable_cuda():
+    suite = unittest.TestLoader().loadTestsFromTestCase(CUDATestCase)
+else:
+    suite = unittest.TestSuite()
 
 if __name__ == '__main__':
-    try:
-        dadi.enable_cuda()
+    if dadi.enable_cuda():
         unittest.main()
-    except ImportError:
-        print("Failed to load dadi CUDA module")

@@ -35,9 +35,12 @@ def enable_cuda(toggle=True):
         try:
             from . import cuda
             Integration.cuda_enabled = True
+            return True
         except ImportError:
             print("Failed to import dadi.cuda")
+            return False
     elif toggle == False:
         Integration.cuda_enabled = False
+        return False
     else:
         raise ValueError("toggle must be True or False")
