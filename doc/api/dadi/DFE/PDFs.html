@@ -107,21 +107,23 @@ def biv_ind_gamma_py(xx, yy, params):
     yy: y-coordinates at which to evaluate.
     params: Input parameters. If len(params) == 2, then params = (alpha,beta)
             and alpha and beta are assumed to be equal in the two dimensions. If
-            len(params) == 4, then params = (alpha1,alpha2,beta1,beta2)
+            len(params) == 4, then params = (alpha1,alpha2,beta1,beta2).
+            If len(params) in [3,5], then the last parameter is ignored (for
+            compatibility with mixture model functions).
 
     For extensions to correlated gamma distributions, see
     Kibble (1941) and Smith and Adelfang (1981).
     &#34;&#34;&#34;
     xx = np.atleast_1d(xx)
     yy = np.atleast_1d(yy)
-    if len(params) == 2:
+    if len(params) in [2,3]:
         alpha1 = alpha2 = params[0]
         beta1 = beta2 = params[1]
-    elif len(params) == 4:
-        alpha1, alpha2, beta1, beta2 = params
+    elif len(params) in [4,5]:
+        alpha1, alpha2, beta1, beta2 = params[:4]
     else:
         raise ValueError(&#39;Parameter array for bivariate independent gamma must have &#39;
-                         &#39;length 2 or 4.&#39;)
+                         &#39;length 2,3,4, or 5.&#39;)
 
     xmarg = ssd.gamma.pdf(xx, alpha1, scale=beta1)
     ymarg = ssd.gamma.pdf(yy, alpha2, scale=beta2)
@@ -161,7 +163,9 @@ def biv_ind_gamma_py(xx, yy, params):
 yy: y-coordinates at which to evaluate.
 params: Input parameters. If len(params) == 2, then params = (alpha,beta)
 and alpha and beta are assumed to be equal in the two dimensions. If
-len(params) == 4, then params = (alpha1,alpha2,beta1,beta2)</p>
+len(params) == 4, then params = (alpha1,alpha2,beta1,beta2).
+If len(params) in [3,5], then the last parameter is ignored (for
+compatibility with mixture model functions).</p>
 <p>For extensions to correlated gamma distributions, see
 Kibble (1941) and Smith and Adelfang (1981).</p></section>
 <details class="source">
@@ -176,21 +180,23 @@ Kibble (1941) and Smith and Adelfang (1981).</p></section>
     yy: y-coordinates at which to evaluate.
     params: Input parameters. If len(params) == 2, then params = (alpha,beta)
             and alpha and beta are assumed to be equal in the two dimensions. If
-            len(params) == 4, then params = (alpha1,alpha2,beta1,beta2)
+            len(params) == 4, then params = (alpha1,alpha2,beta1,beta2).
+            If len(params) in [3,5], then the last parameter is ignored (for
+            compatibility with mixture model functions).
 
     For extensions to correlated gamma distributions, see
     Kibble (1941) and Smith and Adelfang (1981).
     &#34;&#34;&#34;
     xx = np.atleast_1d(xx)
     yy = np.atleast_1d(yy)
-    if len(params) == 2:
+    if len(params) in [2,3]:
         alpha1 = alpha2 = params[0]
         beta1 = beta2 = params[1]
-    elif len(params) == 4:
-        alpha1, alpha2, beta1, beta2 = params
+    elif len(params) in [4,5]:
+        alpha1, alpha2, beta1, beta2 = params[:4]
     else:
         raise ValueError(&#39;Parameter array for bivariate independent gamma must have &#39;
-                         &#39;length 2 or 4.&#39;)
+                         &#39;length 2,3,4, or 5.&#39;)
 
     xmarg = ssd.gamma.pdf(xx, alpha1, scale=beta1)
     ymarg = ssd.gamma.pdf(yy, alpha2, scale=beta2)
