@@ -4,4 +4,4 @@ recursive-include dadi *.pyf *.pyx
 recursive-include doc manual.pdf *.tex *.bib
 recursive-include examples *
 recursive-include tests *
-global-exclude *.msout *.swp *.pyc seedms *.png *.bpkl *.npz
+global-exclude *.msout *.swp *.pyc seedms *.png *.bpkl *.npz *.so *.pyd
