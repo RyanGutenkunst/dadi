@@ -120,9 +120,8 @@ numpy.distutils.core.setup(name='dadi',
 # (Testing) python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # (Final) python3 -m twine upload dist/*   # Username is RyanGutenkunst
 # To distribute to Conda
-# Update bioconda-recipes via "git fetch https://github.com/bioconda/bioconda-recipes.git master" "git merge FETCH_HEAD"
-# Update recipe meta.yaml in bioconda-recipes/recipes/dadi with new version number and sha256. 
+# A pull request will automatically be created to update https://github.com/conda-forge/dadi-feedstock
+# Update recipe meta.yaml in dadi-feedstock/recipe with new version number and sha256. 
 #  (To generate sha256, use openssl dgst -sha256 dist/dadi-<version>.tar.gz
 # Then "git add meta.yaml" and "git commit" then "git push"
-# Push recipe and submit pull request
-# To test BioConda, I used bootstrap method on https://bioconda.github.io/contributor/building-locally.html
+# Then update the pull request

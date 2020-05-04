@@ -13,7 +13,7 @@ It is also recommended that you install
 - matplotlib
 - IPython
 
-The easiest way to obtain all these dependencies to install the [Anaconda Python Distribution](https://www.anaconda.com/distribution/). And the easiest way to install dadi is then via `conda`, using the command `conda install -c bioconda dadi`. dadi can also be installed via `pip`, using the command `python3 -m pip install dadi`.
+The easiest way to obtain all these dependencies to install the [Anaconda Python Distribution](https://www.anaconda.com/distribution/). And the easiest way to install dadi is then via `conda`, using the command `conda install -c conda-forge dadi`. dadi can also be installed via `pip`, using the command `python3 -m pip install dadi`.
 
 ### Installing from source
 

@@ -12,4 +12,4 @@ See the manual (https://dadi.readthedocs.io) and the example files in the source
 
 Also, please sign up for our mailing list, where we help the community with ∂a∂i. Please do search the archives before posting. Many questions come up repeatedly. (http://groups.google.com/group/dadi-user)
 
-The easiest way to install dadi is via conda, `conda install -c bioconda dadi`.
+The easiest way to install dadi is via conda, `conda install -c conda-forge dadi`.
