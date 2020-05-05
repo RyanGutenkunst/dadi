@@ -171,6 +171,8 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
                                           block=(1, 1, 1))
 
         if not frozen1:
+            # Note, if L is an int32, L-1 can be int64. This can
+            # break the code. So we wrap the -1 expressions in np.int32.
             kernels._Vfunc(xx_gpu, nu1, L, Vx_gpu, 
                            grid=_grid(L), block=_block())
             kernels._Vfunc(xInt_gpu, nu1, np.int32(L-1), VIntx_gpu, 
@@ -385,10 +387,10 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
         if not frozen1:
             kernels._Vfunc(xx_gpu, nu1, L, V_gpu, 
                            grid=_grid(L), block=_block())
-            kernels._Vfunc(xInt_gpu, nu1, L-1, VInt_gpu, 
+            kernels._Vfunc(xInt_gpu, nu1, np.int32(L-1), VInt_gpu, 
                            grid=_grid(L-1), block=_block())
             kernels._Mfunc3D(xInt_gpu, xx_gpu, xx_gpu, m12, m13, gamma1, h1,
-                             L-1, M, N, MInt_gpu,
+                             np.int32(L-1), M, N, MInt_gpu,
                              grid=_grid((L-1)*M*N), block=_block())
 
             kernels._cx0(c_gpu, L, M*N, grid=_grid(M*N), block=_block())
@@ -416,11 +418,11 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
 
             kernels._Vfunc(xx_gpu, nu2, M, V_gpu, 
                            grid=_grid(M), block=_block())
-            kernels._Vfunc(xInt_gpu, nu2, M-1, VInt_gpu, 
+            kernels._Vfunc(xInt_gpu, nu2, np.int32(M-1), VInt_gpu, 
                            grid=_grid(M-1), block=_block())
             # Note the order of the m23, m21 arguments here.
             kernels._Mfunc3D(xInt_gpu, xx_gpu, xx_gpu, m23, m21, gamma2, h2,
-                             M-1, N, L, MInt_gpu,
+                             np.int32(M-1), N, L, MInt_gpu,
                              grid=_grid((M-1)*L*N), block=_block())
 
             kernels._cx0(c_gpu, M, L*N, grid=_grid(L*N), block=_block())
@@ -447,10 +449,10 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
         if not frozen3:
             kernels._Vfunc(xx_gpu, nu3, N, V_gpu, 
                            grid=_grid(N), block=_block())
-            kernels._Vfunc(xInt_gpu, nu3, N-1, VInt_gpu, 
+            kernels._Vfunc(xInt_gpu, nu3, np.int32(N-1), VInt_gpu, 
                            grid=_grid(N-1), block=_block())
             kernels._Mfunc3D(xInt_gpu, xx_gpu, xx_gpu, m31, m32, gamma3, h3,
-                             N-1, L, M, MInt_gpu,
+                             np.int32(N-1), L, M, MInt_gpu,
                              grid=_grid((N-1)*M*L), block=_block())
 
             kernels._cx0(c_gpu, N, L*M, grid=_grid(L*M), block=_block())
