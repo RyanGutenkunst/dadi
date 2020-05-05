@@ -173,10 +173,10 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
         if not frozen1:
             kernels._Vfunc(xx_gpu, nu1, L, Vx_gpu, 
                            grid=_grid(L), block=_block())
-            kernels._Vfunc(xInt_gpu, nu1, L-1, VIntx_gpu, 
+            kernels._Vfunc(xInt_gpu, nu1, np.int32(L-1), VIntx_gpu, 
                            grid=_grid(L-1), block=_block())
             kernels._Mfunc2D(xInt_gpu, yy_gpu, m12, gamma1, h1,
-                             L-1, M, MIntx_gpu,
+                             np.int32(L-1), M, MIntx_gpu,
                              grid=_grid((L-1)*M), block=_block())
 
             kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
@@ -200,10 +200,10 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
         if not frozen2:
             kernels._Vfunc(xx_gpu, nu2, L, Vx_gpu, 
                            grid=_grid(L), block=_block())
-            kernels._Vfunc(xInt_gpu, nu2, L-1, VIntx_gpu, 
+            kernels._Vfunc(xInt_gpu, nu2, np.int32(L-1), VIntx_gpu, 
                            grid=_grid(L-1), block=_block())
             kernels._Mfunc2D(xInt_gpu, yy_gpu, m21, gamma2, h2,
-                             L-1, M, MIntx_gpu,
+                             np.int32(L-1), M, MIntx_gpu,
                              grid=_grid((L-1)*M), block=_block())
             kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
             bx_gpu.fill(1./this_dt)
