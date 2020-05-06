@@ -721,6 +721,8 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if Mz[-1,-1,-1] >= 0:
         bz[-1,-1,-1] += -(-0.5/nu3 - Mz[-1,-1,-1])*2/dz[-1]
 
+    del Vz,VzInt,Mz,MzInt,deljz
+
     dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
              _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
              _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
