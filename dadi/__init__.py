@@ -27,11 +27,13 @@ except ImportError:
 import numpy
 numpy.seterr(all='ignore')
 
-def enable_cuda(toggle=True):
+def cuda_enabled(toggle=None):
     """
     Enable or disable cuda execution
     """
-    if toggle == True:
+    if toggle is None:
+        return Integration.cuda_enabled
+    elif toggle == True:
         try:
             from . import cuda
             Integration.cuda_enabled = True
@@ -43,4 +45,4 @@ def enable_cuda(toggle=True):
         Integration.cuda_enabled = False
         return False
     else:
-        raise ValueError("toggle must be True or False")
+        raise ValueError("toggle must be True, False, or None")

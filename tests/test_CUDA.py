@@ -152,11 +152,11 @@ class CUDATestCase(unittest.TestCase):
         
                     self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
-if dadi.enable_cuda():
+if dadi.cuda_enabled(True):
     suite = unittest.TestLoader().loadTestsFromTestCase(CUDATestCase)
 else:
     suite = unittest.TestSuite()
 
 if __name__ == '__main__':
-    if dadi.enable_cuda():
+    if dadi.cuda_enabled():
         unittest.main()
