@@ -48,10 +48,8 @@ def _two_pops_const_params(phi, xx,
 
     ax_gpu = gpuarray.to_gpu(ax)
     bx_gpu = gpuarray.to_gpu(bx)
-    cx_gpu = gpuarray.to_gpu(cx)
     ay_gpu = gpuarray.to_gpu(ay.transpose().copy())
     by_gpu = gpuarray.to_gpu(by.transpose().copy())
-    cy_gpu = gpuarray.to_gpu(cy.transpose().copy())
 
     # du is modified when InterleavedBatch runs.
     # Save a copy on the GPU to refill after each call.
@@ -59,12 +57,14 @@ def _two_pops_const_params(phi, xx,
     cy_saved_gpu = gpuarray.to_gpu(cy.transpose().copy())
 
     phi_gpu = gpuarray.to_gpu(phi)
-    phiT_gpu = gpuarray.empty(phi.shape[::-1], phi.dtype)
+
+    # Use this memory buffer for temporary c arrays and transposition
+    buff_gpu = gpuarray.empty_like(cx_saved_gpu)
 
     # Calculate necessary buffer size
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
         cusparse_handle, 0, L, ax_gpu.gpudata, bx_gpu.gpudata,
-        cx_gpu.gpudata, phi_gpu.gpudata, L)
+        buff_gpu.gpudata, phi_gpu.gpudata, L)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
     last_dt = np.inf
@@ -79,7 +79,7 @@ def _two_pops_const_params(phi, xx,
 
         if not frozen1:
             # Restore from saved version of dux
-            pycuda.driver.memcpy_dtod(cx_gpu.gpudata, cx_saved_gpu.gpudata,
+            pycuda.driver.memcpy_dtod(buff_gpu.gpudata, cx_saved_gpu.gpudata,
                                       cx_saved_gpu.nbytes)
 
             # Prepare linear system
@@ -87,23 +87,26 @@ def _two_pops_const_params(phi, xx,
             phi_gpu /= this_dt
 
             cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
-                ax_gpu.gpudata, bx_gpu.gpudata, cx_gpu.gpudata, phi_gpu.gpudata,
+                ax_gpu.gpudata, bx_gpu.gpudata, buff_gpu.gpudata, phi_gpu.gpudata,
                 L, pBuffer)
 
         if not frozen2:
-            pycuda.driver.memcpy_dtod(cy_gpu.gpudata, cy_saved_gpu.gpudata,
-                                      cy_saved_gpu.nbytes)
-            by_gpu += (1./this_dt - 1./last_dt)
-            
             # We tranpose here and use InterleavedBatch (rather than StridedBatch)
             # because it is notably faster.
-            transpose_gpuarray(phi_gpu, phiT_gpu)
+            transpose_gpuarray(phi_gpu, buff_gpu)
+            # Switch which memory location is treated as buffer and phiT
+            phiT_gpu, buff_gpu = buff_gpu, phi_gpu
             phiT_gpu /= this_dt
 
+            pycuda.driver.memcpy_dtod(buff_gpu.gpudata, cy_saved_gpu.gpudata,
+                                      cy_saved_gpu.nbytes)
+            by_gpu += (1./this_dt - 1./last_dt)
+
             cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
-                ay_gpu.gpudata, by_gpu.gpudata, cy_gpu.gpudata, phiT_gpu.gpudata,
+                ay_gpu.gpudata, by_gpu.gpudata, buff_gpu.gpudata, phiT_gpu.gpudata,
                 L, pBuffer)
-            transpose_gpuarray(phiT_gpu, phi_gpu)
+            transpose_gpuarray(phiT_gpu, buff_gpu)
+            phi_gpu, buff_gpu = buff_gpu, phiT_gpu
 
         last_dt = this_dt
         current_t += this_dt
@@ -137,19 +140,18 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
     # By transposing phi, we can use the same functions to generate
     # the a,b,c matrices for both x and y.
     phi_gpu = gpuarray.to_gpu(phi)
-    phiT_gpu = gpuarray.empty(phi.shape[::-1], phi.dtype)
 
     Vx_gpu = gpuarray.empty(L, np.float64)
     VIntx_gpu = gpuarray.empty(L-1, np.float64)
-    MIntx_gpu = gpuarray.empty((L-1,M), np.float64)
 
-    ax_gpu = gpuarray.zeros((L,M), np.float64)
+    ax_gpu = gpuarray.empty((L,M), np.float64)
     bx_gpu = gpuarray.empty((L,M), np.float64)
-    cx_gpu = gpuarray.zeros((L,M), np.float64)
+    # Buffer for MInt arrays, c arrays, and transposition
+    buff_gpu = gpuarray.empty((L,M), np.float64)
 
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
         cusparse_handle, 0, L, ax_gpu.gpudata, bx_gpu.gpudata,
-        cx_gpu.gpudata, phi_gpu.gpudata, L)
+        buff_gpu.gpudata, phi_gpu.gpudata, L)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
     while current_t < T:
@@ -177,56 +179,64 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
                            grid=_grid(L), block=_block())
             kernels._Vfunc(xInt_gpu, nu1, np.int32(L-1), VIntx_gpu, 
                            grid=_grid(L-1), block=_block())
+            # Fill buff_gpu with MInt
             kernels._Mfunc2D(xInt_gpu, yy_gpu, m12, gamma1, h1,
-                             np.int32(L-1), M, MIntx_gpu,
+                             np.int32(L-1), M, buff_gpu,
                              grid=_grid((L-1)*M), block=_block())
 
-            kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
             bx_gpu.fill(1./this_dt)
             kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
-                MIntx_gpu, Vx_gpu, this_dt, L, M,
+                buff_gpu, Vx_gpu, this_dt, L, M,
                 ax_gpu, bx_gpu,
                 grid=_grid((L-1)*M), block=_block())
+            # Note that this transforms buff_gpu from MInt to cx
             kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
-                MIntx_gpu, Vx_gpu, this_dt, L, M,
-                bx_gpu, cx_gpu,
+                buff_gpu, Vx_gpu, this_dt, L, M,
+                bx_gpu, buff_gpu,
                 grid=_grid((L-1)*M), block=_block())
             kernels._include_bc(dx_gpu, nu1, gamma1, h1, L, M,
                 bx_gpu, block=(1,1,1))
+            kernels._cx0(buff_gpu, L, M, grid=_grid(M), block=_block())
 
             phi_gpu /= this_dt
 
             cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
-                ax_gpu.gpudata, bx_gpu.gpudata, cx_gpu.gpudata, phi_gpu.gpudata,
+                ax_gpu.gpudata, bx_gpu.gpudata, buff_gpu.gpudata, phi_gpu.gpudata,
                 L, pBuffer)
         if not frozen2:
+            # Use the buffer as destination for transpose
+            transpose_gpuarray(phi_gpu, buff_gpu)
+            # Use previous phi memory as buffer for this step, and vice versa
+            phiT_gpu, buff_gpu = buff_gpu, phi_gpu
+
+            phiT_gpu /= this_dt
+
             kernels._Vfunc(xx_gpu, nu2, L, Vx_gpu, 
                            grid=_grid(L), block=_block())
             kernels._Vfunc(xInt_gpu, nu2, np.int32(L-1), VIntx_gpu, 
                            grid=_grid(L-1), block=_block())
             kernels._Mfunc2D(xInt_gpu, yy_gpu, m21, gamma2, h2,
-                             np.int32(L-1), M, MIntx_gpu,
+                             np.int32(L-1), M, buff_gpu,
                              grid=_grid((L-1)*M), block=_block())
-            kernels._cx0(cx_gpu, L, M, grid=_grid(M), block=_block())
+
             bx_gpu.fill(1./this_dt)
             kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
-                MIntx_gpu, Vx_gpu, this_dt, L, M,
+                buff_gpu, Vx_gpu, this_dt, L, M,
                 ax_gpu, bx_gpu,
                 grid=_grid((L-1)*M), block=_block())
             kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
-                MIntx_gpu, Vx_gpu, this_dt, L, M,
-                bx_gpu, cx_gpu,
+                buff_gpu, Vx_gpu, this_dt, L, M,
+                bx_gpu, buff_gpu,
                 grid=_grid((L-1)*M), block=_block())
             kernels._include_bc(dx_gpu, nu2, gamma2, h2, L, M,
                 bx_gpu, block=(1,1,1))
-
-            transpose_gpuarray(phi_gpu, phiT_gpu)
-            phiT_gpu /= this_dt
+            kernels._cx0(buff_gpu, L, M, grid=_grid(M), block=_block())
 
             cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
-                ax_gpu.gpudata, bx_gpu.gpudata, cx_gpu.gpudata, phiT_gpu.gpudata,
+                ax_gpu.gpudata, bx_gpu.gpudata, buff_gpu.gpudata, phiT_gpu.gpudata,
                 L, pBuffer)
-            transpose_gpuarray(phiT_gpu, phi_gpu)
+            transpose_gpuarray(phiT_gpu, buff_gpu)
+            phi_gpu, buff_gpu = buff_gpu, phiT_gpu
 
         current_t = next_t
 
@@ -345,9 +355,9 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
     V_gpu = gpuarray.empty(L, np.float64)
     VInt_gpu = gpuarray.empty(L-1, np.float64)
 
-    a_gpu = gpuarray.zeros((L,L*L), np.float64)
+    a_gpu = gpuarray.empty((L,L*L), np.float64)
     b_gpu = gpuarray.empty((L,L*L), np.float64)
-    c_gpu = gpuarray.zeros((L,L*L), np.float64)
+    c_gpu = gpuarray.empty((L,L*L), np.float64)
 
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
         cusparse_handle, 0, L, a_gpu.gpudata, b_gpu.gpudata,
