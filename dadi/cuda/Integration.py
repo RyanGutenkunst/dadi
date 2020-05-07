@@ -344,7 +344,6 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
 
     V_gpu = gpuarray.empty(L, np.float64)
     VInt_gpu = gpuarray.empty(L-1, np.float64)
-    MInt_gpu = gpuarray.empty((L-1,L*L), np.float64)
 
     a_gpu = gpuarray.zeros((L,L*L), np.float64)
     b_gpu = gpuarray.empty((L,L*L), np.float64)
@@ -384,6 +383,9 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                                          frozen1, frozen2, frozen3)
         kernels._inject_mutations_3D_vals(phi_gpu, L,
                                           val001, val010, val100, block=(1,1,1))
+        # I can use the c_gpu buffer for the MInt_gpu buffer, to save GPU memory.
+        # Note that I have to reassign this after each transpose operation I do.
+        MInt_gpu = c_gpu
         if not frozen1:
             kernels._Vfunc(xx_gpu, nu1, L, V_gpu, 
                            grid=_grid(L), block=_block())
@@ -393,7 +395,6 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                              np.int32(L-1), M, N, MInt_gpu,
                              grid=_grid((L-1)*M*N), block=_block())
 
-            kernels._cx0(c_gpu, L, M*N, grid=_grid(M*N), block=_block())
             b_gpu.fill(1./this_dt)
             kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
                 MInt_gpu, V_gpu, this_dt, L, M*N,
@@ -405,6 +406,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                 grid=_grid((L-1)*M*N), block=_block())
             kernels._include_bc(dx_gpu, nu1, gamma1, h1, L, M*N,
                 b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, L, M*N, grid=_grid(M*N), block=_block())
 
             phi_gpu /= this_dt
 
@@ -414,8 +416,8 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
 
         transpose_gpuarray(phi_gpu, c_gpu.reshape(M*N,L))
         phi_gpu, c_gpu = c_gpu.reshape(M,L*N), phi_gpu.reshape(M,L*N)
+        MInt_gpu = c_gpu
         if not frozen2:
-
             kernels._Vfunc(xx_gpu, nu2, M, V_gpu, 
                            grid=_grid(M), block=_block())
             kernels._Vfunc(xInt_gpu, nu2, np.int32(M-1), VInt_gpu, 
@@ -425,7 +427,6 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                              np.int32(M-1), N, L, MInt_gpu,
                              grid=_grid((M-1)*L*N), block=_block())
 
-            kernels._cx0(c_gpu, M, L*N, grid=_grid(L*N), block=_block())
             b_gpu.fill(1./this_dt)
             kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
                 MInt_gpu, V_gpu, this_dt, M, L*N,
@@ -437,6 +438,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                 grid=_grid((M-1)*L*N), block=_block())
             kernels._include_bc(dx_gpu, nu2, gamma2, h2, M, L*N,
                 b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, M, L*N, grid=_grid(L*N), block=_block())
 
             phi_gpu /= this_dt
 
@@ -446,6 +448,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
 
         transpose_gpuarray(phi_gpu, c_gpu.reshape(L*N,M))
         phi_gpu, c_gpu = c_gpu.reshape(N,L*M), phi_gpu.reshape(N,L*M)
+        MInt_gpu = c_gpu
         if not frozen3:
             kernels._Vfunc(xx_gpu, nu3, N, V_gpu, 
                            grid=_grid(N), block=_block())
@@ -455,7 +458,6 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                              np.int32(N-1), L, M, MInt_gpu,
                              grid=_grid((N-1)*M*L), block=_block())
 
-            kernels._cx0(c_gpu, N, L*M, grid=_grid(L*M), block=_block())
             b_gpu.fill(1./this_dt)
             kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
                 MInt_gpu, V_gpu, this_dt, N, L*M,
@@ -467,6 +469,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
                 grid=_grid((N-1)*L*M), block=_block())
             kernels._include_bc(dx_gpu, nu3, gamma3, h3, N, L*M,
                 b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, N, L*M, grid=_grid(L*M), block=_block())
 
             phi_gpu /= this_dt
 
