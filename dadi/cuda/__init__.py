@@ -1,5 +1,6 @@
 import atexit
 
+import pycuda.autoinit
 from pycuda.tools import clear_context_caches, make_default_context
 from skcuda.cusparse import cusparseCreate, cusparseDestroy
 from skcuda.cublas import cublasCreate, cublasDestroy, cublasDgeam
