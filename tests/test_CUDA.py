@@ -21,10 +21,10 @@ class CUDATestCase(unittest.TestCase):
         xx = np.linspace(0, 1, pts)
         phi = np.random.uniform(size=((pts, pts)))
 
-        dadi.enable_cuda(False)
+        dadi.cuda_enabled(False)
         phi_cpu = dadi.Integration.two_pops(phi.copy(), xx, *args)
     
-        dadi.enable_cuda()
+        dadi.cuda_enabled(True)
         phi_gpu = dadi.Integration.two_pops(phi.copy(), xx, *args)
 
         self.assertTrue(np.allclose(phi_cpu, phi_gpu))
@@ -38,10 +38,10 @@ class CUDATestCase(unittest.TestCase):
         xx = np.linspace(0, 1, pts)
         phi = np.random.uniform(size=((pts, pts)))
 
-        dadi.enable_cuda(False)
+        dadi.cuda_enabled(False)
         phi_cpu = dadi.Integration.two_pops(phi.copy(), xx, *args)
     
-        dadi.enable_cuda()
+        dadi.cuda_enabled(True)
         phi_gpu = dadi.Integration.two_pops(phi.copy(), xx, *args)
 
         self.assertTrue(np.allclose(phi_cpu, phi_gpu))
@@ -60,14 +60,14 @@ class CUDATestCase(unittest.TestCase):
         np.random.seed(213)
         phi = np.random.uniform(size=(pts,pts,pts))
 
-        dadi.enable_cuda(False)
+        dadi.cuda_enabled(False)
         phi_cpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                        m12, m13, m21, m23, m31, m32,
                        gamma1, gamma2, gamma3, h1, h2, h3,
                        theta0, initial_t, frozen1, frozen2,
                        frozen3)
 
-        dadi.enable_cuda()
+        dadi.cuda_enabled(True)
         phi_gpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                        m12, m13, m21, m23, m31, m32,
                        gamma1, gamma2, gamma3, h1, h2, h3,
@@ -82,14 +82,14 @@ class CUDATestCase(unittest.TestCase):
         for frozen1 in [True, False]:
             for frozen2 in [True, False]:
                 for frozen3 in [True, False]:
-                    dadi.enable_cuda(False)
+                    dadi.cuda_enabled(False)
                     phi_cpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                                    m12, m13, m21, m23, m31, m32,
                                    gamma1, gamma2, gamma3, h1, h2, h3,
                                    theta0, initial_t, frozen1, frozen2,
                                    frozen3)
 
-                    dadi.enable_cuda()
+                    dadi.cuda_enabled(True)
                     phi_gpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                                    m12, m13, m21, m23, m31, m32,
                                    gamma1, gamma2, gamma3, h1, h2, h3,
@@ -116,14 +116,14 @@ class CUDATestCase(unittest.TestCase):
         np.random.seed(213)
         phi = np.random.uniform(size=(pts,pts,pts))
 
-        dadi.enable_cuda(False)
+        dadi.cuda_enabled(False)
         phi_cpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                        m12, m13, m21, m23, m31, m32,
                        gamma1, gamma2, gamma3, h1, h2, h3,
                        theta0, initial_t, frozen1, frozen2,
                        frozen3)
 
-        dadi.enable_cuda()
+        dadi.cuda_enabled(True)
         phi_gpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                        m12, m13, m21, m23, m31, m32,
                        gamma1, gamma2, gamma3, h1, h2, h3,
@@ -136,14 +136,14 @@ class CUDATestCase(unittest.TestCase):
         for frozen1 in [True, False]:
             for frozen2 in [True, False]:
                 for frozen3 in [True, False]:
-                    dadi.enable_cuda(False)
+                    dadi.cuda_enabled(False)
                     phi_cpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                                    m12, m13, m21, m23, m31, m32,
                                    gamma1, gamma2, gamma3, h1, h2, h3,
                                    theta0, initial_t, frozen1, frozen2,
                                    frozen3)
 
-                    dadi.enable_cuda()
+                    dadi.cuda_enabled(True)
                     phi_gpu = dadi.Integration.three_pops(phi, xx, T, nu1, nu2, nu3,
                                    m12, m13, m21, m23, m31, m32,
                                    gamma1, gamma2, gamma3, h1, h2, h3,
