@@ -19,3 +19,5 @@ examples/YRI_CEU/test.msout
 dadi/Triallele/*.c
 dadi/TwoLocus/*.c
 .vscode*
+*.pyd
+*~

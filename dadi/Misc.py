@@ -49,9 +49,11 @@ def ensure_1arg_func(var):
     if numpy.isscalar(var):
         # If a constant was passed in, use lambda to make it a nice
         #  simple function.
-        var_f = lambda t: var
+        var_f_tmp = lambda t: var
     else:
-        var_f = var
+        var_f_tmp = var
+    # Wrapping arguments in float64 eases working with CUDA
+    var_f = lambda t: numpy.float64(var_f_tmp(t))
     if not callable(var_f):
         raise ValueError('Argument is not a constant or a function.')
     try:
@@ -107,7 +109,7 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     upper_bound: If not None, the resulting parameter set is adjusted to have
                  all value less than upper_bound.
     """
-    pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
+    pnew = params * 2**(fold * (2*numpy.random.uniform(len(params))-1))
     if lower_bound is not None:
         for ii,bound in enumerate(lower_bound):
             if bound is None:
@@ -309,7 +311,7 @@ def count_data_dict(data_dict, pop_ids):
     polarized using an ancestral state.
     """
     count_dict = collections.defaultdict(int)
-    for snp, snp_info in data_dict.items():
+    for snp_info in data_dict.values():
         # Skip SNPs that aren't biallelic.
         if len(snp_info['segregating']) != 2:
             continue

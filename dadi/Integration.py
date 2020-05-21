@@ -27,6 +27,7 @@ use_delj_trick = False
 import numpy
 from numpy import newaxis as nuax
 
+cuda_enabled = False
 from . import Misc, Numerics, tridiag
 from . import integration_c as int_c
 
@@ -271,6 +272,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     h2_f = Misc.ensure_1arg_func(h2)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
+                frozen1, frozen2, nomut1, nomut2)
+        return phi
+
     current_t = initial_t
     nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
     m12,m21 = m12_f(current_t), m21_f(current_t)
@@ -380,6 +388,14 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     h3_f = Misc.ensure_1arg_func(h3)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
+                gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f, 
+                theta0_f, frozen1, frozen2, frozen3)
+        return phi
+
     current_t = initial_t
     nu1,nu2,nu3 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t)
     m12,m13 = m12_f(current_t), m13_f(current_t)
@@ -389,10 +405,6 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     gamma3 = gamma3_f(current_t)
     h1,h2,h3 = h1_f(current_t), h2_f(current_t), h3_f(current_t)
     dx,dy,dz = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz)
-    dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
-             _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
-             _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
-    steps = 0
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
                  _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
@@ -400,7 +412,6 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         this_dt = min(dt, T - current_t)
 
         next_t = current_t + this_dt
-        steps += 1
 
         nu1,nu2,nu3 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t)
         m12,m13 = m12_f(next_t), m13_f(next_t)
@@ -594,6 +605,14 @@ def _two_pops_const_params(phi, xx, T, nu1=1,nu2=1, m12=0, m21=0,
     dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
              _compute_dt(dy,nu2,[m21],gamma2,h2))
     current_t = initial_t
+
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._two_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, nomut1, nomut2, ax, bx, cx, ay,
+                by, cy, current_t, dt, T)
+        return phi
+
     while current_t < T:
         this_dt = min(dt, T - current_t)
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
@@ -702,10 +721,21 @@ def _three_pops_const_params(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if Mz[-1,-1,-1] >= 0:
         bz[-1,-1,-1] += -(-0.5/nu3 - Mz[-1,-1,-1])*2/dz[-1]
 
+    del Vz,VzInt,Mz,MzInt,deljz
+
     dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
              _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
              _compute_dt(dz,nu3,[m31,m32],gamma3,h3))
     current_t = initial_t
+
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._three_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, frozen3, 
+                ax, bx, cx, ay, by, cy, az, bz, cz,
+                current_t, dt, T)
+        return phi
+
     while current_t < T:    
         this_dt = min(dt, T - current_t)
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,

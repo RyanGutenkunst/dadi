@@ -92,6 +92,7 @@ numpy.distutils.core.setup(name='dadi',
                            long_description_content_type="text/markdown",
                            long_description=long_description,
                            package_data = {'tests':['IM.fs'],
+                                           'dadi.cuda':['kernels.cu'],
                            #                # Copy Triallele extension modules
                                            'dadi.Triallele':['*.so', '*.pyd'],
                            #                # Copy TwoLocus extension modules

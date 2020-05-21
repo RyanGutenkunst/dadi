@@ -167,18 +167,26 @@ class Cache2D:
         if not exterior_int:
             return Spectrum(theta*fs)
 
+        # Test whether our DFE pdf is symmetric. If it is we can dramatically reduce our calculations.
+        testx = np.logspace(-2,2,3)
+        testout = sel_dist(testx, testx, params)
+        # We need atol=0 here to ensure small values don't lead to spurious pass of test
+        symmetric_dfe = np.allclose(testout, testout.T, atol=0, rtol=1e-12)
+
         max_gamma = -self.neg_gammas[-1]
         min_gamma = -self.neg_gammas[0]
         # Account for density that is outside the simulated domain.
         weights_1low, weights_1high = 0*self.neg_gammas, 0*self.neg_gammas
         weights_2low, weights_2high = 0*self.neg_gammas, 0*self.neg_gammas
         for ii, gamma in enumerate(-self.neg_gammas):
-            marg1_func = lambda g1: sel_dist(g1, gamma, params)
-            marg2_func = lambda g2: sel_dist(gamma, g2, params)
-            w_1low, err = scipy.integrate.quad(marg1_func, min_gamma, np.inf)
-            w_1high, err = scipy.integrate.quad(marg1_func, 0, max_gamma)
-            w_2low, err = scipy.integrate.quad(marg2_func, min_gamma, np.inf)
-            w_2high, err = scipy.integrate.quad(marg2_func, 0, max_gamma)
+            w_1low, err = scipy.integrate.quad(sel_dist, min_gamma, np.inf, epsabs=1e-4, epsrel=1e-3, args=(gamma,params))
+            w_1high, err = scipy.integrate.quad(sel_dist, 0, max_gamma, epsabs=1e-4, epsrel=1e-3, args=(gamma,params))
+            if symmetric_dfe:
+                w_2low, w_2high = w_1low, w_1high
+            else:
+                marg2_func = lambda g2: sel_dist(gamma, g2, params)
+                w_2low, err = scipy.integrate.quad(marg2_func, min_gamma, np.inf, epsabs=1e-4, epsrel=1e-3)
+                w_2high, err = scipy.integrate.quad(marg2_func, 0, max_gamma, epsabs=1e-4, epsrel=1e-3)
             weights_1low[ii] = w_1low
             weights_2low[ii] = w_2low
             weights_1high[ii] = w_1high
@@ -198,24 +206,22 @@ class Cache2D:
                        self.neg_gammas, axis=0)
 
         # Both neutral, really slow
-        func = lambda g1,g2: sel_dist(np.array([[g1]]), np.array([[g2]]),
-                                      params)
-        weight, err = scipy.integrate.dblquad(func, 0, max_gamma,
+        weight, err = scipy.integrate.dblquad(sel_dist, 0, max_gamma,
                                               lambda _: 0, lambda _: max_gamma,
-                                              epsrel=1e-3, epsabs=1e-4)
+                                              epsrel=1e-3, epsabs=1e-4, args=[params])
         fs += spectra[-1,-1]*weight
 
         # Neutral gamma2, strongly deleterious gamma1
-        weight, err = scipy.integrate.dblquad(func, 0, max_gamma,
-                                              lambda _: min_gamma,
-                                              lambda _: np.inf,
-                                              epsrel=1e-3, epsabs=1e-4)
+        weight, err = scipy.integrate.dblquad(sel_dist, 0, max_gamma,
+                lambda _: min_gamma, lambda _: np.inf,
+                epsrel=1e-3, epsabs=1e-4 ,args=[params])
         fs += spectra[0,-1]*weight
 
         # Neutral gamma1, strongly deleterious gamma2
-        weight, err = scipy.integrate.dblquad(func, min_gamma, np.inf,
-                                              lambda _: 0, lambda _: max_gamma,
-                                              epsrel=1e-3, epsabs=1e-4)
+        if not symmetric_dfe:
+            weight, err = scipy.integrate.dblquad(sel_dist, min_gamma, np.inf,
+                    lambda _: 0, lambda _: max_gamma,
+                    epsrel=1e-3, epsabs=1e-4, args=[params])
         fs += spectra[-1,0]*weight
 
         return Spectrum(theta*fs)
