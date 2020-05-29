@@ -211,7 +211,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
              h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False,
-             frozen2=False, nomut1=False, nomut2=False):
+             frozen2=False, nomut1=False, nomut2=False, enable_cuda_const=False):
     """
     Integrate a 2-dimensional phi foward.
 
@@ -238,6 +238,9 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     nomut1,nomut2: If True, no new mutations will be introduced into the
                    given population.
 
+    enable_cuda_const: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
+
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
@@ -257,9 +260,12 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
-                                      gamma1, gamma2, h1, h2, theta0, initial_t,
-                                      frozen1, frozen2, nomut1, nomut2)
+        # Constant integration with CUDA turns out to be slower,
+        # so we only use it in specific circumsances.
+        if not cuda_enabled or (cuda_enabled and enable_cuda_const):
+            return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
+                    gamma1, gamma2, h1, h2, theta0, initial_t,
+                    frozen1, frozen2, nomut1, nomut2)
     yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
@@ -321,7 +327,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
                gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
                theta0=1, initial_t=0, frozen1=False, frozen2=False,
-               frozen3=False):
+               frozen3=False, enable_cuda_const=False):
     """
     Integrate a 3-dimensional phi foward.
 
@@ -340,6 +346,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
+
+    enable_cuda_const: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
@@ -364,11 +373,12 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3, 
-                                        m12, m13, m21, m23, m31, m32, 
-                                        gamma1, gamma2, gamma3, h1, h2, h3,
-                                        theta0, initial_t,
-                                        frozen1, frozen2, frozen3)
+        if not cuda_enabled or (cuda_enabled and enable_cuda_const):
+            return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3,
+                                            m12, m13, m21, m23, m31, m32,
+                                            gamma1, gamma2, gamma3, h1, h2, h3,
+                                            theta0, initial_t,
+                                            frozen1, frozen2, frozen3)
     zz = yy = xx
 
     nu1_f = Misc.ensure_1arg_func(nu1)
