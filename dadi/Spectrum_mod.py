@@ -1890,13 +1890,13 @@ class Spectrum(numpy.ma.masked_array):
         """
         import dadi.Misc
         cd = dadi.Misc.count_data_dict(data_dict, pop_ids)
-        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids)
-        if mask_corners:
-            fs.mask_corners()
+        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids, 
+                mask_corners=mask_corners)
         return fs
 
     @staticmethod
-    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None):
+    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None,
+            mask_corners=False):
         """
         Frequency spectrum from data mapping SNP configurations to counts.
 
@@ -1907,6 +1907,8 @@ class Spectrum(numpy.ma.masked_array):
                    polarized.
                    If False, include all SNPs and fold resulting Spectrum.
         pop_ids: Optional list of strings containing the population labels.
+        mask_corners: If True (default), the 'observed in none' and 'observed 
+                      in all' entries of the FS will be masked.
         """
         # create slices for projection calculation
         slices = [[numpy.newaxis] * len(projections) for ii in
@@ -1917,7 +1919,7 @@ class Spectrum(numpy.ma.masked_array):
         slices = [tuple(_) for _ in slices]
 
         fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1),
-                                 pop_ids=pop_ids)
+                                 pop_ids=pop_ids, mask_corners=mask_corners)
         for (called_by_pop, derived_by_pop, this_snp_polarized), count\
                 in count_dict.items():
             if polarized and not this_snp_polarized:
