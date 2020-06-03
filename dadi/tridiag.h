@@ -4,7 +4,7 @@ void tridiag(double a[], double b[], double c[], double r[], double u[], int n);
 void tridiag_fl(float a[], float b[], float c[], float r[], float u[], int n);
 
 void tridiag_malloc(int n);
-void tridiag_free();
+void tridiag_free(void);
 /* This version of tridiag uses previously allocated memory, for slighly *
  * improved performance with repeated solution of problems of the same size.
  */

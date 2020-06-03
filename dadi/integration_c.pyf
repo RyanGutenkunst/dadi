@@ -175,5 +175,89 @@ interface
     integer intent(optional) :: Lstart = 0
     integer intent(optional) :: Lend = shape(phi,0) 
   end subroutine implicit_precalc_3Dz
+  subroutine implicit_4Dx(phi, xx,yy,zz,aa, nu1, m12, m13, m14, gamma1, h1, dt, L, M, N, O, use_delj_trick)
+    intent(c) implicit_4Dx
+    intent(c)
+    double precision intent(in,out), dimension(L,M,N,O) :: phi
+    double precision intent(in), dimension(L) :: xx
+    double precision intent(in), dimension(M) :: yy
+    double precision intent(in), dimension(N) :: zz
+    double precision intent(in), dimension(N) :: aa
+    double precision intent(in) :: nu1
+    double precision intent(in) :: m12
+    double precision intent(in) :: m13
+    double precision intent(in) :: m14
+    double precision intent(in) :: gamma1
+    double precision intent(in) :: h1
+    double precision intent(in) :: dt
+    integer intent(hide), depend(phi) :: L = shape(phi, 0)
+    integer intent(hide), depend(phi) :: M = shape(phi, 1)
+    integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(hide), depend(phi) :: O = shape(phi, 3)
+    integer intent(in) :: use_delj_trick
+  end subroutine implicit_4Dx
+  subroutine implicit_4Dy(phi, xx,yy,zz,aa, nu2, m21, m23, m24, gamma2, h2, dt, L, M, N, O, use_delj_trick)
+    intent(c) implicit_4Dy
+    intent(c)
+    double precision intent(in,out), dimension(L,M,N,O) :: phi
+    double precision intent(in), dimension(L) :: xx
+    double precision intent(in), dimension(M) :: yy
+    double precision intent(in), dimension(N) :: zz
+    double precision intent(in), dimension(N) :: aa
+    double precision intent(in) :: nu2
+    double precision intent(in) :: m21
+    double precision intent(in) :: m23
+    double precision intent(in) :: m24
+    double precision intent(in) :: gamma2
+    double precision intent(in) :: h2
+    double precision intent(in) :: dt
+    integer intent(hide), depend(phi) :: L = shape(phi, 0)
+    integer intent(hide), depend(phi) :: M = shape(phi, 1)
+    integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(hide), depend(phi) :: O = shape(phi, 3)
+    integer intent(in) :: use_delj_trick
+  end subroutine implicit_4Dy
+  subroutine implicit_4Dz(phi, xx,yy,zz,aa, nu3, m31, m32, m34, gamma3, h3, dt, L, M, N, O, use_delj_trick)
+    intent(c) implicit_4Dz
+    intent(c)
+    double precision intent(in,out), dimension(L,M,N,O) :: phi
+    double precision intent(in), dimension(L) :: xx
+    double precision intent(in), dimension(M) :: yy
+    double precision intent(in), dimension(N) :: zz
+    double precision intent(in), dimension(N) :: aa
+    double precision intent(in) :: nu3
+    double precision intent(in) :: m31
+    double precision intent(in) :: m32
+    double precision intent(in) :: m34
+    double precision intent(in) :: gamma3
+    double precision intent(in) :: h3
+    double precision intent(in) :: dt
+    integer intent(hide), depend(phi) :: L = shape(phi, 0)
+    integer intent(hide), depend(phi) :: M = shape(phi, 1)
+    integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(hide), depend(phi) :: O = shape(phi, 3)
+    integer intent(in) :: use_delj_trick
+  end subroutine implicit_4Dz
+  subroutine implicit_4Da(phi, xx,yy,zz,aa, nu4, m41, m42, m43, gamma4, h4, dt, L, M, N, O, use_delj_trick)
+    intent(c) implicit_4Da
+    intent(c)
+    double precision intent(in,out), dimension(L,M,N,O) :: phi
+    double precision intent(in), dimension(L) :: xx
+    double precision intent(in), dimension(M) :: yy
+    double precision intent(in), dimension(N) :: zz
+    double precision intent(in), dimension(N) :: aa
+    double precision intent(in) :: nu4
+    double precision intent(in) :: m41
+    double precision intent(in) :: m42
+    double precision intent(in) :: m43
+    double precision intent(in) :: gamma4
+    double precision intent(in) :: h4
+    double precision intent(in) :: dt
+    integer intent(hide), depend(phi) :: L = shape(phi, 0)
+    integer intent(hide), depend(phi) :: M = shape(phi, 1)
+    integer intent(hide), depend(phi) :: N = shape(phi, 2)
+    integer intent(hide), depend(phi) :: O = shape(phi, 3)
+    integer intent(in) :: use_delj_trick
+  end subroutine implicit_4Da
 end interface
 end python module integration_c

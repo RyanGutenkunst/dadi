@@ -39,6 +39,7 @@ int_c = core.Extension(name = 'dadi.integration_c',
                                   'dadi/integration1D.c',
                                   'dadi/integration2D.c', 
                                   'dadi/integration3D.c',
+                                  'dadi/integration4D.c',
                                   'dadi/integration_shared.c',
                                   'dadi/tridiag.c'],
                          extra_compile_args=extra_compile_args)

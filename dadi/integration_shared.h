@@ -8,6 +8,11 @@ double Mfunc1D(double x, double gamma, double h);
 double Mfunc2D(double x, double y, double m, double gamma, double h);
 double Mfunc3D(double x, double y, double z, double mxy, double mxz,
         double gamma, double h);
+double Mfunc4D(double x, double y, double z, double a, double mxy, double mxz, double mxa,
+        double gamma, double h);
+double Mfunc5D(double x, double y, double z, double a, double b,
+        double mxy, double mxz, double mxa, double mxb,
+        double gamma, double h);
 
 /* Differences between x values.
  */

@@ -19,7 +19,15 @@ double Mfunc3D(double x, double y, double z, double mxy, double mxz,
         double gamma, double h){
     return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
 }
-
+double Mfunc4D(double x, double y, double z, double a, double mxy, double mxz, double mxa,
+        double gamma, double h){
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
+}
+double Mfunc5D(double x, double y, double z, double a, double b, 
+        double mxy, double mxz, double mxa, double mxb,
+        double gamma, double h){
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
+}
 
 void compute_dx(double *xx, int N, double *dx){
     int ii;
