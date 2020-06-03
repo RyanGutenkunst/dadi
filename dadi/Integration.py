@@ -332,12 +332,12 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                              nomut1, nomut2)
-            if not frozen1:
-                phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
-                                         this_dt, use_delj_trick)
-            if not frozen2:
-                phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
-                                         this_dt, use_delj_trick)
+        if not frozen1:
+            phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
+                                     this_dt, use_delj_trick)
+        if not frozen2:
+            phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
+                                     this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -522,13 +522,16 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                          'migration to or from it.')
     aa = zz = yy = xx
 
-    for ii in range(1,5):
-        exec("nu{0}_f = Misc.ensure_1arg_func(nu{0})".format(ii))
-        exec("gamma{0}_f = Misc.ensure_1arg_func(gamma{0})".format(ii))
-        exec("h{0}_f = Misc.ensure_1arg_func(h{0})".format(ii))
-        for jj in range(1,5):
-            if ii != jj:
-                exec("m{0}{1}_f = Misc.ensure_1arg_func(m{0}{1})".format(ii,jj))
+    nu1_f, nu2_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2)
+    nu3_f, nu4_f = Misc.ensure_1arg_func(nu3), Misc.ensure_1arg_func(nu4)
+    gamma1_f, gamma2_f = Misc.ensure_1arg_func(gamma1), Misc.ensure_1arg_func(gamma2)
+    gamma3_f, gamma4_f = Misc.ensure_1arg_func(gamma3), Misc.ensure_1arg_func(gamma4)
+    h1_f, h2_f = Misc.ensure_1arg_func(h1), Misc.ensure_1arg_func(h2)
+    h3_f, h4_f = Misc.ensure_1arg_func(h3), Misc.ensure_1arg_func(h4)
+    m12_f, m13_f, m14_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13), Misc.ensure_1arg_func(m14)
+    m21_f, m23_f, m24_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23), Misc.ensure_1arg_func(m24)
+    m31_f, m32_f, m34_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32), Misc.ensure_1arg_func(m34)
+    m41_f, m42_f, m43_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
     #if cuda_enabled:
@@ -540,13 +543,14 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     #    return phi
 
     current_t = initial_t
-    for ii in range(1,5):
-        exec("nu{0} = nu{0}_f(current_t)".format(ii))
-        exec("gamma{0} = gamma{0}_f(current_t)".format(ii))
-        exec("h{0} = h{0}_f(current_t)".format(ii))
-        for jj in range(1,5):
-            if ii != jj:
-                exec("m{0}{1} = m{0}{1}_f(current_t)".format(ii,jj))
+    nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
+    gamma1, gamma2, gamma3, gamma4 = gamma1_f(current_t), gamma2_f(current_t), gamma3_f(current_t), gamma4_f(current_t)
+    h1, h2, h3, h4 = h1_f(current_t), h2_f(current_t), h3_f(current_t), h4_f(current_t)
+    m12, m13, m14 = m12_f(current_t), m13_f(current_t), m14_f(current_t)
+    m21, m23, m24 = m21_f(current_t), m23_f(current_t), m24_f(current_t)
+    m31, m32, m34 = m31_f(current_t), m32_f(current_t), m34_f(current_t)
+    m41, m42, m43 = m41_f(current_t), m42_f(current_t), m43_f(current_t)
+
     dx,dy,dz,da = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa)
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12,m13,m14],gamma1,h1),
@@ -557,13 +561,13 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
 
         next_t = current_t + this_dt
 
-        for ii in range(1,5):
-            exec("nu{0} = nu{0}_f(current_t)".format(ii))
-            exec("gamma{0} = gamma{0}_f(current_t)".format(ii))
-            exec("h{0} = h{0}_f(current_t)".format(ii))
-            for jj in range(1,5):
-                if ii != jj:
-                    exec("m{0}{1} = m{0}{1}_f(current_t)".format(ii,jj))
+        nu1, nu2, nu3, nu4 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t)
+        gamma1, gamma2, gamma3, gamma4 = gamma1_f(next_t), gamma2_f(next_t), gamma3_f(next_t), gamma4_f(next_t)
+        h1, h2, h3, h4 = h1_f(next_t), h2_f(next_t), h3_f(next_t), h4_f(next_t)
+        m12, m13, m14 = m12_f(next_t), m13_f(next_t), m14_f(next_t)
+        m21, m23, m24 = m21_f(next_t), m23_f(next_t), m24_f(next_t)
+        m31, m32, m34 = m31_f(next_t), m32_f(next_t), m34_f(next_t)
+        m41, m42, m43 = m41_f(next_t), m42_f(next_t), m43_f(next_t)
         theta0 = theta0_f(next_t)
 
         if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,m12,m13,m14,m21,

@@ -156,9 +156,10 @@ import dadi
 
 pts = 20
 xx = dadi.Numerics.default_grid(pts)
+nu1_func = lambda t: 0.5 + 5*t
 phi = dadi.PhiManip.phi_1D(xx)
 phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
-phi = dadi.Integration.two_pops(phi, xx, T=0.1, nu1=0.5, nu2=10, m12=2, m21=0.5, gamma1=-1, gamma2=1, h1=0.2, h2=0.9)
+phi = dadi.Integration.two_pops(phi, xx, T=0.1, nu1=nu1_func, nu2=10, m12=2, m21=0.5, gamma1=-1, gamma2=1, h1=0.2, h2=0.9)
 phi = dadi.PhiManip.phi_2D_admix_1_into_2(phi,0.8,xx,xx)
 fs2 = dadi.Spectrum.from_phi(phi, [5,5], (xx,xx))
 
@@ -166,7 +167,7 @@ phi = dadi.PhiManip.phi_1D(xx)
 phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
 phi = dadi.PhiManip.phi_2D_to_3D(phi, 0, xx,xx,xx)
 phi = dadi.PhiManip.phi_3D_to_4D(phi, 0, 0, xx,xx,xx,xx)
-phi = dadi.Integration.four_pops(phi, xx, T=0.1, nu1=0.5, nu3=10, m13=2, m31=0.5, gamma1=-1, gamma3=1, h1=0.2, h3=0.7)
+phi = dadi.Integration.four_pops(phi, xx, T=0.1, nu1=nu1_func, nu3=10, m13=2, m31=0.5, gamma1=-1, gamma3=1, h1=0.2, h3=0.7)
 phi = dadi.PhiManip.phi_4D_admix_into_3(phi,0.8,0,0,xx,xx,xx,xx)
 fs4 = dadi.Spectrum.from_phi(phi, [5,5,5,5], (xx,xx,xx,xx))
 fsm = fs4.marginalize((1,3))
