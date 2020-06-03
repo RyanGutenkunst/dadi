@@ -9,6 +9,13 @@ __global__ void inject_mutations_3D(double *phi, int L, double val001, double va
     phi[L*L] += val100;
 }
 
+__global__ void inject_mutations_4D(double *phi, int L, double val0001, double val0010, double val0100, double val1000){
+    phi[1] += val0001;
+    phi[L] += val0010;
+    phi[L*L] += val0100;
+    phi[L*L*L] += val1000;
+}
+
 __global__ void Vfunc(double *x, double nu, int L, double *output){
     int ii = blockIdx.x*blockDim.x + threadIdx.x;
     if(ii < L){
@@ -39,6 +46,21 @@ __global__ void Mfunc3D(double *x, double *y, double *z, double mxy, double mxz,
     int kk = (blockIdx.x*blockDim.x + threadIdx.x) % N;
     if(ii < L){
         output[ii*(M*N) + jj*N + kk] = _Mfunc3D(x[ii], y[jj], z[kk], mxy, mxz, gamma, h);
+    }
+}
+
+__device__ double _Mfunc4D(double x, double y, double z, double a, double mxy, double mxz, double mxa,
+        double gamma, double h){
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
+}
+
+__global__ void Mfunc4D(double *x, double *y, double *z, double *a, double mxy, double mxz, double mxa, double gamma, double h, int L, int M, int N, int O, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / O) % N;
+    int ll = (blockIdx.x*blockDim.x + threadIdx.x) % O;
+    if(ii < L){
+        output[ii*M*N*O + jj*N*O + kk*O + ll] = _Mfunc4D(x[ii], y[jj], z[kk], a[ll], mxy, mxz, mxa, gamma, h);
     }
 }
 

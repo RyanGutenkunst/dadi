@@ -152,6 +152,43 @@ class CUDATestCase(unittest.TestCase):
                                    frozen3)
         
                     self.assertTrue(np.allclose(phi_cpu, phi_gpu))
+                    
+    def test_4d_integration(self):
+        pts = 10
+        nu1 = lambda t: 0.5 + 5*t
+        nu2 = lambda t: 10-50*t
+        nu3, nu4 = 0.3, 0.9
+        m12, m13, m14 = 2.0, 0.1, 3.2
+        m21, m23, m24 = lambda t: 0.5+3*t, 0.2, 1.2
+        m31, m32, m34 = 0.9, 1.7, 0.9
+        m41, m42, m43 = 0.3, 0.4, 1.9
+        gamma1 = lambda t: -2*t
+        gamma2, gamma3, gamma4 = 3.0, -1, 0.5
+        h1 = lambda t: 0.2+t
+        h2 = lambda t: 0.9-t
+        h3, h4 = 0.3, 0.5
+        theta0 = lambda t: 1 + 2*t
+
+        xx = dadi.Numerics.default_grid(pts)
+        phi = dadi.PhiManip.phi_1D(xx)
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+        phi = dadi.PhiManip.phi_2D_to_3D(phi, 0, xx,xx,xx)
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, 0, 0, xx,xx,xx,xx)
+        
+        dadi.cuda_enabled(False)
+        phi_cpu = dadi.Integration.four_pops(phi.copy(), xx, T=0.1, nu1=nu1, nu2=nu2, nu3=nu3, nu4=nu4,
+                                             m12=m12, m13=m13, m14=m14, m21=m21, m23=m23, m24=m24,
+                                             m31=m31, m32=m32, m34=m34, m41=m41, m42=m42, m43=m43,
+                                             gamma1=gamma1, gamma2=gamma2, gamma3=gamma3, gamma4=gamma4,
+                                             h1=h1, h2=h2, h3=h3, h4=h4, theta0=theta0)
+
+        dadi.cuda_enabled(True)
+        phi_gpu = dadi.Integration.four_pops(phi.copy(), xx, T=0.1, nu1=nu1, nu2=nu2, nu3=nu3, nu4=nu4,
+                                             m12=m12, m13=m13, m14=m14, m21=m21, m23=m23, m24=m24,
+                                             m31=m31, m32=m32, m34=m34, m41=m41, m42=m42, m43=m43,
+                                             gamma1=gamma1, gamma2=gamma2, gamma3=gamma3, gamma4=gamma4,
+                                             h1=h1, h2=h2, h3=h3, h4=h4, theta0=theta0)
+        self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
 if dadi.cuda_enabled(True):
     suite = unittest.TestLoader().loadTestsFromTestCase(CUDATestCase)
