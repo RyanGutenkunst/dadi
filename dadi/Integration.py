@@ -534,13 +534,13 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     m41_f, m42_f, m43_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    #if cuda_enabled:
-    #    import dadi.cuda
-    #    phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
-    #            nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
-    #            gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f, 
-    #            theta0_f, frozen1, frozen2, frozen3)
-    #    return phi
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
+                m41_f, m42_f, m43_f, gamma1_f, gamma2_f, gamma3_f, gamma4_f, h1_f, h2_f, h3_f, h4_f,
+                theta0_f, frozen1, frozen2, frozen3, frozen4)
+        return phi
 
     current_t = initial_t
     nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
