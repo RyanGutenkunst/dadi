@@ -688,10 +688,10 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                          'backwards.' % (T, initial_t))
 
     if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0 or m15 != 0 or m51 != 0))\
-       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0 or m25 !=0 or m52 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0 or m25 != 0 or m52 != 0))\
        or (frozen3 and (m13 != 0 or m31 != 0 or m23 != 0 or m32 != 0 or m34 != 0 or m43 != 0 or m35 != 0 or m53 !=0))\
-       or (frozen4 and (m14 != 0 or m41 != 0 or m24 != 0 or m42 != 0 or m34 != 0 or m43 != 0 or m45 != or m54 != 0))\
-       or (frozen5 and (m15 != 0 or m51 != 0 or m25 != 0 or m52 != 0 or m35 != 0 or m53 != 0 or m45 != or m54 != 0)):
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 != 0 or m42 != 0 or m34 != 0 or m43 != 0 or m45 != 0 or m54 != 0))\
+       or (frozen5 and (m15 != 0 or m51 != 0 or m25 != 0 or m52 != 0 or m35 != 0 or m53 != 0 or m45 != 0 or m54 != 0)):
         raise ValueError('Population cannot be frozen and have non-zero '
                          'migration to or from it.')
     bb = aa = zz = yy = xx
