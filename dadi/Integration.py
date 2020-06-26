@@ -118,7 +118,7 @@ def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0, frozen1, frozen2, froz
         phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
     return phi
 
-def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, theta0, frozen1, frozen2, frozen3, frozen4):
+def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0, frozen1, frozen2, frozen3, frozen4, frozen5):
     """
     Inject novel mutations for a timestep.
     """
@@ -136,6 +136,7 @@ def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, theta0, frozen1, frozen2, froz
     # Population 4
     if not frozen4:
         phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+    # Population 5
     if not frozen5:
         phi[0,0,0,0,1] += dt/aa[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
     return phi
@@ -736,7 +737,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                  _compute_dt(dy,nu2,[m21,m23,m24,m25],gamma2,h2),
                  _compute_dt(dz,nu3,[m31,m32,m34,m35],gamma3,h3),
                  _compute_dt(da,nu4,[m41,m42,m43,m45],gamma4,h4),
-                 _compute_dt(da,nu4,[m51,m52,m53,m54],gamma5,h5))
+                 _compute_dt(db,nu5,[m51,m52,m53,m54],gamma5,h5))
         this_dt = min(dt, T - current_t)
 
         next_t = current_t + this_dt

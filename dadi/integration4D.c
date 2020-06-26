@@ -63,7 +63,7 @@ void implicit_4Dx(double *phi, double *xx, double *yy, double *zz, double *aa,
 
                 if((yy[jj]==0) && (zz[kk]==0) && (aa[ll]==0) && (Mfirst <= 0))
                     b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
-                if((yy[jj]==1) && (zz[kk]==1) && (aa[ll]==0) && (Mlast >= 0))
+                if((yy[jj]==1) && (zz[kk]==1) && (aa[ll]==1) && (Mlast >= 0))
                     b[L-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
 
                 tridiag_premalloc(a, b, c, r, temp, L);
@@ -142,7 +142,7 @@ void implicit_4Dy(double *phi, double *xx, double *yy, double *zz, double *aa,
 
                 if((xx[ii]==0) && (zz[kk]==0) && (aa[ll]==0) && (Mfirst <= 0))
                     b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
-                if((xx[ii]==1) && (zz[kk]==1) && (aa[ll]==0) && (Mlast >= 0))
+                if((xx[ii]==1) && (zz[kk]==1) && (aa[ll]==1) && (Mlast >= 0))
                     b[M-1] += -(-0.5/nu2 - Mlast)*2./dy[M-2];
 
                 tridiag_premalloc(a, b, c, r, temp, M);
@@ -221,7 +221,7 @@ void implicit_4Dz(double *phi, double *xx, double *yy, double *zz, double *aa,
 
                 if((xx[ii]==0) && (yy[jj]==0) && (aa[ll] == 0) && (Mfirst <= 0))
                     b[0] += (0.5/nu3 - Mfirst)*2./dz[0];
-                if((xx[ii]==1) && (yy[jj]==1) && (aa[ll] == 0) && (Mlast >= 0))
+                if((xx[ii]==1) && (yy[jj]==1) && (aa[ll] == 1) && (Mlast >= 0))
                     b[N-1] += -(-0.5/nu3 - Mlast)*2./dz[N-2];
 
                 tridiag_premalloc(a, b, c, r, temp, N);
@@ -299,7 +299,7 @@ void implicit_4Da(double *phi, double *xx, double *yy, double *zz, double *aa,
 
                 if((xx[ii]==0) && (yy[jj]==0) && (zz[kk] == 0) && (Mfirst <= 0))
                     b[0] += (0.5/nu4 - Mfirst)*2./da[0];
-                if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 0) && (Mlast >= 0))
+                if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 1) && (Mlast >= 0))
                     b[O-1] += -(-0.5/nu4 - Mlast)*2./da[O-2];
 
                 tridiag_premalloc(a, b, c, r, &phi[ii*M*N*O + jj*N*O + kk*O], O);

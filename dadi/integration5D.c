@@ -65,7 +65,7 @@ void implicit_5Dx(double *phi, double *xx, double *yy, double *zz, double *aa, d
 
                     if((yy[jj]==0) && (zz[kk]==0) && (aa[ll]==0) && (bb[mm]==0) && (Mfirst <= 0))
                         b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
-                    if((yy[jj]==1) && (zz[kk]==1) && (aa[ll]==0) && (bb[mm]==0) && (Mlast >= 0))
+                    if((yy[jj]==1) && (zz[kk]==1) && (aa[ll]==1) && (bb[mm]==1) && (Mlast >= 0))
                         b[L-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
 
                     tridiag_premalloc(a, b, c, r, temp, L);
@@ -147,7 +147,7 @@ void implicit_5Dy(double *phi, double *xx, double *yy, double *zz, double *aa, d
 
                     if((xx[ii]==0) && (zz[kk]==0) && (aa[ll]==0) && (bb[mm]==0) && (Mfirst <= 0))
                         b[0] += (0.5/nu2 - Mfirst)*2./dy[0];
-                    if((xx[ii]==1) && (zz[kk]==1) && (aa[ll]==0) && (bb[mm]==0) && (Mlast >= 0))
+                    if((xx[ii]==1) && (zz[kk]==1) && (aa[ll]==1) && (bb[mm]==1) && (Mlast >= 0))
                         b[M-1] += -(-0.5/nu2 - Mlast)*2./dy[M-2];
 
                     tridiag_premalloc(a, b, c, r, temp, M);
@@ -229,7 +229,7 @@ void implicit_5Dz(double *phi, double *xx, double *yy, double *zz, double *aa, d
 
                     if((xx[ii]==0) && (yy[jj]==0) && (aa[ll] == 0) && (bb[mm]==0) && (Mfirst <= 0))
                         b[0] += (0.5/nu3 - Mfirst)*2./dz[0];
-                    if((xx[ii]==1) && (yy[jj]==1) && (aa[ll] == 0) && (bb[mm]==0) && (Mlast >= 0))
+                    if((xx[ii]==1) && (yy[jj]==1) && (aa[ll] == 1) && (bb[mm]==1) && (Mlast >= 0))
                         b[N-1] += -(-0.5/nu3 - Mlast)*2./dz[N-2];
 
                     tridiag_premalloc(a, b, c, r, temp, N);
@@ -311,7 +311,7 @@ void implicit_5Da(double *phi, double *xx, double *yy, double *zz, double *aa, d
 
                     if((xx[ii]==0) && (yy[jj]==0) && (zz[kk] == 0) && (bb[mm] == 0) && (Mfirst <= 0))
                         b[0] += (0.5/nu4 - Mfirst)*2./da[0];
-                    if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 0) && (bb[mm] == 0) && (Mlast >= 0))
+                    if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 1) && (bb[mm] == 1) && (Mlast >= 0))
                         b[O-1] += -(-0.5/nu4 - Mlast)*2./da[O-2];
 
                     tridiag_premalloc(a, b, c, r, temp, O);
@@ -392,7 +392,7 @@ void implicit_5Db(double *phi, double *xx, double *yy, double *zz, double *aa, d
 
                     if((xx[ii]==0) && (yy[jj]==0) && (zz[kk] == 0) && (aa[ll] == 0) && (Mfirst <= 0))
                         b[0] += (0.5/nu5 - Mfirst)*2./db[0];
-                    if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 0) && (aa[ll] == 0) && (Mlast >= 0))
+                    if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 1) && (aa[ll] == 1) && (Mlast >= 0))
                         b[P-1] += -(-0.5/nu5 - Mlast)*2./db[O-2];
 
                     tridiag_premalloc(a, b, c, r, &phi[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll], P);

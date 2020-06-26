@@ -39,7 +39,7 @@ def _inject_mutations_4D_valcalc(dt, xx, yy, zz, aa, theta0, frozen1, frozen2, f
     # Population 1
     # Normalization based on the multi-dimensional trapezoid rule is 
     # implemented                      ************** here ***************
-    val1000, val0100, val0010, val0001 = 0, 0, 0
+    val1000, val0100, val0010, val0001 = 0, 0, 0, 0
     if not frozen1:
         val1000 = dt/xx[1] * theta0/2 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
     # Population 2
@@ -548,20 +548,20 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
     V_gpu = gpuarray.empty(L, np.float64)
     VInt_gpu = gpuarray.empty(L-1, np.float64)
 
-    a_gpu = gpuarray.empty((L,L*L), np.float64)
-    b_gpu = gpuarray.empty((L,L*L), np.float64)
-    c_gpu = gpuarray.empty((L,L*L), np.float64)
+    a_gpu = gpuarray.empty((L,M*N*O), np.float64)
+    b_gpu = gpuarray.empty((L,M*N*O), np.float64)
+    c_gpu = gpuarray.empty((L,M*N*O), np.float64)
 
     bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
         cusparse_handle, 0, L, a_gpu.gpudata, b_gpu.gpudata,
-        c_gpu.gpudata, phi_gpu.gpudata, L**2)
+        c_gpu.gpudata, phi_gpu.gpudata, M*N*O)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
     while current_t < T:
         dt = min(dadi.Integration._compute_dt(dx, nu1, [m12, m13, m14], gamma1, h1),
                  dadi.Integration._compute_dt(dy, nu2, [m21, m23, m24], gamma2, h2),
                  dadi.Integration._compute_dt(dz, nu3, [m31, m32, m34], gamma3, h3),
-                 dadi.Integration._compute_dt(dz, nu4, [m41, m42, m43], gamma4, h4))
+                 dadi.Integration._compute_dt(da, nu4, [m41, m42, m43], gamma4, h4))
         this_dt = np.float64(min(dt, T - current_t))
 
         next_t = current_t + this_dt
@@ -658,7 +658,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
                            grid=_grid(N), block=_block())
             kernels._Vfunc(xInt_gpu, nu3, np.int32(N-1), VInt_gpu, 
                            grid=_grid(N-1), block=_block())
-            kernels._Mfunc3D(xInt_gpu, xx_gpu, xx_gpu, m34, m31, m32, gamma3, h3,
+            kernels._Mfunc4D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, m34, m31, m32, gamma3, h3,
                              np.int32(N-1), O, L, M, MInt_gpu,
                              grid=_grid((N-1)*M*L*O), block=_block())
 
@@ -681,15 +681,15 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
                 a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
                 L*M*O, pBuffer)
 
-        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*N*O,M))
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*M*O,N))
         phi_gpu, c_gpu = c_gpu.reshape(O,L*M*N), phi_gpu.reshape(O,L*M*N)
         MInt_gpu = c_gpu
         if not frozen4:
-            kernels._Vfunc(xx_gpu, nu4, N, V_gpu, 
+            kernels._Vfunc(xx_gpu, nu4, O, V_gpu, 
                            grid=_grid(O), block=_block())
             kernels._Vfunc(xInt_gpu, nu4, np.int32(O-1), VInt_gpu, 
                            grid=_grid(O-1), block=_block())
-            kernels._Mfunc3D(xInt_gpu, xx_gpu, xx_gpu, m41, m42, m43, gamma4, h4,
+            kernels._Mfunc4D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, m41, m42, m43, gamma4, h4,
                              np.int32(O-1), L, M, N, MInt_gpu,
                              grid=_grid((O-1)*M*L*N), block=_block())
 
@@ -712,7 +712,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
                 a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
                 L*M*N, pBuffer)
 
-        transpose_gpuarray(phi_gpu, c_gpu.reshape(M*N*O,L))
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*M*N,O))
         phi_gpu, c_gpu = c_gpu.reshape(L,M*N*O), phi_gpu.reshape(L,M*N*O)
 
         current_t += this_dt
