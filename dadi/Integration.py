@@ -118,6 +118,28 @@ def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0, frozen1, frozen2, froz
         phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
     return phi
 
+def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, theta0, frozen1, frozen2, frozen3, frozen4):
+    """
+    Inject novel mutations for a timestep.
+    """
+    # Population 1
+    # Normalization based on the multi-dimensional trapezoid rule is 
+    # implemented                      ************** here ***************
+    if not frozen1:
+        phi[1,0,0,0,0] += dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
+    # Population 2
+    if not frozen2:
+        phi[0,1,0,0,0] += dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
+    # Population 3
+    if not frozen3:
+        phi[0,0,1,0,0] += dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
+    # Population 4
+    if not frozen4:
+        phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+    if not frozen5:
+        phi[0,0,0,0,1] += dt/aa[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+    return phi
+
 def _compute_dt(dx, nu, ms, gamma, h):
     """
     Compute the appropriate timestep given the current demographic params.
@@ -230,7 +252,8 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
              h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False,
-             frozen2=False, nomut1=False, nomut2=False, enable_cuda_const=False):
+             frozen2=False, nomut1=False, nomut2=False, enable_cuda_const=False,
+             transpose=False):
     """
     Integrate a 2-dimensional phi foward.
 
@@ -278,7 +301,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
                          'migration to or from it.')
 
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
-    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+    if False and numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
         if not cuda_enabled or (cuda_enabled and enable_cuda_const):
@@ -332,12 +355,22 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                              nomut1, nomut2)
-        if not frozen1:
-            phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
-                                     this_dt, use_delj_trick)
-        if not frozen2:
-            phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
-                                     this_dt, use_delj_trick)
+        if not transpose:
+            if not frozen1:
+                phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
+                                         this_dt, use_delj_trick)
+            if not frozen2:
+                phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
+                                         this_dt, use_delj_trick)
+        else:
+            phi = phi.transpose()
+            if not frozen1:
+                phi = int_c.implicit_2Dy(phi, xx, yy, nu1, m12, gamma1, h1,
+                                         this_dt, use_delj_trick)
+            phi = phi.transpose()
+            if not frozen2:
+                phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
+                                         this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -346,7 +379,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
                gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
                theta0=1, initial_t=0, frozen1=False, frozen2=False,
-               frozen3=False, enable_cuda_const=False):
+               frozen3=False, enable_cuda_const=False, transpose=False):
     """
     Integrate a 3-dimensional phi foward.
 
@@ -391,7 +424,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
-    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+    if False and numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         if not cuda_enabled or (cuda_enabled and enable_cuda_const):
             return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3,
                                             m12, m13, m21, m23, m31, m32,
@@ -461,15 +494,29 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
                              frozen1, frozen2, frozen3)
-        if not frozen1:
-            phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
-                                     gamma1, h1, this_dt, use_delj_trick)
-        if not frozen2:
-            phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
-                                     gamma2, h2, this_dt, use_delj_trick)
-        if not frozen3:
-            phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
-                                     gamma3, h3, this_dt, use_delj_trick)
+        if not transpose:
+            if not frozen1:
+                phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
+                                         gamma1, h1, this_dt, use_delj_trick)
+            if not frozen2:
+                phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
+                                         gamma2, h2, this_dt, use_delj_trick)
+            if not frozen3:
+                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+                                         gamma3, h3, this_dt, use_delj_trick)
+        else:
+            phi = phi.transpose(1,2,0)
+            if not frozen1:
+                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu1, m12, m13, 
+                                         gamma1, h1, this_dt, use_delj_trick)
+            phi = phi.transpose(2,1,0)
+            if not frozen2:
+                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu2, m21, m23, 
+                                         gamma2, h2, this_dt, use_delj_trick)
+            phi = phi.transpose(0,2,1)
+            if not frozen3:
+                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+                                         gamma3, h3, this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -517,7 +564,8 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
 
     if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0))\
        or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0))\
-       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0 or m34 != 0 or m43 != 0)):
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0 or m34 != 0 or m43 != 0))\
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 !=0 or m42 != 0 or m34 != 0 or m43 != 0)):
         raise ValueError('Population cannot be frozen and have non-zero '
                          'migration to or from it.')
     aa = zz = yy = xx
@@ -596,6 +644,144 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
 
         current_t = next_t
     return phi
+
+def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
+              m12=0, m13=0, m14=0, m15=0, m21=0, m23=0, m24=0, m25=0,
+              m31=0, m32=0, m34=0, m35=0, m41=0, m42=0, m43=0, m45=0,
+              m51=0, m52=0, m53=0, m54=0, 
+              gamma1=0, gamma2=0, gamma3=0, gamma4=0, gamma5=0,
+              h1=0.5, h2=0.5, h3=0.5, h4=0.5, h5=0,
+              theta0=1, initial_t=0, frozen1=False, frozen2=False,
+              frozen3=False, frozen4=False, frozen5=0, 
+              enable_cuda_const=False):
+    """
+    Integrate a 5-dimensional phi foward.
+
+    phi: Initial 5-dimensional phi
+    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+        that this grid is used in all dimensions.
+
+    nu's, gamma's, m's, and theta0 may be functions of time.
+    nu1,nu2,nu3,nu4,nu5: Population sizes
+    gamma1,gamma2,gamma3,gamma4,gamma5: Selection coefficients on *all* segregating alleles
+    h1,h2,h3,h4,h5: Dominance coefficients. h = 0.5 corresponds to genic selection.
+    m12,m13,m21,m23,m31,m32, ...: Migration rates. Note that m12 is the rate 
+                             *into 1 from 2*.
+    theta0: Proportional to ancestral size. Typically constant.
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    enable_cuda_const: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
+
+    Note: Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+    """
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0 or m15 != 0 or m51 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0 or m25 !=0 or m52 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 != 0 or m32 != 0 or m34 != 0 or m43 != 0 or m35 != 0 or m53 !=0))\
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 != 0 or m42 != 0 or m34 != 0 or m43 != 0 or m45 != or m54 != 0))\
+       or (frozen5 and (m15 != 0 or m51 != 0 or m25 != 0 or m52 != 0 or m35 != 0 or m53 != 0 or m45 != or m54 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    bb = aa = zz = yy = xx
+
+    nu1_f, nu2_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2)
+    nu3_f, nu4_f = Misc.ensure_1arg_func(nu3), Misc.ensure_1arg_func(nu4)
+    nu5_f = Misc.ensure_1arg_func(nu5)
+    gamma1_f, gamma2_f = Misc.ensure_1arg_func(gamma1), Misc.ensure_1arg_func(gamma2)
+    gamma3_f, gamma4_f = Misc.ensure_1arg_func(gamma3), Misc.ensure_1arg_func(gamma4)
+    gamma5_f = Misc.ensure_1arg_func(gamma5)
+    h1_f, h2_f = Misc.ensure_1arg_func(h1), Misc.ensure_1arg_func(h2)
+    h3_f, h4_f = Misc.ensure_1arg_func(h3), Misc.ensure_1arg_func(h4)
+    h5_f = Misc.ensure_1arg_func(h5)
+    m12_f, m13_f, m14_f, m15_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13), Misc.ensure_1arg_func(m14), Misc.ensure_1arg_func(m15)
+    m21_f, m23_f, m24_f, m25_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23), Misc.ensure_1arg_func(m24), Misc.ensure_1arg_func(m25)
+    m31_f, m32_f, m34_f, m35_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32), Misc.ensure_1arg_func(m34), Misc.ensure_1arg_func(m35)
+    m41_f, m42_f, m43_f, m45_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43), Misc.ensure_1arg_func(m45)
+    m51_f, m52_f, m53_f, m54_f = Misc.ensure_1arg_func(m51), Misc.ensure_1arg_func(m52), Misc.ensure_1arg_func(m53), Misc.ensure_1arg_func(m54)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    #if cuda_enabled:
+    #    import dadi.cuda
+    #    phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
+    #            nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
+    #            gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f, 
+    #            theta0_f, frozen1, frozen2, frozen3)
+    #    return phi
+
+    current_t = initial_t
+    nu1, nu2, nu3, nu4, nu5 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t), nu5_f(current_t)
+    gamma1, gamma2, gamma3, gamma4, gamma5 = gamma1_f(current_t), gamma2_f(current_t), gamma3_f(current_t), gamma4_f(current_t), gamma5_f(current_t)
+    h1, h2, h3, h4, h5 = h1_f(current_t), h2_f(current_t), h3_f(current_t), h4_f(current_t), h5_f(current_t)
+    m12, m13, m14, m15 = m12_f(current_t), m13_f(current_t), m14_f(current_t), m15_f(current_t)
+    m21, m23, m24, m25 = m21_f(current_t), m23_f(current_t), m24_f(current_t), m25_f(current_t)
+    m31, m32, m34, m35 = m31_f(current_t), m32_f(current_t), m34_f(current_t), m35_f(current_t)
+    m41, m42, m43, m45 = m41_f(current_t), m42_f(current_t), m43_f(current_t), m45_f(current_t)
+    m51, m52, m53, m54 = m51_f(current_t), m52_f(current_t), m53_f(current_t), m54_f(current_t)
+
+    dx,dy,dz,da,db = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa),numpy.diff(bb)
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13,m14,m15],gamma1,h1),
+                 _compute_dt(dy,nu2,[m21,m23,m24,m25],gamma2,h2),
+                 _compute_dt(dz,nu3,[m31,m32,m34,m35],gamma3,h3),
+                 _compute_dt(da,nu4,[m41,m42,m43,m45],gamma4,h4),
+                 _compute_dt(da,nu4,[m51,m52,m53,m54],gamma5,h5))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1, nu2, nu3, nu4, nu5 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t), nu5_f(next_t)
+        gamma1, gamma2, gamma3, gamma4, gamma5 = gamma1_f(next_t), gamma2_f(next_t), gamma3_f(next_t), gamma4_f(next_t), gamma5_f(next_t)
+        h1, h2, h3, h4, h5 = h1_f(next_t), h2_f(next_t), h3_f(next_t), h4_f(next_t), h5_f(next_t)
+        m12, m13, m14, m15 = m12_f(next_t), m13_f(next_t), m14_f(next_t), m15_f(next_t)
+        m21, m23, m24, m25 = m21_f(next_t), m23_f(next_t), m24_f(next_t), m25_f(next_t)
+        m31, m32, m34, m35 = m31_f(next_t), m32_f(next_t), m34_f(next_t), m35_f(next_t)
+        m41, m42, m43, m45 = m41_f(next_t), m42_f(next_t), m43_f(next_t), m45_f(next_t)
+        m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
+                                 m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
+                                 m51,m52,m53,m54, theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3,nu4,nu5], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_5D(phi, this_dt, xx, yy, zz, aa, bb, theta0,
+                             frozen1, frozen2, frozen3, frozen4, frozen5)
+        if not frozen1:
+            phi = int_c.implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15,
+                                     gamma1, h1, this_dt, use_delj_trick)
+        if not frozen2:
+            phi = int_c.implicit_5Dy(phi, xx, yy, zz, aa, bb, nu2, m21, m23, m24, m25,
+                                     gamma2, h2, this_dt, use_delj_trick)
+        if not frozen3:
+            phi = int_c.implicit_5Dz(phi, xx, yy, zz, aa, bb, nu3, m31, m32, m34, m35,
+                                     gamma3, h3, this_dt, use_delj_trick)
+        if not frozen4:
+            phi = int_c.implicit_5Da(phi, xx, yy, zz, aa, bb, nu4, m41, m42, m43, m45,
+                                     gamma4, h4, this_dt, use_delj_trick)
+        if not frozen5:
+            phi = int_c.implicit_5Db(phi, xx, yy, zz, aa, bb, nu5, m51, m52, m53, m54,
+                                     gamma5, h5, this_dt, use_delj_trick)
+
+        current_t = next_t
+    return phi
+
 
 #
 # Here are the python versions of the population genetic functions.

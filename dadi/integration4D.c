@@ -267,7 +267,6 @@ void implicit_4Da(double *phi, double *xx, double *yy, double *zz, double *aa,
     double *b = malloc(O * sizeof(*b));
     double *c = malloc(O * sizeof(*c));
     double *r = malloc(O * sizeof(*r));
-    double *temp = malloc(O * sizeof(*temp));
 
     double x, y, z;
 
@@ -280,7 +279,7 @@ void implicit_4Da(double *phi, double *xx, double *yy, double *zz, double *aa,
     for(ll=0; ll < O-1; ll++)
         VInt[ll] = Vfunc(aInt[ll], nu4);
 
-    tridiag_malloc(N);
+    tridiag_malloc(O);
     for(ii = 0; ii < L; ii++){
         for(jj = 0; jj < M; jj++){
             for(kk = 0; kk < N; kk++){
@@ -294,7 +293,7 @@ void implicit_4Da(double *phi, double *xx, double *yy, double *zz, double *aa,
                     MInt[ll] = Mfunc4D(aInt[ll], x, y, z, m41, m42, m43, gamma4, h4);
 
                 compute_delj(da, MInt, VInt, O, delj, use_delj_trick);
-                compute_abc_nobc(da, dfactor, delj, MInt, V, dt, N, a, b, c);
+                compute_abc_nobc(da, dfactor, delj, MInt, V, dt, O, a, b, c);
                 for(ll = 0; ll < O; ll++)
                     r[ll] = phi[ii*M*N*O + jj*N*O + kk*O + ll]/dt;
 
@@ -320,5 +319,4 @@ void implicit_4Da(double *phi, double *xx, double *yy, double *zz, double *aa,
     free(b);
     free(c);
     free(r);
-    free(temp);
 }

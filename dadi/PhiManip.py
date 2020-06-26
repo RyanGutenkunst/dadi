@@ -385,6 +385,40 @@ def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa):
 
     return phi_4D
 
+def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb):
+    """
+    Create population 5 from populations 1, 2, 3, and 4.
+
+    Returns a 5D sfs of shape (len(xx),len(yy),len(zz),len(aa),len(bb))
+
+    phi:   phi corresponding to original 3 populations
+    f1:    Fraction of population 4 derived from population 1.
+    f2:    Fraction of population 4 derived from population 2.
+    f4:    Fraction of population 4 derived from population 3.
+           (A fraction 1-f1-f2-f3 will be derived from population 4.)
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1, 2, 3, 4.
+    bb:    Frequency mapping that will be used along population bb axis.
+    """
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, bb)
+
+    # Assemble our result.
+    # This uses numpy's fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post "Numpy Advanced Indexing Question" by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,nuax,nuax,nuax]
+    idx_j = numpy.arange(len(yy))[nuax,:,nuax,nuax]
+    idx_k = numpy.arange(len(zz))[nuax,nuax,:,nuax]
+    idx_l = numpy.arange(len(aa))[nuax,nuax,nuax,:]
+
+    phi_5D = numpy.zeros((len(xx), len(yy), len(zz), len(aa), len(bb)))
+    phi_5D[idx_i, idx_j, idx_k, idx_l, lower_z_index] = frac_lower*norm
+    phi_5D[idx_i, idx_j, idx_k, idx_l, upper_z_index] += frac_upper*norm
+
+    return phi_5D
+
 def phi_2D_admix_1_into_2(phi, f, xx,yy):
     """
     Admix population 1 into population 2.
