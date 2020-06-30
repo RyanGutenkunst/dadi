@@ -138,7 +138,7 @@ def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0, frozen1, frozen2, 
         phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
     # Population 5
     if not frozen5:
-        phi[0,0,0,0,1] += dt/aa[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+        phi[0,0,0,0,1] += dt/bb[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
     return phi
 
 def _compute_dt(dx, nu, ms, gamma, h):
@@ -651,9 +651,9 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
               m31=0, m32=0, m34=0, m35=0, m41=0, m42=0, m43=0, m45=0,
               m51=0, m52=0, m53=0, m54=0, 
               gamma1=0, gamma2=0, gamma3=0, gamma4=0, gamma5=0,
-              h1=0.5, h2=0.5, h3=0.5, h4=0.5, h5=0,
+              h1=0.5, h2=0.5, h3=0.5, h4=0.5, h5=0.5,
               theta0=1, initial_t=0, frozen1=False, frozen2=False,
-              frozen3=False, frozen4=False, frozen5=0, 
+              frozen3=False, frozen4=False, frozen5=False, 
               enable_cuda_const=False):
     """
     Integrate a 5-dimensional phi foward.
