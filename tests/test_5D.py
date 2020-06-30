@@ -250,6 +250,7 @@ if __name__ == '__main__':
         fs_all = dadi.Spectrum.from_phi(phi, [5,5,5,5], (xx,xx,xx,xx))
         return fs_all
 
+    dadi.cuda_enabled(False)
     ref = ref_func(pin, None, [100,120,140])
 
     fs_all = test_func_all(pin, None, [16,18,20])
@@ -259,14 +260,23 @@ if __name__ == '__main__':
     fs5 = fs_all.marginalize([1,2,3])
 
     import matplotlib.pyplot as plt
-    for ii in plt.get_fignums():
-        if ii > 4:
-            plt.close(ii)
-    #plt.close('all')
+    plt.close('all')
     for q in [fs2,fs3,fs4,fs5]: 
     #for q in [fs2,fs3,fs4]: 
         plt.figure() 
         dadi.Plotting.plot_2d_comp_Poisson(ref, q) 
+
+    if dadi.cuda_enabled(True):
+        fs_all_cuda = test_func_all(pin, None, [16,18,20])
+        fs2 = fs_all_cuda.marginalize([2,3,4])
+        fs3 = fs_all_cuda.marginalize([1,3,4])
+        fs4 = fs_all_cuda.marginalize([1,2,4])
+        fs5 = fs_all_cuda.marginalize([1,2,3])
+
+        for q in [fs2,fs3,fs4,fs5]: 
+            plt.figure() 
+            dadi.Plotting.plot_2d_comp_Poisson(ref, q) 
+
 
     #fs4_all = test_func_four(pin, None, [16,18,20])
     #fs2_4 = fs4_all.marginalize([2,3])

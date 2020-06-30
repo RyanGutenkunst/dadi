@@ -53,6 +53,29 @@ def _inject_mutations_4D_valcalc(dt, xx, yy, zz, aa, theta0, frozen1, frozen2, f
         val0001 = dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
     return np.float64(val1000), np.float64(val0100), np.float64(val0010), np.float64(val0001)
 
+def _inject_mutations_5D_valcalc(dt, xx, yy, zz, aa, bb, theta0, frozen1, frozen2, frozen3, frozen4, frozen5):
+    """
+    Calculate mutations that need to be injected.
+    """
+    # Population 1
+    # Normalization based on the multi-dimensional trapezoid rule is 
+    # implemented                      ************** here ***************
+    val10000, val01000, val00100, val00010, val00001 = 0, 0, 0, 0, 0
+    if not frozen1:
+        val10000 = dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
+    # Population 2
+    if not frozen2:
+        val01000 = dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
+    # Population 3
+    if not frozen3:
+        val00100 = dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
+    # Population 4
+    if not frozen4:
+        val00010 = dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+    if not frozen5:
+        val00001 = dt/bb[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+    return np.float64(val10000), np.float64(val01000), np.float64(val00100), np.float64(val00010), np.float64(val00001)
+
 import pycuda
 import pycuda.gpuarray as gpuarray
 from skcuda.cusparse import cusparseDgtsvInterleavedBatch_bufferSizeExt, cusparseDgtsvInterleavedBatch
@@ -522,7 +545,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
     if dadi.Integration.use_delj_trick:
         raise ValueError("delj trick not currently supported in CUDA execution")
 
-    t = current_t = initial_t
+    current_t = initial_t
     nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
     gamma1, gamma2, gamma3, gamma4 = gamma1_f(current_t), gamma2_f(current_t), gamma3_f(current_t), gamma4_f(current_t)
     h1, h2, h3, h4 = h1_f(current_t), h2_f(current_t), h3_f(current_t), h4_f(current_t)
@@ -718,3 +741,246 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         current_t += this_dt
 
     return phi_gpu.get().reshape(L,M,N,O)
+
+def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
+            m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
+            m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
+            gamma1_f, gamma2_f, gamma3_f, gamma4_f, gamma5_f,
+            h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5):
+    if dadi.Integration.use_delj_trick:
+        raise ValueError("delj trick not currently supported in CUDA execution")
+
+    current_t = initial_t
+    nu1, nu2, nu3, nu4, nu5 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t), nu5_f(current_t)
+    gamma1, gamma2, gamma3, gamma4, gamma5 = gamma1_f(current_t), gamma2_f(current_t), gamma3_f(current_t), gamma4_f(current_t), gamma5_f(current_t)
+    h1, h2, h3, h4, h5 = h1_f(current_t), h2_f(current_t), h3_f(current_t), h4_f(current_t), h5_f(current_t)
+    m12, m13, m14, m15 = m12_f(current_t), m13_f(current_t), m14_f(current_t), m15_f(current_t)
+    m21, m23, m24, m25 = m21_f(current_t), m23_f(current_t), m24_f(current_t), m25_f(current_t)
+    m31, m32, m34, m35 = m31_f(current_t), m32_f(current_t), m34_f(current_t), m35_f(current_t)
+    m41, m42, m43, m45 = m41_f(current_t), m42_f(current_t), m43_f(current_t), m45_f(current_t)
+    m51, m52, m53, m54 = m51_f(current_t), m52_f(current_t), m53_f(current_t), m54_f(current_t)
+    nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
+
+    L = M = N = O = P = np.int32(len(xx))
+
+    phi_gpu = gpuarray.to_gpu(phi.reshape(L,M*N*O*P))
+
+    bb = aa = yy = zz = xx
+    db = da = dx = dy = dz = np.diff(xx)
+    dfactor = dadi.Integration._compute_dfactor(dx)
+    xInt = (xx[:-1] + xx[1:])*0.5
+
+    xx_gpu = gpuarray.to_gpu(xx)
+    dx_gpu = gpuarray.to_gpu(dx)
+    dfactor_gpu = gpuarray.to_gpu(dfactor)
+    xInt_gpu = gpuarray.to_gpu(xInt)
+
+    V_gpu = gpuarray.empty(L, np.float64)
+    VInt_gpu = gpuarray.empty(L-1, np.float64)
+
+    a_gpu = gpuarray.empty((L,M*N*O*P), np.float64)
+    b_gpu = gpuarray.empty((L,M*N*O*P), np.float64)
+    c_gpu = gpuarray.empty((L,M*N*O*P), np.float64)
+
+    bsize_int = cusparseDgtsvInterleavedBatch_bufferSizeExt(
+        cusparse_handle, 0, L, a_gpu.gpudata, b_gpu.gpudata,
+        c_gpu.gpudata, phi_gpu.gpudata, M*N*O*P)
+    pBuffer = pycuda.driver.mem_alloc(bsize_int)
+
+    while current_t < T:
+        dt = min(dadi.Integration._compute_dt(dx, nu1, [m12, m13, m14], gamma1, h1),
+                 dadi.Integration._compute_dt(dy, nu2, [m21, m23, m24], gamma2, h2),
+                 dadi.Integration._compute_dt(dz, nu3, [m31, m32, m34], gamma3, h3),
+                 dadi.Integration._compute_dt(da, nu4, [m41, m42, m43], gamma4, h4),
+                 dadi.Integration._compute_dt(db, nu5, [m51,m52,m53,m54],gamma5,h5))
+        this_dt = np.float64(min(dt, T - current_t))
+
+        next_t = current_t + this_dt
+
+        nu1, nu2, nu3, nu4, nu5 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t), nu5_f(next_t)
+        gamma1, gamma2, gamma3, gamma4, gamma5 = gamma1_f(next_t), gamma2_f(next_t), gamma3_f(next_t), gamma4_f(next_t), gamma5_f(next_t)
+        h1, h2, h3, h4, h5 = h1_f(next_t), h2_f(next_t), h3_f(next_t), h4_f(next_t), h5_f(next_t)
+        m12, m13, m14, m15 = m12_f(next_t), m13_f(next_t), m14_f(next_t), m15_f(next_t)
+        m21, m23, m24, m25 = m21_f(next_t), m23_f(next_t), m24_f(next_t), m25_f(next_t)
+        m31, m32, m34, m35 = m31_f(next_t), m32_f(next_t), m34_f(next_t), m35_f(next_t)
+        m41, m42, m43, m45 = m41_f(next_t), m42_f(next_t), m43_f(next_t), m45_f(next_t)
+        m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        if np.any(np.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
+                                 m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
+                                 m51,m52,m53,m54, theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if np.any(np.equal([nu1,nu2,nu3,nu4,nu5], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        val10000, val01000, val00100, val00010, val00001 = \
+            _inject_mutations_5D_valcalc(this_dt, xx, yy, zz, aa, bb, theta0, 
+                                         frozen1, frozen2, frozen3, frozen4, frozen5)
+        kernels._inject_mutations_5D_vals(phi_gpu, L,
+                                          val00001, val00010, val00100, val01000, val10000, block=(1,1,1))
+        # I can use the c_gpu buffer for the MInt_gpu buffer, to save GPU memory.
+        # Note that I have to reassign this after each transpose operation I do.
+        MInt_gpu = c_gpu
+        if not frozen1:
+            kernels._Vfunc(xx_gpu, nu1, L, V_gpu, 
+                           grid=_grid(L), block=_block())
+            kernels._Vfunc(xInt_gpu, nu1, np.int32(L-1), VInt_gpu, 
+                           grid=_grid(L-1), block=_block())
+            kernels._Mfunc5D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m12, m13, m14, m15, gamma1, h1,
+                             np.int32(L-1), M, N, O, P, MInt_gpu,
+                             grid=_grid((L-1)*M*N*O*P), block=_block())
+
+            b_gpu.fill(1./this_dt)
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, L, M*N*O*P,
+                a_gpu, b_gpu,
+                grid=_grid((L-1)*M*N*O*P), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, L, M*N*O*P,
+                b_gpu, c_gpu,
+                grid=_grid((L-1)*M*N*O*P), block=_block())
+            kernels._include_bc(dx_gpu, nu1, gamma1, h1, L, M*N*O*P,
+                b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, L, M*N*O*P, grid=_grid(M*N*O*P), block=_block())
+
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, L,
+                a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
+                M*N*O*P, pBuffer)
+
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(M*N*O*P,L))
+        phi_gpu, c_gpu = c_gpu.reshape(M,L*N*O*P), phi_gpu.reshape(M,L*N*O*P)
+        MInt_gpu = c_gpu
+        if not frozen2:
+            kernels._Vfunc(xx_gpu, nu2, M, V_gpu, 
+                           grid=_grid(M), block=_block())
+            kernels._Vfunc(xInt_gpu, nu2, np.int32(M-1), VInt_gpu, 
+                           grid=_grid(M-1), block=_block())
+            # Note the order of the m arguments here.
+            kernels._Mfunc5D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m23, m24, m25, m21, gamma2, h2,
+                             np.int32(M-1), N, O, P, L, MInt_gpu,
+                             grid=_grid((M-1)*L*N*O*P), block=_block())
+
+            b_gpu.fill(1./this_dt)
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, M, L*N*O*P,
+                a_gpu, b_gpu,
+                grid=_grid((M-1)*L*N*O*P), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, M, L*N*O*P,
+                b_gpu, c_gpu,
+                grid=_grid((M-1)*L*N*O*P), block=_block())
+            kernels._include_bc(dx_gpu, nu2, gamma2, h2, M, L*N*O*P,
+                b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, M, L*N*O*P, grid=_grid(L*N*O*P), block=_block())
+
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, M,
+                a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
+                L*N*O*P, pBuffer)
+
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*N*O*P,M))
+        phi_gpu, c_gpu = c_gpu.reshape(N,L*M*O*P), phi_gpu.reshape(N,L*M*O*P)
+        MInt_gpu = c_gpu
+        if not frozen3:
+            kernels._Vfunc(xx_gpu, nu3, N, V_gpu, 
+                           grid=_grid(N), block=_block())
+            kernels._Vfunc(xInt_gpu, nu3, np.int32(N-1), VInt_gpu, 
+                           grid=_grid(N-1), block=_block())
+            kernels._Mfunc5D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m34, m35, m31, m32, gamma3, h3,
+                             np.int32(N-1), O, P, L, M, MInt_gpu,
+                             grid=_grid((N-1)*M*L*O*P), block=_block())
+
+            b_gpu.fill(1./this_dt)
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, N, L*M*O*P,
+                a_gpu, b_gpu,
+                grid=_grid((N-1)*L*M*O*P), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, N, L*M*O*P,
+                b_gpu, c_gpu,
+                grid=_grid((N-1)*L*M*O*P), block=_block())
+            kernels._include_bc(dx_gpu, nu3, gamma3, h3, N, L*M*O*P,
+                b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, N, L*M*O*P, grid=_grid(L*M*O*P), block=_block())
+
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, N,
+                a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
+                L*M*O*P, pBuffer)
+
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*M*O*P,N))
+        phi_gpu, c_gpu = c_gpu.reshape(O,L*M*N*P), phi_gpu.reshape(O,L*M*N*P)
+        MInt_gpu = c_gpu
+        if not frozen4:
+            kernels._Vfunc(xx_gpu, nu4, O, V_gpu, 
+                           grid=_grid(O), block=_block())
+            kernels._Vfunc(xInt_gpu, nu4, np.int32(O-1), VInt_gpu, 
+                           grid=_grid(O-1), block=_block())
+            kernels._Mfunc5D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m45, m41, m42, m43, gamma4, h4,
+                             np.int32(O-1), P, L, M, N, MInt_gpu,
+                             grid=_grid((O-1)*M*L*N*P), block=_block())
+
+            b_gpu.fill(1./this_dt)
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, O, L*M*N*P,
+                a_gpu, b_gpu,
+                grid=_grid((O-1)*L*M*N*P), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, O, L*M*N*P,
+                b_gpu, c_gpu,
+                grid=_grid((O-1)*L*M*N*P), block=_block())
+            kernels._include_bc(dx_gpu, nu4, gamma4, h4, O, L*M*N*P,
+                b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, O, L*M*N*P, grid=_grid(L*M*N*P), block=_block())
+
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, O,
+                a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
+                L*M*N*P, pBuffer)
+
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*M*N*P,O))
+        phi_gpu, c_gpu = c_gpu.reshape(P,L*M*N*O), phi_gpu.reshape(P,L*M*N*O)
+        MInt_gpu = c_gpu
+        if not frozen5:
+            kernels._Vfunc(xx_gpu, nu5, P, V_gpu, 
+                           grid=_grid(P), block=_block())
+            kernels._Vfunc(xInt_gpu, nu5, np.int32(P-1), VInt_gpu, 
+                           grid=_grid(P-1), block=_block())
+            kernels._Mfunc5D(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m51, m52, m53, m54, gamma5, h5,
+                             np.int32(P-1), L, M, N, O, MInt_gpu,
+                             grid=_grid((P-1)*L*M*N*O), block=_block())
+
+            b_gpu.fill(1./this_dt)
+            kernels._compute_ab_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, P, L*M*N*O,
+                a_gpu, b_gpu,
+                grid=_grid((P-1)*L*M*N*O), block=_block())
+            kernels._compute_bc_nobc(dx_gpu, dfactor_gpu, 
+                MInt_gpu, V_gpu, this_dt, P, L*M*N*O,
+                b_gpu, c_gpu,
+                grid=_grid((P-1)*L*M*N*O), block=_block())
+            kernels._include_bc(dx_gpu, nu5, gamma5, h5, P, L*M*N*O,
+                b_gpu, block=(1,1,1))
+            kernels._cx0(c_gpu, P, L*M*N*O, grid=_grid(L*M*N*O), block=_block())
+
+            phi_gpu /= this_dt
+
+            cusparseDgtsvInterleavedBatch(cusparse_handle, 0, P,
+                a_gpu.gpudata, b_gpu.gpudata, c_gpu.gpudata, phi_gpu.gpudata,
+                L*M*N*O, pBuffer)
+
+        transpose_gpuarray(phi_gpu, c_gpu.reshape(L*M*N*O,P))
+        phi_gpu, c_gpu = c_gpu.reshape(L,M*N*O*P), phi_gpu.reshape(L,M*N*O*P)
+
+        current_t += this_dt
+
+    return phi_gpu.get().reshape(L,M,N,O,P)

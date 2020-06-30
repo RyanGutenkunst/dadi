@@ -16,6 +16,14 @@ __global__ void inject_mutations_4D(double *phi, int L, double val0001, double v
     phi[L*L*L] += val1000;
 }
 
+__global__ void inject_mutations_5D(double *phi, int L, double val00001, double val00010, double val00100, double val01000, double val10000){
+    phi[1] += val00001;
+    phi[L] += val00010;
+    phi[L*L] += val00100;
+    phi[L*L*L] += val01000;
+    phi[L*L*L*L] += val10000;
+}
+
 __global__ void Vfunc(double *x, double nu, int L, double *output){
     int ii = blockIdx.x*blockDim.x + threadIdx.x;
     if(ii < L){
@@ -61,6 +69,22 @@ __global__ void Mfunc4D(double *x, double *y, double *z, double *a, double mxy, 
     int ll = (blockIdx.x*blockDim.x + threadIdx.x) % O;
     if(ii < L){
         output[ii*M*N*O + jj*N*O + kk*O + ll] = _Mfunc4D(x[ii], y[jj], z[kk], a[ll], mxy, mxz, mxa, gamma, h);
+    }
+}
+
+__device__ double _Mfunc5D(double x, double y, double z, double a, double b, double mxy, double mxz, double mxa, double mxb,
+        double gamma, double h){
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + gamma * 2*(h + (1.-2*h)*x) * x*(1.-x);
+}
+
+__global__ void Mfunc5D(double *x, double *y, double *z, double *a, double *b, double mxy, double mxz, double mxa, double mxb, double gamma, double h, int L, int M, int N, int O, int P, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O*P);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O*P)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / (O*P)) % N;
+    int ll = ((blockIdx.x*blockDim.x + threadIdx.x) / P) % O;
+    int mm = (blockIdx.x*blockDim.x + threadIdx.x) % P;
+    if(ii < L){
+        output[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P + mm] = _Mfunc5D(x[ii], y[jj], z[kk], a[ll], b[mm], mxy, mxz, mxa, mxb, gamma, h);
     }
 }
 
