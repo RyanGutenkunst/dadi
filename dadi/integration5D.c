@@ -47,7 +47,7 @@ void implicit_5Dx(double *phi, double *xx, double *yy, double *zz, double *aa, d
     for(jj = 0; jj < M; jj++){
         for(kk = 0; kk < N; kk++){
             for(ll = 0; ll < O; ll++){
-                for(mm = 0; mm < 0; mm++){
+                for(mm = 0; mm < P; mm++){
                     y = yy[jj];
                     z = zz[kk];
                     a_ = aa[ll];
@@ -129,7 +129,7 @@ void implicit_5Dy(double *phi, double *xx, double *yy, double *zz, double *aa, d
     for(ii = 0; ii < L; ii++){
         for(kk = 0; kk < N; kk++){
             for(ll = 0; ll < O; ll++){
-                for(mm = 0; mm < 0; mm++){
+                for(mm = 0; mm < P; mm++){
                     x = xx[ii];
                     z = zz[kk];
                     a_ = aa[ll];
@@ -211,7 +211,7 @@ void implicit_5Dz(double *phi, double *xx, double *yy, double *zz, double *aa, d
     for(ii = 0; ii < L; ii++){
         for(jj = 0; jj < M; jj++){
             for(ll = 0; ll < O; ll++){
-                for(mm = 0; mm < 0; mm++){
+                for(mm = 0; mm < P; mm++){
                     x = xx[ii];
                     y = yy[jj];
                     a_ = aa[ll];
@@ -395,7 +395,7 @@ void implicit_5Db(double *phi, double *xx, double *yy, double *zz, double *aa, d
                     if((xx[ii]==1) && (yy[jj]==1) && (zz[kk] == 1) && (aa[ll] == 1) && (Mlast >= 0))
                         b[P-1] += -(-0.5/nu5 - Mlast)*2./db[P-2];
 
-                    tridiag_premalloc(a, b, c, r, &phi[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll], P);
+                    tridiag_premalloc(a, b, c, r, &phi[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P], P);
                 }
             }
         }
