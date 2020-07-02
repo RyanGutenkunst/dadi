@@ -317,24 +317,44 @@ def _four_pop_admixture_intermediates(phi_4D, f1,f2,f3, xx,yy,zz,aa,bb):
         + (1-f1-f2-f3)*aa[nuax,nuax,nuax,:]
 
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
-            = _admixture_intermediates(phi_4D, ad_w, aa)
+            = _admixture_intermediates(phi_4D, ad_w, bb)
 
     return lower_w_index, upper_w_index, frac_lower, frac_upper, norm
 
-def phi_2D_to_3D_admix(phi, f, xx,yy,zz):
+def _five_pop_admixture_intermediates(phi_5D, f1,f2,f3,f4, xx,yy,zz,aa,bb,cc):
+    """
+    Intermediate results used when splitting a new population out from a 4D phi.
+
+    ww: frequency mapping for the new population.
+    """
+    # For each point x,y,z,a,b in phi, this is the corresponding frequency c that
+    # SNPs with frequency x,y,z,a,b in populations 1,2,3,4,5 would map to.
+    if f1 + f2 + f3 + f4 > 1:
+        raise ValueError('Admixture proportions (f1=%f, f2 = %f, f3=%f, f4=%f) are '
+                         'non-sensible.' % (f1, f2, f3,  f4))
+    ad_w = f1*xx[:,nuax,nuax,nuax,nuax] + f2*yy[nuax,:,nuax,nuax,nuax] + f3*zz[nuax,nuax,:,nuax,nuax]\
+        + f4*aa[nuax,nuax,nuax,:,nuax] + (1-f1-f2-f3-f4)*bb[nuax,nuax,nuax,nuax,:]
+
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _admixture_intermediates(phi_5D, ad_w, cc)
+
+    return lower_w_index, upper_w_index, frac_lower, frac_upper, norm
+
+
+def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
     """
     Create population 3 admixed from populations 1 and 2.
 
     Returns a 3D sfs of shape (len(xx),len(yy),len(zz))
 
     phi:   phi corresponding to original 2 populations
-    f:     Fraction of population 3 derived from population 1. (A fraction 1-f
+    f1:     Fraction of population 3 derived from population 1. (A fraction 1-f1
              will be derived from population 2.)
     xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
     zz:    Frequency mapping that will be used along population 3 axis.
     """
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
-            = _two_pop_admixture_intermediates(phi, f, xx,yy,zz)
+            = _two_pop_admixture_intermediates(phi, f1, xx,yy,zz)
 
 
     # Assemble our result.
@@ -690,6 +710,166 @@ def phi_4D_admix_into_2(phi, f1,f3,f4, xx,yy,zz,aa):
                 phi_int[idx_j, lower_w_index[ii,:,kk,ll]] = lower_cont[ii,:,kk,ll]
                 phi_int[idx_j, upper_w_index[ii,:,kk,ll]] = upper_cont[ii,:,kk,ll]
                 phi[ii,:,kk,ll] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_1(phi, f2,f3,f4,f5, xx,yy,zz,aa,bb):
+    """
+    Admix populations 2, 3, 4, and 5 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+    f4:       Fraction of updated population 1 to be derived from population 4. 
+    f5:       Fraction of updated population 1 to be derived from population 5. 
+              A fraction (1-f2-f3-f4-f5) will be derived from the original pop 1.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    """
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, 1-f2-f3-f4-f5,f2,f3,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+                    phi_int[idx_i, lower_w_index[:,jj,kk,ll,mm]] = lower_cont[:,jj,kk,ll,mm]
+                    phi_int[idx_i, upper_w_index[:,jj,kk,ll,mm]] = upper_cont[:,jj,kk,ll,mm]
+                    phi[:,jj,kk,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_2(phi, f1,f3,f4,f5, xx,yy,zz,aa,bb):
+    """
+    Admix populations 1, 3, 4, and 5 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+    f4:       Fraction of updated population 2 to be derived from population 4. 
+    f5:       Fraction of updated population 2 to be derived from population 5. 
+              A fraction (1-f1-f3-f4-f5) will be derived from the original pop 2.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    """
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, 1-f1-f3-f4-f5,f3,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+                    phi_int[idx_j, lower_w_index[ii,:,kk,ll,mm]] = lower_cont[ii,:,kk,ll,mm]
+                    phi_int[idx_j, upper_w_index[ii,:,kk,ll,mm]] = upper_cont[ii,:,kk,ll,mm]
+                    phi[ii,:,kk,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_3(phi, f1,f2,f4,f5, xx,yy,zz,aa,bb):
+    """
+    Admix populations 1, 2, 4, and 5 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+    f4:       Fraction of updated population 3 to be derived from population 4. 
+    f5:       Fraction of updated population 3 to be derived from population 5. 
+              A fraction (1-f1-f2-f4-f5) will be derived from the original pop 3.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    """
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, 1-f1-f2-f4-f5,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+                    phi_int[idx_k, lower_w_index[ii,jj,:,ll,mm]] = lower_cont[ii,jj,:,ll,mm]
+                    phi_int[idx_k, upper_w_index[ii,jj,:,ll,mm]] = upper_cont[ii,jj,:,ll,mm]
+                    phi[ii,jj,:,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_4(phi, f1,f2,f3,f5, xx,yy,zz,aa,bb):
+    """
+    Admix populations 1, 2, 3, and 5 into population 4.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 4 to be derived from population 1. 
+    f2:       Fraction of updated population 4 to be derived from population 2. 
+    f3:       Fraction of updated population 4 to be derived from population 3. 
+    f5:       Fraction of updated population 4 to be derived from population 5. 
+              A fraction (1-f1-f2-f3-f5) will be derived from the original pop 4.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    """
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, f3, 1-f1-f2-f3-f5, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_l = numpy.arange(phi.shape[3])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[3], phi.shape[3]))
+                    phi_int[idx_l, lower_w_index[ii,jj,kk,:,mm]] = lower_cont[ii,jj,kk,:,mm]
+                    phi_int[idx_l, upper_w_index[ii,jj,kk,:,mm]] = upper_cont[ii,jj,kk,:,mm]
+                    phi[ii,jj,kk,:,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_5(phi, f1,f2,f3,f4, xx,yy,zz,aa,bb):
+    """
+    Admix populations 1, 2, 3, and 4 into population 5.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 5 to be derived from population 1. 
+    f2:       Fraction of updated population 5 to be derived from population 2. 
+    f3:       Fraction of updated population 5 to be derived from population 3. 
+    f4:       Fraction of updated population 5 to be derived from population 3. 
+              A fraction (1-f1-f2-f3-f4) will be derived from the original pop 5.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    """
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, f3, f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_m = numpy.arange(phi.shape[4])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                for ll in range(phi.shape[3]):
+                    phi_int = numpy.zeros((phi.shape[4], phi.shape[4]))
+                    phi_int[idx_m, lower_w_index[ii,jj,kk,ll,:]] = lower_cont[ii,jj,kk,ll,:]
+                    phi_int[idx_m, upper_w_index[ii,jj,kk,ll,:]] = upper_cont[ii,jj,kk,ll,:]
+                    phi[ii,jj,kk,ll,:] = Numerics.trapz(phi_int, xx, axis=0)
 
     return phi
 
