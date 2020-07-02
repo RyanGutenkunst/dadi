@@ -213,6 +213,34 @@ class CUDATestCase(unittest.TestCase):
                                                              gamma1=gamma1, gamma2=gamma2, gamma3=gamma3, gamma4=gamma4,
                                                              h1=h1, h2=h2, h3=h3, h4=h4, theta0=theta0,
                                                              frozen1=f1, frozen2=f2, frozen3=f3, frozen4=f4)
+                        self.assertTrue(np.allclose(phi_cpu, phi_gpu))
+
+    def test_5d_integration(self):
+        kwargs = {'T': 0.1,
+                  'nu1': 0.2, 'nu2': 1.3, 'nu3': 7.1, 'nu4': 27.1, 'nu5':lambda t: 0.9-8*t,
+                  'm12': 3, 'm13': 2.9, 'm14': 0.9, 'm15': 10,
+                  'm21': 3, 'm23': lambda t: 0.9+10*t, 'm24': 0.9, 'm25': lambda t: 2-15*t,
+                  'm31': 3.5, 'm32': 2.9, 'm34': 0.9, 'm35': 10,
+                  'm41': 3.3, 'm42': 2.2, 'm43': 0.1, 'm45': 9,
+                  'm51': 3.3, 'm52': 2.2, 'm53': 0.8, 'm54': 9.2,
+                  'gamma1': -1, 'gamma2': 2, 'gamma3': -1.9, 'gamma4': lambda t: 10*t, 'gamma5': -1, 
+                  'h1': 0.1, 'h2': 0.9, 'h3': 0.2, 'h4': 0.9, 'h5': 0.1, 
+                  'frozen1':False, 'frozen2':False, 'frozen3':False, 'frozen4':False, 'frozen5':False,
+                  'theta0': lambda t: 10*t}
+
+        pts = 5
+        xx = dadi.Numerics.default_grid(pts)
+        phi = dadi.PhiManip.phi_1D(xx)
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+        phi = dadi.PhiManip.phi_2D_to_3D(phi, 0, xx,xx,xx)
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, 0, 0, xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, 0,0,0, xx,xx,xx,xx,xx)
+        dadi.cuda_enabled(True)
+        phi_gpu = dadi.Integration.five_pops(phi.copy(), xx, **kwargs)
+        dadi.cuda_enabled(False)
+        phi_cpu = dadi.Integration.five_pops(phi.copy(), xx, **kwargs)
+
+        self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
 if dadi.cuda_enabled(True):
     suite = unittest.TestLoader().loadTestsFromTestCase(CUDATestCase)
