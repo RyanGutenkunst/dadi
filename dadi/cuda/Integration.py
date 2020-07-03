@@ -788,10 +788,10 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
     while current_t < T:
-        dt = min(dadi.Integration._compute_dt(dx, nu1, [m12, m13, m14], gamma1, h1),
-                 dadi.Integration._compute_dt(dy, nu2, [m21, m23, m24], gamma2, h2),
-                 dadi.Integration._compute_dt(dz, nu3, [m31, m32, m34], gamma3, h3),
-                 dadi.Integration._compute_dt(da, nu4, [m41, m42, m43], gamma4, h4),
+        dt = min(dadi.Integration._compute_dt(dx, nu1, [m12,m13,m14,m15], gamma1, h1),
+                 dadi.Integration._compute_dt(dy, nu2, [m21,m23,m24,m25], gamma2, h2),
+                 dadi.Integration._compute_dt(dz, nu3, [m31,m32,m34,m35], gamma3, h3),
+                 dadi.Integration._compute_dt(da, nu4, [m41,m42,m43,m45], gamma4, h4),
                  dadi.Integration._compute_dt(db, nu5, [m51,m52,m53,m54],gamma5,h5))
         this_dt = np.float64(min(dt, T - current_t))
 

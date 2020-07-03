@@ -144,21 +144,3 @@ __global__ void compute_bc_nobc(double *dx, double *dfactor,
         c[ii*M + jj] = -dfactor[ii]*ctemp;
     }
 }
-
-__global__ void diff_iny_2D(double *in, double *out, int L, int M){
-    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M-1);
-    int jj = (blockIdx.x*blockDim.x + threadIdx.x) % (M-1);
-
-    if(ii < L){
-        out[ii*(M-1) + jj] = in[ii*M+jj+1] - in[ii*M+jj];
-    }
-}
-
-__global__ void drop_last_col_2D(double *in, double *out, int L, int M){
-    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M-1);
-    int jj = (blockIdx.x*blockDim.x + threadIdx.x) % (M-1);
-
-    if(ii < L){
-        out[ii*(M-1) + jj] = in[ii*M+jj];
-    }
-}
