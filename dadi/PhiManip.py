@@ -885,6 +885,23 @@ def remove_pop(phi, xx, popnum):
     """
     return Numerics.trapz(phi, xx, axis=popnum-1)
 
+def filter_pops(phi, xx, tokeep):
+    """
+    Filter phi to keep only certain populations.
+
+    Returns new phi with len(tokeep) fewer populations.
+
+    phi: phi corresponding to original populations
+    xx: Mapping of points in phi to frequencies in population to be removed
+    tokeep: List of population numbers to keep, numbering from 1.
+    """
+    toremove = list(range(1, phi.ndim+1))
+    for pop_ii in tokeep:
+        toremove.remove(pop_ii)
+    for pop_ii in sorted(toremove)[::-1]:
+        phi = remove_pop(phi, xx, pop_ii)
+    return phi
+
 def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
     """
     One-dimensional phi for a constant-sized population with genic selection.
