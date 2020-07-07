@@ -468,6 +468,24 @@ class Spectrum(numpy.ma.masked_array):
         else:
             return output
 
+    def filter_pops(self, tokeep, mask_corners=True):
+        """
+        Filter Spectrum to keep only certain populations.
+
+        Returns new Spectrum with len(tokeep) populations.
+        Note: This is similar in practice to the marginalize operation. But here
+              populations are numbered from 1, as in the majority of dadi.
+
+        tokeep: List of population numbers to keep, numbering from 1.
+        mask_corners: If True, the typical corners of the resulting fs will be
+                      masked
+        """
+        toremove = list(range(0, self.ndim))
+        for pop_ii in tokeep:
+            # Apply -1 factor to account for indexing in marginalize
+            toremove.remove(pop_ii-1)
+        return self.marginalize(toremove)
+
     def _counts_per_entry(self):
         """
         Counts per population for each entry in the fs.

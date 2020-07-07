@@ -889,7 +889,7 @@ def filter_pops(phi, xx, tokeep):
     """
     Filter phi to keep only certain populations.
 
-    Returns new phi with len(tokeep) fewer populations.
+    Returns new phi with len(tokeep) populations.
 
     phi: phi corresponding to original populations
     xx: Mapping of points in phi to frequencies in population to be removed
