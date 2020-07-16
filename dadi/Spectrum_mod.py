@@ -1380,7 +1380,7 @@ class Spectrum(numpy.ma.masked_array):
     #    return fs
 
     @staticmethod
-    def _from_phi_2D_linalg(nx, ny, xx, yy, phi, mask_corners=True):
+    def _from_phi_2D_linalg(nx, ny, xx, yy, phi, mask_corners=True, raw=False):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1388,6 +1388,8 @@ class Spectrum(numpy.ma.masked_array):
         piecewise-linear approximation to phi.
 
         See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
         """
         dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
         dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
@@ -1411,7 +1413,10 @@ class Spectrum(numpy.ma.masked_array):
 
         data = term1_all + term2_all
 
-        return dadi.Spectrum(data, mask_corners=mask_corners)
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
@@ -1638,7 +1643,7 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def _from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+    def _from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, phi, mask_corners=True, raw=False):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1646,6 +1651,8 @@ class Spectrum(numpy.ma.masked_array):
         piecewise-linear approximation to phi.
 
         See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
         """
         data = numpy.zeros((nx+1,ny+1,nz+1))
 
@@ -1666,11 +1673,13 @@ class Spectrum(numpy.ma.masked_array):
             term2 *= (kk+1)/((nz+1)*(nz+2))
             over_z = term1 + term2
 
-            sub_fs = Spectrum._from_phi_2D_linalg(nx, ny, xx, yy, over_z, mask_corners=False)
+            sub_fs = Spectrum._from_phi_2D_linalg(nx, ny, xx, yy, over_z, raw=True)
             data[:,:,kk] = sub_fs.data
 
-        fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return fs
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_5D_linalg(nx, ny, nz, na, nb, xx, yy, zz, aa, bb, phi, mask_corners=True):
@@ -1694,14 +1703,14 @@ class Spectrum(numpy.ma.masked_array):
             term2 *= (mm+1)/((nb+1)*(nb+2))
             over_b = term1 + term2
 
-            sub_fs = Spectrum._from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, over_b, mask_corners=False)
+            sub_fs = Spectrum._from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, over_b, raw=True)
             data[:,:,:,:,mm] = sub_fs.data
 
         fs = dadi.Spectrum(data, mask_corners=mask_corners)
         return fs
 
     @staticmethod
-    def _from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True):
+    def _from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True, raw=False):
         """
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1709,6 +1718,8 @@ class Spectrum(numpy.ma.masked_array):
         piecewise-linear approximation to phi.
 
         See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
         """
         data = numpy.zeros((nx+1,ny+1,nz+1,na+1))
 
@@ -1722,11 +1733,13 @@ class Spectrum(numpy.ma.masked_array):
             term2 *= (ll+1)/((na+1)*(na+2))
             over_a = term1 + term2
 
-            sub_fs = Spectrum._from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, over_a, mask_corners=False)
+            sub_fs = Spectrum._from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, over_a, raw=True)
             data[:,:,:,ll] = sub_fs.data
 
-        fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return fs
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_4D_admix_props(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True,
