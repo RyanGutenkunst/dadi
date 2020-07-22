@@ -253,8 +253,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
              h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False,
-             frozen2=False, nomut1=False, nomut2=False, enable_cuda_const=False,
-             transpose=False):
+             frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False):
     """
     Integrate a 2-dimensional phi foward.
 
@@ -281,7 +280,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     nomut1,nomut2: If True, no new mutations will be introduced into the
                    given population.
 
-    enable_cuda_const: If True, enable CUDA integration with slower constant
+    enable_cuda_cached: If True, enable CUDA integration with slower constant
                        parameter method. Likely useful only for benchmarking.
 
     Note: Generalizing to different grids in different phi directions is
@@ -305,7 +304,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     if False and numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
-        if not cuda_enabled or (cuda_enabled and enable_cuda_const):
+        if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
             return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
                     gamma1, gamma2, h1, h2, theta0, initial_t,
                     frozen1, frozen2, nomut1, nomut2)
@@ -356,22 +355,12 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                              nomut1, nomut2)
-        if not transpose:
-            if not frozen1:
-                phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
-                                         this_dt, use_delj_trick)
-            if not frozen2:
-                phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
-                                         this_dt, use_delj_trick)
-        else:
-            phi = phi.transpose()
-            if not frozen1:
-                phi = int_c.implicit_2Dy(phi, xx, yy, nu1, m12, gamma1, h1,
-                                         this_dt, use_delj_trick)
-            phi = phi.transpose()
-            if not frozen2:
-                phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
-                                         this_dt, use_delj_trick)
+        if not frozen1:
+            phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
+                                     this_dt, use_delj_trick)
+        if not frozen2:
+            phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
+                                     this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -380,7 +369,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
                gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
                theta0=1, initial_t=0, frozen1=False, frozen2=False,
-               frozen3=False, enable_cuda_const=False, transpose=False):
+               frozen3=False, enable_cuda_cached=False):
     """
     Integrate a 3-dimensional phi foward.
 
@@ -400,7 +389,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
 
-    enable_cuda_const: If True, enable CUDA integration with slower constant
+    enable_cuda_cached: If True, enable CUDA integration with slower constant
                        parameter method. Likely useful only for benchmarking.
 
     Note: Generalizing to different grids in different phi directions is
@@ -426,7 +415,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
     if False and numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        if not cuda_enabled or (cuda_enabled and enable_cuda_const):
+        if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
             return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3,
                                             m12, m13, m21, m23, m31, m32,
                                             gamma1, gamma2, gamma3, h1, h2, h3,
@@ -495,29 +484,15 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
                              frozen1, frozen2, frozen3)
-        if not transpose:
-            if not frozen1:
-                phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
-                                         gamma1, h1, this_dt, use_delj_trick)
-            if not frozen2:
-                phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
-                                         gamma2, h2, this_dt, use_delj_trick)
-            if not frozen3:
-                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
-                                         gamma3, h3, this_dt, use_delj_trick)
-        else:
-            phi = phi.transpose(1,2,0)
-            if not frozen1:
-                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu1, m12, m13, 
-                                         gamma1, h1, this_dt, use_delj_trick)
-            phi = phi.transpose(2,1,0)
-            if not frozen2:
-                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu2, m21, m23, 
-                                         gamma2, h2, this_dt, use_delj_trick)
-            phi = phi.transpose(0,2,1)
-            if not frozen3:
-                phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
-                                         gamma3, h3, this_dt, use_delj_trick)
+        if not frozen1:
+            phi = int_c.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
+                                     gamma1, h1, this_dt, use_delj_trick)
+        if not frozen2:
+            phi = int_c.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
+                                     gamma2, h2, this_dt, use_delj_trick)
+        if not frozen3:
+            phi = int_c.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+                                     gamma3, h3, this_dt, use_delj_trick)
 
         current_t = next_t
     return phi
@@ -528,7 +503,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
               gamma1=0, gamma2=0, gamma3=0, gamma4=0, 
               h1=0.5, h2=0.5, h3=0.5, h4=0.5,
               theta0=1, initial_t=0, frozen1=False, frozen2=False,
-              frozen3=False, frozen4=False, enable_cuda_const=False):
+              frozen3=False, frozen4=False):
     """
     Integrate a 4-dimensional phi foward.
 
@@ -653,8 +628,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
               gamma1=0, gamma2=0, gamma3=0, gamma4=0, gamma5=0,
               h1=0.5, h2=0.5, h3=0.5, h4=0.5, h5=0.5,
               theta0=1, initial_t=0, frozen1=False, frozen2=False,
-              frozen3=False, frozen4=False, frozen5=False, 
-              enable_cuda_const=False):
+              frozen3=False, frozen4=False, frozen5=False):
     """
     Integrate a 5-dimensional phi foward.
 
@@ -673,9 +647,6 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
-
-    enable_cuda_const: If True, enable CUDA integration with slower constant
-                       parameter method. Likely useful only for benchmarking.
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
