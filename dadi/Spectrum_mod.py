@@ -1391,6 +1391,8 @@ class Spectrum(numpy.ma.masked_array):
 
         raw: If True, return data as a numpy array, not a Spectrum object
         """
+        if not (len(xx) == len(yy) and np.allclose(xx,yy)):
+            raise ValueError('Must have xx==yy to use linear algebra calculation of FS from phi.')
         dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
         dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
 

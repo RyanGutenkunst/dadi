@@ -46,3 +46,21 @@ def cuda_enabled(toggle=None):
         return False
     else:
         raise ValueError("toggle must be True, False, or None")
+
+def pts_to_RAM(pts, P):
+    """
+    Approximate RAM usage for a given grid points and number of populations 
+
+    pts: Grid points setting
+    P: Number of populations
+    """
+    return 8*4*pts**P / 1024**3
+
+def RAM_to_pts(RAM, P):
+    """
+    Approximate maximum grid points given the number of populations and available RAM
+
+    pts: Grid points setting
+    P: Number of populations
+    """
+    return int((RAM*1024**3/(8*4))**(1./P))

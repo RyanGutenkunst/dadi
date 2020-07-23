@@ -10,5 +10,9 @@ if __name__ == '__main__':
     for file in testfiles:
         module = file[:-3]
         mod = __import__(module)
-        all_tests.addTest(mod.suite)
+        try:
+            all_tests.addTest(mod.suite)
+        except AttributeError:
+            print("Could not load tests automatically from {0}.py. To test that functionality, run those tests manually as python {0}.py.".format(mod.__name__))
+        
     unittest.TextTestRunner(verbosity=2).run(all_tests)
