@@ -2,8 +2,8 @@ import atexit
 
 import pycuda.autoinit
 from pycuda.tools import clear_context_caches, make_default_context
-from dadi.cuda.cusparse import cusparseCreate, cusparseDestroy
 from skcuda.cublas import cublasCreate, cublasDestroy, cublasDgeam
+from .cusparse import cusparseCreate, cusparseDestroy
 
 ctx = make_default_context()
 cusparse_handle = cusparseCreate()

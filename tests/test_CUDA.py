@@ -26,7 +26,7 @@ class CUDATestCase(unittest.TestCase):
     
         dadi.cuda_enabled(True)
         phi_gpu = dadi.Integration.two_pops(phi.copy(), xx, *args,
-                enable_cuda_const=True)
+                enable_cuda_cached=True)
 
         self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
@@ -73,7 +73,7 @@ class CUDATestCase(unittest.TestCase):
                        m12, m13, m21, m23, m31, m32,
                        gamma1, gamma2, gamma3, h1, h2, h3,
                        theta0, initial_t, frozen1, frozen2,
-                       frozen3, enable_cuda_const=True)
+                       frozen3, enable_cuda_cached=True)
         
         self.assertTrue(np.allclose(phi_cpu, phi_gpu))
 
