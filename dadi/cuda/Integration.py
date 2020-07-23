@@ -78,10 +78,10 @@ def _inject_mutations_5D_valcalc(dt, xx, yy, zz, aa, bb, theta0, frozen1, frozen
 
 import pycuda
 import pycuda.gpuarray as gpuarray
-from skcuda.cusparse import cusparseDgtsvInterleavedBatch_bufferSizeExt, cusparseDgtsvInterleavedBatch
 
 import dadi.cuda
 from dadi.cuda import cusparse_handle, _grid, _block, transpose_gpuarray
+from dadi.cuda.cusparse import cusparseDgtsvInterleavedBatch_bufferSizeExt, cusparseDgtsvInterleavedBatch
 from . import kernels
 
 def _two_pops_const_params(phi, xx, 
