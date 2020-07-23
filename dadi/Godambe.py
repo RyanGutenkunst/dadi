@@ -6,9 +6,6 @@ import numpy
 from dadi import Inference
 from dadi.Spectrum_mod import Spectrum
 
-print("""If you use the Godambe methods in your published research, please cite Coffman et al. (2016) in addition to the main dadi paper Gutenkunst et al. (2009).
-AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591-593 (2016)""")
-
 def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
     """
     Calculate element [ii][jj] of the Hessian matrix, a matrix

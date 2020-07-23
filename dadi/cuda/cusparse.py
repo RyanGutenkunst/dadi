@@ -9,11 +9,6 @@ over two months, hence I moved the code into the dadi distribution itself.
 import ctypes, platform, sys
 from string import Template
 
-#(base) PS C:\Users\rgute\Desktop\dadi-devel\tests> python test_CUDA.py -v                                               C:\Users\rgute\anaconda3\lib\site-packages\skcuda\cublas.py:284: UserWarning: creating CUBLAS context to get version number
-#  warnings.warn('creating CUBLAS context to get version number')
-#test_2d_const_params (__main__.CUDATestCase) ... C:\Users\rgute\anaconda3\lib\site-packages\pycuda\gpuarray.py:183: DeprecationWarning: np.asscalar(a) is deprecated since NumPy v1.16, use a.item() instead
-#  s = np.asscalar(s)
-
 # Load library:
 _linux_version_list = [10.2, 10.1, 10.0, 9.2, 9.1, 9.0, 8.0, 7.5, 7.0, 6.5, 6.0, 5.5, 5.0, 4.0]
 _win32_version_list = [10, 10, 100, 92, 91, 90, 80, 75, 70, 65, 60, 55, 50, 40]

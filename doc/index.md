@@ -12,6 +12,23 @@ Please join the `dadi-user` Google group: [https://groups.google.com/group/dadi-
 
 As we do our own research, dadi is constantly improving. Our philosophy is to include in dadi any code we develop for our own projects that may useful to others. Similarly, if you develop dadi-related code that you think might be useful to others, please let us know so we can include it with the main distribution. If you have particular needs that modification to dadi may fulfill, please contact the developers and we may be able to help.
 
+### Citations
+
+If you find dadi useful in your research, please cite:
+RN Gutenkunst, RD Hernandez, SH Williamson, CD Bustamante "Inferring the joint demographic history of multiple populations from multidimensional SNP data" PLoS Genetics 5:e1000695 (2009)
+
+If you find the Godambe Information Matrix methods useful, please cite:
+AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591 (2016)
+
+If you find the DFE inference methods useful, please cite:
+BY Kim, CD Huber, KE Lohmueller "Inference of the Distribution of Selection Coefficients for New Nonsynonymous Mutations Using Large Samples" Genetics 206:345 (2017)
+
+If you find the triallelic methods useful, please cite:
+AP Ragsdale, AJ Coffman, P Hsieh, TJ Struck, RN Gutenkunst "Triallelic population genomics for inferring correlated fitness effects of same site nonsynonymous mutations" Genetics 203:513 (2016)
+
+If you find the two-locus methods useful, please cite:
+AP Ragsdale, RN Gutenkunst "Inferring demographic history using two-locus statistics" Genetics 206:1037 (2017)
+
 ### Suggested workflow
 
 One of Python’s major strengths is its interactive nature. This is very useful in the ex-ploratory stages of a project: for examining data and testing models. If you intend to use dadi’s plotting commands, which rely on `matplotlib`, they you’ll almost certainly want to install IPython, an enhanced Python shell that fixes several difficulties with interactive plotting using `matplotlib`.
