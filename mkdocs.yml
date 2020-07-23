@@ -24,6 +24,7 @@ nav:
         - 'DFE inference': 'user-guide/dfe-inference.md'
         - 'Inbreeding': 'user-guide/inbreeding.md'
         - 'Polyploid subgenomes': 'user-guide/polyploid-subgenomes.md'
+        - 'GPU computing': 'user-guide/GPU-computing.md'
         - 'Frequently asked questions': 'user-guide/frequently-asked-questions.md'
         - 'References': 'user-guide/references.md'
 - Examples:
