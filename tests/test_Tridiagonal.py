@@ -32,7 +32,7 @@ class TridiagonalTestCase(unittest.TestCase):
         u = dadi.tridiag.tridiag(self.a,self.b,self.c,self.r)
         rcheck = numpy.dot(self.arr,u)
 
-        self.assert_(numpy.allclose(self.r, rcheck, atol=1e-10))
+        self.assert_(numpy.allclose(self.r, rcheck, atol=1e-8))
 
     def test_tridiag_single(self):
         """
