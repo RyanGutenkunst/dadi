@@ -15,19 +15,19 @@ As we do our own research, dadi is constantly improving. Our philosophy is to in
 ### Citations
 
 If you find dadi useful in your research, please cite:
-RN Gutenkunst, RD Hernandez, SH Williamson, CD Bustamante "Inferring the joint demographic history of multiple populations from multidimensional SNP data" PLoS Genetics 5:e1000695 (2009)
+[RN Gutenkunst, RD Hernandez, SH Williamson, CD Bustamante "Inferring the joint demographic history of multiple populations from multidimensional SNP data" PLoS Genetics 5:e1000695 (2009)](http://doi.org/10.1371/journal.pgen.1000695).
 
 If you find the Godambe Information Matrix methods useful, please cite:
-AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591 (2016)
+[AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst "Computationally efficient composite likelihood statistics for demographic inference" Molecular Biology and Evolution 33:591 (2016)](http://doi.org/10.1093/molbev/msv255).
 
 If you find the DFE inference methods useful, please cite:
-BY Kim, CD Huber, KE Lohmueller "Inference of the Distribution of Selection Coefficients for New Nonsynonymous Mutations Using Large Samples" Genetics 206:345 (2017)
+[BY Kim, CD Huber, KE Lohmueller "Inference of the Distribution of Selection Coefficients for New Nonsynonymous Mutations Using Large Samples" Genetics 206:345 (2017)](https://doi.org/10.1534/genetics.116.197145).
 
 If you find the triallelic methods useful, please cite:
-AP Ragsdale, AJ Coffman, P Hsieh, TJ Struck, RN Gutenkunst "Triallelic population genomics for inferring correlated fitness effects of same site nonsynonymous mutations" Genetics 203:513 (2016)
+[AP Ragsdale, AJ Coffman, P Hsieh, TJ Struck, RN Gutenkunst "Triallelic population genomics for inferring correlated fitness effects of same site nonsynonymous mutations" Genetics 203:513 (2016)](http://doi.org/10.1534/genetics.115.184812).
 
 If you find the two-locus methods useful, please cite:
-AP Ragsdale, RN Gutenkunst "Inferring demographic history using two-locus statistics" Genetics 206:1037 (2017)
+[AP Ragsdale, RN Gutenkunst "Inferring demographic history using two-locus statistics" Genetics 206:1037 (2017)](http://doi.org/10.1534/genetics.117.201251).
 
 ### Suggested workflow
 

@@ -5,13 +5,13 @@ dadi can be sped up substantially by running on a CUDA-enabled Nvidia GPU.
 ### Installation
 
 To enable GPU computing, you will first need to install the [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
-After install the Toolkit, you will then need to install PyCUDA and scikit-cuda. 
+After installing the Toolkit, you will then need to install [PyCUDA](https://documen.tician.de/pycuda/) and [scikit-cuda](https://scikit-cuda.readthedocs.io/). 
 Both of these can be installed from the Python Package Index using pip, `python3 -m pip install pycuda` and `python3 -m pip install scikit-cuda`.
 
 ### Usage
 
 GPU computing is implemented for integration of population spectra, `phi`.
-To enable GPU computing, run the command `dadi.cuda_enabled(True)` in your script (generally near the top).
+To enable GPU computing, run the command `dadi.cuda_enabled(True)` in your script, before you carry out any model simulations or optimizations.
 To disable GPU computing, run the command `dadi.cuda_enabled(False)` in your script.
 
 ### RAM limitations
