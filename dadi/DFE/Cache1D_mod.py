@@ -7,6 +7,7 @@ https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc .
 """
 
 import operator
+import sys, traceback
 import numpy as np
 import scipy.stats.distributions
 import scipy.integrate
@@ -108,10 +109,17 @@ class Cache1D:
             if item is None:
                 return
             ii, gamma = item
-            sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
-            if verbose:
-                print('{0}: {1}'.format(ii, gamma))
-            outlist.append((ii, sfs))
+            try:
+                sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
+                if verbose:
+                    print('{0}: {1}'.format(ii, gamma))
+                outlist.append((ii, sfs))
+            except BaseException as inst:
+                # If an exception occurs in the worker function, print an error
+                # and populate the outlist with an item that will cause a later crash.
+                tb = sys.exc_info()[2]
+                traceback.print_tb(tb)
+                outlist.append(inst)
 
     def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
         """

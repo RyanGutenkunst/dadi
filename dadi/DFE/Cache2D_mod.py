@@ -1,6 +1,7 @@
 """
 Developed by the Gutenkunst group, building off of the fitdadi code.
 """
+import sys, traceback
 import numpy as np
 import scipy.integrate
 
@@ -125,10 +126,17 @@ class Cache2D:
             if item is None:
                 return
             ii, jj, gamma, gamma2 = item
-            sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
-            if verbose:
-                print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
-            outlist.append((ii,jj,sfs))
+            try:
+                sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
+                if verbose:
+                    print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
+                outlist.append((ii,jj,sfs))
+            except BaseException as inst:
+                # If an exception occurs in the worker function, print an error
+                # and populate the outlist with an item that will cause a later crash.
+                tb = sys.exc_info()[2]
+                traceback.print_tb(tb)
+                outlist.append(inst)
 
     def integrate(self, params, ns, sel_dist, theta, pts,
                   exterior_int=True):
