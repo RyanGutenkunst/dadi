@@ -14,6 +14,9 @@ GPU computing is implemented for integration of population spectra, `phi`.
 To enable GPU computing, run the command `dadi.cuda_enabled(True)` in your script, before you carry out any model simulations or optimizations.
 To disable GPU computing, run the command `dadi.cuda_enabled(False)` in your script.
 
+Combined CPU and GPU computing is enabled for dadi.DFE.Cache2D.
+To use this functionality, set `mp=True` and specify the number of GPU processes to launch using the `gpus` argument.
+
 ### RAM limitations
 
 Generally, memory is more limited on GPUs than GPUs. To estimate how many gigabytes of RAM your analysis will need,
