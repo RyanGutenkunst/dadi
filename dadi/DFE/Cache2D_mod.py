@@ -125,8 +125,6 @@ class Cache2D:
         Worker function -- used to generate SFSes for
         pairs of gammas.
         """
-        import multiprocessing
-        name = multiprocessing.current_process().name
         demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
         dadi.cuda_enabled(usegpu)
         while True:
@@ -136,7 +134,7 @@ class Cache2D:
             ii, jj, gamma, gamma2 = item
             sfs = demo_sel_func(tuple(params)+(gamma,gamma2), ns, pts)
             if verbose:
-                print('{0},{1}: {2},{3}: {4} {5}'.format(ii, jj, gamma, gamma2, name, dadi.cuda_enabled()))
+                print('{0},{1}: {2},{3}'.format(ii, jj, gamma, gamma2))
             outlist.append((ii,jj,sfs))
 
     def integrate(self, params, ns, sel_dist, theta, pts,

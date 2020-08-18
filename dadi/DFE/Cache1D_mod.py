@@ -10,13 +10,14 @@ import operator
 import numpy as np
 import scipy.stats.distributions
 import scipy.integrate
+import dadi
 from dadi import Numerics, Spectrum
 
 class Cache1D:
     def __init__(self, params, ns, demo_sel_func, pts_l, 
                  gamma_bounds=(1e-4, 2000), gamma_pts=500, 
                  additional_gammas=[],
-                 mp=False, cpus=None, verbose=False):
+                 mp=False, cpus=None, gpus=0, verbose=False):
         """
         params: Optimized demographic parameters
         ns: Sample size(s) for cached spectra
@@ -26,11 +27,12 @@ class Cache1D:
         gamma_bounds: Range of gammas to cache spectra for.
         gamma_pts: Number of gamma grid points over which to integrate
         additional_gammas: Additional positive values of gamma to cache for
-        mp: True if you want to use multiple cores (utilizes 
+        mp: True if you want to use multiple cores or gpus (utilizes 
             multiprocessing). If using the mp option you may also specify
             # of cpus, otherwise this will just use nthreads-1 on your
             machine.
-        cpus: For multiprocessing, number of jobs to launch.
+        cpus: For multiprocessing, number of CPU jobs to launch.
+        gpus: For multiprocessing, number of GPU jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
         """
         self.params, self.ns, self.pts_l = tuple(params), tuple(ns), tuple(pts_l)
@@ -52,7 +54,7 @@ class Cache1D:
         if not mp: #for running with a single thread
             self._single_process(verbose)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, verbose)
+            self._multiple_processes(cpus, gpus, verbose)
 
         demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
         self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts_l)
@@ -66,7 +68,7 @@ class Cache1D:
             if verbose:
                print('{0}: {1}'.format(ii, gamma))
 
-    def _multiple_processes(self, cpus, verbose):
+    def _multiple_processes(self, cpus, gpus, verbose):
         from multiprocessing import Manager, Process, cpu_count
            
         if cpus is None:
@@ -80,7 +82,12 @@ class Cache1D:
             pool = []
             for ii in range(cpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts_l, verbose))
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts_l, verbose, False))
+                p.start()
+                pool.append(p)
+            for ii in range(gpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts_l, verbose, True))
                 p.start()
                 pool.append(p)
 
@@ -88,7 +95,7 @@ class Cache1D:
             for ii, gamma in enumerate(self.gammas):
                 work.put((ii, gamma))
             # Put commands on queue to close out workers
-            for jj in range(cpus):
+            for jj in range(cpus+gpus):
                 work.put(None)
             # Stop workers
             for p in pool:
@@ -97,12 +104,13 @@ class Cache1D:
             for ii, sfs in results:
                 self.spectra[ii] = sfs
 
-    def _worker_sfs(self, in_queue, outlist, popn_func_ex, params, ns, pts_l, verbose):
+    def _worker_sfs(self, in_queue, outlist, popn_func_ex, params, ns, pts_l, verbose, usegpu):
         """
         Worker function -- used to generate SFSes for
         single values of gamma.
         """
         popn_func_ex = Numerics.make_extrap_func(popn_func_ex)
+        dadi.cuda_enabled(usegpu)
         while True:
             item = in_queue.get()
             if item is None:
