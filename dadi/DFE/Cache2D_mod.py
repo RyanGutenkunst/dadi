@@ -9,7 +9,7 @@ class Cache2D:
     def __init__(self, params, ns, demo_sel_func, pts,
                  gamma_bounds=(1e-4, 2000.), gamma_pts=100,
                  additional_gammas=[],
-                 mp=False, cpus=None, verbose=False,
+                 mp=False, cpus=None, gpus=0, verbose=False,
                  split_jobs=1, this_job_id=0):
         """
         params: Optimized demographic parameters
@@ -22,11 +22,12 @@ class Cache2D:
         additional_gammas: Sequence of additional gamma values to store results
                            for. Useful for point masses of explicit neutrality
                            or positive selection.
-        mp: True if you want to use multiple cores (utilizes 
+        mp: True if you want to use multiple cores or gpus (utilizes 
             multiprocessing). If using the mp option you may also specify
             # of cpus, otherwise this will just use nthreads-1 on your
             machine.
-        cpus: For multiprocessing, number of jobs to launch.
+        cpus: For multiprocessing, number of CPU jobs to launch.
+        gpus: For multiprocessing, number of GPU jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
         split_jobs: To split cache generation across multiple computing jobs,
                     set split_jobs > 1 and this_job_id.
@@ -59,7 +60,7 @@ class Cache2D:
         if not mp: #for running with a single thread
             self._single_process(verbose, split_jobs, this_job_id)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, verbose, split_jobs, this_job_id)
+            self._multiple_processes(cpus, gpus, verbose, split_jobs, this_job_id)
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
@@ -79,7 +80,7 @@ class Cache2D:
                     if verbose: print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
                 this_eval += 1
                         
-    def _multiple_processes(self, cpus, verbose, split_jobs, this_job_id):
+    def _multiple_processes(self, cpus, gpus, verbose, split_jobs, this_job_id):
         from multiprocessing import Manager, Process, cpu_count
         # Would like to simply use Pool.map here, but difficult to
         # pass dynamic demo_sel_func that way.
@@ -95,7 +96,12 @@ class Cache2D:
             pool = []
             for i in range(cpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose))
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, False))
+                p.start()
+                pool.append(p)
+            for i in range(gpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, True))
                 p.start()
                 pool.append(p)
 
@@ -107,7 +113,7 @@ class Cache2D:
                         work.put((ii,jj, gamma,gamma2))
                     this_eval += 1
             # Put commands on queue to close out workers
-            for jj in range(cpus):
+            for jj in range(cpus+gpus):
                 work.put(None)
             # Stop workers
             for p in pool:
@@ -115,12 +121,13 @@ class Cache2D:
             for ii,jj, sfs in results:
                 self.spectra[ii][jj] = sfs
                     
-    def _worker_sfs(self, in_queue, outlist, demo_sel_func, params, ns, pts, verbose):
+    def _worker_sfs(self, in_queue, outlist, demo_sel_func, params, ns, pts, verbose, usegpu):
         """
         Worker function -- used to generate SFSes for
         pairs of gammas.
         """
         demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
+        dadi.cuda_enabled(usegpu)
         while True:
             item = in_queue.get()
             if item is None:
