@@ -6,6 +6,8 @@ import numpy
 from dadi import Inference
 from dadi.Spectrum_mod import Spectrum
 
+two_pt_deriv_test = False
+
 def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
     """
     Calculate element [ii][jj] of the Hessian matrix, a matrix
@@ -171,6 +173,10 @@ def get_grad(func, p0, eps, args=()):
             fm = func(pwork, *args)
 
             grad[ii] = (fp - fm)/eps[ii]
+            if two_pt_deriv_test:
+                pwork[ii] = p0[ii] + 2*eps[ii]
+                fpp = func(pwork, *args)
+                grad[ii] = (4*fp - fpp - 3*fm)/(2*eps[ii])
     return grad
 
 cache = {}
