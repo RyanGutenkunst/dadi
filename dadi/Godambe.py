@@ -206,7 +206,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     # Cache evaluations of the frequency spectrum inside our hessian/J 
     # evaluation function
     def func(params, data, theta_adjust=1):
-        key = (tuple(params), tuple(ns), tuple(grid_pts))
+        key = (func_ex.__hash__(), tuple(params), tuple(ns), tuple(grid_pts))
         if key not in cache:
             cache[key] = func_ex(params, ns, grid_pts)
         # theta_adjust deals with bootstraps that need  different thetas
