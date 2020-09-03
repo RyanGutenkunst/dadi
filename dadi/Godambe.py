@@ -328,8 +328,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
-               multinom=True, eps=0.01):
-    # XXX: Need to implement boot_theta_adjusts
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
     """
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -351,7 +350,12 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
          Note that if eps*param is < 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
     """
+    if multinom and boot_theta_adjusts:
+        raise ValueError('Cannot use boot_theta_adjusts with multinom=True.')
     if multinom:
         func_multi = func_ex
         model = func_multi(p0, data.sample_sizes, grid_pts)
@@ -371,7 +375,7 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
     p_nested = numpy.asarray(p0)[nested_indices]
     GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
-                                eps, log=False)
+                                eps, log=False, boot_theta_adjusts=boot_theta_adjusts)
 
     adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
