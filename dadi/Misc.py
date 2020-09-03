@@ -616,6 +616,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
+                else:
+                    # initialize calls_dict with different populations
+                    calls_dict[pop] = (0,0)
                 gt = sample.split(':')[gtindex]
                 g1, g2 = gt[0], gt[2]
                 if g1 == '.' or g2 == '.':
@@ -623,8 +626,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     #full_info = False
                     #break
 
-                if pop not in calls_dict:
-                    calls_dict[pop] = (0,0)
+                #if pop not in calls_dict:
+                #    calls_dict[pop] = (0,0)
                 refcalls, altcalls = calls_dict[pop]
                 refcalls += int(g1 == '0') + int(g2 == '0')
                 altcalls += int(g1 == '1') + int(g2 == '1')
