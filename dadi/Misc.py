@@ -619,16 +619,21 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 else:
                     if pop not in calls_dict:
                         calls_dict[pop] = (0,0)
+                # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
-                g1, g2 = gt[0], gt[2]
-                if g1 == '.' or g2 == '.':
-                    continue
+                #g1, g2 = gt[0], gt[2]
+                #if g1 == '.' or g2 == '.':
+                #    continue
                     #full_info = False
                     #break
 
                 refcalls, altcalls = calls_dict[pop]
-                refcalls += int(g1 == '0') + int(g2 == '0')
-                altcalls += int(g1 == '1') + int(g2 == '1')
+                #refcalls += int(g1 == '0') + int(g2 == '0')
+                #altcalls += int(g1 == '1') + int(g2 == '1')
+                
+                # Assume biallelic variants
+                refcalls += gt[::2].count('0')
+                altcalls += gt[::2].count('1')
                 calls_dict[pop] = (refcalls, altcalls)
             snp_dict['calls'] = calls_dict
             data_dict[snp_id] = snp_dict
