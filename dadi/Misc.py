@@ -588,11 +588,12 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     continue
                 gt = sample.split(':')[gtindex]
                 g1, g2 = gt[0], gt[2]
-                if g1 == '.' or g2 == '.':
-                    continue
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                subsample_dict[pop].append((g1, g2))
+                if g1 == '.' or g2 == '.':
+                    continue
+                else:
+                    subsample_dict[pop].append((g1, g2))
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
@@ -630,7 +631,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 refcalls, altcalls = calls_dict[pop]
                 #refcalls += int(g1 == '0') + int(g2 == '0')
                 #altcalls += int(g1 == '1') + int(g2 == '1')
-                
+
                 # Assume biallelic variants
                 refcalls += gt[::2].count('0')
                 altcalls += gt[::2].count('1')

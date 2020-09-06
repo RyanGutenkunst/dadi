@@ -1,6 +1,6 @@
 # Inbreeding
 
-When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population. For high levels of inbreeding (*F<sub>IS</sub>* ≈ 0.5 or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. However, lower levels of inbreeding can still bias estimates of demograpy despite not have such a dramatic effect on the SFS.
+When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population. For high levels of inbreeding (*F<sub>IS</sub>* ≈ 0.5 or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. However, lower levels of inbreeding can still bias estimates of demography despite not have such a dramatic effect on the SFS.
 
 ![Inbred SFS example](InbreedingSFS.png)
 
@@ -31,3 +31,9 @@ The `from_phi_inbreeding` function also requires the ploidy levels of the popula
 		return fs
 
 <p><strong>Listing 10 Diploid-Tetraploid Isolation Model</strong>: An ancestral population splits at time <code>T</code> into a diploid (pop 1) and autotetraploid (pop 2) population of sizes <code>nu1</code> and <code>nu2</code>, respectively. The populations have separate inbreeding coefficients <code>F1</code> and <code>F2</code></p>
+
+One important thing to note about modeling inbred individuals is that <strong>you cannot use projection on your data</strong>.
+Because inbreeding is manifested as excess homozygosity in an individuals genome, we need to make sure that the effects of
+inbreeding aren't erased by randomly sampling chromosomes from the population. If you are starting with a VCF file,
+there is now a function to read in data from that file to make a frequency spectrum while also allowing for subsampling
+individuals. This is the preferred way to downsample individuals, especially in the case when there is inbreeding.
