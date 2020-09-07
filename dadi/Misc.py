@@ -523,7 +523,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             continue
 
         # Read SNP data
-        cols = line.split()
+        # Data lines in VCF file are tab-delimited
+        # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
+        cols = line.split("\t")
         snp_id = '_'.join(cols[:2]) # CHROM_POS
         snp_dict = {}
 
@@ -557,7 +559,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         rflank, aflank = flanking_info
         for field in info:
             if rflank and field.startswith(rflank):
-                flank = field[len(rflank+1):].upper()
+                flank = field[len(rflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -568,7 +570,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 snp_dict['context'] = prevb + ref + nextb
                 continue
             if aflank and field.startswith(aflank):
-                flank = field[len(aflank+1):].upper()
+                flank = field[len(aflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -588,11 +590,12 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     continue
                 gt = sample.split(':')[gtindex]
                 g1, g2 = gt[0], gt[2]
-                if g1 == '.' or g2 == '.':
-                    continue
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                subsample_dict[pop].append((g1, g2))
+                if g1 == '.' or g2 == '.':
+                    continue
+                else:
+                    subsample_dict[pop].append((g1, g2))
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
@@ -616,18 +619,24 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
+                else:
+                    if pop not in calls_dict:
+                        calls_dict[pop] = (0,0)
+                # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
-                g1, g2 = gt[0], gt[2]
-                if g1 == '.' or g2 == '.':
-                    continue
+                #g1, g2 = gt[0], gt[2]
+                #if g1 == '.' or g2 == '.':
+                #    continue
                     #full_info = False
                     #break
 
-                if pop not in calls_dict:
-                    calls_dict[pop] = (0,0)
                 refcalls, altcalls = calls_dict[pop]
-                refcalls += int(g1 == '0') + int(g2 == '0')
-                altcalls += int(g1 == '1') + int(g2 == '1')
+                #refcalls += int(g1 == '0') + int(g2 == '0')
+                #altcalls += int(g1 == '1') + int(g2 == '1')
+
+                # Assume biallelic variants
+                refcalls += gt[::2].count('0')
+                altcalls += gt[::2].count('1')
                 calls_dict[pop] = (refcalls, altcalls)
             snp_dict['calls'] = calls_dict
             data_dict[snp_id] = snp_dict
