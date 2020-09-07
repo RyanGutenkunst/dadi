@@ -63,7 +63,6 @@ class OptimizationTestCase(unittest.TestCase):
                                          lower_bound=[1e-3, 0], upper_bound=[1.0, 0.7],
                                          algorithm=nlopt.LN_COBYLA,
                                          ineq_constraints=[(ineq_cons,1e-6)],
-                                         verbose=1,
                                          maxtime=10)
         self.assertLess(popt[0]+popt[1], 0.5+1e-6)
 
