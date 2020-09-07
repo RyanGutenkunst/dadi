@@ -80,11 +80,12 @@ if __name__ == '__main__':
     
     # Parameters are mean, variance, and correlation coefficient
     p0 = [0,1.,0.8]
-    popt = dadi.Inference.optimize(p0, data, s2.integrate, pts=None,
+    popt,llopt = dadi.Inference.opt(p0, data, s2.integrate, pts=None,
                                    func_args=[sel_dist, theta],
                                    lower_bound=[None,0,-1],
                                    upper_bound=[None,None,1],
-                                   verbose=30, multinom=False)
+                                   verbose=30, multinom=False,
+                                   maxtime=20)
     print('Input parameters: {0}'.format(input_params))
     print('Optimized parameters: {0}'.format(popt))
     
@@ -142,7 +143,7 @@ if __name__ == '__main__':
     # symmetry if the length of the arguments is only three. If we wanted
     # asymmetric lognormal, we would pass in a p0 of total length 7.
     p0 = [0.3,0.3,0.1,0.2,1.2]
-    popt = dadi.Inference.optimize(p0, data,
+    popt,llopt = dadi.Inference.opt(p0, data,
                                    s2.integrate_symmetric_point_pos,
                                    pts=None, func_args=[sel_dist, theta],
                                    # Note that mu in principle has no lower or
@@ -155,7 +156,8 @@ if __name__ == '__main__':
                                    # we can't do this integration effectively
                                    # if gammapos is allowed to vary.
                                    fixed_params=[None,None,None,None,1.2],
-                                   verbose=30, multinom=False)
+                                   verbose=30, multinom=False,
+                                   maxtime=30)
     print('Symmetric test fit')
     print('  Input parameters: {0}'.format(input_params))
     print('  Optimized parameters: {0}'.format(popt))
@@ -173,7 +175,7 @@ if __name__ == '__main__':
     target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
                                          PDFs.biv_lognormal, theta)
     p0 = [0.3,0.3,0,0.2,1.2,0.3]
-    popt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
+    popt,llopt = dadi.Inference.opt(p0, data, mixture_symmetric_point_pos, pts=None, 
             func_args=[s1, s2, PDFs.lognormal,
                 PDFs.biv_lognormal, theta],
             lower_bound=[None, 0.1,-1,0,None, 0],
@@ -181,7 +183,7 @@ if __name__ == '__main__':
             # We fix both the rho assumed for the 2D distribution,
             # and the assumed value of positive selection.
             fixed_params=[None,None,0,None,1.2,None],
-            verbose=30, multinom=False, maxiter=1)
+            verbose=30, multinom=False, maxtime=60)
     
     #
     # Test Godambe code for estimating uncertainties
@@ -197,7 +199,7 @@ if __name__ == '__main__':
     # Add up those segments to get our data spectrum
     data = dadi.Spectrum(np.sum(data_pieces, axis=0))
     # Do the optimization
-    popt = dadi.Inference.optimize([0.2,0.2,0.15,0.3,1.2], data,
+    popt,llopt = dadi.Inference.opt([0.2,0.2,0.15,0.3,1.2], data,
                                    s2.integrate_symmetric_point_pos,
                                    pts=None, func_args=[sel_dist, theta],
                                    lower_bound=[-1,0.1,-1,0,0],
