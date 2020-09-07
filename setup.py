@@ -84,9 +84,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 numpy.distutils.core.setup(name='dadi',
-                           version='2.1.0',
+                           version='2.1.1',
                            author='Ryan Gutenkunst',
-                           author_email='rgutenk@email.arizona.edu',
+                           author_email='rgutenk@arizona.edu',
                            url='https://bitbucket.org/gutenkunstlab/dadi',
                            ext_modules = [tridiag, int_c, pdfs],
                            packages=setuptools.find_packages(),
