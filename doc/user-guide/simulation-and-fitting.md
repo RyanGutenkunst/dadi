@@ -32,7 +32,7 @@ The optimal \\(\theta_0\\) can be requested via
 
 ### Fitting
 
-To find the maximum-likelihood model parameters for a given data set, dadi employs non-linear optimization. Several optimization methods are provided, as detailed in the Which optimizer should I use section.
+To find the maximum-likelihood model parameters for a given data set, dadi employs non-linear optimization. Several optimization methods are provided, as detailed in the "Which optimizer should I use" section.
 
 #### Parameter bounds
 
@@ -46,14 +46,13 @@ It is often useful to optimize only a subset of model parameters. A common examp
 
 ### Which optimizer should I use?
 
-dadi provides a multitude of optimization algorithms, each of which perform best in particular circumstances.
+dadi provides a multitude of optimization algorithms through the [nlopt library](https://nlopt.readthedocs.io/), each of which perform best in particular circumstances. For a summary of all the algorithms available, see [the nlop documentation](https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/).
 
-The two most general purpose routines are the BFGS methods implemented in `dadi.Inference.optimize` and `dadi.Inference.optimize_log`. These perform a local search from a specified set of parameter, using an algorithm which attempts to estimate the curvature of the likelihood surface. However, these methods may have convergence problems if the maximum-likelihod parameters are at one or more of the parameter bounds.
+The most general purpose and default routine is `algorithm=nlopt.LN_BOBYQA`. This performs a local search from a specified set of parameters, using an algorithm which attempts to estimate the curvature of the likelihood surface. Also available is `algorithm=nlopt.LN_COBYLA`, which supports constrained optimization that restricts combinations of parameter values.
 
-dadi also implements two L-BFGS-B methods, `dadi.Inference.optimize_lbfgsb` and `dadi.Inference.optimize_log_lbgfsb`. These implement a variant of the BFGS method that deals much more effectively with bounded parameter spaces. If your optimizations are often hitting the parameter bounds, try using these methods. Note that it is probably best to start with the vanilla BFGS methods, because the L-BFGS-B methods will always try parameter values at the bounds during the search. This can dramatically slow model fitting.
+You may also want to set `log_opt=True`, which will do the optimization in terms of logs of the parameter values. This is useful
+if the parameters differ dramatically in scale, with some very small and some very large parameter values.
 
-We also provide a simplex (a.k.a. amoeba) method in terms of log parameters, implemented in `dadi.Inference.optimize_log_fmin`. This method does not use derivative information, so it may be more robust than the BFGS-based methods, but it is much slower.
+We generally employ local optimizers. These are efficient, but are not guaranteed to find the global optimum. Thus, it is important to run several optimizations for each data set, starting from different initial parameters. If all goes well, multiple such runs will converge to the same set of parameters and likelihood, and this likelihood will be the highest found. This is strong evidence that you have indeed found the global optimum. To facilitate this, dadi provides a method `dadi.Misc.perturb_params` that randomly perturbs the parameters passed in to generate a new initial point for the optimization. 
 
-Finally, there is a simple grid search, implemented in `daid.Inference.optimize_grid`.
-
-Both BFGS and simplex are local search algorithms; thus they are efficient, but not guaranteed to find the global optimum. Thus, it is important to run several optimizations for each data set, starting from different initial parameters. If all goes well, multiple such runs will converge to the same set of parameters and likelihood, and this likelihood will be the highest found. This is strong evidence that you have indeed found the global optimum. To facilitate this, dadi provides a method `dadi.Misc.perturb_params` that randomly perturbs the parameters passed in to generate a new initial point for the optimization. 
+If you have the computational resources and are struggling to optimize your model to your data, you may consider exploring the [global optimization algorithms](https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#global-optimization) available in nlopt.

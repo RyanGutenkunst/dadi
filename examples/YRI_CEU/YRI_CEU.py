@@ -41,16 +41,16 @@ p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bound,
 # Do the optimization. By default we assume that theta is a free parameter,
 # since it's trivial to find given the other parameters. If you want to fix
 # theta, add a multinom=False to the call.
-# The maxiter argument restricts how long the optimizer will run. For real 
-# runs, you will want to set this value higher (at least 10), to encourage
-# better convergence. You will also want to run optimization several times
+# The maxtime  argument here shuts the optimization down after a short time.
+# For real runs, you won't want this restriction.
+# You will also want to run optimization several times
 # using multiple sets of intial parameters, to be confident you've actually
 # found the true maximum likelihood parameters.
 print('Beginning optimization ************************************************')
-popt = dadi.Inference.optimize_log(p0, data, func_ex, pts_l, 
+popt, llopt = dadi.Inference.opt(p0, data, func_ex, pts_l, 
                                    lower_bound=lower_bound,
                                    upper_bound=upper_bound,
-                                   verbose=len(p0), maxiter=3)
+                                 maxtime=120, verbose=len(p0))
 # The verbose argument controls how often progress of the optimizer should be
 # printed. It's useful to keep track of optimization process.
 print('Finshed optimization **************************************************')

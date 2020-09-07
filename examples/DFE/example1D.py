@@ -38,10 +38,10 @@ if __name__ == '__main__':
     lower_bound, upper_bound = [1e-3, 1e-2], [1, 50000.]
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
-    popt = dadi.Inference.optimize_log(p0, data, spectra.integrate, pts=None,
+    popt, llopt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
                                        func_args=[DFE.PDFs.gamma, theta_ns],
                                        lower_bound=lower_bound, upper_bound=upper_bound, 
-                                       verbose=len(sel_params), maxiter=10, multinom=False)
+                                     verbose=len(sel_params), maxtime=10, multinom=False)
 
     # Get expected SFS for MLE
     model_sfs = spectra.integrate(popt, None, DFE.PDFs.gamma, theta_ns, None)
@@ -62,11 +62,11 @@ if __name__ == '__main__':
     lower_bound, upper_bound = [1e-3, 1e-3, 1e-2], [1, 1, 50000.]
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
-    popt = dadi.Inference.optimize_log(p0, data, spectra.integrate, pts=None,
+    popt, llopt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
                                        func_args=[neugamma, theta_ns],
                                        lower_bound=lower_bound, upper_bound=upper_bound, 
                                        verbose=len(sel_params),
-                                       maxiter=10, multinom=False)
+                                     maxtime=10, multinom=False)
 
     #
     # Modeling ancestral state misidentification, using dadi's built-in function to 
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     lower_bound, upper_bound = [1e-3, 1e-2, 0], [1, 50000., 1]
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
-    popt = dadi.Inference.optimize_log(p0, data, misid_func, pts=None,
+    popt, llopt = dadi.Inference.opt(p0, data, misid_func, pts=None,
                                        func_args=[DFE.PDFs.gamma, theta_ns],
                                        lower_bound=lower_bound, upper_bound=upper_bound,
-                                       verbose=len(sel_params), maxiter=10,
+                                     verbose=len(sel_params), maxtime=10,
                                        multinom=False)
     #
     # Including a point mass of positive selection
@@ -96,10 +96,11 @@ if __name__ == '__main__':
     lower_bound, upper_bound = [1e-3, 1e-2, 0, 0], [1, 50000., 1, 50]
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
-    popt = dadi.Inference.optimize_log(p0, data_pos, spectra.integrate_point_pos, pts=None,
-                                       func_args=[DFE.PDFs.gamma, theta_ns, DFE.DemogSelModels.two_epoch], 
+    popt, llopt = dadi.Inference.opt(p0, data_pos, spectra.integrate_point_pos, pts=None,
+                                     func_args=[DFE.PDFs.gamma, theta_ns,
+                                                DFE.DemogSelModels.two_epoch],
                                        lower_bound=lower_bound, upper_bound=upper_bound, 
-                                       verbose=len(sel_params), maxiter=10, multinom=False)
+                                     verbose=len(sel_params), maxtime=10, multinom=False)
 
     #
     # Multiple point masses of positive selection
@@ -113,16 +114,18 @@ if __name__ == '__main__':
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
 
-    def ieq_constraint(p,*args):
+    def ineq_constraint(p, grad):
         # Our constraint is that ppop1+ppos2 must be less than 1.
-        return [1-(p[2]-p[4])]
+        return (p[2]-p[4])-1
 
-    popt = dadi.Inference.optimize_cons(p0, data, spectra.integrate_point_pos, pts=None,
+    import nlopt
+    popt = dadi.Inference.opt(p0, data, spectra.integrate_point_pos, pts=None,
                                         func_args=[DFE.PDFs.lognormal, theta_ns,
                                                    DFE.DemogSelModels.two_epoch, 2],
                                         lower_bound=lower_bound, upper_bound=upper_bound,
-                                        ieq_constraint=ieq_constraint,
+                              algorithm=nlopt.LN_COBYLA,
+                              ineq_constraints=[(ineq_constraint, 1e-6)],
                                         # Fix gammapos1
-                                        fixed_params=[None,None,None,2,None,None],
+                              fixed_params=[None, None, None, 2, None, None],
                                         verbose=len(sel_params),
-                                        maxiter=10, multinom=False)
+                              maxtime=10, multinom=False)

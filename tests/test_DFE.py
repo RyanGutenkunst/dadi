@@ -46,23 +46,21 @@ class DFETestCase(unittest.TestCase):
                               additional_gammas=[2])
         # Test with basic integration
         sel_dist = PDFs.exponential
-        popt = dadi.Inference.optimize([1], data, s1.integrate, pts=None,
-                                       func_args=[sel_dist, theta],
-                                       lower_bound=[0], upper_bound=[10],
-                                       multinom=False)
+        popt,llopt = dadi.Inference.opt([1], data, s1.integrate, pts=None,
+                                  func_args=[sel_dist, theta],
+                                  lower_bound=[0], upper_bound=[10],
+                                  multinom=False, maxtime=10)
         # Test with gammapos held fixed at cached value
-        popt = dadi.Inference.optimize([1, 0.2, 2], data, s1.integrate_point_pos, pts=None,
-                                       func_args=[sel_dist, theta,
-                                           DemogSelModels.equil],
-                                       lower_bound=[0, 0, None], upper_bound=[10, 1, 10],
-                                       fixed_params=[None, None, 2],
-                                       multinom=False)
+        popt,llopt = dadi.Inference.opt([1, 0.2, 2], data, s1.integrate_point_pos, pts=None,
+                                  func_args=[sel_dist, theta, DemogSelModels.equil],
+                                  lower_bound=[0, 0, None], upper_bound=[10, 1, 10],
+                                  fixed_params=[None, None, 2],
+                                  multinom=False, maxtime=10)
         # Test with gammapos allowed to vary
-        popt = dadi.Inference.optimize([1, 0.2, 2], data, s1.integrate_point_pos, pts=None,
-                                       func_args=[sel_dist, theta,
-                                           DemogSelModels.equil],
-                                       lower_bound=[0, 0, None], upper_bound=[10, 1, 10],
-                                       multinom=False)
+        popt,llopt = dadi.Inference.opt([1, 0.2, 2], data, s1.integrate_point_pos, pts=None,
+                                  func_args=[sel_dist, theta, DemogSelModels.equil],
+                                  lower_bound=[0, 0, None], upper_bound=[10, 1, 10],
+                                  multinom=False, maxtime=10)
 
     def test_1D_integration_correctness(self):
         """
@@ -148,17 +146,16 @@ class DFETestCase(unittest.TestCase):
                               additional_gammas=[0.2])
         sel_dist = PDFs.biv_lognormal
         # Test with basic integration
-        popt = dadi.Inference.optimize([2, 1, 0.5], data, s2.integrate, pts=None,
-                                       func_args=[sel_dist, theta],
-                                       lower_bound=[None, 0, 0], upper_bound=[None, None, 1],
-                                       multinom=False, maxiter=2)
+        popt,llopt = dadi.Inference.opt([2, 1, 0.5], data, s2.integrate, pts=None,
+                                  func_args=[sel_dist, theta],
+                                  lower_bound=[None, 0, -0.999], upper_bound=[None, None, 0.999],
+                                  multinom=False, maxtime=10)
         # Test with point mass of positive selection
-        popt = dadi.Inference.optimize([2, 1, 0.5, 0.1, 0.2], data, s2.integrate_symmetric_point_pos, pts=None,
-                                       func_args=[sel_dist, theta],
-                                       lower_bound=[None, 0, 0], upper_bound=[None, None, 1],
-                                       fixed_params=[
-                                           None, None, None, None, 0.2],
-                                       multinom=False, maxiter=2)
+        popt,llopt = dadi.Inference.opt([2, 1, 0.5, 0.1, 0.2], data, s2.integrate_symmetric_point_pos, pts=None,
+                                  func_args=[sel_dist, theta],
+                                  lower_bound=[None, 0, -0.999, None, None], upper_bound=[None, None, 0.999, None, None],
+                                  fixed_params=[None, None, None, None, 0.2],
+                                  multinom=False, maxtime=10)
 
     def test_2D_correctness(self):
         """
@@ -255,7 +252,7 @@ if __name__ == '__main__':
 
     # Run tests using Windows-style multiprocessing. This is more fragile, so
     # we test against it.
-    #import multiprocessing
-    #multiprocessing.set_start_method('spawn')
+    import multiprocessing
+    multiprocessing.set_start_method('spawn')
 
     unittest.main()
