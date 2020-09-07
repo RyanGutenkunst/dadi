@@ -523,7 +523,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             continue
 
         # Read SNP data
-        cols = line.split()
+        # Data lines in VCF file are tab-delimited
+        # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
+        cols = line.split("\t")
         snp_id = '_'.join(cols[:2]) # CHROM_POS
         snp_dict = {}
 
