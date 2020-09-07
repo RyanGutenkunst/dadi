@@ -2,7 +2,7 @@
 
 ### Grid sizes and extrapolation
 
-To simulate the frequency spectrum, dadi solves a partial differential equation, approximating the solution using a grid of points in population frequency space (the `phi` array). Importantly, a signle evaluation of the frequency spectrum with a fixed grid size is apt to be inaccurate, because computational limits mean the grid must be relatively coarse. To overcome this, dadi solves the problem at a series (typically 3) of grid sizes and extrapolates to an infinitely fine grid. To transform the demographic model function you have created (call it `my_demo_func`) into a function that does this extrapolation. wrap it using a call to `Numerics.make_extrap_func`, e.g.:
+To simulate the frequency spectrum, dadi solves a partial differential equation, approximating the solution using a grid of points in population frequency space (the `phi` array). Importantly, a single evaluation of the frequency spectrum with a fixed grid size is apt to be inaccurate, because computational limits mean the grid must be relatively coarse. To overcome this, dadi solves the problem at a series (typically 3) of grid sizes and extrapolates to an infinitely fine grid. To transform the demographic model function you have created (call it `my_demo_func`) into a function that does this extrapolation. wrap it using a call to `Numerics.make_extrap_func`, e.g.:
 
 	my_extrap_func = Numerics.make_extrap_func(my_demo_func)
 
