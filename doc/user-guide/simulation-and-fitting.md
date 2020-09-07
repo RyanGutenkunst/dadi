@@ -14,22 +14,6 @@ A simulated frequency spectrum is thus obtained by calling
 
 Here `ns` is the sequenc of sample sizes for the populations in the model, `params` is the model parameters, and `pts_l` is the grid sizes.
 
-#### Grid choice
-
-As of version 1.5.0, the default grid in dadi has points exponentially clustered toward \\(x = 0\\) and \\(x = 1\\). This grid was suggested by Simon Gravel. The parameter `crwd` controls how closely grid points crowd the endpoints of the interval.
-
-![1D crwd analysis](opt_crwd_1d.png)
-
-![2D crwd analysis](opt_crwd_2d.png)
-
-<p><strong>Figure 1 Eimpirical optimum values for <code>crwd</code>:</strong> Each point represents the optimum value of <code>crwd</code> for a given model with a particular random choice of parameters.</p>
-
-![Further crwd analysis](consistent_crwd.png)
-
-<p><strong>Figure 2 Consistency of optimum <code>crwd</code> value:</strong> For a one-dimensional system with 30 samples, the likelihood of a particular data set was calculated with <code>pts_l = [base, base+10, base+20]</code>, for varying <code>crwd</code> factors and values of <code>base</code>. In general, the optimum value of the <code>crwd</code> parameter does not depend on <code>base</code>.</p>
-
-We have performed some empirical investigations of the best value for `crwd`, although these results cannot be considered definitive. We ran simulations for a variety of models and parameter values for a variety of sample sizes. Denoting the largest sample size as `n`, we asked which value of `crwd` yielded the most accurate FS with `pts_l = [n, n+10, n+20]`. Results are shown in above. It is evident that the best value for `crwd` is lower for smaller sample sizes. The red lines are empirical functions which approximate the optimum. These are implemented in `Numerics.estimate_best_exp_grid_crwd`. The lower figure demonstrates that the optimum value of `crwd` doesn't depend strongly on the number of grid points used for integration. Unless you need absolute top performance, the default value of `crwd = 8` will probably be sufficient.
-
 ### Likelihoods
 
 dadi offers two complimentary ways of calculating the likelihood of the data FS given a model FS. The first is the Poisson approach, and the second is the multinomial approach.
