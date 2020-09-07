@@ -1093,7 +1093,7 @@ def optimize_cons(p0, data, model_func, pts,
               re-optimize with ll_scale=1.
     """
     if output_file:
-        output_stream = file(output_file, 'w')
+        output_stream = open(output_file, 'w')
     else:
         output_stream = sys.stdout
     
@@ -1279,3 +1279,5 @@ def add_misid_param(func):
     misid_func.__name__ = func.__name__
     misid_func.__doc__ = func.__doc__
     return misid_func
+
+from .NLopt_mod import opt
