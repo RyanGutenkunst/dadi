@@ -78,28 +78,6 @@ dadi.Plotting.plot_2d_comp_multinom(model, data, vmin=1, resid_range=3,
 # Save the figure
 pylab.savefig('YRI_CEU.png', dpi=250)
 
-# Let's generate some data using ms, if you have it installed.
-mscore = demographic_models.prior_onegrow_mig_mscore(popt)
-# I find that it's most efficient to simulate with theta=1, average over many
-# iterations, and then scale up.
-mscommand = dadi.Misc.ms_command(1., ns, mscore, int(1e5))
-# If you have ms installed, uncomment these lines to see the results.
-
-# We use Python's os module to call this command from within the script.
-import os
-return_code = os.system('{0} > test.msout'.format(mscommand))
-# We check the return code, so the script doesn't crash if you don't have ms
-# installed
-if return_code == 0:
-    msdata = dadi.Spectrum.from_ms_file('test.msout')
-    pylab.figure(2)
-    dadi.Plotting.plot_2d_comp_multinom(model, theta*msdata, vmin=1,
-                                        pop_ids=('YRI','CEU'), show=False)
-
-# Estimate parameter uncertainties using the Godambe Information Matrix, to
-# account for linkage in the data. 
-import dadi.Godambe
-
 # To use the GIM approach, we need to have spectra from bootstrapping our 
 # data.  Let's load the ones we've provided for the example.  
 # (We're using Python list comprehension syntax to do this in one line.)
