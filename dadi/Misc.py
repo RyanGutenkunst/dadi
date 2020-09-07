@@ -557,7 +557,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         rflank, aflank = flanking_info
         for field in info:
             if rflank and field.startswith(rflank):
-                flank = field[len(rflank+1):].upper()
+                flank = field[len(rflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -568,7 +568,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 snp_dict['context'] = prevb + ref + nextb
                 continue
             if aflank and field.startswith(aflank):
-                flank = field[len(aflank+1):].upper()
+                flank = field[len(aflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
