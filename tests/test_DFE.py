@@ -117,6 +117,21 @@ class DFETestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             dadi.DFE.Cache2D.merge([s2a,s2b])
 
+    def test_cache_GPU(self):
+        """
+        Test that Cache generation with GPUs works
+        """
+        # Short circuit test if not CUDA
+        if not dadi.cuda_enabled():
+            return
+
+        demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
+        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+                         gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
+        s2_gpu = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+                         gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True, use_gpu=True)
+        self.assertTrue(np.allclose(s2.spectra, s2_gpu.spectra))
+
     def test_2D_integration(self):
         """
         Trivial test that Cache2D integration doesn't crash.
