@@ -7,13 +7,14 @@ dadi depends on a number of Python libraries. The absolute dependencies are
 - Python 3
 - NumPy
 - SciPy
+- nlopt
 
 It is also recommended that you install
 
 - matplotlib
 - IPython
 
-The easiest way to obtain all these dependencies to install the [Anaconda Python Distribution](https://www.anaconda.com/distribution/). And the easiest way to install dadi is then via `conda`, using the command `conda install -c conda-forge dadi`. dadi can also be installed via `pip`, using the command `python3 -m pip install dadi`.
+The easiest way to obtain all these dependencies to install the [Anaconda Python Distribution](https://www.anaconda.com/distribution/). You'll need to separately [install nlopt from conda-forge](https://anaconda.org/conda-forge/nlopt). And the easiest way to install dadi is then via `conda`, using the command `conda install -c conda-forge dadi`. dadi can also be installed via `pip`, using the command `python3 -m pip install dadi`.
 
 ### GPU computing
 
