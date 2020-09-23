@@ -624,25 +624,24 @@ class Spectrum(numpy.ma.masked_array):
         """
         Generate a Poisson-sampled fs from the current one.
 
-        Note: Entries where the current fs is masked or 0 will be masked in the
+        Note: Entries where the current fs is masked will be masked in the
               output sampled fs.
         """
         import scipy.stats
-        # These are entries where the sampling has no meaning. Either the fs is
-        # 0 there or masked. 
-        bad_entries = numpy.logical_or(self == 0, self.mask)
+        # These are entries where the sampling has no meaning, b/c fs is masked.
+        bad_entries = self.mask
         # We convert to a 1-d array for passing into the sampler
         means = self.ravel().copy()
         # Filter out those bad entries.
         means[bad_entries.ravel()] = 1
         # Sample
         samp = scipy.stats.distributions.poisson.rvs(means, size=len(means))
-        # Replace bad entries...
+        # Replace bad entries with zero
         samp[bad_entries.ravel()] = 0
         # Convert back to a properly shaped array
         samp = samp.reshape(self.shape)
         # Convert to a fs and mask the bad entries
-        samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded,
+        samp = Spectrum(samp, mask=self.mask, data_folded=self.folded,
                         pop_ids = self.pop_ids)
         return samp
 
