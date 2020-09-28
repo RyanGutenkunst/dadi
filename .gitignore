@@ -21,3 +21,4 @@ dadi/TwoLocus/*.c
 .vscode*
 *.pyd
 *~
+tests/test.fs

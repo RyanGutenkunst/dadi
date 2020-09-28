@@ -2,7 +2,7 @@
 Miscellaneous utility functions. Including ms simulation.
 """
 
-import collections,os,sys,time
+import collections,os,sys,time, warnings
 
 import numpy
 import scipy.linalg
@@ -466,8 +466,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     do_subsampling = False
     if subsample is not None:
         do_subsampling = True
-        print("\n\n** Note on subsampling: Because you are subsampling individuals, please make sure not to project")
-        print("**                      down your data in future steps of your analysis.\n\n")
+        warnings.warn('Note on subsampling: If you will be including inbreeding in your model, '
+                      'do not project your data to smaller sample sizes in later steps of your analysis.')
 
     if os.path.splitext(popinfo_filename)[1] == '.gz':
         import gzip
@@ -741,3 +741,98 @@ def combine_pops(fs, idx=[0,1]):
         print("Error: could not combine populations.")
         exit(-1)
     return fs2
+
+def fragment_data_dict(dd, chunk_size):
+    """
+    Split data dictionary for bootstrapping.
+
+    For bootstrapping, split the data dictionary in subdictionaries
+    for each chunk of the genome. The chunk_size is given in
+    basepairs.
+
+    This method assumes that keys in the dictionary are
+    chromosome_position
+
+    dd: Data dictionary to split
+    chunk_size: Size of genomic chunks in basepairs
+
+    Return: List of dictionaries corresponding to each chunk.
+    """
+    # split dictionary by chromosome name
+    ndd = collections.defaultdict(list)
+    for k in dd.keys():
+        chrname, position = k.split("_")
+        ndd[chrname].append(int(position))
+            
+    # generate chunks with given chunk size
+    chunks_dict = collections.defaultdict(list)
+    for chrname in ndd.keys():
+        positions = sorted(ndd[chrname])
+        end = chunk_size
+        chunk_index = 0
+        chunks_dict[chrname].append([])
+        for p in positions:
+            if p > end: 
+                # Need a new chunk
+                end += chunk_size
+                chunk_index += 1
+                chunks_dict[chrname].append([])
+            chunks_dict[chrname][chunk_index].append(p)
+
+    # Break data dictionary into dictionaries for each chunk
+    new_dds = []
+    for chrname, chunks in chunks_dict.items():
+        for pos_list in chunks:
+            new_dds.append({})
+            for pos in pos_list:
+                key = '{0}_{1}'.format(chrname,pos)
+                new_dds[-1][key] = dd[key]
+
+    return new_dds
+
+import numpy as np
+import random
+from .Spectrum_mod import Spectrum
+
+def bootstraps_from_dd_chunks(fragments, Nboot, pop_ids, projections, mask_corners=True, polarized=True):
+    """
+    Bootstrap frequency spectra from data dictionary fragments
+
+    fragments: Fragmented data dictionary
+    Nboot: Number of bootstrap spectra to generate
+    Remaining arguments are as in Spectrum.from_data_dict
+    """
+    spectra = [Spectrum.from_data_dict(dd, pop_ids, projections, mask_corners, polarized)
+               for dd in fragments]
+
+    bootstraps = []
+    for ii in range(Nboot):
+        chosen = random.choices(spectra, k=len(spectra))
+        bootstraps.append(np.sum(chosen, axis=0))
+
+    bootstraps = [Spectrum(_, mask_corners=mask_corners, data_folded=not polarized, pop_ids=pop_ids)
+                  for _ in bootstraps]
+    return bootstraps
+
+def bootstraps_subsample_vcf(vcf_filename, popinfo_filename, subsample, Nboot, chunk_size, pop_ids, filter=True,
+                             flanking_info=[None, None], mask_corners=True, polarized=True):
+    """
+    Bootstrap frequency spectra from subsampling in VCF file
+
+    This method is useful when you have subsampled individuals. You might do this
+    because you're modeling inbreeding, or because you want to avoid composite likelihood
+    complications (if your data is unlinked).
+
+    Nboot: Number of boostrap spectra to generate
+    chunk_size: Size of regions to divide genome into (in basepairs)
+    Other arguments are as in make_data_dict_vcf and Spectrum.from_data_dict.
+    """
+    bootstraps = []
+    projections = [subsample[pop]*2 for pop in pop_ids]
+    for ii in range(Nboot):
+        dd = make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=subsample, filter=filter,
+                                flanking_info=flanking_info)
+        fragments = fragment_data_dict(dd, chunk_size)
+        fs = bootstraps_from_dd_chunks(fragments, 1, pop_ids, projections, mask_corners, polarized)[0]
+        bootstraps.append(fs)
+    return bootstraps
