@@ -1,37 +1,71 @@
 """
-Simple example of extracting a frequency spectrum from a SNP data file.
+Extracting a frequency spectrum from a VCF file and generating bootstrap samples
 """
 import dadi
 
-# Parse the data file to generate the data dictionary
-dd = dadi.Misc.make_data_dict('data.txt')
+# Parse the VCF file to generate a data dictionary
+datafile = '1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.vcf.gz'
+dd = dadi.Misc.make_data_dict_vcf(datafile, '1KG.YRI.CEU.popfile.txt')
 
 # Extract the spectrum for ['YRI','CEU'] from that dictionary, with both
-# projected down to 20 samples per population.
-fs = dadi.Spectrum.from_data_dict(dd, ['YRI','CEU'], [20,20])
+# YRI projected down to 20 and CEU projected down to 24.
+# We project down like this just to make fitting faster. For a real analysis
+# we would not project so severely.
+pop_ids, ns = ['YRI','CEU'], [20,24]
+fs = dadi.Spectrum.from_data_dict(dd, pop_ids, ns)
+# We can save our extracted spectrum to disk
+fs.to_file('1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.fs')
 
-# Let's plot the fs.
-import pylab
-dadi.Plotting.plot_single_2d_sfs(fs, vmin=0.1)
-pylab.show()
+# If we didn't have outgroup information, we could fold the fs.
+fs_folded = dadi.Spectrum.from_data_dict(dd, pop_ids, ns, polarized=False)
 
-# If we didn't have outgroup information, we could use the folded  version 
-# of the fs.
-folded = dadi.Spectrum.from_data_dict(dd, ['YRI','CEU'], [20,20],
-                                      polarized=False)
+# Generate 100 bootstrap datasets, by dividing the genome into 2 Mb chunks and
+# resampling from those chunks.
+Nboot, chunk_size = 100, 2e6
+chunks = dadi.Misc.fragment_data_dict(dd, chunk_size)
+boots = dadi.Misc.bootstraps_from_dd_chunks(chunks, Nboot, pop_ids, ns)
 
-# We may also want to apply a statistical correction for ancestral state
-# misidentification.
-# To do so, we need a trinucleotide transition rate matrix. This one was
-# inferred along the human lineage by Hwang and Green, PNAS 101:13994 (2004).
-Q = dadi.Numerics.array_from_file('Q.HwangGreen.human.dat')
-# We also need a table of trinucleotide frequencies. These are derived from
-# the EGP data.
-tri_freq = dict((line.split()[0], float(line.split()[1])) 
-                for line in open('tri_freq.dat').readlines())
-# We combine these to make a table of 1-f_{ux}, in the notation of
-# of Hernandez, Williamson & Bustamante, Mol Biol Evol 24:1792 (2007).
-dadi.Misc.make_fux_table('fux_table.dat', 0.0112, Q, tri_freq)
-# And finally we get the corrected frequency spectrum.
-fs_corr = dadi.Spectrum.from_data_dict_corrected(dd, ['YRI','CEU'], [20,20],
-                                                 'fux_table.dat')
+# If you're modeling inbreeding, you cannot project your data downward. Instead,
+# to deal with missing data we subsample individuals in the VCF file.
+# If we're modeling inbreeding, it is important that we *never* project downward,
+# as this destroys the genotype information.
+dd_subsample = dadi.Misc.make_data_dict_vcf(datafile, '1KG.YRI.CEU.popfile.txt',
+                                            subsample={'YRI': ns[0]//2, 'CEU': ns[1]//2})
+fs_subsample = dadi.Spectrum.from_data_dict(dd_subsample, pop_ids, ns)
+# Bootstrapping with subsampling is more computationally expensive, 
+# because we must repeatedly access the VCF file to subsample.
+boots_subsample = dadi.Misc.bootstraps_subsample_vcf(datafile, '1KG.YRI.CEU.popfile.txt',
+                                                     subsample={'YRI': ns[0]//2, 'CEU': ns[1]//2}, Nboot=2, 
+                                                     chunk_size=chunk_size, pop_ids=pop_ids)
+
+# Plot comparing the multiple versions of our data spectra.
+import matplotlib.pyplot as plt
+
+fig = plt.figure(1, figsize=(10,6))
+fig.clear()
+
+# Note that projection creates fractional entries in the spectrum,
+# so vmin < 1 is sensible.
+ax = fig.add_subplot(2,3,1)
+dadi.Plotting.plot_single_2d_sfs(fs, vmin=1e-2, ax=ax)
+ax.set_title('Orignal data')
+
+ax = fig.add_subplot(2,3,2)
+dadi.Plotting.plot_single_2d_sfs(fs_folded, vmin=1e-2, ax=ax)
+ax.set_title('Folded original data')
+
+ax = fig.add_subplot(2,3,3)
+dadi.Plotting.plot_single_2d_sfs(boots[0], vmin=1e-2, ax=ax)
+ax.set_title('Bootstrap from original data')
+
+# Subsampling does not create those fractional entries.
+ax = fig.add_subplot(2,3,4)
+dadi.Plotting.plot_single_2d_sfs(fs_subsample, vmin=1e-2, ax=ax)
+ax.set_title('Subsampled original data')
+
+ax = fig.add_subplot(2,3,6)
+dadi.Plotting.plot_single_2d_sfs(boots_subsample[0], vmin=1e-2, ax=ax)
+ax.set_title('Bootstrap subsampled data')
+
+fig.tight_layout()
+plt.show()

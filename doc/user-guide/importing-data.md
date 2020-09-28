@@ -1,6 +1,5 @@
 # Importing data
 
-
 dadi represents frequency spectra using `dadi.Spectrum` objects. As desccribed in the [Manipulating spectra section](./manipulating-spectra.md), `Spectrum` objects are subclassed from `numpy.masked_array` and thus can be constructed similarly. The most basic way to create a `Spectrum` is manually:
 
 	fs = dadi.Spectrum([0, 100, 20, 10, 1, 0])
@@ -20,6 +19,46 @@ dadi uses a simple fie format for storing the FS. Each file begins with any numb
 The actual data is stored in a single line listing all the FS elements separated by spaces, in the order `fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...` This is followed by a single line giving the elements of the mask in the same order as the data, with `1` indicating masked and `0` indicating unmasked.
 
 The file corresponding to the `Spectrum fs` can be written using the ccommand `fs.to_file(filename)`
+
+### Frequency spectra from VCF files
+
+Data can be loaded from VCF files. The main function for accomplishing this is `make_data_dict_vcf` in the `dadi.Misc` submodule. The function has two required arguments: 
+
+1. The name of the VCF (can be gzipped [*.vcf.ga])
+2. The name of a file describing how individuals map to populations.
+
+This second file is a plain-text, two-column file containing the individual names in column one and their respective populations in column two:
+
+	i0	pop0
+	i1	pop0
+	i2	pop0
+	...
+	iN	pop2
+
+Examples of these files can be found in the `examples/fs_from_data/` folder in the [dadi source distribution](https://bitbucket.org/gutenkunstlab/dadi/src/master/). Generating a frequency spectrum with these files can then be achieved through the creation of a data dictionary with the following two lines of code:
+
+	dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz", "popfile.txt")
+	fs = dadi.Spectrum.from_data_dict(dd, ['pop0', 'pop1'], projections = [20, 30], polarized = False)
+
+Projection is often used to deal with missing data. But projection cannot be used when modeling inbreeding. It also turns the dadi's likelihood function into a composite likelihood, even for unlinked data. We have thus included an option to take a smaller subsample of individuals from a population at each site, so that variants with less missing data than the specified subsampling size are not completely ignored. To specify how many individuals should be subsampled, the function takes an additional dictionary as an argument, where the dictionary simply maps the population names to the desired number of individuals to subsample.
+
+	# create the subsample dictionary
+	ss = {'pop0':5, 'pop1':10}
+	# pass it as an additional argument
+	dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz", "popfile.txt", subsample = ss)
+	fs = dadi.Spectrum.from_data_dict(dd, ['pop0', 'pop1'], projections = [10, 20], polarized = False)
+
+Subsampling offers an alternative to down projecting your data that preserves individual genotypes. Projecting will consider sampled chromosomes/alleles as exchangeable across all individuals, which is usually OK for a randomly mating population. However, if you want to include inbreeding in your model (see the [Inbreeding section](./inbreeding.md)), then projecting will erase the signal of excess homozygosity that inbreeding creates by sampling chromosomes instead of individuals. When generating a frequency spectrum from a subsampled data dictionary, be sure to set the projections argument to 2 times the subsample size you specified for each population so that no down projecting is done.
+
+### SNP data methods
+
+From a data dictionary, the method `Spectrum.from_data_dict` can be used to create a `Spectrum`.
+
+	fs = Spectrum.from_data_dict(dd, pop_id = ['YRI', 'CEU'], projections = [10, 12], polarized = True)
+
+The `pop_ids` argument specifies which populations to use to create the FS, and their order. `projections` denotes the population sample sizes for resulting FS. (Recall that for a diploid organism, assuming random mating, we get two samples from each individual.) Note that the total number of calls to `Allele1` and `Allele2` in a given population need not be the same for each SNP. When constructing the Spectrum, each SNP will be projected down to the requested number of samples in each population. (Note that SNPs cannot be projected up, so SNPs without enough calls in any population will be ignored.) `polarized` specifies whether dadi should use outgroup information to polarize the SNPs. If `polarized = True`, SNPs withouth outgroup information, or with that information —— will be ingored. If `polarized = False`, outgroup information will be ignored and the resulting `Spectrum` will be folded.
+
+If your data have missing calls for some individuals, projecting down to a smaller sample size will increase the number of SNPs you can use for analysis. On the other hand, some fraction of the SNPs will now project down to frequency 0, and thus be uninformative. As a rule of thumb, we often choose our projection to maximize the number of segregating sites in our final FS (assessed via `fs.S()`), although we have not formally tested whether this maximizes statistical power.
 
 ### SNP data format
 
@@ -49,48 +88,6 @@ Then follows an arbitrary number of columns which will be concatenated with `_` 
 
 The `Allele1` and `Allele2` headers must be exactly those values because the number of columns between those two is used to infer the number of population in the file.
 
-### SNP data methods
-
 The method `Misc.make_data_dict` reads the above SNP file format to generate a Python data dictionary describing the data:
 
 	dd = Misc.make_data_dict(filename)
-
-From this dictionary, the method `Spectrum.from_data_dict` can be used to create a `Spectrum`.
-
-	fs = Spectrum.from_data_dict(dd, pop_id = ['YRI', 'CEU'], projections = [10, 12], polarized = True)
-
-The `pop_ids` argument specifies which populations to use to create the FS, and their order. `projections` denotes the population sample sizes for resulting FS. (Recall that for a diploid organism, assuming random mating, we get two samples from each individual.) Note that the total number of calls to `Allele1` and `Allele2` in a given population need not be the same for each SNP. When constructing the Spectrum, each SNP will be projected down to the requested number of samples in each population. (Note that SNPs cannot be projected up, so SNPs without enough calls in any population will be ignored.) `polarized` specifies whether dadi should use outgroup information to polarize the SNPs. If `polarized = True`, SNPs withouth outgroup information, or with that information —— will be ingored. If `polarized = False`, outgroup information will be ignored and the resulting `Spectrum` will be folded.
-
-If your data have missing calls for some individuals, projecting down to a smaller sample size will increase the number of SNPs you can use for analysis. On the other hand, some fraction of the SNPs will now project down to frequency 0, and thus be uninformative. As a rule of thumb, we often choose our projection to maximize the number of segregating sites in our final FS (assessed via `fs.S()`), although we have not formally tested whether this maximizes statistical power.
-
-The method `Spectrum.from_data_dict_corrected` polarizes the SNPs using outgroup information and applies a statistical correction for multiple mutations described by Hernandez et al<sup>[1](./references.md)</sup>. Any SNPs without full trinucleotide ingroup and outgroup sequences will be ignored, as well as SNPs in which the flanking bases are not conserved between ingroup and outgroup, or in which the outgroup allele is not one of the segregating alleles. The correction uses the expected number of substitutions per site, the trinucleotide mutation rate matrix, and a stationary trinucleotide distribution. These are summarized in a table of misidentification probabilities that can be calculated using `Misc.make_fux_table`. (It should also be possible to develop a correction using only the single-site transition matrix. If this would be helpful, please contact the developers of dadi).
-
-### Frequency spectra from VCF files
-
-In newer versions of dadi (≥ 2.0.5), we have included functions for generating frequency spectra from VCF files directly. The main function for accomplishing this is `make_data_dict_vcf` in the `dadi.Misc` submodule. The function has two required arguments: 
-
-1. The name of the VCF (can be gzipped [*.vcf.ga])
-2. The name of a file describing how individuals map to populations.
-
-This second file is a plain-text, two-column file containing the individual names in column one and their respective populations in column two:
-
-	i0	pop0
-	i1	pop0
-	i2	pop0
-	...
-	iN	pop2
-
-Examples of these files can be found in the `examples/fs_from_data/` folder in the [dadi source distribution](https://bitbucket.org/gutenkunstlab/dadi/src/master/). Generating a frequency spectrum with these files can then be achieved through the creation of a data dictionary with the following two lines of code:
-
-	dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz", "popfile.txt")
-	fs = dadi.Spectrum.from_data_dict(dd, ['pop0', 'pop1'], projections = [20, 30], polarized = False)
-
-The default version of the `make_data_dict_vcf` function will only include sites that don't have any missing data. Because of this, we have included an option to take a smaller subsample of individuals from a population at each site so that variants with less missing data than the specified subsampling size are not completely ignored. To specify how many individuals should be subsampled, the function takes an additional dictionary as an argument, where the dictionary simply maps the population names to the desired number of individuals to subsample.
-
-	# create the subsample dictionary
-	ss = {'pop0':5, 'pop1':10}
-	# pass it as an additional argument
-	dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz", "popfile.txt", subsample = ss)
-	fs = dadi.Spectrum.from_data_dict(dd, ['pop0', 'pop1'], projections = [10, 20], polarized = False)
-
-Subsampling offers an alternative to down projecting your data that preserves individual genotypes. Projecting will consider sampled chromosomes/alleles as exchangeable across all individuals, which is usually OK for a randomly mating population. However, if you want to include inbreeding in your model (see the [Inbreeding section](./inbreeding.md)), then projecting will erase the signal of excess homozygosity that inbreeding creates by sampling chromosomes instead of individuals. When generating a frequency spectrum from a subsampled data dictionary, be sure to set the projections argument to 2 times the subsample size you specified for each population so that no down projecting is done.
