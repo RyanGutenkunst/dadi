@@ -173,3 +173,47 @@ def split_mig_single_gamma(params, ns, pts):
     """
     nu1,nu2,T,m,gamma = params
     return split_mig([nu1,nu2,T,m,gamma,gamma], ns, pts)
+    
+def split_asym_mig(params, ns, pts):
+    """
+    Instantaneous split into two populations of specified size, with asymmetric migration.
+    params = [nu1,nu2,T,m]
+
+    ns: Sample sizes
+    pts: Grid point settings for integration
+
+    Note that DFE methods internally apply make_extrap_func,
+    So there is no need to make it extrapolate again.
+
+    Note also: Selection in contemporary population 1 is assumed to equal
+               that in the ancestral population.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    m12: Migration rate from population 2 to population 1 (2*Na*m12)
+    m21: Migration rate from population 1 to population 2 (2*Na*m21)
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    """
+    nu1,nu2,T,m12,m21,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21, gamma1=gamma1,
+                               gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+
+def split_asym_mig_single_gamma(params, ns, pts):
+    """
+    split_asym_mig model with selection assumed to be equal in all populations.
+
+    See split_asym_mig for argument definitions, but only a single gamma in params.
+    """
+    nu1,nu2,T,m12,m21,gamma = params
+    return split_asym_mig([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)

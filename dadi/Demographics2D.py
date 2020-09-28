@@ -243,7 +243,7 @@ def IM_pre_mscore(params):
 
     return command % sub_dict
 
-def IM_fsc(params, ns, pts):
+def split_asym_mig(params, ns, pts):
     """
     params = (nu1,nu2,T,m12,m21)
     ns = (n1,n2)
