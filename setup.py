@@ -101,6 +101,7 @@ numpy.distutils.core.setup(name='dadi',
                                            'dadi.TwoLocus':['*.so', '*.pyd'],
                            #                # Copy DFE extension modules,
                                            'dadi.DFE':['*.so', '*.pyd']},
+                           install_requires=['scipy', 'numpy', 'matplotlib', 'nlopt'],
                            classifiers=[
                                "Programming Language :: Python :: 3",
                                "License :: OSI Approved :: BSD License",
