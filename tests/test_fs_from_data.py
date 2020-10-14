@@ -32,6 +32,34 @@ class DataTestCase(unittest.TestCase):
         self.assertTrue(fs_folded.mask[10,16])
         self.assertTrue(np.allclose(fs_folded[6,5], 0.995723483283639))
 
+    def test_chunking(self):
+        """
+        Test that chunks are correctly sized.
+
+        Based on bug fixed on October 14, 2020.
+        """
+        dd = dadi.Misc.make_data_dict_vcf(datafile, popfile)
+        fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
+        # To find bad spacings in chunks, check that that sequential
+        # chunks 1,2,3, the gap between snps in 3 and 1 is at least
+        # chunk_size.
+        for ii, f1 in enumerate(fragments[:-2]):
+            f2, f3 = fragments[ii+1], fragments[ii+2]
+            try:
+                k1 = list(f1)[0]
+                k3 = list(f3)[0]
+            except IndexError:
+                # Skip empty chunks
+                continue
+            # Get positions
+            chr1, chr3 = k1.split('_')[0], k3.split('_')[0]
+            if chr1 != chr3:
+                # Ignore cases in which chunks are on different chromosomes
+                continue
+            pos1 = int(k1.split('_')[1])
+            pos3 = int(k3.split('_')[1])
+            self.assertGreaterEqual(pos3 - pos1, chunk_size)
+
     def test_boostraps(self):
         dd = dadi.Misc.make_data_dict_vcf(datafile, popfile)
         fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)

@@ -772,7 +772,7 @@ def fragment_data_dict(dd, chunk_size):
         chunk_index = 0
         chunks_dict[chrname].append([])
         for p in positions:
-            if p > end: 
+            while p > end: 
                 # Need a new chunk
                 end += chunk_size
                 chunk_index += 1
