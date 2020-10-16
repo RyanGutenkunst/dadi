@@ -156,7 +156,8 @@ def NewWorld_4G09(pts, variant='original'):
                                 nu3=nuAs_func, nu4=nuMx_func,
                                 m12=mAfEu, m21=mAfEu, m13=mAfAs, m31=mAfAs,
                                 m23=mEuAs, m32=mEuAs)
-    phi = dadi.PhiManip.phi_4D_admix_into_4(phi, 0,fEuMx,0, xx,xx,xx,xx)
+    if variant != 'no_admixture':
+        phi = dadi.PhiManip.phi_4D_admix_into_4(phi, 0,fEuMx,0, xx,xx,xx,xx)
 
     return phi
 NewWorld_4G09_timed = timeit(NewWorld_4G09)

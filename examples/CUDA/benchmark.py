@@ -27,7 +27,7 @@ print()
 # Burn in to ensure GPU kernels are loaded
 for ii in range(3):
     models.OutOfAfrica_2L06(10, variant='original')
-    models.OutOfAfrica_2L06(10, variant='const_int')
+    models.OutOfAfrica_2L06(10, variant='cached_int')
 
 maxpts = int(dadi.RAM_to_pts(args.RAM, 2))
 pts_l_2D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
