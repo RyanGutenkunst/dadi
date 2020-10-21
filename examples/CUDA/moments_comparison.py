@@ -37,7 +37,7 @@ for ii in range(3):
     models.OutOfAfrica_2L06(10, variant='original')
     models.OutOfAfrica_2L06(10, variant='cached_int')
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 2))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 2)/1.5)
 n_l_2D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 2D Original')
 for n in n_l_2D:
@@ -49,7 +49,7 @@ for n in n_l_2D:
     print('n: {0}, time: {1:.4g}'.format(n, time.time()-start), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 3))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 3)/1.5)
 n_l_3D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 3D Original')
 for n in n_l_3D:
@@ -61,7 +61,7 @@ for n in n_l_3D:
     print('n: {0}, time: {1:.4g}'.format(n, time.time()-start), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 4))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 4)/1.5)
 n_l_4D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 4D Original')
 for n in n_l_4D:
@@ -73,7 +73,7 @@ for n in n_l_4D:
     print('n: {0}, time: {1:.4g}'.format(n, time.time()-start), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 5))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 5)/1.5)
 n_l_5D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 5D Original')
 for n in n_l_5D:
