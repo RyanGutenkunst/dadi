@@ -4,25 +4,25 @@ import models
 import moments, numpy
 
 @dadi.Numerics.make_extrap_func
-def OutOfAfricaArchaicAdmixture_5R19_dadi(unused, n, pts):
+def OutOfAfricaArchaicAdmixture_5R19_dadi(n, pts):
     xx = dadi.Numerics.default_grid(pts)
     phi = models.OutOfAfricaArchaicAdmixture_5R19(pts)
     return dadi.Spectrum.from_phi(phi, (n,n,n), (xx,xx,xx))
 
 @dadi.Numerics.make_extrap_func
-def NewWorld_4G09_noadmix_dadi(unused, n, pts):
+def NewWorld_4G09_noadmix_dadi(n, pts):
     xx = dadi.Numerics.default_grid(pts)
     phi = models.NewWorld_4G09(pts, variant='no_admixture')
     return dadi.Spectrum.from_phi(phi, (n,n,n,n), (xx,xx,xx,xx))
 
 @dadi.Numerics.make_extrap_func
-def OutOfAfrica_3G09_dadi(unused, n, pts):
+def OutOfAfrica_3G09_dadi(n, pts):
     xx = dadi.Numerics.default_grid(pts)
     phi = models.OutOfAfrica_3G09(pts)
     return dadi.Spectrum.from_phi(phi, (n,n,n), (xx,xx,xx))
 
 @dadi.Numerics.make_extrap_func
-def OutOfAfrica_2L06_dadi(unused, n, pts):
+def OutOfAfrica_2L06_dadi(n, pts):
     xx = dadi.Numerics.default_grid(pts)
     phi = models.OutOfAfrica_2L06(pts)
     return dadi.Spectrum.from_phi(phi, (n,n), (xx,xx))
