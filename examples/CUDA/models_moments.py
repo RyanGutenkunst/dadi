@@ -1,31 +1,5 @@
-import dadi
-import models
-
 import moments, numpy
-
-@dadi.Numerics.make_extrap_func
-def OutOfAfricaArchaicAdmixture_5R19_dadi(n, pts):
-    xx = dadi.Numerics.default_grid(pts)
-    phi = models.OutOfAfricaArchaicAdmixture_5R19(pts)
-    return dadi.Spectrum.from_phi(phi, (n,n,n), (xx,xx,xx))
-
-@dadi.Numerics.make_extrap_func
-def NewWorld_4G09_noadmix_dadi(n, pts):
-    xx = dadi.Numerics.default_grid(pts)
-    phi = models.NewWorld_4G09(pts, variant='no_admixture')
-    return dadi.Spectrum.from_phi(phi, (n,n,n,n), (xx,xx,xx,xx))
-
-@dadi.Numerics.make_extrap_func
-def OutOfAfrica_3G09_dadi(n, pts):
-    xx = dadi.Numerics.default_grid(pts)
-    phi = models.OutOfAfrica_3G09(pts)
-    return dadi.Spectrum.from_phi(phi, (n,n,n), (xx,xx,xx))
-
-@dadi.Numerics.make_extrap_func
-def OutOfAfrica_2L06_dadi(n, pts):
-    xx = dadi.Numerics.default_grid(pts)
-    phi = models.OutOfAfrica_2L06(pts)
-    return dadi.Spectrum.from_phi(phi, (n,n), (xx,xx))
+from models import timeit
 
 def OutOfAfrica_2L06_moments(n):
     """
@@ -64,7 +38,7 @@ def OutOfAfrica_2L06_moments(n):
     fs.integrate([N_A0/N_A1, N_E0/N_A1], t_E1/(2*N_A1), 0.05)
 
     return fs
-
+OutOfAfrica_2L06_moments_timed = timeit(OutOfAfrica_2L06_moments)
 
 def OutOfAfrica_3G09_moments(n):
     # Parameter values from https://github.com/popsim-consortium/stdpopsim/blob/master/stdpopsim/catalog/homo_sapiens.py
@@ -122,6 +96,7 @@ def OutOfAfrica_3G09_moments(n):
     fs.integrate(nu2, TEuAs, 0.05, m=mig2)
 
     return fs
+OutOfAfrica_3G09_moments_timed = timeit(OutOfAfrica_3G09_moments)
 
 def NewWorld_4G09_noadmix_moments(n):
     """
@@ -178,6 +153,7 @@ def NewWorld_4G09_noadmix_moments(n):
     # Admixture skipped
 
     return fs
+NewWorld_4G09_noadmix_moments_timed = timeit(NewWorld_4G09_noadmix_moments)
 
 def OutOfAfricaArchaicAdmixture_5R19_moments(n):
     """
@@ -279,4 +255,4 @@ def OutOfAfricaArchaicAdmixture_5R19_moments(n):
     fs.integrate(nu_func, T_arch_adm_end/(2*N_0), m=mig_mat)
 
     return fs
-
+OutOfAfricaArchaicAdmixture_5R19_moments_timed = timeit(OutOfAfricaArchaicAdmixture_5R19_moments)
