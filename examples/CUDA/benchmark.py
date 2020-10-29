@@ -35,9 +35,9 @@ if dadi.cuda_enabled():
           device.total_memory()/1024**3))
 print()
 
-# Extra factor of 1.5 to account for additional memory used
+# Extra factor of 1.3 to account for additional memory used
 # in pts_l extrapolation.
-maxpts = int(dadi.RAM_to_pts(args.RAM, 2)/1.5)
+maxpts = int(dadi.RAM_to_pts(args.RAM, 2)/1.3)
 n_l_2D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 2D')
 for n in n_l_2D:
@@ -53,7 +53,7 @@ for n in n_l_2D:
     print('n: {0}, time: {1:.4g}'.format(n, t), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 3)/1.5)
+maxpts = int(dadi.RAM_to_pts(args.RAM, 3)/1.3)
 n_l_3D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 3D')
 for n in n_l_3D:
@@ -66,7 +66,7 @@ for n in n_l_3D:
     print('n: {0}, time: {1:.4g}'.format(n, t), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 4)/1.5)
+maxpts = int(dadi.RAM_to_pts(args.RAM, 4)/1.3)
 n_l_4D = 4 * 2**np.arange(0,np.log2(maxpts//4), dtype=int)
 print('# Model: 4D')
 for n in n_l_4D:
@@ -79,7 +79,7 @@ for n in n_l_4D:
     print('n: {0}, time: {1:.4g}'.format(n, t), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 5)/1.5)
+maxpts = int(dadi.RAM_to_pts(args.RAM, 5)/1.3)
 n_l_5D = 2 * 2**np.arange(1,np.log2(maxpts//2), dtype=int)
 print('# Model: 5D')
 for n in n_l_5D:
