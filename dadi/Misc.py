@@ -3,6 +3,9 @@ Miscellaneous utility functions. Including ms simulation.
 """
 
 import collections,os,sys,time, warnings
+def simple_warning(message, category, filename, lineno, file=None, line=None):
+    return '%s' % message
+warnings.formatwarning = simple_warning
 
 import numpy
 import scipy.linalg
