@@ -798,6 +798,7 @@ def fragment_data_dict(dd, chunk_size):
 import numpy as np
 import random
 from .Spectrum_mod import Spectrum
+import functools, operator
 
 def bootstraps_from_dd_chunks(fragments, Nboot, pop_ids, projections, mask_corners=True, polarized=True):
     """
@@ -813,7 +814,7 @@ def bootstraps_from_dd_chunks(fragments, Nboot, pop_ids, projections, mask_corne
     bootstraps = []
     for ii in range(Nboot):
         chosen = random.choices(spectra, k=len(spectra))
-        bootstraps.append(np.sum(chosen, axis=0))
+        bootstraps.append(functools.reduce(operator.add, chosen))
 
     bootstraps = [Spectrum(_, mask_corners=mask_corners, data_folded=not polarized, pop_ids=pop_ids)
                   for _ in bootstraps]
