@@ -764,7 +764,9 @@ def fragment_data_dict(dd, chunk_size):
     # split dictionary by chromosome name
     ndd = collections.defaultdict(list)
     for k in dd.keys():
-        chrname, position = k.split("_")
+        spl = k.split('_')
+        position = spl[-1]
+        chrname = '_'.join(spl[:-1])
         ndd[chrname].append(int(position))
             
     # generate chunks with given chunk size
