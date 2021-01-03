@@ -465,3 +465,37 @@ def mixture_symmetric_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
     params2 = list(pdf_params) + [rho, ppos, gamma_pos]
     fs2 = s2.integrate_symmetric_point_pos(params2, None, sel_dist2, theta, None)
     return (1-p2d)*fs1 + p2d*fs2
+
+def mixture_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
+                      theta, pts=None):
+    """
+    Weighted summation of 1d and 2d distributions with positive selection.
+    The 1d distribution is equivalent to assuming selection coefficients are
+    perfectly correlated.
+
+    params: Parameters for potential optimization.
+            The last parameter is the weight for the 2d dist.
+            The second-to-last parameter is positive gammma for the point mass in population 2.
+            The third-to-last parameter is the proportion of positive selection in population 2.
+            The fourth-to-last parameter is positive gamma for the point mass in population 1.
+            The fifth-to-last parameter is the proportion of positive selection in population 1.
+            The sixth-to-last parameter is the correlation coefficient for the
+                2d distribution.
+            The remaining parameters as must be shared between the 1d and 2d
+                distributions.
+    ns: Ignored
+    s1: Cache1D object for 1d distribution
+    s2: Cache2D object for 2d distribution
+    sel_dist1: Univariate probability distribution for s1
+    sel_dist2: Bivariate probability distribution for s2
+    theta: Population-scaled mutation rate
+    pts: Ignored
+    """
+    pdf_params = params[:-6]
+    rho, ppos1, gamma_pos1, ppos2, gamma_pos2, p2d = params[-6:]
+
+    params1 = list(pdf_params) + [ppos1, gamma_pos1]
+    fs1 = s1.integrate_point_pos(params1, None, sel_dist1, theta, Npos=1, pts=None)
+    params2 = list(pdf_params) + [rho, ppos1, gamma_pos1, ppos2, gamma_pos2]
+    fs2 = s2.integrate_point_pos(params2, None, sel_dist2, theta, None)
+    return (1-p2d)*fs1 + p2d*fs2
