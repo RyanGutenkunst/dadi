@@ -10,6 +10,8 @@ warnings.formatwarning = simple_warning
 import numpy
 import scipy.linalg
 
+from .Spectrum_mod import Spectrum
+
 # Nucleotide order assumed in Q matrices.
 code = 'CGTA'
 
@@ -743,6 +745,8 @@ def combine_pops(fs, idx=[0,1]):
     else:
         print("Error: could not combine populations.")
         exit(-1)
+    fs2 = Spectrum(fs2)
+    fs2.extrap_x = fs.extrap_x
     return fs2
 
 def fragment_data_dict(dd, chunk_size):
