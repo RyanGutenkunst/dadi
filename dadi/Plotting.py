@@ -114,12 +114,14 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
     ax = pylab.subplot(2,1,1)
-    pylab.semilogy(masked_data, '-ob')
-    pylab.semilogy(masked_model, '-or')
+    pylab.semilogy(masked_data, '-ob', label='data')
+    pylab.semilogy(masked_model, '-or', label='model')
 
     if plot_masked:
         pylab.semilogy(masked_data.data, '--ob', mfc='w', zorder=-100)
         pylab.semilogy(masked_model.data, '--or', mfc='w', zorder=-100)
+
+    ax.legend(loc='upper right')
 
     pylab.subplot(2,1,2, sharex = ax)
     if residual == 'Anscombe':

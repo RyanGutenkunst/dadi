@@ -37,48 +37,48 @@ for ii in range(3):
     models.OutOfAfrica_2L06(10, variant='original')
     models.OutOfAfrica_2L06(10, variant='cached_int')
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 2))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 2)/1.5)
 n_l_2D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 2D Original')
 for n in n_l_2D:
     start = time.time()
-    if moments:
+    if args.moments:
         fs = OutOfAfrica_2L06_moments(n)
     else:
         fs = OutOfAfrica_2L06_dadi(n, pts_l_func(n))
     print('n: {0}, time: {1:.4g}'.format(n, time.time()-start), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 3))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 3)/1.5)
 n_l_3D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 3D Original')
 for n in n_l_3D:
     start = time.time()
-    if moments:
+    if args.moments:
         fs = OutOfAfrica_3G09_moments(n)
     else:
         fs = OutOfAfrica_3G09_dadi(n, pts_l_func(n))
     print('n: {0}, time: {1:.4g}'.format(n, time.time()-start), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 4))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 4)/1.5)
 n_l_4D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 4D Original')
 for n in n_l_4D:
     start = time.time()
-    if moments:
+    if args.moments:
         fs = NewWorld_4G09_noadmix_moments(n)
     else:
         fs = NewWorld_4G09_noadmix_dadi(n, pts_l_func(n))
     print('n: {0}, time: {1:.4g}'.format(n, time.time()-start), flush=True)
 print()
 
-maxpts = int(dadi.RAM_to_pts(args.RAM, 5))
+maxpts = int(dadi.RAM_to_pts(args.RAM, 5)/1.5)
 n_l_5D = 10 * 2**np.arange(0,np.log2(maxpts//10), dtype=int)
 print('# Model: 5D Original')
 for n in n_l_5D:
     start = time.time()
-    if moments:
+    if args.moments:
         fs = OutOfAfricaArchaicAdmixture_5R19_moments(n)
     else:
         fs = OutOfAfricaArchaicAdmixture_5R19_dadi(n, pts_l_func(n))

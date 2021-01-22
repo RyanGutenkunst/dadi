@@ -9,7 +9,8 @@ def timeit(func):
         return out, end-start
     return newfunc
 
-def OutOfAfricaArchaicAdmixture_5R19(pts, variant='original'):
+@dadi.Numerics.make_extrap_func
+def OutOfAfricaArchaicAdmixture_5R19(n, pts):
     """
     Integration of model from Ragsdale (2019) PLoS Genetics.
     """
@@ -100,16 +101,21 @@ def OutOfAfricaArchaicAdmixture_5R19(pts, variant='original'):
                                      m13=m_YRI_CHB*2*N_0, m31=m_YRI_CHB*2*N_0,
                                      m23=m_CEU_CHB*2*N_0, m32=m_CEU_CHB*2*N_0,
                                      )
-    return phi
+
+    return dadi.Spectrum.from_phi(phi, (n,n,n), (xx,xx,xx))
 OutOfAfricaArchaicAdmixture_5R19_timed = timeit(OutOfAfricaArchaicAdmixture_5R19)
 
-def NewWorld_4G09(pts, variant='original'):
+@dadi.Numerics.make_extrap_func
+def NewWorld_4G09(n, pts, variant='original'):
     """
     Integration of New World model from Gutenkunst (2009) PLoS Genetics.
 
     Note that in the original publication, the African population was removed late
     in the simulation, to keep the total number of populations to three. Now
     we can run with that fourth population.
+
+    If variant=='no_admixture', then the final admixture event is ignored,
+    for comparison with moments.
     """
     # From Table S3
     nuAf, nuB = 1.68, 0.287
@@ -159,17 +165,13 @@ def NewWorld_4G09(pts, variant='original'):
     if variant != 'no_admixture':
         phi = dadi.PhiManip.phi_4D_admix_into_4(phi, 0,fEuMx,0, xx,xx,xx,xx)
 
-    return phi
+    return dadi.Spectrum.from_phi(phi, (n,n,n,n), (xx,xx,xx,xx))
 NewWorld_4G09_timed = timeit(NewWorld_4G09)
 
-def OutOfAfrica_3G09(pts, variant='original'):
+@dadi.Numerics.make_extrap_func
+def OutOfAfrica_3G09(n, pts):
     """
     Integration of Out-of-Africa model from Gutenkunst (2009) PLoS Genetics.
-
-    Potential variants:
-    'original': Model from the original publication
-    'const': Model in which European and Asian population have constant size, for testing
-    'cached_int': As in 'const', but forcing CUDA code to use cached matrices
     """
     # Parameter values from https://github.com/popsim-consortium/stdpopsim/blob/master/stdpopsim/catalog/homo_sapiens.py
     generation_time = 25
@@ -205,32 +207,21 @@ def OutOfAfrica_3G09(pts, variant='original'):
     phi = dadi.PhiManip.phi_2D_to_3D_split_2(xx, phi)
     
     enable_cuda_cached = False
-    if variant=='original':
-        def nuEu_func(t): return N_EU0/N_A * math.exp(r_EU * t*2*N_A)
-        def nuAs_func(t): return N_AS0/N_A * math.exp(r_AS * t*2*N_A)
-    elif variant=='const':
-        nuEu_func = N_EU0/N_A
-        nuAs_func = N_AS0/N_A
-    elif variant=='cached_int':
-        nuEu_func = N_EU0/N_A
-        nuAs_func = N_AS0/N_A
-        enable_cuda_cached = True
+    def nuEu_func(t): return N_EU0/N_A * math.exp(r_EU * t*2*N_A)
+    def nuAs_func(t): return N_AS0/N_A * math.exp(r_AS * t*2*N_A)
 
     phi = dadi.Integration.three_pops(phi, xx, T_EU_AS/(2*N_A), nu1=N_AF/N_A, nu2=nuEu_func, nu3=nuAs_func,
                                        m12=m_AF_EU *2*N_A, m13=m_AF_AS *2*N_A, m21=m_AF_EU *2*N_A,
                                        m23=m_EU_AS *2*N_A, m31=m_AF_AS *2*N_A, m32=m_EU_AS *2*N_A,
                                        enable_cuda_cached=enable_cuda_cached)
 
-    return phi
+    return dadi.Spectrum.from_phi(phi, (n,n,n), (xx,xx,xx))
 OutOfAfrica_3G09_timed = timeit(OutOfAfrica_3G09)
 
-def OutOfAfrica_2L06(pts, variant='original'):
+@dadi.Numerics.make_extrap_func
+def OutOfAfrica_2L06(n, pts):
     """
     Integration of Out-of-Africa model from Li (2006) PLoS Genetics.
-
-    Potential variants:
-    'original': Model from the original publication
-    'cached_int': Forcing CUDA code to use cached matrices
     """
     # Parameter values from https://github.com/popsim-consortium/stdpopsim/blob/master/stdpopsim/catalog/drosophila_melanogaster.py
 
@@ -255,13 +246,11 @@ def OutOfAfrica_2L06(pts, variant='original'):
     phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
 
     enable_cuda_cached = False
-    if variant == 'cached_int':
-        enable_cuda_cached = True
 
     phi = dadi.Integration.two_pops(phi, xx, (t_AE - t_E1)/(2*N_A1), nu1=N_A0/N_A1, nu2=N_E1/N_A1,
             enable_cuda_cached=enable_cuda_cached)
     phi = dadi.Integration.two_pops(phi, xx, t_E1/(2*N_A1), nu1=N_A0/N_A1, nu2=N_E0/N_A1,
             enable_cuda_cached=enable_cuda_cached)
 
-    return phi
+    return dadi.Spectrum.from_phi(phi, (n,n), (xx,xx))
 OutOfAfrica_2L06_timed = timeit(OutOfAfrica_2L06)

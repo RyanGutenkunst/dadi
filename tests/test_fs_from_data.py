@@ -69,6 +69,13 @@ class DataTestCase(unittest.TestCase):
         meanS = np.mean([_.S() for _ in boots])
         self.assertTrue(500 < meanS < 600)
 
+    def test_boostraps_folded(self):
+        dd = dadi.Misc.make_data_dict_vcf(datafile, popfile)
+        fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
+        boots = dadi.Misc.bootstraps_from_dd_chunks(fragments, 1, pop_ids, ns, polarized=False)
+
+        self.assertTrue(boots[0].mask[-1,-2])
+
     def test_subsample(self):
         dd_subsample = dadi.Misc.make_data_dict_vcf(datafile, popfile,
                                                     subsample={'YRI': ns[0]//2, 'CEU': ns[1]//2})
