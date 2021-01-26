@@ -468,6 +468,74 @@ class Spectrum(numpy.ma.masked_array):
         else:
             return output
 
+    def combine_pops(self, tocombine):
+        """
+        Combine two or more populations in the fs, treating them as a single pop
+
+        tocombine: Indices for populations being combined (starting from 1)
+
+        The populations will alwasy be combined into the slot of the 
+        population with the smallest index. For example, if the sample sizes of
+        the spectrum are (1,2,3,4,5) and tocombine=[4,2,1], then the output spectrum
+        will have sample_sizes (7,3,5) when populations 1, 2, and 4 are combined.
+
+        The pop_ids of the new population will be the pop_ids of the combined
+        populations with a '+' in between them.
+        """
+        tocombine = sorted(tocombine)
+        result = self
+        # Need to combine from highest to lowest index
+        for right_pop in tocombine[1:][::-1]: 
+            result = result.combine_two_pops([tocombine[0], right_pop])
+        # Need to fix pop_id of combined pop
+        result.pop_ids[tocombine[0]-1] = '+'.join(self.pop_ids[_-1] for _ in tocombine)
+        return result
+
+    def combine_two_pops(self, tocombine):
+        """
+        Combine two populations in the fs, treating them as a single pop
+
+        tocombine: Indices for populations being combined (starting from 1)
+
+        The two populations will alwasy be combined into the slot of the 
+        population with the smallest index. For example, if the sample sizes of
+        the spectrum are (2,3,4,5) and tocombine=[4,2], then the output spectrum
+        will have sample_sizes (2,8,4) when populations 2 and 4 are combined.
+
+        The pop_ids of the new population will be the pop_ids of the two combined
+        populations with a '+' in between them.
+        """
+        # Calculate new sample sizes
+        tocombine = sorted([_-1 for _ in tocombine]) # Account for indexing from 1
+        new_ns = list(self.sample_sizes)
+        new_ns[tocombine[0]] = self.sample_sizes[tocombine[0]] + self.sample_sizes[tocombine[1]]
+        del new_ns[tocombine[1]] # Remove pop being combined away
+
+        # Create new pop ids
+        new_pop_ids = None
+        if self.pop_ids:
+            new_pop_ids = list(self.pop_ids)
+            new_pop_ids[tocombine[0]] = '{0}+{1}'.format(self.pop_ids[tocombine[0]], self.pop_ids[tocombine[1]])
+            del new_pop_ids[tocombine[1]]
+
+        # Create new spectrum
+        new_data = np.zeros(shape=[n+1 for n in new_ns])
+        new_fs = Spectrum(new_data, pop_ids=new_pop_ids)
+        # Copy over extrapolation info
+        new_fs.extrap_x = self.extrap_x
+
+        # Fill new spectrum
+        for index in np.ndindex(self.shape):
+            new_index = list(index)
+            new_index[tocombine[0]] = index[tocombine[0]] + index[tocombine[1]]
+            del new_index[tocombine[1]]
+            new_index = tuple(new_index)
+            new_fs[new_index] += self[index]
+            # Mask entry if any of the contributing entries are masked
+            new_fs.mask[new_index] = (new_fs.mask[new_index] or self.mask[index])
+
+        return new_fs
+
     def filter_pops(self, tokeep, mask_corners=True):
         """
         Filter Spectrum to keep only certain populations.
