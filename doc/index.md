@@ -29,6 +29,7 @@ If you find the triallelic methods useful, please cite:
 If you find the two-locus methods useful, please cite:
 [AP Ragsdale, RN Gutenkunst "Inferring demographic history using two-locus statistics" Genetics 206:1037 (2017)](http://doi.org/10.1534/genetics.117.201251).
 
+
 ### Suggested workflow
 
 One of Python’s major strengths is its interactive nature. This is very useful in the ex-ploratory stages of a project: for examining data and testing models. If you intend to use dadi’s plotting commands, which rely on `matplotlib`, they you’ll almost certainly want to install IPython, an enhanced Python shell that fixes several difficulties with interactive plotting using `matplotlib`.
@@ -38,3 +39,7 @@ My preferred workflow involves one window editing a Python script (e.g. `script.
 Note that to access dadi’s functions, you will need to `import dadi` at the start of your script or interactive session.
 
 If you are comfortable with Matlab, this workflow should seem very familiar. Moreover the `numpy`, `scipy`, and `matplotlib` packages replicate much of Matlab’s functionality.
+
+### Interactive examples with Jupyter notebooks
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fbitbucket.org%2Fgutenkunstlab%2Fdadi%2Fsrc/devel)
