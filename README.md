@@ -15,4 +15,5 @@ Also, please sign up for our mailing list, where we help the community with ∂a
 The easiest way to install dadi is via conda, `conda install -c conda-forge dadi`.
 
 **Notebook examples**
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fbitbucket.org%2Fgutenkunstlab%2Fdadi%2Fsrc/devel)
