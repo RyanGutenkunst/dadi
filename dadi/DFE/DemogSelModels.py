@@ -28,6 +28,7 @@ def two_epoch(params, ns, pts):
     params: [nu,T,gamma]
     ns: Sample sizes
     pts: Grid point settings for integration
+    gamma: Scaled selection coefficient
 
     Note that DFE methods internally apply make_extrap_func,
     So there is no need to make it extrapolate again.
@@ -217,3 +218,28 @@ def split_asym_mig_single_gamma(params, ns, pts):
     """
     nu1,nu2,T,m12,m21,gamma = params
     return split_asym_mig([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
+    
+def three_epoch(params, ns, pts):
+    """
+    params = (nuB,nuF,TB,TF,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nuB,nuF,TB,TF,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB, gamma=gamma)
+    phi = Integration.one_pop(phi, xx, TF, nuF, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
