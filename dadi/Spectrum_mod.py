@@ -488,7 +488,8 @@ class Spectrum(numpy.ma.masked_array):
         for right_pop in tocombine[1:][::-1]: 
             result = result.combine_two_pops([tocombine[0], right_pop])
         # Need to fix pop_id of combined pop
-        result.pop_ids[tocombine[0]-1] = '+'.join(self.pop_ids[_-1] for _ in tocombine)
+        if self.pop_ids:
+            result.pop_ids[tocombine[0]-1] = '+'.join(self.pop_ids[_-1] for _ in tocombine)
         return result
 
     def combine_two_pops(self, tocombine):
