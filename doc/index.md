@@ -42,4 +42,4 @@ If you are comfortable with Matlab, this workflow should seem very familiar. Mor
 
 ### Interactive examples with Jupyter notebooks
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fbitbucket.org%2Fgutenkunstlab%2Fdadi%2Fsrc/devel)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fbitbucket.org%2Fgutenkunstlab%2Fdadi%2Fsrc%2Fmaster/HEAD)
