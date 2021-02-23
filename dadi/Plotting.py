@@ -166,7 +166,6 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     if vmax is None:
         vmax = sfs.max()
 
-    pylab.cm.hsv.set_under('w')
     if vmax / vmin > 10:
         # Under matplotlib 1.0.1, default LogFormatter omits some tick lines.
         # This works more consistently.
