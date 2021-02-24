@@ -4,7 +4,7 @@ Comparison and optimization of model spectra to data.
 import logging
 logger = logging.getLogger('Inference')
 
-import os,sys
+import os,sys, warnings
 
 import numpy
 from numpy import logical_and, logical_not
@@ -1272,6 +1272,7 @@ def add_misid_param(func):
     list, which is the proportion of segregating sites whose ancestral state
     were misidentified.
     """
+    warnings.warn("Inference.add_misid_param is deprecated. Please use the updated Numerics.make_anc_state_misd_func instead.\n", FutureWarning)
     def misid_func(params, *args, **kwargs):
         misid = params[-1]
         fs = func(params[:-1], *args, **kwargs)
