@@ -1,9 +1,7 @@
 import numpy as np, dadi
 import numpy
-import scipy, math
-from scipy.special import gammaln
+import scipy
 import scipy.optimize
-from numpy import logical_and, logical_not
 from . import numerics
 import os,sys
 
