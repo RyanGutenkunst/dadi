@@ -17,6 +17,32 @@ _counter = 0
 #: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
 _out_of_bounds_val = -1e8
 
+def ll_over_rho_bins(model_list,data_list):
+    """
+    The log-likelihood of the binned data given the model spectra for the same bins
+    Input list of models for rho bins, and list of data for rho bins
+    """
+    if len(model_list) != len(data_list):
+        print('model list and data list must be of same length')
+        return 0
+    LL = 0
+    for ii in range(len(model_list)):
+        LL += ll(model_list[ii],data_list[ii])
+    return LL
+
+def ll_over_rho_bins_multinom(model_list,data_list):
+    """
+    The log-likelihood of the binned data given the model spectra for the same bins
+    Input list of models for rho bins, and list of data for rho bins
+    """
+    if len(model_list) != len(data_list):
+        print('model list and data list must be of same length')
+        return 0
+    LL = 0
+    for ii in range(len(model_list)):
+        LL += ll_multinom(model_list[ii],data_list[ii])
+    return LL
+
 def _object_func(params, data_list, model_func, pts, dts, rhos=[0],
                  lower_bound=None, upper_bound=None, 
                  verbose=0, multinom=True, flush_delay=0,
@@ -205,8 +231,6 @@ def optimize_log_lbfgsb(p0, data_list, model_func, pts, dts, rhos=[0],
         return xopt
     else:
         return xopt, fopt, info_dict
-
-
 
 
 def optimize_log_fmin(p0, data_list, model_func, pts, dts, rhos=[0],
