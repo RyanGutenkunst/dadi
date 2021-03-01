@@ -393,12 +393,6 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
             ex_result = linear_extrap(result_l, x_l)
         elif len(pts_l) == 3:
             ex_result = quadratic_extrap(result_l, x_l)
-        elif len(pts_l) == 4:
-            ex_result = cubic_extrap(result_l, x_l)
-        elif len(pts_l) == 5:
-            ex_result = quartic_extrap(result_l, x_l)
-        elif len(pts_l) == 6:
-            ex_result = quintic_extrap(result_l, x_l)
         else:
             raise ValueError('Number of calculations to use for extrapolation '
                              'must be between 1 and 6')
