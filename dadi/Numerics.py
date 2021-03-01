@@ -428,6 +428,10 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
             # For entries that fail, use the "best" input result.
             ex_result[extrap_failed] = best_result[extrap_failed]
 
+        try:
+            ex_result.pop_ids = result_l[0].pop_ids
+        except AttributeError:
+            pass
         return ex_result
 
     extrap_func.__name__ = func.__name__
