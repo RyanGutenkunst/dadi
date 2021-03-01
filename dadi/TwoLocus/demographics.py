@@ -43,15 +43,6 @@ def equilibrium_phi(pts, rho, dt, gammaA=0, gammaB=0, hA=0, hB=0,
         np.savez(fname, yA, yB, phi)
     return yA, yB, phi
 
-def equilibrium(pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
-                 hA=0.5, hB=0.5, thetaA=1.0, thetaB=1.0):
-    x = numerics.grid(pts)
-    yA, yB, phi = equilibrium_phi(pts, rho, dt, gammaA, gammaB, hA, hB,
-                                  thetaA, thetaB)
-
-    fs = numerics.sample_cached(phi, ns, x)
-    return fs
-
 def two_epoch(params, pts, ns, rho=0.0, dt=0.005, gammaA=0.0, gammaB=0.0,
               hA=0.5, hB=0.5, thetaA=1.0, thetaB=1.0):
     nu,T = params
