@@ -341,6 +341,19 @@ class TLSpectrum(np.ma.masked_array):
         folded.extrap_x = self.extrap_x
         folded.extrap_t = self.extrap_t
         return folded
+
+    def log(self):
+        """
+        Return the natural logarithm of the entries of the frequency spectrum.
+
+        Only necessary because numpy.ma.log now fails to propagate extra
+        attributes after numpy 1.10.
+        """
+        logfs = np.ma.log(self)
+        logfs.folded = self.folded
+        logfs.extrap_x = self.extrap_x
+        logfs.extrap_t = self.extrap_t
+        return logfs
     
     # Ensures that when arithmetic is done with TLSpectrum objects,
     # attributes are preserved. For details, see similar code in
