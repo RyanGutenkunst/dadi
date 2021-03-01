@@ -7,6 +7,9 @@ from numpy import logical_and, logical_not
 from . import numerics
 import os,sys
 
+from dadi.Inference import ll, ll_per_bin, ll_multinom, ll_multinom_per_bin, optimal_sfs_scaling, optimally_scaled_sfs, _project_params_down, _project_params_up
+
+# RNG: Note the _interp doesn't do much, just stores arguments that would be passed to a defined model function (which isn't in the repository)
 
 ###
 ### This is almost entirely adapted from the dadi.Inference functions
@@ -15,117 +18,6 @@ import os,sys
 _counter = 0
 #: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
 _out_of_bounds_val = -1e8
-
-def ll(model, data):
-    """
-    The log-likelihood of the data given the model linkage frequency spectrum
-    """
-    ll_arr = ll_per_bin(model,data)
-    return ll_arr.sum()
-
-def ll_per_bin(model, data):
-    """
-    Poisson log-likelihood of each entry in the data given the model sfs
-    """
-    result = -model.data + data.data*np.log(model) - gammaln(data + 1.)
-    return result
-
-def ll_multinom(model,data):
-    """
-    LL of the data given the model, with optimal rescaling
-    """
-    ll_arr = ll_multinom_per_bin(model,data)
-    return ll_arr.sum()
-
-def ll_multinom_per_bin(model,data):
-    """
-    Multinomial log-likelihood of each entry in the data given the model
-    """
-    theta_opt = optimal_sfs_scaling(model,data)
-    return ll_per_bin(theta_opt*model,data)
-
-def optimal_sfs_scaling(model,data):
-    """
-    Optimal multiplicative scaling factor between model and data
-    """
-    model, data = dadi.Numerics.intersect_masks(model,data)
-    return data.sum()/model.sum()
-
-def optimally_scaled_sfs(model,data):
-    """
-    Optimally scaled model to data
-    """
-    return optimal_sfs_scaling(model,data) * model
-
-
-def ll_over_rho_bins(model_list,data_list):
-    """
-    The log-likelihood of the binned data given the model spectra for the same bins
-    Input list of models for rho bins, and list of data for rho bins
-    """
-    if len(model_list) != len(data_list):
-        print('model list and data list must be of same length')
-        return 0
-    LL = 0
-    for ii in range(len(model_list)):
-        LL += ll(model_list[ii],data_list[ii])
-    return LL
-
-
-def ll_over_rho_bins_multinom(model_list,data_list):
-    """
-    The log-likelihood of the binned data given the model spectra for the same bins
-    Input list of models for rho bins, and list of data for rho bins
-    """
-    if len(model_list) != len(data_list):
-        print('model list and data list must be of same length')
-        return 0
-    LL = 0
-    for ii in range(len(model_list)):
-        LL += ll_multinom(model_list[ii],data_list[ii])
-    return LL
-
-
-### what if we want multinom log likelihoods, but the relative theta for each bin is known?
-
-
-def _project_params_up(pin, fixed_params):
-    """
-    Fold fixed parameters into pin.
-    """
-    if fixed_params is None:
-        return pin
-
-    if numpy.isscalar(pin):
-        pin = [pin]
-
-    pout = numpy.zeros(len(fixed_params))
-    orig_ii = 0
-    for out_ii, val in enumerate(fixed_params):
-        if val is None:
-            pout[out_ii] = pin[orig_ii]
-            orig_ii += 1
-        else:
-            pout[out_ii] = fixed_params[out_ii]
-    return pout
-
-def _project_params_down(pin, fixed_params):
-    """
-    Eliminate fixed parameters from pin.
-    """
-    if fixed_params is None:
-        return pin
-
-    if len(pin) != len(fixed_params):
-        raise ValueError('fixed_params list must have same length as input '
-                         'parameter array.')
-
-    pout = []
-    for ii, (curr_val,fixed_val) in enumerate(zip(pin, fixed_params)):
-        if fixed_val is None:
-            pout.append(curr_val)
-
-    return numpy.array(pout)
 
 def _object_func(params, data_list, model_func, pts, dts, rhos=[0],
                  lower_bound=None, upper_bound=None, 
