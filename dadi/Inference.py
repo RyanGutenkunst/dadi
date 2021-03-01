@@ -451,12 +451,6 @@ def optimize_log_lbfgsb(p0, data, model_func, pts,
     else:
         return xopt, fopt, info_dict
 
-def minus_ll(model, data):
-    """
-    The negative of the log-likelihood of the data given the model sfs.
-    """
-    return -ll(model, data)
-
 def ll(model, data):
     """
     The log-likelihood of the data given the model sfs.
@@ -562,14 +556,6 @@ def ll_multinom(model, data):
     """
     ll_arr = ll_multinom_per_bin(model, data)
     return ll_arr.sum()
-
-def minus_ll_multinom(model, data):
-    """
-    The negative of the log-likelihood of the data given the model sfs.
-
-    Return a double that is -(log-likelihood)
-    """
-    return -ll_multinom(model, data)
 
 def linear_Poisson_residual(model, data, mask=None):
     """
