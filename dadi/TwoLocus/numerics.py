@@ -5,7 +5,7 @@ import numpy as np
 import dadi
 from numpy import newaxis as nuax
 from scipy.sparse import lil_matrix,identity
-import math
+import math, functools
 
 from dadi.TwoLocus.TLSpectrum_mod import TLSpectrum
 
@@ -1182,6 +1182,7 @@ def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
 
 sample_cache = {}
 def sample_cached(phi, ns, x):
+    # XXX: Move into TLSpectrum.from_phi
     dx = grid_dx(x)
     dx3 = grid_dx3(x,dx)
 
@@ -1281,28 +1282,48 @@ def extrap_dt_pts(temps):
 
     return dadi.Numerics.quadratic_extrap((F0,F1,F2),(dts[0],dts[1],dts[2]))
 
-
-def array_to_spectrum(phi):
+def make_extrap_dt_pts_func(func):
     """
-    now handled by TLSpectrum_mod.TLSpectrum
-    """
-    ns = len(phi)-1
-    phi = dadi.Spectrum(phi)
-    phi = dadi.Spectrum(phi)
-    phi.mask[0,0,0] = True
-    phi.mask[0,:,0] = True
-    phi.mask[0,0,:] = True
-    for ii in range(len(phi)):
-        for jj in range(len(phi)):
-            for kk in range(len(phi)):
-                if ii+jj+kk > ns:
-                    phi.mask[ii,jj,kk] = True
+    Generate a version of func that extrapolates to infinitely many grid and time points.
 
-    for ii in range(len(phi)):
-        phi.mask[ii,ns-ii,0] = True
-        phi.mask[ii,0,ns-ii] = True
-    
-    return phi
+    func: A function that returns a single scalar or array and whose two
+        last non-keyword arguments are 'pts' (the number of grid points to use
+        in calculation) and 'dt' (the timestep to use).
+
+    Returns a new function whose last two argument are a list of numbers of grid
+    points and dt intervals and that returns a result extrapolated to 
+    infinitely many grid points and dt=0.
+
+    Note: The lists of grid points and dts must be of length 1 or 3.
+    """
+    def extrap_func(*args, **kwargs):
+        other_args, pts_l, dt_l = args[:-2], args[-2], args[-1]
+
+        if np.isscalar(pts_l):
+            pts_l = [pts_l]
+        if np.isscalar(dt_l):
+            dt_l = [dt_l]
+
+        if len(pts_l) not in [1,3] or len(dt_l) not in [1,3]:
+            raise ValueError('dt and pts extrapolation lists must be length 1 or 3')
+
+        # Create a sub-function that fixes all other arguments and only
+        # takes in pts and dt.
+        partial_func = functools.partial(func, *other_args, **kwargs)
+
+        temps = {}
+        for dt in dt_l:
+            temps[dt] = {}
+            for pts in pts_l:
+                temps[dt][pts] = partial_func(pts, dt)
+
+        results = extrap_dt_pts(temps)
+        return results
+
+    extrap_func.__name__ = func.__name__
+    extrap_func.__doc__ = func.__doc__
+
+    return extrap_func
 
 def to_single_locus(phi):
     ns = len(phi)-1
