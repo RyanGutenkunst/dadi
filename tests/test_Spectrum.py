@@ -472,6 +472,24 @@ class SpectrumTestCase(unittest.TestCase):
         # Test that masked correctly
         self.assertTrue(new_fs.mask[0,6,2,4])
 
+    def test_reorder_pops(self):
+        """
+        Test fs.reorder_pops
+        """
+        fs = dadi.Spectrum(numpy.random.uniform(size=[4,5,6,7]), pop_ids=['A','B','C','D'])
+        neworder = [2,4,3,1]
+        reordered = fs.reorder_pops(neworder)
+
+        # Assert that subsets of spectrum are correct
+        self.assertTrue(numpy.allclose(fs.filter_pops([2,3]), reordered.filter_pops([1,3])))
+        # In this case, we need the transpose, because order has reversed
+        self.assertTrue(numpy.allclose(fs.filter_pops([1,2]).data, reordered.filter_pops([1,4]).transpose().data))
+        # Assert that pop_ids are correct
+        self.assertTrue([fs.pop_ids[_-1] for _ in neworder], reordered.pop_ids)
+        # Test error checking
+        self.assertRaises(ValueError, fs.reorder_pops, [1])
+        self.assertRaises(ValueError, fs.reorder_pops, [2,1,2,3])
+
 suite = unittest.TestLoader().loadTestsFromTestCase(SpectrumTestCase)
 
 if __name__ == '__main__':

@@ -545,7 +545,7 @@ class Spectrum(numpy.ma.masked_array):
         Note: This is similar in practice to the marginalize operation. But here
               populations are numbered from 1, as in the majority of dadi.
 
-        tokeep: List of population numbers to keep, numbering from 1.
+        tokeep: Unordered set of population numbers to keep, numbering from 1.
         mask_corners: If True, the typical corners of the resulting fs will be
                       masked
         """
@@ -582,6 +582,24 @@ class Spectrum(numpy.ma.masked_array):
         logfs.pop_ids = self.pop_ids
         logfs.extrap_x = self.extrap_x
         return logfs
+
+    def reorder_pops(self, neworder):
+        """
+        Get Spectrum with populations in new order
+
+        Returns new Spectrum with same number of populations, but in a different order
+
+        neworder: Integer list defining new order of populations, indexing the orginal
+                  populations from 1. Must contain all integers from 1 to number of pops.
+        """
+        if sorted(neworder) != [_+1 for _ in range(self.ndim)]
+            raise(ValueError("neworder argument misspecified"))
+        newaxes = [_-1 for _ in neworder]
+        fs = self.transpose(newaxes)
+        if self.pop_ids:
+            fs.pop_ids = [self.pop_ids[_] for _ in newaxes]
+
+        return fs
 
     def fold(self):
         """
