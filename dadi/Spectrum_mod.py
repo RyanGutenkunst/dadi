@@ -592,7 +592,7 @@ class Spectrum(numpy.ma.masked_array):
         neworder: Integer list defining new order of populations, indexing the orginal
                   populations from 1. Must contain all integers from 1 to number of pops.
         """
-        if sorted(neworder) != [_+1 for _ in range(self.ndim)]
+        if sorted(neworder) != [_+1 for _ in range(self.ndim)]:
             raise(ValueError("neworder argument misspecified"))
         newaxes = [_-1 for _ in neworder]
         fs = self.transpose(newaxes)
