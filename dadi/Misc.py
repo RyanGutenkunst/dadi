@@ -548,7 +548,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         # Add ancestral allele information if available
         info = cols[7].split(';')
         for field in info:
-            if field.startswith('AA'):
+            if field.startswith('AA='):
                 outgroup_allele = field[3:].upper()
                 if outgroup_allele not in ['A','C','G','T']:
                     # Skip if ancestral not single base A, C, G, or T
