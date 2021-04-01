@@ -1227,6 +1227,7 @@ def quadrinomial(ns,ii,jj,kk):
     return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(kk+1) - math.lgamma(ns-ii-jj-kk+1))
 
 def ln_binomial(n,k):
+    # XXX: Replace with dadi.Numerics._lncomb
     return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)
 
 def fold_ancestral(F):
@@ -1282,7 +1283,7 @@ def extrap_dt_pts(temps):
 
     return dadi.Numerics.quadratic_extrap((F0,F1,F2),(dts[0],dts[1],dts[2]))
 
-def make_extrap_dt_pts_func(func):
+def make_extrap_pts_dt_func(func):
     """
     Generate a version of func that extrapolates to infinitely many grid and time points.
 
