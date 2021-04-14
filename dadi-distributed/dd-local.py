@@ -7,6 +7,7 @@ import sys
 def best_fit(args, task_num):
     cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(task_num) + \
         " --output " + args.dir + "/output" + str(task_num) + ".params --ubounds " + args.ubounds + " --lbounds " + args.lbounds
+    print(cmd)
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if out.returncode != 0:
         print("BestFit returned an error")
@@ -14,9 +15,11 @@ def best_fit(args, task_num):
         sys.exit(1)
     return out.stdout
 
-def infer_dm(args):
-    cmd = "dadi-cli InferDM --syn-fs infile --model " + args.model + " --misid --p0 " + args.p0 + " --ubounds " + args.ubounds + \
-        " --lbounds " + args.lbounds + " --output outfile --jobs " + str(args.jobs) + "\n")
+def infer_dm(args, task_num):
+    os.mkdir(args.dir + "/optimization" + str(task_num))
+    cmd = "dadi-cli InferDM --syn-fs " + args.infile + " --model " + args.model + " --misid --p0 " + args.p0 + " --ubounds " + args.ubounds + \
+        " --lbounds " + args.lbounds + " --output " + args.dir + "/optimization" + str(task_num) + "/output --jobs " + str(args.jobs)
+    print(cmd)
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if out.returncode != 0:
         print("InferDM returned an error")
@@ -40,7 +43,7 @@ if __name__ == '__main__':
     print("running...")
     task_num = 1
     while True:
-        o = infer_dm(args)
+        o = infer_dm(args, task_num)
         print(o)
         o = best_fit(args, task_num)
         print(o)
