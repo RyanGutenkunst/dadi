@@ -17,8 +17,13 @@ def best_fit(args, task_num):
 
 def infer_dm(args, task_num):
     os.mkdir(args.dir + "/optimization" + str(task_num))
-    cmd = "dadi-cli InferDM --syn-fs " + args.infile + " --model " + args.model + " --misid --p0 " + args.p0 + " --ubounds " + args.ubounds + \
-        " --lbounds " + args.lbounds + " --output " + args.dir + "/optimization" + str(task_num) + "/output --jobs " + str(args.jobs)
+    cmd = "dadi-cli InferDM --syn-fs " + args.infile + " --model " + args.model
+    if args.misid:
+        cmd += " --misid"
+    cmd += " --p0 " + args.p0 + " --ubounds " + args.ubounds + \
+        " --lbounds " + args.lbounds + " --output " + args.dir + "/optimization" + str(task_num) + "/output"
+    if args.jobs:
+        cmd += " --jobs " + str(args.jobs)
     print(cmd)
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if out.returncode != 0:
@@ -34,10 +39,11 @@ if __name__ == '__main__':
     parser.add_argument('dir', help='directory in which optimization and params files are stored')
     parser.add_argument('infile', help='allele frequency spectrum file')
     parser.add_argument('--model', required=True)
+    parser.add_argument('--misid', action='store_true')
     parser.add_argument('--p0', required=True)
     parser.add_argument('--ubounds', required=True)
     parser.add_argument('--lbounds', required=True)
-    parser.add_argument('--jobs', type=int, required=True)
+    parser.add_argument('--jobs', type=int)
     args = parser.parse_args()
 
     print("running...")

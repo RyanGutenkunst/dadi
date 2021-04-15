@@ -45,9 +45,13 @@ def unpack(args, task_num):
 
 def write_script(script):
     f = open(script, "w")
-    f.write("dadi-cli InferDM --syn-fs infile --model " + args.model + " --misid --p0 " + args.p0 + " --ubounds " + args.ubounds + \
-        " --lbounds " + args.lbounds + " --output outfile --jobs " + str(args.jobs) + "\n")
-    f.write("tar czf outfiles.tar.gz outfile.run*")
+    f.write("dadi-cli InferDM --syn-fs infile --model " + args.model)
+    if args.misid:
+        f.write(" --misid")
+    f.write(" --p0 " + args.p0 + " --ubounds " + args.ubounds + " --lbounds " + args.lbounds + " --output outfile")
+    if args.jobs:
+        f.write(" --jobs " + str(args.jobs))
+    f.write("\ntar czf outfiles.tar.gz outfile.run*")
     f.close()
     os.chmod(script, stat.S_IRWXU)
 
@@ -57,6 +61,7 @@ if __name__ == '__main__':
     parser.add_argument('dir', help='directory in which optimization and params files are stored')
     parser.add_argument('infile', help='allele frequency spectrum file')
     parser.add_argument('--model', required=True)
+    parser.add_argument('--misid', action='store_true')
     parser.add_argument('--p0', required=True)
     parser.add_argument('--ubounds', required=True)
     parser.add_argument('--lbounds', required=True)
