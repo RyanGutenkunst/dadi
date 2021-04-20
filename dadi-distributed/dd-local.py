@@ -16,7 +16,7 @@ def best_fit(args, task_num):
     return out.stdout
 
 def infer_dm(args, task_num):
-    os.mkdir(args.dir + "/optimization" + str(task_num))
+    os.makedirs(args.dir + "/optimization" + str(task_num), exist_ok=True)
     cmd = "dadi-cli InferDM --syn-fs " + args.infile + " --model " + args.model
     if args.misid:
         cmd += " --misid"
@@ -34,7 +34,6 @@ def infer_dm(args, task_num):
 
 
 if __name__ == '__main__':
-    global model, initial_p0, ubounds, lbounds, jobs
     parser = argparse.ArgumentParser(description='Work Queue manager for Dadi.')
     parser.add_argument('dir', help='directory in which optimization and params files are stored')
     parser.add_argument('infile', help='allele frequency spectrum file')
@@ -47,6 +46,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     print("running...")
+    os.makedirs(args.dir, exist_ok=True)
     task_num = 1
     while True:
         o = infer_dm(args, task_num)

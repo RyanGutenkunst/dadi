@@ -7,24 +7,19 @@ from work_queue import *
 import sys
 
 def add_task(args, task_num, q):
-    cmd = "./infer_dm.py --syn-fs infile --model " + args.model
-    if args.misid:
-        cmd += " --misid"
-    cmd += " --p0 " + args.p0 + " --ubounds " + args.ubounds + " --lbounds " + args.lbounds
-    t = Task(cmd)
-    t.specify_input_file("infer_dm.py")
-    t.specify_input_file(args.infile, "infile", cache=False)
+    print("adding task for p0=" + str(args.p0))
+    script = "./inferdm" + str(task_num) + ".sh"
+    t = Task(script)
     if args.p0.startswith("output"):
         t.specify_input_file(os.path.join(args.dir, args.p0), cache=False)
-    t.specify_output_file(os.path.join(args.dir, "output.run" + str(task_num)), "output.run0")
+    t.specify_tag("dadi")
+    script = os.path.join(args.dir, script)
+    write_script(script, args)
+    t.specify_input_file(script, cache=False)
+    t.specify_input_file(args.infile, "infile", cache=False)
+    t.specify_output_file(os.path.join(args.dir, "outfiles.tar.gz"), cache=False)
     taskid = q.submit(t)
     print("submitted task (id# %d): %s" % (taskid, t.command))
-
-def add_tasks(jobs, task_num, args, q):
-    for i in range(jobs):
-        add_task(args, task_num, q)
-        task_num += 1
-    return task_num
 
 def best_fit(args, task_num):
     cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(task_num) + \
@@ -36,14 +31,28 @@ def best_fit(args, task_num):
         sys.exit(1)
     return out.stdout
 
-def write_script(args, task_num):
-    f = open("inferdm.sh", "w")
-    f.write("./infer_dm.py --syn-fs infile --model " + args.model)
+def unpack(args, task_num):
+    d = os.getcwd()
+    os.chdir(args.dir)
+    o = "optimization" + str(task_num)
+    os.makedirs(o, exist_ok=True)
+    out = subprocess.run("tar xzf outfiles.tar.gz -C " + o, shell=True)
+    if out.returncode != 0:
+        sys.exit(1)
+    os.remove("outfiles.tar.gz")
+    os.chdir(d)
+
+def write_script(script, args):
+    f = open(script, "w")
+    f.write("dadi-cli InferDM --syn-fs infile --model " + args.model)
     if args.misid:
         f.write(" --misid")
     f.write(" --p0 " + args.p0 + " --ubounds " + args.ubounds + " --lbounds " + args.lbounds + " --output outfile")
+    if args.jobs:
+        f.write(" --jobs " + str(args.jobs))
+    f.write("\ntar czf outfiles.tar.gz outfile.run*")
     f.close()
-    os.chmod("inferdm.sh", stat.S_IRWXU)
+    os.chmod(script, stat.S_IRWXU)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Work Queue manager for Dadi.')
@@ -57,6 +66,7 @@ if __name__ == '__main__':
     parser.add_argument('--jobs', type=int)
     args = parser.parse_args()
 
+    os.makedirs(args.dir, exist_ok=True)
     try:
         q = WorkQueue(port = WORK_QUEUE_DEFAULT_PORT) #, debug_log = "debug.log")
     except:
@@ -64,11 +74,8 @@ if __name__ == '__main__':
         sys.exit(1)
     print("listening on port %d..." % q.port)
 
-    write_script(args)
-    jobs = args.jobs
-    if !jobs:
-        jobs = 1
-    task_num = add_tasks(jobs, 1, args, q)
+    task_num = 1
+    add_task(args, task_num, q)
     print("waiting for tasks to complete...")
     while not q.empty():
         t = q.wait(5)
@@ -76,6 +83,7 @@ if __name__ == '__main__':
             if t.return_status != 0:
                 print("problem encountered, return status =" + str(t.return_status))
                 sys.exit(t.return_status)
+            unpack(args, t.id)
             o = best_fit(args, t.id)
             print(o)
             if o.find("CONVERGED RESULT FOUND!") != -1:
@@ -85,7 +93,7 @@ if __name__ == '__main__':
             else:
                 args.p0 = "output" + str(t.id) + ".params"
                 task_num += 1
-                add_task(args, task_num)
+                add_task(args, task_num, q)
     print("all tasks complete!")
     sys.exit(0)
 
