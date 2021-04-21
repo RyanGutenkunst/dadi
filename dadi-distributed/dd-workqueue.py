@@ -6,7 +6,7 @@ import subprocess
 from work_queue import *
 import sys
 
-def add_task(args, task_num, q):
+def add_task(args, batch_num, task_num, q):
     cmd = "./infer_dm.py --syn-fs infile --model " + args.model
     if args.misid:
         cmd += " --misid"
@@ -16,34 +16,23 @@ def add_task(args, task_num, q):
     t.specify_input_file(args.infile, "infile", cache=False)
     if args.p0.startswith("output"):
         t.specify_input_file(os.path.join(args.dir, args.p0), cache=False)
-    t.specify_output_file(os.path.join(args.dir, "output.run" + str(task_num)), "output.run0")
-    taskid = q.submit(t)
-    print("submitted task (id# %d): %s" % (taskid, t.command))
+    t.specify_output_file(os.path.join(args.dir, "optimization" + str(batch_num), "output.run" + str(task_num)), "output.run0")
+    q.submit(t)
 
-def add_tasks(jobs, task_num, args, q):
+def add_tasks(jobs, batch_num, args, q):
+    os.makedirs(os.path.join(args.dir, "optimization" + str(batch_num)), exist_ok=True)
     for i in range(jobs):
-        add_task(args, task_num, q)
-        task_num += 1
-    return task_num
+        add_task(args, batch_num, i, q)
 
-def best_fit(args, task_num):
-    cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(task_num) + \
-        " --output " + args.dir + "/output" + str(task_num) + ".params --ubounds " + args.ubounds + " --lbounds " + args.lbounds
+def best_fit(args, batch_num):
+    cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(batch_num) + \
+        " --output " + args.dir + "/output" + str(batch_num) + ".params --ubounds " + args.ubounds + " --lbounds " + args.lbounds
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if out.returncode != 0:
         print("BestFit returned an error")
         print(out.stderr)
         sys.exit(1)
     return out.stdout
-
-def write_script(args, task_num):
-    f = open("inferdm.sh", "w")
-    f.write("./infer_dm.py --syn-fs infile --model " + args.model)
-    if args.misid:
-        f.write(" --misid")
-    f.write(" --p0 " + args.p0 + " --ubounds " + args.ubounds + " --lbounds " + args.lbounds + " --output outfile")
-    f.close()
-    os.chmod("inferdm.sh", stat.S_IRWXU)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Work Queue manager for Dadi.')
@@ -57,35 +46,29 @@ if __name__ == '__main__':
     parser.add_argument('--jobs', type=int)
     args = parser.parse_args()
 
+    os.makedirs(args.dir, exist_ok=True)
     try:
         q = WorkQueue(port = WORK_QUEUE_DEFAULT_PORT) #, debug_log = "debug.log")
     except:
         print("Instantiation of Work Queue failed!")
         sys.exit(1)
     print("listening on port %d..." % q.port)
-
-    write_script(args)
-    jobs = args.jobs
-    if !jobs:
-        jobs = 1
-    task_num = add_tasks(jobs, 1, args, q)
-    print("waiting for tasks to complete...")
-    while not q.empty():
-        t = q.wait(5)
-        if t:
-            if t.return_status != 0:
-                print("problem encountered, return status =" + str(t.return_status))
-                sys.exit(t.return_status)
-            o = best_fit(args, t.id)
-            print(o)
-            if o.find("CONVERGED RESULT FOUND!") != -1:
-                q.cancel_by_tasktag("dadi")
-                q.shutdown_workers(0)
-                sys.exit(0)
-            else:
-                args.p0 = "output" + str(t.id) + ".params"
-                task_num += 1
-                add_task(args, task_num)
-    print("all tasks complete!")
-    sys.exit(0)
-
+    jobs = 1
+    if args.jobs:
+        jobs = args.jobs
+    batch_num = 1
+    while True:
+        add_tasks(jobs, batch_num, args, q)
+        print("waiting for tasks to complete...")
+        while not q.empty():
+            t = q.wait(5)
+            if t:
+                if t.return_status != 0:
+                    print("problem encountered, return status =" + str(t.return_status))
+                    sys.exit(t.return_status)
+                o = best_fit(args, batch_num)
+                print(o)
+                if o.find("CONVERGED RESULT FOUND!") != -1:
+                    q.shutdown_workers(0)
+                    sys.exit(0)
+                args.p0 = "output" + str(batch_num) + ".params"
