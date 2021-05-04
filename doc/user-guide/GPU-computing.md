@@ -15,7 +15,7 @@ To enable GPU computing, run the command `dadi.cuda_enabled(True)` in your scrip
 To disable GPU computing, run the command `dadi.cuda_enabled(False)` in your script.
 
 Combined CPU and GPU computing is enabled for dadi.DFE.Cache2D.
-To use this functionality, set `mp=True` and specify the number of GPU processes to launch using the `gpus` argument.
+To use this functionality, set `mp=True`.
 
 ### RAM limitations
 
