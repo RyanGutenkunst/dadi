@@ -115,7 +115,8 @@ numpy.distutils.core.setup(name='dadi',
 # To build completely
 # rm -rf build dist */*.so */*/*.so */*module.c */*/*module.c
 # python setup.py build_ext --inplace --cython
-# To build API documention (https://pdoc3.github.io/pdoc/)
+# To build API documention (https://pdoc3.github.io/pdoc/). 
+# Remember to push the updated documentation to the repository
 # rm -rf doc/api; pdoc -f --html -o doc/api dadi
 # To build test mkdocs documentation in site/index.hml
 # python -m mkdocs build --clean --no-directory-urls --config-file mkdocs.yml
