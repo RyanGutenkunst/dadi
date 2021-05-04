@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.Godambe API documentation</title>
 <meta name="description" content="Parameter uncertainties and likelihood ratio tests using Godambe information." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -33,8 +33,7 @@ import numpy
 from dadi import Inference
 from dadi.Spectrum_mod import Spectrum
 
-print(&#34;&#34;&#34;If you use the Godambe methods in your published research, please cite Coffman et al. (2016) in addition to the main dadi paper Gutenkunst et al. (2009).
-AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst &#34;Computationally efficient composite likelihood statistics for demographic inference&#34; Molecular Biology and Evolution 33:591-593 (2016)&#34;&#34;&#34;)
+two_pt_deriv_test = False
 
 def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
     &#34;&#34;&#34;
@@ -201,6 +200,10 @@ def get_grad(func, p0, eps, args=()):
             fm = func(pwork, *args)
 
             grad[ii] = (fp - fm)/eps[ii]
+            if two_pt_deriv_test:
+                pwork[ii] = p0[ii] + 2*eps[ii]
+                fpp = func(pwork, *args)
+                grad[ii] = (4*fp - fpp - 3*fm)/(2*eps[ii])
     return grad
 
 cache = {}
@@ -230,7 +233,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
     # Cache evaluations of the frequency spectrum inside our hessian/J 
     # evaluation function
     def func(params, data, theta_adjust=1):
-        key = (tuple(params), tuple(ns), tuple(grid_pts))
+        key = (func_ex.__hash__(), tuple(params), tuple(ns), tuple(grid_pts))
         if key not in cache:
             cache[key] = func_ex(params, ns, grid_pts)
         # theta_adjust deals with bootstraps that need  different thetas
@@ -352,8 +355,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
 
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
-               multinom=True, eps=0.01):
-    # XXX: Need to implement boot_theta_adjusts
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
     &#34;&#34;&#34;
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -375,7 +377,12 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
          Note that if eps*param is &lt; 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
     &#34;&#34;&#34;
+    if multinom and boot_theta_adjusts:
+        raise ValueError(&#39;Cannot use boot_theta_adjusts with multinom=True.&#39;)
     if multinom:
         func_multi = func_ex
         model = func_multi(p0, data.sample_sizes, grid_pts)
@@ -395,7 +402,7 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
     p_nested = numpy.asarray(p0)[nested_indices]
     GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
-                                eps, log=False)
+                                eps, log=False, boot_theta_adjusts=boot_theta_adjusts)
 
     adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust
@@ -576,7 +583,7 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 <span>def <span class="ident">FIM_uncert</span></span>(<span>func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Parameter uncertainties from Fisher Information Matrix</p>
+<div class="desc"><p>Parameter uncertainties from Fisher Information Matrix</p>
 <p>Returns standard deviations of parameter values.</p>
 <p>func_ex: Model function
 all_boot: List of bootstrap frequency spectra
@@ -594,7 +601,7 @@ theta. Because uncertainty in theta must be accounted for to get
 correct uncertainties for other parameters, this function will
 automatically consider theta if multinom=True. In that case, the
 final entry of the returned uncertainties will correspond to
-theta.</p></section>
+theta.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -637,7 +644,7 @@ theta.</p></section>
 <span>def <span class="ident">GIM_uncert</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, log=False, multinom=True, eps=0.01, return_GIM=False, boot_theta_adjusts=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Parameter uncertainties from Godambe Information Matrix (GIM)</p>
+<div class="desc"><p>Parameter uncertainties from Godambe Information Matrix (GIM)</p>
 <p>Returns standard deviations of parameter values.</p>
 <p>func_ex: Model function
 all_boot: List of bootstrap frequency spectra
@@ -659,7 +666,7 @@ theta.
 return_GIM: If true, also return the full GIM.
 boot_theta_adjusts: Optionally, a sequence of </em>relative* values of theta
 (compared to original data) to assume for bootstrap
-data sets. Only valid when multinom=False.</p></section>
+data sets. Only valid when multinom=False.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -713,10 +720,10 @@ data sets. Only valid when multinom=False.</p></section>
 </details>
 </dd>
 <dt id="dadi.Godambe.LRT_adjust"><code class="name flex">
-<span>def <span class="ident">LRT_adjust</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, multinom=True, eps=0.01)</span>
+<span>def <span class="ident">LRT_adjust</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, multinom=True, eps=0.01, boot_theta_adjusts=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>First-order moment matching adjustment factor for likelihood ratio test</p>
+<div class="desc"><p>First-order moment matching adjustment factor for likelihood ratio test</p>
 <p>func_ex: Model function for complex model
 grid_pts: Grid points at which to evaluate func_ex
 all_boot: List of bootstrap frequency spectra
@@ -733,16 +740,18 @@ theta. Because uncertainty in theta must be accounted for to get
 correct uncertainties for other parameters, this function will
 automatically consider theta if multinom=True.
 eps: Fractional stepsize to use when taking finite-difference derivatives
-Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+Note that if eps<em>param is &lt; 1e-6, then the step size for that parameter
 will simply be eps, to avoid numerical issues with small parameter
-perturbations.</p></section>
+perturbations.
+boot_theta_adjusts: Optionally, a sequence of </em>relative* values of theta
+(compared to original data) to assume for bootstrap
+data sets. Only valid when multinom=False.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
-               multinom=True, eps=0.01):
-    # XXX: Need to implement boot_theta_adjusts
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
     &#34;&#34;&#34;
     First-order moment matching adjustment factor for likelihood ratio test
 
@@ -764,7 +773,12 @@ perturbations.</p></section>
          Note that if eps*param is &lt; 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
     &#34;&#34;&#34;
+    if multinom and boot_theta_adjusts:
+        raise ValueError(&#39;Cannot use boot_theta_adjusts with multinom=True.&#39;)
     if multinom:
         func_multi = func_ex
         model = func_multi(p0, data.sample_sizes, grid_pts)
@@ -784,7 +798,7 @@ perturbations.</p></section>
 
     p_nested = numpy.asarray(p0)[nested_indices]
     GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
-                                eps, log=False)
+                                eps, log=False, boot_theta_adjusts=boot_theta_adjusts)
 
     adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
     return adjust</code></pre>
@@ -794,7 +808,7 @@ perturbations.</p></section>
 <span>def <span class="ident">Wald_stat</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, full_params, multinom=True, eps=0.01, adj_and_org=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Calculate test stastic from wald test</p>
+<div class="desc"><p>Calculate test stastic from wald test</p>
 <p>func_ex: Model function for complex model
 all_boot: List of bootstrap frequency spectra
 p0: Best-fit parameters for the simple model, with nested parameter
@@ -819,7 +833,7 @@ Note that if eps*param is &lt; 1e-6, then the step size for that parameter
 will simply be eps, to avoid numerical issues with small parameter
 perturbations.
 adj_and_org: If False, return only adjusted Wald statistic. If True, also
-return unadjusted statistic as second return value.</p></section>
+return unadjusted statistic as second return value.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -899,7 +913,7 @@ return unadjusted statistic as second return value.</p></section>
 <span>def <span class="ident">get_godambe</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, eps, log=False, just_hess=False, boot_theta_adjusts=[])</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Godambe information and Hessian matrices</p>
+<div class="desc"><p>Godambe information and Hessian matrices</p>
 <p>func_ex: Model function
 grid_pts: Number of grid points to evaluate the model function
 all_boot: List of bootstrap frequency spectra
@@ -912,7 +926,7 @@ perturbations.
 log: If True, calculate derivatives in terms of log-parameters
 just_hess: If True, only evaluate and return the Hessian matrix
 boot_theta_adjusts: Factors by which to adjust theta for each bootstrap
-sample, relative to full data theta.</p></section>
+sample, relative to full data theta.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -943,7 +957,7 @@ sample, relative to full data theta.</p></section>
     # Cache evaluations of the frequency spectrum inside our hessian/J 
     # evaluation function
     def func(params, data, theta_adjust=1):
-        key = (tuple(params), tuple(ns), tuple(grid_pts))
+        key = (func_ex.__hash__(), tuple(params), tuple(ns), tuple(grid_pts))
         if key not in cache:
             cache[key] = func_ex(params, ns, grid_pts)
         # theta_adjust deals with bootstraps that need  different thetas
@@ -989,14 +1003,14 @@ sample, relative to full data theta.</p></section>
 <span>def <span class="ident">get_grad</span></span>(<span>func, p0, eps, args=())</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Calculate gradient vector</p>
+<div class="desc"><p>Calculate gradient vector</p>
 <p>func: Model function
 p0: Parameters for func
 eps: Fractional stepsize to use when taking finite-difference derivatives
 Note that if eps*param is &lt; 1e-6, then the step size for that parameter
 will simply be eps, to avoid numerical issues with small parameter
 perturbations.
-args: Additional arguments to func</p></section>
+args: Additional arguments to func</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1050,6 +1064,10 @@ args: Additional arguments to func</p></section>
             fm = func(pwork, *args)
 
             grad[ii] = (fp - fm)/eps[ii]
+            if two_pt_deriv_test:
+                pwork[ii] = p0[ii] + 2*eps[ii]
+                fpp = func(pwork, *args)
+                grad[ii] = (4*fp - fpp - 3*fm)/(2*eps[ii])
     return grad</code></pre>
 </details>
 </dd>
@@ -1057,7 +1075,7 @@ args: Additional arguments to func</p></section>
 <span>def <span class="ident">get_hess</span></span>(<span>func, p0, eps, args=())</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Calculate Hessian matrix of partial second derivatives.
+<div class="desc"><p>Calculate Hessian matrix of partial second derivatives.
 Hij = dfunc/(dp_i dp_j)</p>
 <p>func: Model function
 p0: Parameter values to take derivative around
@@ -1065,7 +1083,7 @@ eps: Fractional stepsize to use when taking finite-difference derivatives
 Note that if eps*param is &lt; 1e-6, then the step size for that parameter
 will simply be eps, to avoid numerical issues with small parameter
 perturbations.
-args: Additional arguments to func</p></section>
+args: Additional arguments to func</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1112,7 +1130,7 @@ args: Additional arguments to func</p></section>
 <span>def <span class="ident">hessian_elem</span></span>(<span>func, f0, p0, ii, jj, eps, args=(), one_sided=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Calculate element [ii][jj] of the Hessian matrix, a matrix
+<div class="desc"><p>Calculate element [ii][jj] of the Hessian matrix, a matrix
 of partial second derivatives w.r.t. to parameters ii and jj</p>
 <p>func: Model function
 f0: Evaluation of func at p0
@@ -1121,7 +1139,7 @@ eps: List of absolute step sizes to use for each parameter when taking
 finite differences.
 args: Additional arguments to func
 one_sided: Optionally, pass in a sequence of length p0 that determines
-whether a one-sided derivative will be used for each parameter.</p></section>
+whether a one-sided derivative will be used for each parameter.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1210,7 +1228,7 @@ whether a one-sided derivative will be used for each parameter.</p></section>
 <span>def <span class="ident">score_stat</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, multinom=True, eps=0.01, adj_and_org=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Calculate test stastic from score test</p>
+<div class="desc"><p>Calculate test stastic from score test</p>
 <p>func_ex: Model function for complex model
 grid_pts: Grid points to evaluate model function
 all_boot: List of bootstrap frequency spectra
@@ -1231,7 +1249,7 @@ theta. Because uncertainty in theta must be accounted for to get
 correct uncertainties for other parameters, this function will
 automatically consider theta if multinom=True.
 adj_and_org: If False, return only adjusted score statistic. If True, also
-return unadjusted statistic as second return value.</p></section>
+return unadjusted statistic as second return value.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1298,14 +1316,14 @@ return unadjusted statistic as second return value.</p></section>
 <span>def <span class="ident">sum_chi2_ppf</span></span>(<span>x, weights=(0, 1))</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Percent point function (inverse of cdf) of weighted sum of chi^2
+<div class="desc"><p>Percent point function (inverse of cdf) of weighted sum of chi^2
 distributions.</p>
 <p>x: Value(s) at which to evaluate ppf
 weights: Weights of chi^2 distributions, beginning with zero d.o.f.
 For example, weights=(0,1) is the normal chi^2 distribution with 1
 d.o.f. For single parameters on the boundary, the correct
 distribution for the LRT is 0.5<em>chi^2_0 + 0.5</em>chi^2_1, which would
-be weights=(0.5,0.5).</p></section>
+be weights=(0.5,0.5).</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1382,7 +1400,7 @@ be weights=(0.5,0.5).</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

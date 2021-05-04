@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.Plotting API documentation</title>
 <meta name="description" content="Routines for Plotting comparisons between model and data …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -145,12 +145,14 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual=&#39;Anscombe&#39;,
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
     ax = pylab.subplot(2,1,1)
-    pylab.semilogy(masked_data, &#39;-ob&#39;)
-    pylab.semilogy(masked_model, &#39;-or&#39;)
+    pylab.semilogy(masked_data, &#39;-ob&#39;, label=&#39;data&#39;)
+    pylab.semilogy(masked_model, &#39;-or&#39;, label=&#39;model&#39;)
 
     if plot_masked:
         pylab.semilogy(masked_data.data, &#39;--ob&#39;, mfc=&#39;w&#39;, zorder=-100)
         pylab.semilogy(masked_model.data, &#39;--or&#39;, mfc=&#39;w&#39;, zorder=-100)
+
+    ax.legend(loc=&#39;upper right&#39;)
 
     pylab.subplot(2,1,2, sharex = ax)
     if residual == &#39;Anscombe&#39;:
@@ -195,7 +197,6 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
     if vmax is None:
         vmax = sfs.max()
 
-    pylab.cm.hsv.set_under(&#39;w&#39;)
     if vmax / vmin &gt; 10:
         # Under matplotlib 1.0.1, default LogFormatter omits some tick lines.
         # This works more consistently.
@@ -878,7 +879,7 @@ def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None,
 <span>def <span class="ident">plot_1d_comp_Poisson</span></span>(<span>model, data, fig_num=None, residual='Anscombe', plot_masked=False, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Poisson comparison between 1d model and data.</p>
+<div class="desc"><p>Poisson comparison between 1d model and data.</p>
 <p>model: 1-dimensional model SFS
 data: 1-dimensional data SFS
 fig_num: Clear and use figure fig_num for display. If None, an new figure
@@ -888,7 +889,7 @@ distributed for Poisson sampling. 'linear' for the linear
 residuals, which can be less biased.
 plot_masked: Additionally plots (in open circles) results for points in the
 model or data that were masked.
-show: If True, execute pylab.show command to make sure plot displays.</p></section>
+show: If True, execute pylab.show command to make sure plot displays.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -922,12 +923,14 @@ show: If True, execute pylab.show command to make sure plot displays.</p></secti
     masked_model, masked_data = Numerics.intersect_masks(model, data)
 
     ax = pylab.subplot(2,1,1)
-    pylab.semilogy(masked_data, &#39;-ob&#39;)
-    pylab.semilogy(masked_model, &#39;-or&#39;)
+    pylab.semilogy(masked_data, &#39;-ob&#39;, label=&#39;data&#39;)
+    pylab.semilogy(masked_model, &#39;-or&#39;, label=&#39;model&#39;)
 
     if plot_masked:
         pylab.semilogy(masked_data.data, &#39;--ob&#39;, mfc=&#39;w&#39;, zorder=-100)
         pylab.semilogy(masked_model.data, &#39;--or&#39;, mfc=&#39;w&#39;, zorder=-100)
+
+    ax.legend(loc=&#39;upper right&#39;)
 
     pylab.subplot(2,1,2, sharex = ax)
     if residual == &#39;Anscombe&#39;:
@@ -949,7 +952,7 @@ show: If True, execute pylab.show command to make sure plot displays.</p></secti
 <span>def <span class="ident">plot_1d_comp_multinom</span></span>(<span>model, data, fig_num=None, residual='Anscombe', plot_masked=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Mulitnomial comparison between 1d model and data.</p>
+<div class="desc"><p>Mulitnomial comparison between 1d model and data.</p>
 <p>model: 1-dimensional model SFS
 data: 1-dimensional data SFS
 fig_num: Clear and use figure fig_num for display. If None, an new figure
@@ -960,7 +963,7 @@ residuals, which can be less biased.
 plot_masked: Additionally plots (in open circles) results for points in the
 model or data that were masked.</p>
 <p>This comparison is multinomial in that it rescales the model to optimally
-fit the data.</p></section>
+fit the data.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -994,14 +997,14 @@ fit the data.</p></section>
 <span>def <span class="ident">plot_1d_fs</span></span>(<span>fs, fig_num=None, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Plot a 1-dimensional frequency spectrum.</p>
+<div class="desc"><p>Plot a 1-dimensional frequency spectrum.</p>
 <p>fs: 1-dimensional Spectrum
 fig_num: Clear and use figure fig_num for display. If None, an new figure
 window is created.
 show: If True, execute pylab.show command to make sure plot displays.</p>
 <p>Note that all the plotting is done with pylab. To see additional pylab
 methods: "import pylab; help(pylab)". Pylab's many functions are documented
-at <a href="http://matplotlib.sourceforge.net/contents.html">http://matplotlib.sourceforge.net/contents.html</a></p></section>
+at <a href="http://matplotlib.sourceforge.net/contents.html">http://matplotlib.sourceforge.net/contents.html</a></p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1038,7 +1041,7 @@ at <a href="http://matplotlib.sourceforge.net/contents.html">http://matplotlib.s
 <span>def <span class="ident">plot_2d_comp_Poisson</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Poisson comparison between 2d model and data.</p>
+<div class="desc"><p>Poisson comparison between 2d model and data.</p>
 <p>model: 2-dimensional model SFS
 data: 2-dimensional data SFS
 vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
@@ -1051,7 +1054,7 @@ residual: 'Anscombe' for Anscombe residuals, which are more normally
 distributed for Poisson sampling. 'linear' for the linear
 residuals, which can be less biased.
 adjust: Should method use automatic 'subplots_adjust'? For advanced
-manipulation of plots, it may be useful to make this False.</p></section>
+manipulation of plots, it may be useful to make this False.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1159,7 +1162,7 @@ manipulation of plots, it may be useful to make this False.</p></section>
 <span>def <span class="ident">plot_2d_comp_multinom</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Mulitnomial comparison between 2d model and data.</p>
+<div class="desc"><p>Mulitnomial comparison between 2d model and data.</p>
 <p>model: 2-dimensional model SFS
 data: 2-dimensional data SFS
 vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
@@ -1176,7 +1179,7 @@ manipulation of plots, it may be useful to make this False.
 show: Display the figure? False is useful for saving many comparisons
 in a loop.</p>
 <p>This comparison is multinomial in that it rescales the model to optimally
-fit the data.</p></section>
+fit the data.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1220,7 +1223,7 @@ fit the data.</p></section>
 <span>def <span class="ident">plot_2d_meta_resid</span></span>(<span>s_resid, ns_resid, resid_range=None, fig_num=None, pop_ids=None, adjust=True, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Comparison between 2d nonsynonymous residual and 2d synonymous residual.</p>
+<div class="desc"><p>Comparison between 2d nonsynonymous residual and 2d synonymous residual.</p>
 <p>s_resid: residual SFS from synonymous data
 ns_resid: residual SFS from nonsynonymous data
 resid_range: Residual plot saturates at +- resid_range. This range applies to both
@@ -1230,7 +1233,7 @@ window is created.
 pop_ids: If not None, override pop_ids stored in Spectrum.
 adjust: Should method use automatic 'subplots_adjust'? For advanced
 manipulation of plots, it may be useful to make this False.
-show: Display the plot? False can be useful when plotting many in a loop.</p></section>
+show: Display the plot? False can be useful when plotting many in a loop.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1337,7 +1340,7 @@ show: Display the plot? False can be useful when plotting many in a loop.</p></s
 <span>def <span class="ident">plot_2d_resid</span></span>(<span>resid, resid_range=None, ax=None, pop_ids=None, extend='neither', colorbar=True, cmap=&lt;matplotlib.colors.LinearSegmentedColormap object&gt;)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Linear heatmap of 2d residual array.</p>
+<div class="desc"><p>Linear heatmap of 2d residual array.</p>
 <p>sfs: Residual array to plot.
 resid_range: Values &gt; resid range or &lt; resid_range saturate the color
 spectrum.
@@ -1345,7 +1348,7 @@ ax: Axes object to plot into. If None, the result of pylab.gca() is used.
 pop_ids: If not None, override pop_ids stored in Spectrum.
 extend: Whether the colorbar should have 'extension' arrows. See
 help(pylab.colorbar) for more details.
-colorbar: Should we plot a colorbar?</p></section>
+colorbar: Should we plot a colorbar?</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1412,7 +1415,7 @@ colorbar: Should we plot a colorbar?</p></section>
 <span>def <span class="ident">plot_3d_comp_Poisson</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Poisson comparison between 3d model and data.</p>
+<div class="desc"><p>Poisson comparison between 3d model and data.</p>
 <p>model: 3-dimensional model SFS
 data: 3-dimensional data SFS
 vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
@@ -1426,7 +1429,7 @@ distributed for Poisson sampling. 'linear' for the linear
 residuals, which can be less biased.
 adjust: Should method use automatic 'subplots_adjust'? For advanced
 manipulation of plots, it may be useful to make this False.
-show: If True, execute pylab.show command to make sure plot displays.</p></section>
+show: If True, execute pylab.show command to make sure plot displays.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1560,7 +1563,7 @@ show: If True, execute pylab.show command to make sure plot displays.</p></secti
 <span>def <span class="ident">plot_3d_comp_multinom</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Multinomial comparison between 3d model and data.</p>
+<div class="desc"><p>Multinomial comparison between 3d model and data.</p>
 <p>model: 3-dimensional model SFS
 data: 3-dimensional data SFS
 vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
@@ -1575,7 +1578,7 @@ residuals, which can be less biased.
 adjust: Should method use automatic 'subplots_adjust'? For advanced
 manipulation of plots, it may be useful to make this False.</p>
 <p>This comparison is multinomial in that it rescales the model to optimally
-fit the data.</p></section>
+fit the data.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1616,7 +1619,7 @@ fit the data.</p></section>
 <span>def <span class="ident">plot_3d_spectrum</span></span>(<span>fs, fignum=None, vmin=None, vmax=None, pop_ids=None, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Logarithmic heatmap of single 3d FS.</p>
+<div class="desc"><p>Logarithmic heatmap of single 3d FS.</p>
 <p>Note that this method is slow, because it relies on matplotlib's software
 rendering. For faster and better looking plots, use plot_3d_spectrum_mayavi.</p>
 <p>fs: FS to plot
@@ -1624,7 +1627,7 @@ vmin: Values in fs below vmin are masked in plot.
 vmax: Values in fs above vmax saturate the color spectrum.
 fignum: Figure number to plot into. If None, a new figure will be created.
 pop_ids: If not None, override pop_ids stored in Spectrum.
-show: If True, execute pylab.show command to make sure plot displays.</p></section>
+show: If True, execute pylab.show command to make sure plot displays.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1744,7 +1747,7 @@ show: If True, execute pylab.show command to make sure plot displays.</p></secti
 <span>def <span class="ident">plot_3d_spectrum_mayavi</span></span>(<span>fs, fignum=None, vmin=None, vmax=None, pop_ids=None, show=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Logarithmic heatmap of single 3d FS.</p>
+<div class="desc"><p>Logarithmic heatmap of single 3d FS.</p>
 <p>This method relies on MayaVi2's mlab interface. See <a href="http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html">http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html</a> . To edit plot
 properties, click leftmost icon in the toolbar.</p>
 <p>If you get an ImportError upon calling this function, it is likely that you
@@ -1756,7 +1759,7 @@ fignum: Figure number to plot into. If None, a new figure will be created.
 Note that these are MayaVi figures, which are separate from
 matplotlib figures.
 pop_ids: If not None, override pop_ids stored in Spectrum.
-show: If True, execute mlab.show command to make sure plot displays.</p></section>
+show: If True, execute mlab.show command to make sure plot displays.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1834,7 +1837,7 @@ show: If True, execute mlab.show command to make sure plot displays.</p></sectio
 <span>def <span class="ident">plot_single_2d_sfs</span></span>(<span>sfs, vmin=None, vmax=None, ax=None, pop_ids=None, extend='neither', colorbar=True, cmap=&lt;matplotlib.colors.ListedColormap object&gt;)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Heatmap of single 2d SFS. </p>
+<div class="desc"><p>Heatmap of single 2d SFS. </p>
 <p>If vmax is greater than a factor of 10, plot on log scale.</p>
 <p>Returns colorbar that is created.</p>
 <p>sfs: SFS to plot
@@ -1845,7 +1848,7 @@ pop_ids: If not None, override pop_ids stored in Spectrum.
 extend: Whether the colorbar should have 'extension' arrows. See
 help(pylab.colorbar) for more details.
 colorbar: Should we plot a colorbar?
-cmap: Pylab colormap to use for plotting.</p></section>
+cmap: Pylab colormap to use for plotting.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1878,7 +1881,6 @@ cmap: Pylab colormap to use for plotting.</p></section>
     if vmax is None:
         vmax = sfs.max()
 
-    pylab.cm.hsv.set_under(&#39;w&#39;)
     if vmax / vmin &gt; 10:
         # Under matplotlib 1.0.1, default LogFormatter omits some tick lines.
         # This works more consistently.
@@ -1960,7 +1962,7 @@ cmap: Pylab colormap to use for plotting.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

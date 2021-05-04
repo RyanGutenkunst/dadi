@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>dadi.DFE API documentation</title>
-<meta name="description" content="Fitting Distributions of Fitness Effects to population genomic data, both single-population and joint." />
+<title>dadi.integration_c API documentation</title>
+<meta name="description" content="This module &#39;integration_c&#39; is auto-generated with f2py (version:2).
+Functions:
+phi = implicit_1Dx(phi,xx,nu,gamma,h,beta,dt,use_delj_trick)
+phi = …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -17,56 +20,34 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>dadi.DFE</code></h1>
+<h1 class="title">Module <code>dadi.integration_c</code></h1>
 </header>
 <section id="section-intro">
-<p>Fitting Distributions of Fitness Effects to population genomic data, both single-population and joint.</p>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">&#34;&#34;&#34;
-Fitting Distributions of Fitness Effects to population genomic data, both single-population and joint.
-&#34;&#34;&#34;
-from dadi.DFE.Cache1D_mod import Cache1D
-from dadi.DFE.Cache2D_mod import Cache2D, mixture, mixture_symmetric_point_pos
-from dadi.DFE import PDFs, DemogSelModels, Plotting</code></pre>
-</details>
+<p>This module 'integration_c' is auto-generated with f2py (version:2).</p>
+<h2 id="functions">Functions</h2>
+<p>phi = implicit_1Dx(phi,xx,nu,gamma,h,beta,dt,use_delj_trick)
+phi = implicit_2Dx(phi,xx,yy,nu1,m12,gamma1,h1,dt,use_delj_trick,Mstart=0,Mend=shape(phi,1))
+phi = implicit_2Dy(phi,xx,yy,nu2,m21,gamma2,h2,dt,use_delj_trick,Lstart=0,Lend=shape(phi,0))
+phi = implicit_precalc_2Dx(phi,ax,bx,cx,dt,Mstart=0,Mend=shape(phi,1))
+phi = implicit_precalc_2Dy(phi,ay,by,cy,dt,Lstart=0,Lend=shape(phi,0))
+phi = implicit_3Dx(phi,xx,yy,zz,nu1,m12,m13,gamma1,h1,dt,use_delj_trick,Mstart=0,Mend=shape(phi,0))
+phi = implicit_3Dy(phi,xx,yy,zz,nu2,m21,m23,gamma2,h2,dt,use_delj_trick,Lstart=0,Lend=shape(phi,0))
+phi = implicit_3Dz(phi,xx,yy,zz,nu3,m31,m32,gamma3,h3,dt,use_delj_trick,Lstart=0,Lend=shape(phi,0))
+phi = implicit_precalc_3Dx(phi,ax,bx,cx,dt,Mstart=0,Mend=shape(phi,0))
+phi = implicit_precalc_3Dy(phi,ay,by,cy,dt,Lstart=0,Lend=shape(phi,0))
+phi = implicit_precalc_3Dz(phi,az,bz,cz,dt,Lstart=0,Lend=shape(phi,0))
+phi = implicit_4Dx(phi,xx,yy,zz,aa,nu1,m12,m13,m14,gamma1,h1,dt,use_delj_trick)
+phi = implicit_4Dy(phi,xx,yy,zz,aa,nu2,m21,m23,m24,gamma2,h2,dt,use_delj_trick)
+phi = implicit_4Dz(phi,xx,yy,zz,aa,nu3,m31,m32,m34,gamma3,h3,dt,use_delj_trick)
+phi = implicit_4Da(phi,xx,yy,zz,aa,nu4,m41,m42,m43,gamma4,h4,dt,use_delj_trick)
+phi = implicit_5Dx(phi,xx,yy,zz,aa,bb,nu1,m12,m13,m14,m15,gamma1,h1,dt,use_delj_trick)
+phi = implicit_5Dy(phi,xx,yy,zz,aa,bb,nu2,m21,m23,m24,m25,gamma2,h2,dt,use_delj_trick)
+phi = implicit_5Dz(phi,xx,yy,zz,aa,bb,nu3,m31,m32,m34,m35,gamma3,h3,dt,use_delj_trick)
+phi = implicit_5Da(phi,xx,yy,zz,aa,bb,nu4,m41,m42,m43,m45,gamma4,h4,dt,use_delj_trick)
+phi = implicit_5Db(phi,xx,yy,zz,aa,bb,nu5,m51,m52,m53,m54,gamma5,h5,dt,use_delj_trick)
+.</p>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="dadi.DFE.Cache1D_mod" href="Cache1D_mod.html">dadi.DFE.Cache1D_mod</a></code></dt>
-<dd>
-<div class="desc"><p>Initially developed by Bernard Kim and published as fitdadi
-Kim, Huber, Lohmueller (2017) Genetics.
-Modified version of the script found at: …</p></div>
-</dd>
-<dt><code class="name"><a title="dadi.DFE.Cache2D_mod" href="Cache2D_mod.html">dadi.DFE.Cache2D_mod</a></code></dt>
-<dd>
-<div class="desc"><p>Developed by the Gutenkunst group, building off of the fitdadi code.</p></div>
-</dd>
-<dt><code class="name"><a title="dadi.DFE.DemogSelModels" href="DemogSelModels.html">dadi.DFE.DemogSelModels</a></code></dt>
-<dd>
-<div class="desc"><p>Input models of demography + selection.</p></div>
-</dd>
-<dt><code class="name"><a title="dadi.DFE.PDFs" href="PDFs.html">dadi.DFE.PDFs</a></code></dt>
-<dd>
-<div class="desc"><p>Probability density functions for defining DFEs.</p></div>
-</dd>
-<dt><code class="name"><a title="dadi.DFE.PDFs_c" href="PDFs_c.html">dadi.DFE.PDFs_c</a></code></dt>
-<dd>
-<div class="desc"><p>This module 'PDFs_c' is auto-generated with f2py (version:2).</p>
-<h2 id="functions">Functions</h2>
-<p>output = biv_lognormal(xx,yy,params)
-y = gamma_func(z)
-output = …</p></div>
-</dd>
-<dt><code class="name"><a title="dadi.DFE.Plotting" href="Plotting.html">dadi.DFE.Plotting</a></code></dt>
-<dd>
-<div class="desc"><p>Miscellaneous functions for plotting DFEs</p></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -83,17 +64,7 @@ output = …</p></div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="dadi" href="../index.html">dadi</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="dadi.DFE.Cache1D_mod" href="Cache1D_mod.html">dadi.DFE.Cache1D_mod</a></code></li>
-<li><code><a title="dadi.DFE.Cache2D_mod" href="Cache2D_mod.html">dadi.DFE.Cache2D_mod</a></code></li>
-<li><code><a title="dadi.DFE.DemogSelModels" href="DemogSelModels.html">dadi.DFE.DemogSelModels</a></code></li>
-<li><code><a title="dadi.DFE.PDFs" href="PDFs.html">dadi.DFE.PDFs</a></code></li>
-<li><code><a title="dadi.DFE.PDFs_c" href="PDFs_c.html">dadi.DFE.PDFs_c</a></code></li>
-<li><code><a title="dadi.DFE.Plotting" href="Plotting.html">dadi.DFE.Plotting</a></code></li>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
 </ul>
 </li>
 </ul>

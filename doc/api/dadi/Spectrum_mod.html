@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.Spectrum_mod API documentation</title>
 <meta name="description" content="Contains Spectrum object, which represents frequency spectra." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -32,10 +32,11 @@ import logging
 logging.basicConfig()
 logger = logging.getLogger(&#39;Spectrum_mod&#39;)
 
-import gzip, operator, os
+import gzip, operator, os, sys
 
 import numpy
 from numpy import newaxis as nuax
+import numpy as np
 # Account for difference in scipy installations.
 from scipy.special import comb
 from scipy.integrate import trapz
@@ -43,6 +44,23 @@ from scipy.special import betainc
 
 import dadi.Numerics
 from dadi.Numerics import reverse_array, _cached_projection, _lncomb, BetaBinomConvolution
+
+_dbeta_cache = {}
+def cached_dbeta(nx, xx):
+    key = nx, tuple(xx)
+
+    xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+    if key not in _dbeta_cache:
+        dbeta1 = np.empty((nx+1,len(xx)-1))
+        dbeta2 = np.empty((nx+1,len(xx)-1))
+        for ii in range(0, nx+1):
+            b = betainc(ii+1,nx-ii+1,xx)
+            dbeta1[ii] = b[1:]-b[:-1]
+            b = betainc(ii+2,nx-ii+1,xx)
+            dbeta2[ii] = b[1:]-b[:-1]
+        _dbeta_cache[key] = dbeta1, dbeta2
+    dbeta1, dbeta2 = _dbeta_cache[key]
+    return dbeta1, dbeta2
 
 class Spectrum(numpy.ma.masked_array):
     &#34;&#34;&#34;
@@ -477,6 +495,24 @@ class Spectrum(numpy.ma.masked_array):
         else:
             return output
 
+    def filter_pops(self, tokeep, mask_corners=True):
+        &#34;&#34;&#34;
+        Filter Spectrum to keep only certain populations.
+
+        Returns new Spectrum with len(tokeep) populations.
+        Note: This is similar in practice to the marginalize operation. But here
+              populations are numbered from 1, as in the majority of dadi.
+
+        tokeep: List of population numbers to keep, numbering from 1.
+        mask_corners: If True, the typical corners of the resulting fs will be
+                      masked
+        &#34;&#34;&#34;
+        toremove = list(range(0, self.ndim))
+        for pop_ii in tokeep:
+            # Apply -1 factor to account for indexing in marginalize
+            toremove.remove(pop_ii-1)
+        return self.marginalize(toremove)
+
     def _counts_per_entry(self):
         &#34;&#34;&#34;
         Counts per population for each entry in the fs.
@@ -615,25 +651,24 @@ class Spectrum(numpy.ma.masked_array):
         &#34;&#34;&#34;
         Generate a Poisson-sampled fs from the current one.
 
-        Note: Entries where the current fs is masked or 0 will be masked in the
+        Note: Entries where the current fs is masked will be masked in the
               output sampled fs.
         &#34;&#34;&#34;
         import scipy.stats
-        # These are entries where the sampling has no meaning. Either the fs is
-        # 0 there or masked. 
-        bad_entries = numpy.logical_or(self == 0, self.mask)
+        # These are entries where the sampling has no meaning, b/c fs is masked.
+        bad_entries = self.mask
         # We convert to a 1-d array for passing into the sampler
         means = self.ravel().copy()
         # Filter out those bad entries.
         means[bad_entries.ravel()] = 1
         # Sample
         samp = scipy.stats.distributions.poisson.rvs(means, size=len(means))
-        # Replace bad entries...
+        # Replace bad entries with zero
         samp[bad_entries.ravel()] = 0
         # Convert back to a properly shaped array
         samp = samp.reshape(self.shape)
         # Convert to a fs and mask the bad entries
-        samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded,
+        samp = Spectrum(samp, mask=self.mask, data_folded=self.folded,
                         pop_ids = self.pop_ids)
         return samp
 
@@ -873,7 +908,6 @@ class Spectrum(numpy.ma.masked_array):
                            for ii in range(1, 1+num_pops)]
         
         pop_samples = numpy.asarray(pop_samples)
-        pop_digits = [str(i) for i in range(num_pops)]
         pop_fixed_str = [&#39;,%s.-1&#39; % i for i in range(num_pops)]
         pop_count_str = [&#39;,%s.&#39; % i for i in range(num_pops)]
         
@@ -1329,8 +1363,50 @@ class Spectrum(numpy.ma.masked_array):
         fs.extrap_x = xx[1]
         return fs
 
+    #@staticmethod
+    #def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+    #    &#34;&#34;&#34;
+    #    Compute sample Spectrum from population frequency distribution phi.
+
+    #    This function uses analytic formulae for integrating over a 
+    #    piecewise-linear approximation to phi.
+
+    #    See from_phi for explanation of arguments.
+    #    &#34;&#34;&#34;
+    #    data = numpy.zeros((nx+1,ny+1))
+
+    #    xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+    #    yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
+
+    #    beta_cache_xx = {}
+    #    for ii in range(0, nx+1):
+    #        beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
+    #        beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
+
+    #    s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+    #    c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
+    #    for jj in range(0, ny+1):
+    #        c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
+    #        beta1_yy = betainc(jj+1,ny-jj+1,yy)
+    #        beta2_yy = betainc(jj+2,ny-jj+1,yy)
+    #        over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
+    #                           + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
+    #                           axis=-1)
+
+    #        s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
+    #        c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
+    #        for ii in range(0, nx+1):
+    #            c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
+    #            beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
+    #            beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
+    #            value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
+    #                              + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
+    #            data[ii,jj] = value
+    #    fs = dadi.Spectrum(data, mask_corners=mask_corners)
+    #    return fs
+
     @staticmethod
-    def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+    def _from_phi_2D_linalg(nx, ny, xx, yy, phi, mask_corners=True, raw=False):
         &#34;&#34;&#34;
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1338,38 +1414,37 @@ class Spectrum(numpy.ma.masked_array):
         piecewise-linear approximation to phi.
 
         See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
         &#34;&#34;&#34;
-        data = numpy.zeros((nx+1,ny+1))
+        if not (len(xx) == len(yy) and np.allclose(xx,yy)):
+            raise ValueError(&#39;Must have xx==yy to use linear algebra calculation of FS from phi.&#39;)
+        dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
+        dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
 
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-
-        beta_cache_xx = {}
-        for ii in range(0, nx+1):
-            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
-            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
-
-        s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+        # For a somewhat less terse example of this code, see the
+        # (archived) _from_phi_2D_analytic function.
+        s_yy = (phi[:,1:] - phi[:,:-1])/(yy[nuax,1:] - yy[nuax,:-1])
         c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
-        for jj in range(0, ny+1):
-            c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
-            beta1_yy = betainc(jj+1,ny-jj+1,yy)
-            beta2_yy = betainc(jj+2,ny-jj+1,yy)
-            over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
-                               + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
-                               axis=-1)
 
-            s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
-            c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
-            for ii in range(0, nx+1):
-                c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
-                beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
-                beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
-                value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
-                                  + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
-                data[ii,jj] = value
-        fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return fs
+        term1_yy = np.dot(dbeta1_yy,c1_yy.T)
+        term2_yy = np.dot(dbeta2_yy, s_yy.T)
+        term2_yy *= np.arange(1,ny+2)[:,np.newaxis]/((ny+1)*(ny+2))
+        over_y_all = term1_yy + term2_yy
+
+        s_xx_all = (over_y_all[:,1:] - over_y_all[:,:-1])/(xx[1:]-xx[:-1])
+        c1_xx_all = (over_y_all[:,:-1] - s_xx_all*xx[:-1])/(nx+1)
+
+        term1_all = np.dot(dbeta1_xx, c1_xx_all.T)
+        term2_all = np.dot(dbeta2_xx, s_xx_all.T)
+        term2_all *=  np.arange(1,nx+2)[:,np.newaxis]/((nx+1)*(nx+2))
+
+        data = term1_all + term2_all
+
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
@@ -1412,6 +1487,58 @@ class Spectrum(numpy.ma.masked_array):
                     integrand = factorx * over_y
                     ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
                     data[ii,jj,kk] = ans
+    
+        return Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_4D_direct(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True,
+                     het_ascertained=None):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        &#34;&#34;&#34;
+        data = numpy.zeros((nx+1, ny+1, nz+1, na+1))
+    
+        dx, dy, dz, da = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz), np.diff(aa)
+        half_dx = dx/2.0
+    
+        # We cache these calculations...
+        factorx_cache, factory_cache, factorz_cache = {}, {}, {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            if het_ascertained == &#39;xx&#39;:
+                factorx *= xx*(1-xx)
+            factorx_cache[nx,ii] = factorx
+        for jj in range(0, ny+1):
+            factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            if het_ascertained == &#39;yy&#39;:
+                factory *= yy*(1-yy)
+            factory_cache[ny,jj] = factory[nuax,:]
+        for kk in range(0, nz+1):
+            factorz = comb(nz, kk) * zz**kk * (1-zz)**(nz-kk)
+            if het_ascertained == &#39;zz&#39;:
+                factorz *= zz*(1-zz)
+            factorz_cache[nz,kk] = factorz[nuax,nuax,:]
+    
+        for ll in range(0, na+1):
+            factora = comb(na, ll) * aa**ll * (1-aa)**(na-ll)
+            if het_ascertained == &#39;aa&#39;:
+                factora *= aa*(1-aa)
+            over_a = trapz(factora[nuax,nuax,nuax,:] * phi, dx=da)
+            for kk in range(0, nz+1):
+                factorz = factorz_cache[nz,kk]
+                over_z = trapz(factorz * over_a, dx=dz)
+                for jj in range(0, ny+1):
+                    factory = factory_cache[ny,jj]
+                    over_y = trapz(factory * over_z, dx=dy)
+                    for ii in range(0, nx+1):
+                        factorx = factorx_cache[nx,ii]
+                        # It&#39;s faster here to do the trapezoid rule explicitly
+                        # rather than using SciPy&#39;s more general routine.
+                        integrand = factorx * over_y
+                        ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
+                        data[ii,jj,kk,ll] = ans
     
         return Spectrum(data, mask_corners=mask_corners)
 
@@ -1516,7 +1643,6 @@ class Spectrum(numpy.ma.masked_array):
         data = numpy.zeros((nx+1, ny+1, nz+1))
     
         dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
-        half_dx = dx/2.0
     
         # We cache these calculations...
         factorx_cache, factory_cache, factorz_cache = {}, {}, {}
@@ -1545,7 +1671,46 @@ class Spectrum(numpy.ma.masked_array):
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def _from_phi_3D_analytic(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+    def _from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, phi, mask_corners=True, raw=False):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
+        &#34;&#34;&#34;
+        data = numpy.zeros((nx+1,ny+1,nz+1))
+
+        dbeta1_zz, dbeta2_zz = cached_dbeta(nz, zz)
+
+        # Quick testing suggests that doing the x direction first for better
+        # memory alignment isn&#39;t worth much.
+        s_zz = (phi[:,:,1:]-phi[:,:,:-1])/(zz[nuax,nuax,1:]-zz[nuax,nuax,:-1])
+        c1_zz = (phi[:,:,:-1] - s_zz*zz[nuax,nuax,:-1])/(nz+1)
+        # These calculations can be done without this for loop, but the
+        # four-dimensional intermediate results consume massive amounts of RAM,
+        # which makes the for loop faster for large systems.
+        for kk in range(0, nz+1):
+            # In testing, these two np.dot lines occupy 2/3 the time, so further
+            # speedup will be difficult
+            term1 = np.dot(c1_zz, dbeta1_zz[kk])
+            term2 = np.dot(s_zz, dbeta2_zz[kk])
+            term2 *= (kk+1)/((nz+1)*(nz+2))
+            over_z = term1 + term2
+
+            sub_fs = Spectrum._from_phi_2D_linalg(nx, ny, xx, yy, over_z, raw=True)
+            data[:,:,kk] = sub_fs.data
+
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_5D_linalg(nx, ny, nz, na, nb, xx, yy, zz, aa, bb, phi, mask_corners=True):
         &#34;&#34;&#34;
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -1554,48 +1719,120 @@ class Spectrum(numpy.ma.masked_array):
 
         See from_phi for explanation of arguments.
         &#34;&#34;&#34;
-        data = numpy.zeros((nx+1,ny+1,nz+1))
+        data = numpy.zeros((nx+1,ny+1,nz+1,na+1,nb+1))
 
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-        zz = numpy.minimum(numpy.maximum(zz, 0), 1.0)
+        dbeta1_bb, dbeta2_bb = cached_dbeta(nb, bb)
 
-        beta_cache_xx = {}
-        for ii in range(0, nx+1):
-            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
-            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
-        beta_cache_yy = {}
-        for jj in range(0, ny+1):
-            beta_cache_yy[jj+1,ny-jj+1] = betainc(jj+1,ny-jj+1,yy)
-            beta_cache_yy[jj+2,ny-jj+1] = betainc(jj+2,ny-jj+1,yy)
+        s_bb = (phi[:,:,:,:,1:]-phi[:,:,:,:,:-1])/(bb[nuax,nuax,nuax,nuax,1:]-bb[nuax,nuax,nuax,nuax:-1])
+        c1_bb = (phi[:,:,:,:,:-1] - s_bb*bb[nuax,nuax,nuax,nuax,:-1])/(nb+1)
+        for mm in range(0, nb+1):
+            term1 = np.dot(c1_bb, dbeta1_bb[mm])
+            term2 = np.dot(s_bb, dbeta2_bb[mm])
+            term2 *= (mm+1)/((nb+1)*(nb+2))
+            over_b = term1 + term2
 
-        s_zz = (phi[:,:,1:]-phi[:,:,:-1])/(zz[nuax,nuax,1:]-zz[nuax,nuax,:-1])
-        c1_zz = (phi[:,:,:-1] - s_zz*zz[nuax,nuax,:-1])/(nz+1)
-        for kk in range(0, nz+1):
-            c2_zz = s_zz*(kk+1)/((nz+1)*(nz+2))
-            beta1_zz = betainc(kk+1,nz-kk+1,zz)
-            beta2_zz = betainc(kk+2,nz-kk+1,zz)
-            over_z = numpy.sum(c1_zz*(beta1_zz[nuax,nuax,1:]-beta1_zz[nuax,nuax,:-1]) + c2_zz*(beta2_zz[nuax,nuax,1:]-beta2_zz[nuax,nuax,:-1]), axis=-1)
+            sub_fs = Spectrum._from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, over_b, raw=True)
+            data[:,:,:,:,mm] = sub_fs.data
 
-            s_yy = (over_z[:,1:]-over_z[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
-            c1_yy = (over_z[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
-            for jj in range(0, ny+1):
-                c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
-                beta1_yy = beta_cache_yy[jj+1,ny-jj+1]
-                beta2_yy = beta_cache_yy[jj+2,ny-jj+1]
-                over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1]) + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]), axis=-1)
-        
-                s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
-                c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
-                for ii in range(0, nx+1):
-                    c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
-                    beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
-                    beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
-                    value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1]) + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
-                    data[ii,jj,kk] = value
         fs = dadi.Spectrum(data, mask_corners=mask_corners)
         return fs
 
+    @staticmethod
+    def _from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True, raw=False):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
+        &#34;&#34;&#34;
+        data = numpy.zeros((nx+1,ny+1,nz+1,na+1))
+
+        dbeta1_aa, dbeta2_aa = cached_dbeta(na, aa)
+
+        s_aa = (phi[:,:,:,1:]-phi[:,:,:,:-1])/(aa[nuax,nuax,nuax,1:]-aa[nuax,nuax,nuax:-1])
+        c1_aa = (phi[:,:,:,:-1] - s_aa*aa[nuax,nuax,nuax,:-1])/(na+1)
+        for ll in range(0, na+1):
+            term1 = np.dot(c1_aa, dbeta1_aa[ll])
+            term2 = np.dot(s_aa, dbeta2_aa[ll])
+            term2 *= (ll+1)/((na+1)*(na+2))
+            over_a = term1 + term2
+
+            sub_fs = Spectrum._from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, over_a, raw=True)
+            data[:,:,:,ll] = sub_fs.data
+
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_4D_admix_props(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True,
+                                 admix_props=None):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        &#34;&#34;&#34;
+        if admix_props is None:
+            admix_props = ((1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1))
+
+        xadmix = admix_props[0][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[0][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[0][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[0][3]*aa[nuax,nuax,nuax,:]
+        yadmix = admix_props[1][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[1][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[1][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[1][3]*aa[nuax,nuax,nuax,:]
+        zadmix = admix_props[2][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[2][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[2][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[2][3]*aa[nuax,nuax,nuax,:]
+        aadmix = admix_props[3][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[3][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[3][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[3][3]*aa[nuax,nuax,nuax,:]
+
+        data = numpy.zeros((nx+1, ny+1, nz+1, na+1))
+    
+        dx, dy, dz, da = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz), numpy.diff(aa)
+    
+        # We cache these calculations...
+        factorx_cache, factory_cache, factorz_cache, factora_cache = {}, {}, {}, {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xadmix**ii * (1-xadmix)**(nx-ii)
+            factorx_cache[nx,ii] = factorx
+
+        for jj in range(0, ny+1):
+            factory = comb(ny, jj) * yadmix**jj * (1-yadmix)**(ny-jj)
+            factory_cache[ny,jj] = factory
+
+        for kk in range(0, nz+1):
+            factorz = comb(nz, kk) * zadmix**kk * (1-zadmix)**(nz-kk)
+            factorz_cache[nz,kk] = factorz
+
+        for ll in range(0, na+1):
+            factora = comb(na, ll) * aadmix**ll * (1-aadmix)**(na-ll)
+            factora_cache[na,ll] = factora
+    
+        for ll in range(0, na+1):
+            factora = factora_cache[na,ll]
+            for kk in range(0, nz+1):
+                factorz = factorz_cache[nz,kk]
+                for jj in range(0, ny+1):
+                    factory = factory_cache[ny,jj]
+                    for ii in range(0, nx+1):
+                        factorx = factorx_cache[nx,ii]
+                        over_a = trapz(factora * factorz * factory * factorx * phi, dx=da)
+                        over_z = trapz(over_a, dx=dz)
+                        over_y = trapz(over_z, dx=dy)
+                        data[ii,jj,kk,ll] = trapz(over_y, dx=dx)
+    
+        return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def from_phi(phi, ns, xxs, mask_corners=True, 
@@ -1663,9 +1900,9 @@ class Spectrum(numpy.ma.masked_array):
                                                   mask_corners, het_ascertained)
         elif phi.ndim == 2:
             if not het_ascertained and not admix_props and not force_direct:
-                fs = Spectrum._from_phi_2D_analytic(ns[0], ns[1], 
-                                                    xxs[0], xxs[1], phi,
-                                                    mask_corners)
+                fs = Spectrum._from_phi_2D_linalg(ns[0], ns[1], 
+                                                  xxs[0], xxs[1], phi,
+                                                  mask_corners)
             elif not admix_props:
                 fs = Spectrum._from_phi_2D_direct(ns[0], ns[1], xxs[0], xxs[1], 
                                                   phi, mask_corners, 
@@ -1677,9 +1914,9 @@ class Spectrum(numpy.ma.masked_array):
                                                       admix_props)
         elif phi.ndim == 3:
             if not het_ascertained and not admix_props and not force_direct:
-                fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
-                                                    xxs[0], xxs[1], xxs[2], 
-                                                    phi, mask_corners)
+                fs = Spectrum._from_phi_3D_linalg(ns[0], ns[1], ns[2], 
+                                                  xxs[0], xxs[1], xxs[2],
+                                                  phi, mask_corners)
             elif not admix_props:
                 fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                                   xxs[0], xxs[1], xxs[2], 
@@ -1690,8 +1927,28 @@ class Spectrum(numpy.ma.masked_array):
                                                        xxs[0], xxs[1], xxs[2], 
                                                        phi, mask_corners, 
                                                        admix_props)
+        elif phi.ndim == 4:
+            if not het_ascertained and not admix_props and not force_direct:
+                fs = Spectrum._from_phi_4D_linalg(ns[0], ns[1], ns[2], ns[3],
+                                                  xxs[0], xxs[1], xxs[2], xxs[3],
+                                                  phi, mask_corners)
+            elif not admix_props:
+                fs = Spectrum._from_phi_4D_direct(ns[0], ns[1], ns[2], ns[3],
+                                                  xxs[0], xxs[1], xxs[2], xxs[3],
+                                                  phi, mask_corners, 
+                                                  het_ascertained)
+            else:
+                fs = Spectrum._from_phi_4D_admix_props(ns[0], ns[1], ns[2], ns[3],
+                                                       xxs[0], xxs[1], xxs[2], xxs[3],
+                                                       phi, mask_corners, 
+                                                       admix_props)
+        elif phi.ndim == 5:
+            if not het_ascertained and not admix_props and not force_direct:
+                fs = Spectrum._from_phi_5D_linalg(ns[0], ns[1], ns[2], ns[3], ns[4],
+                                                  xxs[0], xxs[1], xxs[2], xxs[3], xxs[4],
+                                                  phi, mask_corners)
         else:
-            raise ValueError(&#39;Only implemented for dimensions 1,2 or 3.&#39;)
+            raise ValueError(&#39;Only implemented for dimensions 1-5.&#39;)
         fs.pop_ids = pop_ids
         # Record value to use for extrapolation. This is the first grid point,
         # which is where new mutations are introduced. Note that extrapolation
@@ -1872,13 +2129,13 @@ class Spectrum(numpy.ma.masked_array):
         &#34;&#34;&#34;
         import dadi.Misc
         cd = dadi.Misc.count_data_dict(data_dict, pop_ids)
-        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids)
-        if mask_corners:
-            fs.mask_corners()
+        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids, 
+                mask_corners=mask_corners)
         return fs
 
     @staticmethod
-    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None):
+    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None,
+            mask_corners=False):
         &#34;&#34;&#34;
         Frequency spectrum from data mapping SNP configurations to counts.
 
@@ -1889,6 +2146,8 @@ class Spectrum(numpy.ma.masked_array):
                    polarized.
                    If False, include all SNPs and fold resulting Spectrum.
         pop_ids: Optional list of strings containing the population labels.
+        mask_corners: If True (default), the &#39;observed in none&#39; and &#39;observed 
+                      in all&#39; entries of the FS will be masked.
         &#34;&#34;&#34;
         # create slices for projection calculation
         slices = [[numpy.newaxis] * len(projections) for ii in
@@ -1899,7 +2158,7 @@ class Spectrum(numpy.ma.masked_array):
         slices = [tuple(_) for _ in slices]
 
         fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1),
-                                 pop_ids=pop_ids)
+                                 pop_ids=pop_ids, mask_corners=mask_corners)
         for (called_by_pop, derived_by_pop, this_snp_polarized), count\
                 in count_dict.items():
             if polarized and not this_snp_polarized:
@@ -2176,7 +2435,7 @@ copyreg.pickle(Spectrum, Spectrum_pickler, Spectrum_unpickler)</code></pre>
 <span>def <span class="ident">Spectrum_pickler</span></span>(<span>fs)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2189,13 +2448,39 @@ copyreg.pickle(Spectrum, Spectrum_pickler, Spectrum_unpickler)</code></pre>
 <span>def <span class="ident">Spectrum_unpickler</span></span>(<span>data, mask, data_folded, pop_ids, extrap_x)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def Spectrum_unpickler(data, mask, data_folded, pop_ids, extrap_x):
     return dadi.Spectrum(data, mask, mask_corners=False, data_folded=data_folded, check_folding=False, pop_ids=pop_ids, extrap_x=extrap_x)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Spectrum_mod.cached_dbeta"><code class="name flex">
+<span>def <span class="ident">cached_dbeta</span></span>(<span>nx, xx)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cached_dbeta(nx, xx):
+    key = nx, tuple(xx)
+
+    xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+    if key not in _dbeta_cache:
+        dbeta1 = np.empty((nx+1,len(xx)-1))
+        dbeta2 = np.empty((nx+1,len(xx)-1))
+        for ii in range(0, nx+1):
+            b = betainc(ii+1,nx-ii+1,xx)
+            dbeta1[ii] = b[1:]-b[:-1]
+            b = betainc(ii+2,nx-ii+1,xx)
+            dbeta2[ii] = b[1:]-b[:-1]
+        _dbeta_cache[key] = dbeta1, dbeta2
+    dbeta1, dbeta2 = _dbeta_cache[key]
+    return dbeta1, dbeta2</code></pre>
 </details>
 </dd>
 </dl>
@@ -2205,10 +2490,10 @@ copyreg.pickle(Spectrum, Spectrum_pickler, Spectrum_unpickler)</code></pre>
 <dl>
 <dt id="dadi.Spectrum_mod.Spectrum"><code class="flex name class">
 <span>class <span class="ident">Spectrum</span></span>
-<span>(</span><span>*args, **kwargs)</span>
+<span>(</span><span>data, mask=False, mask_corners=True, data_folded=None, check_folding=True, dtype=builtins.float, copy=True, fill_value=nan, keep_mask=True, shrink=True, pop_ids=None, extrap_x=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Represents a frequency spectrum.</p>
+<div class="desc"><p>Represents a frequency spectrum.</p>
 <p>Spectra are represented by masked arrays. The masking allows us to ignore
 specific entries in the spectrum. Most often, these are the absent and fixed
 categories.</p>
@@ -2234,7 +2519,7 @@ check_folding: If True and data_folded=True, the data and mask will be
 pop_ids: Optional list of strings containing the population labels.
 extrap_x: Optional floating point value specifying x value to use
           for extrapolation.
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2672,6 +2957,24 @@ extrap_x: Optional floating point value specifying x value to use
         else:
             return output
 
+    def filter_pops(self, tokeep, mask_corners=True):
+        &#34;&#34;&#34;
+        Filter Spectrum to keep only certain populations.
+
+        Returns new Spectrum with len(tokeep) populations.
+        Note: This is similar in practice to the marginalize operation. But here
+              populations are numbered from 1, as in the majority of dadi.
+
+        tokeep: List of population numbers to keep, numbering from 1.
+        mask_corners: If True, the typical corners of the resulting fs will be
+                      masked
+        &#34;&#34;&#34;
+        toremove = list(range(0, self.ndim))
+        for pop_ii in tokeep:
+            # Apply -1 factor to account for indexing in marginalize
+            toremove.remove(pop_ii-1)
+        return self.marginalize(toremove)
+
     def _counts_per_entry(self):
         &#34;&#34;&#34;
         Counts per population for each entry in the fs.
@@ -2810,25 +3113,24 @@ extrap_x: Optional floating point value specifying x value to use
         &#34;&#34;&#34;
         Generate a Poisson-sampled fs from the current one.
 
-        Note: Entries where the current fs is masked or 0 will be masked in the
+        Note: Entries where the current fs is masked will be masked in the
               output sampled fs.
         &#34;&#34;&#34;
         import scipy.stats
-        # These are entries where the sampling has no meaning. Either the fs is
-        # 0 there or masked. 
-        bad_entries = numpy.logical_or(self == 0, self.mask)
+        # These are entries where the sampling has no meaning, b/c fs is masked.
+        bad_entries = self.mask
         # We convert to a 1-d array for passing into the sampler
         means = self.ravel().copy()
         # Filter out those bad entries.
         means[bad_entries.ravel()] = 1
         # Sample
         samp = scipy.stats.distributions.poisson.rvs(means, size=len(means))
-        # Replace bad entries...
+        # Replace bad entries with zero
         samp[bad_entries.ravel()] = 0
         # Convert back to a properly shaped array
         samp = samp.reshape(self.shape)
         # Convert to a fs and mask the bad entries
-        samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded,
+        samp = Spectrum(samp, mask=self.mask, data_folded=self.folded,
                         pop_ids = self.pop_ids)
         return samp
 
@@ -3068,7 +3370,6 @@ extrap_x: Optional floating point value specifying x value to use
                            for ii in range(1, 1+num_pops)]
         
         pop_samples = numpy.asarray(pop_samples)
-        pop_digits = [str(i) for i in range(num_pops)]
         pop_fixed_str = [&#39;,%s.-1&#39; % i for i in range(num_pops)]
         pop_count_str = [&#39;,%s.&#39; % i for i in range(num_pops)]
         
@@ -3524,8 +3825,50 @@ extrap_x: Optional floating point value specifying x value to use
         fs.extrap_x = xx[1]
         return fs
 
+    #@staticmethod
+    #def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+    #    &#34;&#34;&#34;
+    #    Compute sample Spectrum from population frequency distribution phi.
+
+    #    This function uses analytic formulae for integrating over a 
+    #    piecewise-linear approximation to phi.
+
+    #    See from_phi for explanation of arguments.
+    #    &#34;&#34;&#34;
+    #    data = numpy.zeros((nx+1,ny+1))
+
+    #    xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
+    #    yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
+
+    #    beta_cache_xx = {}
+    #    for ii in range(0, nx+1):
+    #        beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
+    #        beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
+
+    #    s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+    #    c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
+    #    for jj in range(0, ny+1):
+    #        c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
+    #        beta1_yy = betainc(jj+1,ny-jj+1,yy)
+    #        beta2_yy = betainc(jj+2,ny-jj+1,yy)
+    #        over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
+    #                           + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
+    #                           axis=-1)
+
+    #        s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
+    #        c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
+    #        for ii in range(0, nx+1):
+    #            c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
+    #            beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
+    #            beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
+    #            value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
+    #                              + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
+    #            data[ii,jj] = value
+    #    fs = dadi.Spectrum(data, mask_corners=mask_corners)
+    #    return fs
+
     @staticmethod
-    def _from_phi_2D_analytic(nx, ny, xx, yy, phi, mask_corners=True):
+    def _from_phi_2D_linalg(nx, ny, xx, yy, phi, mask_corners=True, raw=False):
         &#34;&#34;&#34;
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -3533,38 +3876,37 @@ extrap_x: Optional floating point value specifying x value to use
         piecewise-linear approximation to phi.
 
         See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
         &#34;&#34;&#34;
-        data = numpy.zeros((nx+1,ny+1))
+        if not (len(xx) == len(yy) and np.allclose(xx,yy)):
+            raise ValueError(&#39;Must have xx==yy to use linear algebra calculation of FS from phi.&#39;)
+        dbeta1_xx, dbeta2_xx = cached_dbeta(nx, xx)
+        dbeta1_yy, dbeta2_yy = cached_dbeta(ny, yy)
 
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-
-        beta_cache_xx = {}
-        for ii in range(0, nx+1):
-            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
-            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
-
-        s_yy = (phi[:,1:]-phi[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
+        # For a somewhat less terse example of this code, see the
+        # (archived) _from_phi_2D_analytic function.
+        s_yy = (phi[:,1:] - phi[:,:-1])/(yy[nuax,1:] - yy[nuax,:-1])
         c1_yy = (phi[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
-        for jj in range(0, ny+1):
-            c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
-            beta1_yy = betainc(jj+1,ny-jj+1,yy)
-            beta2_yy = betainc(jj+2,ny-jj+1,yy)
-            over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1])
-                               + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]),
-                               axis=-1)
 
-            s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
-            c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
-            for ii in range(0, nx+1):
-                c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
-                beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
-                beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
-                value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1])
-                                  + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
-                data[ii,jj] = value
-        fs = dadi.Spectrum(data, mask_corners=mask_corners)
-        return fs
+        term1_yy = np.dot(dbeta1_yy,c1_yy.T)
+        term2_yy = np.dot(dbeta2_yy, s_yy.T)
+        term2_yy *= np.arange(1,ny+2)[:,np.newaxis]/((ny+1)*(ny+2))
+        over_y_all = term1_yy + term2_yy
+
+        s_xx_all = (over_y_all[:,1:] - over_y_all[:,:-1])/(xx[1:]-xx[:-1])
+        c1_xx_all = (over_y_all[:,:-1] - s_xx_all*xx[:-1])/(nx+1)
+
+        term1_all = np.dot(dbeta1_xx, c1_xx_all.T)
+        term2_all = np.dot(dbeta2_xx, s_xx_all.T)
+        term2_all *=  np.arange(1,nx+2)[:,np.newaxis]/((nx+1)*(nx+2))
+
+        data = term1_all + term2_all
+
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def _from_phi_3D_direct(nx, ny, nz, xx, yy, zz, phi, mask_corners=True,
@@ -3607,6 +3949,58 @@ extrap_x: Optional floating point value specifying x value to use
                     integrand = factorx * over_y
                     ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
                     data[ii,jj,kk] = ans
+    
+        return Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_4D_direct(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True,
+                     het_ascertained=None):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        &#34;&#34;&#34;
+        data = numpy.zeros((nx+1, ny+1, nz+1, na+1))
+    
+        dx, dy, dz, da = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz), np.diff(aa)
+        half_dx = dx/2.0
+    
+        # We cache these calculations...
+        factorx_cache, factory_cache, factorz_cache = {}, {}, {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xx**ii * (1-xx)**(nx-ii)
+            if het_ascertained == &#39;xx&#39;:
+                factorx *= xx*(1-xx)
+            factorx_cache[nx,ii] = factorx
+        for jj in range(0, ny+1):
+            factory = comb(ny, jj) * yy**jj * (1-yy)**(ny-jj)
+            if het_ascertained == &#39;yy&#39;:
+                factory *= yy*(1-yy)
+            factory_cache[ny,jj] = factory[nuax,:]
+        for kk in range(0, nz+1):
+            factorz = comb(nz, kk) * zz**kk * (1-zz)**(nz-kk)
+            if het_ascertained == &#39;zz&#39;:
+                factorz *= zz*(1-zz)
+            factorz_cache[nz,kk] = factorz[nuax,nuax,:]
+    
+        for ll in range(0, na+1):
+            factora = comb(na, ll) * aa**ll * (1-aa)**(na-ll)
+            if het_ascertained == &#39;aa&#39;:
+                factora *= aa*(1-aa)
+            over_a = trapz(factora[nuax,nuax,nuax,:] * phi, dx=da)
+            for kk in range(0, nz+1):
+                factorz = factorz_cache[nz,kk]
+                over_z = trapz(factorz * over_a, dx=dz)
+                for jj in range(0, ny+1):
+                    factory = factory_cache[ny,jj]
+                    over_y = trapz(factory * over_z, dx=dy)
+                    for ii in range(0, nx+1):
+                        factorx = factorx_cache[nx,ii]
+                        # It&#39;s faster here to do the trapezoid rule explicitly
+                        # rather than using SciPy&#39;s more general routine.
+                        integrand = factorx * over_y
+                        ans = numpy.sum(half_dx * (integrand[1:]+integrand[:-1]))
+                        data[ii,jj,kk,ll] = ans
     
         return Spectrum(data, mask_corners=mask_corners)
 
@@ -3711,7 +4105,6 @@ extrap_x: Optional floating point value specifying x value to use
         data = numpy.zeros((nx+1, ny+1, nz+1))
     
         dx, dy, dz = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz)
-        half_dx = dx/2.0
     
         # We cache these calculations...
         factorx_cache, factory_cache, factorz_cache = {}, {}, {}
@@ -3740,7 +4133,46 @@ extrap_x: Optional floating point value specifying x value to use
         return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
-    def _from_phi_3D_analytic(nx, ny, nz, xx, yy, zz, phi, mask_corners=True):
+    def _from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, phi, mask_corners=True, raw=False):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
+        &#34;&#34;&#34;
+        data = numpy.zeros((nx+1,ny+1,nz+1))
+
+        dbeta1_zz, dbeta2_zz = cached_dbeta(nz, zz)
+
+        # Quick testing suggests that doing the x direction first for better
+        # memory alignment isn&#39;t worth much.
+        s_zz = (phi[:,:,1:]-phi[:,:,:-1])/(zz[nuax,nuax,1:]-zz[nuax,nuax,:-1])
+        c1_zz = (phi[:,:,:-1] - s_zz*zz[nuax,nuax,:-1])/(nz+1)
+        # These calculations can be done without this for loop, but the
+        # four-dimensional intermediate results consume massive amounts of RAM,
+        # which makes the for loop faster for large systems.
+        for kk in range(0, nz+1):
+            # In testing, these two np.dot lines occupy 2/3 the time, so further
+            # speedup will be difficult
+            term1 = np.dot(c1_zz, dbeta1_zz[kk])
+            term2 = np.dot(s_zz, dbeta2_zz[kk])
+            term2 *= (kk+1)/((nz+1)*(nz+2))
+            over_z = term1 + term2
+
+            sub_fs = Spectrum._from_phi_2D_linalg(nx, ny, xx, yy, over_z, raw=True)
+            data[:,:,kk] = sub_fs.data
+
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_5D_linalg(nx, ny, nz, na, nb, xx, yy, zz, aa, bb, phi, mask_corners=True):
         &#34;&#34;&#34;
         Compute sample Spectrum from population frequency distribution phi.
 
@@ -3749,48 +4181,120 @@ extrap_x: Optional floating point value specifying x value to use
 
         See from_phi for explanation of arguments.
         &#34;&#34;&#34;
-        data = numpy.zeros((nx+1,ny+1,nz+1))
+        data = numpy.zeros((nx+1,ny+1,nz+1,na+1,nb+1))
 
-        xx = numpy.minimum(numpy.maximum(xx, 0), 1.0)
-        yy = numpy.minimum(numpy.maximum(yy, 0), 1.0)
-        zz = numpy.minimum(numpy.maximum(zz, 0), 1.0)
+        dbeta1_bb, dbeta2_bb = cached_dbeta(nb, bb)
 
-        beta_cache_xx = {}
-        for ii in range(0, nx+1):
-            beta_cache_xx[ii+1,nx-ii+1] = betainc(ii+1,nx-ii+1,xx)
-            beta_cache_xx[ii+2,nx-ii+1] = betainc(ii+2,nx-ii+1,xx)
-        beta_cache_yy = {}
-        for jj in range(0, ny+1):
-            beta_cache_yy[jj+1,ny-jj+1] = betainc(jj+1,ny-jj+1,yy)
-            beta_cache_yy[jj+2,ny-jj+1] = betainc(jj+2,ny-jj+1,yy)
+        s_bb = (phi[:,:,:,:,1:]-phi[:,:,:,:,:-1])/(bb[nuax,nuax,nuax,nuax,1:]-bb[nuax,nuax,nuax,nuax:-1])
+        c1_bb = (phi[:,:,:,:,:-1] - s_bb*bb[nuax,nuax,nuax,nuax,:-1])/(nb+1)
+        for mm in range(0, nb+1):
+            term1 = np.dot(c1_bb, dbeta1_bb[mm])
+            term2 = np.dot(s_bb, dbeta2_bb[mm])
+            term2 *= (mm+1)/((nb+1)*(nb+2))
+            over_b = term1 + term2
 
-        s_zz = (phi[:,:,1:]-phi[:,:,:-1])/(zz[nuax,nuax,1:]-zz[nuax,nuax,:-1])
-        c1_zz = (phi[:,:,:-1] - s_zz*zz[nuax,nuax,:-1])/(nz+1)
-        for kk in range(0, nz+1):
-            c2_zz = s_zz*(kk+1)/((nz+1)*(nz+2))
-            beta1_zz = betainc(kk+1,nz-kk+1,zz)
-            beta2_zz = betainc(kk+2,nz-kk+1,zz)
-            over_z = numpy.sum(c1_zz*(beta1_zz[nuax,nuax,1:]-beta1_zz[nuax,nuax,:-1]) + c2_zz*(beta2_zz[nuax,nuax,1:]-beta2_zz[nuax,nuax,:-1]), axis=-1)
+            sub_fs = Spectrum._from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, over_b, raw=True)
+            data[:,:,:,:,mm] = sub_fs.data
 
-            s_yy = (over_z[:,1:]-over_z[:,:-1])/(yy[nuax,1:]-yy[nuax,:-1])
-            c1_yy = (over_z[:,:-1] - s_yy*yy[nuax,:-1])/(ny+1)
-            for jj in range(0, ny+1):
-                c2_yy = s_yy*(jj+1)/((ny+1)*(ny+2))
-                beta1_yy = beta_cache_yy[jj+1,ny-jj+1]
-                beta2_yy = beta_cache_yy[jj+2,ny-jj+1]
-                over_y = numpy.sum(c1_yy*(beta1_yy[nuax,1:]-beta1_yy[nuax,:-1]) + c2_yy*(beta2_yy[nuax,1:]-beta2_yy[nuax,:-1]), axis=-1)
-        
-                s_xx = (over_y[1:]-over_y[:-1])/(xx[1:]-xx[:-1])
-                c1_xx = (over_y[:-1] - s_xx*xx[:-1])/(nx+1)
-                for ii in range(0, nx+1):
-                    c2_xx = s_xx*(ii+1)/((nx+1)*(nx+2))
-                    beta1_xx = beta_cache_xx[ii+1,nx-ii+1]
-                    beta2_xx = beta_cache_xx[ii+2,nx-ii+1]
-                    value = numpy.sum(c1_xx*(beta1_xx[1:]-beta1_xx[:-1]) + c2_xx*(beta2_xx[1:]-beta2_xx[:-1]))
-                    data[ii,jj,kk] = value
         fs = dadi.Spectrum(data, mask_corners=mask_corners)
         return fs
 
+    @staticmethod
+    def _from_phi_4D_linalg(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True, raw=False):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        This function uses analytic formulae for integrating over a 
+        piecewise-linear approximation to phi.
+
+        See from_phi for explanation of arguments.
+
+        raw: If True, return data as a numpy array, not a Spectrum object
+        &#34;&#34;&#34;
+        data = numpy.zeros((nx+1,ny+1,nz+1,na+1))
+
+        dbeta1_aa, dbeta2_aa = cached_dbeta(na, aa)
+
+        s_aa = (phi[:,:,:,1:]-phi[:,:,:,:-1])/(aa[nuax,nuax,nuax,1:]-aa[nuax,nuax,nuax:-1])
+        c1_aa = (phi[:,:,:,:-1] - s_aa*aa[nuax,nuax,nuax,:-1])/(na+1)
+        for ll in range(0, na+1):
+            term1 = np.dot(c1_aa, dbeta1_aa[ll])
+            term2 = np.dot(s_aa, dbeta2_aa[ll])
+            term2 *= (ll+1)/((na+1)*(na+2))
+            over_a = term1 + term2
+
+            sub_fs = Spectrum._from_phi_3D_linalg(nx, ny, nz, xx, yy, zz, over_a, raw=True)
+            data[:,:,:,ll] = sub_fs.data
+
+        if raw:
+            return data
+        else:
+            return dadi.Spectrum(data, mask_corners=mask_corners)
+
+    @staticmethod
+    def _from_phi_4D_admix_props(nx, ny, nz, na, xx, yy, zz, aa, phi, mask_corners=True,
+                                 admix_props=None):
+        &#34;&#34;&#34;
+        Compute sample Spectrum from population frequency distribution phi.
+
+        See from_phi for explanation of arguments.
+        &#34;&#34;&#34;
+        if admix_props is None:
+            admix_props = ((1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1))
+
+        xadmix = admix_props[0][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[0][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[0][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[0][3]*aa[nuax,nuax,nuax,:]
+        yadmix = admix_props[1][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[1][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[1][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[1][3]*aa[nuax,nuax,nuax,:]
+        zadmix = admix_props[2][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[2][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[2][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[2][3]*aa[nuax,nuax,nuax,:]
+        aadmix = admix_props[3][0]*xx[:,nuax,nuax,nuax]\
+                + admix_props[3][1]*yy[nuax,:,nuax,nuax]\
+                + admix_props[3][2]*zz[nuax,nuax,:,nuax]\
+                + admix_props[3][3]*aa[nuax,nuax,nuax,:]
+
+        data = numpy.zeros((nx+1, ny+1, nz+1, na+1))
+    
+        dx, dy, dz, da = numpy.diff(xx), numpy.diff(yy), numpy.diff(zz), numpy.diff(aa)
+    
+        # We cache these calculations...
+        factorx_cache, factory_cache, factorz_cache, factora_cache = {}, {}, {}, {}
+        for ii in range(0, nx+1):
+            factorx = comb(nx, ii) * xadmix**ii * (1-xadmix)**(nx-ii)
+            factorx_cache[nx,ii] = factorx
+
+        for jj in range(0, ny+1):
+            factory = comb(ny, jj) * yadmix**jj * (1-yadmix)**(ny-jj)
+            factory_cache[ny,jj] = factory
+
+        for kk in range(0, nz+1):
+            factorz = comb(nz, kk) * zadmix**kk * (1-zadmix)**(nz-kk)
+            factorz_cache[nz,kk] = factorz
+
+        for ll in range(0, na+1):
+            factora = comb(na, ll) * aadmix**ll * (1-aadmix)**(na-ll)
+            factora_cache[na,ll] = factora
+    
+        for ll in range(0, na+1):
+            factora = factora_cache[na,ll]
+            for kk in range(0, nz+1):
+                factorz = factorz_cache[nz,kk]
+                for jj in range(0, ny+1):
+                    factory = factory_cache[ny,jj]
+                    for ii in range(0, nx+1):
+                        factorx = factorx_cache[nx,ii]
+                        over_a = trapz(factora * factorz * factory * factorx * phi, dx=da)
+                        over_z = trapz(over_a, dx=dz)
+                        over_y = trapz(over_z, dx=dy)
+                        data[ii,jj,kk,ll] = trapz(over_y, dx=dx)
+    
+        return Spectrum(data, mask_corners=mask_corners)
 
     @staticmethod
     def from_phi(phi, ns, xxs, mask_corners=True, 
@@ -3858,9 +4362,9 @@ extrap_x: Optional floating point value specifying x value to use
                                                   mask_corners, het_ascertained)
         elif phi.ndim == 2:
             if not het_ascertained and not admix_props and not force_direct:
-                fs = Spectrum._from_phi_2D_analytic(ns[0], ns[1], 
-                                                    xxs[0], xxs[1], phi,
-                                                    mask_corners)
+                fs = Spectrum._from_phi_2D_linalg(ns[0], ns[1], 
+                                                  xxs[0], xxs[1], phi,
+                                                  mask_corners)
             elif not admix_props:
                 fs = Spectrum._from_phi_2D_direct(ns[0], ns[1], xxs[0], xxs[1], 
                                                   phi, mask_corners, 
@@ -3872,9 +4376,9 @@ extrap_x: Optional floating point value specifying x value to use
                                                       admix_props)
         elif phi.ndim == 3:
             if not het_ascertained and not admix_props and not force_direct:
-                fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
-                                                    xxs[0], xxs[1], xxs[2], 
-                                                    phi, mask_corners)
+                fs = Spectrum._from_phi_3D_linalg(ns[0], ns[1], ns[2], 
+                                                  xxs[0], xxs[1], xxs[2],
+                                                  phi, mask_corners)
             elif not admix_props:
                 fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                                   xxs[0], xxs[1], xxs[2], 
@@ -3885,8 +4389,28 @@ extrap_x: Optional floating point value specifying x value to use
                                                        xxs[0], xxs[1], xxs[2], 
                                                        phi, mask_corners, 
                                                        admix_props)
+        elif phi.ndim == 4:
+            if not het_ascertained and not admix_props and not force_direct:
+                fs = Spectrum._from_phi_4D_linalg(ns[0], ns[1], ns[2], ns[3],
+                                                  xxs[0], xxs[1], xxs[2], xxs[3],
+                                                  phi, mask_corners)
+            elif not admix_props:
+                fs = Spectrum._from_phi_4D_direct(ns[0], ns[1], ns[2], ns[3],
+                                                  xxs[0], xxs[1], xxs[2], xxs[3],
+                                                  phi, mask_corners, 
+                                                  het_ascertained)
+            else:
+                fs = Spectrum._from_phi_4D_admix_props(ns[0], ns[1], ns[2], ns[3],
+                                                       xxs[0], xxs[1], xxs[2], xxs[3],
+                                                       phi, mask_corners, 
+                                                       admix_props)
+        elif phi.ndim == 5:
+            if not het_ascertained and not admix_props and not force_direct:
+                fs = Spectrum._from_phi_5D_linalg(ns[0], ns[1], ns[2], ns[3], ns[4],
+                                                  xxs[0], xxs[1], xxs[2], xxs[3], xxs[4],
+                                                  phi, mask_corners)
         else:
-            raise ValueError(&#39;Only implemented for dimensions 1,2 or 3.&#39;)
+            raise ValueError(&#39;Only implemented for dimensions 1-5.&#39;)
         fs.pop_ids = pop_ids
         # Record value to use for extrapolation. This is the first grid point,
         # which is where new mutations are introduced. Note that extrapolation
@@ -4067,13 +4591,13 @@ extrap_x: Optional floating point value specifying x value to use
         &#34;&#34;&#34;
         import dadi.Misc
         cd = dadi.Misc.count_data_dict(data_dict, pop_ids)
-        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids)
-        if mask_corners:
-            fs.mask_corners()
+        fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids, 
+                mask_corners=mask_corners)
         return fs
 
     @staticmethod
-    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None):
+    def _from_count_dict(count_dict, projections, polarized=True, pop_ids=None,
+            mask_corners=False):
         &#34;&#34;&#34;
         Frequency spectrum from data mapping SNP configurations to counts.
 
@@ -4084,6 +4608,8 @@ extrap_x: Optional floating point value specifying x value to use
                    polarized.
                    If False, include all SNPs and fold resulting Spectrum.
         pop_ids: Optional list of strings containing the population labels.
+        mask_corners: If True (default), the &#39;observed in none&#39; and &#39;observed 
+                      in all&#39; entries of the FS will be masked.
         &#34;&#34;&#34;
         # create slices for projection calculation
         slices = [[numpy.newaxis] * len(projections) for ii in
@@ -4094,7 +4620,7 @@ extrap_x: Optional floating point value specifying x value to use
         slices = [tuple(_) for _ in slices]
 
         fs_total = dadi.Spectrum(numpy.zeros(numpy.array(projections)+1),
-                                 pop_ids=pop_ids)
+                                 pop_ids=pop_ids, mask_corners=mask_corners)
         for (called_by_pop, derived_by_pop, this_snp_polarized), count\
                 in count_dict.items():
             if polarized and not this_snp_polarized:
@@ -4355,15 +4881,7 @@ def %(method)s(self, other):
 <dl>
 <dt id="dadi.Spectrum_mod.Spectrum.method"><code class="name">var <span class="ident">method</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<div class="desc"></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
@@ -4372,7 +4890,7 @@ errors defaults to 'strict'.</p></section>
 <span>def <span class="ident">from_data_dict</span></span>(<span>data_dict, pop_ids, projections, mask_corners=True, polarized=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Spectrum from a dictionary of polymorphisms.</p>
+<div class="desc"><p>Spectrum from a dictionary of polymorphisms.</p>
 <p>pop_ids: list of which populations to make fs for.
 projections: list of sample sizes to project down to for each
 population.
@@ -4394,7 +4912,7 @@ and the returned spectrum is folded.</p>
 }
 The 'calls' entry gives the successful calls in each population, in the
 order that the alleles are specified in 'segregating'.
-Non-diallelic polymorphisms are skipped.</p></section>
+Non-diallelic polymorphisms are skipped.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4431,9 +4949,8 @@ def from_data_dict(data_dict, pop_ids, projections, mask_corners=True,
     &#34;&#34;&#34;
     import dadi.Misc
     cd = dadi.Misc.count_data_dict(data_dict, pop_ids)
-    fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids)
-    if mask_corners:
-        fs.mask_corners()
+    fs = Spectrum._from_count_dict(cd, projections, polarized, pop_ids, 
+            mask_corners=mask_corners)
     return fs</code></pre>
 </details>
 </dd>
@@ -4441,7 +4958,7 @@ def from_data_dict(data_dict, pop_ids, projections, mask_corners=True,
 <span>def <span class="ident">from_data_dict_corrected</span></span>(<span>data_dict, pop_ids, projections, fux_filename, force_pos=True, mask_corners=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Spectrum from a dictionary of polymorphisms, corrected for ancestral
+<div class="desc"><p>Spectrum from a dictionary of polymorphisms, corrected for ancestral
 misidentification.</p>
 <p>The correction is based upon:
 Hernandez, Williamson &amp; Bustamante <em>Mol_Biol_Evol</em> 24:1792 (2007)</p>
@@ -4476,7 +4993,7 @@ The additional entries are 'context', which includes the two flanking
 bases in the species of interest, and 'outgroup_context', which
 includes the aligned bases in the outgroup.</p>
 <p>This method skips entries for which the correction cannot be applied.
-Most commonly this is because of missing or non-constant context.</p></section>
+Most commonly this is because of missing or non-constant context.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4582,7 +5099,7 @@ def from_data_dict_corrected(data_dict, pop_ids, projections,
 <span>def <span class="ident">from_file</span></span>(<span>fname, mask_corners=True, return_comments=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Read frequency spectrum from file.</p>
+<div class="desc"><p>Read frequency spectrum from file.</p>
 <p>fname: String with file name to read from. If it ends in .gz, gzip
 compression is assumed.
 mask_corners: If True, mask the 'absent in all samples' and 'fixed in
@@ -4590,7 +5107,7 @@ all samples' entries.
 return_comments: If true, the return value is (fs, comments), where
 comments is a list of strings containing the comments
 from the file (without #'s).</p>
-<p>See to_file method for details on the file format.</p></section>
+<p>See to_file method for details on the file format.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4671,7 +5188,7 @@ def from_file(fname, mask_corners=True, return_comments=False):
 <span>def <span class="ident">from_ms_file</span></span>(<span>fid, average=True, mask_corners=True, return_header=False, pop_assignments=None, pop_ids=None, bootstrap_segments=1)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Read frequency spectrum from file of ms output.</p>
+<div class="desc"><p>Read frequency spectrum from file of ms output.</p>
 <p>fid: string with file name to read from or an open file object.
 average: If True, the returned fs is the average over the runs in the ms
 file. If False, the returned fs is the sum.
@@ -4691,7 +5208,7 @@ If pop_ids is None, labels will be "pop0", "pop1", &hellip;
 bootstrap_segments: If bootstrap_segments is an integer greater than 1,
 the data will be broken up into that many segments
 based on SNP position. Instead of single FS, a list
-of spectra will be returned, one for each segment.</p></section>
+of spectra will be returned, one for each segment.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4882,7 +5399,7 @@ def from_ms_file(fid, average=True, mask_corners=True, return_header=False,
 <span>def <span class="ident">from_phi</span></span>(<span>phi, ns, xxs, mask_corners=True, pop_ids=None, admix_props=None, het_ascertained=None, force_direct=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Compute sample Spectrum from population frequency distribution phi.</p>
+<div class="desc"><p>Compute sample Spectrum from population frequency distribution phi.</p>
 <p>phi: P-dimensional population frequency distribution.
 ns: Sequence of P sample sizes for each population.
 xxs: Sequence of P one-dimesional grids on which phi is defined.
@@ -4913,7 +5430,7 @@ also that this option cannot be used simultaneously
 with admix_props.)
 force_direct: Forces integration to use older direct integration method,
 rather than using analytic integration of sampling
-formula.</p></section>
+formula.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -4984,9 +5501,9 @@ def from_phi(phi, ns, xxs, mask_corners=True,
                                               mask_corners, het_ascertained)
     elif phi.ndim == 2:
         if not het_ascertained and not admix_props and not force_direct:
-            fs = Spectrum._from_phi_2D_analytic(ns[0], ns[1], 
-                                                xxs[0], xxs[1], phi,
-                                                mask_corners)
+            fs = Spectrum._from_phi_2D_linalg(ns[0], ns[1], 
+                                              xxs[0], xxs[1], phi,
+                                              mask_corners)
         elif not admix_props:
             fs = Spectrum._from_phi_2D_direct(ns[0], ns[1], xxs[0], xxs[1], 
                                               phi, mask_corners, 
@@ -4998,9 +5515,9 @@ def from_phi(phi, ns, xxs, mask_corners=True,
                                                   admix_props)
     elif phi.ndim == 3:
         if not het_ascertained and not admix_props and not force_direct:
-            fs = Spectrum._from_phi_3D_analytic(ns[0], ns[1], ns[2], 
-                                                xxs[0], xxs[1], xxs[2], 
-                                                phi, mask_corners)
+            fs = Spectrum._from_phi_3D_linalg(ns[0], ns[1], ns[2], 
+                                              xxs[0], xxs[1], xxs[2],
+                                              phi, mask_corners)
         elif not admix_props:
             fs = Spectrum._from_phi_3D_direct(ns[0], ns[1], ns[2], 
                                               xxs[0], xxs[1], xxs[2], 
@@ -5011,8 +5528,28 @@ def from_phi(phi, ns, xxs, mask_corners=True,
                                                    xxs[0], xxs[1], xxs[2], 
                                                    phi, mask_corners, 
                                                    admix_props)
+    elif phi.ndim == 4:
+        if not het_ascertained and not admix_props and not force_direct:
+            fs = Spectrum._from_phi_4D_linalg(ns[0], ns[1], ns[2], ns[3],
+                                              xxs[0], xxs[1], xxs[2], xxs[3],
+                                              phi, mask_corners)
+        elif not admix_props:
+            fs = Spectrum._from_phi_4D_direct(ns[0], ns[1], ns[2], ns[3],
+                                              xxs[0], xxs[1], xxs[2], xxs[3],
+                                              phi, mask_corners, 
+                                              het_ascertained)
+        else:
+            fs = Spectrum._from_phi_4D_admix_props(ns[0], ns[1], ns[2], ns[3],
+                                                   xxs[0], xxs[1], xxs[2], xxs[3],
+                                                   phi, mask_corners, 
+                                                   admix_props)
+    elif phi.ndim == 5:
+        if not het_ascertained and not admix_props and not force_direct:
+            fs = Spectrum._from_phi_5D_linalg(ns[0], ns[1], ns[2], ns[3], ns[4],
+                                              xxs[0], xxs[1], xxs[2], xxs[3], xxs[4],
+                                              phi, mask_corners)
     else:
-        raise ValueError(&#39;Only implemented for dimensions 1,2 or 3.&#39;)
+        raise ValueError(&#39;Only implemented for dimensions 1-5.&#39;)
     fs.pop_ids = pop_ids
     # Record value to use for extrapolation. This is the first grid point,
     # which is where new mutations are introduced. Note that extrapolation
@@ -5029,7 +5566,7 @@ def from_phi(phi, ns, xxs, mask_corners=True,
 <span>def <span class="ident">from_phi_inbreeding</span></span>(<span>phi, ns, xxs, Fs, ploidys, mask_corners=True, pop_ids=None, admix_props=None, het_ascertained=None, force_direct=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Compute sample Spectrum from population frequency distribution phi
+<div class="desc"><p>Compute sample Spectrum from population frequency distribution phi
 plus inbreeding.</p>
 <p>phi: P-dimensional population frequency distribution.
 ns: Sequence of P sample sizes for each population.
@@ -5062,7 +5599,7 @@ also that this option cannot be used simultaneously
 with admix_props.)
 force_direct: Forces integration to use older direct integration method,
 rather than using analytic integration of sampling
-formula.</p></section>
+formula.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5160,7 +5697,7 @@ def from_phi_inbreeding(phi, ns, xxs, Fs, ploidys, mask_corners=True,
 <span>def <span class="ident">from_sfscode_file</span></span>(<span>fid, sites='all', average=True, mask_corners=True, return_header=False, pop_ids=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Read frequency spectrum from file of sfs_code output.</p>
+<div class="desc"><p>Read frequency spectrum from file of sfs_code output.</p>
 <p>fid: string with file name to read from or an open file object.
 sites: If sites=='all', return the fs of all sites. If sites == 'syn',
 use only synonymous mutations. If sites == 'nonsyn', use
@@ -5173,7 +5710,7 @@ return_header: If true, the return value is (fs, (command,seeds), where
 command and seeds are strings containing the ms
 commandline and the seeds used.
 pop_ids: Optional list of strings containing the population labels.
-If pop_ids is None, labels will be "pop0", "pop1", &hellip;</p></section>
+If pop_ids is None, labels will be "pop0", "pop1", &hellip;</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5233,7 +5770,6 @@ def from_sfscode_file(fid, sites=&#39;all&#39;, average=True, mask_corners=True,
                        for ii in range(1, 1+num_pops)]
     
     pop_samples = numpy.asarray(pop_samples)
-    pop_digits = [str(i) for i in range(num_pops)]
     pop_fixed_str = [&#39;,%s.-1&#39; % i for i in range(num_pops)]
     pop_count_str = [&#39;,%s.&#39; % i for i in range(num_pops)]
     
@@ -5328,7 +5864,7 @@ def from_sfscode_file(fid, sites=&#39;all&#39;, average=True, mask_corners=True,
 <span>def <span class="ident">fromfile</span></span>(<span>fname, mask_corners=True, return_comments=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Read frequency spectrum from file.</p>
+<div class="desc"><p>Read frequency spectrum from file.</p>
 <p>fname: String with file name to read from. If it ends in .gz, gzip
 compression is assumed.
 mask_corners: If True, mask the 'absent in all samples' and 'fixed in
@@ -5336,7 +5872,7 @@ all samples' entries.
 return_comments: If true, the return value is (fs, comments), where
 comments is a list of strings containing the comments
 from the file (without #'s).</p>
-<p>See to_file method for details on the file format.</p></section>
+<p>See to_file method for details on the file format.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5418,7 +5954,7 @@ def from_file(fname, mask_corners=True, return_comments=False):
 <dl>
 <dt id="dadi.Spectrum_mod.Spectrum.Npop"><code class="name">var <span class="ident">Npop</span></code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5429,7 +5965,7 @@ def from_file(fname, mask_corners=True, return_comments=False):
 </dd>
 <dt id="dadi.Spectrum_mod.Spectrum.sample_sizes"><code class="name">var <span class="ident">sample_sizes</span></code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5445,14 +5981,14 @@ def from_file(fname, mask_corners=True, return_comments=False):
 <span>def <span class="ident">Fst</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Wright's Fst between the populations represented in the fs.</p>
+<div class="desc"><p>Wright's Fst between the populations represented in the fs.</p>
 <p>This estimate of Fst assumes random mating, because we don't have
 heterozygote frequencies in the fs.</p>
 <p>Calculation is by the method of Weir and Cockerham <em>Evolution</em> 38:1358
 (1984).
 For a single SNP, the relevant formula is at the top of page
 1363. To combine results between SNPs, we use the weighted average
-indicated by equation 10.</p></section>
+indicated by equation 10.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5513,7 +6049,7 @@ indicated by equation 10.</p></section>
 <span>def <span class="ident">S</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Segregating sites.</p></section>
+<div class="desc"><p>Segregating sites.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5533,8 +6069,8 @@ indicated by equation 10.</p></section>
 <span>def <span class="ident">Tajima_D</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Tajima's D.</p>
-<p>Following Gillespie "Population Genetics: A Concise Guide" pg. 45</p></section>
+<div class="desc"><p>Tajima's D.</p>
+<p>Following Gillespie "Population Genetics: A Concise Guide" pg. 45</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5570,8 +6106,8 @@ indicated by equation 10.</p></section>
 <span>def <span class="ident">Watterson_theta</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Watterson's estimator of theta.</p>
-<p>Note that is only sensible for 1-dimensional spectra.</p></section>
+<div class="desc"><p>Watterson's estimator of theta.</p>
+<p>Note that is only sensible for 1-dimensional spectra.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5596,9 +6132,9 @@ indicated by equation 10.</p></section>
 <span>def <span class="ident">Zengs_E</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Zeng et al.'s E statistic.</p>
+<div class="desc"><p>Zeng et al.'s E statistic.</p>
 <p>From Zeng et al. "Statistical Tests for Detecting Positive Selection by
-Utilizing High-Frequency Variants" (2006) Genetics</p></section>
+Utilizing High-Frequency Variants" (2006) Genetics</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5632,14 +6168,48 @@ Utilizing High-Frequency Variants" (2006) Genetics</p></section>
     return num/numpy.sqrt(var)</code></pre>
 </details>
 </dd>
+<dt id="dadi.Spectrum_mod.Spectrum.filter_pops"><code class="name flex">
+<span>def <span class="ident">filter_pops</span></span>(<span>self, tokeep, mask_corners=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filter Spectrum to keep only certain populations.</p>
+<p>Returns new Spectrum with len(tokeep) populations.
+Note: This is similar in practice to the marginalize operation. But here
+populations are numbered from 1, as in the majority of dadi.</p>
+<p>tokeep: List of population numbers to keep, numbering from 1.
+mask_corners: If True, the typical corners of the resulting fs will be
+masked</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def filter_pops(self, tokeep, mask_corners=True):
+    &#34;&#34;&#34;
+    Filter Spectrum to keep only certain populations.
+
+    Returns new Spectrum with len(tokeep) populations.
+    Note: This is similar in practice to the marginalize operation. But here
+          populations are numbered from 1, as in the majority of dadi.
+
+    tokeep: List of population numbers to keep, numbering from 1.
+    mask_corners: If True, the typical corners of the resulting fs will be
+                  masked
+    &#34;&#34;&#34;
+    toremove = list(range(0, self.ndim))
+    for pop_ii in tokeep:
+        # Apply -1 factor to account for indexing in marginalize
+        toremove.remove(pop_ii-1)
+    return self.marginalize(toremove)</code></pre>
+</details>
+</dd>
 <dt id="dadi.Spectrum_mod.Spectrum.fixed_size_sample"><code class="name flex">
 <span>def <span class="ident">fixed_size_sample</span></span>(<span>self, nsamples, only_nonmasked=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generate a resampled fs from the current one.</p>
+<div class="desc"><p>Generate a resampled fs from the current one.</p>
 <p>nsamples: Number of samples to include in the new FS.
 only_nonmasked: If True, only SNPs from non-masked will be resampled.
-Otherwise, all SNPs will be used.</p></section>
+Otherwise, all SNPs will be used.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5669,7 +6239,7 @@ Otherwise, all SNPs will be used.</p></section>
 <span>def <span class="ident">fold</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Folded frequency spectrum</p>
+<div class="desc"><p>Folded frequency spectrum</p>
 <p>The folded fs assumes that information on which allele is ancestral or
 derived is unavailable. Thus the fs is in terms of minor allele
 frequency.
@@ -5677,7 +6247,7 @@ Note that this makes the fs into a "triangular" array.</p>
 <p>Note that if a masked cell is folded into non-masked cell, the
 destination cell is masked as well.</p>
 <p>Note also that folding is not done in-place. The return value is a new
-Spectrum object.</p></section>
+Spectrum object.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5740,9 +6310,9 @@ Spectrum object.</p></section>
 <span>def <span class="ident">log</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Return the natural logarithm of the entries of the frequency spectrum.</p>
+<div class="desc"><p>Return the natural logarithm of the entries of the frequency spectrum.</p>
 <p>Only necessary because numpy.ma.log now fails to propagate extra
-attributes after numpy 1.10.</p></section>
+attributes after numpy 1.10.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5765,11 +6335,11 @@ attributes after numpy 1.10.</p></section>
 <span>def <span class="ident">marginalize</span></span>(<span>self, over, mask_corners=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Reduced dimensionality spectrum summing over some populations.</p>
+<div class="desc"><p>Reduced dimensionality spectrum summing over some populations.</p>
 <p>over: sequence of axes to sum over. For example (0,2) will sum over
 populations 0 and 2.
 mask_corners: If True, the typical corners of the resulting fs will be
-masked</p></section>
+masked</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5823,7 +6393,7 @@ masked</p></section>
 <span>def <span class="ident">mask_corners</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Mask the 'seen in 0 samples' and 'seen in all samples' entries.</p></section>
+<div class="desc"><p>Mask the 'seen in 0 samples' and 'seen in all samples' entries.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5839,10 +6409,10 @@ masked</p></section>
 <span>def <span class="ident">pi</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Estimated expected number of pairwise differences between two
+<div class="desc"><p>Estimated expected number of pairwise differences between two
 chromosomes in the population.</p>
 <p>Note that this estimate includes a factor of sample_size/(sample_size-1)
-to make E(\hat{pi}) = theta.</p></section>
+to make E(\hat{pi}) = theta.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5870,8 +6440,8 @@ to make E(\hat{pi}) = theta.</p></section>
 <span>def <span class="ident">project</span></span>(<span>self, ns)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Project to smaller sample size.</p>
-<p>ns: Sample sizes for new spectrum.</p></section>
+<div class="desc"><p>Project to smaller sample size.</p>
+<p>ns: Sample sizes for new spectrum.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5918,9 +6488,9 @@ to make E(\hat{pi}) = theta.</p></section>
 <span>def <span class="ident">sample</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generate a Poisson-sampled fs from the current one.</p>
-<p>Note: Entries where the current fs is masked or 0 will be masked in the
-output sampled fs.</p></section>
+<div class="desc"><p>Generate a Poisson-sampled fs from the current one.</p>
+<p>Note: Entries where the current fs is masked will be masked in the
+output sampled fs.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -5929,25 +6499,24 @@ output sampled fs.</p></section>
     &#34;&#34;&#34;
     Generate a Poisson-sampled fs from the current one.
 
-    Note: Entries where the current fs is masked or 0 will be masked in the
+    Note: Entries where the current fs is masked will be masked in the
           output sampled fs.
     &#34;&#34;&#34;
     import scipy.stats
-    # These are entries where the sampling has no meaning. Either the fs is
-    # 0 there or masked. 
-    bad_entries = numpy.logical_or(self == 0, self.mask)
+    # These are entries where the sampling has no meaning, b/c fs is masked.
+    bad_entries = self.mask
     # We convert to a 1-d array for passing into the sampler
     means = self.ravel().copy()
     # Filter out those bad entries.
     means[bad_entries.ravel()] = 1
     # Sample
     samp = scipy.stats.distributions.poisson.rvs(means, size=len(means))
-    # Replace bad entries...
+    # Replace bad entries with zero
     samp[bad_entries.ravel()] = 0
     # Convert back to a properly shaped array
     samp = samp.reshape(self.shape)
     # Convert to a fs and mask the bad entries
-    samp = Spectrum(samp, mask=bad_entries, data_folded=self.folded,
+    samp = Spectrum(samp, mask=self.mask, data_folded=self.folded,
                     pop_ids = self.pop_ids)
     return samp</code></pre>
 </details>
@@ -5956,12 +6525,12 @@ output sampled fs.</p></section>
 <span>def <span class="ident">scramble_pop_ids</span></span>(<span>self, mask_corners=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Spectrum corresponding to scrambling individuals among populations.</p>
+<div class="desc"><p>Spectrum corresponding to scrambling individuals among populations.</p>
 <p>This is useful for assessing how diverged populations are.
 Essentially, it pools all the individuals represented in the fs and
 generates new populations of random individuals (without replacement)
 from that pool. If this fs is significantly different from the
-original, that implies population structure.</p></section>
+original, that implies population structure.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6020,10 +6589,10 @@ original, that implies population structure.</p></section>
 <span>def <span class="ident">theta_L</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>theta_L as defined by Zeng et al. "Statistical Tests for Detecting
+<div class="desc"><p>theta_L as defined by Zeng et al. "Statistical Tests for Detecting
 Positive Selection by Utilizing High-Frequency Variants" (2006)
 Genetics</p>
-<p>Note that is only sensible for 1-dimensional spectra.</p></section>
+<p>Note that is only sensible for 1-dimensional spectra.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6047,7 +6616,7 @@ Genetics</p>
 <span>def <span class="ident">to_file</span></span>(<span>self, fname, precision=16, comment_lines=[], foldmaskinfo=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Write frequency spectrum to file.</p>
+<div class="desc"><p>Write frequency spectrum to file.</p>
 <p>fname: File name to write to.
 If string ends in .gz, file will be saved
 with gzip compression.
@@ -6070,7 +6639,7 @@ labels in quotes separated by spaces, e.g. "pop 1" "pop 2"
 A single line giving the array elements. The order of elements is
 e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;
 A single line giving the elements of the mask in the same order as
-the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
+the data line. '1' indicates masked, '0' indicates unmasked.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6148,7 +6717,7 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 <span>def <span class="ident">tofile</span></span>(<span>self, fname, precision=16, comment_lines=[], foldmaskinfo=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Write frequency spectrum to file.</p>
+<div class="desc"><p>Write frequency spectrum to file.</p>
 <p>fname: File name to write to.
 If string ends in .gz, file will be saved
 with gzip compression.
@@ -6171,7 +6740,7 @@ labels in quotes separated by spaces, e.g. "pop 1" "pop 2"
 A single line giving the array elements. The order of elements is
 e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;
 A single line giving the elements of the mask in the same order as
-the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
+the data line. '1' indicates masked, '0' indicates unmasked.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6249,11 +6818,11 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 <span>def <span class="ident">unfold</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Unfolded frequency spectrum</p>
+<div class="desc"><p>Unfolded frequency spectrum</p>
 <p>It is assumed that each state of a SNP is equally likely to be
 ancestral.</p>
 <p>Note also that unfolding is not done in-place. The return value is a new
-Spectrum object.</p></section>
+Spectrum object.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6296,7 +6865,7 @@ Spectrum object.</p></section>
 <span>def <span class="ident">unmask_all</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Unmask all values.</p></section>
+<div class="desc"><p>Unmask all values.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -6328,6 +6897,7 @@ Spectrum object.</p></section>
 <ul class="">
 <li><code><a title="dadi.Spectrum_mod.Spectrum_pickler" href="#dadi.Spectrum_mod.Spectrum_pickler">Spectrum_pickler</a></code></li>
 <li><code><a title="dadi.Spectrum_mod.Spectrum_unpickler" href="#dadi.Spectrum_mod.Spectrum_unpickler">Spectrum_unpickler</a></code></li>
+<li><code><a title="dadi.Spectrum_mod.cached_dbeta" href="#dadi.Spectrum_mod.cached_dbeta">cached_dbeta</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -6341,6 +6911,7 @@ Spectrum object.</p></section>
 <li><code><a title="dadi.Spectrum_mod.Spectrum.Tajima_D" href="#dadi.Spectrum_mod.Spectrum.Tajima_D">Tajima_D</a></code></li>
 <li><code><a title="dadi.Spectrum_mod.Spectrum.Watterson_theta" href="#dadi.Spectrum_mod.Spectrum.Watterson_theta">Watterson_theta</a></code></li>
 <li><code><a title="dadi.Spectrum_mod.Spectrum.Zengs_E" href="#dadi.Spectrum_mod.Spectrum.Zengs_E">Zengs_E</a></code></li>
+<li><code><a title="dadi.Spectrum_mod.Spectrum.filter_pops" href="#dadi.Spectrum_mod.Spectrum.filter_pops">filter_pops</a></code></li>
 <li><code><a title="dadi.Spectrum_mod.Spectrum.fixed_size_sample" href="#dadi.Spectrum_mod.Spectrum.fixed_size_sample">fixed_size_sample</a></code></li>
 <li><code><a title="dadi.Spectrum_mod.Spectrum.fold" href="#dadi.Spectrum_mod.Spectrum.fold">fold</a></code></li>
 <li><code><a title="dadi.Spectrum_mod.Spectrum.from_data_dict" href="#dadi.Spectrum_mod.Spectrum.from_data_dict">from_data_dict</a></code></li>
@@ -6373,7 +6944,7 @@ Spectrum object.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
