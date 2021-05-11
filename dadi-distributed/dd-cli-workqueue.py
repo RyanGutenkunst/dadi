@@ -10,6 +10,8 @@ def add_task(args, task_num, q):
     print("adding task for p0=" + str(args.p0))
     script = "./inferdm" + str(task_num) + ".sh"
     t = Task(script)
+    t.specify_output_file("std.out")
+    t.specify_output_file("std.err")
     if args.p0.startswith("output"):
         t.specify_input_file(os.path.join(args.dir, args.p0), cache=False)
     t.specify_tag("dadi")
@@ -50,6 +52,7 @@ def write_script(script, args):
     f.write(" --p0 " + args.p0 + " --ubounds " + args.ubounds + " --lbounds " + args.lbounds + " --output outfile")
     if args.jobs:
         f.write(" --jobs " + str(args.jobs))
+    f.write(" >std.out 2>std.err")
     f.write("\ntar czf outfiles.tar.gz outfile.run*")
     f.close()
     os.chmod(script, stat.S_IRWXU)
@@ -66,6 +69,9 @@ if __name__ == '__main__':
     parser.add_argument('--jobs', type=int)
     args = parser.parse_args()
 
+    if not os.path.isfile(args.infile):
+        print(args.infile + " not found")
+        sys.exit(1)
     os.makedirs(args.dir, exist_ok=True)
     try:
         q = WorkQueue(port = WORK_QUEUE_DEFAULT_PORT) #, debug_log = "debug.log")
