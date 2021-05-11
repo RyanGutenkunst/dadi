@@ -292,7 +292,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
     if not return_GIM:
         return uncerts
     else:
-        return uncerts, GIM
+        return uncerts, GIM, H
 
 def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
     """
