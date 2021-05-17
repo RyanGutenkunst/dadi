@@ -41,6 +41,31 @@ def two_epoch(params, ns, pts):
     phi = Integration.one_pop(phi, xx, T, nu, gamma=gamma)
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+    
+def three_epoch(params, ns, pts):
+    """
+    params = (nuB,nuF,TB,TF,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nuB,nuF,TB,TF,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB, gamma=gamma)
+    phi = Integration.one_pop(phi, xx, TF, nuF, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
 
 def IM_pre(params, ns, pts):
     """
