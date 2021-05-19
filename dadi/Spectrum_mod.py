@@ -2391,7 +2391,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_demes(
-        g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=4
+        g, sampled_demes, sample_sizes, pts, log_extrap=False, sample_times=None, Ne=None, unsampled_n=4
     ):
         """
         Takes a deme graph and computes the SFS. ``demes`` is a package for
@@ -2426,11 +2426,11 @@ class Spectrum(numpy.ma.masked_array):
         :param unsampled_n: The default sample size of unsampled demes, which must be
             greater than or equal to 4.
         :type unsampled_n: int, optional
-        :return: A ``moments`` site frequency spectrum, with dimension equal to the
+        :return: A ``dadi`` site frequency spectrum, with dimension equal to the
             length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
             in each dimension, indexing the allele frequency in each deme from 0
             to n[i], where i is the deme index.
-        :rtype: :class:`moments.Spectrum`
+        :rtype: :class:`dadi.Spectrum`
         """
         global _imported_demes
         if not _imported_demes:
@@ -2449,13 +2449,16 @@ class Spectrum(numpy.ma.masked_array):
         else:
             dg = g
 
-        fs = Demes.SFS(
+        func_ex = dadi.Numerics.make_extrap_func(Demes.SFS)
+
+        fs = func_ex(
             dg,
             sampled_demes,
             sample_sizes,
-            sample_times=sample_times,
-            Ne=Ne,
-            unsampled_n=unsampled_n,
+            sample_times,
+            Ne,
+            unsampled_n,
+            pts,
         )
         return fs
 

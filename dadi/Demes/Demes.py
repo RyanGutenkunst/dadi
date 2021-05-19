@@ -55,11 +55,11 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=
     :param unsampled_n: The default sample size of unsampled demes, which must be
         greater than or equal to 4.
     :type unsampled_n: int, optional
-    :return: A ``moments`` site frequency spectrum, with dimension equal to the
+    :return: A ``dadi`` site frequency spectrum, with dimension equal to the
         length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
         in each dimension, indexing the allele frequency in each deme from 0
         to n[i], where i is the deme index.
-    :rtype: :class:`moments.Spectrum`
+    :rtype: :class:`dadi.Spectrum`
     """
     _check_demes_imported()
     if len(sampled_demes) != len(sample_sizes):
@@ -93,7 +93,7 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=
         g, sample_times = _convert_to_generations(g, sample_times)
     for d, n, t in zip(sampled_demes, sample_sizes, sample_times):
         if n < 4:
-            raise ValueError("moments fails with sample sizes less than 4")
+            raise ValueError("dadi fails with sample sizes less than 4")
         if t < g[d].end_time or t >= g[d].start_time:
             raise ValueError("sample time for {deme} must be within its time span")
 
@@ -114,7 +114,7 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=
     for epoch, epoch_demes in demes_present.items():
         if len(epoch_demes) > 5:
             raise ValueError(
-                f"Moments cannot integrate more than five demes at a time. "
+                f"dadi cannot integrate more than five demes at a time. "
                 f"Epoch {epoch} has demes {epoch_demes}."
             )
 
@@ -322,7 +322,7 @@ def _make_nu_func(sizes, T, Ne):
     """
     Given the sizes at start and end of time interval, and the size function for
     each deme, along with the integration time and reference Ne, return the
-    size function that gets passed to the moments integration routines.
+    size function that gets passed to the dadi integration routines.
     """
     if np.all([s[-1] == "constant" for s in sizes]):
         # all constant
@@ -435,7 +435,7 @@ def _compute_sfs(
     h=None,
 ):
     """
-    Integrates using moments to find the SFS for given demo events, etc
+    Integrates using dadi to find the SFS for given demo events, etc
     """
     if gamma is not None and h is None:
         h = 0.5
