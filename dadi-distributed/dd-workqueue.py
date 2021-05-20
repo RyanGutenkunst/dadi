@@ -46,13 +46,17 @@ if __name__ == '__main__':
     parser.add_argument('--jobs', type=int)
     args = parser.parse_args()
 
+    if not os.path.isfile(args.infile):
+        print(args.infile + " not found")
+        sys.exit(1)
     os.makedirs(args.dir, exist_ok=True)
     try:
-        q = WorkQueue(port = WORK_QUEUE_DEFAULT_PORT) #, debug_log = "debug.log")
+        q = WorkQueue(name = "dadi-distributed", debug_log = "debug.log")
+        q.specify_password_file('pwfile')
     except:
         print("Instantiation of Work Queue failed!")
         sys.exit(1)
-    print("listening on port %d..." % q.port)
+    #print("listening on port %d..." % q.port)
     jobs = 1
     if args.jobs:
         jobs = args.jobs
