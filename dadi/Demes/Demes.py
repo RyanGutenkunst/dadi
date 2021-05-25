@@ -614,10 +614,9 @@ def _split_phi(phi, xx, pop_ids, parent, children):
         dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx)
     return phi, pop_ids
 
-#Need to add in occasions where all current pops are not contributing
-def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents, child):
+def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents):
     """
-    This function is for when admixture and mergining events result in a child that is new.
+    This function is for when admixture and mergining events result in a new population.
     Merge events remove the parental demes, while admixture events do not.
     """
     parent_i = []
