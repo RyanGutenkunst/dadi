@@ -6,17 +6,17 @@ model = "gutenkunst_ooa.yml"
 sampled_demes = ["YRI", "CEU", "CHB"]
 sample_sizes = [10, 10, 10]
 
-#simple model to test admix using all populations to form a new one
-model = "browning_america.yml"
-sampled_demes = ['AFR', 'EUR', 'EAS', 'ADMIX']
-sample_sizes = [10, 10, 10, 10]
-# sampled_demes = ['ADMIX']
-# sample_sizes = [10]
+# #simple model to test admix using all populations to form a new one
+# model = "browning_america.yml"
+# sampled_demes = ['AFR', 'EUR', 'EAS', 'ADMIX']
+# sample_sizes = [10, 10, 10, 10]
+# # sampled_demes = ['ADMIX']
+# # sample_sizes = [10]
 
-#simple model to test branches and pulses
-model = "offshoots.yml"
-sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
-sample_sizes = [10, 10, 10]
+# #simple model to test branches and pulses
+# model = "offshoots.yml"
+# sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
+# sample_sizes = [10, 10, 10]
 
 pts_l = [20,30,40]
 
@@ -50,7 +50,7 @@ if 'gutenkunst_ooa' in model:
         return fs
 
     params = [1.6849315068493151, 0.2876712328767123, 
-    0.129, 3.74, 0.07, 7.29, 
+    0.136986301369863, 4.071917808219178, 0.06986301369863014, 7.409589041095891, 
     3.65, 0.438, 0.2774, 1.4016,
     0.2191780821917808, 0.3254794520547945, 0.05808219178082192]
 
