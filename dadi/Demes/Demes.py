@@ -516,13 +516,19 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
         children = [parent, child]
         phi, pop_ids = _split_phi(phi, xx, pop_ids, parent, children)
     elif e in ["admix", "merge"]:
-        # two or more populations merge, based on given proportions
+        # two or more populations merge, based on given proportion(s)
         parents = event[1]
         proportions = event[2]
         child = event[3]
-        phi = _admix_phi(phi, xx, proportions, pop_ids, parents, child)
         if child not in pop_ids:
             pop_ids.append(child)
+            if len(pop_ids)>5:
+                raise ValueError("Cannot apply admix that creates more than 5 demes")
+            phi = _admix_new_pop_phi(phi, xx, proportions, pop_ids[:-1], parents, child)
+        else:
+            # admixture from one or more populations to another existing population
+            # with some proportion
+            phi = _admix_phi(phi, xx, proportions, pop_ids, sources, dest)
         if e == "merge":
             for parent in parents:
                 remove_i = pop_ids.index(parent)
@@ -533,7 +539,7 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
         source = event[1]
         dest = event[2]
         proportion = event[3]
-        phi = _pulse_phi(phi, xx, proportion, pop_ids, source, dest)
+        phi = _admix_phi(phi, xx, proportion, pop_ids, source, dest)
     else:
         raise ValueError(f"Haven't implemented methods for event type {e}")
     return phi, pop_ids
@@ -543,11 +549,6 @@ def _integrate_phi(phi, xx, integration_params, pop_ids):
     Intrgates phi into children with split_sizes, from the deme at split_idx.
     """
     nu, T, M, gamma, h, theta, frozen = integration_params
-    # try:
-    #     nu = nu(T)
-    #     # nu = [nu] * len(frozen)
-    # except:
-    #     pass
     if len(pop_ids) == 1:
         phi = dadi.Integration.one_pop(
             phi, xx, T, nu[0], 
@@ -613,40 +614,43 @@ def _split_phi(phi, xx, pop_ids, parent, children):
         dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx)
     return phi, pop_ids
 
-
-#Need to add in occasions where the child is not a new population?
-def _admix_phi(phi, xx, proportions, pop_ids, parents, child):
+#Need to add in occasions where all current pops are not contributing
+def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents, child):
     """
-    Both merge and admixture events use this function, with the only difference that
-    merge events remove the parental demes, while admixture events do not.
+    This function is for when admixture and mergining events result in a child that is new.
+    Merge events remove the parental demes, while admixture events do not.
     """
+    parent_i = []
+    for parent in parents:
+        parent_i.append(pop_ids.index(parent))
+    proportion_l = _make_sorted_proportions_list(proportions, parent_i, None, pop_ids[:-1])
     if len(pop_ids) == 2:
-        if child not in pop_ids:
-            phi = dadi.PhiManip.phi_2D_to_3D_admix(phi, proportions[0], xx,xx,xx)
+        phi = dadi.PhiManip.phi_2D_to_3D_admix(phi, proportion_l[0], xx,xx,xx)
     if len(pop_ids) == 3:
-        if child not in pop_ids:
-            phi = dadi.PhiManip.phi_3D_to_4D(phi, proportions[0],proportions[1], xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportion_l[0],proportion_l[1], xx,xx,xx,xx)
     if len(pop_ids) == 4:
-        if child not in pop_ids:
-            phi = dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportion_l[0],proportion_l[1],proportion_l[2], xx,xx,xx,xx,xx)
     return phi
 
-#Might rework this for all situations where admix child is not a new population
-def _pulse_phi(phi, xx, proportion, pop_ids, source, dest):
+def _admix_phi(phi, xx, proportions, pop_ids, sources, dest):
     # Get index of source and destination populations
     # uses admix in place
-    source_i = pop_ids.index(source)
+    if type(proportions) != list:
+        proportions = [proportions]
+    if type(sources) != list:
+        sources = [sources]
+    source_i = []
+    for source in sources:
+        source_i.append(pop_ids.index(source))
     dest_i = pop_ids.index(dest)
+    proportion_l = _make_sorted_proportions_list(proportions, source_i, dest_i, pop_ids)
     if len(pop_ids) == 2:
         pulse = [
         dadi.PhiManip.phi_2D_admix_2_into_1,
         dadi.PhiManip.phi_2D_admix_1_into_2
         ][dest_i]
-        pulse(phi, proportion, xx,xx)
+        pulse(phi, proportions[0], xx,xx)
     if len(pop_ids) == 3:
-        proportion_l = [0,0,0]
-        proportion_l[source_i] = proportion
-        proportion_l.pop(dest_i)
         proportion1,proportion2 = proportion_l
         pulse = [
         dadi.PhiManip.phi_3D_admix_2_and_3_into_1,
@@ -655,9 +659,6 @@ def _pulse_phi(phi, xx, proportion, pop_ids, source, dest):
         ][dest_i]
         pulse(phi, proportion1,proportion2, xx,xx,xx)
     if len(pop_ids) == 4:
-        proportion_l = [0,0,0,0]
-        proportion_l[source_i] = proportion
-        proportion_l.pop(dest_i)
         proportion1,proportion2,proportion3 = proportion_l
         pulse = [
         dadi.PhiManip.phi_4D_admix_into_1,
@@ -667,9 +668,6 @@ def _pulse_phi(phi, xx, proportion, pop_ids, source, dest):
         ][dest_i]
         pulse(phi, proportion1,proportion2,proportion3, xx,xx,xx,xx)
     if len(pop_ids) == 5:
-        proportion_l = [0,0,0,0,0]
-        proportion_l[source_i] = proportion
-        proportion_l.pop(dest_i)
         proportion1,proportion2,proportion3,proportion4 = proportion_l
         pulse = [
         dadi.PhiManip.phi_5D_admix_into_1,
@@ -681,5 +679,13 @@ def _pulse_phi(phi, xx, proportion, pop_ids, source, dest):
         pulse(phi, proportion1,proportion2,proportion3,proportion4, xx,xx,xx,xx,xx)
     return phi
 
-
+def _make_sorted_proportions_list(proportions, source_i, dest_i, pop_ids):
+    proportion_l = [0] * len(pop_ids)
+    for i,prop in zip(source_i,proportions):
+        proportion_l[i] = prop
+    try:
+        proportion_l.pop(dest_i)
+    except:
+        pass
+    return proportion_l
 
