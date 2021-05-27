@@ -949,3 +949,24 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
         # I used Mathematica to check that this was the proper limit.
         phi[-1] = 1./int0
     return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)
+
+
+def reorder_pops(phi, neworder):
+    """
+    Get Spectrum with populations in new order
+
+    Returns new Spectrum with same number of populations, but in a different order
+
+    neworder: Integer list defining new order of populations, indexing the orginal
+              populations from 1. Must contain all integers from 1 to number of pops.
+    """
+    if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:
+        raise(ValueError("neworder argument misspecified"))
+    newaxes = [_-1 for _ in neworder]
+    phi = phi.transpose(newaxes)
+    
+    return phi
+
+
+
+
