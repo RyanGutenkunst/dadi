@@ -26,7 +26,7 @@ def _check_demes_imported():
         )
 
 
-def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=4, pts=None):
+def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None):
     """
     Takes a deme graph and computes the SFS. ``demes`` is a package for
     specifying demographic models in a user-friendly, human-readable YAML
@@ -52,9 +52,6 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=
     :param Ne: reference population size. If none is given, we use the initial
         size of the root deme.
     :type Ne: float, optional
-    :param unsampled_n: The default sample size of unsampled demes, which must be
-        greater than or equal to 4.
-    :type unsampled_n: int, optional
     :return: A ``dadi`` site frequency spectrum, with dimension equal to the
         length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
         in each dimension, indexing the allele frequency in each deme from 0
@@ -69,9 +66,6 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, unsampled_n=
     for deme in sampled_demes:
         if deme not in g:
             raise ValueError(f"deme {deme} is not in demography")
-
-    if unsampled_n < 4:
-        raise ValueError("unsampled_n must be greater than 3")
 
     if sample_times is None:
         sample_times = [g[d].end_time for d in sampled_demes]

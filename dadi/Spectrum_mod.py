@@ -2391,8 +2391,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_demes(
-        g, sampled_demes, sample_sizes, pts, log_extrap=False, sample_times=None, Ne=None, unsampled_n=4
-    ):
+        g, sampled_demes, sample_sizes, pts, log_extrap=False, sample_times=None, Ne=None):
         """
         Takes a deme graph and computes the SFS. ``demes`` is a package for
         specifying demographic models in a user-friendly, human-readable YAML
@@ -2423,9 +2422,6 @@ class Spectrum(numpy.ma.masked_array):
         :param Ne: reference population size. If none is given, we use the initial
             size of the root deme.
         :type Ne: float, optional
-        :param unsampled_n: The default sample size of unsampled demes, which must be
-            greater than or equal to 4.
-        :type unsampled_n: int, optional
         :return: A ``dadi`` site frequency spectrum, with dimension equal to the
             length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
             in each dimension, indexing the allele frequency in each deme from 0
@@ -2457,7 +2453,6 @@ class Spectrum(numpy.ma.masked_array):
             sample_sizes,
             sample_times,
             Ne,
-            unsampled_n,
             pts,
         )
         return fs
