@@ -476,7 +476,7 @@ def _compute_sfs(
             next_deme_order = demes_present[next_interval]
 
             if pop_ids != next_deme_order:
-                new_order = [next_deme_order.index(pop)+1 for pop in pop_ids]
+                new_order = [pop_ids.index(pop)+1 for pop in next_deme_order]
                 phi = dadi.PhiManip.reorder_pops(phi, new_order)
                 pop_ids = next_deme_order
     fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
@@ -592,7 +592,8 @@ def _split_phi(phi, xx, pop_ids, parent, children):
     Split the phi into children from the deme at pop_ids.index(parent).
     """
     parent_i = pop_ids.index(parent)
-    pop_ids = pop_ids[:parent_i] +children+ pop_ids[parent_i+1:]
+    # When dadi splits a population, one of the new children is always the last in the phi matrix
+    pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
     if len(pop_ids) == 2:
         phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
     elif len(pop_ids) == 3:
