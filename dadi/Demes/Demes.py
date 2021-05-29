@@ -86,8 +86,6 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None):
     if g.time_units != "generations":
         g, sample_times = _convert_to_generations(g, sample_times)
     for d, n, t in zip(sampled_demes, sample_sizes, sample_times):
-        if n < 4:
-            raise ValueError("dadi fails with sample sizes less than 4")
         if t < g[d].end_time or t >= g[d].start_time:
             raise ValueError("sample time for {deme} must be within its time span")
 
