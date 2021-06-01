@@ -13,10 +13,10 @@ sample_sizes = [10, 10, 10, 10]
 # sampled_demes = ['ADMIX']
 # sample_sizes = [10]
 
-# #simple model to test branches and pulses
-# model = "offshoots.yml"
-# sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
-# sample_sizes = [10, 10, 10]
+#simple model to test branches and pulses
+model = "offshoots.yml"
+sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
+sample_sizes = [10, 10, 10]
 
 pts_l = [20]#,30,40]
 
@@ -59,7 +59,19 @@ if 'browning_america' in model:
     fs_dadi = func_ex(params, sample_sizes, pts_l)
     print(fs_dadi.S())
 
+if 'offshoots' in model:
+    dadi_model = testing_models.offshoots
 
+    params = [
+    1.0, 0.2, 0.1, #size changes
+    0.02, 0.04, 0.2, #Migration rates
+    0.0, 0.25, 0.15, 0.05, 0.025, 0.25, #Ts
+    0.1 #proportions
+    ]
+
+    func_ex = dadi.Numerics.make_extrap_func(dadi_model)
+    fs_dadi = func_ex(params, sample_sizes, pts_l)
+    print(fs_dadi.S())
 
 
 

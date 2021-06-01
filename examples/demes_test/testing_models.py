@@ -60,7 +60,43 @@ def browning_america(params, ns, pts):
     fs = dadi.Spectrum.from_phi(phi, ns, (xx, xx, xx, xx))
     return fs
 
+def offshoots(params, ns, pts):
+    nuAnc, nuOff2, nuOff1, \
+    mAncOff2, mOff2Off1, mOff1Anc, \
+    T1, T2, T3, T4, T5, T6, prop = params
 
+    xx = dadi.Numerics.default_grid(pts)
+
+    phi = dadi.PhiManip.phi_1D(xx)
+    phi = dadi.Integration.one_pop(phi, xx, T1, nu = nuAnc)
+    
+    #offshoot2 branches off ancestral, migration between offshoot2 and ancestral
+    phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+    phi = dadi.Integration.two_pops(phi, xx, T2, nu1 = nuAnc, nu2 = nuOff2, m12 = mAncOff2, m21 = mAncOff2)
+
+    #offshoot1 branches off ancestral, migration between offshoot1 and offshoot2,
+    #no migration between offshoot1 and ancestral
+    phi = dadi.PhiManip.phi_2D_to_3D_split_1(xx, phi)
+    phi = dadi.Integration.three_pops(phi, xx, T3, nu1 = nuAnc, nu2 = nuOff2, nu3 = nuOff1, 
+        m12 = mAncOff2, m13 = 0, m21 = mAncOff2, m23 = mOff2Off1, m31 = 0, m32 = mOff2Off1)
+
+    #Some migration from ancestral to offshoot1
+    phi = dadi.Integration.three_pops(phi, xx, T4, nu1 = nuAnc, nu2 = nuOff2, nu3 = nuOff1, 
+        m12 = mAncOff2, m13 = 0, m21 = mAncOff2, m23 = mOff2Off1, m31 = mOff1Anc, m32 = mOff2Off1)
+
+    #Some time passes, migration from ancestral to offshoot1 stops
+    phi = dadi.Integration.three_pops(phi, xx, T5, nu1 = nuAnc, nu2 = nuOff2, nu3 = nuOff1, 
+        m12 = mAncOff2, m13 = 0, m21 = mAncOff2, m23 = mOff2Off1, m31 = 0, m32 = mOff2Off1)
+
+    #pulse from offshoot1 to ancestral
+    phi = dadi.PhiManip.phi_3D_admix_2_and_3_into_1(phi, 0, prop, xx,xx,xx)
+
+    #some more time passes, no gene flow between ancestral and offshoot1
+    phi = dadi.Integration.three_pops(phi, xx, T6, nu1 = nuAnc, nu2 = nuOff2, nu3 = nuOff1, 
+        m12 = mAncOff2, m13 = 0, m21 = mAncOff2, m23 = mOff2Off1, m31 = 0, m32 = mOff2Off1)
+
+    fs = dadi.Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs
 
 
 
