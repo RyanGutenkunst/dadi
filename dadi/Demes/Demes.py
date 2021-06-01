@@ -335,6 +335,7 @@ def _make_nu_func(sizes, T, Ne):
                 )
             else:
                 raise ValueError(f"{s[-1]} not a valid size function")
+            # print([ele/Ne for ele in s[:-1]],s[-1],T,Ne)
     return nu_func
 
 
@@ -381,6 +382,7 @@ def _sizes_at_time(g, deme_id, time_interval):
             frac = (epoch.start_time - time_interval[1]) / epoch.time_span
             end_size = epoch.start_size + frac * (epoch.end_size - epoch.start_size)
 
+    # print(epoch, start_size, end_size, size_function)
     return start_size, end_size, size_function
 
 
@@ -457,6 +459,7 @@ def _compute_sfs(
         frozen_demes,
         integration_intervals,
     ):
+        # print('T: ',T,'\nnu: ',nu,'\nM:\n',M, '\ninterval',interval)
         if pop_ids == []:
             pop_ids = demes_present[interval]
         if T > 0:
@@ -516,7 +519,7 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
             pop_ids.append(child)
             if len(pop_ids)>5:
                 raise ValueError("Cannot apply admix that creates more than 5 demes")
-            phi = _admix_new_pop_phi(phi, xx, proportions, pop_ids[:-1], parents, child)
+            phi = _admix_new_pop_phi(phi, xx, proportions, pop_ids[:-1], parents)
         else:
             # admixture from one or more populations to another existing population
             # with some proportion
@@ -615,7 +618,7 @@ def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents):
     parent_i = []
     for parent in parents:
         parent_i.append(pop_ids.index(parent))
-    proportion_l = _make_sorted_proportions_list(proportions, parent_i, None, pop_ids[:-1])
+    proportion_l = _make_sorted_proportions_list(proportions, parent_i, None, pop_ids)
     if len(pop_ids) == 2:
         phi = dadi.PhiManip.phi_2D_to_3D_admix(phi, proportion_l[0], xx,xx,xx)
     if len(pop_ids) == 3:
