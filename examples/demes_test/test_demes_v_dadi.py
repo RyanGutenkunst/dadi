@@ -18,15 +18,11 @@ model = "offshoots.yml"
 sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
 sample_sizes = [10, 10, 10]
 
-pts_l = [20]#,30,40]
+pts_l = [20,30,40]
 
 import dadi
 fs_demes = dadi.Spectrum.from_demes(model, sampled_demes=sampled_demes, sample_sizes=sample_sizes, pts=pts_l)
 print(fs_demes.S())
-
-# import moments
-# fs_moments = moments.Spectrum.from_demes(model, sampled_demes=sampled_demes, sample_sizes=sample_sizes)
-# print(fs_moments.S())
 
 import testing_models
 
