@@ -16,7 +16,8 @@ def add_task(args, batch_num, task_num, q):
     t.specify_input_file(args.infile, "infile", cache=False)
     if args.p0.startswith("output"):
         t.specify_input_file(os.path.join(args.dir, args.p0), cache=False)
-    t.specify_output_file(os.path.join(args.dir, "optimization" + str(batch_num), "output.run" + str(task_num)), "output.run0")
+    local_file = os.path.join(args.dir, "optimization" + str(batch_num), "output")#.run" + str(task_num))
+    t.specify_file(local_file, remote_name="output", type=WORK_QUEUE_OUTPUT)
     q.submit(t)
 
 def add_tasks(jobs, batch_num, args, q):
@@ -76,3 +77,4 @@ if __name__ == '__main__':
                     q.shutdown_workers(0)
                     sys.exit(0)
                 args.p0 = "output" + str(batch_num) + ".params"
+                batch += 1
