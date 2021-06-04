@@ -22,7 +22,7 @@ def main():
             else: new_params.append(p)
         return new_params
 
-    def read_arams(params):
+    def read_params(params):
         new_params = []
         line = open(params, 'r').readline().rstrip().split()
         for p in line:

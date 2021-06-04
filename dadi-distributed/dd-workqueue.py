@@ -16,8 +16,8 @@ def add_task(args, batch_num, task_num, q):
     t.specify_input_file(args.infile, "infile", cache=False)
     if args.p0.startswith("output"):
         t.specify_input_file(os.path.join(args.dir, args.p0), cache=False)
-    local_file = os.path.join(args.dir, "optimization" + str(batch_num), "output")#.run" + str(task_num))
-    t.specify_file(local_file, remote_name="output", type=WORK_QUEUE_OUTPUT)
+    local_file = os.path.join(args.dir, "optimization" + str(batch_num), "output.run" + str(task_num))
+    t.specify_output_file(local_file, remote_name="output")
     q.submit(t)
 
 def add_tasks(jobs, batch_num, args, q):
@@ -29,6 +29,7 @@ def best_fit(args, batch_num):
     cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(batch_num) + \
         " --output " + args.dir + "/output" + str(batch_num) + ".params --ubounds " + args.ubounds + " --lbounds " + args.lbounds
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    print(out.stdout)
     if out.returncode != 0:
         print("BestFit returned an error")
         print(out.stderr)
@@ -71,10 +72,10 @@ if __name__ == '__main__':
                 if t.return_status != 0:
                     print("problem encountered, return status =" + str(t.return_status))
                     sys.exit(t.return_status)
-                o = best_fit(args, batch_num)
-                print(o)
-                if o.find("CONVERGED RESULT FOUND!") != -1:
-                    q.shutdown_workers(0)
-                    sys.exit(0)
-                args.p0 = "output" + str(batch_num) + ".params"
-                batch += 1
+        o = best_fit(args, batch_num)
+        print(o)
+        if o.find("CONVERGED RESULT FOUND!") != -1:
+            q.shutdown_workers(0)
+            sys.exit(0)
+        args.p0 = "output" + str(batch_num) + ".params"
+        batch += 1
