@@ -13,7 +13,7 @@ sample_sizes = [10, 10, 10]
 # sample_sizes = [10, 10, 10, 10]
 
 pts_l = [15,20,25]
-class DataTestCase(unittest.TestCase):
+class DemesTestCase(unittest.TestCase):
     def test_basic_loading(self):
         fs_demes = dadi.Spectrum.from_demes(model, sampled_demes=sampled_demes, sample_sizes=sample_sizes, pts=pts_l)
         self.assertTrue(np.allclose(fs_demes[2,5,6], 0.0025822560555528017))
