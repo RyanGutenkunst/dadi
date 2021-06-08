@@ -319,6 +319,8 @@ def _make_nu_func(sizes, T, Ne):
     if np.all([s[-1] == "constant" for s in sizes]):
         # all constant
         nu_func = [s[0] / Ne for s in sizes]
+        # print(sizes,T,Ne)
+        #print([ele/Ne for ele in s[:-1]],s[-1],T,Ne)
     else:
         nu_func = []
         for s in sizes:
@@ -459,7 +461,7 @@ def _compute_sfs(
         frozen_demes,
         integration_intervals,
     ):
-        # print('T: ',T,'\nnu: ',nu,'\nM:\n',M, '\ninterval',interval)
+        # print('T: ',T,'\nnu: ',nu,'\nM:\n',M, '\ninterval',interval,'\nevents:',demo_events[interval[1]],'\n')
         if pop_ids == []:
             pop_ids = demes_present[interval]
         if T > 0:
@@ -482,6 +484,7 @@ def _compute_sfs(
                 new_order = [pop_ids.index(pop)+1 for pop in next_deme_order]
                 phi = dadi.PhiManip.reorder_pops(phi, new_order)
                 pop_ids = next_deme_order
+            print('new order:',pop_ids,'\n\n')
     fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
     return fs
 
@@ -495,21 +498,26 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
     elif e == "split":
         children = event[2]
         parent = event[1]
+        parent_i = pop_ids.index(parent)
         if len(children) == 1:
             # "split" into just one population (name change)
-            parent_i = pop_ids.index(parent)
             pop_ids = pop_ids[:parent_i] +children+ pop_ids[parent_i+1:]
         else:
             # split into multiple children demes
             if len(children) + len(pop_ids) - 1 > 5:
                 raise ValueError("Cannot apply split that creates more than 5 demes")
-            phi, pop_ids = _split_phi(phi, xx, pop_ids, parent, children)
+            phi= _split_phi(phi, xx, pop_ids, parent)
+            # When dadi splits a population, one of the new children is always the last in the phi matrix
+            pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
     elif e == "branch":
         # branch is a split, but keep the pop_id of parent
         parent = event[1]
+        parent_i = pop_ids.index(parent)
         child = event[2]
         children = [parent, child]
-        phi, pop_ids = _split_phi(phi, xx, pop_ids, parent, children)
+        phi = _split_phi(phi, xx, pop_ids, parent)
+        # When dadi splits a population, one of the new children is always the last in the phi matrix
+        pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
     elif e in ["admix", "merge"]:
         # two or more populations merge, based on given proportion(s)
         parents = event[1]
@@ -537,6 +545,7 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
         phi = _admix_phi(phi, xx, proportion, pop_ids, source, dest)
     else:
         raise ValueError(f"Haven't implemented methods for event type {e}")
+    print(pop_ids)
     return phi, pop_ids
 
 def _integrate_phi(phi, xx, integration_params, pop_ids):
@@ -590,25 +599,23 @@ def _integrate_phi(phi, xx, integration_params, pop_ids):
            )
     return phi
 
-def _split_phi(phi, xx, pop_ids, parent, children):
+def _split_phi(phi, xx, pop_ids, parent):
     """
     Split the phi into children from the deme at pop_ids.index(parent).
     """
     parent_i = pop_ids.index(parent)
-    # When dadi splits a population, one of the new children is always the last in the phi matrix
-    pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
-    if len(pop_ids) == 2:
+    if len(pop_ids) == 1:
         phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
-    elif len(pop_ids) == 3:
+    elif len(pop_ids) == 2:
         phimanip_func = [dadi.PhiManip.phi_2D_to_3D_split_1, dadi.PhiManip.phi_2D_to_3D_split_2][parent_i]
         phi = phimanip_func(xx, phi)
-    elif len(pop_ids) == 4:
+    elif len(pop_ids) == 3:
         proportions = [[1,0,0], [0,1,0], [0,0,1]][parent_i]
-        dadi.PhiManip.phi_3D_to_4D(phi, proportions[0],proportions[1], xx,xx,xx,xx)
-    elif len(pop_ids) == 5:
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportions[0],proportions[1], xx,xx,xx,xx)
+    elif len(pop_ids) == 4:
         proportions = [[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]][parent_i]
-        dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx)
-    return phi, pop_ids
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx,xx)
+    return phi
 
 def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents):
     """
@@ -682,5 +689,6 @@ def _make_sorted_proportions_list(proportions, source_i, dest_i, pop_ids):
         proportion_l.pop(dest_i)
     except:
         pass
+    # print(proportion_l)
     return proportion_l
 
