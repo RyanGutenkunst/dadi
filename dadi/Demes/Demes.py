@@ -9,7 +9,7 @@ import copy
 import numpy as np
 
 import dadi
-
+import pickle
 
 try:
     import demes
@@ -133,7 +133,7 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None):
 
 
 ##
-## general functions used by both SFS and LD
+## general functions used by both SFS
 ##
 
 
@@ -469,6 +469,12 @@ def _compute_sfs(
             h_int = [h for _ in frozen]
             integration_params = [nu, T, M, gamma_int, h_int, theta, frozen]
             phi = _integrate_phi(phi, xx, integration_params, pop_ids)
+            # ###
+            # try:
+            #     print(integration_params)
+            # except:
+            #     pass
+            # ###
         events = demo_events[interval[1]]
         for event in events:
             phi, pop_ids = _apply_event(phi, xx, pop_ids, event, interval[1], sample_sizes, demes_present)
@@ -479,12 +485,15 @@ def _compute_sfs(
                 [x[0] for x in integration_intervals].index(interval[1])
             ]
             next_deme_order = demes_present[next_interval]
-
+            # ###
+            # print(pop_ids)
+            # ###
             if pop_ids != next_deme_order:
                 new_order = [pop_ids.index(pop)+1 for pop in next_deme_order]
                 phi = dadi.PhiManip.reorder_pops(phi, new_order)
                 pop_ids = next_deme_order
-            print('new order:',pop_ids,'\n\n')
+            # print('new order:',pop_ids,'\n\n')
+
     fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
     return fs
 
@@ -545,7 +554,7 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
         phi = _admix_phi(phi, xx, proportion, pop_ids, source, dest)
     else:
         raise ValueError(f"Haven't implemented methods for event type {e}")
-    print(pop_ids)
+    # print(pop_ids)
     return phi, pop_ids
 
 def _integrate_phi(phi, xx, integration_params, pop_ids):
