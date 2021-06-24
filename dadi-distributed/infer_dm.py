@@ -12,7 +12,6 @@ def main():
     parser.add_argument('--model', type=str, required=True, help='The name of the demographic model; To check available demographic models, please use `dadi-cli Model`')
     parser.add_argument('--p0', type=str, nargs='+', required=True, help='The initial parameters for inference')
     parser.add_argument('--ubounds', type=float, nargs='+', required=True, help='The upper bounds of the inferred parameters, please use -1 to indicate a parameter without upper bound')
-    parser.add_argument('--jobs', default=1, type=int, help='The number of jobs to run optimization parrallelly')
 
     args = parser.parse_args()
 
@@ -23,7 +22,7 @@ def main():
             else: new_params.append(p)
         return new_params
 
-    def read_arams(params):
+    def read_params(params):
         new_params = []
         line = open(params, 'r').readline().rstrip().split()
         for p in line:
@@ -45,7 +44,7 @@ def main():
 
     from src.InferDM import infer_demography
 
-    infer_demography(args.syn_fs, args.model, args.grids, args.p0, 'output', args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
+    infer_demography(args.syn_fs, args.model, args.grids, args.p0, "output", args.ubounds, args.lbounds, args.constants, args.misid, args.cuda)
 
 if __name__ == '__main__':
     main()
