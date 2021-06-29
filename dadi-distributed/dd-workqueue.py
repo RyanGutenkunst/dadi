@@ -28,16 +28,20 @@ def add_tasks(jobs, batch_num, args, q):
     for i in range(jobs):
         add_task(args, batch_num, i, q)
 
-def best_fit(args, batch_num):
-    cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(batch_num) + \
-        " --output " + args.dir + "/output" + str(batch_num) + ".params --ubounds " + args.ubounds + " --lbounds " + args.lbounds
+def best_fit(args, batch_num, q):
+    cmd = "dadi-cli BestFit --dir " + args.dir + "/optimization" + str(batch_num)
+    cmd += " --output " + args.dir + "/output" + str(batch_num) + ".params"
+    cmd += " --ubounds " + args.ubounds + " --lbounds " + args.lbounds
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     print(out.stdout)
     if out.returncode != 0:
         print("BestFit returned an error")
         print(out.stderr)
+        q.shutdown_workers(0)
         sys.exit(1)
-    return out.stdout
+    if out.stdout.find("CONVERGED RESULT FOUND!") != -1:
+        q.shutdown_workers(0)
+        sys.exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Work Queue manager for Dadi.')
@@ -75,11 +79,7 @@ if __name__ == '__main__':
                 if t.return_status != 0:
                     print("problem encountered, return status =" + str(t.return_status))
                     sys.exit(t.return_status)
-        o = best_fit(args, batch_num)
-        print(o)
-        if o.find("CONVERGED RESULT FOUND!") != -1:
-            q.shutdown_workers(0)
-            sys.exit(0)
+        best_fit(args, batch_num)
         args.p0 = "output" + str(batch_num) + ".params"
-        batch += 1
+        batch_num += 1
     q.shutdown_workers(0)
