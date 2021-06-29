@@ -10,7 +10,7 @@ sample_sizes = [10, 10, 10]
 
 pts_l = [15,20,25]
 pts = pts_l[0]
-class TestSplits(unittest.TestCase):
+class DemesTests(unittest.TestCase):
     def test_split(self):
         xx = dadi.Numerics.default_grid(pts)
         phi1D = dadi.PhiManip.phi_1D(xx)
@@ -46,7 +46,6 @@ class TestSplits(unittest.TestCase):
             demes_phi5D = Demes._split_phi(dadi_phi4D, xx, pop_ids, parent)
             self.assertTrue(np.allclose(demes_phi5D, dadi_phi5D))
 
-class TestIntegration(unittest.TestCase):
     def test_integration(self):
         xx = dadi.Numerics.default_grid(pts)
         phi1D = dadi.PhiManip.phi_1D(xx)
@@ -81,45 +80,43 @@ class TestIntegration(unittest.TestCase):
         demes_phi3D = Demes._integrate_phi(phi3D, xx, integration_params, pop_ids)
         self.assertTrue(np.allclose(demes_phi3D, dadi_phi3D))
 
-class TestAdmix(unittest.TestCase):
-        def test_admix(self):
-            xx = dadi.Numerics.default_grid(pts)
-            phi1D = dadi.PhiManip.phi_1D(xx)
+    def test_admix(self):
+        xx = dadi.Numerics.default_grid(pts)
+        phi1D = dadi.PhiManip.phi_1D(xx)
 
-            dadi_phi2D = dadi.PhiManip.phi_1D_to_2D(xx, phi1D)
+        dadi_phi2D = dadi.PhiManip.phi_1D_to_2D(xx, phi1D)
 
-            pop_ids = ['1']
-            parent = '1'
-            children=['A', 'B']
-            demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
+        pop_ids = ['1']
+        parent = '1'
+        children=['A', 'B']
+        demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
 
-            proportions, pop_ids = [0.7, children]
-            for sources, dest in zip(pop_ids, pop_ids[::-1]):
-                i = pop_ids.index(dest)
-                phifunc = [
-                dadi.PhiManip.phi_2D_admix_2_into_1,
-                dadi.PhiManip.phi_2D_admix_1_into_2
-                ][i]
-                dadi_phi2D_admix = phifunc(dadi_phi2D, proportions, xx,xx)
-                demes_phi2D_admix = Demes._admix_phi(demes_phi2D, xx, proportions, pop_ids, sources, dest)
-                self.assertTrue(np.allclose(demes_phi2D_admix, dadi_phi2D_admix))
-        def test_admix_new_pop(self):
-            xx = dadi.Numerics.default_grid(pts)
-            phi1D = dadi.PhiManip.phi_1D(xx)
+        proportions, pop_ids = [0.7, children]
+        for sources, dest in zip(pop_ids, pop_ids[::-1]):
+            i = pop_ids.index(dest)
+            phifunc = [
+            dadi.PhiManip.phi_2D_admix_2_into_1,
+            dadi.PhiManip.phi_2D_admix_1_into_2
+            ][i]
+            dadi_phi2D_admix = phifunc(dadi_phi2D, proportions, xx,xx)
+            demes_phi2D_admix = Demes._admix_phi(demes_phi2D, xx, proportions, pop_ids, sources, dest)
+            self.assertTrue(np.allclose(demes_phi2D_admix, dadi_phi2D_admix))
+    def test_admix_new_pop(self):
+        xx = dadi.Numerics.default_grid(pts)
+        phi1D = dadi.PhiManip.phi_1D(xx)
 
-            dadi_phi2D = dadi.PhiManip.phi_1D_to_2D(xx, phi1D)
+        dadi_phi2D = dadi.PhiManip.phi_1D_to_2D(xx, phi1D)
 
-            pop_ids = ['1']
-            parent = '1'
-            children=['A', 'B']
-            demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
+        pop_ids = ['1']
+        parent = '1'
+        children=['A', 'B']
+        demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
 
-            proportions, pop_ids, parents = [[0.7, 0.3], children, children]
-            dadi_phi3D = dadi.PhiManip.phi_2D_to_3D_admix(dadi_phi2D, proportions[0], xx,xx,xx)
-            demes_phi3D = Demes._admix_new_pop_phi(demes_phi2D, xx, proportions, pop_ids, parents)
-            self.assertTrue(np.allclose(demes_phi3D, dadi_phi3D))
+        proportions, pop_ids, parents = [[0.7, 0.3], children, children]
+        dadi_phi3D = dadi.PhiManip.phi_2D_to_3D_admix(dadi_phi2D, proportions[0], xx,xx,xx)
+        demes_phi3D = Demes._admix_new_pop_phi(demes_phi2D, xx, proportions, pop_ids, parents)
+        self.assertTrue(np.allclose(demes_phi3D, dadi_phi3D))
 
-class DemesDataTestCase(unittest.TestCase):
     def test_basic_loading(self):
         fs_demes = dadi.Spectrum.from_demes(model, sampled_demes=sampled_demes, sample_sizes=sample_sizes, pts=pts_l)
         self.assertTrue(np.allclose(fs_demes[2,5,6], 0.0025822560555528017))
@@ -185,15 +182,7 @@ class DemesDataTestCase(unittest.TestCase):
         self.assertTrue(np.allclose(fs_demes, fs_dadi))
         #self.assertTrue(np.allclose(fs_demes[6,3,2], fs_demes[6,3,2]))
 
-suite=unittest.TestLoader().loadTestsFromTestCase(TestAdmix)
+suite=unittest.TestLoader().loadTestsFromTestCase(DemesTests)
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
-
-
-
-
-
