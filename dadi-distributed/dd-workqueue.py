@@ -11,10 +11,10 @@ def add_task(args, batch_num, task_num, q):
     if args.misid:
         cmd += " --misid"
     cmd += " --p0 " + args.p0 + " --ubounds " + args.ubounds + " --lbounds " + args.lbounds
-    cmd += " >std.out 2>std.err"
+    #cmd += " >std.out 2>std.err"
     t = Task(cmd)
-    t.specify_output_file("std.out")
-    t.specify_output_file("std.err")
+    #t.specify_output_file("std.out")
+    #t.specify_output_file("std.err")
     t.specify_input_file(os.path.dirname(__file__) + "/infer_dm.py")
     t.specify_input_file(args.infile, "infile", cache=False)
     if args.p0.startswith("output"):
@@ -33,14 +33,12 @@ def best_fit(args, batch_num, q):
     cmd += " --output " + args.dir + "/output" + str(batch_num) + ".params"
     cmd += " --ubounds " + args.ubounds + " --lbounds " + args.lbounds
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    print(out.stdout)
     if out.returncode != 0:
         print("BestFit returned an error")
         print(out.stderr)
-        q.shutdown_workers(0)
         sys.exit(1)
     if out.stdout.find("CONVERGED RESULT FOUND!") != -1:
-        q.shutdown_workers(0)
+        print(out.stdout)
         sys.exit(0)
 
 if __name__ == '__main__':
@@ -60,7 +58,8 @@ if __name__ == '__main__':
         sys.exit(1)
     os.makedirs(args.dir, exist_ok=True)
     try:
-        q = WorkQueue(name = "dadi-distributed", debug_log = "debug.log")
+        q = WorkQueue(name = "dadi-distributed")
+        #q = WorkQueue(name = "dadi-distributed", debug_log = "debug.log")
         q.specify_password_file('pwfile')
     except:
         print("Instantiation of Work Queue failed!")
@@ -72,14 +71,13 @@ if __name__ == '__main__':
     batch_num = 1
     while True:
         add_tasks(jobs, batch_num, args, q)
-        print("waiting for tasks to complete...")
+        print("waiting for tasks to complete for batch " + str(batch_num) + "...")
         while not q.empty():
             t = q.wait(5)
             if t:
                 if t.return_status != 0:
                     print("problem encountered, return status =" + str(t.return_status))
                     sys.exit(t.return_status)
-        best_fit(args, batch_num)
+        best_fit(args, batch_num, q)
         args.p0 = "output" + str(batch_num) + ".params"
         batch_num += 1
-    q.shutdown_workers(0)
