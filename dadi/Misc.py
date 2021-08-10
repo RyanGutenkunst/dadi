@@ -487,7 +487,10 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     else:
         popinfo_file = open(popinfo_filename)
     # pop_dict has key, value pairs of "SAMPLE_NAME" : "POP_NAME"
-    popinfo_dict = _get_popinfo(popinfo_file)
+    try:
+        popinfo_dict = _get_popinfo(popinfo_file)
+    except:
+        raise ValueError('Failed in parsing popinfo file.')
     popinfo_file.close()
 
     # Open VCF file
@@ -687,7 +690,7 @@ def _get_popinfo(popinfo_file):
     # read in population information for each sample
     popinfo_file.seek(0)
     for line in popinfo_file:
-        if line.startswith('#'):
+        if line.startswith('#') or not line.strip():
             continue
         cols = line.split()
         sample = cols[sample_col]
