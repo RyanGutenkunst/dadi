@@ -357,3 +357,28 @@ def bottlegrowth_split_mig_single_gamma(params, ns, pts):
     """
     nuB,nuF,m,T,Ts,gamma = params
     return bottlegrowth_split_mig((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
+
+def growth(params, ns, pts):
+    """
+    Exponential growth beginning some time ago.
+
+    params = (nu,T)
+    ns = (n1,)
+
+    nu: Ratio of contemporary to ancient population size
+    T: Time in the past at which growth began (in units of 2*Na 
+       generations) 
+    gamma: Scaled selection coefficient
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nu,T,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+
+    nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
