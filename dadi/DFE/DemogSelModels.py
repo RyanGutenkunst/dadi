@@ -243,3 +243,117 @@ def three_epoch(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+
+def bottlegrowth(params, ns, pts):
+    """
+    params = (nuB,nuF,T)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth with no population
+    split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nuB,nuF,T,gamma1,gamma2 = params
+    return bottlegrowth_split_mig((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)
+
+def bottlegrowth_single_gamma(params, ns, pts):
+    """
+    bottlegrowth model with selection assumed to be equal in all populations.
+
+    See bottlegrowth for argument definitions, but only a single gamma in params.
+    """
+    nuB,nuF,T,gamma = params
+    return bottlegrowth_split_mig((nuB,nuF,0,T,0,gamma,gamma), ns, pts)
+
+def bottlegrowth_split(params, ns, pts):
+    """
+    params = (nuB,nuF,T,Ts)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth then split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    Ts: Time in the past at which the two populations split.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nuB,nuF,T,Ts,gamma1,gamma2 = params
+    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)
+
+def bottlegrowth_split_single_gamma(params, ns, pts):
+    """
+    bottlegrowth_split model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_split for argument definitions, but only a single gamma in params.
+    """
+    nuB,nuF,T,Ts,gamma = params
+    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)
+
+def bottlegrowth_split_mig(params, ns, pts):
+    """
+    params = (nuB,nuF,m,T,Ts)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth then split with
+    migration.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    m: Migration rate between the two populations (2*Na*m).
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    Ts: Time in the past at which the two populations split.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nuB,nuF,m,T,Ts,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+
+    if T >= Ts:
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.one_pop(phi, xx, T-Ts, nu_func, gamma=gamma1)
+
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        nu0 = nu_func(T-Ts)
+        nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
+        phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+    else:
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        phi = Integration.two_pops(phi, xx, Ts-T, 1, 1, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.two_pops(phi, xx, T, nu_func, nu_func, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+
+def bottlegrowth_split_mig_single_gamma(params, ns, pts):
+    """
+    bottlegrowth_split_mig model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_split_mig for argument definitions, but only a single gamma in params.
+    """
+    nuB,nuF,m,T,Ts,gamma = params
+    return bottlegrowth_split_mig((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
