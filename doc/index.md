@@ -29,6 +29,9 @@ If you find the triallelic methods useful, please cite:
 If you find the two-locus methods useful, please cite:
 [AP Ragsdale, RN Gutenkunst "Inferring demographic history using two-locus statistics" Genetics 206:1037 (2017)](http://doi.org/10.1534/genetics.117.201251).
 
+If you find the joint DFE inference methods useful, please cite:
+[X Huang, AL Fortier, AJ Coffman, TJ Struck, MN Irby, JE James, JE León-Burguete, AP Ragsdale, RN Gutenkunst](https://doi.org/10.1093/molbev/msab162)
+
 
 ### Suggested workflow
 
