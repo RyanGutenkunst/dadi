@@ -15,7 +15,7 @@ import dadi
 from dadi import Numerics, Spectrum
 
 class Cache1D:
-    def __init__(self, params, ns, demo_sel_func, pts_l, 
+    def __init__(self, params, ns, demo_sel_func, pts, 
                  gamma_bounds=(1e-4, 2000), gamma_pts=500, 
                  additional_gammas=[],
                  mp=False, cpus=None, gpus=0, verbose=False):
@@ -24,7 +24,7 @@ class Cache1D:
         ns: Sample size(s) for cached spectra
         demo_sel_func: DaDi demographic function with selection. 
                        gamma must be the last argument.
-        pts_l: Integration/extrapolation grid points settings for demo_sel_func
+        pts: Integration/extrapolation grid points settings for demo_sel_func
         gamma_bounds: Range of gammas to cache spectra for.
         gamma_pts: Number of gamma grid points over which to integrate
         additional_gammas: Additional positive values of gamma to cache for
@@ -36,7 +36,7 @@ class Cache1D:
         gpus: For multiprocessing, number of GPU jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
         """
-        self.params, self.ns, self.pts_l = tuple(params), tuple(ns), tuple(pts_l)
+        self.params, self.ns, self.pts = tuple(params), tuple(ns), tuple(pts)
 
         #Create a vector of gammas that are log-spaced over an interval
         self.gammas = -np.logspace(np.log10(gamma_bounds[1]),
@@ -50,7 +50,7 @@ class Cache1D:
         self.demo_sel_func = demo_sel_func
         self.params = params
         self.ns = ns
-        self.pts_l = pts_l
+        self.pts = pts
 
         if not mp: #for running with a single thread
             self._single_process(verbose)
@@ -58,14 +58,14 @@ class Cache1D:
             self._multiple_processes(cpus, gpus, verbose)
 
         demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
-        self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts_l)
+        self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts)
         self.spectra = np.array(self.spectra)
 
     def _single_process(self, verbose):
         demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
         for ii, gamma in enumerate(self.gammas):
             self.spectra[ii] = demo_sel_extrap_func(tuple(self.params)+(gamma,), self.ns,
-                                             self.pts_l)
+                                             self.pts)
             if verbose:
                print('{0}: {1}'.format(ii, gamma))
 
@@ -83,12 +83,12 @@ class Cache1D:
             pool = []
             for ii in range(cpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts_l, verbose, False))
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, False))
                 p.start()
                 pool.append(p)
             for ii in range(gpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts_l, verbose, True))
+                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, True))
                 p.start()
                 pool.append(p)
 
@@ -105,7 +105,7 @@ class Cache1D:
             for ii, sfs in results:
                 self.spectra[ii] = sfs
 
-    def _worker_sfs(self, in_queue, outlist, popn_func_ex, params, ns, pts_l, verbose, usegpu):
+    def _worker_sfs(self, in_queue, outlist, popn_func_ex, params, ns, pts, verbose, usegpu):
         """
         Worker function -- used to generate SFSes for
         single values of gamma.
@@ -118,7 +118,7 @@ class Cache1D:
                 return
             ii, gamma = item
             try:
-                sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts_l)
+                sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts)
                 if verbose:
                     print('{0}: {1}'.format(ii, gamma))
                 outlist.append((ii, sfs))
@@ -193,7 +193,7 @@ class Cache1D:
         demo_sel_func: DaDi demographic function with selection. 
                        gamma must be the last argument.
         Npos: Number of positive point masses to model.
-        pts: Ignored, evaluation of demo_self_func will use pts_l from orignal
+        pts: Ignored, evaluation of demo_self_func will use pts from orignal
                caching.
         exterior_int: If False, do not integrate outside sampled domain.
 
@@ -218,7 +218,7 @@ class Cache1D:
                                      'in Cache1D spectra. Was it included in '
                                      'additional_gammas during cache generation?'.format(gammapos))
                 pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
-                                             self.ns, self.pts_l)
+                                             self.ns, self.pts)
                 self.gammas = np.append(self.gammas, gammapos)
                 self.spectra = np.append(self.spectra, [pos_fs.data], axis=0)
             ii = list(self.gammas).index(gammapos)
