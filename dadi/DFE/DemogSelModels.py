@@ -218,7 +218,48 @@ def split_asym_mig_single_gamma(params, ns, pts):
     """
     nu1,nu2,T,m12,m21,gamma = params
     return split_asym_mig([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
-    
+
+def split_delay_mig(params, ns, pts):
+    """
+    params = (nu1,nu2,Tpre,Tmig,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with migration after some time has passed post split.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    """
+    nu1,nu2,Tpre,Tmig,m12,m21,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0, 
+                               gamma1=gamma1, gamma2=gamma2)
+    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21, 
+                               gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+
+def split_delay_mig_single_gamma(params, ns, pts):
+    """
+    split_delay_mig model with selection assumed to be equal in all populations.
+
+    See split_delay_mig for argument definitions, but only a single gamma in params.
+    """
+    nu1,nu2,Tpre,Tmig,m12,m21,gamma = params
+    return split_delay_mig([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)
+
 def three_epoch(params, ns, pts):
     """
     params = (nuB,nuF,TB,TF,gamma)
