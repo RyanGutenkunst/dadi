@@ -6,7 +6,7 @@ import numpy
 from dadi import Numerics, PhiManip, Integration
 from dadi.Spectrum_mod import Spectrum
 
-def snm(notused, ns, pts):
+def snm_2d(notused, ns, pts):
     """
     ns = (n1,n2)
 
@@ -17,8 +17,9 @@ def snm(notused, ns, pts):
     phi = PhiManip.phi_1D_to_2D(xx, phi)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+snm_2d.__param_names__ = []
 
-def bottlegrowth(params, ns, pts):
+def bottlegrowth_2d(params, ns, pts):
     """
     params = (nuB,nuF,T)
     ns = (n1,n2)
@@ -36,6 +37,7 @@ def bottlegrowth(params, ns, pts):
     """
     nuB,nuF,T = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,0), ns, pts)
+bottlegrowth_2d.__param_names__ = ['nuB', 'nuF', 'T']
 
 def bottlegrowth_split(params, ns, pts):
     """
@@ -55,6 +57,7 @@ def bottlegrowth_split(params, ns, pts):
     """
     nuB,nuF,T,Ts = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,Ts), ns, pts)
+bottlegrowth_split.__param_names__ = ['nuB', 'nuF', 'T', 'Ts']
 
 def bottlegrowth_split_mig(params, ns, pts):
     """
@@ -95,6 +98,7 @@ def bottlegrowth_split_mig(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+bottlegrowth_split_mig.__param_names__ = ['nuB', 'nuF', 'm', 'T', 'Ts']
 
 def split_mig(params, ns, pts):
     """
@@ -121,6 +125,7 @@ def split_mig(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_mig.__param_names__ = ['nu1', 'nu2', 'T', 'm']
 
 def split_mig_mscore(params):
     """
@@ -135,6 +140,64 @@ def split_mig_mscore(params):
     sub_dict = {'nu1':nu1, 'nu2':nu2, 'm12':2*m, 'm21':2*m, 'T': T/2}
 
     return command % sub_dict
+split_mig_mscore.__param_names__ = ['nu1', 'nu2', 'T', 'm']
+
+def split_asym_mig(params, ns, pts):
+    """
+    params = (nu1,nu2,T,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with asymetric migration .
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nu1,nu2,T,m12,m21 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+split_asym_mig.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm21']
+
+def split_delay_mig(params, ns, pts):
+    """
+    params = (nu1,nu2,Tpre,Tmig,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with migration after some time has passed post split.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nu1,nu2,Tpre,Tmig,m12,m21 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+split_delay_mig.__param_names__ = ['nu1', 'nu2', 'Tpre', 'Tmig', 'm12', 'm21']
 
 def IM(params, ns, pts):
     """
@@ -166,6 +229,7 @@ def IM(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+IM.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21']
 
 def IM_mscore(params):
     """
@@ -184,6 +248,7 @@ def IM_mscore(params):
                 'm12':2*m12, 'm21':2*m21, 'T': T/2}
 
     return command % sub_dict
+IM_mscore.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21']
 
 def IM_pre(params, ns, pts):
     """
@@ -221,6 +286,7 @@ def IM_pre(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+IM_pre.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21']
 
 def IM_pre_mscore(params):
     """
@@ -242,59 +308,5 @@ def IM_pre_mscore(params):
                 'm12':2*m12, 'm21':2*m21, 'T': T/2, 'nuP':nuPre, 'TP':(T+TPre)/2}
 
     return command % sub_dict
-
-def split_asym_mig(params, ns, pts):
-    """
-    params = (nu1,nu2,T,m12,m21)
-    ns = (n1,n2)
-
-    Split into two populations of specifed size, with asymetric migration .
-
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2 (2*Na*m21)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
-    """
-    nu1,nu2,T,m12,m21 = params
-
-    xx = Numerics.default_grid(pts)
-
-    phi = PhiManip.phi_1D(xx)
-    phi = PhiManip.phi_1D_to_2D(xx, phi)
-
-    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
-
-    fs = Spectrum.from_phi(phi, ns, (xx,xx))
-    return fs
-
-def split_delay_mig(params, ns, pts):
-    """
-    params = (nu1,nu2,Tpre,Tmig,m12,m21)
-    ns = (n1,n2)
-
-    Split into two populations of specifed size, with migration after some time has passed post split.
-
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
-    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2 (2*Na*m21)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
-    """
-    nu1,nu2,Tpre,Tmig,m12,m21 = params
-
-    xx = Numerics.default_grid(pts)
-
-    phi = PhiManip.phi_1D(xx)
-    phi = PhiManip.phi_1D_to_2D(xx, phi)
-    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0)
-    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21)
-
-    fs = Spectrum.from_phi(phi, ns, (xx,xx))
-    return fs
+IM_pre_mscore.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21']
 
