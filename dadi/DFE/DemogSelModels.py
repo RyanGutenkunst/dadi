@@ -21,20 +21,20 @@ def equil(params, ns, pts):
 
     return Spectrum.from_phi(phi, ns, (xx,))
 
-def two_epoch(params, ns, pts):
+def two_epoch_sel(params, ns, pts):
     """
     Instantaneous population size change, plus selection.
 
     params: [nu,T,gamma]
     ns: Sample sizes
     pts: Grid point settings for integration
-    gamma: Scaled selection coefficient
 
     Note that DFE methods internally apply make_extrap_func,
     So there is no need to make it extrapolate again.
 
     nu: Final population size
     T: Time of size change
+    gamma: Scaled selection coefficient
     """
     nu, T, gamma = params
     xx = Numerics.default_grid(pts)
@@ -43,7 +43,7 @@ def two_epoch(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 
-def IM_pre(params, ns, pts):
+def IM_pre_sel(params, ns, pts):
     """
     Isolation-with-migration model with exponential pop growth, a size change
     prior to split, and selection.
@@ -88,16 +88,16 @@ def IM_pre(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 
-def IM_pre_single_gamma(params, ns, pts):
+def IM_pre_sel_single_gamma(params, ns, pts):
     """
-    IM_pre model with selection assumed to be equal in all populations.
+    IM_pre_sel model with selection assumed to be equal in all populations.
 
-    See IM_pre for argument definitions, but only a single gamma in params.
+    See IM_pre_sel for argument definitions, but only a single gamma in params.
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
-    return IM_pre((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+    return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
 
-def IM(params, ns, pts):
+def IM_sel(params, ns, pts):
     """
     Isolation-with-migration model with exponential pop growth and selection.
 
@@ -121,18 +121,18 @@ def IM(params, ns, pts):
     gamma2: Scaled selection coefficient in pop 2
     """
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
-    return IM_pre((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
+    return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
 
-def IM_single_gamma(params, ns, pts):
+def IM_sel_single_gamma(params, ns, pts):
     """
-    IM model with selection assumed to be equal in all populations.
+    IM_sel model with selection assumed to be equal in all populations.
 
-    See IM for argument definitions, but only a single gamma in params.
+    See IM_sel for argument definitions, but only a single gamma in params.
     """
     s,nu1,nu2,T,m12,m21,gamma = params
-    return IM((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+    return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
 
-def split_mig(params, ns, pts):
+def split_mig_sel(params, ns, pts):
     """
     Instantaneous split into two populations of specified size, with symmetric migration.
     params = [nu1,nu2,T,m]
@@ -166,16 +166,16 @@ def split_mig(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 
-def split_mig_single_gamma(params, ns, pts):
+def split_mig_sel_single_gamma(params, ns, pts):
     """
-    split_mig model with selection assumed to be equal in all populations.
+    split_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_mig for argument definitions, but only a single gamma in params.
+    See split_mig_sel for argument definitions, but only a single gamma in params.
     """
     nu1,nu2,T,m,gamma = params
-    return split_mig([nu1,nu2,T,m,gamma,gamma], ns, pts)
+    return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)
     
-def split_asym_mig(params, ns, pts):
+def split_asym_mig_sel(params, ns, pts):
     """
     Instantaneous split into two populations of specified size, with asymmetric migration.
     params = [nu1,nu2,T,m]
@@ -210,16 +210,16 @@ def split_asym_mig(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 
-def split_asym_mig_single_gamma(params, ns, pts):
+def split_asym_mig_sel_single_gamma(params, ns, pts):
     """
-    split_asym_mig model with selection assumed to be equal in all populations.
+    split_asym_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_asym_mig for argument definitions, but only a single gamma in params.
+    See split_asym_mig_sel for argument definitions, but only a single gamma in params.
     """
     nu1,nu2,T,m12,m21,gamma = params
-    return split_asym_mig([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
+    return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
 
-def split_delay_mig(params, ns, pts):
+def split_delay_mig_sel(params, ns, pts):
     """
     params = (nu1,nu2,Tpre,Tmig,m12,m21)
     ns = (n1,n2)
@@ -251,16 +251,16 @@ def split_delay_mig(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 
-def split_delay_mig_single_gamma(params, ns, pts):
+def split_delay_mig_sel_single_gamma(params, ns, pts):
     """
-    split_delay_mig model with selection assumed to be equal in all populations.
+    split_delay_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_delay_mig for argument definitions, but only a single gamma in params.
+    See split_delay_mig_sel for argument definitions, but only a single gamma in params.
     """
     nu1,nu2,Tpre,Tmig,m12,m21,gamma = params
-    return split_delay_mig([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)
+    return split_delay_mig_sel([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)
 
-def three_epoch(params, ns, pts):
+def three_epoch_sel(params, ns, pts):
     """
     params = (nuB,nuF,TB,TF,gamma)
     ns = (n1,)
@@ -285,7 +285,7 @@ def three_epoch(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 
-def bottlegrowth(params, ns, pts):
+def bottlegrowth_2d_sel(params, ns, pts):
     """
     params = (nuB,nuF,T)
     ns = (n1,n2)
@@ -304,18 +304,18 @@ def bottlegrowth(params, ns, pts):
     pts: Number of grid points to use in integration.
     """
     nuB,nuF,T,gamma1,gamma2 = params
-    return bottlegrowth_split_mig((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)
 
-def bottlegrowth_single_gamma(params, ns, pts):
+def bottlegrowth_2d_sel_single_gamma(params, ns, pts):
     """
-    bottlegrowth model with selection assumed to be equal in all populations.
+    bottlegrowth_2d_sel model with selection assumed to be equal in all populations.
 
-    See bottlegrowth for argument definitions, but only a single gamma in params.
+    See bottlegrowth_2d_sel for argument definitions, but only a single gamma in params.
     """
     nuB,nuF,T,gamma = params
-    return bottlegrowth_split_mig((nuB,nuF,0,T,0,gamma,gamma), ns, pts)
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma,gamma), ns, pts)
 
-def bottlegrowth_split(params, ns, pts):
+def bottlegrowth_split_sel(params, ns, pts):
     """
     params = (nuB,nuF,T,Ts)
     ns = (n1,n2)
@@ -334,18 +334,18 @@ def bottlegrowth_split(params, ns, pts):
     pts: Number of grid points to use in integration.
     """
     nuB,nuF,T,Ts,gamma1,gamma2 = params
-    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)
 
-def bottlegrowth_split_single_gamma(params, ns, pts):
+def bottlegrowth_split_sel_single_gamma(params, ns, pts):
     """
-    bottlegrowth_split model with selection assumed to be equal in all populations.
+    bottlegrowth_split_sel model with selection assumed to be equal in all populations.
 
-    See bottlegrowth_split for argument definitions, but only a single gamma in params.
+    See bottlegrowth_split_sel for argument definitions, but only a single gamma in params.
     """
     nuB,nuF,T,Ts,gamma = params
-    return bottlegrowth_split_mig((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)
 
-def bottlegrowth_split_mig(params, ns, pts):
+def bottlegrowth_split_mig_sel(params, ns, pts):
     """
     params = (nuB,nuF,m,T,Ts)
     ns = (n1,n2)
@@ -390,16 +390,16 @@ def bottlegrowth_split_mig(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 
-def bottlegrowth_split_mig_single_gamma(params, ns, pts):
+def bottlegrowth_split_mig_sel_single_gamma(params, ns, pts):
     """
-    bottlegrowth_split_mig model with selection assumed to be equal in all populations.
+    bottlegrowth_split_mig_sel model with selection assumed to be equal in all populations.
 
-    See bottlegrowth_split_mig for argument definitions, but only a single gamma in params.
+    See bottlegrowth_split_mig_sel for argument definitions, but only a single gamma in params.
     """
     nuB,nuF,m,T,Ts,gamma = params
-    return bottlegrowth_split_mig((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
+    return bottlegrowth_split_mig_sel((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
 
-def growth(params, ns, pts):
+def growth_sel(params, ns, pts):
     """
     Exponential growth beginning some time ago.
 
@@ -416,9 +416,36 @@ def growth(params, ns, pts):
     nu,T,gamma = params
 
     xx = Numerics.default_grid(pts)
-    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
 
     nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
+
+def bottlegrowth_1d_sel(params, ns, pts):
+    """
+    Instantanous size change followed by exponential growth.
+
+    params = (nuB,nuF,T,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contemporary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    """
+    nuB,nuF,T = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
     phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
