@@ -2,6 +2,7 @@
 Input models of demography + selection.
 """
 from dadi import Numerics, Integration, PhiManip, Spectrum
+import numpy
 
 def equil(params, ns, pts):
     """
@@ -440,7 +441,7 @@ def bottlegrowth_1d_sel(params, ns, pts):
     n1: Number of samples in resulting Spectrum
     pts: Number of grid points to use in integration.
     """
-    nuB,nuF,T = params
+    nuB,nuF,T,gamma = params
 
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx, gamma=gamma)
