@@ -715,7 +715,7 @@ def annotate_from_annovar(dd, annovar_file, variant_type):
     var_fid = open(annovar_file)
     for line in var_fid:
         variant = line.split('\t')[1]
-        position = '_'.join([line.split('\t')[-5],line.split('\t')[-4]])
+        position = '_'.join(line.split()[4:6])
         if variant_type in variant:
             anno_list.append(position)
     var_fid.close()
