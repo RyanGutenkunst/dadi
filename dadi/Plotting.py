@@ -62,7 +62,7 @@ def plot_1d_fs(fs, fig_num=None, show=True):
         fig.show()
 
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
-                          plot_masked=False):
+                          plot_masked=False, show=True):
     """
     Mulitnomial comparison between 1d model and data.
 
@@ -83,7 +83,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
     model = Inference.optimally_scaled_sfs(model, data)
 
     plot_1d_comp_Poisson(model, data, fig_num, residual,
-                         plot_masked)
+                         plot_masked, show)
 
 def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
                          plot_masked=False, show=True):
