@@ -70,7 +70,7 @@ class DFETestCase(unittest.TestCase):
         ns = [8, 12]
         pts_l = [60, 80, 100]
 
-        s1 = dadi.DFE.Cache1D(demo_params, ns, DemogSelModels.IM_single_gamma, pts_l,
+        s1 = dadi.DFE.Cache1D(demo_params, ns, DemogSelModels.IM_sel_single_gamma, pts_l,
                               gamma_bounds=(1e-2, 10), gamma_pts=100)
 
         fs = s1.integrate([-0.5, 0.5], None, PDFs.lognormal,
@@ -84,7 +84,7 @@ class DFETestCase(unittest.TestCase):
         assert(np.allclose(fs, comp))
 
         fs = s1.integrate_point_pos([-0.5, 0.5, 0.1, 4.3], None, PDFs.lognormal,
-                                    1e5, DemogSelModels.IM_single_gamma)
+                                    1e5, DemogSelModels.IM_sel_single_gamma)
         comp = dadi.Spectrum.from_file(
             'test_data/fitdadi.IM_point_pos_test.fs')
         assert(np.allclose(fs, comp))
@@ -94,20 +94,20 @@ class DFETestCase(unittest.TestCase):
         Trivial test that Cache2D generation doesn't crash.
         """
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
-        dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=2)
-        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
         s2.integrate([2, 1, 0.4], None, PDFs.biv_lognormal, 1, None)
 
         # Merging of separate caches
-        s2a = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2a = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                 gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
                 split_jobs=3, this_job_id=0)
-        s2b = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2b = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                 gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
                 split_jobs=3, this_job_id=1)
-        s2c = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2c = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                 gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
                 split_jobs=3, this_job_id=2)
         # Merge caches
@@ -126,9 +126,9 @@ class DFETestCase(unittest.TestCase):
             return
 
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
-        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
-        s2_gpu = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2_gpu = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True, use_gpu=True)
         self.assertTrue(np.allclose(s2.spectra, s2_gpu.spectra))
 
@@ -137,7 +137,7 @@ class DFETestCase(unittest.TestCase):
         Trivial test that Cache2D integration doesn't crash.
         """
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
-        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM, [20],
+        s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=2,
                          additional_gammas=[0.2])
         s2.integrate([2, 1, 0.4], None, PDFs.biv_lognormal, 1, None)
@@ -155,8 +155,8 @@ class DFETestCase(unittest.TestCase):
         """
         demo_params = [0.5, 2, 0.5, 0.03, 1, 2]
         ns, pts_l, theta = [3, 3], [20, 30, 40], 10
-        data = theta*DemogSelModels.IM(demo_params+[-2, -3], ns, pts_l[-1])
-        s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM, pts_l,
+        data = theta*DemogSelModels.IM_sel(demo_params+[-2, -3], ns, pts_l[-1])
+        s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM_sel, pts_l,
                               gamma_bounds=(1e-4, 2), gamma_pts=2,
                               additional_gammas=[0.2])
         sel_dist = PDFs.biv_lognormal
@@ -180,7 +180,7 @@ class DFETestCase(unittest.TestCase):
         ns = [8, 12]
         pts_l = [60, 80, 100]
 
-        s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM, pts=pts_l,
+        s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM_sel, pts=pts_l,
                               gamma_pts=5, gamma_bounds=(1e-2, 10),
                               additional_gammas=[4.3])
         fs = s2.integrate_symmetric_point_pos([-0.5, 0.5, 0.5, 0.1, 4.3], None,
@@ -195,10 +195,10 @@ class DFETestCase(unittest.TestCase):
         """
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
         ns, pts_l = [3,3], [20]
-        s1 = dadi.DFE.Cache1D(demo_params, ns, DemogSelModels.IM_single_gamma, pts_l,
+        s1 = dadi.DFE.Cache1D(demo_params, ns, DemogSelModels.IM_sel_single_gamma, pts_l,
                               gamma_bounds=(1e-4, 20), gamma_pts=2,
                               additional_gammas=[4.3])
-        s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM, pts_l,
+        s2 = dadi.DFE.Cache2D(demo_params, ns, DemogSelModels.IM_sel, pts_l,
                               gamma_bounds=(1e-4, 2), gamma_pts=2,
                               additional_gammas=[4.3])
         # Basic mixture model
@@ -238,7 +238,7 @@ def generate_old_fitdadi_data():
     ns = [8, 12]
     pts_l = [60, 80, 100]
 
-    func_ex_single = dadi.Numerics.make_extrap_func(Selection_2d.IM_single_sel)
+    func_ex_single = dadi.Numerics.make_extrap_func(Selection_2d.IM_sel_single_sel)
     # 1D code, as modified by the Gutenkunst group
     s1 = Selection.spectra(demo_params, ns, func_ex_single, pts_l=pts_l,
                            Npts=100, int_bounds=(1e-2, 10))

@@ -5,7 +5,7 @@ from dadi.Misc import combine_pops
 
 class SubgenomesTestCase(unittest.TestCase):
     def test_combine_pops(self):
-        sfs = dadi.Demographics2D.snm(None, (20,20), 50)
+        sfs = dadi.Demographics2D.snm_2d(None, (20,20), 50)
         sfs2 = dadi.Spectrum(combine_pops(sfs))
     
     def test_3d_combinations(self):
