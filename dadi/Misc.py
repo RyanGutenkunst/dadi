@@ -589,46 +589,44 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
 
         calls_dict = {}
         subsample_dict = {}
-        full_info = True
         gtindex = cols[8].split(':').index('GT')
         if do_subsampling:
+            # Collect data for all genotyped samples
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
                 gt = sample.split(':')[gtindex]
-                g1, g2 = gt[0], gt[2]
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                if g1 == '.' or g2 == '.':
-                    continue
-                else:
-                    subsample_dict[pop].append((g1, g2))
+                if '.' not in gt:
+                    subsample_dict[pop].append(gt)
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
-            for k,v in subsample_dict.items():
-                if k not in calls_dict:
-                    calls_dict[k] = (0, 0)
-                if len(v) < subsample[k]:
-                    full_info = False
+            for pop, genotypes in subsample_dict.items():
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0, 0)
+                if len(genotypes) < subsample[pop]:
+                    # Not enough calls for this SNP
                     break
-                idx = numpy.random.choice([i for i in range(0,len(v))],subsample[k],replace=False)
-                for i in idx:
-                    refcalls, altcalls = calls_dict[k]
-                    refcalls += int(v[i][0] == '0') + int(v[i][1] == '0')
-                    altcalls += int(v[i][0] == '1') + int(v[i][1] == '1')
-                    calls_dict[k] = (refcalls, altcalls)
-            if not full_info:
-                continue
-            snp_dict['calls'] = calls_dict
-            data_dict[snp_id] = snp_dict
+                # Choose which individuals to use
+                idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
+                for ii in idx:
+                    gt = subsample_dict[pop][ii]
+                    refcalls, altcalls = calls_dict[pop]
+                    refcalls += gt[::2].count('0')
+                    altcalls += gt[::2].count('1')
+                    calls_dict[pop] = (refcalls, altcalls)
+            else:
+                # Only runs if we didn't break out of this loop
+                snp_dict['calls'] = calls_dict
+                data_dict[snp_id] = snp_dict
         else:
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
-                else:
-                    if pop not in calls_dict:
-                        calls_dict[pop] = (0,0)
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0,0)
                 # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
                 #g1, g2 = gt[0], gt[2]
