@@ -551,8 +551,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         # Add ancestral allele information if available
         info = cols[7].split(';')
         for field in info:
-            if field.startswith('AA='):
-                outgroup_allele = field[3:].upper()
+            if field.startswith('AA=') or field.startswith('AA_ensembl=') or field.startswith('AA_chimp='):
+                outgroup_allele = field.split('=')[1].upper()
                 if outgroup_allele not in ['A','C','G','T']:
                     # Skip if ancestral not single base A, C, G, or T
                     outgroup_allele = '-'
@@ -700,6 +700,30 @@ def _get_popinfo(popinfo_file):
         popinfo_dict[sample] = pop
 
     return popinfo_dict
+
+def annotate_from_annovar(dd, annovar_file, variant_type):
+    """
+    Return a data dictionary with only the sites of a requested type of variation based on an ANNOVAR '.exonic_variant_function' output file.
+
+    dd: Data dictionary of sites of a requested type of annotation
+    annovar_file: Output file from ANNOVAR with the '.exonic_variant_function' extension
+    variant_type: The type of variant you want to make a data dictionary sites to contain
+    """
+    anno_list = []
+    var_fid = open(annovar_file)
+    for line in var_fid:
+        variant = line.split('\t')[1]
+        position = '_'.join(line.split()[4:6])
+        if variant_type in variant:
+            anno_list.append(position)
+    var_fid.close()
+
+    dd_anno = {}
+    for key in dd:
+        if key in anno_list:
+            dd_anno[key] = dd[key]
+
+    return dd_anno
 
 def combine_pops(fs, idx=[0,1]):
     """
