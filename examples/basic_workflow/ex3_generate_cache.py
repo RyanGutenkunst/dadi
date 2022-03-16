@@ -62,9 +62,9 @@ popt = [2.2, 0.52, 0.28, 1.24]
 # It is recommended to use gamma_bounds=[1e-4, 2000], gamma_pts=50 for either 1D or 2D cache generation
 # on the HPC.
 # NOTE: When testing locally, having mp = True might cause a bug, so set it to mp=False until you start working on an HPC
-cache2d = DFE.Cache2D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 2], gamma_pts=10, mp=False)
+cache2d = DFE.Cache2D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 2], gamma_pts=10, mp=True)
 # The one population or shared selection version would be:
-# cache2d = DFE.Cache1D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 200], gamma_pts=10, mp=False)
+# cache2d = DFE.Cache1D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 200], gamma_pts=10, mp=True)
 
 # Check if the cached spectra have any large negative values
 if (cache2d.spectra<0).sum() > 0:
