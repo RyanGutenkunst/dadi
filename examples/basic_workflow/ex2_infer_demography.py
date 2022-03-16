@@ -129,9 +129,9 @@ for i in range(1):
     # dadi.Plotting.plot_2d_comp_multinom(model_fs, data_fs, resid_range=3, vmin=1e-3, show=False)
     # fig.savefig(fid_name + '.png')
 
-# Optional save method 1: 
-# Close the file
-fid.close()
+# # Optional save method 1: 
+# # Close the file
+# fid.close()
 
 # You can use a BASH command like sort on the files to more easily tell what the
 # best fit is and how the log-likelihoods compare.
