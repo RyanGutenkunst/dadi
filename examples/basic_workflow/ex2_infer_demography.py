@@ -85,7 +85,7 @@ for i in range(1):
                                  lower_bound=lower_bounds,
                                  upper_bound=upper_bounds,
                                  algorithm=nlopt.LN_BOBYQA,
-                                 maxeval=100, verbose=0)
+                                 maxeval=600, verbose=0)
 
     # Find the synonymous theta
     model_fs = demo_model_ex(popt, ns, pts_l)
