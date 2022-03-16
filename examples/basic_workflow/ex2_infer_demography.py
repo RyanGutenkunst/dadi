@@ -133,6 +133,9 @@ for i in range(1):
 # Close the file
 fid.close()
 
-
+# You can use a BASH command like sort on the files to more easily tell what the
+# best fit is and how the log-likelihoods compare.
+# ex:
+# sort results/1KG.YRI.20_demo_fits.txt
 
 
