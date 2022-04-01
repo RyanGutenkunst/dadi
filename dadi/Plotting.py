@@ -76,6 +76,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
               residuals, which can be less biased.
     plot_masked: Additionally plots (in open circles) results for points in the 
                  model or data that were masked.
+    show: If True, execute pylab.show command to make sure plot displays.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -140,7 +141,7 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
                        pop_ids=None, extend='neither', colorbar=True,
-                       cmap=pylab.cm.viridis_r):
+                       cmap=pylab.cm.viridis_r, show=True):
     """
     Heatmap of single 2d SFS. 
     
@@ -207,6 +208,9 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     ax.set_xlim(0, sfs.shape[1])
     ax.set_ylim(0, sfs.shape[0])
+
+    if show:
+        pylab.show()
 
     return cb
 
@@ -505,7 +509,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop_ids=None, residual='Anscombe', adjust=True):
+                          pop_ids=None, residual='Anscombe', adjust=True, show=True):
     """
     Multinomial comparison between 3d model and data.
 
@@ -523,6 +527,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
               residuals, which can be less biased.
     adjust: Should method use automatic 'subplots_adjust'? For advanced
             manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
 
     This comparison is multinomial in that it rescales the model to optimally
     fit the data.
@@ -532,7 +537,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
     plot_3d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
                          resid_range=resid_range, fig_num=fig_num,
                          pop_ids=pop_ids, residual=residual,
-                         adjust=adjust)
+                         adjust=adjust, show=show)
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None, pop_ids=None, 
