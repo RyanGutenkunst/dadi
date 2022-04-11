@@ -141,7 +141,7 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
                        pop_ids=None, extend='neither', colorbar=True,
-                       cmap=pylab.cm.viridis_r, show=True):
+                       cmap=pylab.cm.viridis_r):
     """
     Heatmap of single 2d SFS. 
     
@@ -208,9 +208,6 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     ax.set_xlim(0, sfs.shape[1])
     ax.set_ylim(0, sfs.shape[0])
-
-    if show:
-        pylab.show()
 
     return cb
 
