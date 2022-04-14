@@ -347,9 +347,11 @@ def count_data_dict(data_dict, pop_ids):
                    this_snp_polarized] += 1
     return count_dict
 
-def dd_from_SLiM_files(fnames, mut_types=None):
+def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     """
     Create a data dictionary from a sequence of SLiM output files.
+
+    Returns the data dictionary and a sequence of sample sizes.
 
     It is assumed that each file corresponds to samples from a different
     population. For example, in SLiM:
@@ -359,7 +361,10 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     The populations will be named 0,1,2,... corresponding
     to their order in fnames.
 
-    TODO: Add filtering by mutation type.
+    fnames: Filenames to parse
+    mut_types: Sequence of mutation types to include. If None, all mutations
+               will be included.
+    chr: Prefix to be used for indicating mutation locations.
     """
     # Open all the files
     try:
@@ -369,13 +374,15 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     # For each population, we'll first map the mutation ids used in the file to
     # the simulation-level global mutation ids
     mut_dicts = [{} for _ in fids]
+    loc_dict = {}
     for fid, mut_dict in zip(fids, mut_dicts):
         fid.readline(); fid.readline()
         line = fid.readline()
         while not line.startswith('Genomes:'):
-            local_id, global_id, mut_type, _ = line.split(None, 3)
+            local_id, global_id, mut_type, location, _ = line.split(None, 4)
             if mut_types is None or mut_type in mut_types:
                 mut_dict[local_id] = global_id
+                loc_dict[global_id] = location
             line = fid.readline()
 
     # Now for each population we count each mutation
@@ -398,14 +405,15 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     # Create the empty data dictionary
     dd = {}
     for global_id in all_muts:
-        dd[global_id] = {'segregating': [0,1],
+        key = 'SLiM_'+loc_dict[global_id]
+        dd[key] = {'segregating': [0,1],
                          'outgroup_allele': 0,
                          'calls': {}}
         for pop_id, n in enumerate(sample_sizes):
             # We initialize each entry to indicate that the allele is not
             # segregating in the population, since in this case it's
             # not reported in that population's file.
-            dd[global_id]['calls'][pop_id] = [n, 0]
+            dd[key]['calls'][pop_id] = [n, 0]
 
     # Now update the alleles that are segregating in each population.
     for pop_ii, (mut_count, mut_dict)\
@@ -415,7 +423,8 @@ def dd_from_SLiM_files(fnames, mut_types=None):
                 # Lookup in mut_dict will fail if mutation isn't of appropriate
                 # type to include in this run.
                 global_id = mut_dict[local_id]
-                dd[global_id]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
+                key = 'SLiM_'+loc_dict[global_id]
+                dd[key]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
             except KeyError:
                 pass
 
