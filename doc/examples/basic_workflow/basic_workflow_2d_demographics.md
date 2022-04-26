@@ -179,8 +179,7 @@ popt, ll_model = dadi.Inference.opt(p0, data_fs, demo_model_ex, pts_l,
                                     algorithm=nlopt.LN_BOBYQA,
                                     maxeval=400, verbose=100)
 
-# Find the synonymous theta
-
+# Calculate the synonymous theta
 model_fs = demo_model_ex(popt, ns, pts_l)
 theta0 = dadi.Inference.optimal_sfs_scaling(model_fs, data_fs)
 
@@ -196,7 +195,7 @@ best fit is and how the log-likelihoods compare. The best log-likelihood is the 
 
 ex:
 ```bash
-sort results/1KG.YRI.20_demo_fits.txt
+sort results/1KG.YRI.CEU.20_demo_fits.txt
 ```
 ## Plotting demographic inference
 ```python
