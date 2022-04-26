@@ -1,9 +1,6 @@
 # Basic workflow for single population distribution of fitness effects (DFE) inference
 The example code can be ran from `dadi/examples/basic_workflow/` directory. You may need to be on the developmental branch of dadi.
-
-We start by generating a cache of demographic model frequency spectrum with varying selection. 
-Generating a cache can take a long time and it is recommended that you use a script dedicated to generating it on an HPC.
-
+Load modules used for DFE inference:
 ```python
 import dadi
 import dadi.DFE as DFE
@@ -12,7 +9,6 @@ import nlopt
 ```
 ## Infer DFE with shared selection
 We will start with infering a DFE where selection is shared between the two populations and demonstraight more complex models later.
-Since cache generation can take a long time and should be done in a seperate script, some code that is also needed for infering the DFE is repeated for this example:
 ```python
 # Make a variable to store the name of the dataset you are working with
 # so that you can esaily change it to work on different datasets
@@ -60,7 +56,7 @@ func_args = [sele_dist1d, theta_ns]
 
 # Choose starting parameters for inference
 # This is an example for the gamma distribution.
-# Most importantly the first two parameters
+# Most importantly are the first two parameters
 # shape and scale (also called alpha and beta).
 params = [0.1, 5000, 0.01]
 
@@ -68,7 +64,7 @@ params = [0.1, 5000, 0.01]
 # It is a good idea to have boundaries for the DFE as
 # the optimizer can take parameters to values that
 # cause errors with calulating the spectrum.
-# Ex. rho = 1 for multiple population selection.
+# Ex. rho = 1 for independent population selection.
 # If optimization runs up against boundaries, you can increase them
 lower_bounds = [1e-2, 1e-2, 1e-3]
 upper_bounds = [10, 10000, 1]
@@ -111,10 +107,6 @@ popt, ll_model = dadi.Inference.opt(p0, data_fs, dfe_func, pts=None,
                                     lower_bound=lower_bounds, 
                                     upper_bound=upper_bounds,
                                     maxeval=600, multinom=False, verbose=0)
-# If were were using the DFE.mixture function, we might want to
-# fix the rho to 0, to have w be the weight of uncorrelated model
-# compared to the perfectly correlated model:
-# fixed_params=[None, None, 0, None, None]
 
 # Generate DFE spectrum
 model_fs = dfe_func(popt, None, sele_dist1d, theta_ns, None)
@@ -248,10 +240,6 @@ popt, ll_model = dadi.Inference.opt(p0, data_fs, dfe_func, pts=None,
                                     lower_bound=lower_bounds, 
                                     upper_bound=upper_bounds,
                                     maxeval=600, multinom=False, verbose=0)
-# If were were using the DFE.mixture function, we might want to
-# fix the rho to 0, to have w be the weight of uncorrelated model
-# compared to the perfectly correlated model:
-# fixed_params=[None, None, 0, None, None]
 
 # Generate DFE spectrum
 model_fs = dfe_func(popt, None, sele_dist2d, theta_ns, None)
@@ -264,7 +252,6 @@ fid.write('\t'.join([str(ele) for ele in res])+'\n')
 # Close the file
 fid.close()
 ```
-
 ## Godambe analysis for the DFE with shared or independent selection:
 The overall method for doing the Godambe analysis is the same for shared or independent selection.
 ```python
