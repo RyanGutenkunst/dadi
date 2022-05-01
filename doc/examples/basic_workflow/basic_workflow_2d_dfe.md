@@ -119,7 +119,8 @@ fid.write('\t'.join([str(ele) for ele in res])+'\n')
 # Close the file
 fid.close()
 ```
-Plotting DFE
+## Plotting DFE
+The main difference plotting the DFE is we use `dadi.Plotting.plot_2d_comp_Poisson` instead of `dadi.Plotting.plot_2d_comp_multinom`. The `_multinom` function adjusts the model to help match the data, because the DFE is adjusted to better match the data using theta, we use the `_Poisson` plotting function, which does not adjust the DFE.
 ```python
 # Using inference information to generate the model
 popt = [0.14, 2734, 0.02]
