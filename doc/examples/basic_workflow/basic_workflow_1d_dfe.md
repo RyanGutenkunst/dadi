@@ -114,7 +114,8 @@ fid.write('\t'.join([str(ele) for ele in res])+'\n')
 # Close the file
 fid.close()
 ```
-Plotting DFE
+## Plotting the DFE
+The main difference plotting the DFE is we use `dadi.Plotting.plot_1d_comp_Poisson` instead of `dadi.Plotting.plot_1d_comp_multinom`. The `_multinom` function adjusts the model to help match the data, because the DFE is adjusted to better match the data using theta, we use the `_Poisson` plotting function, which does not adjust the DFE.
 ```python
 # Using inference information to generate the model
 popt = [0.133, 4125, 0.02]
@@ -123,10 +124,10 @@ popt = [0.133, 4125, 0.02]
 import matplotlib.pyplot as plt
 fig = plt.figure(219033)
 fig.clear()
-dadi.Plotting.plot_1d_comp_multinom(model_fs, data_fs)
+dadi.Plotting.plot_1d_comp_Poisson(model_fs, data_fs)
 fig.savefig('results/'+dataset+'_dfe_plot.png')
 ```
-To do the Godambe analysis with the DFE:
+## Godambe analysis with the DFE
 ```python
 # Load bootstraped frequency spectrum
 # (if they haven't been made, there is an example in the "Creating a frequency spectrum"
