@@ -103,12 +103,12 @@ class Spectrum(numpy.ma.masked_array):
             where_folded_out = total_per_entry > int(total_samples/2)
             if check_folding\
                and not numpy.all(subarr.data[where_folded_out] == 0):
-                logger.warn('Creating Spectrum with data_folded = True, but '
+                logger.warning('Creating Spectrum with data_folded = True, but '
                             'data has non-zero values in entries which are '
                             'nonsensical for a folded Spectrum.')
             if check_folding\
                and not numpy.all(subarr.mask[where_folded_out]):
-                logger.warn('Creating Spectrum with data_folded = True, but '
+                logger.warning('Creating Spectrum with data_folded = True, but '
                             'mask is not True for all entries which are '
                             'nonsensical for a folded Spectrum.')
 
@@ -116,7 +116,7 @@ class Spectrum(numpy.ma.masked_array):
             if pop_ids is None or pop_ids == data.pop_ids:
                 subarr.pop_ids = data.pop_ids
             elif pop_ids != data.pop_ids:
-                logger.warn('Changing population labels in construction of new '
+                logger.warning('Changing population labels in construction of new '
                             'Spectrum.')
                 if len(pop_ids) != subarr.ndim:
                     raise ValueError('pop_ids must be of length equal to '
@@ -446,7 +446,7 @@ class Spectrum(numpy.ma.masked_array):
         orig_mask = output.mask.copy()
         orig_mask.flat[0] = orig_mask.flat[-1] = False
         if numpy.any(orig_mask):
-            logger.warn('Marginalizing a Spectrum with internal masked values. '
+            logger.warning('Marginalizing a Spectrum with internal masked values. '
                         'This may not be a well-defined operation.')
 
         # Do the marginalization
@@ -2018,7 +2018,7 @@ class Spectrum(numpy.ma.masked_array):
         fs.extrap_x = xxs[0][1]
         for xx in xxs[1:]:
             if not xx[1] == fs.extrap_x:
-                logger.warn('Spectrum calculated from phi different grids for '
+                logger.warning('Spectrum calculated from phi different grids for '
                             'different dimensions. Extrapolation may fail.')
         return fs
 
@@ -2106,7 +2106,7 @@ class Spectrum(numpy.ma.masked_array):
         fs.extrap_x = xxs[0][1]
         for xx in xxs[1:]:
             if not xx[1] == fs.extrap_x:
-                logger.warn('Spectrum calculated from phi different grids for '
+                logger.warning('Spectrum calculated from phi different grids for '
                             'different dimensions. Extrapolation may fail.')
         return fs
 
@@ -2498,7 +2498,7 @@ def %(method)s(self, other):
         elif self.pop_ids is None:
             newpop_ids = other.pop_ids
         elif other.pop_ids != self.pop_ids:
-            logger.warn('Arithmetic between Spectra with different pop_ids. '
+            logger.warning('Arithmetic between Spectra with different pop_ids. '
                         'Resulting pop_id may not be correct.')
     if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
         extrap_x = None
@@ -2524,7 +2524,7 @@ def %(method)s(self, other):
         self.data.%(method)s (other)
     if hasattr(other, 'pop_ids') and other.pop_ids is not None\
              and other.pop_ids != self.pop_ids:
-        logger.warn('Arithmetic between Spectra with different pop_ids. '
+        logger.warning('Arithmetic between Spectra with different pop_ids. '
                     'Resulting pop_id may not be correct.')
     if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
         self.extrap_x = None

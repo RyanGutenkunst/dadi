@@ -56,7 +56,7 @@ def set_timescale_factor(pts, factor=10):
     # the integration doesn't know whether its results will be used in an
     # extrapolation.
     global timescale_factor
-    logger.warn('set_timescale_factor has been deprecated, as it may be too '
+    logger.warning('set_timescale_factor has been deprecated, as it may be too '
                 'conservative (and thus slow) in choosing timesteps. If you '
                 'wish to take smaller timesteps for accuracy (particularly for '
                 'a very quickly growing population), manually set '

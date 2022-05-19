@@ -422,7 +422,7 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
             # best input value.
             extrap_failed = abs(numpy.log10(ex_result/best_result)) > fail_mag
             if numpy.any(extrap_failed):
-                logger.warn('Extrapolation may have failed. Check resulting '
+                logger.warning('Extrapolation may have failed. Check resulting '
                             'frequency spectrum for unexpected results.')
 
             # For entries that fail, use the "best" input result.
