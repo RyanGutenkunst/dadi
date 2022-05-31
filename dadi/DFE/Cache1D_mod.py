@@ -47,29 +47,29 @@ class Cache1D:
         # Add additional gammas to cache
         self.gammas = np.concatenate((self.gammas, additional_gammas))
         self.spectra = [None]*len(self.gammas)
-        self.demo_sel_func = demo_sel_func
         self.params = params
         self.ns = ns
         self.pts = pts
+        self.func_name = demo_sel_func.__name__
 
         if not mp: #for running with a single thread
-            self._single_process(verbose)
+            self._single_process(verbose, demo_sel_func)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, gpus, verbose)
+            self._multiple_processes(cpus, gpus, verbose, demo_sel_func)
 
-        demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
+        demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
         self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts)
         self.spectra = np.array(self.spectra)
 
-    def _single_process(self, verbose):
-        demo_sel_extrap_func = Numerics.make_extrap_func(self.demo_sel_func)
+    def _single_process(self, verbose, demo_sel_func):
+        demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
         for ii, gamma in enumerate(self.gammas):
             self.spectra[ii] = demo_sel_extrap_func(tuple(self.params)+(gamma,), self.ns,
                                              self.pts)
             if verbose:
                print('{0}: {1}'.format(ii, gamma))
 
-    def _multiple_processes(self, cpus, gpus, verbose):
+    def _multiple_processes(self, cpus, gpus, verbose, demo_sel_func):
         from multiprocessing import Manager, Process, cpu_count
            
         if cpus is None:
@@ -83,12 +83,12 @@ class Cache1D:
             pool = []
             for ii in range(cpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, False))
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, False))
                 p.start()
                 pool.append(p)
             for ii in range(gpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, True))
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, True))
                 p.start()
                 pool.append(p)
 
@@ -105,12 +105,12 @@ class Cache1D:
             for ii, sfs in results:
                 self.spectra[ii] = sfs
 
-    def _worker_sfs(self, in_queue, outlist, popn_func_ex, params, ns, pts, verbose, usegpu):
+    def _worker_sfs(self, in_queue, outlist, popn_func, params, ns, pts, verbose, usegpu):
         """
         Worker function -- used to generate SFSes for
         single values of gamma.
         """
-        popn_func_ex = Numerics.make_extrap_func(popn_func_ex)
+        popn_func_ex = Numerics.make_extrap_func(popn_func)
         dadi.cuda_enabled(usegpu)
         while True:
             item = in_queue.get()
