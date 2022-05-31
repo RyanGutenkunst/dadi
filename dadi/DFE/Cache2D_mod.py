@@ -42,7 +42,6 @@ class Cache2D:
         self.ns = ns
         self.pts = pts
         self.func_name = demo_sel_func.__name__
-        self.demo_sel_func = demo_sel_func
         self.params = params
 
         # Create a vector of gammas that are log-spaced over sequential 
@@ -58,9 +57,9 @@ class Cache2D:
         self.spectra = [[None]*len(self.gammas) for _ in self.gammas]
 
         if not mp: #for running with a single thread
-            self._single_process(verbose, split_jobs, this_job_id)
+            self._single_process(verbose, split_jobs, this_job_id, demo_sel_func)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, use_gpu, verbose, split_jobs, this_job_id)
+            self._multiple_processes(cpus, use_gpu, verbose, split_jobs, this_job_id, demo_sel_func)
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
@@ -68,19 +67,19 @@ class Cache2D:
         if split_jobs == 1:
             self.spectra = np.array(self.spectra)
         
-    def _single_process(self, verbose, split_jobs, this_job_id):
-        self.demo_sel_func = Numerics.make_extrap_func(self.demo_sel_func)
+    def _single_process(self, verbose, split_jobs, this_job_id, demo_sel_func):
+        func_ex = Numerics.make_extrap_func(demo_sel_func)
 
         this_eval = 0
         for ii,gamma in enumerate(self.gammas):
             for jj, gamma2 in enumerate(self.gammas):
                 if this_eval % split_jobs == this_job_id:
-                    self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
+                    self.spectra[ii][jj] = func_ex(tuple(self.params)+(gamma,gamma2),
                             self.ns, self.pts)
                     if verbose: print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
                 this_eval += 1
                         
-    def _multiple_processes(self, cpus, use_gpu, verbose, split_jobs, this_job_id):
+    def _multiple_processes(self, cpus, use_gpu, verbose, split_jobs, this_job_id, demo_sel_func):
         from multiprocessing import Manager, Process, cpu_count
         # Would like to simply use Pool.map here, but difficult to
         # pass dynamic demo_sel_func that way.
@@ -96,12 +95,12 @@ class Cache2D:
             pool = []
             for i in range(cpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, False))
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, False))
                 p.start()
                 pool.append(p)
             if use_gpu:
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, True))
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, True))
                 p.start()
                 pool.append(p)
 
