@@ -365,6 +365,9 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     mut_types: Sequence of mutation types to include. If None, all mutations
                will be included.
     chr: Prefix to be used for indicating mutation locations.
+
+    The keys in the resulting dictionary are of the form
+    <chr>_<position>.<globalid>
     """
     # Open all the files
     try:
@@ -405,7 +408,7 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     # Create the empty data dictionary
     dd = {}
     for global_id in all_muts:
-        key = 'SLiM_'+loc_dict[global_id]
+        key = 'SLiM_'+loc_dict[global_id] + '.' + global_id
         dd[key] = {'segregating': [0,1],
                          'outgroup_allele': 0,
                          'calls': {}}
@@ -423,7 +426,7 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
                 # Lookup in mut_dict will fail if mutation isn't of appropriate
                 # type to include in this run.
                 global_id = mut_dict[local_id]
-                key = 'SLiM_'+loc_dict[global_id]
+                key = 'SLiM_'+loc_dict[global_id] + '.' + global_id
                 dd[key]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
             except KeyError:
                 pass
@@ -791,7 +794,9 @@ def fragment_data_dict(dd, chunk_size):
     basepairs.
 
     This method assumes that keys in the dictionary are
-    chromosome_position
+    chromosome_position[.additional_info]
+    The [.additional_info] is optional, and can be used to distinguish 
+    recurrent mutations at the same site.
 
     dd: Data dictionary to split
     chunk_size: Size of genomic chunks in basepairs
@@ -801,7 +806,7 @@ def fragment_data_dict(dd, chunk_size):
     # split dictionary by chromosome name
     ndd = collections.defaultdict(list)
     for k in dd.keys():
-        spl = k.split('_')
+        spl = k.split('.')[0].split('_')
         position = spl[-1]
         chrname = '_'.join(spl[:-1])
         ndd[chrname].append(int(position))
