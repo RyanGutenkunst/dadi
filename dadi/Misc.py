@@ -809,7 +809,12 @@ def fragment_data_dict(dd, chunk_size):
         spl = k.split('.')[0].split('_')
         position = spl[-1]
         chrname = '_'.join(spl[:-1])
-        ndd[chrname].append(int(position))
+        # Track additional_info
+        if not '.' in k:
+            add_info = None
+        else:
+            add_info = k.split('.',1)[1]
+        ndd[chrname].append((int(position), add_info))
             
     # generate chunks with given chunk size
     chunks_dict = collections.defaultdict(list)
@@ -818,21 +823,24 @@ def fragment_data_dict(dd, chunk_size):
         end = chunk_size
         chunk_index = 0
         chunks_dict[chrname].append([])
-        for p in positions:
+        for p, add_info in positions:
             while p > end: 
                 # Need a new chunk
                 end += chunk_size
                 chunk_index += 1
                 chunks_dict[chrname].append([])
-            chunks_dict[chrname][chunk_index].append(p)
+            chunks_dict[chrname][chunk_index].append((p, add_info))
 
     # Break data dictionary into dictionaries for each chunk
     new_dds = []
     for chrname, chunks in chunks_dict.items():
         for pos_list in chunks:
             new_dds.append({})
-            for pos in pos_list:
-                key = '{0}_{1}'.format(chrname,pos)
+            for pos, add_info in pos_list:
+                if not add_info:
+                    key = '{0}_{1}'.format(chrname,pos)
+                else:
+                    key = '{0}_{1}.{2}'.format(chrname,pos,add_info)
                 new_dds[-1][key] = dd[key]
 
     return new_dds
