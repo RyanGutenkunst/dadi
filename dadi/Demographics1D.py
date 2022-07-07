@@ -21,6 +21,7 @@ def snm_1d(notused, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 snm_1d.__param_names__ = []
+snm = snm_1d
 
 def two_epoch(params, ns, pts):
     """
@@ -97,6 +98,7 @@ def bottlegrowth_1d(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 bottlegrowth_1d.__param_names__ = ['nuB', 'nuF', 'T']
+bottlegrowth = bottlegrowth_1d
 
 def three_epoch(params, ns, pts):
     """

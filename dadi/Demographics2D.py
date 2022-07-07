@@ -18,6 +18,7 @@ def snm_2d(notused, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 snm_2d.__param_names__ = []
+snm = snm_2d
 
 def bottlegrowth_2d(params, ns, pts):
     """
@@ -38,6 +39,7 @@ def bottlegrowth_2d(params, ns, pts):
     nuB,nuF,T = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,0), ns, pts)
 bottlegrowth_2d.__param_names__ = ['nuB', 'nuF', 'T']
+bottlegrowth = bottlegrowth_2d
 
 def bottlegrowth_split(params, ns, pts):
     """
