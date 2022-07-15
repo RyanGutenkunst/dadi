@@ -21,6 +21,7 @@ def equil(params, ns, pts):
     phi = PhiManip.phi_1D(xx, gamma=gamma)
 
     return Spectrum.from_phi(phi, ns, (xx,))
+equil.__param_names__ = ['gamma']
 
 def two_epoch_sel(params, ns, pts):
     """
@@ -43,6 +44,8 @@ def two_epoch_sel(params, ns, pts):
     phi = Integration.one_pop(phi, xx, T, nu, gamma=gamma)
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+two_epoch_sel.__param_names__ = ['nu', 'T', 'gamma']
+two_epoch = two_epoch_sel
 
 def IM_pre_sel(params, ns, pts):
     """
@@ -88,6 +91,8 @@ def IM_pre_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+IM_pre_sel.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma1', 'gamma2']
+IM_pre = IM_pre_sel
 
 def IM_pre_sel_single_gamma(params, ns, pts):
     """
@@ -97,6 +102,8 @@ def IM_pre_sel_single_gamma(params, ns, pts):
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
     return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+IM_pre_sel_single_gamma.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma']
+IM_pre_single_gamma = IM_pre_sel_single_gamma
 
 def IM_sel(params, ns, pts):
     """
@@ -123,6 +130,8 @@ def IM_sel(params, ns, pts):
     """
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
     return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
+IM_sel.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma1', 'gamma2']
+IM = IM_sel
 
 def IM_sel_single_gamma(params, ns, pts):
     """
@@ -132,6 +141,8 @@ def IM_sel_single_gamma(params, ns, pts):
     """
     s,nu1,nu2,T,m12,m21,gamma = params
     return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+IM_sel_single_gamma.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma']
+IM_single_gamma = IM_sel_single_gamma
 
 def split_mig_sel(params, ns, pts):
     """
@@ -166,6 +177,8 @@ def split_mig_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_mig_sel.__param_names__ = ['nu1', 'nu2', 'T', 'm', 'gamma1', 'gamma2']
+split_mig = split_mig_sel
 
 def split_mig_sel_single_gamma(params, ns, pts):
     """
@@ -175,7 +188,9 @@ def split_mig_sel_single_gamma(params, ns, pts):
     """
     nu1,nu2,T,m,gamma = params
     return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)
-    
+split_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'T', 'm', 'gamma']
+split_mig_single_gamma = split_mig_sel_single_gamma
+
 def split_asym_mig_sel(params, ns, pts):
     """
     Instantaneous split into two populations of specified size, with asymmetric migration.
@@ -210,6 +225,8 @@ def split_asym_mig_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_asym_mig_sel.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm21', 'gamma1', 'gamma2']
+split_asym_mig = split_asym_mig_sel
 
 def split_asym_mig_sel_single_gamma(params, ns, pts):
     """
@@ -219,6 +236,8 @@ def split_asym_mig_sel_single_gamma(params, ns, pts):
     """
     nu1,nu2,T,m12,m21,gamma = params
     return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
+split_asym_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm21', 'gamma']
+split_asym_mig_single_gamma = split_asym_mig_sel_single_gamma
 
 def split_delay_mig_sel(params, ns, pts):
     """
@@ -251,6 +270,7 @@ def split_delay_mig_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_delay_mig_sel.__param_names__ = ['nu1', 'nu2', 'Tpre', 'Tmig', 'm12', 'm21', 'gamma1', 'gamma2']
 
 def split_delay_mig_sel_single_gamma(params, ns, pts):
     """
@@ -260,6 +280,7 @@ def split_delay_mig_sel_single_gamma(params, ns, pts):
     """
     nu1,nu2,Tpre,Tmig,m12,m21,gamma = params
     return split_delay_mig_sel([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)
+split_delay_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'Tpre', 'Tmig', 'm12', 'm21', 'gamma']
 
 def three_epoch_sel(params, ns, pts):
     """
@@ -285,10 +306,12 @@ def three_epoch_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+three_epoch_sel.__param_names__ = ['nuB', 'nuF', 'TB', 'TF', 'gamma']
+three_epoch = three_epoch_sel
 
 def bottlegrowth_2d_sel(params, ns, pts):
     """
-    params = (nuB,nuF,T)
+    params = (nuB,nuF,T,gamma1,gamma2)
     ns = (n1,n2)
 
     Instantanous size change followed by exponential growth with no population
@@ -306,6 +329,7 @@ def bottlegrowth_2d_sel(params, ns, pts):
     """
     nuB,nuF,T,gamma1,gamma2 = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)
+bottlegrowth_2d_sel.__param_names__ = ['nuB', 'nuF', 'T', 'gamma1', 'gamma2']
 
 def bottlegrowth_2d_sel_single_gamma(params, ns, pts):
     """
@@ -315,10 +339,11 @@ def bottlegrowth_2d_sel_single_gamma(params, ns, pts):
     """
     nuB,nuF,T,gamma = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma,gamma), ns, pts)
+bottlegrowth_2d_sel_single_gamma.__param_names__ = ['nuB', 'nuF', 'T', 'gamma']
 
 def bottlegrowth_split_sel(params, ns, pts):
     """
-    params = (nuB,nuF,T,Ts)
+    params = (nuB,nuF,T,Ts,gamma1,gamma2)
     ns = (n1,n2)
 
     Instantanous size change followed by exponential growth then split.
@@ -336,6 +361,7 @@ def bottlegrowth_split_sel(params, ns, pts):
     """
     nuB,nuF,T,Ts,gamma1,gamma2 = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)
+bottlegrowth_split_sel.__param_names__ = ['nuB', 'nuF', 'T', 'Ts', 'gamma1', 'gamma2']
 
 def bottlegrowth_split_sel_single_gamma(params, ns, pts):
     """
@@ -345,10 +371,11 @@ def bottlegrowth_split_sel_single_gamma(params, ns, pts):
     """
     nuB,nuF,T,Ts,gamma = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)
+bottlegrowth_split_sel_single_gamma.__param_names__ = ['nuB', 'nuF', 'T', 'Ts', 'gamma']
 
 def bottlegrowth_split_mig_sel(params, ns, pts):
     """
-    params = (nuB,nuF,m,T,Ts)
+    params = (nuB,nuF,m,T,Ts,gamma1,gamma2)
     ns = (n1,n2)
 
     Instantanous size change followed by exponential growth then split with
@@ -390,6 +417,7 @@ def bottlegrowth_split_mig_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+bottlegrowth_split_mig_sel.__param_names__ = ['nuB', 'nuF', 'm', 'T', 'Ts', 'gamma1', 'gamma2']
 
 def bottlegrowth_split_mig_sel_single_gamma(params, ns, pts):
     """
@@ -399,12 +427,13 @@ def bottlegrowth_split_mig_sel_single_gamma(params, ns, pts):
     """
     nuB,nuF,m,T,Ts,gamma = params
     return bottlegrowth_split_mig_sel((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
+bottlegrowth_split_mig_sel_single_gamma.__param_names__ = ['nuB', 'nuF', 'm', 'T', 'Ts', 'gamma']
 
 def growth_sel(params, ns, pts):
     """
     Exponential growth beginning some time ago.
 
-    params = (nu,T)
+    params = (nu,T,gamma)
     ns = (n1,)
 
     nu: Ratio of contemporary to ancient population size
@@ -424,6 +453,7 @@ def growth_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+growth_sel.__param_names__ = ['nu', 'T', 'gamma']
 
 def bottlegrowth_1d_sel(params, ns, pts):
     """
@@ -451,3 +481,4 @@ def bottlegrowth_1d_sel(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+bottlegrowth_1d_sel.__param_names__ = ['nuB', 'nuF', 'T', 'gamma']
