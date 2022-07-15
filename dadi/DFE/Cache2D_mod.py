@@ -175,8 +175,8 @@ class Cache2D:
                 weighted_spectra[ii,jj] = w*spectra[ii,jj]
 
         # Integrate out the first two axes, which are the gamma axes.
-        temp = np.trapz(weighted_spectra, -self.neg_gammas, axis=0)
-        fs = np.trapz(temp, -self.neg_gammas, axis=0)
+        temp = np.trapz(weighted_spectra, self.neg_gammas, axis=0)
+        fs = np.trapz(temp, self.neg_gammas, axis=0)
 
         if not exterior_int:
             return Spectrum(theta*fs)
@@ -315,20 +315,20 @@ class Cache2D:
         pos_neg_spectra = np.squeeze(self.spectra[self.gammas==gammapos1,:Nneg])
         # Obtain the marginal DFE for pop2 by integrating over the weights
         # for pop1.
-        pos_neg_weights = np.trapz(weights, -self.neg_gammas, axis=0)
+        pos_neg_weights = np.trapz(weights, self.neg_gammas, axis=0)
         # For numpy multiplication...
         pos_neg_weights = pos_neg_weights[:,np.newaxis,np.newaxis]
         # Do the weighted integral.
         pos_neg = np.trapz(pos_neg_weights*pos_neg_spectra,
-                           -self.neg_gammas, axis=0)
+                           self.neg_gammas, axis=0)
 
         # Case in which pop2 is positive and pop1 is negative.
         neg_pos_spectra = np.squeeze(self.spectra[:Nneg,self.gammas==gammapos2])
         # Now integrate over pop2 to get marginal DFE for pop1
-        neg_pos_weights = np.trapz(weights, -self.neg_gammas, axis=1)
+        neg_pos_weights = np.trapz(weights, self.neg_gammas, axis=1)
         neg_pos_weights = neg_pos_weights[:,np.newaxis,np.newaxis]
         neg_pos = np.trapz(neg_pos_weights*neg_pos_spectra,
-                           -self.neg_gammas, axis=0)
+                           self.neg_gammas, axis=0)
 
         # Weighting factors for each quadrant of the DFE. Note that in the case
         # that ppos1==ppos2, these reduce to the model of Ragsdale et al. (2016)
