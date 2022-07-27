@@ -807,13 +807,12 @@ def fragment_data_dict(dd, chunk_size):
     ndd = collections.defaultdict(list)
     for k in dd.keys():
         spl = k.split('.')[0].split('_')
-        position = spl[-1]
-        chrname = '_'.join(spl[:-1])
+        chrname, position = '_'.join(k.split('_')[:-1]), k.split('_')[-1]
         # Track additional_info
-        if not '.' in k:
+        if not '.' in position:
             add_info = None
         else:
-            add_info = k.split('.',1)[1]
+            add_info = position.split('.',1)[1]
         ndd[chrname].append((int(position), add_info))
             
     # generate chunks with given chunk size
