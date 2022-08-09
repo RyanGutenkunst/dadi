@@ -60,6 +60,25 @@ class DataTestCase(unittest.TestCase):
             pos3 = int(k3.split('_')[1])
             self.assertGreaterEqual(pos3 - pos1, chunk_size)
 
+    def test_chunking_naming(self):
+        """
+        Test that chunked data dictionaries maintain a correct naming convention from data dictionary.
+
+        Based on bug fixed on July 27, 2022.
+        """
+        import pickle
+        dd = pickle.load(open('test_data/complex.chromosome.naming.bpkl','rb'))
+        fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
+        dd_keys = list(dd.keys())
+        fragments_keys = []
+        for ele in [list(ele_dd.keys()) for ele_dd in fragments]:
+            fragments_keys.extend(ele)
+        dd_keys.sort()
+        fragments_keys.sort()
+        for key1, key2 in zip(dd_keys, fragments_keys):
+            assert key1==key2
+
+
     def test_boostraps(self):
         dd = dadi.Misc.make_data_dict_vcf(datafile, popfile)
         fragments = dadi.Misc.fragment_data_dict(dd, chunk_size)
