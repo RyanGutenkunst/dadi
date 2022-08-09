@@ -812,7 +812,7 @@ def fragment_data_dict(dd, chunk_size):
         if not '.' in position:
             add_info = None
         else:
-            add_info = position.split('.',1)[1]
+            position, add_info = position.split('.',1)
         ndd[chrname].append((int(position), add_info))
             
     # generate chunks with given chunk size
