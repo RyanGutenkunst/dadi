@@ -18,7 +18,7 @@ class Cache1D:
     def __init__(self, params, ns, demo_sel_func, pts, 
                  gamma_bounds=(1e-4, 2000), gamma_pts=500, 
                  additional_gammas=[],
-                 mp=False, cpus=None, gpus=0, verbose=False):
+                 cpus=None, gpus=0, verbose=False):
         """
         params: Optimized demographic parameters
         ns: Sample size(s) for cached spectra
@@ -28,11 +28,8 @@ class Cache1D:
         gamma_bounds: Range of gammas to cache spectra for.
         gamma_pts: Number of gamma grid points over which to integrate
         additional_gammas: Additional positive values of gamma to cache for
-        mp: True if you want to use multiple cores or gpus (utilizes 
-            multiprocessing). If using the mp option you may also specify
-            # of cpus, otherwise this will just use nthreads-1 on your
-            machine.
         cpus: For multiprocessing, number of CPU jobs to launch.
+              If None (default), then all CPUs available will be used.
         gpus: For multiprocessing, number of GPU jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
         """
@@ -52,7 +49,11 @@ class Cache1D:
         self.pts = pts
         self.func_name = demo_sel_func.__name__
 
-        if not mp: #for running with a single thread
+        if cpus is None:
+            import multiprocessing
+            cpus = multiprocessing.cpu_count()
+
+        if not cpus > 1 or gpus > 0: #for running with a single thread
             self._single_process(verbose, demo_sel_func)
         else: #for running with with multiple cores
             self._multiple_processes(cpus, gpus, verbose, demo_sel_func)
@@ -71,12 +72,9 @@ class Cache1D:
 
     def _multiple_processes(self, cpus, gpus, verbose, demo_sel_func):
         from multiprocessing import Manager, Process, cpu_count
-           
-        if cpus is None:
-            cpus = cpu_count() - 1
 
         with Manager() as manager:
-            work = manager.Queue(cpus)
+            work = manager.Queue(cpus + gpus)
             results = manager.list()
 
             # Assemble pool of workers

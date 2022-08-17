@@ -8,8 +8,7 @@ import scipy.integrate
 class Cache2D:
     def __init__(self, params, ns, demo_sel_func, pts,
                  gamma_bounds=(1e-4, 2000.), gamma_pts=100,
-                 additional_gammas=[],
-                 mp=False, cpus=None, use_gpu=False, verbose=False,
+                 additional_gammas=[], cpus=None, gpus=0, verbose=False,
                  split_jobs=1, this_job_id=0):
         """
         params: Optimized demographic parameters
@@ -22,12 +21,9 @@ class Cache2D:
         additional_gammas: Sequence of additional gamma values to store results
                            for. Useful for point masses of explicit neutrality
                            or positive selection.
-        mp: True if you want to use multiple cores or a gpu (utilizes 
-            multiprocessing). If using the mp option you may also specify
-            # of cpus, otherwise this will just use nthreads-1 on your
-            machine.
-        cpus: For multiprocessing, number of CPU jobs to launch.
-        use_gpu: If True, use a GPU in addition to the cpus
+        cpus: Number of CPU jobs to launch. If None (the default), then
+              all CPUs available will be used.
+        gpus: Number of GPU jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
         split_jobs: To split cache generation across multiple computing jobs,
                     set split_jobs > 1 and this_job_id.
@@ -56,10 +52,14 @@ class Cache2D:
 
         self.spectra = [[None]*len(self.gammas) for _ in self.gammas]
 
-        if not mp: #for running with a single thread
+        if cpus is None:
+            import multiprocessing
+            cpus = multiprocessing.cpu_count()
+
+        if not cpus > 1 or gpus > 0: #for running with a single thread
             self._single_process(verbose, split_jobs, this_job_id, demo_sel_func)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, use_gpu, verbose, split_jobs, this_job_id, demo_sel_func)
+            self._multiple_processes(cpus, gpus, verbose, split_jobs, this_job_id, demo_sel_func)
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
@@ -79,16 +79,11 @@ class Cache2D:
                     if verbose: print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
                 this_eval += 1
                         
-    def _multiple_processes(self, cpus, use_gpu, verbose, split_jobs, this_job_id, demo_sel_func):
-        from multiprocessing import Manager, Process, cpu_count
-        # Would like to simply use Pool.map here, but difficult to
-        # pass dynamic demo_sel_func that way.
-            
-        if cpus is None:
-            cpus = cpu_count() - 1
-        
+    def _multiple_processes(self, cpus, gpus, verbose, split_jobs, this_job_id, demo_sel_func):
+        from multiprocessing import Manager, Process
+
         with Manager() as manager:
-            work = manager.Queue(cpus)
+            work = manager.Queue(cpus+gpus)
             results = manager.list()
                 
             # Assemble pool of workers
@@ -98,7 +93,7 @@ class Cache2D:
                             args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, False))
                 p.start()
                 pool.append(p)
-            if use_gpu:
+            for i in range(gpus):
                 p = Process(target=self._worker_sfs,
                             args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, True))
                 p.start()
@@ -112,7 +107,7 @@ class Cache2D:
                         work.put((ii,jj, gamma,gamma2))
                     this_eval += 1
             # Put commands on queue to close out workers
-            for jj in range(cpus+int(use_gpu)):
+            for jj in range(cpus+gpus):
                 work.put(None)
             # Stop workers
             for p in pool:
