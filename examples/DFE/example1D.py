@@ -21,7 +21,7 @@ if __name__ == '__main__':
     pts = [600, 800, 1000]
     spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch, pts=pts, 
                           gamma_bounds=(1e-5, 500), gamma_pts=100, verbose=True,
-                          mp=True)
+                          cpus=4)
     # The spectra can be pickled for usage later. This is especially convenient
     # if the process of generating the spectra takes a long time.
     pickle.dump(spectra, open('example_spectra.bpkl','wb'))

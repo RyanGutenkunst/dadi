@@ -38,14 +38,14 @@ if __name__ == '__main__':
     demo_params = [0.5,2,0.5,0.1,0,0]
     ns = [8, 12]
     pts_l = [60, 80, 100]
-    func_ex = DemogSelModels.IM
+    func_ex = DemogSelModels.IM_sel
     # Check whether we already have a chached set of 2d spectra. If not
     # generate them.
     try:
         s2 = pickle.load(open('test.spectra2d.bpkl', 'rb'))
     except IOError:
         s2 = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-                     gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+                     gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
                      additional_gammas=[1.2, 4.3])
         # Save spectra2d object
         fid = open('test.spectra2d.bpkl', 'wb')
@@ -60,13 +60,13 @@ if __name__ == '__main__':
         ## nodes, then s2a,s2b,s2c would be saved to separate files, then loaded
         ## and combined later.
         #s2a = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        #        gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
         #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=0)
         #s2b = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        #        gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
         #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=1)
         #s2c = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        #        gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
         #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=2)
         #s2 = Cache2D.merge([s2a, s2b, s2c])
     
@@ -110,7 +110,7 @@ if __name__ == '__main__':
         s1 = pickle.load(open('test.spectra1d.bpkl', 'rb'))
     except IOError:
         s1 = Cache1D(demo_params, ns, func_single_ex, pts_l=pts_l,
-                     gamma_pts=100, gamma_bounds=(1e-2, 10), mp=True,
+                     gamma_pts=100, gamma_bounds=(1e-2, 10), cpus=4,
                      additional_gammas = [1.2, 4.3], verbose=False)
         fid = open('test.spectra1d.bpkl', 'wb')
         pickle.dump(s1, fid, protocol=2)
