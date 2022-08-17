@@ -57,8 +57,8 @@ def plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=None,
             cb.set_label('Probability density')
 
     # Set to logscale. Use symlog because it handles negative values cleanly
-    ax.set_xscale('symlog', linthreshx=abs(gammax).min())
-    ax.set_yscale('symlog', linthreshy=abs(gammay).min())
+    ax.set_xscale('symlog', linthresh=abs(gammax).min())
+    ax.set_yscale('symlog', linthresh=abs(gammay).min())
 
     ax.set_xlabel(xlabel, fontsize='large')
     ax.set_ylabel(ylabel, fontsize='large')
@@ -183,8 +183,8 @@ def plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params, rho=0,
     ax_ul.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
 
     # Set logarithmic scale on legative parts
-    ax_ll.set_xscale('symlog', linthreshx=abs(gammax).min())
-    ax_ll.set_yscale('symlog', linthreshy=abs(gammay).min())
+    ax_ll.set_xscale('symlog', linthresh=abs(gammax).min())
+    ax_ll.set_yscale('symlog', linthresh=abs(gammay).min())
 
     # Remove interior axes lines and tickmarks
     ax_ll.spines['right'].set_visible(False)
