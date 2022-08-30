@@ -2,6 +2,10 @@ import unittest
 import numpy as np
 import dadi.DFE
 from dadi.DFE import PDFs, DemogSelModels
+from dadi.DFE import Cache1D, Cache2D, Vourlaki_mixture
+
+def trivial_fs(params, ns, pts): 
+    return dadi.Spectrum([[0, 0.5], [0.5, 0]])
 
 class DFETestCase(unittest.TestCase):
     def test_Cache1D_generation(self):
@@ -209,6 +213,41 @@ class DFETestCase(unittest.TestCase):
         with self.assertRaises(IndexError):
             dadi.DFE.mixture_symmetric_point_pos([-0.5,0.5,0.5,0.1,4.9,0.1],
                                                  None, s1, s2, PDFs.lognormal, PDFs.biv_lognormal, 1, None)
+
+    def test_Vourlaki_normalization(self):
+        """
+        Tests of normalization with Vourlaki_mixture
+        """
+        ns, pts_l = [2,2], [1]
+        s1 = Cache1D([], ns, trivial_fs, pts=pts_l, gamma_pts=100,
+                     gamma_bounds=(1e-4, 2000), additional_gammas=[10])
+        s2 = Cache2D([], ns, trivial_fs, pts=pts_l, gamma_pts=100,
+                     gamma_bounds=(1e-4, 2000), additional_gammas=[10])
+
+        # No gamma changes, no positive component: ppos_wild=0.0, pchange=0.0
+        fs = Vourlaki_mixture([1, 10, 0, 10, 0, 0], None, s1, s2, 1.0, None)
+        assert(np.allclose(fs.sum(), 1, atol=0.01))
+
+        # No gamma changes, with positive component: ppos_wild=0.5, pchange=0.0
+        fs = Vourlaki_mixture([1, 10, 0.5, 10, 0, 0], None, s1, s2, 1.0, None)
+        assert(np.allclose(fs.sum(), 1, atol=0.01))
+
+        # Substantial gamma changes, no positive component: ppos_wild=0.0, pchange=0.5
+        fs = Vourlaki_mixture([1, 10, 0.0, 10, 0.5, 0], None, s1, s2, 1.0, None)
+        assert(np.allclose(fs.sum(), 1, atol=0.01))
+
+        # Substantial gamma changes, with positive component: ppos_wild=0.5, pchange=0.5
+        fs = Vourlaki_mixture([1, 10, 0.5, 10, 0.5, 0], None, s1, s2, 1.0, None)
+        assert(np.allclose(fs.sum(), 1, atol=0.01))
+
+        # Substantial gamma changes, with positive component, some changing to positive:
+        #  ppos_wild=0.5, pchange=0.5, pchange_pos=0.5
+        fs = Vourlaki_mixture([1, 10, 0.5, 10, 1.0, 0.5], None, s1, s2, 1.0, None)
+        assert(np.allclose(fs.sum(), 1, atol=0.01))
+
+        # Theta != 1.0
+        fs = Vourlaki_mixture([1, 10, 0.5, 10, 1.0, 0.5], None, s1, s2, 2.0, None)
+        assert(np.allclose(fs.sum(), 2, atol=0.01))
 
     #def test_plotting(self):
     #    import matplotlib.pyplot as plt
