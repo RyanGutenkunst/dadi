@@ -9,7 +9,7 @@ import logging
 logging.basicConfig()
 
 from . import Demographics1D, Demographics2D, Inference, Integration
-from . import Misc, Numerics, PhiManip, Spectrum_mod, tridiag, Godambe
+from . import Misc, Numerics, PhiManip, Spectrum_mod, Godambe
 
 # We do it this way so it's easier to reload.
 Spectrum = Spectrum_mod.Spectrum

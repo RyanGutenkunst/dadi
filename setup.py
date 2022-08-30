@@ -30,23 +30,23 @@ else:
     extra_compile_args = []
 
 
-# Configure our C modules that are built with f2py.
-tridiag = core.Extension(name = 'dadi.tridiag',
-                         sources = ['dadi/tridiag.pyf', 'dadi/tridiag.c'],
-                         extra_compile_args=extra_compile_args)
-int_c = core.Extension(name = 'dadi.integration_c',
-                       sources = ['dadi/integration_c.pyf', 
-                                  'dadi/integration1D.c',
-                                  'dadi/integration2D.c', 
-                                  'dadi/integration3D.c',
-                                  'dadi/integration4D.c',
-                                  'dadi/integration5D.c',
-                                  'dadi/integration_shared.c',
-                                  'dadi/tridiag.c'],
-                         extra_compile_args=extra_compile_args)
-pdfs = core.Extension(name = 'dadi.DFE.PDFs_c',
-                      sources = ['dadi/DFE/PDFs.pyf', 'dadi/DFE/PDFs.c'],
-                      extra_compile_args=extra_compile_args)
+## Configure our C modules that are built with f2py.
+#tridiag = core.Extension(name = 'dadi.tridiag',
+#                         sources = ['dadi/tridiag.pyf', 'dadi/tridiag.c'],
+#                         extra_compile_args=extra_compile_args)
+#int_c = core.Extension(name = 'dadi.integration_c',
+#                       sources = ['dadi/integration_c.pyf', 
+#                                  'dadi/integration1D.c',
+#                                  'dadi/integration2D.c', 
+#                                  'dadi/integration3D.c',
+#                                  'dadi/integration4D.c',
+#                                  'dadi/integration5D.c',
+#                                  'dadi/integration_shared.c',
+#                                  'dadi/tridiag.c'],
+#                         extra_compile_args=extra_compile_args)
+#pdfs = core.Extension(name = 'dadi.DFE.PDFs_c',
+#                      sources = ['dadi/DFE/PDFs.pyf', 'dadi/DFE/PDFs.c'],
+#                      extra_compile_args=extra_compile_args)
 
 if '--cython' in sys.argv:
     # Remove extra argument, so distutils doesn't complain
@@ -80,6 +80,31 @@ if '--cython' in sys.argv:
           script_args = ['build_ext', '--inplace'], 
           )
 
+    tridiag_extension = [core.Extension(name='dadi.tridiag_cython', sources=['dadi/tridiag_cython.pyx', 'dadi/tridiag.c'])]
+    setup(ext_modules = tridiag_extension,
+        include_dirs = [numpy.get_include()],
+        cmdclass = {'build_ext': build_ext},
+        script_args = ['build_ext', '--inplace'],
+    )
+
+    int_cython = [core.Extension(name = 'dadi.integration_c',
+                       sources = ['dadi/integration_c.pyx', 'dadi/integration1D.c', 
+                                  'dadi/integration2D.c', 'dadi/integration3D.c', 'dadi/integration4D.c', 
+                                  'dadi/integration5D.c', 'dadi/integration_shared.c',
+                                  'dadi/tridiag.c'])]
+    setup(ext_modules = int_cython,
+        include_dirs = [numpy.get_include()],
+        cmdclass = {'build_ext': build_ext},
+        script_args = ['build_ext', '--inplace'],
+    )
+
+    pdf_extension = [core.Extension(name='dadi.DFE.PDFs_cython', sources=['dadi/DFE/PDFs_cython.pyx'])]
+    setup(ext_modules = pdf_extension,
+        include_dirs = [numpy.get_include()],
+        cmdclass = {'build_ext': build_ext},
+        script_args = ['build_ext', '--inplace'],
+    )
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -88,7 +113,7 @@ numpy.distutils.core.setup(name='dadi',
                            author='Ryan Gutenkunst',
                            author_email='rgutenk@arizona.edu',
                            url='https://bitbucket.org/gutenkunstlab/dadi',
-                           ext_modules = [tridiag, int_c, pdfs],
+                           #ext_modules = [tridiag, int_c, pdfs],
                            packages=setuptools.find_packages(),
                            description="Fit population genetic models of demography and selection using diffusion approximations to the allele frequency spectrum",
                            long_description_content_type="text/markdown",
@@ -100,7 +125,9 @@ numpy.distutils.core.setup(name='dadi',
                            #                # Copy TwoLocus extension modules
                                            'dadi.TwoLocus':['*.so', '*.pyd'],
                            #                # Copy DFE extension modules,
-                                           'dadi.DFE':['*.so', '*.pyd']},
+                                           'dadi.DFE':['*.so', '*.pyd'],
+                           #                # Copy DFE extension modules,
+                                           'dadi':['*.so', '*.pyd']},
                            install_requires=['scipy', 'numpy', 'matplotlib', 'nlopt'],
                            classifiers=[
                                "Programming Language :: Python :: 3",

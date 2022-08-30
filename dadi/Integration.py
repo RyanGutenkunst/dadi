@@ -28,7 +28,8 @@ import numpy
 from numpy import newaxis as nuax
 
 cuda_enabled = False
-from . import Misc, Numerics, tridiag
+from . import Misc, Numerics
+from . import tridiag_cython as tridiag
 from . import integration_c as int_c
 
 #: Controls timestep for integrations. This is a reasonable default for
