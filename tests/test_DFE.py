@@ -11,7 +11,7 @@ class DFETestCase(unittest.TestCase):
         dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
                          gamma_bounds=(1e-4, 20), gamma_pts=2)
         s1 = dadi.DFE.Cache1D([], [10], DemogSelModels.equil, [20, 30, 40],
-                         gamma_bounds=(1e-4, 20), gamma_pts=10, mp=True)
+                         gamma_bounds=(1e-4, 20), gamma_pts=10, cpus=2)
         s1.integrate([-0.5, 0.5], None, PDFs.lognormal,
                 1e5, None, exterior_int=False)
 
@@ -97,18 +97,18 @@ class DFETestCase(unittest.TestCase):
         dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
                          gamma_bounds=(1e-4, 2), gamma_pts=2)
         s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
-                         gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
+                         gamma_bounds=(1e-4, 2), gamma_pts=4, cpus=2)
         s2.integrate([2, 1, 0.4], None, PDFs.biv_lognormal, 1, None)
 
         # Merging of separate caches
         s2a = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
-                gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
+                gamma_bounds=(1e-4, 2), gamma_pts=4, cpus=2,
                 split_jobs=3, this_job_id=0)
         s2b = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
-                gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
+                gamma_bounds=(1e-4, 2), gamma_pts=4, cpus=2,
                 split_jobs=3, this_job_id=1)
         s2c = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
-                gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True,
+                gamma_bounds=(1e-4, 2), gamma_pts=4, cpus=2,
                 split_jobs=3, this_job_id=2)
         # Merge caches
         s2m = dadi.DFE.Cache2D.merge([s2a,s2b,s2c])
@@ -127,9 +127,9 @@ class DFETestCase(unittest.TestCase):
 
         demo_params = [0.5, 2, 0.5, 0.01, 0, 0]
         s2 = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
-                         gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True)
+                         gamma_bounds=(1e-4, 2), gamma_pts=4, cpus=2)
         s2_gpu = dadi.DFE.Cache2D(demo_params, [3, 3], DemogSelModels.IM_sel, [20],
-                         gamma_bounds=(1e-4, 2), gamma_pts=4, mp=True, use_gpu=True)
+                         gamma_bounds=(1e-4, 2), gamma_pts=4, cpus=0, gpus=1)
         self.assertTrue(np.allclose(s2.spectra, s2_gpu.spectra))
 
     def test_2D_integration(self):
