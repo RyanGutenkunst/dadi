@@ -248,5 +248,5 @@ else:
     suite = unittest.TestSuite()
 
 if __name__ == '__main__':
-    if dadi.cuda_enabled():
+    if dadi.cuda_enabled(True):
         unittest.main()

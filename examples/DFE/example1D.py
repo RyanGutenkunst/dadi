@@ -18,10 +18,10 @@ if __name__ == '__main__':
     ns = [250]
 
     # Integrate over a range of gammas
-    pts_l = [600, 800, 1000]
-    spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch, pts_l=pts_l, 
+    pts = [600, 800, 1000]
+    spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch, pts=pts, 
                           gamma_bounds=(1e-5, 500), gamma_pts=100, verbose=True,
-                          mp=True)
+                          cpus=4)
     # The spectra can be pickled for usage later. This is especially convenient
     # if the process of generating the spectra takes a long time.
     pickle.dump(spectra, open('example_spectra.bpkl','wb'))
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     #
     data = dadi.Spectrum.from_file('example.fs')
     ppos = 0.1
-    sel_data = theta_ns*DFE.DemogSelModels.two_epoch(tuple(demog_params) + (5,), ns, pts_l[-1])
+    sel_data = theta_ns*DFE.DemogSelModels.two_epoch(tuple(demog_params) + (5,), ns, pts[-1])
     data_pos = (1-ppos)*data + ppos*sel_data
 
     sel_params = [0.2, 1000., 0.2, 2]

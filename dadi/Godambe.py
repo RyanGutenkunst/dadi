@@ -292,9 +292,9 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
     if not return_GIM:
         return uncerts
     else:
-        return uncerts, GIM
+        return uncerts, GIM, H
 
-def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
+def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False):
     """
     Parameter uncertainties from Fisher Information Matrix
 
@@ -325,7 +325,11 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
-    return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    if not return_FIM:
+        return uncerts
+    else:
+        return uncerts, H
 
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01, boot_theta_adjusts=None):

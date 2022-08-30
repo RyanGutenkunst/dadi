@@ -38,6 +38,20 @@ def normal(xx, mu, sigma):
     return ssd.norm.pdf(xx, loc=mu, scale=sigma)
 
 from dadi.DFE.PDFs_c import biv_lognormal, biv_ind_gamma
+#import dadi.DFE.PDFs_cython as PDFs_cython
+## The Cython functions need correct dimension and type array inputs,
+## so we need to be careful here.
+#def biv_lognormal(xx, yy, params):
+#    xx = np.asarray(np.atleast_1d(xx), dtype=np.double)
+#    yy = np.asarray(np.atleast_1d(yy), dtype=np.double)
+#    params = np.asarray(np.atleast_1d(params), dtype=np.double)
+#    return np.squeeze(PDFs_cython.biv_lognormal(xx, yy, params))
+#def biv_indgamma(xx, yy, params):
+#    xx = np.asarray(np.atleast_1d(xx), dtype=np.double)
+#    yy = np.asarray(np.atleast_1d(yy), dtype=np.double)
+#    params = np.asarray(np.atleast_1d(params), dtype=np.double)
+#    return np.squeeze(PDFs_cython.biv_indgamma(xx, yy, params))
+
 # Note: This method has been deprecated in favor of the much faster C version
 # defined in PDFS_c
 def biv_lognormal_py(xx, yy, params):

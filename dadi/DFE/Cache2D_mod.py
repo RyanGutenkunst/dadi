@@ -8,8 +8,7 @@ import scipy.integrate
 class Cache2D:
     def __init__(self, params, ns, demo_sel_func, pts,
                  gamma_bounds=(1e-4, 2000.), gamma_pts=100,
-                 additional_gammas=[],
-                 mp=False, cpus=None, use_gpu=False, verbose=False,
+                 additional_gammas=[], cpus=None, gpus=0, verbose=False,
                  split_jobs=1, this_job_id=0):
         """
         params: Optimized demographic parameters
@@ -22,12 +21,9 @@ class Cache2D:
         additional_gammas: Sequence of additional gamma values to store results
                            for. Useful for point masses of explicit neutrality
                            or positive selection.
-        mp: True if you want to use multiple cores or a gpu (utilizes 
-            multiprocessing). If using the mp option you may also specify
-            # of cpus, otherwise this will just use nthreads-1 on your
-            machine.
-        cpus: For multiprocessing, number of CPU jobs to launch.
-        use_gpu: If True, use a GPU in addition to the cpus
+        cpus: Number of CPU jobs to launch. If None (the default), then
+              all CPUs available will be used.
+        gpus: Number of GPU jobs to launch.
         verbose: If True, print messages to track progress of cache generation.
         split_jobs: To split cache generation across multiple computing jobs,
                     set split_jobs > 1 and this_job_id.
@@ -42,7 +38,6 @@ class Cache2D:
         self.ns = ns
         self.pts = pts
         self.func_name = demo_sel_func.__name__
-        self.demo_sel_func = demo_sel_func
         self.params = params
 
         # Create a vector of gammas that are log-spaced over sequential 
@@ -57,10 +52,14 @@ class Cache2D:
 
         self.spectra = [[None]*len(self.gammas) for _ in self.gammas]
 
-        if not mp: #for running with a single thread
-            self._single_process(verbose, split_jobs, this_job_id)
+        if cpus is None:
+            import multiprocessing
+            cpus = multiprocessing.cpu_count()
+
+        if not cpus > 1 or gpus > 0: #for running with a single thread
+            self._single_process(verbose, split_jobs, this_job_id, demo_sel_func)
         else: #for running with with multiple cores
-            self._multiple_processes(cpus, use_gpu, verbose, split_jobs, this_job_id)
+            self._multiple_processes(cpus, gpus, verbose, split_jobs, this_job_id, demo_sel_func)
 
         # self.spectra is an array of arrays. The first two dimensions are
         # indexed by the pairs of gamma values, and the remaining dimensions
@@ -68,40 +67,35 @@ class Cache2D:
         if split_jobs == 1:
             self.spectra = np.array(self.spectra)
         
-    def _single_process(self, verbose, split_jobs, this_job_id):
-        self.demo_sel_func = Numerics.make_extrap_func(self.demo_sel_func)
+    def _single_process(self, verbose, split_jobs, this_job_id, demo_sel_func):
+        func_ex = Numerics.make_extrap_func(demo_sel_func)
 
         this_eval = 0
         for ii,gamma in enumerate(self.gammas):
             for jj, gamma2 in enumerate(self.gammas):
                 if this_eval % split_jobs == this_job_id:
-                    self.spectra[ii][jj] = self.demo_sel_func(tuple(self.params)+(gamma,gamma2),
+                    self.spectra[ii][jj] = func_ex(tuple(self.params)+(gamma,gamma2),
                             self.ns, self.pts)
                     if verbose: print('{0},{1}: {2},{3}'.format(ii,jj, gamma,gamma2))
                 this_eval += 1
                         
-    def _multiple_processes(self, cpus, use_gpu, verbose, split_jobs, this_job_id):
-        from multiprocessing import Manager, Process, cpu_count
-        # Would like to simply use Pool.map here, but difficult to
-        # pass dynamic demo_sel_func that way.
-            
-        if cpus is None:
-            cpus = cpu_count() - 1
-        
+    def _multiple_processes(self, cpus, gpus, verbose, split_jobs, this_job_id, demo_sel_func):
+        from multiprocessing import Manager, Process
+
         with Manager() as manager:
-            work = manager.Queue(cpus)
+            work = manager.Queue(cpus+gpus)
             results = manager.list()
                 
             # Assemble pool of workers
             pool = []
             for i in range(cpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, False))
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, False))
                 p.start()
                 pool.append(p)
-            if use_gpu:
+            for i in range(gpus):
                 p = Process(target=self._worker_sfs,
-                            args=(work, results, self.demo_sel_func, self.params, self.ns, self.pts, verbose, True))
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, True))
                 p.start()
                 pool.append(p)
 
@@ -113,7 +107,7 @@ class Cache2D:
                         work.put((ii,jj, gamma,gamma2))
                     this_eval += 1
             # Put commands on queue to close out workers
-            for jj in range(cpus+int(use_gpu)):
+            for jj in range(cpus+gpus):
                 work.put(None)
             # Stop workers
             for p in pool:
@@ -176,8 +170,8 @@ class Cache2D:
                 weighted_spectra[ii,jj] = w*spectra[ii,jj]
 
         # Integrate out the first two axes, which are the gamma axes.
-        temp = np.trapz(weighted_spectra, -self.neg_gammas, axis=0)
-        fs = np.trapz(temp, -self.neg_gammas, axis=0)
+        temp = np.trapz(weighted_spectra, self.neg_gammas, axis=0)
+        fs = np.trapz(temp, self.neg_gammas, axis=0)
 
         if not exterior_int:
             return Spectrum(theta*fs)
@@ -316,20 +310,20 @@ class Cache2D:
         pos_neg_spectra = np.squeeze(self.spectra[self.gammas==gammapos1,:Nneg])
         # Obtain the marginal DFE for pop2 by integrating over the weights
         # for pop1.
-        pos_neg_weights = np.trapz(weights, -self.neg_gammas, axis=0)
+        pos_neg_weights = np.trapz(weights, self.neg_gammas, axis=0)
         # For numpy multiplication...
         pos_neg_weights = pos_neg_weights[:,np.newaxis,np.newaxis]
         # Do the weighted integral.
         pos_neg = np.trapz(pos_neg_weights*pos_neg_spectra,
-                           -self.neg_gammas, axis=0)
+                           self.neg_gammas, axis=0)
 
         # Case in which pop2 is positive and pop1 is negative.
         neg_pos_spectra = np.squeeze(self.spectra[:Nneg,self.gammas==gammapos2])
         # Now integrate over pop2 to get marginal DFE for pop1
-        neg_pos_weights = np.trapz(weights, -self.neg_gammas, axis=1)
+        neg_pos_weights = np.trapz(weights, self.neg_gammas, axis=1)
         neg_pos_weights = neg_pos_weights[:,np.newaxis,np.newaxis]
         neg_pos = np.trapz(neg_pos_weights*neg_pos_spectra,
-                           -self.neg_gammas, axis=0)
+                           self.neg_gammas, axis=0)
 
         # Weighting factors for each quadrant of the DFE. Note that in the case
         # that ppos1==ppos2, these reduce to the model of Ragsdale et al. (2016)
@@ -464,4 +458,38 @@ def mixture_symmetric_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
     fs1 = s1.integrate_point_pos(params1, None, sel_dist1, theta, Npos=1, pts=None)
     params2 = list(pdf_params) + [rho, ppos, gamma_pos]
     fs2 = s2.integrate_symmetric_point_pos(params2, None, sel_dist2, theta, None)
+    return (1-p2d)*fs1 + p2d*fs2
+
+def mixture_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
+                      theta, pts=None):
+    """
+    Weighted summation of 1d and 2d distributions with positive selection.
+    The 1d distribution is equivalent to assuming selection coefficients are
+    perfectly correlated.
+
+    params: Parameters for potential optimization.
+            The last parameter is the weight for the 2d dist.
+            The second-to-last parameter is positive gammma for the point mass in population 2.
+            The third-to-last parameter is the proportion of positive selection in population 2.
+            The fourth-to-last parameter is positive gamma for the point mass in population 1.
+            The fifth-to-last parameter is the proportion of positive selection in population 1.
+            The sixth-to-last parameter is the correlation coefficient for the
+                2d distribution.
+            The remaining parameters as must be shared between the 1d and 2d
+                distributions.
+    ns: Ignored
+    s1: Cache1D object for 1d distribution
+    s2: Cache2D object for 2d distribution
+    sel_dist1: Univariate probability distribution for s1
+    sel_dist2: Bivariate probability distribution for s2
+    theta: Population-scaled mutation rate
+    pts: Ignored
+    """
+    pdf_params = params[:-6]
+    rho, ppos1, gamma_pos1, ppos2, gamma_pos2, p2d = params[-6:]
+
+    params1 = list(pdf_params) + [ppos1, gamma_pos1]
+    fs1 = s1.integrate_point_pos(params1, None, sel_dist1, theta, Npos=1, pts=None)
+    params2 = list(pdf_params) + [rho, ppos1, gamma_pos1, ppos2, gamma_pos2]
+    fs2 = s2.integrate_point_pos(params2, None, sel_dist2, theta, None)
     return (1-p2d)*fs1 + p2d*fs2

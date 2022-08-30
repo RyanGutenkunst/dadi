@@ -35,6 +35,8 @@ def cached_dbeta(nx, xx):
     dbeta1, dbeta2 = _dbeta_cache[key]
     return dbeta1, dbeta2
 
+_imported_demes = False
+
 class Spectrum(numpy.ma.masked_array):
     """
     Represents a frequency spectrum.
@@ -101,12 +103,12 @@ class Spectrum(numpy.ma.masked_array):
             where_folded_out = total_per_entry > int(total_samples/2)
             if check_folding\
                and not numpy.all(subarr.data[where_folded_out] == 0):
-                logger.warn('Creating Spectrum with data_folded = True, but '
+                logger.warning('Creating Spectrum with data_folded = True, but '
                             'data has non-zero values in entries which are '
                             'nonsensical for a folded Spectrum.')
             if check_folding\
                and not numpy.all(subarr.mask[where_folded_out]):
-                logger.warn('Creating Spectrum with data_folded = True, but '
+                logger.warning('Creating Spectrum with data_folded = True, but '
                             'mask is not True for all entries which are '
                             'nonsensical for a folded Spectrum.')
 
@@ -114,7 +116,7 @@ class Spectrum(numpy.ma.masked_array):
             if pop_ids is None or pop_ids == data.pop_ids:
                 subarr.pop_ids = data.pop_ids
             elif pop_ids != data.pop_ids:
-                logger.warn('Changing population labels in construction of new '
+                logger.warning('Changing population labels in construction of new '
                             'Spectrum.')
                 if len(pop_ids) != subarr.ndim:
                     raise ValueError('pop_ids must be of length equal to '
@@ -444,7 +446,7 @@ class Spectrum(numpy.ma.masked_array):
         orig_mask = output.mask.copy()
         orig_mask.flat[0] = orig_mask.flat[-1] = False
         if numpy.any(orig_mask):
-            logger.warn('Marginalizing a Spectrum with internal masked values. '
+            logger.warning('Marginalizing a Spectrum with internal masked values. '
                         'This may not be a well-defined operation.')
 
         # Do the marginalization
@@ -468,6 +470,75 @@ class Spectrum(numpy.ma.masked_array):
         else:
             return output
 
+    def combine_pops(self, tocombine):
+        """
+        Combine two or more populations in the fs, treating them as a single pop
+
+        tocombine: Indices for populations being combined (starting from 1)
+
+        The populations will alwasy be combined into the slot of the 
+        population with the smallest index. For example, if the sample sizes of
+        the spectrum are (1,2,3,4,5) and tocombine=[4,2,1], then the output spectrum
+        will have sample_sizes (7,3,5) when populations 1, 2, and 4 are combined.
+
+        The pop_ids of the new population will be the pop_ids of the combined
+        populations with a '+' in between them.
+        """
+        tocombine = sorted(tocombine)
+        result = self
+        # Need to combine from highest to lowest index
+        for right_pop in tocombine[1:][::-1]: 
+            result = result.combine_two_pops([tocombine[0], right_pop])
+        # Need to fix pop_id of combined pop
+        if self.pop_ids:
+            result.pop_ids[tocombine[0]-1] = '+'.join(self.pop_ids[_-1] for _ in tocombine)
+        return result
+
+    def combine_two_pops(self, tocombine):
+        """
+        Combine two populations in the fs, treating them as a single pop
+
+        tocombine: Indices for populations being combined (starting from 1)
+
+        The two populations will alwasy be combined into the slot of the 
+        population with the smallest index. For example, if the sample sizes of
+        the spectrum are (2,3,4,5) and tocombine=[4,2], then the output spectrum
+        will have sample_sizes (2,8,4) when populations 2 and 4 are combined.
+
+        The pop_ids of the new population will be the pop_ids of the two combined
+        populations with a '+' in between them.
+        """
+        # Calculate new sample sizes
+        tocombine = sorted([_-1 for _ in tocombine]) # Account for indexing from 1
+        new_ns = list(self.sample_sizes)
+        new_ns[tocombine[0]] = self.sample_sizes[tocombine[0]] + self.sample_sizes[tocombine[1]]
+        del new_ns[tocombine[1]] # Remove pop being combined away
+
+        # Create new pop ids
+        new_pop_ids = None
+        if self.pop_ids:
+            new_pop_ids = list(self.pop_ids)
+            new_pop_ids[tocombine[0]] = '{0}+{1}'.format(self.pop_ids[tocombine[0]], self.pop_ids[tocombine[1]])
+            del new_pop_ids[tocombine[1]]
+
+        # Create new spectrum
+        new_data = np.zeros(shape=[n+1 for n in new_ns])
+        new_fs = Spectrum(new_data, pop_ids=new_pop_ids)
+        # Copy over extrapolation info
+        new_fs.extrap_x = self.extrap_x
+
+        # Fill new spectrum
+        for index in np.ndindex(self.shape):
+            new_index = list(index)
+            new_index[tocombine[0]] = index[tocombine[0]] + index[tocombine[1]]
+            del new_index[tocombine[1]]
+            new_index = tuple(new_index)
+            new_fs[new_index] += self[index]
+            # Mask entry if any of the contributing entries are masked
+            new_fs.mask[new_index] = (new_fs.mask[new_index] or self.mask[index])
+
+        return new_fs
+
     def filter_pops(self, tokeep, mask_corners=True):
         """
         Filter Spectrum to keep only certain populations.
@@ -476,7 +547,7 @@ class Spectrum(numpy.ma.masked_array):
         Note: This is similar in practice to the marginalize operation. But here
               populations are numbered from 1, as in the majority of dadi.
 
-        tokeep: List of population numbers to keep, numbering from 1.
+        tokeep: Unordered set of population numbers to keep, numbering from 1.
         mask_corners: If True, the typical corners of the resulting fs will be
                       masked
         """
@@ -513,6 +584,24 @@ class Spectrum(numpy.ma.masked_array):
         logfs.pop_ids = self.pop_ids
         logfs.extrap_x = self.extrap_x
         return logfs
+
+    def reorder_pops(self, neworder):
+        """
+        Get Spectrum with populations in new order
+
+        Returns new Spectrum with same number of populations, but in a different order
+
+        neworder: Integer list defining new order of populations, indexing the orginal
+                  populations from 1. Must contain all integers from 1 to number of pops.
+        """
+        if sorted(neworder) != [_+1 for _ in range(self.ndim)]:
+            raise(ValueError("neworder argument misspecified"))
+        newaxes = [_-1 for _ in neworder]
+        fs = self.transpose(newaxes)
+        if self.pop_ids:
+            fs.pop_ids = [self.pop_ids[_] for _ in newaxes]
+
+        return fs
 
     def fold(self):
         """
@@ -1929,7 +2018,7 @@ class Spectrum(numpy.ma.masked_array):
         fs.extrap_x = xxs[0][1]
         for xx in xxs[1:]:
             if not xx[1] == fs.extrap_x:
-                logger.warn('Spectrum calculated from phi different grids for '
+                logger.warning('Spectrum calculated from phi different grids for '
                             'different dimensions. Extrapolation may fail.')
         return fs
 
@@ -2017,7 +2106,7 @@ class Spectrum(numpy.ma.masked_array):
         fs.extrap_x = xxs[0][1]
         for xx in xxs[1:]:
             if not xx[1] == fs.extrap_x:
-                logger.warn('Spectrum calculated from phi different grids for '
+                logger.warning('Spectrum calculated from phi different grids for '
                             'different dimensions. Extrapolation may fail.')
         return fs
 
@@ -2300,6 +2389,74 @@ class Spectrum(numpy.ma.masked_array):
     
         return Spectrum(fs, mask_corners=mask_corners, pop_ids=pop_ids)
 
+    @staticmethod
+    def from_demes(
+        g, sampled_demes, sample_sizes, pts, log_extrap=False, sample_times=None, Ne=None):
+        """
+        Takes a deme graph and computes the SFS. ``demes`` is a package for
+        specifying demographic models in a user-friendly, human-readable YAML
+        format. This function automatically parses the demographic description
+        and returns a SFS for the specified populations and sample sizes.
+
+        This function is new in version 1.1.0. Future developments will allow for
+        inference using ``demes``-based demographic descriptions.
+
+        :param g: A ``demes`` DemeGraph from which to compute the SFS. The DemeGraph
+            can either be specified as a YAML file, in which case `g` is a string,
+            or as a ``DemeGraph`` object.
+        :type g: str or :class:`demes.DemeGraph`
+        :param sampled_demes: A list of deme IDs to take samples from. We can repeat
+            demes, as long as the sampling of repeated deme IDs occurs at distinct
+            times.
+        :type sampled_demes: list of strings
+        :param sample_sizes: A list of the same length as ``sampled_demes``,
+            giving the sample sizes for each sampled deme.
+        :type sample_sizes: list of ints
+        :param sample_times: If None, assumes all sampling occurs at the end of the
+            existence of the sampled deme. If there are
+            ancient samples, ``sample_times`` must be a list of same length as
+            ``sampled_demes``, giving the sampling times for each sampled
+            deme. Sampling times are given in time units of the original deme graph,
+            so might not necessarily be generations (e.g. if ``g.time_units`` is years)
+        :type sample_times: list of floats, optional
+        :param Ne: reference population size. If none is given, we use the initial
+            size of the root deme.
+        :type Ne: float, optional
+        :return: A ``dadi`` site frequency spectrum, with dimension equal to the
+            length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
+            in each dimension, indexing the allele frequency in each deme from 0
+            to n[i], where i is the deme index.
+        :rtype: :class:`dadi.Spectrum`
+        """
+        global _imported_demes
+        if not _imported_demes:
+            try:
+                global demes
+                global Demes
+                import demes
+                import dadi.Demes as Demes
+
+                _imported_demes = True
+            except ImportError:
+                raise ImportError("demes is not installed, need to `pip install demes`")
+
+        if isinstance(g, str):
+            dg = demes.load(g)
+        else:
+            dg = g
+
+        func_ex = dadi.Numerics.make_extrap_func(Demes.SFS)
+
+        fs = func_ex(
+            dg,
+            sampled_demes,
+            sample_sizes,
+            sample_times,
+            Ne,
+            pts,
+        )
+        return fs
+
     # The code below ensures that when I do arithmetic with Spectrum objects,
     # it is not done between a folded and an unfolded array. If it is, I raise
     # a ValueError.
@@ -2341,7 +2498,7 @@ def %(method)s(self, other):
         elif self.pop_ids is None:
             newpop_ids = other.pop_ids
         elif other.pop_ids != self.pop_ids:
-            logger.warn('Arithmetic between Spectra with different pop_ids. '
+            logger.warning('Arithmetic between Spectra with different pop_ids. '
                         'Resulting pop_id may not be correct.')
     if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
         extrap_x = None
@@ -2367,7 +2524,7 @@ def %(method)s(self, other):
         self.data.%(method)s (other)
     if hasattr(other, 'pop_ids') and other.pop_ids is not None\
              and other.pop_ids != self.pop_ids:
-        logger.warn('Arithmetic between Spectra with different pop_ids. '
+        logger.warning('Arithmetic between Spectra with different pop_ids. '
                     'Resulting pop_id may not be correct.')
     if hasattr(other, 'extrap_x') and self.extrap_x != other.extrap_x:
         self.extrap_x = None

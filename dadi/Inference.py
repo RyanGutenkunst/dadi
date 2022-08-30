@@ -4,7 +4,7 @@ Comparison and optimization of model spectra to data.
 import logging
 logger = logging.getLogger('Inference')
 
-import os,sys
+import os,sys, warnings
 
 import numpy
 from numpy import logical_and, logical_not
@@ -506,9 +506,9 @@ def ll_per_bin(model, data, missing_model_cutoff=1e-6):
     missing = logical_and(model < 0, not_data_mask)
     if numpy.any(missing)\
        and data[missing].sum()/data.sum() > missing_model_cutoff:
-        logger.warn('Model is < 0 where data is not masked.')
-        logger.warn('Number of affected entries is %i. Sum of data in those '
-                    'entries is %g:' % (missing.sum(), data[missing].sum()))
+        logger.warning('Model is < 0 where data is not masked.')
+        logger.warning('Number of affected entries is %i. Sum of data in those '
+                'entries is %g:' % (missing.sum(), data[missing].sum()))
 
     # If the data is 0, it's okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.
@@ -1272,6 +1272,7 @@ def add_misid_param(func):
     list, which is the proportion of segregating sites whose ancestral state
     were misidentified.
     """
+    warnings.warning("Inference.add_misid_param is deprecated. Please use the updated Numerics.make_anc_state_misd_func instead.\n", FutureWarning)
     def misid_func(params, *args, **kwargs):
         misid = params[-1]
         fs = func(params[:-1], *args, **kwargs)

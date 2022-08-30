@@ -430,6 +430,66 @@ class SpectrumTestCase(unittest.TestCase):
         marg1 = fs.filter_pops([2])
         self.assertEqual(marg1.shape, (ns[1],))
 
+    def test_combine_two_pops(self):
+        """
+        Test combining two populations
+        """
+        ns = (2,3,4)
+        fs = dadi.Spectrum(numpy.random.uniform(size=[_+1 for _ in ns]),
+                pop_ids=['A','B','C'])
+        fs.mask[2,2,3] = True
+
+        new_fs = fs.combine_two_pops([3,1])
+
+        # Test shape correct
+        self.assertTrue(numpy.array_equal(new_fs.sample_sizes, (6,3)))
+        # Test data combined correctly
+        self.assertAlmostEqual(new_fs[2,1], fs[0,1,2]+fs[1,1,1]+fs[2,1,0])
+        # Test pop_ids formatted correctly
+        self.assertEqual(new_fs.pop_ids[0], 'A+C')
+        # Test that masked correctly
+        self.assertTrue(new_fs.mask[5,2])
+
+    def test_combine_pops(self):
+        """
+        Test combining multiple populations
+        """
+        ns = (1,2,3,4,5,6)
+        fs = dadi.Spectrum(numpy.random.uniform(size=[_+1 for _ in ns]),
+                pop_ids = 'ABCDEF')
+        fs.mask[0,1,2,2,3,4] = True
+
+        new_fs = fs.combine_pops([3,2,5])
+
+        # Test shape correct
+        self.assertTrue(numpy.array_equal(new_fs.sample_sizes, (1,10,4,6)))
+        # Test data combined correctly. For this entry, we need all ways the combined
+        # pops can have 3 derived alleles.
+        combos = [[0,0,3],[0,1,2],[0,2,1],[0,3,0],[1,0,2],[1,1,1],[1,2,0],[2,0,1],[2,1,0]]
+        self.assertAlmostEqual(new_fs[1,3,3,5], numpy.sum([fs[1,_[0],_[1],3,_[2],5] for _ in combos]))
+        # Test pop_ids formatted correctly
+        self.assertEqual(new_fs.pop_ids[1], 'B+C+E')
+        # Test that masked correctly
+        self.assertTrue(new_fs.mask[0,6,2,4])
+
+    def test_reorder_pops(self):
+        """
+        Test fs.reorder_pops
+        """
+        fs = dadi.Spectrum(numpy.random.uniform(size=[4,5,6,7]), pop_ids=['A','B','C','D'])
+        neworder = [2,4,3,1]
+        reordered = fs.reorder_pops(neworder)
+
+        # Assert that subsets of spectrum are correct
+        self.assertTrue(numpy.allclose(fs.filter_pops([2,3]), reordered.filter_pops([1,3])))
+        # In this case, we need the transpose, because order has reversed
+        self.assertTrue(numpy.allclose(fs.filter_pops([1,2]).data, reordered.filter_pops([1,4]).transpose().data))
+        # Assert that pop_ids are correct
+        self.assertTrue([fs.pop_ids[_-1] for _ in neworder], reordered.pop_ids)
+        # Test error checking
+        self.assertRaises(ValueError, fs.reorder_pops, [1])
+        self.assertRaises(ValueError, fs.reorder_pops, [2,1,2,3])
+
 suite = unittest.TestLoader().loadTestsFromTestCase(SpectrumTestCase)
 
 if __name__ == '__main__':

@@ -10,6 +10,7 @@ warnings.formatwarning = simple_warning
 import numpy
 import scipy.linalg
 
+from .Spectrum_mod import Spectrum
 # Nucleotide order assumed in Q matrices.
 code = 'CGTA'
 
@@ -364,6 +365,9 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     mut_types: Sequence of mutation types to include. If None, all mutations
                will be included.
     chr: Prefix to be used for indicating mutation locations.
+
+    The keys in the resulting dictionary are of the form
+    <chr>_<position>.<globalid>
     """
     # Open all the files
     try:
@@ -404,7 +408,7 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     # Create the empty data dictionary
     dd = {}
     for global_id in all_muts:
-        key = 'SLiM_'+loc_dict[global_id]
+        key = 'SLiM_'+loc_dict[global_id] + '.' + global_id
         dd[key] = {'segregating': [0,1],
                          'outgroup_allele': 0,
                          'calls': {}}
@@ -422,7 +426,7 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
                 # Lookup in mut_dict will fail if mutation isn't of appropriate
                 # type to include in this run.
                 global_id = mut_dict[local_id]
-                key = 'SLiM_'+loc_dict[global_id]
+                key = 'SLiM_'+loc_dict[global_id] + '.' + global_id
                 dd[key]['calls'][pop_ii] = (sample_sizes[pop_ii]-count, count)
             except KeyError:
                 pass
@@ -495,7 +499,10 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     else:
         popinfo_file = open(popinfo_filename)
     # pop_dict has key, value pairs of "SAMPLE_NAME" : "POP_NAME"
-    popinfo_dict = _get_popinfo(popinfo_file)
+    try:
+        popinfo_dict = _get_popinfo(popinfo_file)
+    except:
+        raise ValueError('Failed in parsing popinfo file.')
     popinfo_file.close()
 
     # Open VCF file
@@ -556,8 +563,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         # Add ancestral allele information if available
         info = cols[7].split(';')
         for field in info:
-            if field.startswith('AA='):
-                outgroup_allele = field[3:].upper()
+            if field.startswith('AA=') or field.startswith('AA_ensembl=') or field.startswith('AA_chimp='):
+                outgroup_allele = field.split('=')[1].upper()
                 if outgroup_allele not in ['A','C','G','T']:
                     # Skip if ancestral not single base A, C, G, or T
                     outgroup_allele = '-'
@@ -594,46 +601,44 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
 
         calls_dict = {}
         subsample_dict = {}
-        full_info = True
         gtindex = cols[8].split(':').index('GT')
         if do_subsampling:
+            # Collect data for all genotyped samples
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
                 gt = sample.split(':')[gtindex]
-                g1, g2 = gt[0], gt[2]
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                if g1 == '.' or g2 == '.':
-                    continue
-                else:
-                    subsample_dict[pop].append((g1, g2))
+                if '.' not in gt:
+                    subsample_dict[pop].append(gt)
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
-            for k,v in subsample_dict.items():
-                if k not in calls_dict:
-                    calls_dict[k] = (0, 0)
-                if len(v) < subsample[k]:
-                    full_info = False
+            for pop, genotypes in subsample_dict.items():
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0, 0)
+                if len(genotypes) < subsample[pop]:
+                    # Not enough calls for this SNP
                     break
-                idx = numpy.random.choice([i for i in range(0,len(v))],subsample[k],replace=False)
-                for i in idx:
-                    refcalls, altcalls = calls_dict[k]
-                    refcalls += int(v[i][0] == '0') + int(v[i][1] == '0')
-                    altcalls += int(v[i][0] == '1') + int(v[i][1] == '1')
-                    calls_dict[k] = (refcalls, altcalls)
-            if not full_info:
-                continue
-            snp_dict['calls'] = calls_dict
-            data_dict[snp_id] = snp_dict
+                # Choose which individuals to use
+                idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
+                for ii in idx:
+                    gt = subsample_dict[pop][ii]
+                    refcalls, altcalls = calls_dict[pop]
+                    refcalls += gt[::2].count('0')
+                    altcalls += gt[::2].count('1')
+                    calls_dict[pop] = (refcalls, altcalls)
+            else:
+                # Only runs if we didn't break out of this loop
+                snp_dict['calls'] = calls_dict
+                data_dict[snp_id] = snp_dict
         else:
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
-                else:
-                    if pop not in calls_dict:
-                        calls_dict[pop] = (0,0)
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0,0)
                 # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
                 #g1, g2 = gt[0], gt[2]
@@ -695,7 +700,7 @@ def _get_popinfo(popinfo_file):
     # read in population information for each sample
     popinfo_file.seek(0)
     for line in popinfo_file:
-        if line.startswith('#'):
+        if line.startswith('#') or not line.strip():
             continue
         cols = line.split()
         sample = cols[sample_col]
@@ -707,6 +712,30 @@ def _get_popinfo(popinfo_file):
         popinfo_dict[sample] = pop
 
     return popinfo_dict
+
+def annotate_from_annovar(dd, annovar_file, variant_type):
+    """
+    Return a data dictionary with only the sites of a requested type of variation based on an ANNOVAR '.exonic_variant_function' output file.
+
+    dd: Data dictionary of sites of a requested type of annotation
+    annovar_file: Output file from ANNOVAR with the '.exonic_variant_function' extension
+    variant_type: The type of variant you want to make a data dictionary sites to contain
+    """
+    anno_list = []
+    var_fid = open(annovar_file)
+    for line in var_fid:
+        variant = line.split('\t')[1]
+        position = '_'.join(line.split()[4:6])
+        if variant_type in variant:
+            anno_list.append(position)
+    var_fid.close()
+
+    dd_anno = {}
+    for key in dd:
+        if key in anno_list:
+            dd_anno[key] = dd[key]
+
+    return dd_anno
 
 def combine_pops(fs, idx=[0,1]):
     """
@@ -752,6 +781,8 @@ def combine_pops(fs, idx=[0,1]):
     else:
         print("Error: could not combine populations.")
         exit(-1)
+    fs2 = Spectrum(fs2)
+    fs2.extrap_x = fs.extrap_x
     return fs2
 
 def fragment_data_dict(dd, chunk_size):
@@ -763,7 +794,9 @@ def fragment_data_dict(dd, chunk_size):
     basepairs.
 
     This method assumes that keys in the dictionary are
-    chromosome_position
+    chromosome_position[.additional_info]
+    The [.additional_info] is optional, and can be used to distinguish 
+    recurrent mutations at the same site.
 
     dd: Data dictionary to split
     chunk_size: Size of genomic chunks in basepairs
@@ -773,10 +806,14 @@ def fragment_data_dict(dd, chunk_size):
     # split dictionary by chromosome name
     ndd = collections.defaultdict(list)
     for k in dd.keys():
-        spl = k.split('_')
-        position = spl[-1]
-        chrname = '_'.join(spl[:-1])
-        ndd[chrname].append(int(position))
+        spl = k.split('.')[0].split('_')
+        chrname, position = '_'.join(k.split('_')[:-1]), k.split('_')[-1]
+        # Track additional_info
+        if not '.' in position:
+            add_info = None
+        else:
+            position, add_info = position.split('.',1)
+        ndd[chrname].append((int(position), add_info))
             
     # generate chunks with given chunk size
     chunks_dict = collections.defaultdict(list)
@@ -785,21 +822,24 @@ def fragment_data_dict(dd, chunk_size):
         end = chunk_size
         chunk_index = 0
         chunks_dict[chrname].append([])
-        for p in positions:
+        for p, add_info in positions:
             while p > end: 
                 # Need a new chunk
                 end += chunk_size
                 chunk_index += 1
                 chunks_dict[chrname].append([])
-            chunks_dict[chrname][chunk_index].append(p)
+            chunks_dict[chrname][chunk_index].append((p, add_info))
 
     # Break data dictionary into dictionaries for each chunk
     new_dds = []
     for chrname, chunks in chunks_dict.items():
         for pos_list in chunks:
             new_dds.append({})
-            for pos in pos_list:
-                key = '{0}_{1}'.format(chrname,pos)
+            for pos, add_info in pos_list:
+                if not add_info:
+                    key = '{0}_{1}'.format(chrname,pos)
+                else:
+                    key = '{0}_{1}.{2}'.format(chrname,pos,add_info)
                 new_dds[-1][key] = dd[key]
 
     return new_dds

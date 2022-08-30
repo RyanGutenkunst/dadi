@@ -6,7 +6,7 @@ import dadi
 class ResultsTestCase(unittest.TestCase):
     def test_1d_ic(self):
         # This just the standard neutral model
-        func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.snm)
+        func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.snm_1d)
         fs = func_ex([], (17,), [100,120,140])
 
         answer = dadi.Spectrum(1./numpy.arange(18))
