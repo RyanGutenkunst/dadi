@@ -83,7 +83,7 @@ def set_timescale_factor(pts, factor=10):
     # the integration doesn&#39;t know whether its results will be used in an
     # extrapolation.
     global timescale_factor
-    logger.warn(&#39;set_timescale_factor has been deprecated, as it may be too &#39;
+    logger.warning(&#39;set_timescale_factor has been deprecated, as it may be too &#39;
                 &#39;conservative (and thus slow) in choosing timesteps. If you &#39;
                 &#39;wish to take smaller timesteps for accuracy (particularly for &#39;
                 &#39;a very quickly growing population), manually set &#39;
@@ -1729,7 +1729,7 @@ are changing continously and rapidly.</p></div>
     # the integration doesn&#39;t know whether its results will be used in an
     # extrapolation.
     global timescale_factor
-    logger.warn(&#39;set_timescale_factor has been deprecated, as it may be too &#39;
+    logger.warning(&#39;set_timescale_factor has been deprecated, as it may be too &#39;
                 &#39;conservative (and thus slow) in choosing timesteps. If you &#39;
                 &#39;wish to take smaller timesteps for accuracy (particularly for &#39;
                 &#39;a very quickly growing population), manually set &#39;

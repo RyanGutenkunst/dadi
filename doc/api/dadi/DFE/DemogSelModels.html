@@ -29,6 +29,7 @@
 Input models of demography + selection.
 &#34;&#34;&#34;
 from dadi import Numerics, Integration, PhiManip, Spectrum
+import numpy
 
 def equil(params, ns, pts):
     &#34;&#34;&#34;
@@ -47,8 +48,9 @@ def equil(params, ns, pts):
     phi = PhiManip.phi_1D(xx, gamma=gamma)
 
     return Spectrum.from_phi(phi, ns, (xx,))
+equil.__param_names__ = [&#39;gamma&#39;]
 
-def two_epoch(params, ns, pts):
+def two_epoch_sel(params, ns, pts):
     &#34;&#34;&#34;
     Instantaneous population size change, plus selection.
 
@@ -61,6 +63,7 @@ def two_epoch(params, ns, pts):
 
     nu: Final population size
     T: Time of size change
+    gamma: Scaled selection coefficient
     &#34;&#34;&#34;
     nu, T, gamma = params
     xx = Numerics.default_grid(pts)
@@ -68,8 +71,10 @@ def two_epoch(params, ns, pts):
     phi = Integration.one_pop(phi, xx, T, nu, gamma=gamma)
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+two_epoch_sel.__param_names__ = [&#39;nu&#39;, &#39;T&#39;, &#39;gamma&#39;]
+two_epoch = two_epoch_sel
 
-def IM_pre(params, ns, pts):
+def IM_pre_sel(params, ns, pts):
     &#34;&#34;&#34;
     Isolation-with-migration model with exponential pop growth, a size change
     prior to split, and selection.
@@ -113,17 +118,21 @@ def IM_pre(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+IM_pre_sel.__param_names__ = [&#39;nuPre&#39;, &#39;TPre&#39;, &#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+IM_pre = IM_pre_sel
 
-def IM_pre_single_gamma(params, ns, pts):
+def IM_pre_sel_single_gamma(params, ns, pts):
     &#34;&#34;&#34;
-    IM_pre model with selection assumed to be equal in all populations.
+    IM_pre_sel model with selection assumed to be equal in all populations.
 
-    See IM_pre for argument definitions, but only a single gamma in params.
+    See IM_pre_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
-    return IM_pre((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+    return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+IM_pre_sel_single_gamma.__param_names__ = [&#39;nuPre&#39;, &#39;TPre&#39;, &#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma&#39;]
+IM_pre_single_gamma = IM_pre_sel_single_gamma
 
-def IM(params, ns, pts):
+def IM_sel(params, ns, pts):
     &#34;&#34;&#34;
     Isolation-with-migration model with exponential pop growth and selection.
 
@@ -147,18 +156,22 @@ def IM(params, ns, pts):
     gamma2: Scaled selection coefficient in pop 2
     &#34;&#34;&#34;
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
-    return IM_pre((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
+    return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
+IM_sel.__param_names__ = [&#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+IM = IM_sel
 
-def IM_single_gamma(params, ns, pts):
+def IM_sel_single_gamma(params, ns, pts):
     &#34;&#34;&#34;
-    IM model with selection assumed to be equal in all populations.
+    IM_sel model with selection assumed to be equal in all populations.
 
-    See IM for argument definitions, but only a single gamma in params.
+    See IM_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     s,nu1,nu2,T,m12,m21,gamma = params
-    return IM((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+    return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
+IM_sel_single_gamma.__param_names__ = [&#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma&#39;]
+IM_single_gamma = IM_sel_single_gamma
 
-def split_mig(params, ns, pts):
+def split_mig_sel(params, ns, pts):
     &#34;&#34;&#34;
     Instantaneous split into two populations of specified size, with symmetric migration.
     params = [nu1,nu2,T,m]
@@ -191,17 +204,21 @@ def split_mig(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_mig_sel.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+split_mig = split_mig_sel
 
-def split_mig_single_gamma(params, ns, pts):
+def split_mig_sel_single_gamma(params, ns, pts):
     &#34;&#34;&#34;
-    split_mig model with selection assumed to be equal in all populations.
+    split_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_mig for argument definitions, but only a single gamma in params.
+    See split_mig_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     nu1,nu2,T,m,gamma = params
-    return split_mig([nu1,nu2,T,m,gamma,gamma], ns, pts)
-    
-def split_asym_mig(params, ns, pts):
+    return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)
+split_mig_sel_single_gamma.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m&#39;, &#39;gamma&#39;]
+split_mig_single_gamma = split_mig_sel_single_gamma
+
+def split_asym_mig_sel(params, ns, pts):
     &#34;&#34;&#34;
     Instantaneous split into two populations of specified size, with asymmetric migration.
     params = [nu1,nu2,T,m]
@@ -235,15 +252,263 @@ def split_asym_mig(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_asym_mig_sel.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+split_asym_mig = split_asym_mig_sel
 
-def split_asym_mig_single_gamma(params, ns, pts):
+def split_asym_mig_sel_single_gamma(params, ns, pts):
     &#34;&#34;&#34;
-    split_asym_mig model with selection assumed to be equal in all populations.
+    split_asym_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_asym_mig for argument definitions, but only a single gamma in params.
+    See split_asym_mig_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     nu1,nu2,T,m12,m21,gamma = params
-    return split_asym_mig([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)</code></pre>
+    return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
+split_asym_mig_sel_single_gamma.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma&#39;]
+split_asym_mig_single_gamma = split_asym_mig_sel_single_gamma
+
+def split_delay_mig_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nu1,nu2,Tpre,Tmig,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with migration after some time has passed post split.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    &#34;&#34;&#34;
+    nu1,nu2,Tpre,Tmig,m12,m21,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0, 
+                               gamma1=gamma1, gamma2=gamma2)
+    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21, 
+                               gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+split_delay_mig_sel.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;Tpre&#39;, &#39;Tmig&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+
+def split_delay_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    split_delay_mig_sel model with selection assumed to be equal in all populations.
+
+    See split_delay_mig_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nu1,nu2,Tpre,Tmig,m12,m21,gamma = params
+    return split_delay_mig_sel([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)
+split_delay_mig_sel_single_gamma.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;Tpre&#39;, &#39;Tmig&#39;, &#39;m12&#39;, &#39;m21&#39;, &#39;gamma&#39;]
+
+def three_epoch_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,TB,TF,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,TB,TF,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB, gamma=gamma)
+    phi = Integration.one_pop(phi, xx, TF, nuF, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
+three_epoch_sel.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;TB&#39;, &#39;TF&#39;, &#39;gamma&#39;]
+three_epoch = three_epoch_sel
+
+def bottlegrowth_2d_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,T,gamma1,gamma2)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth with no population
+    split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T,gamma1,gamma2 = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)
+bottlegrowth_2d_sel.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+
+def bottlegrowth_2d_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    bottlegrowth_2d_sel model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_2d_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuB,nuF,T,gamma = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma,gamma), ns, pts)
+bottlegrowth_2d_sel_single_gamma.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;, &#39;gamma&#39;]
+
+def bottlegrowth_split_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,T,Ts,gamma1,gamma2)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth then split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    Ts: Time in the past at which the two populations split.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T,Ts,gamma1,gamma2 = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)
+bottlegrowth_split_sel.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;, &#39;Ts&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+
+def bottlegrowth_split_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    bottlegrowth_split_sel model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_split_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuB,nuF,T,Ts,gamma = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)
+bottlegrowth_split_sel_single_gamma.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;, &#39;Ts&#39;, &#39;gamma&#39;]
+
+def bottlegrowth_split_mig_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,m,T,Ts,gamma1,gamma2)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth then split with
+    migration.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    m: Migration rate between the two populations (2*Na*m).
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    Ts: Time in the past at which the two populations split.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,m,T,Ts,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+
+    if T &gt;= Ts:
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.one_pop(phi, xx, T-Ts, nu_func, gamma=gamma1)
+
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        nu0 = nu_func(T-Ts)
+        nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
+        phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+    else:
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        phi = Integration.two_pops(phi, xx, Ts-T, 1, 1, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.two_pops(phi, xx, T, nu_func, nu_func, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+bottlegrowth_split_mig_sel.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;m&#39;, &#39;T&#39;, &#39;Ts&#39;, &#39;gamma1&#39;, &#39;gamma2&#39;]
+
+def bottlegrowth_split_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    bottlegrowth_split_mig_sel model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_split_mig_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuB,nuF,m,T,Ts,gamma = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
+bottlegrowth_split_mig_sel_single_gamma.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;m&#39;, &#39;T&#39;, &#39;Ts&#39;, &#39;gamma&#39;]
+
+def growth_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    Exponential growth beginning some time ago.
+
+    params = (nu,T,gamma)
+    ns = (n1,)
+
+    nu: Ratio of contemporary to ancient population size
+    T: Time in the past at which growth began (in units of 2*Na 
+       generations) 
+    gamma: Scaled selection coefficient
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nu,T,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
+growth_sel.__param_names__ = [&#39;nu&#39;, &#39;T&#39;, &#39;gamma&#39;]
+
+def bottlegrowth_1d_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    Instantanous size change followed by exponential growth.
+
+    params = (nuB,nuF,T,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contemporary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs
+bottlegrowth_1d_sel.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;, &#39;gamma&#39;]</code></pre>
 </details>
 </section>
 <section>
@@ -277,7 +542,7 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def IM(params, ns, pts):
+<pre><code class="python">def IM_sel(params, ns, pts):
     &#34;&#34;&#34;
     Isolation-with-migration model with exponential pop growth and selection.
 
@@ -301,7 +566,7 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
     gamma2: Scaled selection coefficient in pop 2
     &#34;&#34;&#34;
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
-    return IM_pre((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)</code></pre>
+    return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)</code></pre>
 </details>
 </dd>
 <dt id="dadi.DFE.DemogSelModels.IM_pre"><code class="name flex">
@@ -331,7 +596,7 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def IM_pre(params, ns, pts):
+<pre><code class="python">def IM_pre_sel(params, ns, pts):
     &#34;&#34;&#34;
     Isolation-with-migration model with exponential pop growth, a size change
     prior to split, and selection.
@@ -377,44 +642,470 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
     return fs</code></pre>
 </details>
 </dd>
-<dt id="dadi.DFE.DemogSelModels.IM_pre_single_gamma"><code class="name flex">
-<span>def <span class="ident">IM_pre_single_gamma</span></span>(<span>params, ns, pts)</span>
+<dt id="dadi.DFE.DemogSelModels.IM_pre_sel"><code class="name flex">
+<span>def <span class="ident">IM_pre_sel</span></span>(<span>params, ns, pts)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>IM_pre model with selection assumed to be equal in all populations.</p>
-<p>See IM_pre for argument definitions, but only a single gamma in params.</p></div>
+<div class="desc"><p>Isolation-with-migration model with exponential pop growth, a size change
+prior to split, and selection.</p>
+<p>params: [nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma1,gamma2]
+ns: Sample sizes
+pts: Grid point settings for integration</p>
+<p>Note that DFE methods internally apply make_extrap_func,
+So there is no need to make it extrapolate again.</p>
+<p>Note also: Selection in contemporary population 1 is assumed to equil
+that in the ancestral population.</p>
+<p>nuPre: Size after first size change
+TPre: Time before split of first size change.
+s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre<em>(1-s).)
+nu1: Final size of pop 1.
+nu2: Final size of pop 2.
+T: Time in the past of split (in units of 2</em>Na generations)
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12)
+m21: Migration from pop 1 to pop 2
+gamma1: Scaled selection coefficient in pop 1 <em>and</em> ancestral pop.
+gamma2: Scaled selection coefficient in pop 2</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def IM_pre_single_gamma(params, ns, pts):
+<pre><code class="python">def IM_pre_sel(params, ns, pts):
     &#34;&#34;&#34;
-    IM_pre model with selection assumed to be equal in all populations.
+    Isolation-with-migration model with exponential pop growth, a size change
+    prior to split, and selection.
 
-    See IM_pre for argument definitions, but only a single gamma in params.
+    params: [nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma1,gamma2]
+    ns: Sample sizes
+    pts: Grid point settings for integration
+
+    Note that DFE methods internally apply make_extrap_func,
+    So there is no need to make it extrapolate again.
+
+    Note also: Selection in contemporary population 1 is assumed to equil
+               that in the ancestral population.
+
+    nuPre: Size after first size change
+    TPre: Time before split of first size change.
+    s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
+    nu1: Final size of pop 1.
+    nu2: Final size of pop 2.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    &#34;&#34;&#34;
+    nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = Integration.one_pop(phi, xx, TPre, nu=nuPre, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    nu1_0 = nuPre*s
+    nu2_0 = nuPre*(1-s)
+    nu1_func = lambda t: nu1_0 * (nu1/nu1_0)**(t/T)
+    nu2_func = lambda t: nu2_0 * (nu2/nu2_0)**(t/T)
+    phi = Integration.two_pops(phi, xx, T, nu1_func, nu2_func,
+                               m12=m12, m21=m21, 
+                               gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.IM_pre_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">IM_pre_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>IM_pre_sel model with selection assumed to be equal in all populations.</p>
+<p>See IM_pre_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def IM_pre_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    IM_pre_sel model with selection assumed to be equal in all populations.
+
+    See IM_pre_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
-    return IM_pre((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)</code></pre>
+    return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.IM_pre_single_gamma"><code class="name flex">
+<span>def <span class="ident">IM_pre_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>IM_pre_sel model with selection assumed to be equal in all populations.</p>
+<p>See IM_pre_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def IM_pre_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    IM_pre_sel model with selection assumed to be equal in all populations.
+
+    See IM_pre_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
+    return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.IM_sel"><code class="name flex">
+<span>def <span class="ident">IM_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Isolation-with-migration model with exponential pop growth and selection.</p>
+<p>params: [s,nu1,nu2,T,m12,m21,gamma1,gamma2]
+ns: Sample sizes
+pts: Grid point settings for integration</p>
+<p>Note that this function is defined using a decorator with make_extrap_func.
+So there is no need to make it extrapolate again.</p>
+<p>Note also: Selection in contemporary population 1 is assumed to equal
+that in the ancestral population.</p>
+<p>s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre<em>(1-s).)
+nu1: Final size of pop 1.
+nu2: Final size of pop 2.
+T: Time in the past of split (in units of 2</em>Na generations)
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12)
+m21: Migration from pop 1 to pop 2
+gamma1: Scaled selection coefficient in pop 1 <em>and</em> ancestral pop.
+gamma2: Scaled selection coefficient in pop 2</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def IM_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    Isolation-with-migration model with exponential pop growth and selection.
+
+    params: [s,nu1,nu2,T,m12,m21,gamma1,gamma2]
+    ns: Sample sizes
+    pts: Grid point settings for integration
+
+    Note that this function is defined using a decorator with make_extrap_func.
+    So there is no need to make it extrapolate again.
+
+    Note also: Selection in contemporary population 1 is assumed to equal
+               that in the ancestral population.
+
+    s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
+    nu1: Final size of pop 1.
+    nu2: Final size of pop 2.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    &#34;&#34;&#34;
+    s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
+    return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.IM_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">IM_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>IM_sel model with selection assumed to be equal in all populations.</p>
+<p>See IM_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def IM_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    IM_sel model with selection assumed to be equal in all populations.
+
+    See IM_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    s,nu1,nu2,T,m12,m21,gamma = params
+    return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)</code></pre>
 </details>
 </dd>
 <dt id="dadi.DFE.DemogSelModels.IM_single_gamma"><code class="name flex">
 <span>def <span class="ident">IM_single_gamma</span></span>(<span>params, ns, pts)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>IM model with selection assumed to be equal in all populations.</p>
-<p>See IM for argument definitions, but only a single gamma in params.</p></div>
+<div class="desc"><p>IM_sel model with selection assumed to be equal in all populations.</p>
+<p>See IM_sel for argument definitions, but only a single gamma in params.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def IM_single_gamma(params, ns, pts):
+<pre><code class="python">def IM_sel_single_gamma(params, ns, pts):
     &#34;&#34;&#34;
-    IM model with selection assumed to be equal in all populations.
+    IM_sel model with selection assumed to be equal in all populations.
 
-    See IM for argument definitions, but only a single gamma in params.
+    See IM_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     s,nu1,nu2,T,m12,m21,gamma = params
-    return IM((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)</code></pre>
+    return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_1d_sel"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_1d_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Instantanous size change followed by exponential growth.</p>
+<p>params = (nuB,nuF,T,gamma)
+ns = (n1,)</p>
+<p>nuB: Ratio of population size after instantanous change to ancient
+population size
+nuF: Ratio of contemporary to ancient population size
+T: Time in the past at which instantaneous change happened and growth began
+(in units of 2*Na generations)
+gamma: Scaled selection coefficient
+n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_1d_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    Instantanous size change followed by exponential growth.
+
+    params = (nuB,nuF,T,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contemporary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_2d_sel"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_2d_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,T,gamma1,gamma2)
+ns = (n1,n2)</p>
+<p>Instantanous size change followed by exponential growth with no population
+split.</p>
+<p>nuB: Ratio of population size after instantanous change to ancient
+population size
+nuF: Ratio of contempoary to ancient population size
+T: Time in the past at which instantaneous change happened and growth began
+(in units of 2<em>Na generations)
+gamma1: Scaled selection coefficient in pop 1 </em>and* ancestral pop.
+gamma2: Scaled selection coefficient in pop 2
+n1,n2: Sample sizes of resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_2d_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,T,gamma1,gamma2)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth with no population
+    split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T,gamma1,gamma2 = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_2d_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_2d_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>bottlegrowth_2d_sel model with selection assumed to be equal in all populations.</p>
+<p>See bottlegrowth_2d_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_2d_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    bottlegrowth_2d_sel model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_2d_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuB,nuF,T,gamma = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma,gamma), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_split_mig_sel"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_split_mig_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,m,T,Ts,gamma1,gamma2)
+ns = (n1,n2)</p>
+<p>Instantanous size change followed by exponential growth then split with
+migration.</p>
+<p>nuB: Ratio of population size after instantanous change to ancient
+population size
+nuF: Ratio of contempoary to ancient population size
+m: Migration rate between the two populations (2<em>Na</em>m).
+T: Time in the past at which instantaneous change happened and growth began
+(in units of 2<em>Na generations)
+Ts: Time in the past at which the two populations split.
+gamma1: Scaled selection coefficient in pop 1 </em>and* ancestral pop.
+gamma2: Scaled selection coefficient in pop 2
+n1,n2: Sample sizes of resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_split_mig_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,m,T,Ts,gamma1,gamma2)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth then split with
+    migration.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    m: Migration rate between the two populations (2*Na*m).
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    Ts: Time in the past at which the two populations split.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,m,T,Ts,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+
+    if T &gt;= Ts:
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.one_pop(phi, xx, T-Ts, nu_func, gamma=gamma1)
+
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        nu0 = nu_func(T-Ts)
+        nu_func = lambda t: nu0*numpy.exp(numpy.log(nuF/nu0) * t/Ts)
+        phi = Integration.two_pops(phi, xx, Ts, nu_func, nu_func, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+    else:
+        phi = PhiManip.phi_1D_to_2D(xx, phi)
+        phi = Integration.two_pops(phi, xx, Ts-T, 1, 1, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+        nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+        phi = Integration.two_pops(phi, xx, T, nu_func, nu_func, m12=m, m21=m,
+                                   gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_split_mig_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_split_mig_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>bottlegrowth_split_mig_sel model with selection assumed to be equal in all populations.</p>
+<p>See bottlegrowth_split_mig_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_split_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    bottlegrowth_split_mig_sel model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_split_mig_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuB,nuF,m,T,Ts,gamma = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_split_sel"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_split_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,T,Ts,gamma1,gamma2)
+ns = (n1,n2)</p>
+<p>Instantanous size change followed by exponential growth then split.</p>
+<p>nuB: Ratio of population size after instantanous change to ancient
+population size
+nuF: Ratio of contempoary to ancient population size
+T: Time in the past at which instantaneous change happened and growth began
+(in units of 2<em>Na generations)
+Ts: Time in the past at which the two populations split.
+gamma1: Scaled selection coefficient in pop 1 </em>and* ancestral pop.
+gamma2: Scaled selection coefficient in pop 2
+n1,n2: Sample sizes of resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_split_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,T,Ts,gamma1,gamma2)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth then split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    Ts: Time in the past at which the two populations split.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T,Ts,gamma1,gamma2 = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.bottlegrowth_split_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_split_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>bottlegrowth_split_sel model with selection assumed to be equal in all populations.</p>
+<p>See bottlegrowth_split_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_split_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    bottlegrowth_split_sel model with selection assumed to be equal in all populations.
+
+    See bottlegrowth_split_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nuB,nuF,T,Ts,gamma = params
+    return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)</code></pre>
 </details>
 </dd>
 <dt id="dadi.DFE.DemogSelModels.equil"><code class="name flex">
@@ -450,6 +1141,49 @@ so there is no need to make it extrapolate again.</p></div>
     return Spectrum.from_phi(phi, ns, (xx,))</code></pre>
 </details>
 </dd>
+<dt id="dadi.DFE.DemogSelModels.growth_sel"><code class="name flex">
+<span>def <span class="ident">growth_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Exponential growth beginning some time ago.</p>
+<p>params = (nu,T,gamma)
+ns = (n1,)</p>
+<p>nu: Ratio of contemporary to ancient population size
+T: Time in the past at which growth began (in units of 2*Na
+generations)
+gamma: Scaled selection coefficient
+n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def growth_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    Exponential growth beginning some time ago.
+
+    params = (nu,T,gamma)
+    ns = (n1,)
+
+    nu: Ratio of contemporary to ancient population size
+    T: Time in the past at which growth began (in units of 2*Na 
+       generations) 
+    gamma: Scaled selection coefficient
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nu,T,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+</dd>
 <dt id="dadi.DFE.DemogSelModels.split_asym_mig"><code class="name flex">
 <span>def <span class="ident">split_asym_mig</span></span>(<span>params, ns, pts)</span>
 </code></dt>
@@ -473,7 +1207,7 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def split_asym_mig(params, ns, pts):
+<pre><code class="python">def split_asym_mig_sel(params, ns, pts):
     &#34;&#34;&#34;
     Instantaneous split into two populations of specified size, with asymmetric migration.
     params = [nu1,nu2,T,m]
@@ -509,24 +1243,177 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
     return fs</code></pre>
 </details>
 </dd>
-<dt id="dadi.DFE.DemogSelModels.split_asym_mig_single_gamma"><code class="name flex">
-<span>def <span class="ident">split_asym_mig_single_gamma</span></span>(<span>params, ns, pts)</span>
+<dt id="dadi.DFE.DemogSelModels.split_asym_mig_sel"><code class="name flex">
+<span>def <span class="ident">split_asym_mig_sel</span></span>(<span>params, ns, pts)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>split_asym_mig model with selection assumed to be equal in all populations.</p>
-<p>See split_asym_mig for argument definitions, but only a single gamma in params.</p></div>
+<div class="desc"><p>Instantaneous split into two populations of specified size, with asymmetric migration.
+params = [nu1,nu2,T,m]</p>
+<p>ns: Sample sizes
+pts: Grid point settings for integration</p>
+<p>Note that DFE methods internally apply make_extrap_func,
+So there is no need to make it extrapolate again.</p>
+<p>Note also: Selection in contemporary population 1 is assumed to equal
+that in the ancestral population.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2<em>Na generations)
+m12: Migration rate from population 2 to population 1 (2</em>Na<em>m12)
+m21: Migration rate from population 1 to population 2 (2</em>Na<em>m21)
+gamma1: Scaled selection coefficient in pop 1 </em>and* ancestral pop.
+gamma2: Scaled selection coefficient in pop 2</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def split_asym_mig_single_gamma(params, ns, pts):
+<pre><code class="python">def split_asym_mig_sel(params, ns, pts):
     &#34;&#34;&#34;
-    split_asym_mig model with selection assumed to be equal in all populations.
+    Instantaneous split into two populations of specified size, with asymmetric migration.
+    params = [nu1,nu2,T,m]
 
-    See split_asym_mig for argument definitions, but only a single gamma in params.
+    ns: Sample sizes
+    pts: Grid point settings for integration
+
+    Note that DFE methods internally apply make_extrap_func,
+    So there is no need to make it extrapolate again.
+
+    Note also: Selection in contemporary population 1 is assumed to equal
+               that in the ancestral population.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    m12: Migration rate from population 2 to population 1 (2*Na*m12)
+    m21: Migration rate from population 1 to population 2 (2*Na*m21)
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    &#34;&#34;&#34;
+    nu1,nu2,T,m12,m21,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21, gamma1=gamma1,
+                               gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.split_asym_mig_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">split_asym_mig_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>split_asym_mig_sel model with selection assumed to be equal in all populations.</p>
+<p>See split_asym_mig_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_asym_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    split_asym_mig_sel model with selection assumed to be equal in all populations.
+
+    See split_asym_mig_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     nu1,nu2,T,m12,m21,gamma = params
-    return split_asym_mig([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)</code></pre>
+    return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.split_asym_mig_single_gamma"><code class="name flex">
+<span>def <span class="ident">split_asym_mig_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>split_asym_mig_sel model with selection assumed to be equal in all populations.</p>
+<p>See split_asym_mig_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_asym_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    split_asym_mig_sel model with selection assumed to be equal in all populations.
+
+    See split_asym_mig_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nu1,nu2,T,m12,m21,gamma = params
+    return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.split_delay_mig_sel"><code class="name flex">
+<span>def <span class="ident">split_delay_mig_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nu1,nu2,Tpre,Tmig,m12,m21)
+ns = (n1,n2)</p>
+<p>Split into two populations of specifed size, with migration after some time has passed post split.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+Tpre: Time in the past after split but before migration (in units of 2<em>Na generations)
+Tmig: Time in the past after migration starts (in units of 2</em>Na generations)
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12)
+m21: Migration from pop 1 to pop 2 (2<em>Na</em>m21)
+n1,n2: Sample sizes of resulting Spectrum
+pts: Number of grid points to use in integration.
+gamma1: Scaled selection coefficient in pop 1 <em>and</em> ancestral pop.
+gamma2: Scaled selection coefficient in pop 2</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_delay_mig_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nu1,nu2,Tpre,Tmig,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with migration after some time has passed post split.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    &#34;&#34;&#34;
+    nu1,nu2,Tpre,Tmig,m12,m21,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0, 
+                               gamma1=gamma1, gamma2=gamma2)
+    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21, 
+                               gamma1=gamma1, gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.split_delay_mig_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">split_delay_mig_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>split_delay_mig_sel model with selection assumed to be equal in all populations.</p>
+<p>See split_delay_mig_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_delay_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    split_delay_mig_sel model with selection assumed to be equal in all populations.
+
+    See split_delay_mig_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nu1,nu2,Tpre,Tmig,m12,m21,gamma = params
+    return split_delay_mig_sel([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)</code></pre>
 </details>
 </dd>
 <dt id="dadi.DFE.DemogSelModels.split_mig"><code class="name flex">
@@ -551,7 +1438,7 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def split_mig(params, ns, pts):
+<pre><code class="python">def split_mig_sel(params, ns, pts):
     &#34;&#34;&#34;
     Instantaneous split into two populations of specified size, with symmetric migration.
     params = [nu1,nu2,T,m]
@@ -586,24 +1473,187 @@ gamma2: Scaled selection coefficient in pop 2</p></div>
     return fs</code></pre>
 </details>
 </dd>
-<dt id="dadi.DFE.DemogSelModels.split_mig_single_gamma"><code class="name flex">
-<span>def <span class="ident">split_mig_single_gamma</span></span>(<span>params, ns, pts)</span>
+<dt id="dadi.DFE.DemogSelModels.split_mig_sel"><code class="name flex">
+<span>def <span class="ident">split_mig_sel</span></span>(<span>params, ns, pts)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>split_mig model with selection assumed to be equal in all populations.</p>
-<p>See split_mig for argument definitions, but only a single gamma in params.</p></div>
+<div class="desc"><p>Instantaneous split into two populations of specified size, with symmetric migration.
+params = [nu1,nu2,T,m]</p>
+<p>ns: Sample sizes
+pts: Grid point settings for integration</p>
+<p>Note that DFE methods internally apply make_extrap_func,
+So there is no need to make it extrapolate again.</p>
+<p>Note also: Selection in contemporary population 1 is assumed to equal
+that in the ancestral population.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2<em>Na generations)
+m: Migration rate between populations (2</em>Na<em>m)
+gamma1: Scaled selection coefficient in pop 1 </em>and* ancestral pop.
+gamma2: Scaled selection coefficient in pop 2</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def split_mig_single_gamma(params, ns, pts):
+<pre><code class="python">def split_mig_sel(params, ns, pts):
     &#34;&#34;&#34;
-    split_mig model with selection assumed to be equal in all populations.
+    Instantaneous split into two populations of specified size, with symmetric migration.
+    params = [nu1,nu2,T,m]
 
-    See split_mig for argument definitions, but only a single gamma in params.
+    ns: Sample sizes
+    pts: Grid point settings for integration
+
+    Note that DFE methods internally apply make_extrap_func,
+    So there is no need to make it extrapolate again.
+
+    Note also: Selection in contemporary population 1 is assumed to equal
+               that in the ancestral population.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m: Migration rate between populations (2*Na*m)
+    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
+    gamma2: Scaled selection coefficient in pop 2
+    &#34;&#34;&#34;
+    nu1,nu2,T,m,gamma1,gamma2 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma=gamma1)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m, m21=m, gamma1=gamma1,
+                               gamma2=gamma2)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.split_mig_sel_single_gamma"><code class="name flex">
+<span>def <span class="ident">split_mig_sel_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>split_mig_sel model with selection assumed to be equal in all populations.</p>
+<p>See split_mig_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    split_mig_sel model with selection assumed to be equal in all populations.
+
+    See split_mig_sel for argument definitions, but only a single gamma in params.
     &#34;&#34;&#34;
     nu1,nu2,T,m,gamma = params
-    return split_mig([nu1,nu2,T,m,gamma,gamma], ns, pts)</code></pre>
+    return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.split_mig_single_gamma"><code class="name flex">
+<span>def <span class="ident">split_mig_single_gamma</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>split_mig_sel model with selection assumed to be equal in all populations.</p>
+<p>See split_mig_sel for argument definitions, but only a single gamma in params.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_mig_sel_single_gamma(params, ns, pts):
+    &#34;&#34;&#34;
+    split_mig_sel model with selection assumed to be equal in all populations.
+
+    See split_mig_sel for argument definitions, but only a single gamma in params.
+    &#34;&#34;&#34;
+    nu1,nu2,T,m,gamma = params
+    return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.three_epoch"><code class="name flex">
+<span>def <span class="ident">three_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,TB,TF,gamma)
+ns = (n1,)</p>
+<p>nuB: Ratio of bottleneck population size to ancient pop size
+nuF: Ratio of contemporary to ancient pop size
+TB: Length of bottleneck (in units of 2<em>Na generations)
+TF: Time since bottleneck recovery (in units of 2</em>Na generations)
+gamma: Scaled selection coefficient</p>
+<p>n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def three_epoch_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,TB,TF,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,TB,TF,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB, gamma=gamma)
+    phi = Integration.one_pop(phi, xx, TF, nuF, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.three_epoch_sel"><code class="name flex">
+<span>def <span class="ident">three_epoch_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,TB,TF,gamma)
+ns = (n1,)</p>
+<p>nuB: Ratio of bottleneck population size to ancient pop size
+nuF: Ratio of contemporary to ancient pop size
+TB: Length of bottleneck (in units of 2<em>Na generations)
+TF: Time since bottleneck recovery (in units of 2</em>Na generations)
+gamma: Scaled selection coefficient</p>
+<p>n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def three_epoch_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,TB,TF,gamma)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    gamma: Scaled selection coefficient
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,TB,TF,gamma = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB, gamma=gamma)
+    phi = Integration.one_pop(phi, xx, TF, nuF, gamma=gamma)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
 </details>
 </dd>
 <dt id="dadi.DFE.DemogSelModels.two_epoch"><code class="name flex">
@@ -617,12 +1667,13 @@ pts: Grid point settings for integration</p>
 <p>Note that DFE methods internally apply make_extrap_func,
 So there is no need to make it extrapolate again.</p>
 <p>nu: Final population size
-T: Time of size change</p></div>
+T: Time of size change
+gamma: Scaled selection coefficient</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def two_epoch(params, ns, pts):
+<pre><code class="python">def two_epoch_sel(params, ns, pts):
     &#34;&#34;&#34;
     Instantaneous population size change, plus selection.
 
@@ -635,6 +1686,47 @@ T: Time of size change</p></div>
 
     nu: Final population size
     T: Time of size change
+    gamma: Scaled selection coefficient
+    &#34;&#34;&#34;
+    nu, T, gamma = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+    phi = Integration.one_pop(phi, xx, T, nu, gamma=gamma)
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.DemogSelModels.two_epoch_sel"><code class="name flex">
+<span>def <span class="ident">two_epoch_sel</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Instantaneous population size change, plus selection.</p>
+<p>params: [nu,T,gamma]
+ns: Sample sizes
+pts: Grid point settings for integration</p>
+<p>Note that DFE methods internally apply make_extrap_func,
+So there is no need to make it extrapolate again.</p>
+<p>nu: Final population size
+T: Time of size change
+gamma: Scaled selection coefficient</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def two_epoch_sel(params, ns, pts):
+    &#34;&#34;&#34;
+    Instantaneous population size change, plus selection.
+
+    params: [nu,T,gamma]
+    ns: Sample sizes
+    pts: Grid point settings for integration
+
+    Note that DFE methods internally apply make_extrap_func,
+    So there is no need to make it extrapolate again.
+
+    nu: Final population size
+    T: Time of size change
+    gamma: Scaled selection coefficient
     &#34;&#34;&#34;
     nu, T, gamma = params
     xx = Numerics.default_grid(pts)
@@ -664,14 +1756,35 @@ T: Time of size change</p></div>
 <ul class="">
 <li><code><a title="dadi.DFE.DemogSelModels.IM" href="#dadi.DFE.DemogSelModels.IM">IM</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.IM_pre" href="#dadi.DFE.DemogSelModels.IM_pre">IM_pre</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.IM_pre_sel" href="#dadi.DFE.DemogSelModels.IM_pre_sel">IM_pre_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.IM_pre_sel_single_gamma" href="#dadi.DFE.DemogSelModels.IM_pre_sel_single_gamma">IM_pre_sel_single_gamma</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.IM_pre_single_gamma" href="#dadi.DFE.DemogSelModels.IM_pre_single_gamma">IM_pre_single_gamma</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.IM_sel" href="#dadi.DFE.DemogSelModels.IM_sel">IM_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.IM_sel_single_gamma" href="#dadi.DFE.DemogSelModels.IM_sel_single_gamma">IM_sel_single_gamma</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.IM_single_gamma" href="#dadi.DFE.DemogSelModels.IM_single_gamma">IM_single_gamma</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_1d_sel" href="#dadi.DFE.DemogSelModels.bottlegrowth_1d_sel">bottlegrowth_1d_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_2d_sel" href="#dadi.DFE.DemogSelModels.bottlegrowth_2d_sel">bottlegrowth_2d_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_2d_sel_single_gamma" href="#dadi.DFE.DemogSelModels.bottlegrowth_2d_sel_single_gamma">bottlegrowth_2d_sel_single_gamma</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_split_mig_sel" href="#dadi.DFE.DemogSelModels.bottlegrowth_split_mig_sel">bottlegrowth_split_mig_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_split_mig_sel_single_gamma" href="#dadi.DFE.DemogSelModels.bottlegrowth_split_mig_sel_single_gamma">bottlegrowth_split_mig_sel_single_gamma</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_split_sel" href="#dadi.DFE.DemogSelModels.bottlegrowth_split_sel">bottlegrowth_split_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.bottlegrowth_split_sel_single_gamma" href="#dadi.DFE.DemogSelModels.bottlegrowth_split_sel_single_gamma">bottlegrowth_split_sel_single_gamma</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.equil" href="#dadi.DFE.DemogSelModels.equil">equil</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.growth_sel" href="#dadi.DFE.DemogSelModels.growth_sel">growth_sel</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.split_asym_mig" href="#dadi.DFE.DemogSelModels.split_asym_mig">split_asym_mig</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.split_asym_mig_sel" href="#dadi.DFE.DemogSelModels.split_asym_mig_sel">split_asym_mig_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.split_asym_mig_sel_single_gamma" href="#dadi.DFE.DemogSelModels.split_asym_mig_sel_single_gamma">split_asym_mig_sel_single_gamma</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.split_asym_mig_single_gamma" href="#dadi.DFE.DemogSelModels.split_asym_mig_single_gamma">split_asym_mig_single_gamma</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.split_delay_mig_sel" href="#dadi.DFE.DemogSelModels.split_delay_mig_sel">split_delay_mig_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.split_delay_mig_sel_single_gamma" href="#dadi.DFE.DemogSelModels.split_delay_mig_sel_single_gamma">split_delay_mig_sel_single_gamma</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.split_mig" href="#dadi.DFE.DemogSelModels.split_mig">split_mig</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.split_mig_sel" href="#dadi.DFE.DemogSelModels.split_mig_sel">split_mig_sel</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.split_mig_sel_single_gamma" href="#dadi.DFE.DemogSelModels.split_mig_sel_single_gamma">split_mig_sel_single_gamma</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.split_mig_single_gamma" href="#dadi.DFE.DemogSelModels.split_mig_single_gamma">split_mig_single_gamma</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.three_epoch" href="#dadi.DFE.DemogSelModels.three_epoch">three_epoch</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.three_epoch_sel" href="#dadi.DFE.DemogSelModels.three_epoch_sel">three_epoch_sel</a></code></li>
 <li><code><a title="dadi.DFE.DemogSelModels.two_epoch" href="#dadi.DFE.DemogSelModels.two_epoch">two_epoch</a></code></li>
+<li><code><a title="dadi.DFE.DemogSelModels.two_epoch_sel" href="#dadi.DFE.DemogSelModels.two_epoch_sel">two_epoch_sel</a></code></li>
 </ul>
 </li>
 </ul>

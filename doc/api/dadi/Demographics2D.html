@@ -33,7 +33,7 @@ import numpy
 from dadi import Numerics, PhiManip, Integration
 from dadi.Spectrum_mod import Spectrum
 
-def snm(notused, ns, pts):
+def snm_2d(notused, ns, pts):
     &#34;&#34;&#34;
     ns = (n1,n2)
 
@@ -44,8 +44,10 @@ def snm(notused, ns, pts):
     phi = PhiManip.phi_1D_to_2D(xx, phi)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+snm_2d.__param_names__ = []
+snm = snm_2d
 
-def bottlegrowth(params, ns, pts):
+def bottlegrowth_2d(params, ns, pts):
     &#34;&#34;&#34;
     params = (nuB,nuF,T)
     ns = (n1,n2)
@@ -63,6 +65,8 @@ def bottlegrowth(params, ns, pts):
     &#34;&#34;&#34;
     nuB,nuF,T = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,0), ns, pts)
+bottlegrowth_2d.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;]
+bottlegrowth = bottlegrowth_2d
 
 def bottlegrowth_split(params, ns, pts):
     &#34;&#34;&#34;
@@ -82,6 +86,7 @@ def bottlegrowth_split(params, ns, pts):
     &#34;&#34;&#34;
     nuB,nuF,T,Ts = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,Ts), ns, pts)
+bottlegrowth_split.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;, &#39;Ts&#39;]
 
 def bottlegrowth_split_mig(params, ns, pts):
     &#34;&#34;&#34;
@@ -122,6 +127,7 @@ def bottlegrowth_split_mig(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+bottlegrowth_split_mig.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;m&#39;, &#39;T&#39;, &#39;Ts&#39;]
 
 def split_mig(params, ns, pts):
     &#34;&#34;&#34;
@@ -148,6 +154,7 @@ def split_mig(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+split_mig.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m&#39;]
 
 def split_mig_mscore(params):
     &#34;&#34;&#34;
@@ -162,6 +169,64 @@ def split_mig_mscore(params):
     sub_dict = {&#39;nu1&#39;:nu1, &#39;nu2&#39;:nu2, &#39;m12&#39;:2*m, &#39;m21&#39;:2*m, &#39;T&#39;: T/2}
 
     return command % sub_dict
+split_mig_mscore.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m&#39;]
+
+def split_asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nu1,nu2,T,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with asymetric migration .
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nu1,nu2,T,m12,m21 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+split_asym_mig.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;]
+
+def split_delay_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nu1,nu2,Tpre,Tmig,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with migration after some time has passed post split.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nu1,nu2,Tpre,Tmig,m12,m21 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+split_delay_mig.__param_names__ = [&#39;nu1&#39;, &#39;nu2&#39;, &#39;Tpre&#39;, &#39;Tmig&#39;, &#39;m12&#39;, &#39;m21&#39;]
 
 def IM(params, ns, pts):
     &#34;&#34;&#34;
@@ -193,6 +258,7 @@ def IM(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+IM.__param_names__ = [&#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;]
 
 def IM_mscore(params):
     &#34;&#34;&#34;
@@ -211,6 +277,7 @@ def IM_mscore(params):
                 &#39;m12&#39;:2*m12, &#39;m21&#39;:2*m21, &#39;T&#39;: T/2}
 
     return command % sub_dict
+IM_mscore.__param_names__ = [&#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;]
 
 def IM_pre(params, ns, pts):
     &#34;&#34;&#34;
@@ -248,6 +315,7 @@ def IM_pre(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+IM_pre.__param_names__ = [&#39;nuPre&#39;, &#39;TPre&#39;, &#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;]
 
 def IM_pre_mscore(params):
     &#34;&#34;&#34;
@@ -269,33 +337,7 @@ def IM_pre_mscore(params):
                 &#39;m12&#39;:2*m12, &#39;m21&#39;:2*m21, &#39;T&#39;: T/2, &#39;nuP&#39;:nuPre, &#39;TP&#39;:(T+TPre)/2}
 
     return command % sub_dict
-
-def split_asym_mig(params, ns, pts):
-    &#34;&#34;&#34;
-    params = (nu1,nu2,T,m12,m21)
-    ns = (n1,n2)
-
-    Split into two populations of specifed size, with asymetric migration .
-
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2 (2*Na*m21)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
-    &#34;&#34;&#34;
-    nu1,nu2,T,m12,m21 = params
-
-    xx = Numerics.default_grid(pts)
-
-    phi = PhiManip.phi_1D(xx)
-    phi = PhiManip.phi_1D_to_2D(xx, phi)
-
-    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
-
-    fs = Spectrum.from_phi(phi, ns, (xx,xx))
-    return fs</code></pre>
+IM_pre_mscore.__param_names__ = [&#39;nuPre&#39;, &#39;TPre&#39;, &#39;s&#39;, &#39;nu1&#39;, &#39;nu2&#39;, &#39;T&#39;, &#39;m12&#39;, &#39;m21&#39;]</code></pre>
 </details>
 </section>
 <section>
@@ -494,7 +536,46 @@ pts: Number of grid points to use in integration.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def bottlegrowth(params, ns, pts):
+<pre><code class="python">def bottlegrowth_2d(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,T)
+    ns = (n1,n2)
+
+    Instantanous size change followed by exponential growth with no population
+    split.
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contempoary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T = params
+    return bottlegrowth_split_mig((nuB,nuF,0,T,0), ns, pts)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Demographics2D.bottlegrowth_2d"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_2d</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,T)
+ns = (n1,n2)</p>
+<p>Instantanous size change followed by exponential growth with no population
+split.</p>
+<p>nuB: Ratio of population size after instantanous change to ancient
+population size
+nuF: Ratio of contempoary to ancient population size
+T: Time in the past at which instantaneous change happened and growth began
+(in units of 2*Na generations)
+n1,n2: Sample sizes of resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_2d(params, ns, pts):
     &#34;&#34;&#34;
     params = (nuB,nuF,T)
     ns = (n1,n2)
@@ -625,7 +706,30 @@ pts: Number of grid points to use in integration.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def snm(notused, ns, pts):
+<pre><code class="python">def snm_2d(notused, ns, pts):
+    &#34;&#34;&#34;
+    ns = (n1,n2)
+
+    Standard neutral model, populations never diverge.
+    &#34;&#34;&#34;
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.Demographics2D.snm_2d"><code class="name flex">
+<span>def <span class="ident">snm_2d</span></span>(<span>notused, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ns = (n1,n2)</p>
+<p>Standard neutral model, populations never diverge.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def snm_2d(notused, ns, pts):
     &#34;&#34;&#34;
     ns = (n1,n2)
 
@@ -679,6 +783,54 @@ pts: Number of grid points to use in integration.</p></div>
     phi = PhiManip.phi_1D_to_2D(xx, phi)
 
     phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.Demographics2D.split_delay_mig"><code class="name flex">
+<span>def <span class="ident">split_delay_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nu1,nu2,Tpre,Tmig,m12,m21)
+ns = (n1,n2)</p>
+<p>Split into two populations of specifed size, with migration after some time has passed post split.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+Tpre: Time in the past after split but before migration (in units of 2<em>Na generations)
+Tmig: Time in the past after migration starts (in units of 2</em>Na generations)
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12)
+m21: Migration from pop 1 to pop 2 (2<em>Na</em>m21)
+n1,n2: Sample sizes of resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_delay_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nu1,nu2,Tpre,Tmig,m12,m21)
+    ns = (n1,n2)
+
+    Split into two populations of specifed size, with migration after some time has passed post split.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
+    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2 (2*Na*m21)
+    n1,n2: Sample sizes of resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nu1,nu2,Tpre,Tmig,m12,m21 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, Tpre, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, Tmig, nu1, nu2, m12=m12, m21=m21)
 
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs</code></pre>
@@ -775,10 +927,13 @@ pts: Number of grid points to use in integration.</p></div>
 <li><code><a title="dadi.Demographics2D.IM_pre" href="#dadi.Demographics2D.IM_pre">IM_pre</a></code></li>
 <li><code><a title="dadi.Demographics2D.IM_pre_mscore" href="#dadi.Demographics2D.IM_pre_mscore">IM_pre_mscore</a></code></li>
 <li><code><a title="dadi.Demographics2D.bottlegrowth" href="#dadi.Demographics2D.bottlegrowth">bottlegrowth</a></code></li>
+<li><code><a title="dadi.Demographics2D.bottlegrowth_2d" href="#dadi.Demographics2D.bottlegrowth_2d">bottlegrowth_2d</a></code></li>
 <li><code><a title="dadi.Demographics2D.bottlegrowth_split" href="#dadi.Demographics2D.bottlegrowth_split">bottlegrowth_split</a></code></li>
 <li><code><a title="dadi.Demographics2D.bottlegrowth_split_mig" href="#dadi.Demographics2D.bottlegrowth_split_mig">bottlegrowth_split_mig</a></code></li>
 <li><code><a title="dadi.Demographics2D.snm" href="#dadi.Demographics2D.snm">snm</a></code></li>
+<li><code><a title="dadi.Demographics2D.snm_2d" href="#dadi.Demographics2D.snm_2d">snm_2d</a></code></li>
 <li><code><a title="dadi.Demographics2D.split_asym_mig" href="#dadi.Demographics2D.split_asym_mig">split_asym_mig</a></code></li>
+<li><code><a title="dadi.Demographics2D.split_delay_mig" href="#dadi.Demographics2D.split_delay_mig">split_delay_mig</a></code></li>
 <li><code><a title="dadi.Demographics2D.split_mig" href="#dadi.Demographics2D.split_mig">split_mig</a></code></li>
 <li><code><a title="dadi.Demographics2D.split_mig_mscore" href="#dadi.Demographics2D.split_mig_mscore">split_mig_mscore</a></code></li>
 </ul>

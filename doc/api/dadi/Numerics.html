@@ -449,12 +449,16 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
             # best input value.
             extrap_failed = abs(numpy.log10(ex_result/best_result)) &gt; fail_mag
             if numpy.any(extrap_failed):
-                logger.warn(&#39;Extrapolation may have failed. Check resulting &#39;
+                logger.warning(&#39;Extrapolation may have failed. Check resulting &#39;
                             &#39;frequency spectrum for unexpected results.&#39;)
 
             # For entries that fail, use the &#34;best&#34; input result.
             ex_result[extrap_failed] = best_result[extrap_failed]
 
+        try:
+            ex_result.pop_ids = result_l[0].pop_ids
+        except AttributeError:
+            pass
         return ex_result
 
     extrap_func.__name__ = func.__name__
@@ -646,52 +650,7 @@ def quadratic_extrap(ys, xs):
     y1,y2,y3 = ys
     x1,x2,x3 = xs
     return x2*x3/((x1-x2)*(x1-x3)) * y1 + x1*x3/((x2-x1)*(x2-x3)) * y2\
-            + x1*x2/((x3-x1)*(x3-x2)) * y3
-
-def cubic_extrap(ys, xs):
-    &#34;&#34;&#34;
-    Cubically extrapolate from three x,y pairs to x = 0.
-
-    ys: y values from x,y pairs. Note that these can be arrays of values.
-    xs: x values from x,y pairs. These should be scalars.
-
-    Returns extrapolated y at x=0.
-    &#34;&#34;&#34;
-    y1,y2,y3,y4 = ys
-    x1,x2,x3,x4 = xs
-    # This horrid implementation came from using CForm in Mathematica.
-    Power = numpy.power
-    return ((x1*(x1 - x3)*x3* (x1 - x4)*(x3 - x4)*x4* y2 + x2*Power(x4,2)* (-(Power(x3,3)*y1) + Power(x3,2)*x4*y1 + Power(x1,2)* (x1 - x4)*y3) + Power(x1,2)*x2* Power(x3,2)*(-x1 + x3)* y4 + Power(x2,3)* (x4*(-(Power(x3,2)* y1) + x3*x4*y1 + x1*(x1 - x4)*y3) + x1*x3*(-x1 + x3)* y4) + Power(x2,2)* (x1*x4* (-Power(x1,2) + Power(x4,2))*y3 + Power(x3,3)* (x4*y1 - x1*y4) + x3*(-(Power(x4,3)* y1) + Power(x1,3)*y4)))/ ((x1 - x2)*(x1 - x3)* (x2 - x3)*(x1 - x4)* (x2 - x4)*(x3 - x4)))
-
-def quartic_extrap(ys, xs):
-    &#34;&#34;&#34;
-    Quartically extrapolate from three x,y pairs to x = 0.
-
-    y1,y2...: y values from x,y pairs. Note that these can be arrays of values.
-    x1,x2...: x values from x,y pairs. These should be scalars.
-
-    Returns extrapolated y at x=0.
-    &#34;&#34;&#34;
-    y1,y2,y3,y4,y5 = ys
-    x1,x2,x3,x4,x5 = xs
-    # This horrid implementation came from using CForm in Mathematica.
-    Power = numpy.power
-    return (-(x1*(x1 - x3)*x3*(x1 - x4)*(x3 - x4)*x4*(x1 - x5)* (x3 - x5)*(x4 - x5)*x5*y2) + Power(x2,4)*(-(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*y3) + Power(x3,3)*(x1*x5*(-x1 + x5)*y4 + Power(x4,2)*(x5*y1 - x1*y5) + x4*(-(Power(x5,2)*y1) + Power(x1,2)*y5)) + Power(x3,2)*(x1*x5* (Power(x1,2) - Power(x5,2))*y4 + Power(x4,3)*(-(x5*y1) + x1*y5) + x4*(Power(x5,3)*y1 - Power(x1,3)*y5)) + x3*(Power(x1,2)*Power(x5,2)*(-x1 + x5)*y4 + Power(x4,3)* (Power(x5,2)*y1 - Power(x1,2)*y5) + Power(x4,2)* (-(Power(x5,3)*y1) + Power(x1,3)*y5))) + Power(x2,3)*(x1*x4*x5* (Power(x1,3)*(x4 - x5) + x4*x5*(Power(x4,2) - Power(x5,2)) + x1*(-Power(x4,3) + Power(x5,3)))*y3 + Power(x3,4)*(x1*(x1 - x5)*x5*y4 + Power(x4,2)*(-(x5*y1) + x1*y5) + x4*(Power(x5,2)*y1 - Power(x1,2)*y5)) + x3*(Power(x1,2)*Power(x5,2)* (Power(x1,2) - Power(x5,2))*y4 + Power(x4,4)* (-(Power(x5,2)*y1) + Power(x1,2)*y5) + Power(x4,2)* (Power(x5,4)*y1 - Power(x1,4)*y5)) + Power(x3,2)*(x1*x5* (-Power(x1,3) + Power(x5,3))*y4 + Power(x4,4)*(x5*y1 - x1*y5) + x4*(-(Power(x5,4)*y1) + Power(x1,4)*y5))) + x2*(Power(x1,2)*(x1 - x4)*Power(x4,2)* (x1 - x5)*(x4 - x5)*Power(x5,2)*y3 + Power(x3,4)*(Power(x1,2)*(x1 - x5)* Power(x5,2)*y4 + Power(x4,3)* (-(Power(x5,2)*y1) + Power(x1,2)*y5) + Power(x4,2)* (Power(x5,3)*y1 - Power(x1,3)*y5)) + Power(x3,2)*(Power(x1,3)*(x1 - x5)* Power(x5,3)*y4 + Power(x4,4)* (-(Power(x5,3)*y1) + Power(x1,3)*y5) + Power(x4,3)* (Power(x5,4)*y1 - Power(x1,4)*y5)) + Power(x3,3)*(Power(x1,2)*Power(x5,2)* (-Power(x1,2) + Power(x5,2))*y4 + Power(x4,4)* (Power(x5,2)*y1 - Power(x1,2)*y5) + Power(x4,2)* (-(Power(x5,4)*y1) + Power(x1,4)*y5))) + Power(x2,2)*(x1*x4*x5* (Power(x4,2)*Power(x5,2)*(-x4 + x5) + Power(x1,3)*(-Power(x4,2) + Power(x5,2)) + Power(x1,2)*(Power(x4,3) - Power(x5,3)))*y3 + Power(x3,4)* (x1*x5*(-Power(x1,2) + Power(x5,2))*y4 + Power(x4,3)*(x5*y1 - x1*y5) + x4*(-(Power(x5,3)*y1) + Power(x1,3)*y5)) + Power(x3,3)*(x1*x5* (Power(x1,3) - Power(x5,3))*y4 + Power(x4,4)*(-(x5*y1) + x1*y5) + x4*(Power(x5,4)*y1 - Power(x1,4)*y5)) + x3*(Power(x1,3)*Power(x5,3)*(-x1 + x5)*y4 + Power(x4,4)* (Power(x5,3)*y1 - Power(x1,3)*y5) + Power(x4,3)* (-(Power(x5,4)*y1) + Power(x1,4)*y5))))/ ((x1 - x2)*(x1 - x3)*(x2 - x3)*(x1 - x4)*(x2 - x4)* (x3 - x4)*(x1 - x5)*(x2 - x5)*(x3 - x5)*(x4 - x5))
-
-def quintic_extrap(ys, xs):
-    &#34;&#34;&#34;
-    Quintic extrapolate from three x,y pairs to x = 0.
-
-    y1,y2...: y values from x,y pairs. Note that these can be arrays of values.
-    x1,x2...: x values from x,y pairs. These should be scalars.
-
-    Returns extrapolated y at x=0.
-    &#34;&#34;&#34;
-    y1,y2,y3,y4,y5,y6 = ys
-    x1,x2,x3,x4,x5,x6 = xs
-    # This horrid implementation came from using CForm in Mathematica.
-    Power = numpy.power
-    return (-(x1*(x1 - x3)*x3*(x1 - x4)*(x3 - x4)*x4*(x1 - x5)* (x3 - x5)*(x4 - x5)*x5*(x1 - x6)*(x3 - x6)* (x4 - x6)*(x5 - x6)*x6*y2) + Power(x2,5)*(-(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*y3) + Power(x3,4)* (-(x1*(x1 - x5)*x5*(x1 - x6)*(x5 - x6)*x6* y4) + Power(x4,3)* (x1*x6*(-x1 + x6)*y5 + Power(x5,2)*(x6*y1 - x1*y6) + x5*(-(Power(x6,2)*y1) + Power(x1,2)*y6)) + Power(x4,2)* (x1*x6*(Power(x1,2) - Power(x6,2))*y5 + Power(x5,3)*(-(x6*y1) + x1*y6) + x5*(Power(x6,3)*y1 - Power(x1,3)*y6)) + x4*(Power(x1,2)*Power(x6,2)*(-x1 + x6)* y5 + Power(x5,3)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,3)*y1) + Power(x1,3)*y6))) + Power(x3,3)* (x1*x5*x6*(Power(x1,3)*(x5 - x6) + x5*x6*(Power(x5,2) - Power(x6,2)) + x1*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,4)* (x1*(x1 - x6)*x6*y5 + Power(x5,2)*(-(x6*y1) + x1*y6) + x5*(Power(x6,2)*y1 - Power(x1,2)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,4)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,2)* (x1*x6*(-Power(x1,3) + Power(x6,3))*y5 + Power(x5,4)*(x6*y1 - x1*y6) + x5*(-(Power(x6,4)*y1) + Power(x1,4)*y6))) + x3*(Power(x1,2)*(x1 - x5)*Power(x5,2)* (x1 - x6)*(x5 - x6)*Power(x6,2)*y4 + Power(x4,4)* (Power(x1,2)*(x1 - x6)*Power(x6,2)*y5 + Power(x5,3)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,3)*y1 - Power(x1,3)*y6)) + Power(x4,2)* (Power(x1,3)*(x1 - x6)*Power(x6,3)*y5 + Power(x5,4)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,4)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,2)* (x1*x5*x6*(Power(x5,2)*Power(x6,2)* (-x5 + x6) + Power(x1,3)* (-Power(x5,2) + Power(x6,2)) + Power(x1,2)*(Power(x5,3) - Power(x6,3))) *y4 + Power(x4,4)* (x1*x6*(-Power(x1,2) + Power(x6,2))*y5 + Power(x5,3)*(x6*y1 - x1*y6) + x5*(-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (x1*x6*(Power(x1,3) - Power(x6,3))*y5 + Power(x5,4)*(-(x6*y1) + x1*y6) + x5*(Power(x6,4)*y1 - Power(x1,4)*y6)) + x4*(Power(x1,3)*Power(x6,3)*(-x1 + x6)* y5 + Power(x5,4)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,4)*y1) + Power(x1,4)*y6)))) + Power(x2,4)*(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*(x1 + x4 + x5 + x6)*y3 + Power(x3,5)*(x1*(x1 - x5)*x5*(x1 - x6)* (x5 - x6)*x6*y4 + Power(x4,3)* (x1*(x1 - x6)*x6*y5 + Power(x5,2)*(-(x6*y1) + x1*y6) + x5*(Power(x6,2)*y1 - Power(x1,2)*y6)) + x4*(Power(x1,2)*(x1 - x6)*Power(x6,2)*y5 + Power(x5,3)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,3)*y1 - Power(x1,3)*y6)) + Power(x4,2)* (x1*x6*(-Power(x1,2) + Power(x6,2))*y5 + Power(x5,3)*(x6*y1 - x1*y6) + x5*(-(Power(x6,3)*y1) + Power(x1,3)*y6))) + Power(x3,2)* (x1*x5*(Power(x1,2) - Power(x5,2))*x6* (Power(x1,2) - Power(x6,2))* (Power(x5,2) - Power(x6,2))*y4 + Power(x4,5)* (x1*x6*(Power(x1,2) - Power(x6,2))*y5 + Power(x5,3)*(-(x6*y1) + x1*y6) + x5*(Power(x6,3)*y1 - Power(x1,3)*y6)) + x4*(Power(x1,3)*Power(x6,3)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,5)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,3)* (x1*x6*(-Power(x1,4) + Power(x6,4))*y5 + Power(x5,5)*(x6*y1 - x1*y6) + x5*(-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,3)* (x1*x5*x6*(-(Power(x5,4)*x6) + x5*Power(x6,4) + Power(x1,4)*(-x5 + x6) + x1*(Power(x5,4) - Power(x6,4)))*y4 + Power(x4,5)* (x1*x6*(-x1 + x6)*y5 + Power(x5,2)*(x6*y1 - x1*y6) + x5*(-(Power(x6,2)*y1) + Power(x1,2)*y6)) + Power(x4,2)* (x1*x6*(Power(x1,4) - Power(x6,4))*y5 + Power(x5,5)*(-(x6*y1) + x1*y6) + x5*(Power(x6,5)*y1 - Power(x1,5)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (-Power(x1,3) + Power(x6,3))*y5 + Power(x5,5)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + x3*(Power(x1,2)*Power(x5,2)*Power(x6,2)* (-(Power(x5,3)*x6) + x5*Power(x6,3) + Power(x1,3)*(-x5 + x6) + x1*(Power(x5,3) - Power(x6,3)))*y4 + Power(x4,5)* (Power(x1,2)*Power(x6,2)*(-x1 + x6)*y5 + Power(x5,3)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (Power(x1,3) - Power(x6,3))*y5 + Power(x5,5)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,2)* (Power(x1,3)*Power(x6,3)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,5)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))) + Power(x2,3)*(-(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*(x5*x6 + x4*(x5 + x6) + x1*(x4 + x5 + x6))*y3) + Power(x3,5)*(x1*x5*x6* (-(Power(x5,3)*x6) + x5*Power(x6,3) + Power(x1,3)*(-x5 + x6) + x1*(Power(x5,3) - Power(x6,3)))*y4 + Power(x4,4)* (x1*x6*(-x1 + x6)*y5 + Power(x5,2)*(x6*y1 - x1*y6) + x5*(-(Power(x6,2)*y1) + Power(x1,2)*y6)) + Power(x4,2)* (x1*x6*(Power(x1,3) - Power(x6,3))*y5 + Power(x5,4)*(-(x6*y1) + x1*y6) + x5*(Power(x6,4)*y1 - Power(x1,4)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,4)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,4)* (x1*x5*x6*(Power(x1,4)*(x5 - x6) + x5*x6*(Power(x5,3) - Power(x6,3)) + x1*(-Power(x5,4) + Power(x6,4)))*y4 + Power(x4,5)* (x1*(x1 - x6)*x6*y5 + Power(x5,2)*(-(x6*y1) + x1*y6) + x5*(Power(x6,2)*y1 - Power(x1,2)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (Power(x1,3) - Power(x6,3))*y5 + Power(x5,5)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,2)* (x1*x6*(-Power(x1,4) + Power(x6,4))*y5 + Power(x5,5)*(x6*y1 - x1*y6) + x5*(-(Power(x6,5)*y1) + Power(x1,5)*y6))) + x3*(Power(x1,2)*Power(x5,2)* Power(x6,2)* (Power(x5,2)*(x5 - x6)*Power(x6,2) + Power(x1,3)* (Power(x5,2) - Power(x6,2)) + Power(x1,2)*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,5)* (Power(x1,2)*Power(x6,2)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,4)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,2)* (Power(x1,4)*(x1 - x6)*Power(x6,4)*y5 + Power(x5,5)* (-(Power(x6,4)*y1) + Power(x1,4)*y6) + Power(x5,4)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,4)* (Power(x1,2)*Power(x6,2)* (-Power(x1,3) + Power(x6,3))*y5 + Power(x5,5)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,2)* (x1*x5*x6*(Power(x5,3)*Power(x6,3)* (-x5 + x6) + Power(x1,4)* (-Power(x5,3) + Power(x6,3)) + Power(x1,3)*(Power(x5,4) - Power(x6,4))) *y4 + Power(x4,5)* (x1*x6*(-Power(x1,3) + Power(x6,3))*y5 + Power(x5,4)*(x6*y1 - x1*y6) + x5*(-(Power(x6,4)*y1) + Power(x1,4)*y6)) + Power(x4,4)* (x1*x6*(Power(x1,4) - Power(x6,4))*y5 + Power(x5,5)*(-(x6*y1) + x1*y6) + x5*(Power(x6,5)*y1 - Power(x1,5)*y6)) + x4*(Power(x1,4)*Power(x6,4)*(-x1 + x6)* y5 + Power(x5,5)* (Power(x6,4)*y1 - Power(x1,4)*y6) + Power(x5,4)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))) + x2*(-(Power(x1,2)*(x1 - x4)*Power(x4,2)* (x1 - x5)*(x4 - x5)*Power(x5,2)*(x1 - x6)* (x4 - x6)*(x5 - x6)*Power(x6,2)*y3) + Power(x3,5)*(-(Power(x1,2)*(x1 - x5)* Power(x5,2)*(x1 - x6)*(x5 - x6)* Power(x6,2)*y4) + Power(x4,4)* (Power(x1,2)*Power(x6,2)*(-x1 + x6)*y5 + Power(x5,3)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,4)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,2)* (Power(x1,3)*Power(x6,3)*(-x1 + x6)*y5 + Power(x5,4)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,4)* (Power(x1,2)*Power(x5,2)*Power(x6,2)* (Power(x1,3)*(x5 - x6) + x5*x6*(Power(x5,2) - Power(x6,2)) + x1*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,5)* (Power(x1,2)*(x1 - x6)*Power(x6,2)*y5 + Power(x5,3)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,3)*y1 - Power(x1,3)*y6)) + Power(x4,2)* (Power(x1,3)*Power(x6,3)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,5)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (-Power(x1,3) + Power(x6,3))*y5 + Power(x5,5)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,2)* (Power(x1,3)*(x1 - x5)*Power(x5,3)*(x1 - x6)* (x5 - x6)*Power(x6,3)*y4 + Power(x4,5)* (Power(x1,3)*(x1 - x6)*Power(x6,3)*y5 + Power(x5,4)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,3)* (Power(x1,4)*(x1 - x6)*Power(x6,4)*y5 + Power(x5,5)* (-(Power(x6,4)*y1) + Power(x1,4)*y6) + Power(x5,4)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,4)* (Power(x1,3)*Power(x6,3)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,5)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,3)* (Power(x1,2)*Power(x5,2)*Power(x6,2)* (Power(x5,2)*Power(x6,2)*(-x5 + x6) + Power(x1,3)* (-Power(x5,2) + Power(x6,2)) + Power(x1,2)*(Power(x5,3) - Power(x6,3))) *y4 + Power(x4,5)* (Power(x1,2)*Power(x6,2)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,4)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,4)*y1) + Power(x1,4)*y6)) + Power(x4,4)* (Power(x1,2)*Power(x6,2)* (Power(x1,3) - Power(x6,3))*y5 + Power(x5,5)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,2)* (Power(x1,4)*Power(x6,4)*(-x1 + x6)*y5 + Power(x5,5)* (Power(x6,4)*y1 - Power(x1,4)*y6) + Power(x5,4)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))) + Power(x2,2)*(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*(x4*x5*x6 + x1*(x5*x6 + x4*(x5 + x6)))*y3 + Power(x3,5)* (x1*x5*x6*(Power(x5,2)*(x5 - x6)* Power(x6,2) + Power(x1,3)* (Power(x5,2) - Power(x6,2)) + Power(x1,2)*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,4)* (x1*x6*(Power(x1,2) - Power(x6,2))*y5 + Power(x5,3)*(-(x6*y1) + x1*y6) + x5*(Power(x6,3)*y1 - Power(x1,3)*y6)) + x4*(Power(x1,3)*(x1 - x6)*Power(x6,3)*y5 + Power(x5,4)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,3)* (x1*x6*(-Power(x1,3) + Power(x6,3))*y5 + Power(x5,4)*(x6*y1 - x1*y6) + x5*(-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,3)* (x1*x5*x6*(Power(x5,3)*(x5 - x6)* Power(x6,3) + Power(x1,4)* (Power(x5,3) - Power(x6,3)) + Power(x1,3)*(-Power(x5,4) + Power(x6,4)))*y4 + Power(x4,5)* (x1*x6*(Power(x1,3) - Power(x6,3))*y5 + Power(x5,4)*(-(x6*y1) + x1*y6) + x5*(Power(x6,4)*y1 - Power(x1,4)*y6)) + x4*(Power(x1,4)*(x1 - x6)*Power(x6,4)*y5 + Power(x5,5)* (-(Power(x6,4)*y1) + Power(x1,4)*y6) + Power(x5,4)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,4)* (x1*x6*(-Power(x1,4) + Power(x6,4))*y5 + Power(x5,5)*(x6*y1 - x1*y6) + x5*(-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,4)* (-(x1*x5*(Power(x1,2) - Power(x5,2))*x6* (Power(x1,2) - Power(x6,2))* (Power(x5,2) - Power(x6,2))*y4) + Power(x4,5)* (x1*x6*(-Power(x1,2) + Power(x6,2))*y5 + Power(x5,3)*(x6*y1 - x1*y6) + x5*(-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (x1*x6*(Power(x1,4) - Power(x6,4))*y5 + Power(x5,5)*(-(x6*y1) + x1*y6) + x5*(Power(x6,5)*y1 - Power(x1,5)*y6)) + x4*(Power(x1,3)*Power(x6,3)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,5)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + x3*(-(Power(x1,3)*(x1 - x5)*Power(x5,3)* (x1 - x6)*(x5 - x6)*Power(x6,3)*y4) + Power(x4,5)* (Power(x1,3)*Power(x6,3)*(-x1 + x6)*y5 + Power(x5,4)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,4)*y1) + Power(x1,4)*y6)) + Power(x4,4)* (Power(x1,3)*Power(x6,3)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,5)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,3)* (Power(x1,4)*Power(x6,4)*(-x1 + x6)*y5 + Power(x5,5)* (Power(x6,4)*y1 - Power(x1,4)*y6) + Power(x5,4)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))))/((x1 - x2)*(x1 - x3)*(-x2 + x3)*(x1 - x4)* (-x2 + x4)*(-x3 + x4)*(x1 - x5)*(x2 - x5)* (x3 - x5)*(x4 - x5)*(x1 - x6)*(x2 - x6)* (x3 - x6)*(x4 - x6)*(x5 - x6))</code></pre>
+            + x1*x2/((x3-x1)*(x3-x2)) * y3</code></pre>
 </details>
 </section>
 <section>
@@ -944,34 +903,6 @@ maxval: maximum value allowed for partition entries.</p></div>
     if (x,n,minval,maxval) not in _part_cache:
         _part_cache[x,n,minval,maxval] = list(part(x,n,minval,maxval))
     return _part_cache[x,n,minval,maxval]</code></pre>
-</details>
-</dd>
-<dt id="dadi.Numerics.cubic_extrap"><code class="name flex">
-<span>def <span class="ident">cubic_extrap</span></span>(<span>ys, xs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cubically extrapolate from three x,y pairs to x = 0.</p>
-<p>ys: y values from x,y pairs. Note that these can be arrays of values.
-xs: x values from x,y pairs. These should be scalars.</p>
-<p>Returns extrapolated y at x=0.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def cubic_extrap(ys, xs):
-    &#34;&#34;&#34;
-    Cubically extrapolate from three x,y pairs to x = 0.
-
-    ys: y values from x,y pairs. Note that these can be arrays of values.
-    xs: x values from x,y pairs. These should be scalars.
-
-    Returns extrapolated y at x=0.
-    &#34;&#34;&#34;
-    y1,y2,y3,y4 = ys
-    x1,x2,x3,x4 = xs
-    # This horrid implementation came from using CForm in Mathematica.
-    Power = numpy.power
-    return ((x1*(x1 - x3)*x3* (x1 - x4)*(x3 - x4)*x4* y2 + x2*Power(x4,2)* (-(Power(x3,3)*y1) + Power(x3,2)*x4*y1 + Power(x1,2)* (x1 - x4)*y3) + Power(x1,2)*x2* Power(x3,2)*(-x1 + x3)* y4 + Power(x2,3)* (x4*(-(Power(x3,2)* y1) + x3*x4*y1 + x1*(x1 - x4)*y3) + x1*x3*(-x1 + x3)* y4) + Power(x2,2)* (x1*x4* (-Power(x1,2) + Power(x4,2))*y3 + Power(x3,3)* (x4*y1 - x1*y4) + x3*(-(Power(x4,3)* y1) + Power(x1,3)*y4)))/ ((x1 - x2)*(x1 - x3)* (x2 - x3)*(x1 - x4)* (x2 - x4)*(x3 - x4)))</code></pre>
 </details>
 </dd>
 <dt id="dadi.Numerics.default_grid"><code class="name flex">
@@ -1380,12 +1311,16 @@ points.</p></div>
             # best input value.
             extrap_failed = abs(numpy.log10(ex_result/best_result)) &gt; fail_mag
             if numpy.any(extrap_failed):
-                logger.warn(&#39;Extrapolation may have failed. Check resulting &#39;
+                logger.warning(&#39;Extrapolation may have failed. Check resulting &#39;
                             &#39;frequency spectrum for unexpected results.&#39;)
 
             # For entries that fail, use the &#34;best&#34; input result.
             ex_result[extrap_failed] = best_result[extrap_failed]
 
+        try:
+            ex_result.pop_ids = result_l[0].pop_ids
+        except AttributeError:
+            pass
         return ex_result
 
     extrap_func.__name__ = func.__name__
@@ -1578,62 +1513,6 @@ then decreases the step size.</p></div>
     return grid</code></pre>
 </details>
 </dd>
-<dt id="dadi.Numerics.quartic_extrap"><code class="name flex">
-<span>def <span class="ident">quartic_extrap</span></span>(<span>ys, xs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Quartically extrapolate from three x,y pairs to x = 0.</p>
-<p>y1,y2&hellip;: y values from x,y pairs. Note that these can be arrays of values.
-x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
-<p>Returns extrapolated y at x=0.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def quartic_extrap(ys, xs):
-    &#34;&#34;&#34;
-    Quartically extrapolate from three x,y pairs to x = 0.
-
-    y1,y2...: y values from x,y pairs. Note that these can be arrays of values.
-    x1,x2...: x values from x,y pairs. These should be scalars.
-
-    Returns extrapolated y at x=0.
-    &#34;&#34;&#34;
-    y1,y2,y3,y4,y5 = ys
-    x1,x2,x3,x4,x5 = xs
-    # This horrid implementation came from using CForm in Mathematica.
-    Power = numpy.power
-    return (-(x1*(x1 - x3)*x3*(x1 - x4)*(x3 - x4)*x4*(x1 - x5)* (x3 - x5)*(x4 - x5)*x5*y2) + Power(x2,4)*(-(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*y3) + Power(x3,3)*(x1*x5*(-x1 + x5)*y4 + Power(x4,2)*(x5*y1 - x1*y5) + x4*(-(Power(x5,2)*y1) + Power(x1,2)*y5)) + Power(x3,2)*(x1*x5* (Power(x1,2) - Power(x5,2))*y4 + Power(x4,3)*(-(x5*y1) + x1*y5) + x4*(Power(x5,3)*y1 - Power(x1,3)*y5)) + x3*(Power(x1,2)*Power(x5,2)*(-x1 + x5)*y4 + Power(x4,3)* (Power(x5,2)*y1 - Power(x1,2)*y5) + Power(x4,2)* (-(Power(x5,3)*y1) + Power(x1,3)*y5))) + Power(x2,3)*(x1*x4*x5* (Power(x1,3)*(x4 - x5) + x4*x5*(Power(x4,2) - Power(x5,2)) + x1*(-Power(x4,3) + Power(x5,3)))*y3 + Power(x3,4)*(x1*(x1 - x5)*x5*y4 + Power(x4,2)*(-(x5*y1) + x1*y5) + x4*(Power(x5,2)*y1 - Power(x1,2)*y5)) + x3*(Power(x1,2)*Power(x5,2)* (Power(x1,2) - Power(x5,2))*y4 + Power(x4,4)* (-(Power(x5,2)*y1) + Power(x1,2)*y5) + Power(x4,2)* (Power(x5,4)*y1 - Power(x1,4)*y5)) + Power(x3,2)*(x1*x5* (-Power(x1,3) + Power(x5,3))*y4 + Power(x4,4)*(x5*y1 - x1*y5) + x4*(-(Power(x5,4)*y1) + Power(x1,4)*y5))) + x2*(Power(x1,2)*(x1 - x4)*Power(x4,2)* (x1 - x5)*(x4 - x5)*Power(x5,2)*y3 + Power(x3,4)*(Power(x1,2)*(x1 - x5)* Power(x5,2)*y4 + Power(x4,3)* (-(Power(x5,2)*y1) + Power(x1,2)*y5) + Power(x4,2)* (Power(x5,3)*y1 - Power(x1,3)*y5)) + Power(x3,2)*(Power(x1,3)*(x1 - x5)* Power(x5,3)*y4 + Power(x4,4)* (-(Power(x5,3)*y1) + Power(x1,3)*y5) + Power(x4,3)* (Power(x5,4)*y1 - Power(x1,4)*y5)) + Power(x3,3)*(Power(x1,2)*Power(x5,2)* (-Power(x1,2) + Power(x5,2))*y4 + Power(x4,4)* (Power(x5,2)*y1 - Power(x1,2)*y5) + Power(x4,2)* (-(Power(x5,4)*y1) + Power(x1,4)*y5))) + Power(x2,2)*(x1*x4*x5* (Power(x4,2)*Power(x5,2)*(-x4 + x5) + Power(x1,3)*(-Power(x4,2) + Power(x5,2)) + Power(x1,2)*(Power(x4,3) - Power(x5,3)))*y3 + Power(x3,4)* (x1*x5*(-Power(x1,2) + Power(x5,2))*y4 + Power(x4,3)*(x5*y1 - x1*y5) + x4*(-(Power(x5,3)*y1) + Power(x1,3)*y5)) + Power(x3,3)*(x1*x5* (Power(x1,3) - Power(x5,3))*y4 + Power(x4,4)*(-(x5*y1) + x1*y5) + x4*(Power(x5,4)*y1 - Power(x1,4)*y5)) + x3*(Power(x1,3)*Power(x5,3)*(-x1 + x5)*y4 + Power(x4,4)* (Power(x5,3)*y1 - Power(x1,3)*y5) + Power(x4,3)* (-(Power(x5,4)*y1) + Power(x1,4)*y5))))/ ((x1 - x2)*(x1 - x3)*(x2 - x3)*(x1 - x4)*(x2 - x4)* (x3 - x4)*(x1 - x5)*(x2 - x5)*(x3 - x5)*(x4 - x5))</code></pre>
-</details>
-</dd>
-<dt id="dadi.Numerics.quintic_extrap"><code class="name flex">
-<span>def <span class="ident">quintic_extrap</span></span>(<span>ys, xs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Quintic extrapolate from three x,y pairs to x = 0.</p>
-<p>y1,y2&hellip;: y values from x,y pairs. Note that these can be arrays of values.
-x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
-<p>Returns extrapolated y at x=0.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def quintic_extrap(ys, xs):
-    &#34;&#34;&#34;
-    Quintic extrapolate from three x,y pairs to x = 0.
-
-    y1,y2...: y values from x,y pairs. Note that these can be arrays of values.
-    x1,x2...: x values from x,y pairs. These should be scalars.
-
-    Returns extrapolated y at x=0.
-    &#34;&#34;&#34;
-    y1,y2,y3,y4,y5,y6 = ys
-    x1,x2,x3,x4,x5,x6 = xs
-    # This horrid implementation came from using CForm in Mathematica.
-    Power = numpy.power
-    return (-(x1*(x1 - x3)*x3*(x1 - x4)*(x3 - x4)*x4*(x1 - x5)* (x3 - x5)*(x4 - x5)*x5*(x1 - x6)*(x3 - x6)* (x4 - x6)*(x5 - x6)*x6*y2) + Power(x2,5)*(-(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*y3) + Power(x3,4)* (-(x1*(x1 - x5)*x5*(x1 - x6)*(x5 - x6)*x6* y4) + Power(x4,3)* (x1*x6*(-x1 + x6)*y5 + Power(x5,2)*(x6*y1 - x1*y6) + x5*(-(Power(x6,2)*y1) + Power(x1,2)*y6)) + Power(x4,2)* (x1*x6*(Power(x1,2) - Power(x6,2))*y5 + Power(x5,3)*(-(x6*y1) + x1*y6) + x5*(Power(x6,3)*y1 - Power(x1,3)*y6)) + x4*(Power(x1,2)*Power(x6,2)*(-x1 + x6)* y5 + Power(x5,3)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,3)*y1) + Power(x1,3)*y6))) + Power(x3,3)* (x1*x5*x6*(Power(x1,3)*(x5 - x6) + x5*x6*(Power(x5,2) - Power(x6,2)) + x1*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,4)* (x1*(x1 - x6)*x6*y5 + Power(x5,2)*(-(x6*y1) + x1*y6) + x5*(Power(x6,2)*y1 - Power(x1,2)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,4)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,2)* (x1*x6*(-Power(x1,3) + Power(x6,3))*y5 + Power(x5,4)*(x6*y1 - x1*y6) + x5*(-(Power(x6,4)*y1) + Power(x1,4)*y6))) + x3*(Power(x1,2)*(x1 - x5)*Power(x5,2)* (x1 - x6)*(x5 - x6)*Power(x6,2)*y4 + Power(x4,4)* (Power(x1,2)*(x1 - x6)*Power(x6,2)*y5 + Power(x5,3)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,3)*y1 - Power(x1,3)*y6)) + Power(x4,2)* (Power(x1,3)*(x1 - x6)*Power(x6,3)*y5 + Power(x5,4)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,4)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,2)* (x1*x5*x6*(Power(x5,2)*Power(x6,2)* (-x5 + x6) + Power(x1,3)* (-Power(x5,2) + Power(x6,2)) + Power(x1,2)*(Power(x5,3) - Power(x6,3))) *y4 + Power(x4,4)* (x1*x6*(-Power(x1,2) + Power(x6,2))*y5 + Power(x5,3)*(x6*y1 - x1*y6) + x5*(-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (x1*x6*(Power(x1,3) - Power(x6,3))*y5 + Power(x5,4)*(-(x6*y1) + x1*y6) + x5*(Power(x6,4)*y1 - Power(x1,4)*y6)) + x4*(Power(x1,3)*Power(x6,3)*(-x1 + x6)* y5 + Power(x5,4)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,4)*y1) + Power(x1,4)*y6)))) + Power(x2,4)*(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*(x1 + x4 + x5 + x6)*y3 + Power(x3,5)*(x1*(x1 - x5)*x5*(x1 - x6)* (x5 - x6)*x6*y4 + Power(x4,3)* (x1*(x1 - x6)*x6*y5 + Power(x5,2)*(-(x6*y1) + x1*y6) + x5*(Power(x6,2)*y1 - Power(x1,2)*y6)) + x4*(Power(x1,2)*(x1 - x6)*Power(x6,2)*y5 + Power(x5,3)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,3)*y1 - Power(x1,3)*y6)) + Power(x4,2)* (x1*x6*(-Power(x1,2) + Power(x6,2))*y5 + Power(x5,3)*(x6*y1 - x1*y6) + x5*(-(Power(x6,3)*y1) + Power(x1,3)*y6))) + Power(x3,2)* (x1*x5*(Power(x1,2) - Power(x5,2))*x6* (Power(x1,2) - Power(x6,2))* (Power(x5,2) - Power(x6,2))*y4 + Power(x4,5)* (x1*x6*(Power(x1,2) - Power(x6,2))*y5 + Power(x5,3)*(-(x6*y1) + x1*y6) + x5*(Power(x6,3)*y1 - Power(x1,3)*y6)) + x4*(Power(x1,3)*Power(x6,3)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,5)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,3)* (x1*x6*(-Power(x1,4) + Power(x6,4))*y5 + Power(x5,5)*(x6*y1 - x1*y6) + x5*(-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,3)* (x1*x5*x6*(-(Power(x5,4)*x6) + x5*Power(x6,4) + Power(x1,4)*(-x5 + x6) + x1*(Power(x5,4) - Power(x6,4)))*y4 + Power(x4,5)* (x1*x6*(-x1 + x6)*y5 + Power(x5,2)*(x6*y1 - x1*y6) + x5*(-(Power(x6,2)*y1) + Power(x1,2)*y6)) + Power(x4,2)* (x1*x6*(Power(x1,4) - Power(x6,4))*y5 + Power(x5,5)*(-(x6*y1) + x1*y6) + x5*(Power(x6,5)*y1 - Power(x1,5)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (-Power(x1,3) + Power(x6,3))*y5 + Power(x5,5)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + x3*(Power(x1,2)*Power(x5,2)*Power(x6,2)* (-(Power(x5,3)*x6) + x5*Power(x6,3) + Power(x1,3)*(-x5 + x6) + x1*(Power(x5,3) - Power(x6,3)))*y4 + Power(x4,5)* (Power(x1,2)*Power(x6,2)*(-x1 + x6)*y5 + Power(x5,3)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (Power(x1,3) - Power(x6,3))*y5 + Power(x5,5)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,2)* (Power(x1,3)*Power(x6,3)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,5)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))) + Power(x2,3)*(-(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*(x5*x6 + x4*(x5 + x6) + x1*(x4 + x5 + x6))*y3) + Power(x3,5)*(x1*x5*x6* (-(Power(x5,3)*x6) + x5*Power(x6,3) + Power(x1,3)*(-x5 + x6) + x1*(Power(x5,3) - Power(x6,3)))*y4 + Power(x4,4)* (x1*x6*(-x1 + x6)*y5 + Power(x5,2)*(x6*y1 - x1*y6) + x5*(-(Power(x6,2)*y1) + Power(x1,2)*y6)) + Power(x4,2)* (x1*x6*(Power(x1,3) - Power(x6,3))*y5 + Power(x5,4)*(-(x6*y1) + x1*y6) + x5*(Power(x6,4)*y1 - Power(x1,4)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,4)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,4)* (x1*x5*x6*(Power(x1,4)*(x5 - x6) + x5*x6*(Power(x5,3) - Power(x6,3)) + x1*(-Power(x5,4) + Power(x6,4)))*y4 + Power(x4,5)* (x1*(x1 - x6)*x6*y5 + Power(x5,2)*(-(x6*y1) + x1*y6) + x5*(Power(x6,2)*y1 - Power(x1,2)*y6)) + x4*(Power(x1,2)*Power(x6,2)* (Power(x1,3) - Power(x6,3))*y5 + Power(x5,5)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,2)* (x1*x6*(-Power(x1,4) + Power(x6,4))*y5 + Power(x5,5)*(x6*y1 - x1*y6) + x5*(-(Power(x6,5)*y1) + Power(x1,5)*y6))) + x3*(Power(x1,2)*Power(x5,2)* Power(x6,2)* (Power(x5,2)*(x5 - x6)*Power(x6,2) + Power(x1,3)* (Power(x5,2) - Power(x6,2)) + Power(x1,2)*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,5)* (Power(x1,2)*Power(x6,2)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,4)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,2)* (Power(x1,4)*(x1 - x6)*Power(x6,4)*y5 + Power(x5,5)* (-(Power(x6,4)*y1) + Power(x1,4)*y6) + Power(x5,4)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,4)* (Power(x1,2)*Power(x6,2)* (-Power(x1,3) + Power(x6,3))*y5 + Power(x5,5)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,2)* (x1*x5*x6*(Power(x5,3)*Power(x6,3)* (-x5 + x6) + Power(x1,4)* (-Power(x5,3) + Power(x6,3)) + Power(x1,3)*(Power(x5,4) - Power(x6,4))) *y4 + Power(x4,5)* (x1*x6*(-Power(x1,3) + Power(x6,3))*y5 + Power(x5,4)*(x6*y1 - x1*y6) + x5*(-(Power(x6,4)*y1) + Power(x1,4)*y6)) + Power(x4,4)* (x1*x6*(Power(x1,4) - Power(x6,4))*y5 + Power(x5,5)*(-(x6*y1) + x1*y6) + x5*(Power(x6,5)*y1 - Power(x1,5)*y6)) + x4*(Power(x1,4)*Power(x6,4)*(-x1 + x6)* y5 + Power(x5,5)* (Power(x6,4)*y1 - Power(x1,4)*y6) + Power(x5,4)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))) + x2*(-(Power(x1,2)*(x1 - x4)*Power(x4,2)* (x1 - x5)*(x4 - x5)*Power(x5,2)*(x1 - x6)* (x4 - x6)*(x5 - x6)*Power(x6,2)*y3) + Power(x3,5)*(-(Power(x1,2)*(x1 - x5)* Power(x5,2)*(x1 - x6)*(x5 - x6)* Power(x6,2)*y4) + Power(x4,4)* (Power(x1,2)*Power(x6,2)*(-x1 + x6)*y5 + Power(x5,3)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,4)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,2)* (Power(x1,3)*Power(x6,3)*(-x1 + x6)*y5 + Power(x5,4)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,4)* (Power(x1,2)*Power(x5,2)*Power(x6,2)* (Power(x1,3)*(x5 - x6) + x5*x6*(Power(x5,2) - Power(x6,2)) + x1*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,5)* (Power(x1,2)*(x1 - x6)*Power(x6,2)*y5 + Power(x5,3)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,3)*y1 - Power(x1,3)*y6)) + Power(x4,2)* (Power(x1,3)*Power(x6,3)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,5)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,3)* (Power(x1,2)*Power(x6,2)* (-Power(x1,3) + Power(x6,3))*y5 + Power(x5,5)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,2)* (Power(x1,3)*(x1 - x5)*Power(x5,3)*(x1 - x6)* (x5 - x6)*Power(x6,3)*y4 + Power(x4,5)* (Power(x1,3)*(x1 - x6)*Power(x6,3)*y5 + Power(x5,4)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,3)* (Power(x1,4)*(x1 - x6)*Power(x6,4)*y5 + Power(x5,5)* (-(Power(x6,4)*y1) + Power(x1,4)*y6) + Power(x5,4)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,4)* (Power(x1,3)*Power(x6,3)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,5)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,3)* (Power(x1,2)*Power(x5,2)*Power(x6,2)* (Power(x5,2)*Power(x6,2)*(-x5 + x6) + Power(x1,3)* (-Power(x5,2) + Power(x6,2)) + Power(x1,2)*(Power(x5,3) - Power(x6,3))) *y4 + Power(x4,5)* (Power(x1,2)*Power(x6,2)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,4)* (Power(x6,2)*y1 - Power(x1,2)*y6) + Power(x5,2)* (-(Power(x6,4)*y1) + Power(x1,4)*y6)) + Power(x4,4)* (Power(x1,2)*Power(x6,2)* (Power(x1,3) - Power(x6,3))*y5 + Power(x5,5)* (-(Power(x6,2)*y1) + Power(x1,2)*y6) + Power(x5,2)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,2)* (Power(x1,4)*Power(x6,4)*(-x1 + x6)*y5 + Power(x5,5)* (Power(x6,4)*y1 - Power(x1,4)*y6) + Power(x5,4)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))) + Power(x2,2)*(x1*(x1 - x4)*x4*(x1 - x5)* (x4 - x5)*x5*(x1 - x6)*(x4 - x6)*(x5 - x6)* x6*(x4*x5*x6 + x1*(x5*x6 + x4*(x5 + x6)))*y3 + Power(x3,5)* (x1*x5*x6*(Power(x5,2)*(x5 - x6)* Power(x6,2) + Power(x1,3)* (Power(x5,2) - Power(x6,2)) + Power(x1,2)*(-Power(x5,3) + Power(x6,3)))*y4 + Power(x4,4)* (x1*x6*(Power(x1,2) - Power(x6,2))*y5 + Power(x5,3)*(-(x6*y1) + x1*y6) + x5*(Power(x6,3)*y1 - Power(x1,3)*y6)) + x4*(Power(x1,3)*(x1 - x6)*Power(x6,3)*y5 + Power(x5,4)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,4)*y1 - Power(x1,4)*y6)) + Power(x4,3)* (x1*x6*(-Power(x1,3) + Power(x6,3))*y5 + Power(x5,4)*(x6*y1 - x1*y6) + x5*(-(Power(x6,4)*y1) + Power(x1,4)*y6))) + Power(x3,3)* (x1*x5*x6*(Power(x5,3)*(x5 - x6)* Power(x6,3) + Power(x1,4)* (Power(x5,3) - Power(x6,3)) + Power(x1,3)*(-Power(x5,4) + Power(x6,4)))*y4 + Power(x4,5)* (x1*x6*(Power(x1,3) - Power(x6,3))*y5 + Power(x5,4)*(-(x6*y1) + x1*y6) + x5*(Power(x6,4)*y1 - Power(x1,4)*y6)) + x4*(Power(x1,4)*(x1 - x6)*Power(x6,4)*y5 + Power(x5,5)* (-(Power(x6,4)*y1) + Power(x1,4)*y6) + Power(x5,4)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,4)* (x1*x6*(-Power(x1,4) + Power(x6,4))*y5 + Power(x5,5)*(x6*y1 - x1*y6) + x5*(-(Power(x6,5)*y1) + Power(x1,5)*y6))) + Power(x3,4)* (-(x1*x5*(Power(x1,2) - Power(x5,2))*x6* (Power(x1,2) - Power(x6,2))* (Power(x5,2) - Power(x6,2))*y4) + Power(x4,5)* (x1*x6*(-Power(x1,2) + Power(x6,2))*y5 + Power(x5,3)*(x6*y1 - x1*y6) + x5*(-(Power(x6,3)*y1) + Power(x1,3)*y6)) + Power(x4,3)* (x1*x6*(Power(x1,4) - Power(x6,4))*y5 + Power(x5,5)*(-(x6*y1) + x1*y6) + x5*(Power(x6,5)*y1 - Power(x1,5)*y6)) + x4*(Power(x1,3)*Power(x6,3)* (-Power(x1,2) + Power(x6,2))*y5 + Power(x5,5)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,5)*y1) + Power(x1,5)*y6))) + x3*(-(Power(x1,3)*(x1 - x5)*Power(x5,3)* (x1 - x6)*(x5 - x6)*Power(x6,3)*y4) + Power(x4,5)* (Power(x1,3)*Power(x6,3)*(-x1 + x6)*y5 + Power(x5,4)* (Power(x6,3)*y1 - Power(x1,3)*y6) + Power(x5,3)* (-(Power(x6,4)*y1) + Power(x1,4)*y6)) + Power(x4,4)* (Power(x1,3)*Power(x6,3)* (Power(x1,2) - Power(x6,2))*y5 + Power(x5,5)* (-(Power(x6,3)*y1) + Power(x1,3)*y6) + Power(x5,3)* (Power(x6,5)*y1 - Power(x1,5)*y6)) + Power(x4,3)* (Power(x1,4)*Power(x6,4)*(-x1 + x6)*y5 + Power(x5,5)* (Power(x6,4)*y1 - Power(x1,4)*y6) + Power(x5,4)* (-(Power(x6,5)*y1) + Power(x1,5)*y6)))))/((x1 - x2)*(x1 - x3)*(-x2 + x3)*(x1 - x4)* (-x2 + x4)*(-x3 + x4)*(x1 - x5)*(x2 - x5)* (x3 - x5)*(x4 - x5)*(x1 - x6)*(x2 - x6)* (x3 - x6)*(x4 - x6)*(x5 - x6))</code></pre>
-</details>
-</dd>
 <dt id="dadi.Numerics.reverse_array"><code class="name flex">
 <span>def <span class="ident">reverse_array</span></span>(<span>arr)</span>
 </code></dt>
@@ -1718,7 +1597,6 @@ x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 <li><code><a title="dadi.Numerics.array_from_file" href="#dadi.Numerics.array_from_file">array_from_file</a></code></li>
 <li><code><a title="dadi.Numerics.array_to_file" href="#dadi.Numerics.array_to_file">array_to_file</a></code></li>
 <li><code><a title="dadi.Numerics.cached_part" href="#dadi.Numerics.cached_part">cached_part</a></code></li>
-<li><code><a title="dadi.Numerics.cubic_extrap" href="#dadi.Numerics.cubic_extrap">cubic_extrap</a></code></li>
 <li><code><a title="dadi.Numerics.default_grid" href="#dadi.Numerics.default_grid">default_grid</a></code></li>
 <li><code><a title="dadi.Numerics.end_point_first_derivs" href="#dadi.Numerics.end_point_first_derivs">end_point_first_derivs</a></code></li>
 <li><code><a title="dadi.Numerics.estimate_best_exp_grid_crwd" href="#dadi.Numerics.estimate_best_exp_grid_crwd">estimate_best_exp_grid_crwd</a></code></li>
@@ -1732,8 +1610,6 @@ x1,x2&hellip;: x values from x,y pairs. These should be scalars.</p>
 <li><code><a title="dadi.Numerics.part" href="#dadi.Numerics.part">part</a></code></li>
 <li><code><a title="dadi.Numerics.quadratic_extrap" href="#dadi.Numerics.quadratic_extrap">quadratic_extrap</a></code></li>
 <li><code><a title="dadi.Numerics.quadratic_grid" href="#dadi.Numerics.quadratic_grid">quadratic_grid</a></code></li>
-<li><code><a title="dadi.Numerics.quartic_extrap" href="#dadi.Numerics.quartic_extrap">quartic_extrap</a></code></li>
-<li><code><a title="dadi.Numerics.quintic_extrap" href="#dadi.Numerics.quintic_extrap">quintic_extrap</a></code></li>
 <li><code><a title="dadi.Numerics.reverse_array" href="#dadi.Numerics.reverse_array">reverse_array</a></code></li>
 <li><code><a title="dadi.Numerics.trapz" href="#dadi.Numerics.trapz">trapz</a></code></li>
 </ul>

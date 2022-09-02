@@ -319,9 +319,9 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
     if not return_GIM:
         return uncerts
     else:
-        return uncerts, GIM
+        return uncerts, GIM, H
 
-def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
+def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False):
     &#34;&#34;&#34;
     Parameter uncertainties from Fisher Information Matrix
 
@@ -352,7 +352,11 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
-    return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    if not return_FIM:
+        return uncerts
+    else:
+        return uncerts, H
 
 def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                multinom=True, eps=0.01, boot_theta_adjusts=None):
@@ -580,7 +584,7 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="dadi.Godambe.FIM_uncert"><code class="name flex">
-<span>def <span class="ident">FIM_uncert</span></span>(<span>func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01)</span>
+<span>def <span class="ident">FIM_uncert</span></span>(<span>func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Parameter uncertainties from Fisher Information Matrix</p>
@@ -606,7 +610,7 @@ theta.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01):
+<pre><code class="python">def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False):
     &#34;&#34;&#34;
     Parameter uncertainties from Fisher Information Matrix
 
@@ -637,7 +641,11 @@ theta.</p></div>
         p0 = list(p0) + [theta_opt]
         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
     H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
-    return numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))</code></pre>
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    if not return_FIM:
+        return uncerts
+    else:
+        return uncerts, H</code></pre>
 </details>
 </dd>
 <dt id="dadi.Godambe.GIM_uncert"><code class="name flex">
@@ -716,7 +724,7 @@ data sets. Only valid when multinom=False.</p></div>
     if not return_GIM:
         return uncerts
     else:
-        return uncerts, GIM</code></pre>
+        return uncerts, GIM, H</code></pre>
 </details>
 </dd>
 <dt id="dadi.Godambe.LRT_adjust"><code class="name flex">

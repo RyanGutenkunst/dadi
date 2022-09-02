@@ -84,8 +84,8 @@ def plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=None,
             cb.set_label(&#39;Probability density&#39;)
 
     # Set to logscale. Use symlog because it handles negative values cleanly
-    ax.set_xscale(&#39;symlog&#39;, linthreshx=abs(gammax).min())
-    ax.set_yscale(&#39;symlog&#39;, linthreshy=abs(gammay).min())
+    ax.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
 
     ax.set_xlabel(xlabel, fontsize=&#39;large&#39;)
     ax.set_ylabel(ylabel, fontsize=&#39;large&#39;)
@@ -210,8 +210,8 @@ def plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params, rho=0,
     ax_ul.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
 
     # Set logarithmic scale on legative parts
-    ax_ll.set_xscale(&#39;symlog&#39;, linthreshx=abs(gammax).min())
-    ax_ll.set_yscale(&#39;symlog&#39;, linthreshy=abs(gammay).min())
+    ax_ll.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax_ll.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
 
     # Remove interior axes lines and tickmarks
     ax_ll.spines[&#39;right&#39;].set_visible(False)
@@ -340,8 +340,8 @@ clip_on: If False, plot will extend outside of axes.</p></div>
             cb.set_label(&#39;Probability density&#39;)
 
     # Set to logscale. Use symlog because it handles negative values cleanly
-    ax.set_xscale(&#39;symlog&#39;, linthreshx=abs(gammax).min())
-    ax.set_yscale(&#39;symlog&#39;, linthreshy=abs(gammay).min())
+    ax.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
 
     ax.set_xlabel(xlabel, fontsize=&#39;large&#39;)
     ax.set_ylabel(ylabel, fontsize=&#39;large&#39;)
@@ -501,8 +501,8 @@ vmin: Values below this will be colored white.</p></div>
     ax_ul.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
 
     # Set logarithmic scale on legative parts
-    ax_ll.set_xscale(&#39;symlog&#39;, linthreshx=abs(gammax).min())
-    ax_ll.set_yscale(&#39;symlog&#39;, linthreshy=abs(gammay).min())
+    ax_ll.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax_ll.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
 
     # Remove interior axes lines and tickmarks
     ax_ll.spines[&#39;right&#39;].set_visible(False)

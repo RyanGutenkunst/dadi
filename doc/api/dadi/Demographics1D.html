@@ -47,6 +47,8 @@ def snm_1d(notused, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+snm_1d.__param_names__ = []
+snm = snm_1d
 
 def two_epoch(params, ns, pts):
     &#34;&#34;&#34;
@@ -70,6 +72,7 @@ def two_epoch(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+two_epoch.__param_names__ = [&#39;nu&#39;, &#39;T&#39;]
 
 def growth(params, ns, pts):
     &#34;&#34;&#34;
@@ -94,8 +97,9 @@ def growth(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+growth.__param_names__ = [&#39;nu&#39;, &#39;T&#39;]
 
-def bottlegrowth(params, ns, pts):
+def bottlegrowth_1d(params, ns, pts):
     &#34;&#34;&#34;
     Instantanous size change followed by exponential growth.
 
@@ -120,6 +124,8 @@ def bottlegrowth(params, ns, pts):
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
+bottlegrowth_1d.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;T&#39;]
+bottlegrowth = bottlegrowth_1d
 
 def three_epoch(params, ns, pts):
     &#34;&#34;&#34;
@@ -143,7 +149,34 @@ def three_epoch(params, ns, pts):
     phi = Integration.one_pop(phi, xx, TF, nuF)
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
-    return fs</code></pre>
+    return fs
+three_epoch.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;TB&#39;, &#39;TF&#39;]
+
+def three_epoch_inbreeding(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,TB,TF,F)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    F: Inbreeding coefficent
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,TB,TF,F = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB)
+    phi = Integration.one_pop(phi, xx, TF, nuF)
+
+    fs = Spectrum.from_phi_inbreeding(phi, ns, (xx,), (F,), (2,))
+    return fs
+three_epoch_inbreeding.__param_names__ = [&#39;nuB&#39;, &#39;nuF&#39;, &#39;TB&#39;, &#39;TF&#39;, &#39;F&#39;]</code></pre>
 </details>
 </section>
 <section>
@@ -171,7 +204,52 @@ pts: Number of grid points to use in integration.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def bottlegrowth(params, ns, pts):
+<pre><code class="python">def bottlegrowth_1d(params, ns, pts):
+    &#34;&#34;&#34;
+    Instantanous size change followed by exponential growth.
+
+    params = (nuB,nuF,T)
+    ns = (n1,)
+
+    nuB: Ratio of population size after instantanous change to ancient
+         population size
+    nuF: Ratio of contemporary to ancient population size
+    T: Time in the past at which instantaneous change happened and growth began
+       (in units of 2*Na generations) 
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,T = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB) * t/T)
+    phi = Integration.one_pop(phi, xx, T, nu_func)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.Demographics1D.bottlegrowth_1d"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_1d</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Instantanous size change followed by exponential growth.</p>
+<p>params = (nuB,nuF,T)
+ns = (n1,)</p>
+<p>nuB: Ratio of population size after instantanous change to ancient
+population size
+nuF: Ratio of contemporary to ancient population size
+T: Time in the past at which instantaneous change happened and growth began
+(in units of 2*Na generations)
+n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_1d(params, ns, pts):
     &#34;&#34;&#34;
     Instantanous size change followed by exponential growth.
 
@@ -234,6 +312,34 @@ pts: Number of grid points to use in integration.</p></div>
 
     nu_func = lambda t: numpy.exp(numpy.log(nu) * t/T)
     phi = Integration.one_pop(phi, xx, T, nu_func)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.Demographics1D.snm"><code class="name flex">
+<span>def <span class="ident">snm</span></span>(<span>notused, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Standard neutral model.</p>
+<p>ns = (n1,)</p>
+<p>n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def snm_1d(notused, ns, pts):
+    &#34;&#34;&#34;
+    Standard neutral model.
+
+    ns = (n1,)
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
 
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs</code></pre>
@@ -308,6 +414,49 @@ pts: Number of grid points to use in integration.</p></div>
     return fs</code></pre>
 </details>
 </dd>
+<dt id="dadi.Demographics1D.three_epoch_inbreeding"><code class="name flex">
+<span>def <span class="ident">three_epoch_inbreeding</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params = (nuB,nuF,TB,TF,F)
+ns = (n1,)</p>
+<p>nuB: Ratio of bottleneck population size to ancient pop size
+nuF: Ratio of contemporary to ancient pop size
+TB: Length of bottleneck (in units of 2<em>Na generations)
+TF: Time since bottleneck recovery (in units of 2</em>Na generations)
+F: Inbreeding coefficent</p>
+<p>n1: Number of samples in resulting Spectrum
+pts: Number of grid points to use in integration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def three_epoch_inbreeding(params, ns, pts):
+    &#34;&#34;&#34;
+    params = (nuB,nuF,TB,TF,F)
+    ns = (n1,)
+
+    nuB: Ratio of bottleneck population size to ancient pop size
+    nuF: Ratio of contemporary to ancient pop size
+    TB: Length of bottleneck (in units of 2*Na generations) 
+    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    F: Inbreeding coefficent
+
+    n1: Number of samples in resulting Spectrum
+    pts: Number of grid points to use in integration.
+    &#34;&#34;&#34;
+    nuB,nuF,TB,TF,F = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+
+    phi = Integration.one_pop(phi, xx, TB, nuB)
+    phi = Integration.one_pop(phi, xx, TF, nuF)
+
+    fs = Spectrum.from_phi_inbreeding(phi, ns, (xx,), (F,), (2,))
+    return fs</code></pre>
+</details>
+</dd>
 <dt id="dadi.Demographics1D.two_epoch"><code class="name flex">
 <span>def <span class="ident">two_epoch</span></span>(<span>params, ns, pts)</span>
 </code></dt>
@@ -367,9 +516,12 @@ pts: Number of grid points to use in integration.</p></div>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="dadi.Demographics1D.bottlegrowth" href="#dadi.Demographics1D.bottlegrowth">bottlegrowth</a></code></li>
+<li><code><a title="dadi.Demographics1D.bottlegrowth_1d" href="#dadi.Demographics1D.bottlegrowth_1d">bottlegrowth_1d</a></code></li>
 <li><code><a title="dadi.Demographics1D.growth" href="#dadi.Demographics1D.growth">growth</a></code></li>
+<li><code><a title="dadi.Demographics1D.snm" href="#dadi.Demographics1D.snm">snm</a></code></li>
 <li><code><a title="dadi.Demographics1D.snm_1d" href="#dadi.Demographics1D.snm_1d">snm_1d</a></code></li>
 <li><code><a title="dadi.Demographics1D.three_epoch" href="#dadi.Demographics1D.three_epoch">three_epoch</a></code></li>
+<li><code><a title="dadi.Demographics1D.three_epoch_inbreeding" href="#dadi.Demographics1D.three_epoch_inbreeding">three_epoch_inbreeding</a></code></li>
 <li><code><a title="dadi.Demographics1D.two_epoch" href="#dadi.Demographics1D.two_epoch">two_epoch</a></code></li>
 </ul>
 </li>

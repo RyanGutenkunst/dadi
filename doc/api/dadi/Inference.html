@@ -31,7 +31,7 @@ Comparison and optimization of model spectra to data.
 import logging
 logger = logging.getLogger(&#39;Inference&#39;)
 
-import os,sys
+import os,sys, warnings
 
 import numpy
 from numpy import logical_and, logical_not
@@ -533,9 +533,9 @@ def ll_per_bin(model, data, missing_model_cutoff=1e-6):
     missing = logical_and(model &lt; 0, not_data_mask)
     if numpy.any(missing)\
        and data[missing].sum()/data.sum() &gt; missing_model_cutoff:
-        logger.warn(&#39;Model is &lt; 0 where data is not masked.&#39;)
-        logger.warn(&#39;Number of affected entries is %i. Sum of data in those &#39;
-                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+        logger.warning(&#39;Model is &lt; 0 where data is not masked.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
 
     # If the data is 0, it&#39;s okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.
@@ -1299,6 +1299,7 @@ def add_misid_param(func):
     list, which is the proportion of segregating sites whose ancestral state
     were misidentified.
     &#34;&#34;&#34;
+    warnings.warning(&#34;Inference.add_misid_param is deprecated. Please use the updated Numerics.make_anc_state_misd_func instead.\n&#34;, FutureWarning)
     def misid_func(params, *args, **kwargs):
         misid = params[-1]
         fs = func(params[:-1], *args, **kwargs)
@@ -1406,6 +1407,7 @@ were misidentified.</p></div>
     list, which is the proportion of segregating sites whose ancestral state
     were misidentified.
     &#34;&#34;&#34;
+    warnings.warning(&#34;Inference.add_misid_param is deprecated. Please use the updated Numerics.make_anc_state_misd_func instead.\n&#34;, FutureWarning)
     def misid_func(params, *args, **kwargs):
         misid = params[-1]
         fs = func(params[:-1], *args, **kwargs)
@@ -1590,9 +1592,9 @@ missing_model_cutoff, a warning is printed.</p></div>
     missing = logical_and(model &lt; 0, not_data_mask)
     if numpy.any(missing)\
        and data[missing].sum()/data.sum() &gt; missing_model_cutoff:
-        logger.warn(&#39;Model is &lt; 0 where data is not masked.&#39;)
-        logger.warn(&#39;Number of affected entries is %i. Sum of data in those &#39;
-                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+        logger.warning(&#39;Model is &lt; 0 where data is not masked.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
 
     # If the data is 0, it&#39;s okay for the model to be 0. In that case the ll
     # contribution is 0, which is fine.

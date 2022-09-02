@@ -977,7 +977,24 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
     if xx[-1] == 1:
         # I used Mathematica to check that this was the proper limit.
         phi[-1] = 1./int0
-    return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)</code></pre>
+    return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)
+
+
+def reorder_pops(phi, neworder):
+    &#34;&#34;&#34;
+    Get Spectrum with populations in new order
+
+    Returns new Spectrum with same number of populations, but in a different order
+
+    neworder: Integer list defining new order of populations, indexing the orginal
+              populations from 1. Must contain all integers from 1 to number of pops.
+    &#34;&#34;&#34;
+    if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:
+        raise(ValueError(&#34;neworder argument misspecified&#34;))
+    newaxes = [_-1 for _ in neworder]
+    phi = phi.transpose(newaxes)
+    
+    return phi</code></pre>
 </details>
 </section>
 <section>
@@ -2386,6 +2403,35 @@ popnum: Population number to remove, numbering from 1.</p></div>
     return Numerics.trapz(phi, xx, axis=popnum-1)</code></pre>
 </details>
 </dd>
+<dt id="dadi.PhiManip.reorder_pops"><code class="name flex">
+<span>def <span class="ident">reorder_pops</span></span>(<span>phi, neworder)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get Spectrum with populations in new order</p>
+<p>Returns new Spectrum with same number of populations, but in a different order</p>
+<p>neworder: Integer list defining new order of populations, indexing the orginal
+populations from 1. Must contain all integers from 1 to number of pops.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reorder_pops(phi, neworder):
+    &#34;&#34;&#34;
+    Get Spectrum with populations in new order
+
+    Returns new Spectrum with same number of populations, but in a different order
+
+    neworder: Integer list defining new order of populations, indexing the orginal
+              populations from 1. Must contain all integers from 1 to number of pops.
+    &#34;&#34;&#34;
+    if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:
+        raise(ValueError(&#34;neworder argument misspecified&#34;))
+    newaxes = [_-1 for _ in neworder]
+    phi = phi.transpose(newaxes)
+    
+    return phi</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -2432,6 +2478,7 @@ popnum: Population number to remove, numbering from 1.</p></div>
 <li><code><a title="dadi.PhiManip.phi_5D_admix_into_4" href="#dadi.PhiManip.phi_5D_admix_into_4">phi_5D_admix_into_4</a></code></li>
 <li><code><a title="dadi.PhiManip.phi_5D_admix_into_5" href="#dadi.PhiManip.phi_5D_admix_into_5">phi_5D_admix_into_5</a></code></li>
 <li><code><a title="dadi.PhiManip.remove_pop" href="#dadi.PhiManip.remove_pop">remove_pop</a></code></li>
+<li><code><a title="dadi.PhiManip.reorder_pops" href="#dadi.PhiManip.reorder_pops">reorder_pops</a></code></li>
 </ul>
 </li>
 </ul>
