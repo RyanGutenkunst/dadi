@@ -10,7 +10,7 @@ import ctypes, platform, sys
 from string import Template
 
 # Load library:
-from skcuda.cublas import _linux_version_list, _win32_version_list
+from dadi.cuda.skcuda_local.cublas import _linux_version_list, _win32_version_list
 if 'linux' in sys.platform:
     _libcusparse_libname_list = ['libcusparse.so'] + \
                                 ['libcusparse.so.%s' % v for v in _linux_version_list]
