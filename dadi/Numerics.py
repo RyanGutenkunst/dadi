@@ -13,7 +13,7 @@ from scipy.special import gammaln, betaln, beta
 _multinomln_cache = {}
 def multinomln(N):
     """
-    Get the multinomial coefficient for an array N.
+    Get the log of the multinomial coefficient for an array N.
     
     N: array of integers.
     """
