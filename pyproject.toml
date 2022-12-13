@@ -1,23 +1,36 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython", "numpy"]
+requires = ["wheel", "numpy", "Cython", "bdist_mpkg", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+#build-backend = "hatchling.build"
 
 [project]
-name = "dadi"
-#author = "Ryan Gutenkunst"
-#author_email = "rgutenk@arizona.edu"
-version = "2.2.0"
+name = "project-base-AB3NzaC1yc-setuptools"
+version= "1.0.1"
+
+description = "Fit population genetic models of demography and selection using diffusion approximations to the allele frequency spectrum"
 readme = "README.md"
 requires-python = ">=3.7"
-classifiers=[
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
+keywords = []
+authors = [
+    { name = "Ryan Gutenkunst", email = "rgutenk@arizona.edu" },
+]
+classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
-    "Topic :: Scientific/Engineering :: Bio-Informatics"
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "scipy",
+    "nlopt",
+    "Cython",
 ]
 
-[metadata]
-url = "https://bitbucket.org/gutenkunstlab/dadi"
+[project.urls]
+Documentation = "https://dadi.readthedocs.io/en/latest/"
+Source = "https://bitbucket.org/gutenkunstlab/dadi"
