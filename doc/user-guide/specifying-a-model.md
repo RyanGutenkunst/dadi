@@ -166,6 +166,8 @@ If you have DNA samples from multiple timepoints, you can construct a frequency 
 		nuAs_func = lambda t : nuAs0 * (nuAs/nuAs0) ** (t/(TEuAs+TMx))
 		phi = Integration.two_pops(phi, xx, TEuAs, nu1 = nuEu_func, nu2 = nuAs_func, m12 = mEuAs, m21 = mEuAs)
 
+		phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+
 		# Initial population sizes for this stretch of integration
 		nuEu0 = nuEu_func(TEuAs)
 		nuAs0 = nuAs_func(TEuAs)
