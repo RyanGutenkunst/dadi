@@ -159,6 +159,7 @@ class Cache2D:
         # Restrict our gammas and spectra to negative gammas.
         Nneg = len(self.neg_gammas)
         spectra = self.spectra[:Nneg, :Nneg]
+        params = np.array(params)
 
         # Weights for integration
         weights = sel_dist(-self.neg_gammas, -self.neg_gammas, params)
