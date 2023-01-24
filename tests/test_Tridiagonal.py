@@ -29,7 +29,7 @@ class TridiagonalTestCase(unittest.TestCase):
         """
         Test double precision tridiagonal routine
         """
-        u = dadi.tridiag.tridiag(self.a,self.b,self.c,self.r)
+        u = dadi.tridiag_cython.tridiag(self.a,self.b,self.c,self.r)
         rcheck = numpy.dot(self.arr,u)
 
         self.assert_(numpy.allclose(self.r, rcheck, atol=1e-8))
@@ -38,7 +38,7 @@ class TridiagonalTestCase(unittest.TestCase):
         """
         Test single precision tridiagonal routine
         """
-        u = dadi.tridiag.tridiag_fl(self.a,self.b,self.c,self.r)
+        u = dadi.tridiag_cython.tridiag_fl(self.a,self.b,self.c,self.r)
         rcheck = numpy.dot(self.arr,u)
 
         self.assert_(numpy.allclose(self.r, rcheck, atol=1e-3))
