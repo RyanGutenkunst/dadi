@@ -20,6 +20,7 @@ pipelines:
           script:
             - conda install -c conda-forge mamba
             - mamba install -c conda-forge scipy matplotlib numpy pytest demes nlopt python=3.8 -y
+            - python setup.py install
             - pytest -v tests/test_*.py --junitxml=test-reports/report.xml
       - step:
           name: Lint code
