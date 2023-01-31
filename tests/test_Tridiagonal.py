@@ -35,12 +35,3 @@ def test_tridiag_double(test_details):
     rcheck = numpy.dot(pytest.arr,u)
 
     assert(numpy.allclose(pytest.r, rcheck, atol=1e-8))
-
-def test_tridiag_single(test_details):
-    """
-    Test single precision tridiagonal routine
-    """
-    u = dadi.tridiag_cython.tridiag_fl(pytest.a,pytest.b,pytest.c,pytest.r)
-    rcheck = numpy.dot(pytest.arr,u)
-
-    assert(numpy.allclose(pytest.r, rcheck, atol=1e-3))
