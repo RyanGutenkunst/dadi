@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.Misc API documentation</title>
 <meta name="description" content="Miscellaneous utility functions. Including ms simulation." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -29,11 +29,15 @@
 Miscellaneous utility functions. Including ms simulation.
 &#34;&#34;&#34;
 
-import collections,os,sys,time
+import collections,os,sys,time, warnings
+def simple_warning(message, category, filename, lineno, file=None, line=None):
+    return &#39;%s&#39; % message
+warnings.formatwarning = simple_warning
 
 import numpy
 import scipy.linalg
 
+from .Spectrum_mod import Spectrum
 # Nucleotide order assumed in Q matrices.
 code = &#39;CGTA&#39;
 
@@ -76,9 +80,11 @@ def ensure_1arg_func(var):
     if numpy.isscalar(var):
         # If a constant was passed in, use lambda to make it a nice
         #  simple function.
-        var_f = lambda t: var
+        var_f_tmp = lambda t: var
     else:
-        var_f = var
+        var_f_tmp = var
+    # Wrapping arguments in float64 eases working with CUDA
+    var_f = lambda t: numpy.float64(var_f_tmp(t))
     if not callable(var_f):
         raise ValueError(&#39;Argument is not a constant or a function.&#39;)
     try:
@@ -134,7 +140,7 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     upper_bound: If not None, the resulting parameter set is adjusted to have
                  all value less than upper_bound.
     &#34;&#34;&#34;
-    pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
+    pnew = params * 2**(fold * (2*numpy.random.uniform(size=len(params))-1))
     if lower_bound is not None:
         for ii,bound in enumerate(lower_bound):
             if bound is None:
@@ -336,7 +342,7 @@ def count_data_dict(data_dict, pop_ids):
     polarized using an ancestral state.
     &#34;&#34;&#34;
     count_dict = collections.defaultdict(int)
-    for snp, snp_info in data_dict.items():
+    for snp_info in data_dict.values():
         # Skip SNPs that aren&#39;t biallelic.
         if len(snp_info[&#39;segregating&#39;]) != 2:
             continue
@@ -368,9 +374,11 @@ def count_data_dict(data_dict, pop_ids):
                    this_snp_polarized] += 1
     return count_dict
 
-def dd_from_SLiM_files(fnames, mut_types=None):
+def dd_from_SLiM_files(fnames, mut_types=None, chr=&#39;SLIM_&#39;):
     &#34;&#34;&#34;
     Create a data dictionary from a sequence of SLiM output files.
+
+    Returns the data dictionary and a sequence of sample sizes.
 
     It is assumed that each file corresponds to samples from a different
     population. For example, in SLiM:
@@ -380,7 +388,13 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     The populations will be named 0,1,2,... corresponding
     to their order in fnames.
 
-    TODO: Add filtering by mutation type.
+    fnames: Filenames to parse
+    mut_types: Sequence of mutation types to include. If None, all mutations
+               will be included.
+    chr: Prefix to be used for indicating mutation locations.
+
+    The keys in the resulting dictionary are of the form
+    &lt;chr&gt;_&lt;position&gt;.&lt;globalid&gt;
     &#34;&#34;&#34;
     # Open all the files
     try:
@@ -390,13 +404,15 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     # For each population, we&#39;ll first map the mutation ids used in the file to
     # the simulation-level global mutation ids
     mut_dicts = [{} for _ in fids]
+    loc_dict = {}
     for fid, mut_dict in zip(fids, mut_dicts):
         fid.readline(); fid.readline()
         line = fid.readline()
         while not line.startswith(&#39;Genomes:&#39;):
-            local_id, global_id, mut_type, _ = line.split(None, 3)
+            local_id, global_id, mut_type, location, _ = line.split(None, 4)
             if mut_types is None or mut_type in mut_types:
                 mut_dict[local_id] = global_id
+                loc_dict[global_id] = location
             line = fid.readline()
 
     # Now for each population we count each mutation
@@ -419,14 +435,15 @@ def dd_from_SLiM_files(fnames, mut_types=None):
     # Create the empty data dictionary
     dd = {}
     for global_id in all_muts:
-        dd[global_id] = {&#39;segregating&#39;: [0,1],
+        key = &#39;SLiM_&#39;+loc_dict[global_id] + &#39;.&#39; + global_id
+        dd[key] = {&#39;segregating&#39;: [0,1],
                          &#39;outgroup_allele&#39;: 0,
                          &#39;calls&#39;: {}}
         for pop_id, n in enumerate(sample_sizes):
             # We initialize each entry to indicate that the allele is not
             # segregating in the population, since in this case it&#39;s
             # not reported in that population&#39;s file.
-            dd[global_id][&#39;calls&#39;][pop_id] = [n, 0]
+            dd[key][&#39;calls&#39;][pop_id] = [n, 0]
 
     # Now update the alleles that are segregating in each population.
     for pop_ii, (mut_count, mut_dict)\
@@ -436,7 +453,8 @@ def dd_from_SLiM_files(fnames, mut_types=None):
                 # Lookup in mut_dict will fail if mutation isn&#39;t of appropriate
                 # type to include in this run.
                 global_id = mut_dict[local_id]
-                dd[global_id][&#39;calls&#39;][pop_ii] = (sample_sizes[pop_ii]-count, count)
+                key = &#39;SLiM_&#39;+loc_dict[global_id] + &#39;.&#39; + global_id
+                dd[key][&#39;calls&#39;][pop_ii] = (sample_sizes[pop_ii]-count, count)
             except KeyError:
                 pass
 
@@ -491,8 +509,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     do_subsampling = False
     if subsample is not None:
         do_subsampling = True
-        print(&#34;\n\n** Note on subsampling: Because you are subsampling individuals, please make sure not to project&#34;)
-        print(&#34;**                      down your data in future steps of your analysis.\n\n&#34;)
+        warnings.warn(&#39;Note on subsampling: If you will be including inbreeding in your model, &#39;
+                      &#39;do not project your data to smaller sample sizes in later steps of your analysis.&#39;)
 
     if os.path.splitext(popinfo_filename)[1] == &#39;.gz&#39;:
         import gzip
@@ -508,7 +526,10 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     else:
         popinfo_file = open(popinfo_filename)
     # pop_dict has key, value pairs of &#34;SAMPLE_NAME&#34; : &#34;POP_NAME&#34;
-    popinfo_dict = _get_popinfo(popinfo_file)
+    try:
+        popinfo_dict = _get_popinfo(popinfo_file)
+    except:
+        raise ValueError(&#39;Failed in parsing popinfo file.&#39;)
     popinfo_file.close()
 
     # Open VCF file
@@ -548,7 +569,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             continue
 
         # Read SNP data
-        cols = line.split()
+        # Data lines in VCF file are tab-delimited
+        # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
+        cols = line.split(&#34;\t&#34;)
         snp_id = &#39;_&#39;.join(cols[:2]) # CHROM_POS
         snp_dict = {}
 
@@ -567,8 +590,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         # Add ancestral allele information if available
         info = cols[7].split(&#39;;&#39;)
         for field in info:
-            if field.startswith(&#39;AA&#39;):
-                outgroup_allele = field[3:].upper()
+            if field.startswith(&#39;AA=&#39;) or field.startswith(&#39;AA_ensembl=&#39;) or field.startswith(&#39;AA_chimp=&#39;):
+                outgroup_allele = field.split(&#39;=&#39;)[1].upper()
                 if outgroup_allele not in [&#39;A&#39;,&#39;C&#39;,&#39;G&#39;,&#39;T&#39;]:
                     # Skip if ancestral not single base A, C, G, or T
                     outgroup_allele = &#39;-&#39;
@@ -582,7 +605,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         rflank, aflank = flanking_info
         for field in info:
             if rflank and field.startswith(rflank):
-                flank = field[len(rflank+1):].upper()
+                flank = field[len(rflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -593,7 +616,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 snp_dict[&#39;context&#39;] = prevb + ref + nextb
                 continue
             if aflank and field.startswith(aflank):
-                flank = field[len(aflank+1):].upper()
+                flank = field[len(aflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -605,54 +628,59 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
 
         calls_dict = {}
         subsample_dict = {}
-        full_info = True
         gtindex = cols[8].split(&#39;:&#39;).index(&#39;GT&#39;)
         if do_subsampling:
+            # Collect data for all genotyped samples
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
                 gt = sample.split(&#39;:&#39;)[gtindex]
-                g1, g2 = gt[0], gt[2]
-                if g1 == &#39;.&#39; or g2 == &#39;.&#39;:
-                    continue
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                subsample_dict[pop].append((g1, g2))
+                if &#39;.&#39; not in gt:
+                    subsample_dict[pop].append(gt)
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
-            for k,v in subsample_dict.items():
-                if k not in calls_dict:
-                    calls_dict[k] = (0, 0)
-                if len(v) &lt; subsample[k]:
-                    full_info = False
+            for pop, genotypes in subsample_dict.items():
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0, 0)
+                if len(genotypes) &lt; subsample[pop]:
+                    # Not enough calls for this SNP
                     break
-                idx = numpy.random.choice([i for i in range(0,len(v))],subsample[k],replace=False)
-                for i in idx:
-                    refcalls, altcalls = calls_dict[k]
-                    refcalls += int(v[i][0] == &#39;0&#39;) + int(v[i][1] == &#39;0&#39;)
-                    altcalls += int(v[i][0] == &#39;1&#39;) + int(v[i][1] == &#39;1&#39;)
-                    calls_dict[k] = (refcalls, altcalls)
-            if not full_info:
-                continue
-            snp_dict[&#39;calls&#39;] = calls_dict
-            data_dict[snp_id] = snp_dict
+                # Choose which individuals to use
+                idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
+                for ii in idx:
+                    gt = subsample_dict[pop][ii]
+                    refcalls, altcalls = calls_dict[pop]
+                    refcalls += gt[::2].count(&#39;0&#39;)
+                    altcalls += gt[::2].count(&#39;1&#39;)
+                    calls_dict[pop] = (refcalls, altcalls)
+            else:
+                # Only runs if we didn&#39;t break out of this loop
+                snp_dict[&#39;calls&#39;] = calls_dict
+                data_dict[snp_id] = snp_dict
         else:
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0,0)
+                # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(&#39;:&#39;)[gtindex]
-                g1, g2 = gt[0], gt[2]
-                if g1 == &#39;.&#39; or g2 == &#39;.&#39;:
-                    continue
+                #g1, g2 = gt[0], gt[2]
+                #if g1 == &#39;.&#39; or g2 == &#39;.&#39;:
+                #    continue
                     #full_info = False
                     #break
 
-                if pop not in calls_dict:
-                    calls_dict[pop] = (0,0)
                 refcalls, altcalls = calls_dict[pop]
-                refcalls += int(g1 == &#39;0&#39;) + int(g2 == &#39;0&#39;)
-                altcalls += int(g1 == &#39;1&#39;) + int(g2 == &#39;1&#39;)
+                #refcalls += int(g1 == &#39;0&#39;) + int(g2 == &#39;0&#39;)
+                #altcalls += int(g1 == &#39;1&#39;) + int(g2 == &#39;1&#39;)
+
+                # Assume biallelic variants
+                refcalls += gt[::2].count(&#39;0&#39;)
+                altcalls += gt[::2].count(&#39;1&#39;)
                 calls_dict[pop] = (refcalls, altcalls)
             snp_dict[&#39;calls&#39;] = calls_dict
             data_dict[snp_id] = snp_dict
@@ -699,7 +727,7 @@ def _get_popinfo(popinfo_file):
     # read in population information for each sample
     popinfo_file.seek(0)
     for line in popinfo_file:
-        if line.startswith(&#39;#&#39;):
+        if line.startswith(&#39;#&#39;) or not line.strip():
             continue
         cols = line.split()
         sample = cols[sample_col]
@@ -711,6 +739,30 @@ def _get_popinfo(popinfo_file):
         popinfo_dict[sample] = pop
 
     return popinfo_dict
+
+def annotate_from_annovar(dd, annovar_file, variant_type):
+    &#34;&#34;&#34;
+    Return a data dictionary with only the sites of a requested type of variation based on an ANNOVAR &#39;.exonic_variant_function&#39; output file.
+
+    dd: Data dictionary of sites of a requested type of annotation
+    annovar_file: Output file from ANNOVAR with the &#39;.exonic_variant_function&#39; extension
+    variant_type: The type of variant you want to make a data dictionary sites to contain
+    &#34;&#34;&#34;
+    anno_list = []
+    var_fid = open(annovar_file)
+    for line in var_fid:
+        variant = line.split(&#39;\t&#39;)[1]
+        position = &#39;_&#39;.join(line.split()[4:6])
+        if variant_type in variant:
+            anno_list.append(position)
+    var_fid.close()
+
+    dd_anno = {}
+    for key in dd:
+        if key in anno_list:
+            dd_anno[key] = dd[key]
+
+    return dd_anno
 
 def combine_pops(fs, idx=[0,1]):
     &#34;&#34;&#34;
@@ -737,13 +789,13 @@ def combine_pops(fs, idx=[0,1]):
             for ii in range(ns[0]+1):
                 for jj in range(ns[2]+1):
                     for kk in range(ns[1]+1):
-                        fs2[ii+kk,jj] += fs_tmp[ii,jj,kk]
+                        fs2[ii+jj,kk] += fs_tmp[ii,kk,jj]
         elif idx == [1,2]:
             fs2 = numpy.zeros((ns[1]+ns[2]+1,ns[0]+1))
             for ii in range(ns[1]+1):
                 for jj in range(ns[2]+1):
                     for kk in range(ns[0]+1):
-                        fs2[jj+kk,ii] += fs_tmp[ii,jj,kk]
+                        fs2[ii+jj,kk] += fs_tmp[kk,ii,jj]
         else:
             print(&#34;Error: did not recognize population indices: {}&#34;.format(idx))
             exit(-1)
@@ -756,7 +808,116 @@ def combine_pops(fs, idx=[0,1]):
     else:
         print(&#34;Error: could not combine populations.&#34;)
         exit(-1)
-    return fs2</code></pre>
+    fs2 = Spectrum(fs2)
+    fs2.extrap_x = fs.extrap_x
+    return fs2
+
+def fragment_data_dict(dd, chunk_size):
+    &#34;&#34;&#34;
+    Split data dictionary for bootstrapping.
+
+    For bootstrapping, split the data dictionary in subdictionaries
+    for each chunk of the genome. The chunk_size is given in
+    basepairs.
+
+    This method assumes that keys in the dictionary are
+    chromosome_position[.additional_info]
+    The [.additional_info] is optional, and can be used to distinguish 
+    recurrent mutations at the same site.
+
+    dd: Data dictionary to split
+    chunk_size: Size of genomic chunks in basepairs
+
+    Return: List of dictionaries corresponding to each chunk.
+    &#34;&#34;&#34;
+    # split dictionary by chromosome name
+    ndd = collections.defaultdict(list)
+    for k in dd.keys():
+        spl = k.split(&#39;.&#39;)[0].split(&#39;_&#39;)
+        chrname, position = &#39;_&#39;.join(k.split(&#39;_&#39;)[:-1]), k.split(&#39;_&#39;)[-1]
+        # Track additional_info
+        if not &#39;.&#39; in position:
+            add_info = None
+        else:
+            position, add_info = position.split(&#39;.&#39;,1)
+        ndd[chrname].append((int(position), add_info))
+            
+    # generate chunks with given chunk size
+    chunks_dict = collections.defaultdict(list)
+    for chrname in ndd.keys():
+        positions = sorted(ndd[chrname])
+        end = chunk_size
+        chunk_index = 0
+        chunks_dict[chrname].append([])
+        for p, add_info in positions:
+            while p &gt; end: 
+                # Need a new chunk
+                end += chunk_size
+                chunk_index += 1
+                chunks_dict[chrname].append([])
+            chunks_dict[chrname][chunk_index].append((p, add_info))
+
+    # Break data dictionary into dictionaries for each chunk
+    new_dds = []
+    for chrname, chunks in chunks_dict.items():
+        for pos_list in chunks:
+            new_dds.append({})
+            for pos, add_info in pos_list:
+                if not add_info:
+                    key = &#39;{0}_{1}&#39;.format(chrname,pos)
+                else:
+                    key = &#39;{0}_{1}.{2}&#39;.format(chrname,pos,add_info)
+                new_dds[-1][key] = dd[key]
+
+    return new_dds
+
+import numpy as np
+import random
+from .Spectrum_mod import Spectrum
+import functools, operator
+
+def bootstraps_from_dd_chunks(fragments, Nboot, pop_ids, projections, mask_corners=True, polarized=True):
+    &#34;&#34;&#34;
+    Bootstrap frequency spectra from data dictionary fragments
+
+    fragments: Fragmented data dictionary
+    Nboot: Number of bootstrap spectra to generate
+    Remaining arguments are as in Spectrum.from_data_dict
+    &#34;&#34;&#34;
+    spectra = [Spectrum.from_data_dict(dd, pop_ids, projections, mask_corners, polarized)
+               for dd in fragments]
+
+    bootstraps = []
+    for ii in range(Nboot):
+        chosen = random.choices(spectra, k=len(spectra))
+        bootstraps.append(functools.reduce(operator.add, chosen))
+
+    bootstraps = [Spectrum(_, mask_corners=mask_corners, data_folded=not polarized, pop_ids=pop_ids)
+                  for _ in bootstraps]
+    return bootstraps
+
+def bootstraps_subsample_vcf(vcf_filename, popinfo_filename, subsample, Nboot, chunk_size, pop_ids, filter=True,
+                             flanking_info=[None, None], mask_corners=True, polarized=True):
+    &#34;&#34;&#34;
+    Bootstrap frequency spectra from subsampling in VCF file
+
+    This method is useful when you have subsampled individuals. You might do this
+    because you&#39;re modeling inbreeding, or because you want to avoid composite likelihood
+    complications (if your data is unlinked).
+
+    Nboot: Number of boostrap spectra to generate
+    chunk_size: Size of regions to divide genome into (in basepairs)
+    Other arguments are as in make_data_dict_vcf and Spectrum.from_data_dict.
+    &#34;&#34;&#34;
+    bootstraps = []
+    projections = [subsample[pop]*2 for pop in pop_ids]
+    for ii in range(Nboot):
+        dd = make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=subsample, filter=filter,
+                                flanking_info=flanking_info)
+        fragments = fragment_data_dict(dd, chunk_size)
+        fs = bootstraps_from_dd_chunks(fragments, 1, pop_ids, projections, mask_corners, polarized)[0]
+        bootstraps.append(fs)
+    return bootstraps</code></pre>
 </details>
 </section>
 <section>
@@ -766,18 +927,127 @@ def combine_pops(fs, idx=[0,1]):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="dadi.Misc.annotate_from_annovar"><code class="name flex">
+<span>def <span class="ident">annotate_from_annovar</span></span>(<span>dd, annovar_file, variant_type)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a data dictionary with only the sites of a requested type of variation based on an ANNOVAR '.exonic_variant_function' output file.</p>
+<p>dd: Data dictionary of sites of a requested type of annotation
+annovar_file: Output file from ANNOVAR with the '.exonic_variant_function' extension
+variant_type: The type of variant you want to make a data dictionary sites to contain</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def annotate_from_annovar(dd, annovar_file, variant_type):
+    &#34;&#34;&#34;
+    Return a data dictionary with only the sites of a requested type of variation based on an ANNOVAR &#39;.exonic_variant_function&#39; output file.
+
+    dd: Data dictionary of sites of a requested type of annotation
+    annovar_file: Output file from ANNOVAR with the &#39;.exonic_variant_function&#39; extension
+    variant_type: The type of variant you want to make a data dictionary sites to contain
+    &#34;&#34;&#34;
+    anno_list = []
+    var_fid = open(annovar_file)
+    for line in var_fid:
+        variant = line.split(&#39;\t&#39;)[1]
+        position = &#39;_&#39;.join(line.split()[4:6])
+        if variant_type in variant:
+            anno_list.append(position)
+    var_fid.close()
+
+    dd_anno = {}
+    for key in dd:
+        if key in anno_list:
+            dd_anno[key] = dd[key]
+
+    return dd_anno</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.bootstraps_from_dd_chunks"><code class="name flex">
+<span>def <span class="ident">bootstraps_from_dd_chunks</span></span>(<span>fragments, Nboot, pop_ids, projections, mask_corners=True, polarized=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Bootstrap frequency spectra from data dictionary fragments</p>
+<p>fragments: Fragmented data dictionary
+Nboot: Number of bootstrap spectra to generate
+Remaining arguments are as in Spectrum.from_data_dict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bootstraps_from_dd_chunks(fragments, Nboot, pop_ids, projections, mask_corners=True, polarized=True):
+    &#34;&#34;&#34;
+    Bootstrap frequency spectra from data dictionary fragments
+
+    fragments: Fragmented data dictionary
+    Nboot: Number of bootstrap spectra to generate
+    Remaining arguments are as in Spectrum.from_data_dict
+    &#34;&#34;&#34;
+    spectra = [Spectrum.from_data_dict(dd, pop_ids, projections, mask_corners, polarized)
+               for dd in fragments]
+
+    bootstraps = []
+    for ii in range(Nboot):
+        chosen = random.choices(spectra, k=len(spectra))
+        bootstraps.append(functools.reduce(operator.add, chosen))
+
+    bootstraps = [Spectrum(_, mask_corners=mask_corners, data_folded=not polarized, pop_ids=pop_ids)
+                  for _ in bootstraps]
+    return bootstraps</code></pre>
+</details>
+</dd>
+<dt id="dadi.Misc.bootstraps_subsample_vcf"><code class="name flex">
+<span>def <span class="ident">bootstraps_subsample_vcf</span></span>(<span>vcf_filename, popinfo_filename, subsample, Nboot, chunk_size, pop_ids, filter=True, flanking_info=[None, None], mask_corners=True, polarized=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Bootstrap frequency spectra from subsampling in VCF file</p>
+<p>This method is useful when you have subsampled individuals. You might do this
+because you're modeling inbreeding, or because you want to avoid composite likelihood
+complications (if your data is unlinked).</p>
+<p>Nboot: Number of boostrap spectra to generate
+chunk_size: Size of regions to divide genome into (in basepairs)
+Other arguments are as in make_data_dict_vcf and Spectrum.from_data_dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bootstraps_subsample_vcf(vcf_filename, popinfo_filename, subsample, Nboot, chunk_size, pop_ids, filter=True,
+                             flanking_info=[None, None], mask_corners=True, polarized=True):
+    &#34;&#34;&#34;
+    Bootstrap frequency spectra from subsampling in VCF file
+
+    This method is useful when you have subsampled individuals. You might do this
+    because you&#39;re modeling inbreeding, or because you want to avoid composite likelihood
+    complications (if your data is unlinked).
+
+    Nboot: Number of boostrap spectra to generate
+    chunk_size: Size of regions to divide genome into (in basepairs)
+    Other arguments are as in make_data_dict_vcf and Spectrum.from_data_dict.
+    &#34;&#34;&#34;
+    bootstraps = []
+    projections = [subsample[pop]*2 for pop in pop_ids]
+    for ii in range(Nboot):
+        dd = make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=subsample, filter=filter,
+                                flanking_info=flanking_info)
+        fragments = fragment_data_dict(dd, chunk_size)
+        fs = bootstraps_from_dd_chunks(fragments, 1, pop_ids, projections, mask_corners, polarized)[0]
+        bootstraps.append(fs)
+    return bootstraps</code></pre>
+</details>
+</dd>
 <dt id="dadi.Misc.combine_pops"><code class="name flex">
 <span>def <span class="ident">combine_pops</span></span>(<span>fs, idx=[0, 1])</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Combine the frequency spectra of two populations.
+<div class="desc"><p>Combine the frequency spectra of two populations.
 fs:
 Spectrum object (2D or 3D).
 idx: Indices for populations being collapsed. (defaul=[0,1])</p>
 <p>The function will always return the combined populations along the
 first axis of the sfs. The resulting spectrum is also returned
 as a numpy array, but can be converted to a Spectrum object
-using the dadi.Spectrum() function.</p></section>
+using the dadi.Spectrum() function.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -807,13 +1077,13 @@ using the dadi.Spectrum() function.</p></section>
             for ii in range(ns[0]+1):
                 for jj in range(ns[2]+1):
                     for kk in range(ns[1]+1):
-                        fs2[ii+kk,jj] += fs_tmp[ii,jj,kk]
+                        fs2[ii+jj,kk] += fs_tmp[ii,kk,jj]
         elif idx == [1,2]:
             fs2 = numpy.zeros((ns[1]+ns[2]+1,ns[0]+1))
             for ii in range(ns[1]+1):
                 for jj in range(ns[2]+1):
                     for kk in range(ns[0]+1):
-                        fs2[jj+kk,ii] += fs_tmp[ii,jj,kk]
+                        fs2[ii+jj,kk] += fs_tmp[kk,ii,jj]
         else:
             print(&#34;Error: did not recognize population indices: {}&#34;.format(idx))
             exit(-1)
@@ -826,6 +1096,8 @@ using the dadi.Spectrum() function.</p></section>
     else:
         print(&#34;Error: could not combine populations.&#34;)
         exit(-1)
+    fs2 = Spectrum(fs2)
+    fs2.extrap_x = fs.extrap_x
     return fs2</code></pre>
 </details>
 </dd>
@@ -833,14 +1105,14 @@ using the dadi.Spectrum() function.</p></section>
 <span>def <span class="ident">count_data_dict</span></span>(<span>data_dict, pop_ids)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Summarize data in data_dict by mapping SNP configurations to counts.</p>
+<div class="desc"><p>Summarize data in data_dict by mapping SNP configurations to counts.</p>
 <p>data_dict: data_dict formatted as in Misc.make_data_dict
 pop_ids: IDs of populations to collect data for.</p>
 <p>Returns a dictionary with keys (successful_calls, derived_calls,
 polarized) mapping to counts of SNPs. Here successful_calls is a tuple
 with the number of good calls per population, derived_calls is a tuple
 of derived calls per pop, and polarized indicates whether that SNP was
-polarized using an ancestral state.</p></section>
+polarized using an ancestral state.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -859,7 +1131,7 @@ polarized using an ancestral state.</p></section>
     polarized using an ancestral state.
     &#34;&#34;&#34;
     count_dict = collections.defaultdict(int)
-    for snp, snp_info in data_dict.items():
+    for snp_info in data_dict.values():
         # Skip SNPs that aren&#39;t biallelic.
         if len(snp_info[&#39;segregating&#39;]) != 2:
             continue
@@ -893,24 +1165,32 @@ polarized using an ancestral state.</p></section>
 </details>
 </dd>
 <dt id="dadi.Misc.dd_from_SLiM_files"><code class="name flex">
-<span>def <span class="ident">dd_from_SLiM_files</span></span>(<span>fnames, mut_types=None)</span>
+<span>def <span class="ident">dd_from_SLiM_files</span></span>(<span>fnames, mut_types=None, chr='SLIM_')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Create a data dictionary from a sequence of SLiM output files.</p>
+<div class="desc"><p>Create a data dictionary from a sequence of SLiM output files.</p>
+<p>Returns the data dictionary and a sequence of sample sizes.</p>
 <p>It is assumed that each file corresponds to samples from a different
 population. For example, in SLiM:
 p1.outputSample(10, filePath='p1.slimout');
 p2.outputSample(10, filePath='p2.slimout');</p>
 <p>The populations will be named 0,1,2,&hellip; corresponding
 to their order in fnames.</p>
-<p>TODO: Add filtering by mutation type.</p></section>
+<p>fnames: Filenames to parse
+mut_types: Sequence of mutation types to include. If None, all mutations
+will be included.
+chr: Prefix to be used for indicating mutation locations.</p>
+<p>The keys in the resulting dictionary are of the form
+<chr>_<position>.<globalid></p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def dd_from_SLiM_files(fnames, mut_types=None):
+<pre><code class="python">def dd_from_SLiM_files(fnames, mut_types=None, chr=&#39;SLIM_&#39;):
     &#34;&#34;&#34;
     Create a data dictionary from a sequence of SLiM output files.
+
+    Returns the data dictionary and a sequence of sample sizes.
 
     It is assumed that each file corresponds to samples from a different
     population. For example, in SLiM:
@@ -920,7 +1200,13 @@ to their order in fnames.</p>
     The populations will be named 0,1,2,... corresponding
     to their order in fnames.
 
-    TODO: Add filtering by mutation type.
+    fnames: Filenames to parse
+    mut_types: Sequence of mutation types to include. If None, all mutations
+               will be included.
+    chr: Prefix to be used for indicating mutation locations.
+
+    The keys in the resulting dictionary are of the form
+    &lt;chr&gt;_&lt;position&gt;.&lt;globalid&gt;
     &#34;&#34;&#34;
     # Open all the files
     try:
@@ -930,13 +1216,15 @@ to their order in fnames.</p>
     # For each population, we&#39;ll first map the mutation ids used in the file to
     # the simulation-level global mutation ids
     mut_dicts = [{} for _ in fids]
+    loc_dict = {}
     for fid, mut_dict in zip(fids, mut_dicts):
         fid.readline(); fid.readline()
         line = fid.readline()
         while not line.startswith(&#39;Genomes:&#39;):
-            local_id, global_id, mut_type, _ = line.split(None, 3)
+            local_id, global_id, mut_type, location, _ = line.split(None, 4)
             if mut_types is None or mut_type in mut_types:
                 mut_dict[local_id] = global_id
+                loc_dict[global_id] = location
             line = fid.readline()
 
     # Now for each population we count each mutation
@@ -959,14 +1247,15 @@ to their order in fnames.</p>
     # Create the empty data dictionary
     dd = {}
     for global_id in all_muts:
-        dd[global_id] = {&#39;segregating&#39;: [0,1],
+        key = &#39;SLiM_&#39;+loc_dict[global_id] + &#39;.&#39; + global_id
+        dd[key] = {&#39;segregating&#39;: [0,1],
                          &#39;outgroup_allele&#39;: 0,
                          &#39;calls&#39;: {}}
         for pop_id, n in enumerate(sample_sizes):
             # We initialize each entry to indicate that the allele is not
             # segregating in the population, since in this case it&#39;s
             # not reported in that population&#39;s file.
-            dd[global_id][&#39;calls&#39;][pop_id] = [n, 0]
+            dd[key][&#39;calls&#39;][pop_id] = [n, 0]
 
     # Now update the alleles that are segregating in each population.
     for pop_ii, (mut_count, mut_dict)\
@@ -976,7 +1265,8 @@ to their order in fnames.</p>
                 # Lookup in mut_dict will fail if mutation isn&#39;t of appropriate
                 # type to include in this run.
                 global_id = mut_dict[local_id]
-                dd[global_id][&#39;calls&#39;][pop_ii] = (sample_sizes[pop_ii]-count, count)
+                key = &#39;SLiM_&#39;+loc_dict[global_id] + &#39;.&#39; + global_id
+                dd[key][&#39;calls&#39;][pop_ii] = (sample_sizes[pop_ii]-count, count)
             except KeyError:
                 pass
 
@@ -987,12 +1277,12 @@ to their order in fnames.</p>
 <span>def <span class="ident">delayed_flush</span></span>(<span>stream=sys.stdout, delay=1)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Flush a stream, ensuring that it is only flushed every 'delay' <em>minutes</em>.
+<div class="desc"><p>Flush a stream, ensuring that it is only flushed every 'delay' <em>minutes</em>.
 Note that upon the first call to this method, the stream is not flushed.</p>
 <p>stream: The stream to flush. For this to work with simple 'print'
 statements, the stream should be sys.stdout.
 delay: Minimum time <em>in minutes</em> between flushes.</p>
-<p>This function is useful to prevent I/O overload on the cluster.</p></section>
+<p>This function is useful to prevent I/O overload on the cluster.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1028,10 +1318,10 @@ delay: Minimum time <em>in minutes</em> between flushes.</p>
 <span>def <span class="ident">ensure_1arg_func</span></span>(<span>var)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Ensure that var is actually a one-argument function.</p>
+<div class="desc"><p>Ensure that var is actually a one-argument function.</p>
 <p>This is primarily used to convert arguments that are constants into
 trivial functions of time for use in integrations where parameters are
-allowed to change over time.</p></section>
+allowed to change over time.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1047,9 +1337,11 @@ allowed to change over time.</p></section>
     if numpy.isscalar(var):
         # If a constant was passed in, use lambda to make it a nice
         #  simple function.
-        var_f = lambda t: var
+        var_f_tmp = lambda t: var
     else:
-        var_f = var
+        var_f_tmp = var
+    # Wrapping arguments in float64 eases working with CUDA
+    var_f = lambda t: numpy.float64(var_f_tmp(t))
     if not callable(var_f):
         raise ValueError(&#39;Argument is not a constant or a function.&#39;)
     try:
@@ -1060,16 +1352,95 @@ allowed to change over time.</p></section>
     return var_f</code></pre>
 </details>
 </dd>
+<dt id="dadi.Misc.fragment_data_dict"><code class="name flex">
+<span>def <span class="ident">fragment_data_dict</span></span>(<span>dd, chunk_size)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Split data dictionary for bootstrapping.</p>
+<p>For bootstrapping, split the data dictionary in subdictionaries
+for each chunk of the genome. The chunk_size is given in
+basepairs.</p>
+<p>This method assumes that keys in the dictionary are
+chromosome_position[.additional_info]
+The [.additional_info] is optional, and can be used to distinguish
+recurrent mutations at the same site.</p>
+<p>dd: Data dictionary to split
+chunk_size: Size of genomic chunks in basepairs</p>
+<p>Return: List of dictionaries corresponding to each chunk.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fragment_data_dict(dd, chunk_size):
+    &#34;&#34;&#34;
+    Split data dictionary for bootstrapping.
+
+    For bootstrapping, split the data dictionary in subdictionaries
+    for each chunk of the genome. The chunk_size is given in
+    basepairs.
+
+    This method assumes that keys in the dictionary are
+    chromosome_position[.additional_info]
+    The [.additional_info] is optional, and can be used to distinguish 
+    recurrent mutations at the same site.
+
+    dd: Data dictionary to split
+    chunk_size: Size of genomic chunks in basepairs
+
+    Return: List of dictionaries corresponding to each chunk.
+    &#34;&#34;&#34;
+    # split dictionary by chromosome name
+    ndd = collections.defaultdict(list)
+    for k in dd.keys():
+        spl = k.split(&#39;.&#39;)[0].split(&#39;_&#39;)
+        chrname, position = &#39;_&#39;.join(k.split(&#39;_&#39;)[:-1]), k.split(&#39;_&#39;)[-1]
+        # Track additional_info
+        if not &#39;.&#39; in position:
+            add_info = None
+        else:
+            position, add_info = position.split(&#39;.&#39;,1)
+        ndd[chrname].append((int(position), add_info))
+            
+    # generate chunks with given chunk size
+    chunks_dict = collections.defaultdict(list)
+    for chrname in ndd.keys():
+        positions = sorted(ndd[chrname])
+        end = chunk_size
+        chunk_index = 0
+        chunks_dict[chrname].append([])
+        for p, add_info in positions:
+            while p &gt; end: 
+                # Need a new chunk
+                end += chunk_size
+                chunk_index += 1
+                chunks_dict[chrname].append([])
+            chunks_dict[chrname][chunk_index].append((p, add_info))
+
+    # Break data dictionary into dictionaries for each chunk
+    new_dds = []
+    for chrname, chunks in chunks_dict.items():
+        for pos_list in chunks:
+            new_dds.append({})
+            for pos, add_info in pos_list:
+                if not add_info:
+                    key = &#39;{0}_{1}&#39;.format(chrname,pos)
+                else:
+                    key = &#39;{0}_{1}.{2}&#39;.format(chrname,pos,add_info)
+                new_dds[-1][key] = dd[key]
+
+    return new_dds</code></pre>
+</details>
+</dd>
 <dt id="dadi.Misc.make_data_dict"><code class="name flex">
 <span>def <span class="ident">make_data_dict</span></span>(<span>filename)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Parse SNP file and store info in a properly formatted dictionary.</p>
+<div class="desc"><p>Parse SNP file and store info in a properly formatted dictionary.</p>
 <p>filename: Name of file to work with.</p>
 <p>This is specific to the particular data format described on the wiki.
 Modification for other formats should be straightforward.</p>
 <p>The file can be zipped (extension .zip) or gzipped (extension .gz). If
-zipped, there must be only a single file in the zip archive.</p></section>
+zipped, there must be only a single file in the zip archive.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1149,7 +1520,7 @@ zipped, there must be only a single file in the zip archive.</p></section>
 <span>def <span class="ident">make_data_dict_vcf</span></span>(<span>vcf_filename, popinfo_filename, subsample=None, filter=True, flanking_info=[None, None])</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Parse a VCF file containing genomic sequence information, along with a file
+<div class="desc"><p>Parse a VCF file containing genomic sequence information, along with a file
 identifying the population of each sample, and store the information in
 a properly formatted dictionary.</p>
 <p>Each file may be zipped (.zip) or gzipped (.gz). If a file is zipped,
@@ -1184,7 +1555,7 @@ only one allele, set the other item in the list to None,
 (e.g. ['RFL', None]). Information can be provided as a 3
 base-pair sequence or 2 base-pair sequence, where the first
 base-pair is the one immediately preceding the SNP, and the
-last base-pair is the one immediately following the SNP.</p></section>
+last base-pair is the one immediately following the SNP.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1238,8 +1609,8 @@ last base-pair is the one immediately following the SNP.</p></section>
     do_subsampling = False
     if subsample is not None:
         do_subsampling = True
-        print(&#34;\n\n** Note on subsampling: Because you are subsampling individuals, please make sure not to project&#34;)
-        print(&#34;**                      down your data in future steps of your analysis.\n\n&#34;)
+        warnings.warn(&#39;Note on subsampling: If you will be including inbreeding in your model, &#39;
+                      &#39;do not project your data to smaller sample sizes in later steps of your analysis.&#39;)
 
     if os.path.splitext(popinfo_filename)[1] == &#39;.gz&#39;:
         import gzip
@@ -1255,7 +1626,10 @@ last base-pair is the one immediately following the SNP.</p></section>
     else:
         popinfo_file = open(popinfo_filename)
     # pop_dict has key, value pairs of &#34;SAMPLE_NAME&#34; : &#34;POP_NAME&#34;
-    popinfo_dict = _get_popinfo(popinfo_file)
+    try:
+        popinfo_dict = _get_popinfo(popinfo_file)
+    except:
+        raise ValueError(&#39;Failed in parsing popinfo file.&#39;)
     popinfo_file.close()
 
     # Open VCF file
@@ -1295,7 +1669,9 @@ last base-pair is the one immediately following the SNP.</p></section>
             continue
 
         # Read SNP data
-        cols = line.split()
+        # Data lines in VCF file are tab-delimited
+        # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
+        cols = line.split(&#34;\t&#34;)
         snp_id = &#39;_&#39;.join(cols[:2]) # CHROM_POS
         snp_dict = {}
 
@@ -1314,8 +1690,8 @@ last base-pair is the one immediately following the SNP.</p></section>
         # Add ancestral allele information if available
         info = cols[7].split(&#39;;&#39;)
         for field in info:
-            if field.startswith(&#39;AA&#39;):
-                outgroup_allele = field[3:].upper()
+            if field.startswith(&#39;AA=&#39;) or field.startswith(&#39;AA_ensembl=&#39;) or field.startswith(&#39;AA_chimp=&#39;):
+                outgroup_allele = field.split(&#39;=&#39;)[1].upper()
                 if outgroup_allele not in [&#39;A&#39;,&#39;C&#39;,&#39;G&#39;,&#39;T&#39;]:
                     # Skip if ancestral not single base A, C, G, or T
                     outgroup_allele = &#39;-&#39;
@@ -1329,7 +1705,7 @@ last base-pair is the one immediately following the SNP.</p></section>
         rflank, aflank = flanking_info
         for field in info:
             if rflank and field.startswith(rflank):
-                flank = field[len(rflank+1):].upper()
+                flank = field[len(rflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -1340,7 +1716,7 @@ last base-pair is the one immediately following the SNP.</p></section>
                 snp_dict[&#39;context&#39;] = prevb + ref + nextb
                 continue
             if aflank and field.startswith(aflank):
-                flank = field[len(aflank+1):].upper()
+                flank = field[len(aflank)+1:].upper()
                 if not (len(flank) == 2 or len(flank) == 3):
                     continue
                 prevb, nextb = flank[0], flank[-1]
@@ -1352,54 +1728,59 @@ last base-pair is the one immediately following the SNP.</p></section>
 
         calls_dict = {}
         subsample_dict = {}
-        full_info = True
         gtindex = cols[8].split(&#39;:&#39;).index(&#39;GT&#39;)
         if do_subsampling:
+            # Collect data for all genotyped samples
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
                 gt = sample.split(&#39;:&#39;)[gtindex]
-                g1, g2 = gt[0], gt[2]
-                if g1 == &#39;.&#39; or g2 == &#39;.&#39;:
-                    continue
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                subsample_dict[pop].append((g1, g2))
+                if &#39;.&#39; not in gt:
+                    subsample_dict[pop].append(gt)
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
-            for k,v in subsample_dict.items():
-                if k not in calls_dict:
-                    calls_dict[k] = (0, 0)
-                if len(v) &lt; subsample[k]:
-                    full_info = False
+            for pop, genotypes in subsample_dict.items():
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0, 0)
+                if len(genotypes) &lt; subsample[pop]:
+                    # Not enough calls for this SNP
                     break
-                idx = numpy.random.choice([i for i in range(0,len(v))],subsample[k],replace=False)
-                for i in idx:
-                    refcalls, altcalls = calls_dict[k]
-                    refcalls += int(v[i][0] == &#39;0&#39;) + int(v[i][1] == &#39;0&#39;)
-                    altcalls += int(v[i][0] == &#39;1&#39;) + int(v[i][1] == &#39;1&#39;)
-                    calls_dict[k] = (refcalls, altcalls)
-            if not full_info:
-                continue
-            snp_dict[&#39;calls&#39;] = calls_dict
-            data_dict[snp_id] = snp_dict
+                # Choose which individuals to use
+                idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
+                for ii in idx:
+                    gt = subsample_dict[pop][ii]
+                    refcalls, altcalls = calls_dict[pop]
+                    refcalls += gt[::2].count(&#39;0&#39;)
+                    altcalls += gt[::2].count(&#39;1&#39;)
+                    calls_dict[pop] = (refcalls, altcalls)
+            else:
+                # Only runs if we didn&#39;t break out of this loop
+                snp_dict[&#39;calls&#39;] = calls_dict
+                data_dict[snp_id] = snp_dict
         else:
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0,0)
+                # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(&#39;:&#39;)[gtindex]
-                g1, g2 = gt[0], gt[2]
-                if g1 == &#39;.&#39; or g2 == &#39;.&#39;:
-                    continue
+                #g1, g2 = gt[0], gt[2]
+                #if g1 == &#39;.&#39; or g2 == &#39;.&#39;:
+                #    continue
                     #full_info = False
                     #break
 
-                if pop not in calls_dict:
-                    calls_dict[pop] = (0,0)
                 refcalls, altcalls = calls_dict[pop]
-                refcalls += int(g1 == &#39;0&#39;) + int(g2 == &#39;0&#39;)
-                altcalls += int(g1 == &#39;1&#39;) + int(g2 == &#39;1&#39;)
+                #refcalls += int(g1 == &#39;0&#39;) + int(g2 == &#39;0&#39;)
+                #altcalls += int(g1 == &#39;1&#39;) + int(g2 == &#39;1&#39;)
+
+                # Assume biallelic variants
+                refcalls += gt[::2].count(&#39;0&#39;)
+                altcalls += gt[::2].count(&#39;1&#39;)
                 calls_dict[pop] = (refcalls, altcalls)
             snp_dict[&#39;calls&#39;] = calls_dict
             data_dict[snp_id] = snp_dict
@@ -1412,7 +1793,7 @@ last base-pair is the one immediately following the SNP.</p></section>
 <span>def <span class="ident">make_fux_table</span></span>(<span>fid, ts, Q, tri_freq)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Make file of 1-fux for use in ancestral misidentification correction.</p>
+<div class="desc"><p>Make file of 1-fux for use in ancestral misidentification correction.</p>
 <p>fid: Filename to output to.
 ts: Expected number of substitutions per site between ingroup and outgroup.
 Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
@@ -1422,7 +1803,7 @@ entry 50,54.
 tri_freq: Dictionary in which each entry maps a trinucleotide to its
 ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012&hellip;}
 Note that should be the frequency in the entire region scanned
-for variation, not just sites where there are SNPs.</p></section>
+for variation, not just sites where there are SNPs.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1509,7 +1890,7 @@ for variation, not just sites where there are SNPs.</p></section>
 <span>def <span class="ident">ms_command</span></span>(<span>theta, ns, core, iter, recomb=0, rsites=None, seeds=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generate ms command for simulation from core.</p>
+<div class="desc"><p>Generate ms command for simulation from core.</p>
 <p>theta: Assumed theta
 ns: Sample sizes
 core: Core of ms command that specifies demography.
@@ -1517,7 +1898,7 @@ iter: Iterations to run ms
 recomb: Assumed recombination rate
 rsites: Sites for recombination. If None, default is 10*theta.
 seeds: Seeds for random number generator. If None, ms default is used.
-Otherwise, three integers should be passed. Example: (132, 435, 123)</p></section>
+Otherwise, three integers should be passed. Example: (132, 435, 123)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1562,13 +1943,13 @@ Otherwise, three integers should be passed. Example: (132, 435, 123)</p></sectio
 <span>def <span class="ident">perturb_params</span></span>(<span>params, fold=1, lower_bound=None, upper_bound=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generate a perturbed set of parameters.</p>
+<div class="desc"><p>Generate a perturbed set of parameters.</p>
 <p>Each element of params is radomly perturbed <fold> factors of 2 up or down.
 fold: Number of factors of 2 to perturb by
 lower_bound: If not None, the resulting parameter set is adjusted to have
 all value greater than lower_bound.
 upper_bound: If not None, the resulting parameter set is adjusted to have
-all value less than upper_bound.</p></section>
+all value less than upper_bound.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1584,7 +1965,7 @@ all value less than upper_bound.</p></section>
     upper_bound: If not None, the resulting parameter set is adjusted to have
                  all value less than upper_bound.
     &#34;&#34;&#34;
-    pnew = params * 2**(fold * (2*numpy.random.random(len(params))-1))
+    pnew = params * 2**(fold * (2*numpy.random.uniform(size=len(params))-1))
     if lower_bound is not None:
         for ii,bound in enumerate(lower_bound):
             if bound is None:
@@ -1598,11 +1979,24 @@ all value less than upper_bound.</p></section>
     return pnew</code></pre>
 </details>
 </dd>
+<dt id="dadi.Misc.simple_warning"><code class="name flex">
+<span>def <span class="ident">simple_warning</span></span>(<span>message, category, filename, lineno, file=None, line=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def simple_warning(message, category, filename, lineno, file=None, line=None):
+    return &#39;%s&#39; % message</code></pre>
+</details>
+</dd>
 <dt id="dadi.Misc.total_instantaneous_rate"><code class="name flex">
 <span>def <span class="ident">total_instantaneous_rate</span></span>(<span>Q, pi)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Total instantaneous substitution rate.</p></section>
+<div class="desc"><p>Total instantaneous substitution rate.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1619,7 +2013,7 @@ all value less than upper_bound.</p></section>
 <span>def <span class="ident">tri_freq_dict_to_array</span></span>(<span>tri_freq_dict)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Convert dictionary of trinucleotide frequencies to array in correct order.</p></section>
+<div class="desc"><p>Convert dictionary of trinucleotide frequencies to array in correct order.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1641,7 +2035,7 @@ all value less than upper_bound.</p></section>
 <span>def <span class="ident">zero_diag</span></span>(<span>Q)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Copy of Q altered such that diagonal entries are all 0.</p></section>
+<div class="desc"><p>Copy of Q altered such that diagonal entries are all 0.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1674,16 +2068,21 @@ all value less than upper_bound.</p></section>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="dadi.Misc.annotate_from_annovar" href="#dadi.Misc.annotate_from_annovar">annotate_from_annovar</a></code></li>
+<li><code><a title="dadi.Misc.bootstraps_from_dd_chunks" href="#dadi.Misc.bootstraps_from_dd_chunks">bootstraps_from_dd_chunks</a></code></li>
+<li><code><a title="dadi.Misc.bootstraps_subsample_vcf" href="#dadi.Misc.bootstraps_subsample_vcf">bootstraps_subsample_vcf</a></code></li>
 <li><code><a title="dadi.Misc.combine_pops" href="#dadi.Misc.combine_pops">combine_pops</a></code></li>
 <li><code><a title="dadi.Misc.count_data_dict" href="#dadi.Misc.count_data_dict">count_data_dict</a></code></li>
 <li><code><a title="dadi.Misc.dd_from_SLiM_files" href="#dadi.Misc.dd_from_SLiM_files">dd_from_SLiM_files</a></code></li>
 <li><code><a title="dadi.Misc.delayed_flush" href="#dadi.Misc.delayed_flush">delayed_flush</a></code></li>
 <li><code><a title="dadi.Misc.ensure_1arg_func" href="#dadi.Misc.ensure_1arg_func">ensure_1arg_func</a></code></li>
+<li><code><a title="dadi.Misc.fragment_data_dict" href="#dadi.Misc.fragment_data_dict">fragment_data_dict</a></code></li>
 <li><code><a title="dadi.Misc.make_data_dict" href="#dadi.Misc.make_data_dict">make_data_dict</a></code></li>
 <li><code><a title="dadi.Misc.make_data_dict_vcf" href="#dadi.Misc.make_data_dict_vcf">make_data_dict_vcf</a></code></li>
 <li><code><a title="dadi.Misc.make_fux_table" href="#dadi.Misc.make_fux_table">make_fux_table</a></code></li>
 <li><code><a title="dadi.Misc.ms_command" href="#dadi.Misc.ms_command">ms_command</a></code></li>
 <li><code><a title="dadi.Misc.perturb_params" href="#dadi.Misc.perturb_params">perturb_params</a></code></li>
+<li><code><a title="dadi.Misc.simple_warning" href="#dadi.Misc.simple_warning">simple_warning</a></code></li>
 <li><code><a title="dadi.Misc.total_instantaneous_rate" href="#dadi.Misc.total_instantaneous_rate">total_instantaneous_rate</a></code></li>
 <li><code><a title="dadi.Misc.tri_freq_dict_to_array" href="#dadi.Misc.tri_freq_dict_to_array">tri_freq_dict_to_array</a></code></li>
 <li><code><a title="dadi.Misc.zero_diag" href="#dadi.Misc.zero_diag">zero_diag</a></code></li>
@@ -1693,7 +2092,7 @@ all value less than upper_bound.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

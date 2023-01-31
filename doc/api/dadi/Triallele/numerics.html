@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.Triallele.numerics API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -686,9 +686,9 @@ except ImportError:
 <span>def <span class="ident">advance1D</span></span>(<span>u, P)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>tridiag breakdown for integration along the diagonal boundary
+<div class="desc"><p>tridiag breakdown for integration along the diagonal boundary
 u - density along that diagonal
-P - transition matrix</p></section>
+P - transition matrix</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -710,11 +710,11 @@ P - transition matrix</p></section>
 <span>def <span class="ident">advance_adi</span></span>(<span>U, U01, P1, P2, x, ii)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Integrate the ADI components forward in time, alternating which direction occurs first
+<div class="desc"><p>Integrate the ADI components forward in time, alternating which direction occurs first
 U - density function
 U01 - stores which points are in the domain
 P1,P2 - transition matrices
-ii - count of integration step</p></section>
+ii - count of integration step</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -748,9 +748,9 @@ ii - count of integration step</p></section>
 <span>def <span class="ident">advance_cov</span></span>(<span>U, C, x, dx)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Explicit integration of the covariance term, using scipy's sparse matrix for C
+<div class="desc"><p>Explicit integration of the covariance term, using scipy's sparse matrix for C
 U - density function
-C - transition matrix</p></section>
+C - transition matrix</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -769,8 +769,8 @@ C - transition matrix</p></section>
 <span>def <span class="ident">advance_line</span></span>(<span>x, phi, P)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
-P - one dimensional transition matrix for the diagonal boundary</p></section>
+<div class="desc"><p>Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
+P - one dimensional transition matrix for the diagonal boundary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -791,8 +791,8 @@ P - one dimensional transition matrix for the diagonal boundary</p></section>
 <span>def <span class="ident">bivariate_lognormal_pdf</span></span>(<span>xx, params)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
-We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution</p></section>
+<div class="desc"><p>mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
+We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -814,10 +814,10 @@ We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't 
 <span>def <span class="ident">cached_projection</span></span>(<span>proj_to, proj_from, hits)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Coefficients for projection from a larger size to smaller
+<div class="desc"><p>Coefficients for projection from a larger size to smaller
 proj_to: Number of samples to project down to
 proj_from: Number of samples to project from
-hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
+hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -854,7 +854,7 @@ hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <span>def <span class="ident">cached_transition1D</span></span>(<span>numpts, sig)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -876,7 +876,7 @@ hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <span>def <span class="ident">domain</span></span>(<span>x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></section>
+<div class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -896,8 +896,8 @@ hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></section>
 <span>def <span class="ident">fold</span></span>(<span>spectrum)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Note: this is now handled in the TriSpectrum class
-Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles</p></section>
+<div class="desc"><p>Note: this is now handled in the TriSpectrum class
+Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -927,9 +927,9 @@ Given a frequency spectrum over the full domain, fold into a spectrum with major
 <span>def <span class="ident">fold_ancestral</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Note: this is now handled by the TriSpectrum class
+<div class="desc"><p>Note: this is now handled by the TriSpectrum class
 Don't know ancestral state, so track minor frequencies
-Store spectrum of two minor allele frequencies</p></section>
+Store spectrum of two minor allele frequencies</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -975,8 +975,8 @@ Store spectrum of two minor allele frequencies</p></section>
 <span>def <span class="ident">grid_dx</span></span>(<span>x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>We use uniform grids in x, using np.linspace(0,1,numpts)
-Grid spacing Delta, which is halved at the first and last grid points.</p></section>
+<div class="desc"><p>We use uniform grids in x, using np.linspace(0,1,numpts)
+Grid spacing Delta, which is halved at the first and last grid points.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -993,8 +993,8 @@ Grid spacing Delta, which is halved at the first and last grid points.</p></sect
 <span>def <span class="ident">grid_dx_2d</span></span>(<span>x, dx)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>The two dimensional grid spacing over the domain.
-Grid points lie along the diagonal boundary, and Delta for those points is halved</p></section>
+<div class="desc"><p>The two dimensional grid spacing over the domain.
+Grid points lie along the diagonal boundary, and Delta for those points is halved</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1014,9 +1014,9 @@ Grid points lie along the diagonal boundary, and Delta for those points is halve
 <span>def <span class="ident">int2</span></span>(<span>DXX, U)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Integrate the density function over the domain
+<div class="desc"><p>Integrate the density function over the domain
 DXX - two dimensional grid
-U - density function</p></section>
+U - density function</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1034,7 +1034,7 @@ U - density function</p></section>
 <span>def <span class="ident">ln_binomial</span></span>(<span>n, k)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1047,8 +1047,8 @@ U - density function</p></section>
 <span>def <span class="ident">misidentification</span></span>(<span>F, p)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
-Then refold to return folded spectrum</p></section>
+<div class="desc"><p>Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
+Then refold to return folded spectrum</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1073,9 +1073,9 @@ Then refold to return folded spectrum</p></section>
 <span>def <span class="ident">move_density_to_bdry</span></span>(<span>x, phi, P)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>P tells us how much should be removed, by multiplying phi*P
+<div class="desc"><p>P tells us how much should be removed, by multiplying phi*P
 Take that density and instead of deleting it, move straight to boundary
-P - stores how much denstity from each grid point should be moved to diagonal</p></section>
+P - stores how much denstity from each grid point should be moved to diagonal</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1122,7 +1122,7 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <span>def <span class="ident">ms_demo_params_to_dadi</span></span>(<span>nu_ms, tau_ms)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)</p></section>
+<div class="desc"><p>convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1138,7 +1138,7 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <span>def <span class="ident">optimal_sfs_scaling</span></span>(<span>model, data)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1154,7 +1154,7 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <span>def <span class="ident">project</span></span>(<span>F_from, proj_to)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1182,14 +1182,14 @@ P - stores how much denstity from each grid point should be moved to diagonal</p
 <span>def <span class="ident">remove_diag_density_weights_nonneutral</span></span>(<span>x, dt, nu, sig1, sig2)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Numerically determine the amount of density that should be lost to the diagonal boundary.
+<div class="desc"><p>Numerically determine the amount of density that should be lost to the diagonal boundary.
 Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
 We then check the fraction of density that is lost to z=1.
 If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1<em>x/(x+y) + sig2</em>y/(x+y)
 x - one dimensional grid of domain
 dt - time step of integration
 nu - relative population size
-sig1,sig2 - selection coefficients</p></section>
+sig1,sig2 - selection coefficients</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1245,7 +1245,7 @@ sig1,sig2 - selection coefficients</p></section>
 <span>def <span class="ident">sample</span></span>(<span>phi, ns, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Obtain the expected sample frequency spectrum from the density function</p></section>
+<div class="desc"><p>Obtain the expected sample frequency spectrum from the density function</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1298,14 +1298,14 @@ sig1,sig2 - selection coefficients</p></section>
 <span>def <span class="ident">transition1</span></span>(<span>x, dx, U01, sig1, sig2)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Implicit transition matrix for the ADI components of the discretization of the diffusion
+<div class="desc"><p>Implicit transition matrix for the ADI components of the discretization of the diffusion
 Time scaled by 2N, with variance and mean terms x(1-x) and \sigma<em>x(1-x), resp.
 Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt</em>P, where I is the identity matrix
 x - grid
 dx - grid spacing
 U01 - domain markers
 sig1/2 - population scaled selection coefficients
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1388,11 +1388,11 @@ nu - relative population size</p></section>
 <span>def <span class="ident">transition12</span></span>(<span>x, dx, U01)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x<em>y</em>phi)
+<div class="desc"><p>Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x<em>y</em>phi)
 As with the ADI components, final transition matrix is given by I + dt/nu*P
 x - grid
 dx - grid spacing
-U01 - domain markers</p></section>
+U01 - domain markers</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1445,12 +1445,12 @@ U01 - domain markers</p></section>
 <span>def <span class="ident">transition1D</span></span>(<span>x, dx, sig)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>transition matrix for one dimensional integration
+<div class="desc"><p>transition matrix for one dimensional integration
 x - grid
 dx - grid spacing
 dt - timestep for integration
 sig - selection coefficient
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1490,14 +1490,14 @@ nu - relative population size</p></section>
 <span>def <span class="ident">transition2</span></span>(<span>x, dx, U01, sig1, sig2)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Implicit transition matrix for the ADI components of the discretization of the diffusion
+<div class="desc"><p>Implicit transition matrix for the ADI components of the discretization of the diffusion
 Time scaled by 2N, with variance and mean terms x(1-x) and \sigma<em>x(1-x), resp.
 Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt</em>P, where I is the identity matrix
 x - grid
 dx - grid spacing
 U01 - domain markers
 sig1/2 - population scaled selection coefficients
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1579,7 +1579,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">trinomial</span></span>(<span>ns, ii, jj)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values</p></section>
+<div class="desc"><p>Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1595,7 +1595,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">univariate_lognormal_pdf</span></span>(<span>x, sigma, mu)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))</p></section>
+<div class="desc"><p>Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1658,7 +1658,7 @@ nu - relative population size</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

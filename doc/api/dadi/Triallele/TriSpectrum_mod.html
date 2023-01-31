@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.Triallele.TriSpectrum_mod API documentation</title>
 <meta name="description" content="Contains triallelic Spectrum object" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -207,7 +207,7 @@ class TriSpectrum(numpy.ma.masked_array):
         # use to open a file.
         if not hasattr(fid, &#39;read&#39;):
             newfile = True
-            fid = file(fid, &#39;r&#39;)
+            fid = open(fid, &#39;r&#39;)
 
         line = fid.readline()
         # Strip out the comments
@@ -291,7 +291,7 @@ class TriSpectrum(numpy.ma.masked_array):
         newfile = False
         if not hasattr(fid, &#39;write&#39;):
             newfile = True
-            fid = file(fid, &#39;w&#39;)
+            fid = open(fid, &#39;w&#39;)
 
         # Write comments
         for line in comment_lines:
@@ -512,7 +512,7 @@ copyreg.pickle(TriSpectrum, TriSpectrum_pickler, TriSpectrum_unpickler)</code></
 <span>def <span class="ident">TriSpectrum_pickler</span></span>(<span>fs)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -528,7 +528,7 @@ copyreg.pickle(TriSpectrum, TriSpectrum_pickler, TriSpectrum_unpickler)</code></
 <span>def <span class="ident">TriSpectrum_unpickler</span></span>(<span>data, mask, folded_major, folded_ancestral, extrap_x, extrap_t)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -549,10 +549,10 @@ copyreg.pickle(TriSpectrum, TriSpectrum_pickler, TriSpectrum_unpickler)</code></
 <dl>
 <dt id="dadi.Triallele.TriSpectrum_mod.TriSpectrum"><code class="flex name class">
 <span>class <span class="ident">TriSpectrum</span></span>
-<span>(</span><span>*args, **kwargs)</span>
+<span>(</span><span>data, mask=False, mask_infeasible=True, data_folded_major=None, check_folding_major=True, data_folded_ancestral=None, check_folding_ancestral=True, dtype=builtins.float, copy=True, fill_value=nan, keep_mask=True, shrink=True, extrap_x=None, extrap_t=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Represents a triallelic frequency spectrum.</p>
+<div class="desc"><p>Represents a triallelic frequency spectrum.</p>
 <p>Similar structure to biallelic spectra as a masked array, but specific
 to the triallelic spectrum, so that infeasible entries are masked,
 and operations performed on triallelic spectra are different than
@@ -577,7 +577,7 @@ extrap_x: Optional floating point value specifying x value to use in
           extrapolation.
 extrap_t: Optional floating point value specifying t value to use in
           extrapolation.
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -755,7 +755,7 @@ extrap_t: Optional floating point value specifying t value to use in
         # use to open a file.
         if not hasattr(fid, &#39;read&#39;):
             newfile = True
-            fid = file(fid, &#39;r&#39;)
+            fid = open(fid, &#39;r&#39;)
 
         line = fid.readline()
         # Strip out the comments
@@ -839,7 +839,7 @@ extrap_t: Optional floating point value specifying t value to use in
         newfile = False
         if not hasattr(fid, &#39;write&#39;):
             newfile = True
-            fid = file(fid, &#39;w&#39;)
+            fid = open(fid, &#39;w&#39;)
 
         # Write comments
         for line in comment_lines:
@@ -1035,15 +1035,7 @@ def %(method)s(self, other):
 <dl>
 <dt id="dadi.Triallele.TriSpectrum_mod.TriSpectrum.method"><code class="name">var <span class="ident">method</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<div class="desc"></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
@@ -1052,13 +1044,13 @@ errors defaults to 'strict'.</p></section>
 <span>def <span class="ident">from_file</span></span>(<span>fid, mask_infeasible=True, return_comments=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Read frequency spectrum from file.</p>
+<div class="desc"><p>Read frequency spectrum from file.</p>
 <p>fid: string with file name to read from or an open file object.
 mask_infeasible: If True, mask the infeasible entries in the triallelic spectrum.
 return_comments: If true, the return value is (fs, comments), where
 comments is a list of strings containing the comments
 from the file (without #'s).</p>
-<p>See to_file method for details on the file format.</p></section>
+<p>See to_file method for details on the file format.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1081,7 +1073,7 @@ def from_file(fid, mask_infeasible=True, return_comments=False):
     # use to open a file.
     if not hasattr(fid, &#39;read&#39;):
         newfile = True
-        fid = file(fid, &#39;r&#39;)
+        fid = open(fid, &#39;r&#39;)
 
     line = fid.readline()
     # Strip out the comments
@@ -1139,7 +1131,7 @@ def from_file(fid, mask_infeasible=True, return_comments=False):
 <span>def <span class="ident">from_phi</span></span>(<span>phi, ns, other_stuff)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1154,7 +1146,7 @@ def from_phi(phi, ns, other_stuff):
 <dl>
 <dt id="dadi.Triallele.TriSpectrum_mod.TriSpectrum.sample_size"><code class="name">var <span class="ident">sample_size</span></code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1165,7 +1157,7 @@ def from_phi(phi, ns, other_stuff):
 </dd>
 <dt id="dadi.Triallele.TriSpectrum_mod.TriSpectrum.sample_sizes"><code class="name">var <span class="ident">sample_sizes</span></code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1181,7 +1173,7 @@ def from_phi(phi, ns, other_stuff):
 <span>def <span class="ident">S</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Segregating sites</p></section>
+<div class="desc"><p>Segregating sites</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1197,7 +1189,7 @@ def from_phi(phi, ns, other_stuff):
 <span>def <span class="ident">fold_ancestral</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1244,7 +1236,7 @@ def from_phi(phi, ns, other_stuff):
 <span>def <span class="ident">fold_major</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1273,9 +1265,9 @@ def from_phi(phi, ns, other_stuff):
 <span>def <span class="ident">log</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Return the natural logarithm of the entries of the frequency spectrum.</p>
+<div class="desc"><p>Return the natural logarithm of the entries of the frequency spectrum.</p>
 <p>Only necessary because numpy.ma.log now fails to propagate extra
-attributes after numpy 1.10.</p></section>
+attributes after numpy 1.10.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1299,7 +1291,7 @@ attributes after numpy 1.10.</p></section>
 <span>def <span class="ident">mask_infeasible</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Mask any infeasible entries.</p></section>
+<div class="desc"><p>Mask any infeasible entries.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1318,7 +1310,7 @@ attributes after numpy 1.10.</p></section>
 <span>def <span class="ident">to_file</span></span>(<span>self, fid, precision=16, comment_lines=[], foldmaskinfo=True, extrapinfo=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Write frequency spectrum to file.</p>
+<div class="desc"><p>Write frequency spectrum to file.</p>
 <p>fid: string with file name to write to or an open file object.
 precision: precision with which to write out entries of the SFS. (They
 are formated via %.<p>g, where <p> is the precision.)
@@ -1339,7 +1331,7 @@ denoting the folding status of the array
 A single line giving the array elements. The order of elements is
 e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;
 A single line giving the elements of the mask in the same order as
-the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
+the data line. '1' indicates masked, '0' indicates unmasked.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1375,7 +1367,7 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
     newfile = False
     if not hasattr(fid, &#39;write&#39;):
         newfile = True
-        fid = file(fid, &#39;w&#39;)
+        fid = open(fid, &#39;w&#39;)
 
     # Write comments
     for line in comment_lines:
@@ -1426,7 +1418,7 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 <span>def <span class="ident">tofile</span></span>(<span>self, fid, precision=16, comment_lines=[], foldmaskinfo=True, extrapinfo=True)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Write frequency spectrum to file.</p>
+<div class="desc"><p>Write frequency spectrum to file.</p>
 <p>fid: string with file name to write to or an open file object.
 precision: precision with which to write out entries of the SFS. (They
 are formated via %.<p>g, where <p> is the precision.)
@@ -1447,7 +1439,7 @@ denoting the folding status of the array
 A single line giving the array elements. The order of elements is
 e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;
 A single line giving the elements of the mask in the same order as
-the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
+the data line. '1' indicates masked, '0' indicates unmasked.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1483,7 +1475,7 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
     newfile = False
     if not hasattr(fid, &#39;write&#39;):
         newfile = True
-        fid = file(fid, &#39;w&#39;)
+        fid = open(fid, &#39;w&#39;)
 
     # Write comments
     for line in comment_lines:
@@ -1534,7 +1526,7 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 <span>def <span class="ident">unfold</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1597,7 +1589,7 @@ the data line. '1' indicates masked, '0' indicates unmasked.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

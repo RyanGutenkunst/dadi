@@ -47,6 +47,8 @@ def cuda_enabled(toggle=None):
     else:
         raise ValueError("toggle must be True, False, or None")
 
+__pdoc__ = {'cuda':False}
+
 def pts_to_RAM(pts, P):
     """
     Approximate RAM usage for a given grid points and number of populations 

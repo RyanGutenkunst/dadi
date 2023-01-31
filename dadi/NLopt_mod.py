@@ -127,17 +127,26 @@ def opt(p0, data, model_func, pts, multinom=True,
                              verbose=verbose, multinom=multinom,
                              func_args=func_args, func_kwargs=func_kwargs, fixed_params=fixed_params)
 
-    opt.set_max_objective(f)
+    # NLopt can run into a roundoff error on rare occassion.
+    # To account for this we put in an exception for nlopt.RoundoffLimited
+    # and return -inf log-likelihood and nan parameter values.
+    try:
+        opt.set_max_objective(f)
 
-    if log_opt:
-        p0 = np.log(p0)
-    xopt = opt.optimize(p0)
-    if log_opt:
-        xopt = np.exp(p0)
+        if log_opt:
+            p0 = np.log(p0)
+        xopt = opt.optimize(p0)
+        if log_opt:
+            xopt = np.exp(p0)
 
-    opt_val = opt.last_optimum_value()
-    result = opt.last_optimize_result()
+        opt_val = opt.last_optimum_value()
+        result = opt.last_optimize_result()
 
-    xopt = _project_params_up(xopt, fixed_params)
+        xopt = _project_params_up(xopt, fixed_params)
+
+    except nlopt.RoundoffLimited:
+        print('nlopt.RoundoffLimited occured, other jobs still running. Users might want to adjust their boundaries or starting parameters if this message occures many times.')
+        opt_val = -np.inf
+        xopt = [np.nan] * len(p0)
 
     return xopt, opt_val

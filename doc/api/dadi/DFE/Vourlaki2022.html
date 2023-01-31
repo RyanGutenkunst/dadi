@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.DFE.Vourlaki2022 API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.DFE.Vourlaki2022</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import numpy as np, scipy.integrate
+import dadi
+from dadi.DFE import *
+
+def Vourlaki_mixture(params, ns, s1, s2, theta, pts):
+    &#34;&#34;&#34;
+    Inference model from Vourlaki et al.
+
+    params = alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    &#34;&#34;&#34;
+    #params = alpha, beta, gamma_pos, ppos_wild, pchange, pchange_pos
+    alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos = params
+
+    # We&#39;ll scale by theta at the end of the script, so set theta=1 here.
+    # Case in which gamma is negative and equal in the two pops
+    m5 = s1.integrate([alpha, beta], None, PDFs.gamma, 1, None)
+    # Case in which gamma is negative and indepenent in the two pops
+    m6 = s2.integrate([alpha, beta], None, PDFs.biv_ind_gamma, 1, None,
+                      exterior_int=True)
+
+    # Cases in which gamma is positive in both pops.
+    # For simplicity, using a single gamma value, rather than exponential dist
+    #  that was simulated.
+    try:
+        m2 = s2.spectra[s2.gammas == gamma_pos,
+                        s2.gammas == gamma_pos][0]
+        # Even if selection coefficient changed to a different positive value,
+        #   we just model them as equal.
+        m3 = m2
+    except IndexError:
+        raise IndexError(&#39;Failed to find requested gamma_pos={0:.4f} &#39;
+                         &#39;in cached spectra. Was it included &#39;
+                         &#39;in additional_gammas during &#39;
+                         &#39;cache generation?&#39;.format(gamma_pos))
+
+    # Cases in which gamma is positive in one pop and negative in the other.
+    weights = PDFs.gamma(-s2.neg_gammas, [alpha, beta])
+
+    # Case in which pop1 is positive and pop2 is negative.
+    pos_neg_spectra = np.squeeze(s2.spectra[s2.gammas==gamma_pos, :len(s2.neg_gammas)])
+    m4 = np.trapz(weights[:,np.newaxis,np.newaxis]*pos_neg_spectra,
+                       s2.neg_gammas, axis=0)
+
+    # Case in which pop2 is positive and pop1 is negative.
+    neg_pos_spectra = np.squeeze(s2.spectra[:len(s2.neg_gammas), s2.gammas==gamma_pos])
+    m7 = np.trapz(weights[:,np.newaxis,np.newaxis]*neg_pos_spectra,
+                       s2.neg_gammas, axis=0)
+
+    # Contributions to m4 and m7 for gammas that aren&#39;t covered by our cache
+    # Probability toward gamma=0 that is not covered by our cache
+    weight_neu, err = scipy.integrate.quad(PDFs.gamma, 0, -s2.neg_gammas[-1], args=[alpha, beta])
+    # Probability toward gamma=-inf that is not covered by our cache
+    weight_del, err = scipy.integrate.quad(PDFs.gamma, -s2.neg_gammas[0], np.inf, args=[alpha, beta])
+
+    # In both cases, use the most neutral or deleterious spectra simulated
+    m4 += pos_neg_spectra[0]*weight_del
+    m4 += pos_neg_spectra[-1]*weight_neu
+    m7 += neg_pos_spectra[0]*weight_del
+    m7 += neg_pos_spectra[-1]*weight_neu
+
+    # Weights for various parts of distribution checked against Figure S0
+    fs = m5*(1-ppos_wild)*(1-pchange) +\
+        m6*(1-ppos_wild)*pchange*(1-pchange_pos) +\
+        m7*(1-ppos_wild)*pchange*pchange_pos +\
+        m2*ppos_wild*(1-pchange) +\
+        m3*ppos_wild*pchange*pchange_pos +\
+        m4*ppos_wild*pchange*(1-pchange_pos)
+
+    return theta*fs
+
+def visual_validation():
+    &#34;&#34;&#34;
+    Simulations with a simple model and extreme parameter values, to check
+    functionality and build intuition.
+    &#34;&#34;&#34;
+    demo_params = [2,2,0.2,0] #nu1, nu2, T, m
+    ns, pts_l = [10,10], [30,35,40]
+
+    s1 = Cache1D(demo_params, ns, DemogSelModels.split_mig_sel_single_gamma, pts=pts_l, 
+                 gamma_pts=30, gamma_bounds=(1e-4, 200), mp=True, additional_gammas=[10])
+    s2 = Cache2D(demo_params, ns, DemogSelModels.split_mig_sel, pts=pts_l, 
+                 gamma_pts=30, gamma_bounds=(1e-4, 200), mp=True, additional_gammas=[10])
+
+    alpha, beta, gamma_pos = 0.2, 10, 10
+
+    import matplotlib.pyplot as plt
+    fig = plt.figure(10, figsize=(10,8))
+    fig.clear()
+
+    axw = fig.add_subplot(3,2,5)
+    axd = fig.add_subplot(3,2,6)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    fs = Vourlaki_mixture([alpha, beta, 0, gamma_pos, 0, 0], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,1); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=0.0, pchange=0.0, pchange_pos=0.0&#39;)
+    ax.text(0.02,0.98,&#39;A&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;A&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;A&#39;)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    fs = Vourlaki_mixture([alpha, beta, 1.0, gamma_pos, 0, 0], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,2); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=1.0, pchange=0.0, pchange_pos=0.0&#39;)
+    ax.text(0.02,0.98,&#39;B&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;B&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;B&#39;)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    fs = Vourlaki_mixture([alpha, beta, 0.0, gamma_pos, 1.0, 0], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,3); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=0.0, pchange=1.0, pchange_pos=0.0&#39;)
+    ax.text(0.02,0.98,&#39;C&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;C&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;C&#39;)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    # This makes me think I got m4, m7 backwards
+    fs = Vourlaki_mixture([alpha, beta, 0.0, gamma_pos, 1.0, 0.9], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,4); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=0.0, pchange=1.0, pchange_pos=0.9&#39;)
+    ax.text(0.02,0.98,&#39;D&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;D&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;D&#39;)
+
+    axw.set_title(&#39;wild&#39;); axd.set_title(&#39;domesticate&#39;)
+    axw.legend(); axd.legend()
+
+    fig.tight_layout()
+    fig.savefig(&#39;validation.pdf&#39;)
+    plt.show()
+
+if __name__ == &#34;__main__&#34;:
+    visual_validation()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.DFE.Vourlaki2022.Vourlaki_mixture"><code class="name flex">
+<span>def <span class="ident">Vourlaki_mixture</span></span>(<span>params, ns, s1, s2, theta, pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Inference model from Vourlaki et al.</p>
+<p>params = alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Vourlaki_mixture(params, ns, s1, s2, theta, pts):
+    &#34;&#34;&#34;
+    Inference model from Vourlaki et al.
+
+    params = alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    &#34;&#34;&#34;
+    #params = alpha, beta, gamma_pos, ppos_wild, pchange, pchange_pos
+    alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos = params
+
+    # We&#39;ll scale by theta at the end of the script, so set theta=1 here.
+    # Case in which gamma is negative and equal in the two pops
+    m5 = s1.integrate([alpha, beta], None, PDFs.gamma, 1, None)
+    # Case in which gamma is negative and indepenent in the two pops
+    m6 = s2.integrate([alpha, beta], None, PDFs.biv_ind_gamma, 1, None,
+                      exterior_int=True)
+
+    # Cases in which gamma is positive in both pops.
+    # For simplicity, using a single gamma value, rather than exponential dist
+    #  that was simulated.
+    try:
+        m2 = s2.spectra[s2.gammas == gamma_pos,
+                        s2.gammas == gamma_pos][0]
+        # Even if selection coefficient changed to a different positive value,
+        #   we just model them as equal.
+        m3 = m2
+    except IndexError:
+        raise IndexError(&#39;Failed to find requested gamma_pos={0:.4f} &#39;
+                         &#39;in cached spectra. Was it included &#39;
+                         &#39;in additional_gammas during &#39;
+                         &#39;cache generation?&#39;.format(gamma_pos))
+
+    # Cases in which gamma is positive in one pop and negative in the other.
+    weights = PDFs.gamma(-s2.neg_gammas, [alpha, beta])
+
+    # Case in which pop1 is positive and pop2 is negative.
+    pos_neg_spectra = np.squeeze(s2.spectra[s2.gammas==gamma_pos, :len(s2.neg_gammas)])
+    m4 = np.trapz(weights[:,np.newaxis,np.newaxis]*pos_neg_spectra,
+                       s2.neg_gammas, axis=0)
+
+    # Case in which pop2 is positive and pop1 is negative.
+    neg_pos_spectra = np.squeeze(s2.spectra[:len(s2.neg_gammas), s2.gammas==gamma_pos])
+    m7 = np.trapz(weights[:,np.newaxis,np.newaxis]*neg_pos_spectra,
+                       s2.neg_gammas, axis=0)
+
+    # Contributions to m4 and m7 for gammas that aren&#39;t covered by our cache
+    # Probability toward gamma=0 that is not covered by our cache
+    weight_neu, err = scipy.integrate.quad(PDFs.gamma, 0, -s2.neg_gammas[-1], args=[alpha, beta])
+    # Probability toward gamma=-inf that is not covered by our cache
+    weight_del, err = scipy.integrate.quad(PDFs.gamma, -s2.neg_gammas[0], np.inf, args=[alpha, beta])
+
+    # In both cases, use the most neutral or deleterious spectra simulated
+    m4 += pos_neg_spectra[0]*weight_del
+    m4 += pos_neg_spectra[-1]*weight_neu
+    m7 += neg_pos_spectra[0]*weight_del
+    m7 += neg_pos_spectra[-1]*weight_neu
+
+    # Weights for various parts of distribution checked against Figure S0
+    fs = m5*(1-ppos_wild)*(1-pchange) +\
+        m6*(1-ppos_wild)*pchange*(1-pchange_pos) +\
+        m7*(1-ppos_wild)*pchange*pchange_pos +\
+        m2*ppos_wild*(1-pchange) +\
+        m3*ppos_wild*pchange*pchange_pos +\
+        m4*ppos_wild*pchange*(1-pchange_pos)
+
+    return theta*fs</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.Vourlaki2022.visual_validation"><code class="name flex">
+<span>def <span class="ident">visual_validation</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Simulations with a simple model and extreme parameter values, to check
+functionality and build intuition.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def visual_validation():
+    &#34;&#34;&#34;
+    Simulations with a simple model and extreme parameter values, to check
+    functionality and build intuition.
+    &#34;&#34;&#34;
+    demo_params = [2,2,0.2,0] #nu1, nu2, T, m
+    ns, pts_l = [10,10], [30,35,40]
+
+    s1 = Cache1D(demo_params, ns, DemogSelModels.split_mig_sel_single_gamma, pts=pts_l, 
+                 gamma_pts=30, gamma_bounds=(1e-4, 200), mp=True, additional_gammas=[10])
+    s2 = Cache2D(demo_params, ns, DemogSelModels.split_mig_sel, pts=pts_l, 
+                 gamma_pts=30, gamma_bounds=(1e-4, 200), mp=True, additional_gammas=[10])
+
+    alpha, beta, gamma_pos = 0.2, 10, 10
+
+    import matplotlib.pyplot as plt
+    fig = plt.figure(10, figsize=(10,8))
+    fig.clear()
+
+    axw = fig.add_subplot(3,2,5)
+    axd = fig.add_subplot(3,2,6)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    fs = Vourlaki_mixture([alpha, beta, 0, gamma_pos, 0, 0], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,1); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=0.0, pchange=0.0, pchange_pos=0.0&#39;)
+    ax.text(0.02,0.98,&#39;A&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;A&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;A&#39;)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    fs = Vourlaki_mixture([alpha, beta, 1.0, gamma_pos, 0, 0], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,2); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=1.0, pchange=0.0, pchange_pos=0.0&#39;)
+    ax.text(0.02,0.98,&#39;B&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;B&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;B&#39;)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    fs = Vourlaki_mixture([alpha, beta, 0.0, gamma_pos, 1.0, 0], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,3); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=0.0, pchange=1.0, pchange_pos=0.0&#39;)
+    ax.text(0.02,0.98,&#39;C&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;C&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;C&#39;)
+
+    # alpha, beta, ppos_wild, gamma_pos, pchange, pchange_pos
+    # This makes me think I got m4, m7 backwards
+    fs = Vourlaki_mixture([alpha, beta, 0.0, gamma_pos, 1.0, 0.9], None, s1, s2, 1.0, None)
+    ax = fig.add_subplot(3,2,4); dadi.Plotting.plot_single_2d_sfs(fs, ax=ax)
+    ax.set_title(&#39;ppos_wild=0.0, pchange=1.0, pchange_pos=0.9&#39;)
+    ax.text(0.02,0.98,&#39;D&#39;, fontsize=&#39;x-large&#39;, va=&#39;top&#39;, transform=ax.transAxes)
+    fsw, fsd = fs.filter_pops(tokeep=[1]), fs.filter_pops(tokeep=[2])
+    axw.semilogy(fsw, &#39;-o&#39;, label=&#39;D&#39;); axd.semilogy(fsd, &#39;-o&#39;, label=&#39;D&#39;)
+
+    axw.set_title(&#39;wild&#39;); axd.set_title(&#39;domesticate&#39;)
+    axw.legend(); axd.legend()
+
+    fig.tight_layout()
+    fig.savefig(&#39;validation.pdf&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.DFE" href="index.html">dadi.DFE</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.DFE.Vourlaki2022.Vourlaki_mixture" href="#dadi.DFE.Vourlaki2022.Vourlaki_mixture">Vourlaki_mixture</a></code></li>
+<li><code><a title="dadi.DFE.Vourlaki2022.visual_validation" href="#dadi.DFE.Vourlaki2022.visual_validation">visual_validation</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
