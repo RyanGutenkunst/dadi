@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.Demes.Demes API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Demes.Demes</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># This script contains functions to compute the sample SFS from a demography
+# defined using demes. Not ever deme graph will be supported, as dadi can
+# only handle integrating up to five populations.
+# (and cannot include selfing or cloning?)
+
+from collections import defaultdict
+import math
+import copy
+import numpy as np
+
+import dadi
+import pickle
+
+try:
+    import demes
+    _imported_demes = True
+except ImportError:
+    _imported_demes = False
+
+
+def _check_demes_imported():
+    if not _imported_demes:
+        raise ImportError(
+            &#34;To simulate using demes, it must be installed -- &#34;
+            &#34;try `pip install demes`&#34;
+        )
+
+
+def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None):
+    &#34;&#34;&#34;
+    Takes a deme graph and computes the SFS. ``demes`` is a package for
+    specifying demographic models in a user-friendly, human-readable YAML
+    format. This function automatically parses the demographic description
+    and returns a SFS for the specified populations and sample sizes.
+
+    :param g: A ``demes`` DemeGraph from which to compute the SFS.
+    :type g: :class:`demes.DemeGraph`
+    :param sampled_demes: A list of deme IDs to take samples from. We can repeat
+        demes, as long as the sampling of repeated deme IDs occurs at distinct
+        times.
+    :type sampled_demes: list of strings
+    :param sample_sizes: A list of the same length as ``sampled_demes``,
+        giving the sample sizes for each sampled deme.
+    :type sample_sizes: list of ints
+    :param sample_times: If None, assumes all sampling occurs at the end of the
+        existence of the sampled deme. If there are
+        ancient samples, ``sample_times`` must be a list of same length as
+        ``sampled_demes``, giving the sampling times for each sampled
+        deme. Sampling times are given in time units of the original deme graph,
+        so might not necessarily be generations (e.g. if ``g.time_units`` is years)
+    :type sample_times: list of floats, optional
+    :param Ne: reference population size. If none is given, we use the initial
+        size of the root deme.
+    :type Ne: float, optional
+    :return: A ``dadi`` site frequency spectrum, with dimension equal to the
+        length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
+        in each dimension, indexing the allele frequency in each deme from 0
+        to n[i], where i is the deme index.
+    :rtype: :class:`dadi.Spectrum`
+    &#34;&#34;&#34;
+    _check_demes_imported()
+    if len(sampled_demes) != len(sample_sizes):
+        raise ValueError(&#34;sampled_demes and sample_sizes must be same length&#34;)
+    if sample_times is not None and len(sampled_demes) != len(sample_times):
+        raise ValueError(&#34;sample_times must have same length as sampled_demes&#34;)
+    for deme in sampled_demes:
+        if deme not in g:
+            raise ValueError(f&#34;deme {deme} is not in demography&#34;)
+
+    if sample_times is None:
+        sample_times = [g[d].end_time for d in sampled_demes]
+
+    if pts == None:
+        raise ValueError(&#34;dadi requires defining pts (grid points)&#34;)
+
+    # for any ancient samples, we need to add frozen branches
+    # with this, all &#34;sample times&#34; are at time 0, and ancient sampled demes are frozen
+    if np.any(np.array(sample_times) != 0):
+        g, sampled_demes, list_of_frozen_demes = _augment_with_ancient_samples(
+            g, sampled_demes, sample_times
+        )
+        sample_times = [0 for _ in sample_times]
+    else:
+        list_of_frozen_demes = []
+
+    if g.time_units != &#34;generations&#34;:
+        g, sample_times = _convert_to_generations(g, sample_times)
+    for d, n, t in zip(sampled_demes, sample_sizes, sample_times):
+        if t &lt; g[d].end_time or t &gt;= g[d].start_time:
+            raise ValueError(&#34;sample time for {deme} must be within its time span&#34;)
+
+    # get the list of demographic events from demes, which is a dictionary with
+    # lists of splits, admixtures, mergers, branches, and pulses
+    demes_demo_events = g.discrete_demographic_events()
+
+    # get the dict of events and event times that partition integration epochs, in
+    # descending order. events include demographic events, such as splits and
+    # mergers and admixtures, as well as changes in population sizes or migration
+    # rates that require instantaneous changes in the size function or migration matrix.
+    # get the list of demes present in each epoch, as a dictionary with non-overlapping
+    # adjoint epoch time intervals
+    demo_events, demes_present = _get_demographic_events(
+        g, demes_demo_events, sampled_demes
+    )
+
+    for epoch, epoch_demes in demes_present.items():
+        if len(epoch_demes) &gt; 5:
+            raise ValueError(
+                f&#34;dadi cannot integrate more than five demes at a time. &#34;
+                f&#34;Epoch {epoch} has demes {epoch_demes}.&#34;
+            )
+
+    # get the list of size functions, migration matrices, and frozen attributes from
+    # the deme graph and event times, matching the integration times
+    nu_funcs, mig_mats, Ts, frozen_pops = _get_integration_parameters(
+        g, demes_present, list_of_frozen_demes, Ne=Ne
+    )
+
+    # compute the SFS
+    fs = _compute_sfs(
+        demo_events,
+        demes_present,
+        sample_sizes,
+        nu_funcs,
+        mig_mats,
+        Ts,
+        frozen_pops,
+        pts
+    )
+
+
+    return fs
+
+
+##
+## general functions used by both SFS
+##
+
+
+def _convert_to_generations(g, sample_times):
+    &#34;&#34;&#34;
+    Takes a deme graph that is not in time units of generations and converts
+    times to generations, using the time units and generation times given.
+    &#34;&#34;&#34;
+    if g.time_units == &#34;generations&#34;:
+        return g, sample_times
+    else:
+        for ii, sample_time in enumerate(sample_times):
+            sample_times[ii] = sample_time / g.generation_time
+        g = g.in_generations()
+        return g, sample_times
+
+
+def _augment_with_ancient_samples(g, sampled_demes, sample_times):
+    &#34;&#34;&#34;
+    Returns a demography object and new sampled demes where we add
+    a branch event for the new sampled deme that is frozen.
+
+    New sampled, frozen demes are labeled &#34;{deme}_sampled_{sample_time}&#34;.
+    Note that we cannot have multiple ancient sampling events at the same
+    time for the same deme (for additional samples at the same time, increase
+    the sample size).
+    &#34;&#34;&#34;
+    frozen_demes = []
+    b = demes.Builder.fromdict(g.asdict())
+    for ii, (sd, st) in enumerate(zip(sampled_demes, sample_times)):
+        if st &gt; 0:
+            sd_frozen = sd + f&#34;_sampled_{st}&#34;
+            frozen_demes.append(sd_frozen)
+            sampled_demes[ii] = sd_frozen
+            b.add_deme(
+                sd_frozen,
+                start_time=st,
+                epochs=[dict(end_time=0, start_size=1)],
+                ancestors=[sd],
+            )
+    g = b.resolve()
+    return g, sampled_demes, frozen_demes
+
+
+def _get_demographic_events(g, demes_demo_events, sampled_demes):
+    &#34;&#34;&#34;
+    Returns demographic events and present demes over each epoch.
+    Epochs are divided by any demographic event.
+    &#34;&#34;&#34;
+    # first get set of all time dividers, from demographic events, migration
+    # rate changes, deme epoch changes
+    break_points = set()
+    for deme in g.demes:
+        for e in deme.epochs:
+            break_points.add(e.start_time)
+            break_points.add(e.end_time)
+    for pulse in g.pulses:
+        break_points.add(pulse.time)
+    for migration in g.migrations:
+        break_points.add(migration.start_time)
+        break_points.add(migration.end_time)
+
+    # get demes present for each integration epoch
+    integration_times = [
+        (start_time, end_time)
+        for start_time, end_time in zip(
+            sorted(list(break_points))[-1:0:-1], sorted(list(break_points))[-2::-1]
+        )
+    ]
+
+    # find live demes in each epoch, starting with most ancient
+    demes_present = defaultdict(list)
+    # add demes as they appear from past to present to end of lists
+    deme_start_times = defaultdict(list)
+    for deme in g.demes:
+        deme_start_times[deme.start_time].append(deme.name)
+
+    if math.inf not in deme_start_times.keys():
+        raise ValueError(&#34;Root deme must have start time as inf&#34;)
+    if len(deme_start_times[math.inf]) != 1:
+        raise ValueError(&#34;Deme graph can only have a single root&#34;)
+
+    for start_time in sorted(deme_start_times.keys())[::-1]:
+        for deme_id in deme_start_times[start_time]:
+            end_time = g[deme_id].end_time
+            for interval in integration_times:
+                if start_time &gt;= interval[0] and end_time &lt;= interval[1]:
+                    demes_present[interval].append(deme_id)
+
+    # dictionary of demographic events (pulses, splits, branches, mergers, and
+    # admixtures) it&#39;s possible that the order of these events will matter
+    # also noting here that there can be ambiguity about order of events, that will
+    # change the demography... but there should always be a way to write the demography
+    # in an unambiguous manner, using different verbs (e.g., two pulse events at the
+    # same time with same dest can be converted to an admixture event, and split the
+    # dest deme into two demes)
+    demo_events = defaultdict(list)
+    for pulse in demes_demo_events[&#34;pulses&#34;]:
+        event = (&#34;pulse&#34;, pulse.source, pulse.dest, pulse.proportion)
+        demo_events[pulse.time].append(event)
+    for branch in demes_demo_events[&#34;branches&#34;]:
+        event = (&#34;branch&#34;, branch.parent, branch.child)
+        demo_events[branch.time].append(event)
+    for merge in demes_demo_events[&#34;mergers&#34;]:
+        event = (&#34;merge&#34;, merge.parents, merge.proportions, merge.child)
+        demo_events[merge.time].append(event)
+    for admix in demes_demo_events[&#34;admixtures&#34;]:
+        event = (&#34;admix&#34;, admix.parents, admix.proportions, admix.child)
+        demo_events[admix.time].append(event)
+    for split in demes_demo_events[&#34;splits&#34;]:
+        event = (&#34;split&#34;, split.parent, split.children)
+        demo_events[split.time].append(event)
+
+    # if there are any unsampled demes that end before present and do not have
+    # any descendent demes, we need to add marginalization events.
+    for deme_id, succs in g.successors().items():
+        if deme_id not in sampled_demes and (
+            len(succs) == 0
+            or np.all([g[succ].start_time &gt; g[deme_id].end_time for succ in succs])
+        ):
+            event = (&#34;marginalize&#34;, deme_id)
+            demo_events[g[deme_id].end_time].append(event)
+
+    return demo_events, demes_present
+
+
+def _get_root_Ne(g):
+    # get root population and set Ne to root size
+    for deme_id, preds in g.predecessors().items():
+        if len(preds) == 0:
+            root_deme = deme_id
+            break
+    Ne = g[root_deme].epochs[0].start_size
+    return Ne
+
+
+def _get_integration_parameters(g, demes_present, frozen_list, Ne=None):
+    &#34;&#34;&#34;
+    Returns a list of size functions, migration matrices, integration times,
+    and lists frozen demes.
+    &#34;&#34;&#34;
+    nu_funcs = []
+    integration_times = []
+    migration_matrices = []
+    frozen_demes = []
+
+    if Ne is None:
+        Ne = _get_root_Ne(g)
+
+    for interval, live_demes in sorted(demes_present.items())[::-1]:
+        # get intergration time for interval
+        T = (interval[0] - interval[1]) / 2 / Ne
+        if T == math.inf:
+            T = 0
+        integration_times.append(T)
+        # get frozen attributes
+        freeze = [d in frozen_list for d in live_demes]
+        frozen_demes.append(freeze)
+        # get nu_function or list of sizes (if all constant)
+        sizes = []
+        for d in live_demes:
+            sizes.append(_sizes_at_time(g, d, interval))
+        nu_func = _make_nu_func(sizes, T, Ne)
+        nu_funcs.append(nu_func)
+        # get migration matrix for interval
+        mig_mat = np.zeros((len(live_demes), len(live_demes)))
+        for ii, d_from in enumerate(live_demes):
+            for jj, d_to in enumerate(live_demes):
+                if d_from != d_to:
+                    m = _migration_rate_in_interval(g, d_from, d_to, interval)
+                    mig_mat[jj, ii] = 2 * Ne * m
+        migration_matrices.append(mig_mat)
+
+    return nu_funcs, migration_matrices, integration_times, frozen_demes
+
+
+def _make_nu_func(sizes, T, Ne):
+    &#34;&#34;&#34;
+    Given the sizes at start and end of time interval, and the size function for
+    each deme, along with the integration time and reference Ne, return the
+    size function that gets passed to the dadi integration routines.
+    &#34;&#34;&#34;
+    if np.all([s[-1] == &#34;constant&#34; for s in sizes]):
+        # all constant
+        nu_func = [s[0] / Ne for s in sizes]
+        # print(sizes,T,Ne)
+        #print([ele/Ne for ele in s[:-1]],s[-1],T,Ne)
+    else:
+        nu_func = []
+        for s in sizes:
+            if s[-1] == &#34;constant&#34;:
+                assert s[0] == s[1]
+                nu_func.append(lambda t, N0=s[0]: N0 / Ne)
+            elif s[-1] == &#34;linear&#34;:
+                nu_func.append(
+                    lambda t, N0=s[0], NF=s[1]: N0 / Ne + t / T * (NF - N0) / Ne
+                )
+            elif s[-1] == &#34;exponential&#34;:
+                nu_func.append(
+                    lambda t, N0=s[0], NF=s[1]: (N0 / Ne) * (NF / N0) ** (t / T)
+                )
+            else:
+                raise ValueError(f&#34;{s[-1]} not a valid size function&#34;)
+            # print([ele/Ne for ele in s[:-1]],s[-1],T,Ne)
+    return nu_func
+
+
+def _sizes_at_time(g, deme_id, time_interval):
+    &#34;&#34;&#34;
+    Returns the start size, end size, and size function for given deme over the
+    given time interval.
+    &#34;&#34;&#34;
+    for epoch in g[deme_id].epochs:
+        if epoch.start_time &gt;= time_interval[0] and epoch.end_time &lt;= time_interval[1]:
+            break
+    if epoch.size_function not in [&#34;constant&#34;, &#34;exponential&#34;, &#34;linear&#34;]:
+        raise ValueError(
+            &#34;Can only intergrate constant, exponential, or linear size functions&#34;
+        )
+    size_function = epoch.size_function
+
+    if size_function == &#34;constant&#34;:
+        start_size = end_size = epoch.start_size
+
+    if epoch.start_time == time_interval[0]:
+        start_size = epoch.start_size
+    else:
+        if size_function == &#34;exponential&#34;:
+            start_size = epoch.start_size * np.exp(
+                np.log(epoch.end_size / epoch.start_size)
+                * (epoch.start_time - time_interval[0])
+                / epoch.time_span
+            )
+        elif size_function == &#34;linear&#34;:
+            frac = (epoch.start_time - time_interval[0]) / epoch.time_span
+            start_size = epoch.start_size + frac * (epoch.end_size - epoch.start_size)
+
+    if epoch.end_time == time_interval[1]:
+        end_size = epoch.end_size
+    else:
+        if size_function == &#34;exponential&#34;:
+            end_size = epoch.start_size * np.exp(
+                np.log(epoch.end_size / epoch.start_size)
+                * (epoch.start_time - time_interval[1])
+                / epoch.time_span
+            )
+        elif size_function == &#34;linear&#34;:
+            frac = (epoch.start_time - time_interval[1]) / epoch.time_span
+            end_size = epoch.start_size + frac * (epoch.end_size - epoch.start_size)
+
+    # print(epoch, start_size, end_size, size_function)
+    return start_size, end_size, size_function
+
+
+def _migration_rate_in_interval(g, source, dest, time_interval):
+    &#34;&#34;&#34;
+    Get the migration rate from source to dest over the given time interval.
+    &#34;&#34;&#34;
+    rate = 0
+    for mig in g.migrations:
+        try:  # if asymmetric migration
+            if mig.source == source and mig.dest == dest:
+                if (
+                    mig.start_time &gt;= time_interval[0]
+                    and mig.end_time &lt;= time_interval[1]
+                ):
+                    rate = mig.rate
+        except AttributeError:  # symmetric migration
+            if source in mig.demes and dest in mig.demes:
+                if (
+                    mig.start_time &gt;= time_interval[0]
+                    and mig.end_time &lt;= time_interval[1]
+                ):
+                    rate = mig.rate
+    return rate
+
+
+##
+## Functions for SFS computation
+##
+
+
+
+def _compute_sfs(
+    demo_events,
+    demes_present,
+    sample_sizes,
+    nu_funcs,
+    migration_matrices,
+    integration_times,
+    frozen_demes,
+    pts,
+    theta=1.0,
+    gamma=None,
+    h=None,
+):
+    &#34;&#34;&#34;
+    Integrates using dadi to find the SFS for given demo events, etc
+    &#34;&#34;&#34;
+    if gamma is not None and h is None:
+        h = 0.5
+
+    # theta is a scalar
+    assert type(theta) in [int, float]
+
+    integration_intervals = sorted(list(demes_present.keys()))[::-1]
+
+    # set up initial steady-state 1D phi for ancestral deme
+    if gamma is None:
+        gamma = 0.0
+    if h is None:
+        h = 0.5
+    xx = dadi.Numerics.default_grid(pts)
+    phi = dadi.PhiManip.phi_1D(xx, theta0=theta, gamma=gamma, h=h)
+    
+    # for each set of demographic events and integration epochs, step through
+    # integration, apply events, and then reorder populations to align with demes
+    # present in the next integration epoch
+    pop_ids = []
+    i=0
+    for (T, nu, M, frozen, interval) in zip(
+        integration_times,
+        nu_funcs,
+        migration_matrices,
+        frozen_demes,
+        integration_intervals,
+    ):
+        # print(&#39;T: &#39;,T,&#39;\nnu: &#39;,nu,&#39;\nM:\n&#39;,M, &#39;\ninterval&#39;,interval,&#39;\nevents:&#39;,demo_events[interval[1]],&#39;\n&#39;)
+        if pop_ids == []:
+            pop_ids = demes_present[interval]
+        if T &gt; 0:
+            gamma_int = [gamma for _ in frozen]
+            h_int = [h for _ in frozen]
+            integration_params = [nu, T, M, gamma_int, h_int, theta, frozen]
+            phi = _integrate_phi(phi, xx, integration_params, pop_ids)
+            # ###
+            # try:
+            #     print(integration_params)
+            # except:
+            #     pass
+            # ###
+        events = demo_events[interval[1]]
+        for event in events:
+            phi, pop_ids = _apply_event(phi, xx, pop_ids, event, interval[1], sample_sizes, demes_present)
+
+        if interval[1] &gt; 0:
+            # rearrange to next order of demes
+            next_interval = integration_intervals[
+                [x[0] for x in integration_intervals].index(interval[1])
+            ]
+            next_deme_order = demes_present[next_interval]
+            # ###
+            # print(pop_ids)
+            # ###
+            if pop_ids != next_deme_order:
+                new_order = [pop_ids.index(pop)+1 for pop in next_deme_order]
+                phi = dadi.PhiManip.reorder_pops(phi, new_order)
+                pop_ids = next_deme_order
+            # print(&#39;new order:&#39;,pop_ids,&#39;\n\n&#39;)
+
+    fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
+    return fs
+
+
+def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present):
+    e = event[0]
+    if e == &#34;marginalize&#34;:
+        marginalize_i = pop_ids.index(event[1])
+        phi = dadi.PhiManip.remove_pop(phi, xx, marginalize_i+1)
+        pop_ids.pop(marginalize_i)
+    elif e == &#34;split&#34;:
+        children = event[2]
+        parent = event[1]
+        parent_i = pop_ids.index(parent)
+        if len(children) == 1:
+            # &#34;split&#34; into just one population (name change)
+            pop_ids = pop_ids[:parent_i] +children+ pop_ids[parent_i+1:]
+        else:
+            # split into multiple children demes
+            if len(children) + len(pop_ids) - 1 &gt; 5:
+                raise ValueError(&#34;Cannot apply split that creates more than 5 demes&#34;)
+            phi= _split_phi(phi, xx, pop_ids, parent)
+            # When dadi splits a population, one of the new children is always the last in the phi matrix
+            pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
+    elif e == &#34;branch&#34;:
+        # branch is a split, but keep the pop_id of parent
+        parent = event[1]
+        parent_i = pop_ids.index(parent)
+        child = event[2]
+        children = [parent, child]
+        phi = _split_phi(phi, xx, pop_ids, parent)
+        # When dadi splits a population, one of the new children is always the last in the phi matrix
+        pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
+    elif e in [&#34;admix&#34;, &#34;merge&#34;]:
+        # two or more populations merge, based on given proportion(s)
+        parents = event[1]
+        proportions = event[2]
+        child = event[3]
+        if child not in pop_ids:
+            pop_ids.append(child)
+            if len(pop_ids)&gt;5:
+                raise ValueError(&#34;Cannot apply admix that creates more than 5 demes&#34;)
+            phi = _admix_new_pop_phi(phi, xx, proportions, pop_ids[:-1], parents)
+        else:
+            # admixture from one or more populations to another existing population
+            # with some proportion
+            phi = _admix_phi(phi, xx, proportions, pop_ids, sources, dest)
+        if e == &#34;merge&#34;:
+            for parent in parents:
+                remove_i = pop_ids.index(parent)
+                pop_ids.pop(remove_i)
+                phi = dadi.PhiManip.remove_pop(phi, xx, remove_i+1)
+    elif e == &#34;pulse&#34;:
+        # admixture from one population to another, with some proportion
+        source = event[1]
+        dest = event[2]
+        proportion = event[3]
+        phi = _admix_phi(phi, xx, proportion, pop_ids, source, dest)
+    else:
+        raise ValueError(f&#34;Haven&#39;t implemented methods for event type {e}&#34;)
+    # print(pop_ids)
+    return phi, pop_ids
+
+def _integrate_phi(phi, xx, integration_params, pop_ids):
+    &#34;&#34;&#34;
+    Intrgates phi into children with split_sizes, from the deme at split_idx.
+    &#34;&#34;&#34;
+    nu, T, M, gamma, h, theta, frozen = integration_params
+    if len(pop_ids) == 1:
+        phi = dadi.Integration.one_pop(
+            phi, xx, T, nu[0], 
+            gamma=gamma[0], h=h[0], theta0=theta, frozen=frozen[0]
+            )
+    elif len(pop_ids) == 2:
+        phi = dadi.Integration.two_pops(
+            phi, xx, T, nu1=nu[0], nu2=nu[1], m12=M[0,1], m21=M[1,0], 
+            gamma1=gamma[0], gamma2=gamma[1], h1=h[0], h2=h[1], theta0=theta, 
+            # initial_t=0, 
+            frozen1=frozen[0], frozen2=frozen[1]
+            )
+    elif len(pop_ids) == 3:
+        phi = dadi.Integration.three_pops(
+           phi, xx, T, nu1=nu[0], nu2=nu[1], nu3=nu[2],
+           m12=M[0,1], m13=M[0,2], m21=M[1,0], m23=M[1,2], m31=M[2,0], m32=M[2,1],
+           gamma1=gamma[0], gamma2=gamma[1], gamma3=gamma[2], h1=h[0], h2=h[1], h3=h[2],
+           theta0=theta, 
+           # initial_t=0, 
+           frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2]
+           )
+    elif len(pop_ids) == 4:
+        phi = dadi.Integration.four_pops(
+            phi, xx, T, nu1=nu[0], nu2=nu[1], nu3=nu[2], nu4=nu[3],
+           m12=M[0,1], m13=M[0,2], m14=M[0,3], m21=M[1,0], m23=M[1,2], m24=M[1,3], 
+           m31=M[2,0], m32=M[2,1], m34=M[2,3], m41=M[3,0], m42=M[3,1], m43=M[3,2],
+           gamma1=gamma[0], gamma2=gamma[1], gamma3=gamma[2], gamma4=gamma[3], h1=h[0], h2=h[1], h3=h[2], h4=h[3],
+           theta0=theta, initial_t=0, frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2], frozen4=frozen[3]
+           )
+    elif len(pop_ids) == 5:
+        phi = dadi.Integration.five_pops(
+           phi, xx, T, nu1=nu[0], nu2=nu[1], nu3=nu[2], nu4=nu[3], nu5=nu[4],
+           m12=M[0,1], m13=M[0,2], m14=M[0,3], m15=M[0,4], 
+           m21=M[1,0], m23=M[1,2], m24=M[1,3], m25=M[1,4],
+           m31=M[2,0], m32=M[2,1], m34=M[2,3], m35=M[2,4], 
+           m41=M[3,0], m42=M[3,1], m43=M[3,2], m45=M[3,4],
+           m51=M[4,0], m52=M[4,1], m53=M[4,2], m54=M[4,3],
+           gamma1=gamma[0], gamma2=gamma[1], gamma3=gamma[2], 
+           gamma4=gamma[3], gamma5=gamma[4],
+           h1=h[0], h2=h[1], h3=h[2], h4=h[3], h5=h[4],
+           theta0=theta, initial_t=0, 
+           frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2], 
+           frozen4=frozen[3], frozen5=frozen[3]
+           )
+    return phi
+
+def _split_phi(phi, xx, pop_ids, parent):
+    &#34;&#34;&#34;
+    Split the phi into children from the deme at pop_ids.index(parent).
+    &#34;&#34;&#34;
+    parent_i = pop_ids.index(parent)
+    if len(pop_ids) == 1:
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+    elif len(pop_ids) == 2:
+        phimanip_func = [dadi.PhiManip.phi_2D_to_3D_split_1, dadi.PhiManip.phi_2D_to_3D_split_2][parent_i]
+        phi = phimanip_func(xx, phi)
+    elif len(pop_ids) == 3:
+        proportions = [[1,0,0], [0,1,0], [0,0,1]][parent_i]
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportions[0],proportions[1], xx,xx,xx,xx)
+    elif len(pop_ids) == 4:
+        proportions = [[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]][parent_i]
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx,xx)
+    return phi
+
+def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents):
+    &#34;&#34;&#34;
+    This function is for when admixture and mergining events result in a new population.
+    Merge events remove the parental demes, while admixture events do not.
+    &#34;&#34;&#34;
+    parent_i = []
+    for parent in parents:
+        parent_i.append(pop_ids.index(parent))
+    proportion_l = _make_sorted_proportions_list(proportions, parent_i, None, pop_ids)
+    if len(pop_ids) == 2:
+        phi = dadi.PhiManip.phi_2D_to_3D_admix(phi, proportion_l[0], xx,xx,xx)
+    if len(pop_ids) == 3:
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportion_l[0],proportion_l[1], xx,xx,xx,xx)
+    if len(pop_ids) == 4:
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportion_l[0],proportion_l[1],proportion_l[2], xx,xx,xx,xx,xx)
+    return phi
+
+def _admix_phi(phi, xx, proportions, pop_ids, sources, dest):
+    # Get index of source and destination populations
+    # uses admix in place
+    if type(proportions) != list:
+        proportions = [proportions]
+    if type(sources) != list:
+        sources = [sources]
+    source_i = []
+    for source in sources:
+        source_i.append(pop_ids.index(source))
+    dest_i = pop_ids.index(dest)
+    proportion_l = _make_sorted_proportions_list(proportions, source_i, dest_i, pop_ids)
+    if len(pop_ids) == 2:
+        pulse = [
+        dadi.PhiManip.phi_2D_admix_2_into_1,
+        dadi.PhiManip.phi_2D_admix_1_into_2
+        ][dest_i]
+        pulse(phi, proportions[0], xx,xx)
+    if len(pop_ids) == 3:
+        proportion1,proportion2 = proportion_l
+        pulse = [
+        dadi.PhiManip.phi_3D_admix_2_and_3_into_1,
+        dadi.PhiManip.phi_3D_admix_1_and_3_into_2,
+        dadi.PhiManip.phi_3D_admix_1_and_2_into_3
+        ][dest_i]
+        pulse(phi, proportion1,proportion2, xx,xx,xx)
+    if len(pop_ids) == 4:
+        proportion1,proportion2,proportion3 = proportion_l
+        pulse = [
+        dadi.PhiManip.phi_4D_admix_into_1,
+        dadi.PhiManip.phi_4D_admix_into_2,
+        dadi.PhiManip.phi_4D_admix_into_3,
+        dadi.PhiManip.phi_4D_admix_into_4
+        ][dest_i]
+        pulse(phi, proportion1,proportion2,proportion3, xx,xx,xx,xx)
+    if len(pop_ids) == 5:
+        proportion1,proportion2,proportion3,proportion4 = proportion_l
+        pulse = [
+        dadi.PhiManip.phi_5D_admix_into_1,
+        dadi.PhiManip.phi_5D_admix_into_2,
+        dadi.PhiManip.phi_5D_admix_into_3,
+        dadi.PhiManip.phi_5D_admix_into_4,
+        dadi.PhiManip.phi_5D_admix_into_5
+        ][dest_i]
+        pulse(phi, proportion1,proportion2,proportion3,proportion4, xx,xx,xx,xx,xx)
+    return phi
+
+def _make_sorted_proportions_list(proportions, source_i, dest_i, pop_ids):
+    proportion_l = [0] * len(pop_ids)
+    for i,prop in zip(source_i,proportions):
+        proportion_l[i] = prop
+    try:
+        proportion_l.pop(dest_i)
+    except:
+        pass
+    # print(proportion_l)
+    return proportion_l</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Demes.Demes.SFS"><code class="name flex">
+<span>def <span class="ident">SFS</span></span>(<span>g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Takes a deme graph and computes the SFS. <code>demes</code> is a package for
+specifying demographic models in a user-friendly, human-readable YAML
+format. This function automatically parses the demographic description
+and returns a SFS for the specified populations and sample sizes.</p>
+<p>:param g: A <code>demes</code> DemeGraph from which to compute the SFS.
+:type g: :class:<code>demes.DemeGraph</code>
+:param sampled_demes: A list of deme IDs to take samples from. We can repeat
+demes, as long as the sampling of repeated deme IDs occurs at distinct
+times.
+:type sampled_demes: list of strings
+:param sample_sizes: A list of the same length as <code>sampled_demes</code>,
+giving the sample sizes for each sampled deme.
+:type sample_sizes: list of ints
+:param sample_times: If None, assumes all sampling occurs at the end of the
+existence of the sampled deme. If there are
+ancient samples, <code>sample_times</code> must be a list of same length as
+<code>sampled_demes</code>, giving the sampling times for each sampled
+deme. Sampling times are given in time units of the original deme graph,
+so might not necessarily be generations (e.g. if <code>g.time_units</code> is years)
+:type sample_times: list of floats, optional
+:param Ne: reference population size. If none is given, we use the initial
+size of the root deme.
+:type Ne: float, optional
+:return: A <code><a title="dadi" href="../index.html">dadi</a></code> site frequency spectrum, with dimension equal to the
+length of <code>sampled_demes</code>, and shape equal to <code>sample_sizes</code> plus one
+in each dimension, indexing the allele frequency in each deme from 0
+to n[i], where i is the deme index.
+:rtype: :class:<code>dadi.Spectrum</code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None):
+    &#34;&#34;&#34;
+    Takes a deme graph and computes the SFS. ``demes`` is a package for
+    specifying demographic models in a user-friendly, human-readable YAML
+    format. This function automatically parses the demographic description
+    and returns a SFS for the specified populations and sample sizes.
+
+    :param g: A ``demes`` DemeGraph from which to compute the SFS.
+    :type g: :class:`demes.DemeGraph`
+    :param sampled_demes: A list of deme IDs to take samples from. We can repeat
+        demes, as long as the sampling of repeated deme IDs occurs at distinct
+        times.
+    :type sampled_demes: list of strings
+    :param sample_sizes: A list of the same length as ``sampled_demes``,
+        giving the sample sizes for each sampled deme.
+    :type sample_sizes: list of ints
+    :param sample_times: If None, assumes all sampling occurs at the end of the
+        existence of the sampled deme. If there are
+        ancient samples, ``sample_times`` must be a list of same length as
+        ``sampled_demes``, giving the sampling times for each sampled
+        deme. Sampling times are given in time units of the original deme graph,
+        so might not necessarily be generations (e.g. if ``g.time_units`` is years)
+    :type sample_times: list of floats, optional
+    :param Ne: reference population size. If none is given, we use the initial
+        size of the root deme.
+    :type Ne: float, optional
+    :return: A ``dadi`` site frequency spectrum, with dimension equal to the
+        length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
+        in each dimension, indexing the allele frequency in each deme from 0
+        to n[i], where i is the deme index.
+    :rtype: :class:`dadi.Spectrum`
+    &#34;&#34;&#34;
+    _check_demes_imported()
+    if len(sampled_demes) != len(sample_sizes):
+        raise ValueError(&#34;sampled_demes and sample_sizes must be same length&#34;)
+    if sample_times is not None and len(sampled_demes) != len(sample_times):
+        raise ValueError(&#34;sample_times must have same length as sampled_demes&#34;)
+    for deme in sampled_demes:
+        if deme not in g:
+            raise ValueError(f&#34;deme {deme} is not in demography&#34;)
+
+    if sample_times is None:
+        sample_times = [g[d].end_time for d in sampled_demes]
+
+    if pts == None:
+        raise ValueError(&#34;dadi requires defining pts (grid points)&#34;)
+
+    # for any ancient samples, we need to add frozen branches
+    # with this, all &#34;sample times&#34; are at time 0, and ancient sampled demes are frozen
+    if np.any(np.array(sample_times) != 0):
+        g, sampled_demes, list_of_frozen_demes = _augment_with_ancient_samples(
+            g, sampled_demes, sample_times
+        )
+        sample_times = [0 for _ in sample_times]
+    else:
+        list_of_frozen_demes = []
+
+    if g.time_units != &#34;generations&#34;:
+        g, sample_times = _convert_to_generations(g, sample_times)
+    for d, n, t in zip(sampled_demes, sample_sizes, sample_times):
+        if t &lt; g[d].end_time or t &gt;= g[d].start_time:
+            raise ValueError(&#34;sample time for {deme} must be within its time span&#34;)
+
+    # get the list of demographic events from demes, which is a dictionary with
+    # lists of splits, admixtures, mergers, branches, and pulses
+    demes_demo_events = g.discrete_demographic_events()
+
+    # get the dict of events and event times that partition integration epochs, in
+    # descending order. events include demographic events, such as splits and
+    # mergers and admixtures, as well as changes in population sizes or migration
+    # rates that require instantaneous changes in the size function or migration matrix.
+    # get the list of demes present in each epoch, as a dictionary with non-overlapping
+    # adjoint epoch time intervals
+    demo_events, demes_present = _get_demographic_events(
+        g, demes_demo_events, sampled_demes
+    )
+
+    for epoch, epoch_demes in demes_present.items():
+        if len(epoch_demes) &gt; 5:
+            raise ValueError(
+                f&#34;dadi cannot integrate more than five demes at a time. &#34;
+                f&#34;Epoch {epoch} has demes {epoch_demes}.&#34;
+            )
+
+    # get the list of size functions, migration matrices, and frozen attributes from
+    # the deme graph and event times, matching the integration times
+    nu_funcs, mig_mats, Ts, frozen_pops = _get_integration_parameters(
+        g, demes_present, list_of_frozen_demes, Ne=Ne
+    )
+
+    # compute the SFS
+    fs = _compute_sfs(
+        demo_events,
+        demes_present,
+        sample_sizes,
+        nu_funcs,
+        mig_mats,
+        Ts,
+        frozen_pops,
+        pts
+    )
+
+
+    return fs</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.Demes" href="index.html">dadi.Demes</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Demes.Demes.SFS" href="#dadi.Demes.Demes.SFS">SFS</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

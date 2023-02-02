@@ -68,7 +68,7 @@ Similar to the way in which vanilla dadi is used, you should have a starting gue
     lower_bound, upper_bound = [1e-3, 1e-2], [1, 50000.]
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
-    popt = dadi.Inference.optimize_log(p0, data, spectra.integrate, pts=None,
+    popt, ll = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
                                        func_args=[DFE.PDFs.gamma, theta_ns],
                                        lower_bound=lower_bound, upper_bound=upper_bound, 
                                        verbose=len(sel_params), maxiter=10, multinom=False)
@@ -97,11 +97,11 @@ Fit the DFE as before, accounting for the extra parameter to describe the propor
     lower_bound, upper_bound = [1e-3, 1e-3, 1e-2], [1, 1, 50000.]
     p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                                   upper_bound=upper_bound)
-    popt = dadi.Inference.optimize_log(p0, data, spectra.integrate, pts=None,
-                                       func_args=[neugamma, theta_ns],
-                                       lower_bound=lower_bound, upper_bound=upper_bound, 
-                                       verbose=len(sel_params),
-                                       maxiter=10, multinom=False)
+    popt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+                              func_args=[neugamma, theta_ns],
+                              lower_bound=lower_bound, upper_bound=upper_bound, 
+                              verbose=len(sel_params),
+                              maxiter=10, multinom=False)
 
 For fitting with ancestral state misidentification or including a point mass of positive selection, see `example1D.py`.
 
@@ -129,11 +129,11 @@ Calculating individual spectra is very similar to the 1D case.
 As is optimization.
 
     p0 = [0,1.,0.8]
-    popt = dadi.Inference.optimize(p0, data, s2.integrate, pts=None,
-                                   func_args=[sel_dist, theta],
-                                   lower_bound=[None,0,-1],
-                                   upper_bound=[None,None,1],
-                                   verbose=30, multinom=False)
+    popt = dadi.Inference.opt(p0, data, s2.integrate, pts=None,
+                              func_args=[sel_dist, theta],
+                              lower_bound=[None,0,-1],
+                              upper_bound=[None,None,1],
+                              verbose=30, multinom=False)
 
 Note that when a point mass of positive selection is included in a 2D DFE, the assumed value for the positive \\(\gamma\\) must be cached, otherwise evaluation would be too expensive.
 

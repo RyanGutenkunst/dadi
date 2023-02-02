@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.2" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>dadi.TwoLocus.numerics API documentation</title>
 <meta name="description" content="methods for numerics of two locus diffusion - grids, transition matrices, etc" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -1684,10 +1684,10 @@ except ImportError:
 <span>def <span class="ident">LD_per_bin</span></span>(<span>ns)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>LD statistics per bin for a TLSpectrum.</p>
+<div class="desc"><p>LD statistics per bin for a TLSpectrum.</p>
 <p>ns: Number of samples</p>
 <p>Returns (D, r2). Both are TLSpectrum objects in which each entry is the
-value of D or r^2 for that combination of haplotypes.</p></section>
+value of D or r^2 for that combination of haplotypes.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1718,9 +1718,9 @@ value of D or r^2 for that combination of haplotypes.</p></section>
 <span>def <span class="ident">advance1D</span></span>(<span>u, P)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Given transition matrix P, use dadi's triagonal solver to integrate in 1D
+<div class="desc"><p>Given transition matrix P, use dadi's triagonal solver to integrate in 1D
 u - 1D density function
-P - transition matrix</p></section>
+P - transition matrix</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1742,11 +1742,11 @@ P - transition matrix</p></section>
 <span>def <span class="ident">advance_adi</span></span>(<span>phi, U01, P1, P2, P3, x, ii)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Combined ADI integration of phi
+<div class="desc"><p>Combined ADI integration of phi
 phi - density function
 U01 - domain markers
 P1/P2/P3 - ADI transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1780,11 +1780,11 @@ x - grid</p></section>
 <span>def <span class="ident">advance_adi1</span></span>(<span>phi, U01, P1, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>ADI integration along axis 1 of phi
+<div class="desc"><p>ADI integration along axis 1 of phi
 phi - density function
 U01 - domain markers
 P1 - ADI transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1810,11 +1810,11 @@ x - grid</p></section>
 <span>def <span class="ident">advance_adi2</span></span>(<span>phi, U01, P2, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>ADI integration along axis 2 of phi
+<div class="desc"><p>ADI integration along axis 2 of phi
 phi - density function
 U01 - domain markers
 P2 - ADI transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1840,11 +1840,11 @@ x - grid</p></section>
 <span>def <span class="ident">advance_adi3</span></span>(<span>phi, U01, P3, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>ADI integration along axis 3 of phi
+<div class="desc"><p>ADI integration along axis 3 of phi
 phi - density function
 U01 - domain markers
 P3 - ADI transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1870,10 +1870,10 @@ x - grid</p></section>
 <span>def <span class="ident">advance_cov</span></span>(<span>phi, C12, C13, C23, x, ii)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Combined integration for the covariance terms
+<div class="desc"><p>Combined integration for the covariance terms
 phi - density function
 C12/C13/C23 - transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1905,10 +1905,10 @@ x - grid</p></section>
 <span>def <span class="ident">advance_cov12</span></span>(<span>phi, C12, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Explicit integration of covariance term in the 1/2 axes planes
+<div class="desc"><p>Explicit integration of covariance term in the 1/2 axes planes
 phi - density function
 C12 - transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1930,10 +1930,10 @@ x - grid</p></section>
 <span>def <span class="ident">advance_cov13</span></span>(<span>phi, C13, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Explicit integration of covariance term in the 1/3 axes planes
+<div class="desc"><p>Explicit integration of covariance term in the 1/3 axes planes
 phi - density function
 C13 - transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1955,10 +1955,10 @@ x - grid</p></section>
 <span>def <span class="ident">advance_cov23</span></span>(<span>phi, C23, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Explicit integration of covariance term in the 2/3 axes planes
+<div class="desc"><p>Explicit integration of covariance term in the 2/3 axes planes
 phi - density function
 C23 - transition matrices
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1980,11 +1980,11 @@ x - grid</p></section>
 <span>def <span class="ident">advance_surf_adi1</span></span>(<span>surf, U01surf, P1surf, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Advance the adi method along first axis one of surface domain
+<div class="desc"><p>Advance the adi method along first axis one of surface domain
 surf - density function along that surface
 U01surf - domain markers along grid
 P1surf - adi transition matrix
-x - uniform grid</p></section>
+x - uniform grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2007,11 +2007,11 @@ x - uniform grid</p></section>
 <span>def <span class="ident">advance_surf_adi2</span></span>(<span>surf, U01surf, P2surf, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Advance the adi method along second axis one of surface domain
+<div class="desc"><p>Advance the adi method along second axis one of surface domain
 surf - density function along that surface
 U01surf - domain markers along grid
 P2surf - adi transition matrix
-x - uniform grid</p></section>
+x - uniform grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2034,10 +2034,10 @@ x - uniform grid</p></section>
 <span>def <span class="ident">advance_surf_cov</span></span>(<span>surf, Csurf, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Explicit integration of the covariance term, using scipy's sparse matrix for Csurf
+<div class="desc"><p>Explicit integration of the covariance term, using scipy's sparse matrix for Csurf
 surf - density function along the surface
 Csurf - transition matrix
-x - grid</p></section>
+x - grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2057,12 +2057,12 @@ x - grid</p></section>
 <span>def <span class="ident">advance_surface</span></span>(<span>phi, x, P1surf, P2surf, Csurf, Pline, P, U01surf)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>phi - full density function
+<div class="desc"><p>phi - full density function
 x - grid
 P1surf,P2surf - ADI transition matrices for triallele density function
 Csurf - covarance transition matrix
 Pline - transition matrix for diagonal boundary of triallele surface
-P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary</p></section>
+P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2093,7 +2093,7 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <span>def <span class="ident">array_to_spectrum</span></span>(<span>phi)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>now handled by TLSpectrum_mod.TLSpectrum</p></section>
+<div class="desc"><p>now handled by TLSpectrum_mod.TLSpectrum</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2125,7 +2125,7 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <span>def <span class="ident">binom</span></span>(<span>n, k)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2138,7 +2138,7 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <span>def <span class="ident">cached_genotype_exact_projection</span></span>(<span>n, haplotype_counts)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2163,10 +2163,10 @@ P - stores the ammount of density that should be moved from triallele domain (su
 <span>def <span class="ident">cached_projection</span></span>(<span>proj_to, proj_from, hits)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Coefficients for projection from a larger size to smaller
+<div class="desc"><p>Coefficients for projection from a larger size to smaller
 proj_to: Number of samples to project down to
 proj_from: Number of samples to project from
-hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)</p></section>
+hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2205,9 +2205,9 @@ hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)</p></secti
 <span>def <span class="ident">condition</span></span>(<span>F, i)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>condition on seeing nA = i
+<div class="desc"><p>condition on seeing nA = i
 Fcond[i,j]: i - number AB, j - number of aB
-i ranges from 0 to i, j ranges from 0 to n-i</p></section>
+i ranges from 0 to i, j ranges from 0 to n-i</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2233,9 +2233,9 @@ i ranges from 0 to i, j ranges from 0 to n-i</p></section>
 <span>def <span class="ident">domain</span></span>(<span>x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Array of same dimension as density function discretization
+<div class="desc"><p>Array of same dimension as density function discretization
 Has a 1 if grid point lies in domain, 0 if outside domain
-x - 1D grid</p></section>
+x - 1D grid</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2257,7 +2257,7 @@ x - 1D grid</p></section>
 <span>def <span class="ident">domain_surf</span></span>(<span>x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></section>
+<div class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2277,7 +2277,7 @@ x - 1D grid</p></section>
 <span>def <span class="ident">extrap_dt_pts</span></span>(<span>temps)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2297,7 +2297,7 @@ x - 1D grid</p></section>
 <span>def <span class="ident">fold_ancestral</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Takes an unfolded two locus frequency spectrum and folds it (assume don't konw ancestral state)</p></section>
+<div class="desc"><p>Takes an unfolded two locus frequency spectrum and folds it (assume don't konw ancestral state)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2334,7 +2334,7 @@ x - 1D grid</p></section>
 <span>def <span class="ident">fold_lr</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Takes an unfolded two locus spectrum and folds based on left/right allele</p></section>
+<div class="desc"><p>Takes an unfolded two locus spectrum and folds based on left/right allele</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2360,8 +2360,8 @@ x - 1D grid</p></section>
 <span>def <span class="ident">genotype_exp_data_to_arrays</span></span>(<span>G_exp, G_data)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>return 1D spectra, to perform likelihood calcs
-so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods</p></section>
+<div class="desc"><p>return 1D spectra, to perform likelihood calcs
+so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2395,7 +2395,7 @@ so given two dicts, one for genotype freq expectations, one for data, returns sp
 <span>def <span class="ident">genotype_spectrum_from_F</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2422,7 +2422,7 @@ so given two dicts, one for genotype freq expectations, one for data, returns sp
 <span>def <span class="ident">genotypes_prob_4</span></span>(<span>n, colors, hits)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2438,9 +2438,9 @@ so given two dicts, one for genotype freq expectations, one for data, returns sp
 <span>def <span class="ident">grid</span></span>(<span>numpts)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Default grid is uniform, so that grid points lie directly on the boundaries
+<div class="desc"><p>Default grid is uniform, so that grid points lie directly on the boundaries
 Here, delta_x = 1./numpts
-numpts - number of grid points (less one)</p></section>
+numpts - number of grid points (less one)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2458,7 +2458,7 @@ numpts - number of grid points (less one)</p></section>
 <span>def <span class="ident">grid_dx</span></span>(<span>x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Given 1D grid x, this returns the 1D grid spacing for x</p></section>
+<div class="desc"><p>Given 1D grid x, this returns the 1D grid spacing for x</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2474,9 +2474,9 @@ numpts - number of grid points (less one)</p></section>
 <span>def <span class="ident">grid_dx3</span></span>(<span>x, dx)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>For integrating over the 3D domain (see int3)
+<div class="desc"><p>For integrating over the 3D domain (see int3)
 x - 1D grid
-dx - 1D grid spacing</p></section>
+dx - 1D grid spacing</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2498,8 +2498,8 @@ dx - 1D grid spacing</p></section>
 <span>def <span class="ident">grid_dx_2d</span></span>(<span>x, dx)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>The two dimensional grid spacing over the domain.
-Grid points lie along the diagonal boundary, and Delta for those points is halved</p></section>
+<div class="desc"><p>The two dimensional grid spacing over the domain.
+Grid points lie along the diagonal boundary, and Delta for those points is halved</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2519,13 +2519,13 @@ Grid points lie along the diagonal boundary, and Delta for those points is halve
 <span>def <span class="ident">injectA</span></span>(<span>x, dx, dt, yB, phi, thetaA)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Injection new derived mutations A onto background of B/b
+<div class="desc"><p>Injection new derived mutations A onto background of B/b
 x - 1D grid
 dx - 1D grid spacing
 dt - integration time step
 yA - biallelic frequency spectrum integrated by dadi
 phi - density function
-thetaA - scaled mutation rate</p></section>
+thetaA - scaled mutation rate</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2550,13 +2550,13 @@ thetaA - scaled mutation rate</p></section>
 <span>def <span class="ident">injectB</span></span>(<span>x, dx, dt, yA, phi, thetaB)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Injection new derived mutations B onto background of A/a
+<div class="desc"><p>Injection new derived mutations B onto background of A/a
 x - 1D grid
 dx - 1D grid spacing
 dt - integration time step
 yB - biallelic frequency spectrum integrated by dadi
 phi - density function
-thetaB - scaled mutation rate</p></section>
+thetaB - scaled mutation rate</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2581,9 +2581,9 @@ thetaB - scaled mutation rate</p></section>
 <span>def <span class="ident">int2</span></span>(<span>DXX, U)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Integrate the density function over the domain
+<div class="desc"><p>Integrate the density function over the domain
 DXX - two dimensional grid
-U - density function</p></section>
+U - density function</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2601,9 +2601,9 @@ U - density function</p></section>
 <span>def <span class="ident">int3</span></span>(<span>DX, U)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Numerically integrate the density function phi
+<div class="desc"><p>Numerically integrate the density function phi
 phi - density function
-DX - 3D grid spacing for integration weights</p></section>
+DX - 3D grid spacing for integration weights</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2621,7 +2621,7 @@ DX - 3D grid spacing for integration weights</p></section>
 <span>def <span class="ident">ln_binomial</span></span>(<span>n, k)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2634,7 +2634,7 @@ DX - 3D grid spacing for integration weights</p></section>
 <span>def <span class="ident">mean_r2</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2662,10 +2662,10 @@ DX - 3D grid spacing for integration weights</p></section>
 <span>def <span class="ident">misidentification</span></span>(<span>F, p)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>with probability p, ancestral state is misidentified
+<div class="desc"><p>with probability p, ancestral state is misidentified
 with prob p(1-p) A -&gt; a but B correct
 with prob p(1-p) B -&gt; b but A correct
-with prob p^2 A -&gt; a and B -&gt; b</p></section>
+with prob p^2 A -&gt; a and B -&gt; b</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2697,9 +2697,9 @@ with prob p^2 A -&gt; a and B -&gt; b</p></section>
 <span>def <span class="ident">misidentification_genotype_dict</span></span>(<span>G, p)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>same misidentification probabilities as misidentification(F,p)
+<div class="desc"><p>same misidentification probabilities as misidentification(F,p)
 with prob p(1-p), AA -&gt; aa, aa -&gt; AA, Aa stays the same, B/b stay same
-with prob p(1-p),</p></section>
+with prob p(1-p),</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2730,11 +2730,11 @@ with prob p(1-p),</p></section>
 <span>def <span class="ident">move_density_to_surface</span></span>(<span>x, dx, dt, gammaA, gammaB, nu, hA=0.5, hB=0.5)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+<div class="desc"><p>for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
 x - grid
 dx - grid spacing
 dt - timestep of integration
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2785,7 +2785,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">move_surf_density_to_bdry</span></span>(<span>x, surf, P)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>This is an absorbing boundary, so we'll just remove that density and not worry about integrating along that diagonal</p></section>
+<div class="desc"><p>This is an absorbing boundary, so we'll just remove that density and not worry about integrating along that diagonal</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2805,12 +2805,12 @@ nu - relative population size</p></section>
 <span>def <span class="ident">move_surf_to_line</span></span>(<span>x, dx, dt, gammaA, gammaB, nu, hA=0.5, hB=0.5)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+<div class="desc"><p>for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
 x - grid
 dx - grid spacing
 dt - timestep of integration
 gammaA/gammaB - scaled selection coefficients
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2843,7 +2843,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">multinomial</span></span>(<span>n, i, j, k)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2858,7 +2858,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">observed_genotype_spectrum_dict_from_F</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Gdict has keys n (num individuals in sample), observed genotypes</p></section>
+<div class="desc"><p>Gdict has keys n (num individuals in sample), observed genotypes</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2892,7 +2892,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">observed_genotype_spectrum_from_F</span></span>(<span>F)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2919,7 +2919,7 @@ nu - relative population size</p></section>
 <span>def <span class="ident">pairings</span></span>(<span>n)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2932,12 +2932,12 @@ nu - relative population size</p></section>
 <span>def <span class="ident">phi_to_surf</span></span>(<span>phi, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>non-square
+<div class="desc"><p>non-square
 mapped to triallelic domain
 note that many of the surface interaction methods could be cythonized for increase in speed
 if x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either A or B have fixed, and that state is absorbing (no recombination can send you back to the interior
 thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don't have to worry about that density anymore
-here, we have x3 lost</p></section>
+here, we have x3 lost</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2962,7 +2962,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">possible_genotypes_4</span></span>(<span>n, colors)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2994,7 +2994,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">project</span></span>(<span>F_from, proj_to)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3023,7 +3023,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">project_Gdict</span></span>(<span>G, n_from, n_to)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>n_from and n_to are the individual counts, not haplotype counts (so ns/2)</p></section>
+<div class="desc"><p>n_from and n_to are the individual counts, not haplotype counts (so ns/2)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3046,7 +3046,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">projection_cache_Gdict</span></span>(<span>n_from, n_to, hits)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3086,7 +3086,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">quadrinomial</span></span>(<span>ns, ii, jj, kk)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)</p></section>
+<div class="desc"><p>returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3102,7 +3102,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">sample_cached</span></span>(<span>phi, ns, x)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3150,7 +3150,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">surf_to_phi</span></span>(<span>surf, phi, x)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>move the surf density back to the full phi density function</p></section>
+<div class="desc"><p>move the surf density back to the full phi density function</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3170,7 +3170,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">surface_interaction_b</span></span>(<span>phi, x, Psurf)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3243,7 +3243,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">surface_recombination</span></span>(<span>phi, x, rho, dt)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>recombination pushes density from surface back into interior of domain</p></section>
+<div class="desc"><p>recombination pushes density from surface back into interior of domain</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3277,7 +3277,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">to_single_locus</span></span>(<span>phi)</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3302,7 +3302,7 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">transition12_surf</span></span>(<span>x, dx, U01)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>transition matrix for explicit integration of mixed derivative term along surface</p></section>
+<div class="desc"><p>transition matrix for explicit integration of mixed derivative term along surface</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3349,13 +3349,13 @@ here, we have x3 lost</p></section>
 <span>def <span class="ident">transition1_surf</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>adi transition matrix for x1 on surface
+<div class="desc"><p>adi transition matrix for x1 on surface
 See cythonized versions of these in the dadi/Triallele code
 x - grid
 dx - grid spacing
 U01 - surface domain marker
 gammaA/B - scaled selection coefficients
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3427,12 +3427,12 @@ nu - relative population size</p></section>
 <span>def <span class="ident">transition2_surf</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>adi transition matrix for x2 on surface
+<div class="desc"><p>adi transition matrix for x2 on surface
 x - grid
 dx - grid spacing
 U01 - surface domain marker
 gammaA/B - scaled selection coefficients
-nu - relative population size</p></section>
+nu - relative population size</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -3582,7 +3582,7 @@ nu - relative population size</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

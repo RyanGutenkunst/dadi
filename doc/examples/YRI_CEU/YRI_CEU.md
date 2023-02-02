@@ -4,6 +4,8 @@
 ```python
 # Numpy is the numerical library dadi is built upon
 import numpy as np
+# NLopt is the optimization libary dadi uses
+import nlopt
 import dadi
 ```
 
@@ -114,10 +116,10 @@ p0 = dadi.Misc.perturb_params(p0, fold=1, upper_bound=upper_bound,
 # using multiple sets of intial parameters, to be confident you've actually
 # found the true maximum likelihood parameters.
 print('Beginning optimization ************************************************')
-popt = dadi.Inference.optimize_log(p0, data, func_ex, pts_l, 
-                                   lower_bound=lower_bound,
-                                   upper_bound=upper_bound,
-                                   verbose=len(p0), maxiter=3)
+popt = dadi.Inference.opt(p0, data, func_ex, pts_l, 
+                          lower_bound=lower_bound,
+                          upper_bound=upper_bound,
+                          verbose=len(p0), maxiter=3)
 # The verbose argument controls how often progress of the optimizer should be
 # printed. It's useful to keep track of optimization process.
 print('Finshed optimization **************************************************')

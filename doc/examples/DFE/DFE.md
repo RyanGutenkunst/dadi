@@ -4,6 +4,7 @@
 ```python
 import pickle, random
 import numpy as np
+import nlopt
 import dadi
 import dadi.DFE as DFE
 import matplotlib.pyplot as plt
@@ -46,10 +47,10 @@ sel_params = [0.2, 1000.]
 lower_bound, upper_bound = [1e-3, 1e-2], [1, 50000.]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.optimize_log(p0, data, spectra.integrate, pts=None,
-                                   func_args=[DFE.PDFs.gamma, theta_ns],
-                                   lower_bound=lower_bound, upper_bound=upper_bound, 
-                                   verbose=len(sel_params), maxiter=10, multinom=False)
+popt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+                          func_args=[DFE.PDFs.gamma, theta_ns],
+                          lower_bound=lower_bound, upper_bound=upper_bound, 
+                          verbose=len(sel_params), maxiter=10, multinom=False)
 
 # Get expected SFS for MLE
 model_sfs = spectra.integrate(popt, None, DFE.PDFs.gamma, theta_ns, None)
@@ -73,11 +74,11 @@ sel_params = [0.2, 0.2, 1000.]
 lower_bound, upper_bound = [1e-3, 1e-3, 1e-2], [1, 1, 50000.]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.optimize_log(p0, data, spectra.integrate, pts=None,
-                                   func_args=[neugamma, theta_ns],
-                                   lower_bound=lower_bound, upper_bound=upper_bound, 
-                                   verbose=len(sel_params),
-                                   maxiter=10, multinom=False)
+popt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+                          func_args=[neugamma, theta_ns],
+                          lower_bound=lower_bound, upper_bound=upper_bound, 
+                          verbose=len(sel_params),
+                          maxiter=10, multinom=False)
 ```
 
 
@@ -93,11 +94,11 @@ sel_params = [0.2, 1000., 0.2]
 lower_bound, upper_bound = [1e-3, 1e-2, 0], [1, 50000., 1]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.optimize_log(p0, data, misid_func, pts=None,
-                                   func_args=[DFE.PDFs.gamma, theta_ns],
-                                   lower_bound=lower_bound, upper_bound=upper_bound,
-                                   verbose=len(sel_params), maxiter=10,
-                                   multinom=False)
+popt = dadi.Inference.opt(p0, data, misid_func, pts=None,
+                          func_args=[DFE.PDFs.gamma, theta_ns],
+                          lower_bound=lower_bound, upper_bound=upper_bound,
+                          verbose=len(sel_params), maxiter=10,
+                          multinom=False)
 ```
 
 
@@ -114,10 +115,10 @@ sel_params = [0.2, 1000., 0.2, 2]
 lower_bound, upper_bound = [1e-3, 1e-2, 0, 0], [1, 50000., 1, 50]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.optimize_log(p0, data_pos, spectra.integrate_point_pos, pts=None,
-                                   func_args=[DFE.PDFs.gamma, theta_ns, DFE.DemogSelModels.two_epoch], 
-                                   lower_bound=lower_bound, upper_bound=upper_bound, 
-                                   verbose=len(sel_params), maxiter=10, multinom=False)
+popt = dadi.Inference.opt(p0, data_pos, spectra.integrate_point_pos, pts=None,
+                          func_args=[DFE.PDFs.gamma, theta_ns, DFE.DemogSelModels.two_epoch], 
+                          lower_bound=lower_bound, upper_bound=upper_bound, 
+                          verbose=len(sel_params), maxiter=10, multinom=False)
 ```
 
 
@@ -138,15 +139,15 @@ def ieq_constraint(p,*args):
     # Our constraint is that ppop1+ppos2 must be less than 1.
     return [1-(p[2]-p[4])]
 
-popt = dadi.Inference.optimize_cons(p0, data, spectra.integrate_point_pos, pts=None,
-                                    func_args=[DFE.PDFs.lognormal, theta_ns,
-                                               DFE.DemogSelModels.two_epoch, 2],
-                                    lower_bound=lower_bound, upper_bound=upper_bound,
-                                    ieq_constraint=ieq_constraint,
-                                    # Fix gammapos1
-                                    fixed_params=[None,None,None,2,None,None],
-                                    verbose=len(sel_params),
-                                    maxiter=10, multinom=False)
+popt = dadi.Inference.opt(p0, data, spectra.integrate_point_pos, pts=None,
+                          func_args=[DFE.PDFs.lognormal, theta_ns,
+                                     DFE.DemogSelModels.two_epoch, 2],
+                          lower_bound=lower_bound, upper_bound=upper_bound,
+                          ieq_constraint=ieq_constraint,
+                          # Fix gammapos1
+                          fixed_params=[None,None,None,2,None,None],
+                          verbose=len(sel_params),
+                          maxiter=10, multinom=False)
 ```
 
 ### 2D examples
@@ -243,11 +244,11 @@ data = target.sample()
     
 # Parameters are mean, variance, and correlation coefficient
 p0 = [0,1.,0.8]
-popt = dadi.Inference.optimize(p0, data, s2.integrate, pts=None,
-                               func_args=[sel_dist, theta],
-                               lower_bound=[None,0,-1],
-                               upper_bound=[None,None,1],
-                               verbose=30, multinom=False)
+popt = dadi.Inference.opt(p0, data, s2.integrate, pts=None,
+                          func_args=[sel_dist, theta],
+                          lower_bound=[None,0,-1],
+                          upper_bound=[None,None,1],
+                          verbose=30, multinom=False)
 print('Input parameters: {0}'.format(input_params))
 print('Optimized parameters: {0}'.format(popt))
 ```
@@ -335,20 +336,20 @@ data = target.sample()
 # symmetry if the length of the arguments is only three. If we wanted
 # asymmetric lognormal, we would pass in a p0 of total length 7.
 p0 = [0.3,0.3,0.1,0.2,1.2]
-popt = dadi.Inference.optimize(p0, data,
-                               s2.integrate_symmetric_point_pos,
-                               pts=None, func_args=[sel_dist, theta],
-                               # Note that mu in principle has no lower or
-                               # upper bound, sigma has only a lower bound
-                               # of 0, ppos is bounded between 0 and 1, and
-                               # gamma pos is bounded from below by 0.
-                               lower_bound=[-1,0.1,-1,0,0],
-                               upper_bound=[1,1,1,1,None],
-                               # We fix the gammapos to be 1.2, because
-                               # we can't do this integration effectively
-                               # if gammapos is allowed to vary.
-                               fixed_params=[None,None,None,None,1.2],
-                               verbose=30, multinom=False)
+popt = dadi.Inference.opt(p0, data,
+                          s2.integrate_symmetric_point_pos,
+                          pts=None, func_args=[sel_dist, theta],
+                          # Note that mu in principle has no lower or
+                          # upper bound, sigma has only a lower bound
+                          # of 0, ppos is bounded between 0 and 1, and
+                          # gamma pos is bounded from below by 0.
+                          lower_bound=[-1,0.1,-1,0,0],
+                          upper_bound=[1,1,1,1,None],
+                          # We fix the gammapos to be 1.2, because
+                          # we can't do this integration effectively
+                          # if gammapos is allowed to vary.
+                          fixed_params=[None,None,None,None,1.2],
+                          verbose=30, multinom=False)
 print('Symmetric test fit')
 print('  Input parameters: {0}'.format(input_params))
 print('  Optimized parameters: {0}'.format(popt))
@@ -392,15 +393,15 @@ input_params, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
 target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
                                      PDFs.biv_lognormal, theta)
 p0 = [0.3,0.3,0,0.2,1.2,0.3]
-popt = dadi.Inference.optimize(p0, data, mixture_symmetric_point_pos, pts=None, 
-            func_args=[s1, s2, PDFs.lognormal,
-            PDFs.biv_lognormal, theta],
-            lower_bound=[None, 0.1,-1,0,None, 0],
-            upper_bound=[None,None, 1,1,None, 1],
-            # We fix both the rho assumed for the 2D distribution,
-            # and the assumed value of positive selection.
-            fixed_params=[None,None,0,None,1.2,None],
-            verbose=30, multinom=False, maxiter=1)
+popt = dadi.Inference.opt(p0, data, mixture_symmetric_point_pos, pts=None, 
+                          func_args=[s1, s2, PDFs.lognormal,
+                                     PDFs.biv_lognormal, theta],
+                          lower_bound=[None, 0.1,-1,0,None, 0],
+                          upper_bound=[None,None, 1,1,None, 1],
+                          # We fix both the rho assumed for the 2D distribution,
+                          # and the assumed value of positive selection.
+                          fixed_params=[None,None,0,None,1.2,None],
+                          verbose=30, multinom=False, maxiter=1)
 ```
 
     1320    , -2719       , array([ 0.189489   ,  0.293573   ,  0          ,  0.133956   ,  1.2        ,  0.439247   ])
@@ -422,13 +423,13 @@ data_pieces = [(fs0*(0.5 + (1.5-0.5)/99*ii)).sample() for ii in range(100)]
 # Add up those segments to get our data spectrum
 data = dadi.Spectrum(np.sum(data_pieces, axis=0))
 # Do the optimization
-popt = dadi.Inference.optimize([0.2,0.2,0.15,0.3,1.2], data,
-                                s2.integrate_symmetric_point_pos,
-                                pts=None, func_args=[sel_dist, theta],
-                                lower_bound=[-1,0.1,-1,0,0],
-                                upper_bound=[1,1,1,1,None],
-                                fixed_params=[None,None,None,None,1.2],
-                                verbose=30, multinom=False)
+popt = dadi.Inference.opt([0.2,0.2,0.15,0.3,1.2], data,
+                          s2.integrate_symmetric_point_pos,
+                          pts=None, func_args=[sel_dist, theta],
+                          lower_bound=[-1,0.1,-1,0,0],
+                          upper_bound=[1,1,1,1,None],
+                          fixed_params=[None,None,None,None,1.2],
+                          verbose=30, multinom=False)
     
 print('Symmetric test fit')
 print('  Input parameters: {0}'.format(input_params))
@@ -474,7 +475,7 @@ def temp_func(pin, ns, pts):
     # Add in gammapos parameter
     params = np.concatenate([pin, [1.2]])
     return s2.integrate_symmetric_point_pos(params, None, sel_dist,
-                                               theta, pts=None)
+                                            theta, pts=None)
     
 # Run the uncertainty analysis. Note that each bootstrap data set
 # needs a different assumed theta. We estimate theta for each bootstrap

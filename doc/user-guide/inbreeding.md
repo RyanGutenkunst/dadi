@@ -1,6 +1,6 @@
 # Inbreeding
 
-When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population. For high levels of inbreeding (*F<sub>IS</sub>* ≈ 0.5 or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. However, lower levels of inbreeding can still bias estimates of demography despite not have such a dramatic effect on the SFS.
+When populations are inbred, the excess homozygosity can distort the SFS such that the even entries are greater than the odd entries for a population. For high levels of inbreeding (*F<sub>IS</sub>* ≈ 0.5 or higher), this will generate frequency spectra with a conspicuous pattern of zig-zagging up and down between adjacent entries. However, lower levels of inbreeding can still bias estimates of demography despite not having such a dramatic effect on the SFS.
 
 ![Inbred SFS example](InbreedingSFS.png)
 
