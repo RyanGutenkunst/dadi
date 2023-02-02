@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import dadi.DFE
 from dadi.DFE import PDFs, DemogSelModels
-from dadi.DFE import Cache1D, Cache2D#, Vourlaki_mixture
+from dadi.DFE import Cache1D, Cache2D, Vourlaki_mixture
 
 def trivial_fs(params, ns, pts): 
     return dadi.Spectrum([[0, 0.5], [0.5, 0]])
@@ -213,7 +213,6 @@ def test_mixture():
         dadi.DFE.mixture_symmetric_point_pos([-0.5,0.5,0.5,0.1,4.9,0.1],
                                              None, s1, s2, PDFs.lognormal, PDFs.biv_lognormal, 1, None)
 
-@pytest.mark.skip(reason="Vourlaki model missing")
 def test_Vourlaki_normalization():
     """
     Tests of normalization with Vourlaki_mixture
@@ -242,7 +241,7 @@ def test_Vourlaki_normalization():
 
     # Substantial gamma changes, with positive component, some changing to positive:
     #  ppos_wild=0.5, pchange=0.5, pchange_pos=0.5
-    fs = Vourlaki_mixture([1, 10, 0.5, 10, 1.0, 0.5], None, s1, s2, 1.0, None)
+    fs = Vourlaki_mixture([1, 10, 0.5, 10, 0.5, 0.5], None, s1, s2, 1.0, None)
     assert(np.allclose(fs.sum(), 1, atol=0.01))
 
     # Theta != 1.0
