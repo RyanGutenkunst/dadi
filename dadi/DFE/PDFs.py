@@ -41,7 +41,7 @@ import dadi.DFE.PDFs_cython as PDFs_cython
 def biv_lognormal(xx, yy, params):
     return PDFs_cython.biv_lognormal(np.asarray(xx, dtype=float), np.asarray(yy, dtype=float), np.asarray(params, dtype=float))
 def biv_ind_gamma(xx, yy, params):
-    return PDFs_cython.biv_ind_gamma(np.asarray(xx, dtype=float), np.asarray(yy, dtype=float), params, dtype=float)
+    return PDFs_cython.biv_ind_gamma(np.asarray(xx, dtype=float), np.asarray(yy, dtype=float), np.asarray(params, dtype=float))
 
 # Note: This method has been deprecated in favor of the much faster C version
 # defined in PDFS_c
