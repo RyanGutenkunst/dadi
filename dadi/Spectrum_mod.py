@@ -2063,6 +2063,10 @@ class Spectrum(numpy.ma.masked_array):
                       rather than using analytic integration of sampling 
                       formula.
         """
+        if np.all(np.asarray(Fs) == 0):
+            return Spectrum.from_phi(phi, ns, xxs, mask_corners=mask_corners, 
+                            pop_ids=pop_ids, admix_props=admix_props,
+                            het_ascertained=het_ascertained, force_direct=force_direct)
         if admix_props and not numpy.allclose(numpy.sum(admix_props, axis=1),1):
             raise ValueError('Admixture proportions {0} must sum to 1 for all '
                              'populations.' .format(str(admix_props)))
