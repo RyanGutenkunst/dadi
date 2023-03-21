@@ -52,7 +52,7 @@ popt = [2.27, 0.61]
 # selection coefficients that will be selected in that range to generate your cache.
 # It is recommended to use gamma_bounds=[1e-4, 2000], gamma_pts=50 for either 1D or 2D cache generation
 # on the HPC.
-cache1d = DFE.Cache1D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 20], gamma_pts=5, mp=False)
+cache1d = DFE.Cache1D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 20], gamma_pts=5, cpus=1)
 ```
 We can check if the cached spectra have any large negative values:
 ```python
