@@ -2,7 +2,7 @@
 import dadi
 
 # Parse the VCF file to generate a data dictionary
-datafile = 'data/vcf/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.vcf.gz'
+datafile = '../fs_from_data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.vcf.gz'
 dd = dadi.Misc.make_data_dict_vcf(datafile, 'data/vcf/1KG.YRI.CEU.popfile.txt')
 
 # Extract the spectrum for ['YRI'] from that dictionary, with both
@@ -29,4 +29,3 @@ import matplotlib.pyplot as plt
 fig = plt.figure(1, figsize=(10,6))
 fig.clear()
 dadi.Plotting.plot_1d_fs(fs)
-ax.set_title('1000 Genomes SFS')
