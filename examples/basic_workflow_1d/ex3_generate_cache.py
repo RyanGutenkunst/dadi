@@ -55,8 +55,8 @@ popt = [2.273, 0.6057]
 # on the HPC.
 # If you want to generate the 2D cache (independent selection coefficients), use:
 # DFE.Cache1D
-# NOTE: When testing locally, having mp = True might cause a bug, so set it to mp=False until you start working on an HPC
-cache1d = DFE.Cache1D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 2000], gamma_pts=50, mp=False)
+# NOTE: When testing locally, having cpus > 1 might cause a bug, so set it to cpus=1 until you start working on an HPC
+cache1d = DFE.Cache1D(popt, ns, demo_sel_model, pts=pts_l, gamma_bounds=[1e-2, 2000], gamma_pts=50, cpus=10)
 
 # Check if the cached spectra have any large negative values
 if (cache1d.spectra<0).sum() > 0:
