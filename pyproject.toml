@@ -28,7 +28,6 @@ dependencies = [
     "numpy",
     "scipy",
     "nlopt",
-    "Cython",
 ]
 
 [project.urls]
