@@ -49,12 +49,14 @@ def create_partitions(ns):
 def calc_error(coverages):
     error_pr = []
     for coverage in coverages:
+        # XXX: Why are we rounding down here?
         calling_threshold = [int(coverage/3), int(coverage + coverage * 0.5)]
         if calling_threshold[0] < 2:
             calling_threshold[0] = 1
         
         # Generate reads using a negative binomial distribution with mean equal to coverage
         coverages_ = range(calling_threshold[0], calling_threshold[1]+1)
+        # XXX: Why are we fixing the dispersion parameer in the negative binomial?
         poisson_pmf = ssd.nbinom.pmf(coverages_, coverage, 0.5)
         pr = {k: poisson_pmf[i] for i, k in enumerate(coverages_)}
         pr = {x: i/sum(pr.values()) for x, i in pr.items()}
@@ -87,6 +89,15 @@ def sfs_redistribution(error_pr, all_partitions, partition_threshold):
 
     all_calculations = {}
     all_calculations = {str(k):str(0) for k in sfs_bins_comb}
+
+    if len(ns) > 1:
+        raise ValueError("Only implemented for 1D (so far)")
+
+    # Store distortion effects as a matrix.
+    # Entry (i,j) represents the flow from allele count i to allele count j
+    all_weights = np.zeros((ns[0]+1,ns[0]+1))
+    # Need to separately store distortion of singletons
+    singleton_weight = 0
 
     for bin_index, sfs_bin in enumerate(sfs_bins_comb):
         corr_pr = []
@@ -158,24 +169,36 @@ def sfs_redistribution(error_pr, all_partitions, partition_threshold):
                         rd = corr * error_00 * error_11 * perm_list * partition_probability
                         if rd > partition_threshold:
                             if sfs_bin_ == 1 and position[0] != 1:
+                                singleton_weight = rd
                                 if position[0] == 0:
                                     calculation = 'sfsc[tuple(' + str(sfs_bin) + ')]*2*b1*' + str(rd)
                                 else:
                                     calculation = 'sfsc[tuple(' + str(sfs_bin) + ')]*2*(1-b1)*' + str(rd)
                             else:
                                 calculation = 'sfsc[tuple(' + str(sfs_bin) + ')]*' + str(rd)
-                            
+                                all_weights[sfs_bin, position] += rd
+
+
                             all_calculations[str(position)] = '+'.join([all_calculations[str(position)],calculation])
                             
-    return(all_calculations)
+    return(all_calculations, all_weights, singleton_weight)
+
+def sfs_redistribution_Ryan(error_pr, all_partitions, partition_threshold, ns):
+    
 
 def sfs_redistribution_dict(ns, coverages, partition_threshold=0):
-
     error_pr = calc_error(coverages)
     all_partitions = create_partitions(ns)
-    sfs_redist = sfs_redistribution(error_pr, all_partitions, partition_threshold)
+    sfs_redist, sfs_weights, singleton_weight = sfs_redistribution(error_pr, all_partitions, partition_threshold, ns)
     
-    return(sfs_redist)
+    return sfs_redist, sfs_weights, singleton_weight
+
+def coverage_Ryan(sfs, sfs_weights, singleton_weight, b1):
+    out = np.dot(sfs, sfs_weights)
+    out[0] += 2*b1*singleton_weight*sfs[1]
+    out[2] += 2*(1-b1)*singleton_weight*sfs[1]
+    # Maintaining normalization for comparison, but that's not what we want long-term.
+    return out * sfs.S() / out.sum()
 
 def coverage_distortion(sfs, sfs_redistribution_dict, b1):
     sfsc = sfs.copy()
@@ -183,6 +206,7 @@ def coverage_distortion(sfs, sfs_redistribution_dict, b1):
     scope = {'sfsc': sfsc, 'b1':b1}
     sfs_ = [eval(x, scope) for x in sfs_redistribution_dict.values()]    
     
+    # XXX: Seems incorrect to normalize here
     if len(sfs.sample_sizes) == 1:
         for i, entry in enumerate(sfs_):
             if entry != 'masked':
@@ -198,6 +222,32 @@ def coverage_distortion(sfs, sfs_redistribution_dict, b1):
     return(sfsc)
 
 if __name__ == "__main__":
-    sfs = dadi.Spectrum(np.random.uniform(size=5))
-    sfs_redis = sfs_redistribution_dict(ns=sfs.sample_sizes, coverages=[5], partition_threshold=0)
-    model = coverage_distortion(sfs=sfs, sfs_redistribution_dict=sfs_redis, b1=0.9)
+    import time
+
+    # Correctness test
+    sfs = dadi.Spectrum(np.random.uniform(size=2*2+1))
+    ns = sfs.sample_sizes
+    coverages, b1, part_thresh = [5.25], 0.32, 0.1
+
+    sfs_redis, sfs_weights, singleton_weight = sfs_redistribution_dict(ns=ns, coverages=coverages, partition_threshold=part_thresh)
+
+    model = coverage_distortion(sfs=sfs, sfs_redistribution_dict=sfs_redis, b1=b1)
+    model_Ryan = coverage_Ryan(sfs, sfs_weights, singleton_weight, b1)
+    assert(np.allclose(model, model_Ryan))
+
+    # Speed test
+    sfs = dadi.Spectrum(np.random.uniform(size=2*50+1))
+    ns = sfs.sample_sizes
+    coverages, b1, part_thresh = [5.25], 0.32, 0.1
+
+    start = time.time()
+    sfs_redis, sfs_weights, singleton_weight = sfs_redistribution_dict(ns=ns, coverages=coverages, partition_threshold=part_thresh)
+    print('Time for precalculation: {0:.3}s'.format(time.time()-start))
+
+    start = time.time()
+    model = coverage_distortion(sfs=sfs, sfs_redistribution_dict=sfs_redis, b1=b1)
+    print('Time for eval code: {0:.3}s'.format(time.time()-start))
+    start = time.time()
+    model_Ryan = coverage_Ryan(sfs, sfs_weights, singleton_weight, b1)
+    print('Time for matrix code: {0:.3}s'.format(time.time()-start))
+    assert(np.allclose(model, model_Ryan))
