@@ -81,7 +81,7 @@ def calc_error(coverages):
 
     return(error_pr)
 
-def sfs_redistribution(error_pr, all_partitions, partition_threshold):
+def sfs_redistribution(error_pr, all_partitions, partition_threshold, ns):
     
     sfs_bins_comb = all_partitions[0]
     genotype_partitions_comb = all_partitions[1]
@@ -182,9 +182,6 @@ def sfs_redistribution(error_pr, all_partitions, partition_threshold):
                             all_calculations[str(position)] = '+'.join([all_calculations[str(position)],calculation])
                             
     return(all_calculations, all_weights, singleton_weight)
-
-def sfs_redistribution_Ryan(error_pr, all_partitions, partition_threshold, ns):
-    
 
 def sfs_redistribution_dict(ns, coverages, partition_threshold=0):
     error_pr = calc_error(coverages)
