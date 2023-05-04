@@ -46,10 +46,23 @@ def create_partitions(ns):
     
     return partitions
 
+def create_partitions_single(n):
+    # XXX: Simpler version of this function that considers only a single population at a time.
+    all_partitions, all_part_probs = [], []
+    for allele_count in range(n+1):
+        partitions = dadi.Numerics.cached_part(allele_count, n/2)
+        partition_probabilities = np.empty(len(partitions))
+        for ii, part in enumerate(partitions):
+            geno_counts = [part.count(_) for _ in [0,1,2]]
+            partition_probabilities[ii] = np.exp(dadi.Numerics.multinomln(geno_counts))
+        partition_probabilities /= partition_probabilities.sum()
+        all_partitions.append(partitions)
+        all_part_probs.append(partition_probabilities)
+    return all_partitions, all_part_probs
+
 def calc_error(coverages):
     error_pr = []
     for coverage in coverages:
-        # XXX: Why are we rounding down here?
         calling_threshold = [int(coverage/3), int(coverage + coverage * 0.5)]
         if calling_threshold[0] < 2:
             calling_threshold[0] = 1
@@ -58,28 +71,61 @@ def calc_error(coverages):
         coverages_ = range(calling_threshold[0], calling_threshold[1]+1)
         # XXX: Why are we fixing the dispersion parameer in the negative binomial?
         poisson_pmf = ssd.nbinom.pmf(coverages_, coverage, 0.5)
-        pr = {k: poisson_pmf[i] for i, k in enumerate(coverages_)}
-        pr = {x: i/sum(pr.values()) for x, i in pr.items()}
-        
-        error_pr_ = {}
-        for k, v in pr.items():
-            reads_permutations = set(itertools.combinations_with_replacement([0,1], k))
-            permutation_list = []
-            for reads_permutation in reads_permutations:  
-                n = [reads_permutation.count(x) for x in [0,1]]
-                permutation_list.append(np.exp(dadi.Numerics.multinomln(n)))
-            permutation_prob = [i/sum(permutation_list) for i in permutation_list]
-            
-            error = []
-            for i, x in enumerate(permutation_prob):
-                if sum(list(reads_permutations)[i]) == 0 or sum(list(reads_permutations)[i]) == len(list(reads_permutations)[i]):
-                    error.append(permutation_prob[i])
-            error_pr_[k] = sum(error) * v
-        
-        error_pr_ = sum(error_pr_.values())
+
+        #pr = {k: poisson_pmf[i] for i, k in enumerate(coverages_)}
+        #pr = {x: i/sum(pr.values()) for x, i in pr.items()}
+        #
+        #error_pr_ = {}
+        #for k, v in pr.items():
+        #    reads_permutations = set(itertools.combinations_with_replacement([0,1], k))
+        #    permutation_list = []
+        #    for reads_permutation in reads_permutations:  
+        #        n = [reads_permutation.count(x) for x in [0,1]]
+        #        permutation_list.append(np.exp(dadi.Numerics.multinomln(n)))
+        #    permutation_prob = [i/sum(permutation_list) for i in permutation_list]
+        #    
+        #    error = []
+        #    for i, x in enumerate(permutation_prob):
+        #        if sum(list(reads_permutations)[i]) == 0 or sum(list(reads_permutations)[i]) == len(list(reads_permutations)[i]):
+        #            error.append(permutation_prob[i])
+        #    error_pr_[k] = sum(error) * v
+
+        #error_pr_ = sum(error_pr_.values())
+
+        # XXX
+        # The above code enumerates the probabilities of getting all reads on a single chromosome for
+        # each potential value of coverage. That's just 2*0.5**nreads
+        # So we can just replace this with a mathematical expression
+        error_pr_ = np.sum(2*0.5**np.asarray(coverages_)* poisson_pmf/poisson_pmf.sum())
         error_pr.append(error_pr_)
 
     return(error_pr)
+
+def sfs_redist(het_error_prob, all_partitions, all_part_probs, n):
+    # Entry (i,j) represents the flow from allele count i to allele count j
+    all_weights = np.zeros((n+1,n+1))
+
+    for allele_count in range(n+1):
+        if allele_count == 1:
+            all_weights[allele_count, allele_count] += 1-2*het_error_prob
+            continue
+        for part, part_prob in zip(all_partitions[allele_count], all_part_probs[allele_count]):
+            nhet = part.count(1)
+            # Each heterozygote can be called to reduce, maintain, or increase the observed allele count
+            for ndown in range(nhet+1):
+                for ncorrect in range(nhet-ndown + 1):
+                    # XXX: There might be a faster way to do this if we thought hard about how to
+                    #      enumerate the potential changes within each partition
+                    nup = nhet - ndown - ncorrect
+                    # XXX: To match Emanuel's code, need to double het_error_prob, which seems wrong
+                    #pr = (het_error_prob/2)**(nup + ndown) * (1-het_error_prob)**ncorrect
+                    pr = (het_error_prob)**(nup + ndown) * (1-2*het_error_prob)**ncorrect
+                    ncomb = np.exp(dadi.Numerics.multinomln([ndown, ncorrect, nup]))
+                    # Once I have this working, I only need to calculate probabilities if there is a net change
+                    net_change = nup - ndown
+                    all_weights[allele_count, allele_count+net_change] += part_prob * ncomb*pr
+    return all_weights
+
 
 def sfs_redistribution(error_pr, all_partitions, partition_threshold, ns):
     
@@ -146,7 +192,10 @@ def sfs_redistribution(error_pr, all_partitions, partition_threshold, ns):
                         homo_perm_00 = []
                         homo_perm_11 = []
                         position = []
-                        perm_list = np.prod(list(genotypes_probabilities_comb[ii]))
+                        # XXX: Seems like these are always length 1 lists?
+                        #perm_list = np.prod(list(genotypes_probabilities_comb[ii]))
+                        # This is noticably faster
+                        perm_list = genotypes_probabilities_comb[ii][0]
                         for iii, perm in enumerate(permutation):
                             if perm != -1:
                                 het_perm.append(perm.count(1))
@@ -159,7 +208,8 @@ def sfs_redistribution(error_pr, all_partitions, partition_threshold, ns):
                                 homo_perm_11.append(0)
                                 position.append(sfs_bin[iii])
                             
-                        perm_list = np.prod(list(genotypes_probabilities_comb[ii]))
+                        # XXX: This was done twice, with no effect
+                        #perm_list = np.prod(list(genotypes_probabilities_comb[ii]))
                         
                         corr = np.prod([corr_pr[k] ** het_perm[k] for k, v in enumerate(homo_perm_00)])
                         
@@ -218,33 +268,45 @@ def coverage_distortion(sfs, sfs_redistribution_dict, b1):
     
     return(sfsc)
 
+def precalc_Ryan(n, coverage):
+    # XXX
+    error_pr = calc_error([coverage])[0]
+    all_partitions, all_part_probs = create_partitions_single(n)
+    weights = sfs_redist(error_pr, all_partitions, all_part_probs, n)
+    return weights, error_pr
+
+
 if __name__ == "__main__":
     import time
+    import LowCovDistortion_SlowerVersion as SlowVer
 
     # Correctness test
     sfs = dadi.Spectrum(np.random.uniform(size=2*2+1))
     ns = sfs.sample_sizes
     coverages, b1, part_thresh = [5.25], 0.32, 0.1
 
-    sfs_redis, sfs_weights, singleton_weight = sfs_redistribution_dict(ns=ns, coverages=coverages, partition_threshold=part_thresh)
+    model_old = SlowVer.low_coverage_distortion(sfs, ns, b1, coverages)
 
-    model = coverage_distortion(sfs=sfs, sfs_redistribution_dict=sfs_redis, b1=b1)
-    model_Ryan = coverage_Ryan(sfs, sfs_weights, singleton_weight, b1)
-    assert(np.allclose(model, model_Ryan))
+    sfs_weights_Ryan, singleton_weight_Ryan = precalc_Ryan(sfs.sample_sizes[0], coverages[0])
+    model_Ryan = coverage_Ryan(sfs, sfs_weights_Ryan, singleton_weight_Ryan, b1)
+    assert(np.allclose(model_Ryan, model_old))
 
-    # Speed test
-    sfs = dadi.Spectrum(np.random.uniform(size=2*50+1))
+    # Speed of precalculation
+    sfs = dadi.Spectrum(np.random.uniform(size=2*40+1))
     ns = sfs.sample_sizes
-    coverages, b1, part_thresh = [5.25], 0.32, 0.1
+    b1, coverages = 0.23, [5.25]
 
     start = time.time()
-    sfs_redis, sfs_weights, singleton_weight = sfs_redistribution_dict(ns=ns, coverages=coverages, partition_threshold=part_thresh)
-    print('Time for precalculation: {0:.3}s'.format(time.time()-start))
-
+    sfs_redis = sfs_redistribution_dict(ns=ns, coverages=coverages)[0]
+    print('Time for sfs_redistribution_dict: {0:.3}s'.format(time.time()-start))
     start = time.time()
     model = coverage_distortion(sfs=sfs, sfs_redistribution_dict=sfs_redis, b1=b1)
-    print('Time for eval code: {0:.3}s'.format(time.time()-start))
+    print('Time for coverage_distortion: {0:.3}s'.format(time.time()-start))
+
     start = time.time()
-    model_Ryan = coverage_Ryan(sfs, sfs_weights, singleton_weight, b1)
-    print('Time for matrix code: {0:.3}s'.format(time.time()-start))
+    sfs_weights_Ryan, singleton_weight_Ryan = precalc_Ryan(sfs.sample_sizes[0], coverages[0])
+    print('Time for precalc_Ryan: {0:.3}s'.format(time.time()-start))
+    start = time.time()
+    model_Ryan = coverage_Ryan(sfs, sfs_weights_Ryan, singleton_weight_Ryan, b1)
+    print('Time for coverage_Ryan: {0:.3}s'.format(time.time()-start))
     assert(np.allclose(model, model_Ryan))
