@@ -46,7 +46,7 @@ def genotype_dict(genotypes, ssample, seed):
             random.seed(seed + count)
 
             ind_to_keep = random.sample(list(genotypes_.index), int(ssample/2))
-        
+
             genotypes_sub = genotypes_[ind_to_keep]
             genotype_sum = sum(genotypes_sub)
             count += 1
@@ -73,13 +73,8 @@ def calc_error(vcf_file, nsamples, ssample, seed):
     vcf = read_vcf(vcf_file)
     first_sample_index = len(vcf.columns) - nsamples
     ind_coverage = vcf.iloc[:, first_sample_index:].applymap(lambda x: extract_coverage(x, remove_het=True))
-
-    digits = []
-    for l in ind_coverage.columns:
-         d = [char for char in l if char.isdigit()]
-         d = int(''.join(d))
-         digits.append(d)
     
+    digits = [int(''.join(filter(str.isdigit, l))) for l in ind_coverage.columns]
     sorted_columns = ind_coverage.columns[np.argsort(digits)]
     ind_coverage = ind_coverage[sorted_columns]
     
@@ -91,7 +86,7 @@ def calc_error(vcf_file, nsamples, ssample, seed):
     genotype_matrix_summed = genotype_matrix.apply(lambda x: genotype_dict(x, ssample=ssample, seed=seed), axis=1)
     
     error_prob_dict = {}
-    for i in np.arange(1, genotype_matrix_summed.max()+1,1):
+    for i in range(1, genotype_matrix_summed.max()+1):
         genotype_subset = genotype_matrix_summed[genotype_matrix_summed == i].index
         ind_coverage_ = ind_coverage.loc[genotype_subset].stack().reset_index(drop=True)
         ind_coverage_dict = ind_coverage_.value_counts(normalize=True).to_dict()
@@ -122,9 +117,7 @@ def sfs_redist(het_error_prob, all_partitions, all_part_probs, n):
     # Entry (i,j) represents the flow from allele count i to allele count j
     all_weights = np.zeros((n+1,n+1))
 
-    het_error_prob[0] = 0
-    het_error_prob[n+1] = 0
-
+    het_error_prob[0], het_error_prob[n+1] = 0, 0
     het_error_prob = dict(sorted(het_error_prob.items()))
 
     for allele_count in range(n+1):
