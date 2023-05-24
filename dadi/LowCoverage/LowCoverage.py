@@ -56,7 +56,6 @@ def genotype_dict(genotypes, ssample, seed):
     else:
         genot_dict = pd.NA
 
-
     return genot_dict
 
 def extract_genotype(genotype_matrix):
@@ -124,7 +123,7 @@ def sfs_redist(het_error_prob, all_partitions, all_part_probs, n):
     all_weights = np.zeros((n+1,n+1))
 
     het_error_prob[0] = 0
-    het_error_prob[n] = 0
+    het_error_prob[n+1] = 0
 
     het_error_prob = dict(sorted(het_error_prob.items()))
 
@@ -148,13 +147,13 @@ def sfs_redist(het_error_prob, all_partitions, all_part_probs, n):
                     all_weights[allele_count, allele_count+net_change] += part_prob * ncomb * pr
     return all_weights
 
-def precalc(n, vcf_file, nsamples):
-    error_prob = calc_error(vcf_file, nsamples)
+def precalc(n, vcf_file, nsamples, seed):
+    error_prob = calc_error(vcf_file, nsamples, n, seed)
     all_partitions, all_part_probs = create_partitions_single(n)
     weights = sfs_redist(error_prob, all_partitions, all_part_probs, n)
     
     weights_ = weights.copy()
-    weights_[:,1] *= 1 - (2 * error_prob[1]) # Trying to correct the excess of singletons.
+    weights_[1] *= 1 - (2 * error_prob[1]) # Trying to correct the excess of singletons.
 
     return weights_
 
