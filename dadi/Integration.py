@@ -32,6 +32,8 @@ from . import Misc, Numerics
 import dadi.tridiag_cython as tridiag
 import dadi.integration_c as int_c
 
+from dadi import Demes
+
 #: Controls timestep for integrations. This is a reasonable default for
 #: gridsizes of ~60. See set_timescale_factor for better control.
 timescale_factor = 1e-3
@@ -212,6 +214,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
 
     vars_to_check = (nu, gamma, h, theta0, beta)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu]))
         return _one_pop_const_params(phi, xx, T, nu, gamma, h, theta0, 
                                      initial_t, beta)
 
@@ -225,6 +228,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
     nu, gamma, h = nu_f(current_t), gamma_f(current_t), h_f(current_t)
     beta = beta_f(current_t)
     dx = numpy.diff(xx)
+    demes_hist = [[0, [nu], []]]
     while current_t < T:
         dt = _compute_dt(dx,nu,[0],gamma,h)
         this_dt = min(dt, T - current_t)
@@ -236,6 +240,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
         nu, gamma, h = nu_f(next_t), gamma_f(next_t), h_f(next_t)
         beta = beta_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu], []])
 
         if numpy.any(numpy.less([T,nu,theta0], 0)):
             raise ValueError('A time, population size, migration rate, or '
@@ -250,6 +255,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
         phi = int_c.implicit_1Dx(phi, xx, nu, gamma, h, beta, this_dt, 
                                  use_delj_trick=use_delj_trick)
         current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist))
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
@@ -302,9 +308,11 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
                          'migration to or from it.')
 
     vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
-    if False and numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
+                           start_sizes = [nu1, nu2], mig = [m12,m21]))
         if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
             return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
                     gamma1, gamma2, h1, h2, theta0, initial_t,
@@ -334,6 +342,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
     gamma1,gamma2 = gamma1_f(current_t), gamma2_f(current_t)
     h1,h2 = h1_f(current_t), h2_f(current_t)
     dx,dy = numpy.diff(xx),numpy.diff(yy)
+
+    demes_hist = [[0, [nu1,nu2], [m12,m21]]]
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
                  _compute_dt(dy,nu2,[m21],gamma2,h2))
@@ -346,6 +356,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
         gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
         h1,h2 = h1_f(next_t), h2_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2], [m12,m21]])
 
         if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
             raise ValueError('A time, population size, migration rate, or '
@@ -364,6 +375,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
                                      this_dt, use_delj_trick)
 
         current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist))
     return phi
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
@@ -415,8 +427,11 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
     vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,gamma1,gamma2,
                      gamma3,h1,h2,h3,theta0]
-    if False and numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
+            Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
+                               start_sizes = [nu1, nu2, nu3],
+                               mig = [m12, m13, m21, m23, m31, m32]))
             return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3,
                                             m12, m13, m21, m23, m31, m32,
                                             gamma1, gamma2, gamma3, h1, h2, h3,
@@ -458,6 +473,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     gamma3 = gamma3_f(current_t)
     h1,h2,h3 = h1_f(current_t), h2_f(current_t), h3_f(current_t)
     dx,dy,dz = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz)
+    demes_hist = [[0, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]]]
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12,m13],gamma1,h1),
                  _compute_dt(dy,nu2,[m21,m23],gamma2,h2),
@@ -474,6 +490,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         gamma3 = gamma3_f(next_t)
         h1,h2,h3 = h1_f(next_t), h2_f(next_t), h3_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]])
 
         if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0],
                                 0)):
@@ -496,6 +513,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                                      gamma3, h3, this_dt, use_delj_trick)
 
         current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist))
     return phi
 
 def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
