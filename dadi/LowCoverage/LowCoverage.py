@@ -145,16 +145,16 @@ def sfs_redist(vcf_file, all_partitions, all_part_probs, n):
                 if allele_count == 1:
                     allele_prob_called_1_or_0 = [1 - x for x in probability_not_call_probs[0]] # The probability of calling a position is derived by subtracting the probability of not calling it from 1.
                     allele_prob_called_1_or_0 = [x * y for x, y in zip(allele_prob_called_1_or_0, coverage_distribution)] # This will be conditional to the coverage distribution
-                    allele_prob_called_1_or_0 = sum(allele_prob_called_1_or_0)
-                    allele_prob_called_1_or_0 = [x / allele_prob_called_1_or_0 for x in allele_prob_called_1_or_0]
+                    allele_prob_called_1_or_0_sum = sum(allele_prob_called_1_or_0)
+                    allele_prob_called_1_or_0 = [x / allele_prob_called_1_or_0_sum for x in allele_prob_called_1_or_0]
                     het_error_prob_1_or_0 = [prob * allele_prob for prob, allele_prob in zip(probability_double_alt[0], allele_prob_called_1_or_0)]
                     het_error_prob_up = sum(het_error_prob_1_or_0)
                 # Calculate the error probability for upwards for doubletons, tripletons, so on.
                 else:
                     allele_prob_called_0 = [1 - x for x in probability_not_call_probs[2]]
                     allele_prob_called_0 = [x * y for x, y in zip(allele_prob_called_0, coverage_distribution)]
-                    allele_prob_called_0 = sum(allele_prob_called_0)
-                    allele_prob_called_0 = [x / allele_prob_called_0 for x in allele_prob_called_0]
+                    allele_prob_called_0_sum = sum(allele_prob_called_0)
+                    allele_prob_called_0 = [x / allele_prob_called_0_sum for x in allele_prob_called_0]
                     het_error_prob_0 = [prob * allele_prob for prob, allele_prob in zip(probability_double_alt[2], allele_prob_called_0)]
                     het_error_prob_down = sum(het_error_prob_0)
 
@@ -191,5 +191,3 @@ def coverage_distortion(sfs, sfs_weights):
     coverage_distortion_ = np.dot(sfs, sfs_weights)
 
     return coverage_distortion_
-
-
