@@ -1,312 +1,195 @@
-import numpy as np    
-import scipy.stats.distributions as ssd
 import dadi
+import numpy as np
+import pandas as pd
+from io import StringIO as SIO
+import warnings
 import itertools
 
-def create_partitions(ns):
-    sfs_bins = {}
-    genotype_partitions = {}
-    genotype_prob = {}
+def read_vcf(path):
+    with open(path, 'r') as f:
+        lines = [l for l in f if not l.startswith('##')]
+        
+        df = pd.read_csv(
+                SIO(''.join(lines)),
+                dtype={'#CHROM': str, 'POS': int, 'ID': str, 'REF': str, 'ALT': str,
+                    'QUAL': str, 'FILTER': str, 'INFO': str},
+                sep='\t'
+            ).rename(columns={'#CHROM': 'CHROM'})
     
-    for i, nsize in enumerate(ns): 
-        sfs_bins_ = []
-        genotype_partitions_ = []
-        genotype_prob_ = []   
-        for n_snps in range(0, nsize+1):    
-            partitions = dadi.Numerics.cached_part(n_snps, nsize/2)
-            probability_list = []
-            for partition in partitions:  
-                # Calculate the number of unique permutations for a given genotype
-                n = [partition.count(x) for x in [0,1,2]]
-                probability_list.append(np.exp(dadi.Numerics.multinomln(n)))
-            
-            probability_list = [i/sum(probability_list) for i in probability_list]
-            
-            i_prob = [i for i, prob in enumerate(probability_list)]
-            
-            if len(i_prob) > 0:
-                sfs_bins_.append(n_snps)
-                
-                partitions_ = [prob for i, prob in enumerate(partitions) if i in i_prob]
-                genotype_partitions_.append(partitions_)
-                
-                probability_list = [partition for i, partition in enumerate(probability_list) if i in i_prob]
-                probability_list = list(probability_list/sum(probability_list))
-                genotype_prob_.append(probability_list)
-                
-        sfs_bins['pop' + str(i + 1)] = sfs_bins_
-        genotype_partitions['pop' + str(i + 1)] = genotype_partitions_
-        genotype_prob['pop' + str(i + 1)] = genotype_prob_
-    
-    sfs_bins_comb = [list(i) for i in itertools.product(*sfs_bins.values())]
-    genotype_partitions_comb = [list(i) for i in itertools.product(*genotype_partitions.values())]
-    genotype_prob_comb = [list(i) for i in itertools.product(*genotype_prob.values())]
+    return df
 
-    partitions = [sfs_bins_comb, genotype_partitions_comb, genotype_prob_comb]
+def extract_coverage(vcf_table, zero_reads):
+    ind_cov = vcf_table.split(':')[1]
+
+    if zero_reads:
+        z_reads = 0
+    else:
+        z_reads = pd.NA
     
-    return partitions
+    if len(ind_cov) > 1:
+        ind_cov = map(int, ind_cov.split(','))
+        coverage = sum(ind_cov)
+    else:
+        coverage = z_reads
+    
+    return coverage
+
+def calc_error(vcf_file):
+    vcf = read_vcf(vcf_file)    
+    ind_coverage = vcf.iloc[:, 9:].applymap(lambda x: extract_coverage(x, True))
+    coverage_distribution = ind_coverage.stack().value_counts(normalize=True).sort_index()
+    
+    return coverage_distribution
 
 def create_partitions_single(n):
-    # XXX: Simpler version of this function that considers only a single population at a time.
-    all_partitions, all_part_probs = [], []
-    for allele_count in range(n+1):
-        partitions = dadi.Numerics.cached_part(allele_count, n/2)
-        partition_probabilities = np.empty(len(partitions))
-        for ii, part in enumerate(partitions):
-            geno_counts = [part.count(_) for _ in [0,1,2]]
-            partition_probabilities[ii] = np.exp(dadi.Numerics.multinomln(geno_counts))
-        partition_probabilities /= partition_probabilities.sum()
-        all_partitions.append(partitions)
-        all_part_probs.append(partition_probabilities)
-    return all_partitions, all_part_probs
-
-def calc_error(coverages):
-    error_pr = []
-    for coverage in coverages:
-        calling_threshold = [int(coverage/3), int(coverage + coverage * 0.5)]
-        if calling_threshold[0] < 2:
-            calling_threshold[0] = 1
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
         
-        # Generate reads using a negative binomial distribution with mean equal to coverage
-        coverages_ = range(calling_threshold[0], calling_threshold[1]+1)
-        # XXX: Why are we fixing the dispersion parameer in the negative binomial?
-        poisson_pmf = ssd.nbinom.pmf(coverages_, coverage, 0.5)
+        allele_counts = np.arange(n+1)
+        
+        all_partitions = [dadi.Numerics.cached_part(ac, n/2) for ac in allele_counts]
+        
+        partition_probabilities = np.array([
+            [np.exp(dadi.Numerics.multinomln([part.count(0), part.count(1), part.count(2)])) for part in parts]
+            for parts in all_partitions
+        ])
+        
+        partition_probabilitie_sum = np.array([np.sum(np.array(elem)) if len(elem) > 1 else np.array(elem) for elem in partition_probabilities])
+        partition_probabilities /= partition_probabilitie_sum
+    
+    return all_partitions, partition_probabilities
 
-        #pr = {k: poisson_pmf[i] for i, k in enumerate(coverages_)}
-        #pr = {x: i/sum(pr.values()) for x, i in pr.items()}
-        #
-        #error_pr_ = {}
-        #for k, v in pr.items():
-        #    reads_permutations = set(itertools.combinations_with_replacement([0,1], k))
-        #    permutation_list = []
-        #    for reads_permutation in reads_permutations:  
-        #        n = [reads_permutation.count(x) for x in [0,1]]
-        #        permutation_list.append(np.exp(dadi.Numerics.multinomln(n)))
-        #    permutation_prob = [i/sum(permutation_list) for i in permutation_list]
-        #    
-        #    error = []
-        #    for i, x in enumerate(permutation_prob):
-        #        if sum(list(reads_permutations)[i]) == 0 or sum(list(reads_permutations)[i]) == len(list(reads_permutations)[i]):
-        #            error.append(permutation_prob[i])
-        #    error_pr_[k] = sum(error) * v
 
-        #error_pr_ = sum(error_pr_.values())
+def calculate_calling_probabilities(coverage_distribution):
+    """
+    Calculate probabilities of not calling genotypes and the probability of having two derived alleles based on the number of reads supporting the alternative allele.
+    """
 
-        # XXX
-        # The above code enumerates the probabilities of getting all reads on a single chromosome for
-        # each potential value of coverage. That's just 2*0.5**nreads
-        # So we can just replace this with a mathematical expression
-        error_pr_ = np.sum(2*0.5**np.asarray(coverages_)* poisson_pmf/poisson_pmf.sum())
-        error_pr.append(error_pr_)
+    error_not_call = []  # List to store the error probability of not calling genotypes
+    probability_double_alt = []  # List to store the probability of having two derived alleles
+    probability_not_call_probs = []  # List to store the probability of not calling genotypes
 
-    return(error_pr)
+    for read in [1, 0]:  # Loop for read values of 1 and 0
+        for gen in ([0, 1], [1]):  # Loop for genotypes [0, 1] and [1]
 
-def sfs_redist(het_error_prob, all_partitions, all_part_probs, n):
-    # Entry (i,j) represents the flow from allele count i to allele count j
-    all_weights = np.zeros((n+1,n+1))
+            probability_not_call = []  # Temporary list to store the probability of not calling values
+            probability_double_alt_ = []  # Temporary list to store the probability of getting two derived alleles
 
-    for allele_count in range(n+1):
-        if allele_count == 1:
-            all_weights[allele_count, allele_count] += 1-2*het_error_prob
-            continue
+            for i in coverage_distribution.index:  # Loop over coverage distribution
+                if i > 20:
+                    probability_not_call.append(0)  # If i > 20, set probability_not_call to 0 since it will take a long time to calculate all combinations and the probability will be very low.
+                else:
+                    genotypes = list(itertools.product(gen, repeat=i))  # Generate possible genotypes for i number of reads
+                    genotypes_count = len(genotypes)  # Count the total number of genotypes
+                    matches_count = sum(1 for genotype in genotypes if genotype.count(1) <= read)
+                    # Count the number of genotypes with at most 'read' alternative alleles
+                    probability_not_call.append(matches_count / genotypes_count)
+                    # Calculate the probability of not calling the genotype based on the count
+
+                    if gen == [0, 1]:  # For genotype [0, 1]
+                        count_total = sum(1 for elem in genotypes if sum(elem) > read)
+                        # Count the number of genotypes with more than 'read' alternative alleles
+                        count_double_alt = sum(1 for elem in genotypes if sum(elem) == i)
+                        # Count the number of genotypes with exactly 'i' alternative alleles
+
+                        if i > 1 and read == 1:
+                            probability_double_alt_.append(count_double_alt / count_total)
+                            # Calculate the probability of having double alternative alleles for read = 1 and i > 1
+                        elif i >= 1 and read == 0:
+                            probability_double_alt_.append(count_double_alt / count_total)
+                            # Calculate the probability of having double alternative alleles for read = 0 and i >= 1
+                        else:
+                            probability_double_alt_.append(0)  # Set probability to 0 otherwise
+
+            probability_double_alt.append(probability_double_alt_)
+            # Store the temporary probability_double_alt_ list for the current gen
+
+            # 'error_not_call' will store the probabilities of not making a genotype call when there are either 1 or 0 reads supporting the alternative allele for the genotypes [0,1] and [1,1].
+            error_not_call.append(
+                sum(
+                    probability_not_call[i] * coverage_distribution.to_list()[i]
+                    for i in range(len(probability_not_call))
+                )
+            )
+            # Calculate the error_not_call by summing probability_not_call multiplied by coverage_distribution
+
+            probability_not_call_probs.append(probability_not_call)
+            # Store the temporary probability_not_call list for the current gen and call combination
+
+    return error_not_call, probability_double_alt, probability_not_call_probs
+
+def sfs_redist(vcf_file, all_partitions, all_part_probs, n):
+    all_weights = np.zeros((n,n))
+
+    coverage_distribution = calc_error(vcf_file)
+    error_not_call, probability_double_alt, probability_not_call_probs = calculate_calling_probabilities(coverage_distribution)
+
+    for allele_count in range(1, n):
         for part, part_prob in zip(all_partitions[allele_count], all_part_probs[allele_count]):
             nhet = part.count(1)
-            # Each heterozygote can be called to reduce, maintain, or increase the observed allele count
-            for ndown in range(nhet+1):
-                for ncorrect in range(nhet-ndown + 1):
-                    # XXX: There might be a faster way to do this if we thought hard about how to
-                    #      enumerate the potential changes within each partition
-                    nup = nhet - ndown - ncorrect
-                    # XXX: To match Emanuel's code, need to double het_error_prob, which seems wrong
-                    #pr = (het_error_prob/2)**(nup + ndown) * (1-het_error_prob)**ncorrect
-                    pr = (het_error_prob)**(nup + ndown) * (1-2*het_error_prob)**ncorrect
-                    ncomb = np.exp(dadi.Numerics.multinomln([ndown, ncorrect, nup]))
-                    # Once I have this working, I only need to calculate probabilities if there is a net change
-                    net_change = nup - ndown
-                    all_weights[allele_count, allele_count+net_change] += part_prob * ncomb*pr
+            ndouble = part.count(2)
+
+            # Taking into consideration different scenarios, one example would be singletons, where we have the conditions nhet > 1 and ndouble == 0. In such cases,
+            # our task would involve calculating the probability of observing 1 or 0 reads for the alternative allele. In the case of doubletons, where we observe 
+            # two heterozygous alleles, we must consider the probability of observing 1 or 0 reads for the alternative allele in one individual and zero reads for 
+            # the alternative allele in the other individual. Additionally, we need to account for the number of combinations of such occurrences.
+            if nhet > 0 and ndouble == 0:
+                error_not_call_ = (error_not_call[0] * error_not_call[1] ** (nhet - 1) * nhet) * part_prob
+            elif nhet == 0 and ndouble > 0:
+                error_not_call_ = error_not_call[2] * error_not_call[3] ** (ndouble - 1) * ndouble * part_prob
+            elif nhet > 0 and ndouble > 0:
+                error_not_call_ = error_not_call[0] * error_not_call[1] ** (nhet - 1) * nhet * error_not_call[3] ** ndouble + error_not_call[2] * error_not_call[3] ** (ndouble - 1) * ndouble * error_not_call[2] ** nhet * part_prob
+            
+            if nhet > 0:
+                # Calculate the error probability for upwards distortion for singletons 
+                if allele_count == 1:
+                    allele_prob_called_1_or_0 = [1 - x for x in probability_not_call_probs[0]] # The probability of calling a position is derived by subtracting the probability of not calling it from 1.
+                    allele_prob_called_1_or_0 = [x * y for x, y in zip(allele_prob_called_1_or_0, coverage_distribution)] # This will be conditional to the coverage distribution
+                    allele_prob_called_1_or_0 = sum(allele_prob_called_1_or_0)
+                    allele_prob_called_1_or_0 = [x / allele_prob_called_1_or_0 for x in allele_prob_called_1_or_0]
+                    het_error_prob_1_or_0 = [prob * allele_prob for prob, allele_prob in zip(probability_double_alt[0], allele_prob_called_1_or_0)]
+                    het_error_prob_up = sum(het_error_prob_1_or_0)
+                # Calculate the error probability for upwards for doubletons, tripletons, so on.
+                else:
+                    allele_prob_called_0 = [1 - x for x in probability_not_call_probs[2]]
+                    allele_prob_called_0 = [x * y for x, y in zip(allele_prob_called_0, coverage_distribution)]
+                    allele_prob_called_0 = sum(allele_prob_called_0)
+                    allele_prob_called_0 = [x / allele_prob_called_0 for x in allele_prob_called_0]
+                    het_error_prob_0 = [prob * allele_prob for prob, allele_prob in zip(probability_double_alt[2], allele_prob_called_0)]
+                    het_error_prob_down = sum(het_error_prob_0)
+
+                # The probability of downward distortion is equivalent to the probability of losing an individual, which means observing a genotype of [0, 0].
+                het_error_prob_down = error_not_call[1]
+                
+                probability_call = 1 - error_not_call_ 
+                all_weights[allele_count, 0] += error_not_call_
+
+                for ndown in range(nhet+1):
+                    for ncorrect in range(nhet-ndown + 1):
+                        nup = nhet - ndown - ncorrect
+                        pr = het_error_prob_down**ndown * het_error_prob_up**nup * (1-(het_error_prob_down + het_error_prob_up))**ncorrect
+                        ncomb = np.exp(dadi.Numerics.multinomln([ndown, ncorrect, nup]))
+                        net_change = nup - ndown
+                        if (allele_count+net_change) > 0:
+                            all_weights[allele_count, allele_count+net_change] += part_prob * ncomb * pr * probability_call
+            else:
+                all_weights[allele_count, allele_count] += probability_call * part_prob
+
     return all_weights
 
-
-def sfs_redistribution(error_pr, all_partitions, partition_threshold, ns):
-    
-    sfs_bins_comb = all_partitions[0]
-    genotype_partitions_comb = all_partitions[1]
-    genotype_prob_comb = all_partitions[2]
-
-    all_calculations = {}
-    all_calculations = {str(k):str(0) for k in sfs_bins_comb}
-
-    if len(ns) > 1:
-        raise ValueError("Only implemented for 1D (so far)")
-
-    # Store distortion effects as a matrix.
-    # Entry (i,j) represents the flow from allele count i to allele count j
-    all_weights = np.zeros((ns[0]+1,ns[0]+1))
-    # Need to separately store distortion of singletons
-    singleton_weight = 0
-
-    for bin_index, sfs_bin in enumerate(sfs_bins_comb):
-        corr_pr = []
-        error_pr1 = []
-        error_pr2 = []
-        for bi, sfs_bin_ in enumerate(sfs_bin):            
-            error_pr1.append(error_pr[bi])
-            error_pr2.append(error_pr[bi])                    
-            corr_pr.append(1 - error_pr1[bi] - error_pr2[bi])
-        
-            genotype_partition = genotype_partitions_comb[bin_index]
-            genotype_partition = [i for i in itertools.product(*genotype_partition)]
-            
-            partition_pr = genotype_prob_comb[bin_index]
-            partition_pr = [i for i in itertools.product(*partition_pr)]
-            
-            for partition_index, partitions in enumerate(genotype_partition):
-                    partitions = list(partitions)
-                    partition_probability = np.prod(partition_pr[partition_index])
-                    
-                    number_01 = [i.count(1) for i in partitions]
-                    number_11 = [i.count(2)*2 for i in partitions]
-                    
-                    genotypes_permutations = []
-                    genotypes_probabilities = []
-                    for i, partition in enumerate(partitions):
-                        genotypes_permutations_ = set(itertools.combinations_with_replacement([0,1,2], number_01[i])) if number_01[i] > 0 else [-1]
-                        if len(genotypes_permutations_) > 1:
-                            genotypes_permutations_ = [list(i) for i in genotypes_permutations_]
-                            permutation_list = []
-                            for genotypes_perm in genotypes_permutations_:  
-                                n = [genotypes_perm.count(x) for x in [0,1,2]]
-                                permutation_list.append(np.exp(dadi.Numerics.multinomln(n)))
-                        else:
-                            permutation_list = [1.0]
-                        
-                        genotypes_permutations.append(genotypes_permutations_)
-                        genotypes_probabilities.append(permutation_list)
-                    
-                    genotypes_permutations_comb = [i for i in itertools.product(*genotypes_permutations)]
-                    genotypes_probabilities_comb = [i for i in itertools.product(*genotypes_probabilities)]
-                    
-                    for ii, permutation in enumerate(genotypes_permutations_comb):
-                        permutation = list(permutation)
-                        het_perm = []
-                        homo_perm_00 = []
-                        homo_perm_11 = []
-                        position = []
-                        # XXX: Seems like these are always length 1 lists?
-                        #perm_list = np.prod(list(genotypes_probabilities_comb[ii]))
-                        # This is noticably faster
-                        perm_list = genotypes_probabilities_comb[ii][0]
-                        for iii, perm in enumerate(permutation):
-                            if perm != -1:
-                                het_perm.append(perm.count(1))
-                                homo_perm_00.append(perm.count(0))
-                                homo_perm_11.append(perm.count(2))
-                                position.append(number_11[iii] + sum(perm))
-                            else:
-                                het_perm.append(0)
-                                homo_perm_00.append(0)
-                                homo_perm_11.append(0)
-                                position.append(sfs_bin[iii])
-                            
-                        # XXX: This was done twice, with no effect
-                        #perm_list = np.prod(list(genotypes_probabilities_comb[ii]))
-                        
-                        corr = np.prod([corr_pr[k] ** het_perm[k] for k, v in enumerate(homo_perm_00)])
-                        
-                        error_00 = np.prod([error_pr1[k] ** homo_perm_00[k] for k, v in enumerate(homo_perm_00)])
-                        error_11 = np.prod([error_pr2[k] ** homo_perm_11[k] for k, v in enumerate(homo_perm_11)])
-                        
-                        rd = corr * error_00 * error_11 * perm_list * partition_probability
-                        if rd > partition_threshold:
-                            if sfs_bin_ == 1 and position[0] != 1:
-                                singleton_weight = rd
-                                if position[0] == 0:
-                                    calculation = 'sfsc[tuple(' + str(sfs_bin) + ')]*2*b1*' + str(rd)
-                                else:
-                                    calculation = 'sfsc[tuple(' + str(sfs_bin) + ')]*2*(1-b1)*' + str(rd)
-                            else:
-                                calculation = 'sfsc[tuple(' + str(sfs_bin) + ')]*' + str(rd)
-                                all_weights[sfs_bin, position] += rd
-
-
-                            all_calculations[str(position)] = '+'.join([all_calculations[str(position)],calculation])
-                            
-    return(all_calculations, all_weights, singleton_weight)
-
-def sfs_redistribution_dict(ns, coverages, partition_threshold=0):
-    error_pr = calc_error(coverages)
-    all_partitions = create_partitions(ns)
-    sfs_redist, sfs_weights, singleton_weight = sfs_redistribution(error_pr, all_partitions, partition_threshold, ns)
-    
-    return sfs_redist, sfs_weights, singleton_weight
-
-def coverage_Ryan(sfs, sfs_weights, singleton_weight, b1):
-    out = np.dot(sfs, sfs_weights)
-    out[0] += 2*b1*singleton_weight*sfs[1]
-    out[2] += 2*(1-b1)*singleton_weight*sfs[1]
-    # Maintaining normalization for comparison, but that's not what we want long-term.
-    return out * sfs.S() / out.sum()
-
-def coverage_distortion(sfs, sfs_redistribution_dict, b1):
-    sfsc = sfs.copy()
-    
-    scope = {'sfsc': sfsc, 'b1':b1}
-    sfs_ = [eval(x, scope) for x in sfs_redistribution_dict.values()]    
-    
-    # XXX: Seems incorrect to normalize here
-    if len(sfs.sample_sizes) == 1:
-        for i, entry in enumerate(sfs_):
-            if entry != 'masked':
-                sfsc[i] = entry/np.ma.sum(sfs_)
-    else:
-        for i, entry in enumerate(sfs_):
-            for ii, entry2 in enumerate(entry):
-                if [i, ii] not in 'masked':
-                    sfsc[i][ii] = entry2/np.ma.sum(sfs_)
-    
-    sfsc = sfsc * sfs.S()
-    
-    return(sfsc)
-
-def precalc_Ryan(n, coverage):
-    # XXX
-    error_pr = calc_error([coverage])[0]
+def precalc(n, vcf_file):
     all_partitions, all_part_probs = create_partitions_single(n)
-    weights = sfs_redist(error_pr, all_partitions, all_part_probs, n)
-    return weights, error_pr
+    weights = sfs_redist(vcf_file, all_partitions, all_part_probs, n+1)
+    
+    for i in range(1, n):
+        weights[i][1:] = weights[i][1:]/sum(weights[i][1:]) * (1 - weights[i][0])
+
+    return weights
+
+def coverage_distortion(sfs, sfs_weights):
+
+    coverage_distortion_ = np.dot(sfs, sfs_weights)
+
+    return coverage_distortion_
 
 
-if __name__ == "__main__":
-    import time
-    import LowCovDistortion_SlowerVersion as SlowVer
-
-    # Correctness test
-    sfs = dadi.Spectrum(np.random.uniform(size=2*2+1))
-    ns = sfs.sample_sizes
-    coverages, b1, part_thresh = [5.25], 0.32, 0.1
-
-    model_old = SlowVer.low_coverage_distortion(sfs, ns, b1, coverages)
-
-    sfs_weights_Ryan, singleton_weight_Ryan = precalc_Ryan(sfs.sample_sizes[0], coverages[0])
-    model_Ryan = coverage_Ryan(sfs, sfs_weights_Ryan, singleton_weight_Ryan, b1)
-    assert(np.allclose(model_Ryan, model_old))
-
-    # Speed of precalculation
-    sfs = dadi.Spectrum(np.random.uniform(size=2*40+1))
-    ns = sfs.sample_sizes
-    b1, coverages = 0.23, [5.25]
-
-    start = time.time()
-    sfs_redis = sfs_redistribution_dict(ns=ns, coverages=coverages)[0]
-    print('Time for sfs_redistribution_dict: {0:.3}s'.format(time.time()-start))
-    start = time.time()
-    model = coverage_distortion(sfs=sfs, sfs_redistribution_dict=sfs_redis, b1=b1)
-    print('Time for coverage_distortion: {0:.3}s'.format(time.time()-start))
-
-    start = time.time()
-    sfs_weights_Ryan, singleton_weight_Ryan = precalc_Ryan(sfs.sample_sizes[0], coverages[0])
-    print('Time for precalc_Ryan: {0:.3}s'.format(time.time()-start))
-    start = time.time()
-    model_Ryan = coverage_Ryan(sfs, sfs_weights_Ryan, singleton_weight_Ryan, b1)
-    print('Time for coverage_Ryan: {0:.3}s'.format(time.time()-start))
-    assert(np.allclose(model, model_Ryan))
