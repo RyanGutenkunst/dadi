@@ -20,7 +20,7 @@ def surface_interaction(np.ndarray[np.float64_t, ndim=3] phi, np.ndarray[np.floa
                     continue
                 if ii == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (jj+kk))/2
+                    dist = int((len(x)-1 - (jj+kk))/2)
                     rmdr = (len(x)-1 - (jj+kk))%2
                     if rmdr == 0:
                         phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -31,7 +31,7 @@ def surface_interaction(np.ndarray[np.float64_t, ndim=3] phi, np.ndarray[np.floa
                         phi[ii,jj,kk] *= (1-amnt)
                 elif jj == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+kk))/2
+                    dist = int((len(x)-1 - (ii+kk))/2)
                     rmdr = (len(x)-1 - (ii+kk))%2
                     if rmdr == 0:
                         phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
@@ -42,7 +42,7 @@ def surface_interaction(np.ndarray[np.float64_t, ndim=3] phi, np.ndarray[np.floa
                         phi[ii,jj,kk] *= (1-amnt)
                 elif kk == 0:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj))/2
+                    dist = int((len(x)-1 - (ii+jj))/2)
                     rmdr = (len(x)-1 - (ii+jj))%2
                     if rmdr == 0:
                         phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
@@ -53,7 +53,7 @@ def surface_interaction(np.ndarray[np.float64_t, ndim=3] phi, np.ndarray[np.floa
                         phi[ii,jj,kk] *= (1-amnt)
                 else:
                     amnt = Psurf[ii,jj,kk]
-                    dist = (len(x)-1 - (ii+jj+kk))/3
+                    dist = int((len(x)-1 - (ii+jj+kk))/3)
                     rmdr = (len(x)-1 - (ii+jj+kk))%3
                     if rmdr == 0: # in line with boundary grid point
                         phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
