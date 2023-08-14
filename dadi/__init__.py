@@ -8,7 +8,7 @@ distribution.
 import logging
 logging.basicConfig()
 
-from . import Demographics1D, Demographics2D, Inference, Integration
+from . import Demographics1D, Demographics2D, Demographics3D, Inference, Integration
 from . import Misc, Numerics, PhiManip, Spectrum_mod, Godambe
 
 # We do it this way so it's easier to reload.
@@ -86,4 +86,7 @@ AP Ragsdale, AJ Coffman, P Hsieh, TJ Struck, RN Gutenkunst "Triallelic populatio
 
 If you find the two-locus methods useful, please cite:
 AP Ragsdale, RN Gutenkunst "Inferring demographic history using two-locus statistics" Genetics 206:1037 (2017)
+
+If you use a Portik model from PortikModels, please cite:
+Portik, DM, Leaché, AD, Rivera, D, et al. Evaluating mechanisms of diversification in a Guineo-Congolian tropical forest frog using demographic model selection. Mol Ecol. 2017; 26: 5245–5263. https://doi.org/10.1111/mec.14266 
 """)
