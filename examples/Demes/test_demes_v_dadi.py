@@ -1,22 +1,22 @@
 
 
 
-# #simple model to test splits up to three populations
-# model = "gutenkunst_ooa.yml"
-# sampled_demes = ["YRI", "CEU", "CHB"]
-# sample_sizes = [10, 10, 10]
+#simple model to test splits up to three populations
+model = "gutenkunst_ooa.yaml"
+sampled_demes = ["YRI", "CEU", "CHB"]
+sample_sizes = [10, 10, 10]
 
 #simple model to test admix using all populations to form a new one
-model = "browning_america.yml"
+model = "browning_america.yaml"
 sampled_demes = ['AFR', 'EUR', 'EAS', 'ADMIX']
 sample_sizes = [10, 10, 10, 10]
 # sampled_demes = ['ADMIX']
 # sample_sizes = [10]
 
-#simple model to test branches and pulses
-model = "offshoots.yml"
-sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
-sample_sizes = [10, 10, 10]
+# #simple model to test branches and pulses
+# model = "offshoots.yaml"
+# sampled_demes=['ancestral', 'offshoot1', 'offshoot2']
+# sample_sizes = [10, 10, 10]
 
 pts_l = [20,30,40]
 
