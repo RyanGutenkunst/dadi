@@ -103,17 +103,17 @@ def partitions_and_probabilities(n_sequenced, partition_type, allele_frequency=N
             partitions = [dadi.Numerics.cached_part(allele_count, n_sequenced / 2) for allele_count in allele_counts]
             
             # Calculate partition probabilities using multinomial likelihood
-            partition_ways = np.array([
+            partition_ways = [
                 [
                     np.exp(dadi.Numerics.multinomln([part.count(0), part.count(1), part.count(2)])) * 2 ** part.count(1)
                     for part in parts
                 ]
                 for parts in partitions
-            ])
+            ]
             
             # Normalize partition probabilities
-            partition_ways_sum = np.array([np.sum(np.array(part)) if len(part) > 1 else np.array(part) for part in partition_ways])
-            partition_probabilities = partition_ways / partition_ways_sum
+            partition_ways_sum = [[np.sum(part)] if len(part) > 1 else part for part in partition_ways]
+            partition_probabilities = [np.array(pw) / np.array(pwb) for pw, pwb in zip(partition_ways, partition_ways_sum)]
         
         else:
             raise ValueError("Invalid partition_type. Use 'allele_frequency' or 'genotype'.")
