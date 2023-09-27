@@ -136,34 +136,6 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None, ga
 ## general functions used by both SFS
 ##
 
-def _get_selfing_rates(g, demes_present):
-    """
-    Returns a list of size functions, migration matrices, integration times,
-    and lists frozen demes.
-    """
-    selfing_rates = []
-
-    for interval, live_demes in sorted(demes_present.items())[::-1]:
-        # get selfing_rates for interval
-        interval_rates = []
-        for d in live_demes:
-            # get the selfing rate for deme d in epoch that spans this interval
-            for epoch in g[d].epochs:
-                if epoch.start_time >= interval[0] and epoch.end_time <= interval[1]:
-                    interval_rates.append(epoch.selfing_rate)
-        selfing_rates.append(interval_rates)
-
-    return selfing_rates
-
-
-def _get_root_selfing_rate(g):
-    for deme_id, preds in g.predecessors().items():
-        if len(preds) == 0:
-            root_deme = deme_id
-            break
-    root_selfing_rate = g[root_deme].epochs[0].selfing_rate
-    return root_selfing_rate
-
 
 def _convert_to_generations(g, sample_times):
     """

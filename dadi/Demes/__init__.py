@@ -1,3 +1,3 @@
-from . import Demes
+from . import Demes, Inference
 
 from .Demes import SFS
