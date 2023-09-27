@@ -1,0 +1,43 @@
+description: The Gutenkunst et al. (2009) OOA model.
+time_units: years
+generation_time: 25
+doi: ['https://doi.org/10.1371/journal.pgen.1000695']
+demes:
+- name: ancestral
+  description: Equilibrium/root population
+  epochs:
+  - {end_time: 234958.12330275605, start_size: 7628.27863455488}
+- name: AMH
+  description: Anatomically modern humans
+  ancestors: [ancestral]
+  epochs:
+  - {end_time: 140071.88881664007, start_size: 12228.303161503532}
+- name: OOA
+  description: Bottleneck out-of-Africa population
+  ancestors: [AMH]
+  epochs:
+  - {end_time: 20553.127171344928, start_size: 8046.985683119598}
+- name: YRI
+  description: Yoruba in Ibadan, Nigeria
+  ancestors: [AMH]
+  epochs:
+  - {end_time: 0, start_size: 12228.303161503532}
+- name: CEU
+  description: Utah Residents (CEPH) with Northern and Western European Ancestry
+  ancestors: [OOA]
+  epochs:
+  - {end_time: 0, start_size: 5000.000000000004, end_size: 30474.34435118036}
+- name: CHB
+  description: Han Chinese in Beijing, China
+  ancestors: [OOA]
+  epochs:
+  - {end_time: 0, start_size: 5000.000000000004, end_size: 57338.33756342972}
+migrations:
+- demes: [YRI, OOA]
+  rate: 0.00023832806600195116
+- demes: [YRI, CEU]
+  rate: 2.8204508414649542e-05
+- demes: [YRI, CHB]
+  rate: 1.9110314864959116e-05
+- demes: [CEU, CHB]
+  rate: 9.806799856112224e-05
