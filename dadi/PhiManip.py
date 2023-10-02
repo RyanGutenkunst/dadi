@@ -7,6 +7,7 @@ from numpy import newaxis as nuax
 import scipy.integrate
 
 from dadi import Numerics
+from dadi import Demes
 
 def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
     """
@@ -27,6 +28,7 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
 
     Returns a new phi array.
     """
+    Demes.cache = [Demes.Initiation(nu)]
 
     if theta is not None:
         raise ValueError('The parameter theta has been deprecated in favor of '
@@ -204,6 +206,8 @@ def phi_1D_to_2D(xx, phi_1D):
     Returns a new two-dimensional phi array.
     """
     check_xx(xx)
+    
+    Demes.cache.append(Demes.Split(proportions=[1]))
 
     pts = len(xx)
     phi_2D = numpy.zeros((pts, pts))
@@ -353,6 +357,8 @@ def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
     xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
     zz:    Frequency mapping that will be used along population 3 axis.
     """
+    Demes.cache.append(Demes.Split(proportions=[f1, 1-f1]))
+
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _two_pop_admixture_intermediates(phi, f1, xx,yy,zz)
 
@@ -454,6 +460,7 @@ def phi_2D_admix_1_into_2(phi, f, xx,yy):
     # a population with zz=yy. We could do this by creating a xx by yy by yy
     # array, then integrating out the second population. That's a big waste of
     # memory, however.
+    Demes.cache.append(Demes.Pulse(sources=[1], dest=2, proportions=[f]))
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _two_pop_admixture_intermediates(phi, f, xx,yy,yy)
 
@@ -487,6 +494,7 @@ def phi_2D_admix_2_into_1(phi, f, xx,yy):
     """
     # Note that it's 1-f here since f now denotes the fraction coming from
     # population 2.
+    Demes.cache.append(Demes.Pulse(sources=[2], dest=1, proportions=[f]))
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _two_pop_admixture_intermediates(phi, 1-f, xx,yy,xx)
 
@@ -513,6 +521,7 @@ def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
               A fraction (1-f1-f2) will be derived from the original pop 3.
     xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
     """
+    Demes.cache.append(Demes.Pulse(sources=[1,2], dest=3, proportions=[f1,f2]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _three_pop_admixture_intermediates(phi, f1,f2, xx,yy,zz, zz)
 
@@ -543,6 +552,7 @@ def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
               A fraction (1-f1-f3) will be derived from the original pop 2.
     xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
     """
+    Demes.cache.append(Demes.Pulse(sources=[1,3], dest=2, proportions=[f1,f3]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _three_pop_admixture_intermediates(phi, f1,1-f1-f3, xx,yy,zz, yy)
 
@@ -573,6 +583,7 @@ def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
               A fraction (1-f2-f3) will be derived from the original pop 1.
     xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
     """
+    Demes.cache.append(Demes.Pulse(sources=[2,3], dest=1, proportions=[f2,f3]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _three_pop_admixture_intermediates(phi, 1-f2-f3,f2, xx,yy,zz, xx)
 
@@ -604,6 +615,7 @@ def phi_4D_admix_into_1(phi, f2,f3,f4, xx,yy,zz,aa):
               A fraction (1-f2-f3-f4) will be derived from the original pop 1.
     xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3, and 4.
     """
+    Demes.cache.append(Demes.Pulse(sources=[2,3,4], dest=1, proportions=[f2,f3,f4]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _four_pop_admixture_intermediates(phi, 1-f2-f3-f4,f2,f3, xx,yy,zz,aa, xx)
 
@@ -636,6 +648,7 @@ def phi_4D_admix_into_4(phi, f1,f2,f3, xx,yy,zz,aa):
               A fraction (1-f1-f2-f3) will be derived from the original pop 4.
     xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
     """
+    Demes.cache.append(Demes.Pulse(sources=[1,2,3], dest=1, proportions=[f1, f2, f3]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, yy)
 
@@ -666,6 +679,7 @@ def phi_4D_admix_into_3(phi, f1,f2,f4, xx,yy,zz,aa):
               A fraction (1-f1-f2-f4) will be derived from the original pop 3.
     xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
     """
+    Demes.cache.append(Demes.Pulse(sources=[1,2,4], dest=3, proportions=[f1, f2, f4]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _four_pop_admixture_intermediates(phi, f1,f2,1-f1-f2-f4, xx,yy,zz,aa, yy)
 
@@ -696,6 +710,7 @@ def phi_4D_admix_into_2(phi, f1,f3,f4, xx,yy,zz,aa):
               A fraction (1-f1-f3-f4) will be derived from the original pop 2.
     xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
     """
+    Demes.cache.append(Demes.Pulse(sources=[1,3,4], dest=2, proportions=[f1, f3, f4]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _four_pop_admixture_intermediates(phi, f1,1-f1-f3-f4,f3, xx,yy,zz,aa, yy)
 
@@ -883,6 +898,7 @@ def remove_pop(phi, xx, popnum):
     xx: Mapping of points in phi to frequencies in population to be removed
     popnum: Population number to remove, numbering from 1.
     """
+    Demes.cache.append(Demes.Remove(removed=popnum))
     return Numerics.trapz(phi, xx, axis=popnum-1)
 
 def filter_pops(phi, xx, tokeep):
@@ -950,23 +966,19 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
         phi[-1] = 1./int0
     return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)
 
-
 def reorder_pops(phi, neworder):
     """
-    Get Spectrum with populations in new order
+    Get phi with populations in new order
 
-    Returns new Spectrum with same number of populations, but in a different order
+    Returns new phi with same number of populations, but in a different order
 
     neworder: Integer list defining new order of populations, indexing the orginal
               populations from 1. Must contain all integers from 1 to number of pops.
     """
+    Demes.cache.append(Demes.Reorder(neworder=neworder))
     if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:
         raise(ValueError("neworder argument misspecified"))
     newaxes = [_-1 for _ in neworder]
     phi = phi.transpose(newaxes)
     
     return phi
-
-
-
-
