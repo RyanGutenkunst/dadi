@@ -26,7 +26,18 @@ def _check_demes_imported():
         )
 
 
-def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None, gamma=None, h=None):
+def SFS(
+    g, 
+    sampled_demes, 
+    sample_sizes, 
+    pts, 
+    sample_times=None,
+    Ne=None, 
+    theta=1.0,
+    gamma=None, 
+    h=None,
+    debug=False,
+    ):
     """
     Takes a deme graph and computes the SFS. ``demes`` is a package for
     specifying demographic models in a user-friendly, human-readable YAML
@@ -67,27 +78,59 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None, ga
         if deme not in g:
             raise ValueError(f"deme {deme} is not in demography")
 
-    if sample_times is None:
-        sample_times = [g[d].end_time for d in sampled_demes]
+    # Easy way to keep sample size properly ordered would be to make a dictionary?
+    # pop_ns = {}
+    # for pop in sampled_demes: pop_ns[pop] = sample_sizes[sampled_demes.index(pop)]
+
+    # we need to copy these to new variable names
+    # so they don't get updated during optimization
+    sampled_pops = copy.copy(sampled_demes)
+    deme_sample_times = copy.copy(sample_times)
+
+    sampled_deme_end_times = [g[d].end_time for d in sampled_pops]
+    if deme_sample_times is None:
+        deme_sample_times = sampled_deme_end_times
+
+    # # Redundant
+    # for d, t in zip(sampled_pops, deme_sample_times):
+    #     if t < g[d].end_time or t >= g[d].start_time:
+    #         raise ValueError(f"sample time {t} is outside of deme {d}'s time span")
 
     if pts == None:
         raise ValueError("dadi requires defining pts (grid points)")
 
     # for any ancient samples, we need to add frozen branches
     # with this, all "sample times" are at time 0, and ancient sampled demes are frozen
-    if np.any(np.array(sample_times) != 0):
-        g, sampled_demes, list_of_frozen_demes = _augment_with_ancient_samples(
-            g, sampled_demes, sample_times
+    if np.any(np.array(deme_sample_times) != 0):
+        g, sampled_pops, list_of_frozen_demes = _augment_with_ancient_samples(
+            g, sampled_pops, deme_sample_times
         )
-        sample_times = [0 for _ in sample_times]
+        deme_sample_times = [0 for _ in deme_sample_times]
     else:
         list_of_frozen_demes = []
 
     if g.time_units != "generations":
-        g, sample_times = _convert_to_generations(g, sample_times)
-    for d, n, t in zip(sampled_demes, sample_sizes, sample_times):
+        g, deme_sample_times = _convert_to_generations(g, deme_sample_times)
+
+    for d, n, t in zip(sampled_pops, sample_sizes, deme_sample_times):
         if t < g[d].end_time or t >= g[d].start_time:
             raise ValueError("sample time for {deme} must be within its time span")
+
+    # check selection and dominance inputs
+    if gamma is not None:
+        if "_default" in g:
+            raise ValueError(
+                "Cannot use `_default` as a deme name when gamma is not None"
+            )
+        if type(gamma) is dict:
+            for k in gamma.keys():
+                if k != "_default" and k not in g:
+                    raise ValueError(f"Deme {k} in gamma, but {k} not in input graph")
+    if h is not None:
+        if type(h) is dict:
+            for k in h.keys():
+                if k != "_default" and k not in g:
+                    raise ValueError(f"Deme {k} in h, but {k} not in input graph")
 
     # get the list of demographic events from demes, which is a dictionary with
     # lists of splits, admixtures, mergers, branches, and pulses
@@ -100,7 +143,7 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None, ga
     # get the list of demes present in each epoch, as a dictionary with non-overlapping
     # adjoint epoch time intervals
     demo_events, demes_present = _get_demographic_events(
-        g, demes_demo_events, sampled_demes
+        g, demes_demo_events, sampled_pops
     )
 
     for epoch, epoch_demes in demes_present.items():
@@ -112,24 +155,52 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None, ga
 
     # get the list of size functions, migration matrices, and frozen attributes from
     # the deme graph and event times, matching the integration times
-    nu_funcs, mig_mats, Ts, frozen_pops = _get_integration_parameters(
+    nu_funcs, migration_matrices, integration_times, frozen_demes = _get_integration_parameters(
         g, demes_present, list_of_frozen_demes, Ne=Ne
     )
 
+
+    # # get the sample sizes within each deme, given sample sizes
+    # probably don't need since sample size doesn't matter untill converting phi to fs, unlike moments where each integration needs a ns
+    # deme_sample_sizes = _get_deme_sample_sizes(
+    #     g,
+    #     demo_events,
+    #     sampled_pops,
+    #     sample_sizes,
+    #     demes_present,
+    #     unsampled_n=None,
+    # )
+
     # compute the SFS
-    fs = _compute_sfs(
+    phi, xx, current_demes_order = _compute_sfs(
         demo_events,
         demes_present,
         sample_sizes,
         nu_funcs,
-        mig_mats,
-        Ts,
-        frozen_pops,
-        pts
+        migration_matrices,
+        integration_times,
+        frozen_demes,
+        pts,
+        theta,
+        gamma,
+        h,
     )
+    if debug:
+        phi_bug = phi
+        fs_bug = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(current_demes_order), pop_ids=current_demes_order)
 
+        new_order = [current_demes_order.index(pop)+1 for pop in sampled_pops]
+        phi_fix = dadi.PhiManip.reorder_pops(phi, new_order)
+        fs_fix = dadi.Spectrum.from_phi(phi_fix, sample_sizes, [xx]*len(sampled_pops), pop_ids=sampled_pops)
 
-    return fs
+        return fs_fix, fs_bug, phi_fix, phi_bug
+
+    else:
+        new_order = [current_demes_order.index(pop)+1 for pop in sampled_pops]
+        phi = dadi.PhiManip.reorder_pops(phi, new_order)
+        fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(sampled_pops), pop_ids=sampled_pops)
+
+        return fs
 
 
 ##
@@ -137,48 +208,81 @@ def SFS(g, sampled_demes, sample_sizes, sample_times=None, Ne=None, pts=None, ga
 ##
 
 
-def _convert_to_generations(g, sample_times):
+def _convert_to_generations(g, deme_sample_times):
     """
     Takes a deme graph that is not in time units of generations and converts
     times to generations, using the time units and generation times given.
     """
     if g.time_units == "generations":
-        return g, sample_times
+        return g, deme_sample_times
     else:
-        for ii, sample_time in enumerate(sample_times):
-            sample_times[ii] = sample_time / g.generation_time
+        for ii, sample_time in enumerate(deme_sample_times):
+            deme_sample_times[ii] = sample_time / g.generation_time
         g = g.in_generations()
-        return g, sample_times
+        return g, deme_sample_times
 
 
-def _augment_with_ancient_samples(g, sampled_demes, sample_times):
+def _augment_with_ancient_samples(g, sampled_demes, deme_sample_times):
     """
     Returns a demography object and new sampled demes where we add
     a branch event for the new sampled deme that is frozen.
+
+    If all sample times are > 0, we also slice the graph to remove the
+    time interval that is more recent than the most recent sample time.
 
     New sampled, frozen demes are labeled "{deme}_sampled_{sample_time}".
     Note that we cannot have multiple ancient sampling events at the same
     time for the same deme (for additional samples at the same time, increase
     the sample size).
     """
+    # Adjust the graph if all sample times are greater than 0
+    t = min(deme_sample_times)
+    g_new = dadi.Demes.DemesUtil.slice(g, min(deme_sample_times))
+    deme_sample_times = [st - t for st in deme_sample_times]
+    # add frozen branches
     frozen_demes = []
-    b = demes.Builder.fromdict(g.asdict())
-    for ii, (sd, st) in enumerate(zip(sampled_demes, sample_times)):
-        if st > 0:
-            sd_frozen = sd + f"_sampled_{st}"
-            frozen_demes.append(sd_frozen)
+    b = demes.Builder.fromdict(g_new.asdict())
+    for ii, (sd, st) in enumerate(zip(sampled_demes, deme_sample_times)):
+        if st > 0 or t > 0:
+            sd_frozen = sd + f"_sampled_{'_'.join(str(float(st + t)).split('.'))}"
+            # update names of sampled demes
             sampled_demes[ii] = sd_frozen
-            b.add_deme(
-                sd_frozen,
-                start_time=st,
-                epochs=[dict(end_time=0, start_size=1)],
-                ancestors=[sd],
-            )
-    g = b.resolve()
-    return g, sampled_demes, frozen_demes
+            deme_sample_times = [y for x, y in zip(sampled_demes, deme_sample_times) if x == sd]
+            if st > 0:
+                # add the frozen branch, as sample time is nonzero
+                frozen_demes.append(sd_frozen)
+                b.add_deme(
+                    sd_frozen,
+                    start_time=st,
+                    epochs=[dict(end_time=0, start_size=1)],
+                    ancestors=[sd],
+                )
+            elif t > 0:
+                # change the name of the sampled branch, as we have all ancient samples
+                for ii, d in enumerate(b.data["demes"]):
+                    if d["name"] == sd:
+                        b.data["demes"][ii]["name"] = sd_frozen
+                # change migration and pulse demes involving this sampled deme
+                if "migrations" in b.data.keys():
+                    for ii, m in enumerate(b.data["migrations"]):
+                        if m["source"] == sd:
+                            m["source"] = sd_frozen
+                        if m["dest"] == sd:
+                            m["dest"] = sd_frozen
+                        b.data["migrations"][ii] = m
+                if "pulses" in b.data.keys():
+                    for ii, p in enumerate(b.data["pulses"]):
+                        for jj, source in enumerate(p["sources"]):
+                            if source == sd:
+                                p["sources"][jj] = sd_frozen
+                        if p["dest"] == sd:
+                            p["dest"] = sd_frozen
+                        b.data["pulses"][ii] = p
+    g_new = b.resolve()
+    return g_new, sampled_demes, frozen_demes
 
 
-def _get_demographic_events(g, demes_demo_events, sampled_demes):
+def _get_demographic_events(g, demes_demo_events, sampled_pops):
     """
     Returns demographic events and present demes over each epoch.
     Epochs are divided by any demographic event.
@@ -250,7 +354,7 @@ def _get_demographic_events(g, demes_demo_events, sampled_demes):
     # if there are any unsampled demes that end before present and do not have
     # any descendent demes, we need to add marginalization events.
     for deme_id, succs in g.successors().items():
-        if deme_id not in sampled_demes and (
+        if deme_id not in sampled_pops and (
             len(succs) == 0
             or np.all([g[succ].start_time > g[deme_id].end_time for succ in succs])
         ):
@@ -415,8 +519,6 @@ def _migration_rate_in_interval(g, source, dest, time_interval):
 ## Functions for SFS computation
 ##
 
-
-
 def _compute_sfs(
     demo_events,
     demes_present,
@@ -433,13 +535,12 @@ def _compute_sfs(
     """
     Integrates using dadi to find the SFS for given demo events, etc
     """
-    if gamma is not None and h is None:
-        h = 0.5
 
     # theta is a scalar
     assert type(theta) in [int, float]
 
     integration_intervals = sorted(list(demes_present.keys()))[::-1]
+    root_deme = demes_present[integration_intervals[0]][0]
 
     # set up initial steady-state 1D phi for ancestral deme
     if gamma is None:
@@ -486,16 +587,17 @@ def _compute_sfs(
             ]
             next_deme_order = demes_present[next_interval]
             # ###
-            # print(pop_ids)
+            print('current pop ids:',pop_ids)
             # ###
             if pop_ids != next_deme_order:
                 new_order = [pop_ids.index(pop)+1 for pop in next_deme_order]
                 phi = dadi.PhiManip.reorder_pops(phi, new_order)
                 pop_ids = next_deme_order
-            # print('new order:',pop_ids,'\n\n')
+                print('new order index:',new_order,'\n\n')
+            print('new order:',pop_ids,'\n\n')
 
-    fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
-    return fs
+    # fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
+    return phi, xx, pop_ids
 
 
 def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present):
