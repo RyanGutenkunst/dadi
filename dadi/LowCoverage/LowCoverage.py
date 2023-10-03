@@ -1,8 +1,8 @@
 import itertools
-from io import StringIO as SIO
-import numpy as np, pandas as pd
+import numpy as np
 import dadi
 import warnings
+import os
 
 import math
 from scipy.special import comb
@@ -217,7 +217,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     # Not enough calls for this SNP
                     break
                 # Choose which individuals to use
-                idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
+                idx = np.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
                 for ii in idx:
                     gt = subsample_dict[pop][ii]
                     refcalls, altcalls = calls_dict[pop]
@@ -335,14 +335,29 @@ def _get_popinfo(popinfo_file):
 
 
 def compute_cov_dist(data_dict, pop_ids):
+    """
+    Compute the coverage distribution for each population.
+
+    Args:
+    - data_dict (dict): A dictionary containing data entries.
+    - pop_ids (list): A list of population identifiers for which coverage distribution is computed.
+
+    Returns:
+    - dict: A dictionary where keys are population identifiers, and values are arrays representing
+            the coverage distribution for each population.
+    
+    Raises:
+    - ValueError: If information about allelic depths for the reference and alternative alleles
+                  is not found in the data dictionary.
+    """
     try:
         # Dictionary comprehension to compute the coverage distribution
-        coverage_distribution = {pop: numpy.array([
-            *numpy.unique(numpy.concatenate([numpy.array(list(entry['coverage'][pop])) for entry in data_dict.values()]), return_counts=True)
+        coverage_distribution = {pop: np.array([
+            *np.unique(np.concatenate([np.array(list(entry['coverage'][pop])) for entry in data_dict.values()]), return_counts=True)
         ]) for pop in pop_ids}
         
         # Normalize counts
-        coverage_distribution = {pop: numpy.array([elements, counts / counts.sum()]) for pop, (elements, counts) in coverage_distribution.items()}
+        coverage_distribution = {pop: np.array([elements, counts / counts.sum()]) for pop, (elements, counts) in coverage_distribution.items()}
         
         return coverage_distribution
     except:
@@ -402,6 +417,44 @@ def partitions_and_probabilities(n_sequenced, partition_type, allele_frequency=N
             raise ValueError("Invalid partition_type. Use 'allele_frequency' or 'genotype'.")
         
         return partitions, partition_probabilities
+
+
+def calculate_coverage_distribution(vcf_file, population_file, population):
+    """
+    Calculate coverage distribution for specified populations from a VCF file.
+    
+    Args:
+        vcf_file (str): The path to the VCF file.
+        population_file (str): The path to the population information file.
+        population (list): A list of population names to calculate coverage for.
+    
+    Returns:
+        list: A list of Pandas Series, each representing the coverage distribution for a population.
+    """
+    # Read VCF data
+    vcf_data = read_vcf(vcf_file)  
+    
+    # Get the index of the 'FORMAT' column and extract format information
+    format_index = list(vcf_data.columns).index('FORMAT')
+    format_info = vcf_data.iloc[1, format_index].split(':')
+    
+    # Read the population information
+    population_info = pd.read_csv(population_file, header=None, sep='\s+|\t', engine='python')
+    
+    # Calculate coverage for all individuals in the VCF data
+    coverage = vcf_data.iloc[:, 9:].applymap(lambda x: extract_coverage(x, format_info))
+    
+    coverage_distribution = []
+    for pop in population:
+        # Filter the population info DataFrame for the specified population
+        population_sub = population_info[population_info.iloc[:, 1] == pop]
+        population_sub = population_sub.iloc[:, 0]
+        
+        # Calculate individual coverage distribution for the population
+        individual_coverage = coverage[population_sub].stack().value_counts(normalize=True).sort_index()
+        coverage_distribution.append(individual_coverage)
+    
+    return coverage_distribution
 
 
 def split_list_by_lengths(input_list, lengths_list):
@@ -484,8 +537,9 @@ def simulate_reads(coverage_distribution, flattened_partition, pop_n_sequenced, 
     splits = np.concatenate((np.array([0]), np.cumsum(pop_n_sequenced)), axis=0)
     
     # Simulate reads for each population
+    pops = list(coverage_distribution.keys())
     for i, _ in enumerate(partition):
-        cov_distribution = np.asarray(coverage_distribution[i])
+        cov_distribution = coverage_distribution[pops[i]][1]
         cov_sampling = ss.rv_discrete(values=[np.arange(len(cov_distribution)), cov_distribution])
         coverages = cov_sampling.rvs(size=(number_simulations, len(partition[i])))
         simulated_coverage[:, splits[i]:splits[i+1]] = coverages
@@ -635,7 +689,7 @@ def probability_of_no_call_1D(coverage_distribution, n_sequenced):
     partitions, partitions_probabilities = partitions_and_probabilities(n_sequenced, 'genotype')
     
     # Array of depths corresponding to coverage_distribution
-    depths = np.arange(len(coverage_distribution))
+    depths = np.arange(len(coverage_distribution[0]))
     
     # Create an empty array to store the final probabilities of no genotype calling
     all_prob_nocall = np.empty(n_sequenced + 1)
@@ -649,22 +703,22 @@ def probability_of_no_call_1D(coverage_distribution, n_sequenced):
             
             # Probability of getting no reads for the homozygous alt
             P_case0 = (
-                coverage_distribution[0]**num_hom_alt *
-                np.sum(coverage_distribution * 0.5**depths)**num_heterozygous
+                coverage_distribution[1][0]**num_hom_alt *
+                np.sum(coverage_distribution[1] * 0.5**depths)**num_heterozygous
             )
             
             # Probability of getting one read for the homozygous alt
             # P_case1a: Probability of 1 read in homozygous alt and 0 in heterozygous
             P_case1a = (
-                num_hom_alt * coverage_distribution[1] * coverage_distribution[0]**(num_hom_alt - 1) *
-                np.sum(coverage_distribution * 0.5**depths)**num_heterozygous
+                num_hom_alt * coverage_distribution[1][1] * coverage_distribution[1][0]**(num_hom_alt - 1) *
+                np.sum(coverage_distribution[1] * 0.5**depths)**num_heterozygous
             )
             
             # P_case1b: Probability of 1 read in heterozygous and 0 in homozygous alt
             P_case1b = (
-                coverage_distribution[0]**num_hom_alt *
-                np.sum(coverage_distribution * 0.5**depths)**(num_heterozygous - 1) *
-                num_heterozygous * np.sum(depths * coverage_distribution * 0.5**depths)
+                coverage_distribution[1][0]**num_hom_alt *
+                np.sum(coverage_distribution[1] * 0.5**depths)**(num_heterozygous - 1) *
+                num_heterozygous * np.sum(depths * coverage_distribution[1] * 0.5**depths)
             )
             
             # Calculate the probability of no call
@@ -694,8 +748,8 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
     for covered in range(int(math.ceil(n_subsampling/2)), n_sequenced//2+1):
         # Calculate the probability of having enough individuals covered
         prob_enough_individuals_covered += (
-            coverage_distribution[0]**(n_sequenced//2 - covered) *
-            np.sum(coverage_distribution[1:]) ** covered *
+            coverage_distribution[1][0]**(n_sequenced//2 - covered) *
+            np.sum(coverage_distribution[1][1:]) ** covered *
             comb(n_sequenced//2, covered)
         )
     
@@ -739,11 +793,11 @@ def calling_error_matrix(coverage_distribution, n_subsampling):
     partitions, partitions_probabilities = partitions_and_probabilities(n_subsampling, 'genotype')
     
     # Array of depths corresopnding to coverage distribution
-    depths = np.arange(1, len(coverage_distribution[1:])+1, 1)
+    depths = np.arange(1, len(coverage_distribution[1][1:])+1, 1)
     
     # Probability that a heterozygote is called incorrectly
     # Note that zero reads would be no call, so it isn't included here
-    coverage_distribution_ = [x/coverage_distribution[1:].sum() for x in coverage_distribution[1:]]
+    coverage_distribution_ = [x/coverage_distribution[1][1:].sum() for x in coverage_distribution[1][1:]]
     prob_het_err = np.sum(coverage_distribution_ * 0.5**depths)
     
     # Transformation matrix
@@ -770,7 +824,110 @@ def calling_error_matrix(coverage_distribution, n_subsampling):
                 afs_after_error = allele_freq + net_change
                 
                 # Record where error alleles end up
-                trans_matrix[afs_after_error, allele_freq] += part_prob * p_nerr * p_nref
+                trans_matrix[allele_freq, afs_after_error] += part_prob * p_nerr * p_nref
     
     return trans_matrix
+
+def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, nsim=1000):
+    """
+    Calculate transformation matrices for low-coverage calling model.
+    
+    nsub: Final sample size (in haplotypes)
+    nseq: Sequenced sample size (in haplotypes)
+    cov_dist: Coverage distribution (list of one array per population)
+    sim_threshold: This method uses the probability an allele is not called
+                   to switch between analytic and simulation-based methods.
+                   Setting this threshold to 0 will always use simulations,
+                   while setting it to 1 will always use analytics.
+    nsim: For simulations, number of simulations per allele frequency combination
+    """
+    # As a lower bound on the probability that a allele with a given frequency is not called,
+    # use the probability it is not called considering only the reads in each individual population.
+    # We calculate them separately, then combine them into a single matrix
+    prob_nocall_by_pop = [probability_of_no_call_1D(cov_dist_, nseq_) for (cov_dist_, nseq_) in zip(cov_dist.values(), nseq)]
+    prob_nocall_ND = 1
+    for apn_1D in prob_nocall_by_pop:
+        prob_nocall_ND = np.multiply.outer(prob_nocall_ND, apn_1D)
+    
+    # Identify those entries that should be simulated, as opposed to analytically calculated
+    use_sim_mat = prob_nocall_ND > sim_threshold
+    
+    ### For analytic calling model
+    # Probability that enough individuals got at least one read to subsample
+    # This doesn't depend on allele frequency
+    prob_enough_covered = np.prod([probability_enough_individuals_covered(cov_dist_, nseq_, nsub_) for (cov_dist_, nseq_, nsub_) in zip(cov_dist.values(), nseq, nsub)])
+    # Precalculate analytic projection and heterozygote error matrices
+    proj_mats = [prob_enough_covered * projection_matrix(nseq_, nsub_) for (nseq_, nsub_) in zip(nseq, nsub)]
+    heterr_mats = [calling_error_matrix(cov_dist_, nsub_) for (cov_dist_, nsub_) in zip(cov_dist.values(), nsub)]
+    
+    ### For simulation calling model
+    # Indices of entries in afs where we should use simulation
+    simulated_indices = np.argwhere(use_sim_mat)
+    # Do the simulations (Note, arbitrarily using 1000 per entry here. Should think harder about tradeoffs.)
+    sim_outputs = {tuple(af):simulate_genotype_calling(cov_dist, af, nseq, nsub, nsim) for af in simulated_indices}
+    
+    return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
+
+
+def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2):
+    """
+    Generage a version of func accounting for low coverage distortion
+    
+    func: The frequency spectrum generating function to which distortion will
+          be applied. It is assumed that the second argument is the final
+          sample size (in haplotypes).
+    vcf_file: The original data VCF file, from which coverage information will
+              extracted.
+    popfile: Name of file containing the population assignments for
+             each sample in the VCF. If a sample in the VCF file does
+             not have a corresponding entry in this file, it will be
+             skipped. See dadi.Misc._get_popinfo for information on how this
+             file must be formatted.
+    nseq: Number of sequenced individuals. # XXX: We should just extract this when we parse the VCF file.
+    sim_threshold: This method uses the probability an allele is not called
+                   to switch between analytic and simulation-based methods.
+                   Setting this threshold to 0 will always use simulations,
+                   while setting it to 1 will always use analytics.
+    """
+    # XXX: Should automatically extract nseq from the vcf file
+    cov_dist = compute_cov_dist(dd, pop_ids)
+    
+    # Used to cache matrices used for low-coverage transformation
+    precalc_cache = {}
+    
+    def lowcov_func(*args, **kwargs):
+        ns = args[1]
+        new_args = [args[0]] + [nseq] + list(args[2:])
+        model = func(*new_args, **kwargs)
+        if model.folded:
+            raise ValueError('Low coverage model not tested for folded model spectra yet.')
+        
+        if tuple(nsub) not in precalc_cache:
+            precalc_cache[tuple(nsub)] = low_cov_precalc(nsub, nseq, cov_dist, sim_threshold)
+        prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs = precalc_cache[tuple(nsub)]
+        
+        # First, transform entries we do analytically. We zero out the entries
+        # we'll simulate, since we'll handle their contribution later.
+        analytic = model * (1-use_sim_mat)
+        # Account for sites that aren't called 
+        analytic *= (1-prob_nocall_ND)
+        # Apply projection and heterozygote error transformations
+        for pop_ii, (proj_mat, heterr_mat) in enumerate(zip(proj_mats, heterr_mats)):
+            analytic = analytic.swapaxes(pop_ii, -1) # Swap axes to use efficient matrix multiplication
+            analytic = analytic.dot(proj_mat)
+            analytic = analytic.dot(heterr_mat)
+            analytic = analytic.swapaxes(pop_ii, -1)
+        
+        # Use the simulated outputs
+        simulated = np.sum([model[af]*output for (af, output) in sim_outputs.items()], axis=0)
+        
+        output = analytic + simulated
+        # Not sure why the folding status got undefined in the above manipulations...
+        output.folded = model.folded
+        output.extrap_x = model.extrap_x
+        
+        return output
+    lowcov_func.__name__ = func.__name__ + '_lowcov'
+    lowcov_func.__doc__ = func.__doc__
+    return lowcov_func
 
