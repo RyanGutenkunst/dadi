@@ -18,6 +18,7 @@ pipelines:
             - pip
             - miniconda3
           script:
-            - conda install -c conda-forge -y scipy matplotlib numpy pytest demes nlopt gcc gfortran cython python=3.8
+            - conda install -c conda-forge -y nlopt python=3.8
+            - pip install demes
             - pip install -e .
             - pytest -v tests/test_*.py --junitxml=test-reports/report.xml
