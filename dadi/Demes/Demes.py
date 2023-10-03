@@ -587,14 +587,14 @@ def _compute_sfs(
             ]
             next_deme_order = demes_present[next_interval]
             # ###
-            print('current pop ids:',pop_ids)
+            # print('current pop ids:',pop_ids)
             # ###
             if pop_ids != next_deme_order:
                 new_order = [pop_ids.index(pop)+1 for pop in next_deme_order]
                 phi = dadi.PhiManip.reorder_pops(phi, new_order)
                 pop_ids = next_deme_order
-                print('new order index:',new_order,'\n\n')
-            print('new order:',pop_ids,'\n\n')
+                # print('new order index:',new_order,'\n\n')
+            # print('new order:',pop_ids,'\n\n')
 
     # fs = dadi.Spectrum.from_phi(phi, sample_sizes, [xx]*len(pop_ids), pop_ids=pop_ids)
     return phi, xx, pop_ids
