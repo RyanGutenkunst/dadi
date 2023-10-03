@@ -11,59 +11,342 @@ import scipy.stats as ss, scipy.stats.distributions as ssd
 rng = np.random.default_rng()
 
 
-def read_vcf(vcf_file):
+def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=True,
+                       flanking_info=[None, None]):
     """
-    Reads data from a VCF file and returns it as a pandas DataFrame.
+    Parse a VCF file containing genomic sequence information, along with a file
+    identifying the population of each sample, and store the information in
+    a properly formatted dictionary.
     
-    Args:
-        vcf_file (str): The path to the VCF file to be read.
+    Each file may be zipped (.zip) or gzipped (.gz). If a file is zipped,
+    it must be the only file in the archive, and the two files cannot be zipped
+    together. Both files must be present for the function to work.
     
-    Returns:
-        pandas.DataFrame: A DataFrame containing the VCF information.
+    vcf_filename : Name of VCF file to work with. The function currently works
+                   for biallelic SNPs only, so if REF or ALT is anything other
+                   than a single base pair (A, C, T, or G), the allele will be
+                   skipped. Additionally, genotype information must be present
+                   in the FORMAT field GT, and genotype info must be known for
+                   every sample, else the SNP will be skipped. If the ancestral
+                   allele is known it should be specified in INFO field 'AA'.
+                   Otherwise, it will be set to '-'.
     
+    popinfo_filename : Name of file containing the population assignments for
+                       each sample in the VCF. If a sample in the VCF file does
+                       not have a corresponding entry in this file, it will be
+                       skipped. See _get_popinfo for information on how this
+                       file must be formatted.
+    
+    subsample : Dictionary with population names used in the popinfo_filename
+                as keys and the desired sample size (in number of individuals)
+                for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
+                two populations.
+    
+    filter : If set to True, alleles will be skipped if they have not passed
+             all filters (i.e. either 'PASS' or '.' must be present in FILTER
+             column.
+    
+    flanking_info : Flanking information for the reference and/or ancestral
+                    allele can be provided as field(s) in the INFO column. To
+                    add this information to the dict, flanking_info should
+                    specify the names of the fields that contain this info as a
+                    list (e.g. ['RFL', 'AFL'].) If context info is given for
+                    only one allele, set the other item in the list to None,
+                    (e.g. ['RFL', None]). Information can be provided as a 3
+                    base-pair sequence or 2 base-pair sequence, where the first
+                    base-pair is the one immediately preceding the SNP, and the
+                    last base-pair is the one immediately following the SNP.
     """
-    # Open the VCF file for reading
-    with open(vcf_file, 'r') as input_file:
-        # Filter out lines starting with '##' (header lines)
-        data_lines = [line for line in input_file if not line.startswith('##')]
-        
-        # Read the VCF data into a DataFrame using pandas
-        vcf_to_table = pd.read_csv(SIO(''.join(data_lines)),dtype={'#CHROM': str, 'POS': int, 'ID': str, 'REF': str, 'ALT': str, 'QUAL': str, 'FILTER': str, 'INFO': str}, sep='\t').rename(columns={'#CHROM': 'CHROM'})
+    do_subsampling = False
+    if subsample is not None:
+        do_subsampling = True
+        warnings.warn('Note on subsampling: If you will be including inbreeding in your model, '
+                      'do not project your data to smaller sample sizes in later steps of your analysis.')
     
-    return vcf_to_table
-
-
-def extract_coverage(vcf_element, target_format):
-    """
-    Extracts coverage information from a VCF element based on a specified target format.
-    
-    Args:
-        vcf_element (str): The VCF element from which to extract coverage information.
-        target_format (str): The format string specifying the structure of the VCF element.
-    
-    Returns:
-        int: The extracted coverage value, or 0 if no coverage information is found (i.e., missing data).
-    
-    Raises:
-        ValueError: If the read depth parameter is not found in the target format.
-    """
+    if os.path.splitext(popinfo_filename)[1] == '.gz':
+        import gzip
+        popinfo_file = gzip.open(popinfo_filename)
+    elif os.path.splitext(popinfo_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(popinfo_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single popinfo file in zip "
+                             "archive: {}".format(popinfo_filename))
+        popinfo_file = archive.open(namelist[0])
+    else:
+        popinfo_file = open(popinfo_filename)
+    # pop_dict has key, value pairs of "SAMPLE_NAME" : "POP_NAME"
     try:
-        # Find the index of 'AD' in the target format
-        i = target_format.index('AD')
+        popinfo_dict = _get_popinfo(popinfo_file)
+    except:
+        raise ValueError('Failed in parsing popinfo file.')
+    popinfo_file.close()
+    
+    # Open VCF file
+    if os.path.splitext(vcf_filename)[1] == '.gz':
+        import gzip
+        vcf_file = gzip.open(vcf_filename)
+    elif os.path.splitext(vcf_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(vcf_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single vcf file in zip "
+                             "archive: {}".format(vcf_filename))
+        vcf_file = archive.open(namelist[0])
+    else:
+        vcf_file = open(vcf_filename)
+    
+    data_dict = {}
+    for line in vcf_file:
+        # decoding lines for Python 3 - probably a better way to handle this
+        try:
+            line = line.decode()
+        except AttributeError:
+            pass
+        # Skip metainformation
+        if line.startswith('##'):
+            continue
+        # Read header
+        if line.startswith('#'):
+            header_cols = line.split()
+            # Ensure there is at least one sample
+            if len(header_cols) <= 9:
+                raise ValueError("No samples in VCF file")
+            # Use popinfo_dict to get the order of populations present in VCF
+            poplist = [popinfo_dict[sample] if sample in popinfo_dict else None
+                       for sample in header_cols[9:]]
+            continue
         
-        # Extract the raw coverage information from the VCF element
-        raw_coverage = vcf_element.split(':')[i]
+        # Read SNP data
+        # Data lines in VCF file are tab-delimited
+        # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
+        cols = line.split("\t")
+        snp_id = '_'.join(cols[:2]) # CHROM_POS
+        snp_dict = {}
         
-        # Check if raw_coverage contains multiple values, representing reference and alternative allele information
-        if len(raw_coverage) > 1:
-            # Convert the comma-separated values to integers and calculate the sum (i.e., total number of reads)
-            return sum(map(int, raw_coverage.split(',')))
+        # Skip SNP if filter is set to True and it fails a filter test
+        if filter and cols[6] != 'PASS' and cols[6] != '.':
+            continue
+        
+        # Add reference and alternate allele info to dict
+        ref, alt = (allele.upper() for allele in cols[3:5])
+        if ref not in ['A', 'C', 'G', 'T'] or alt not in ['A', 'C', 'G', 'T']:
+            # Skip line if site is not an SNP
+            continue
+        snp_dict['segregating'] = (ref, alt)
+        snp_dict['context'] = '-' + ref + '-'
+        
+        # Add ancestral allele information if available
+        info = cols[7].split(';')
+        for field in info:
+            if field.startswith('AA=') or field.startswith('AA_ensembl=') or field.startswith('AA_chimp='):
+                outgroup_allele = field.split('=')[1].upper()
+                if outgroup_allele not in ['A','C','G','T']:
+                    # Skip if ancestral not single base A, C, G, or T
+                    outgroup_allele = '-'
+                break
         else:
-            # Return 0 if there's only one value in raw_coverage
-            return 0
-    except ValueError:
-        # Raise an exception if alleletic depths is not found in the VCF file
-        raise ValueError("Information about allelic depths for the reference and alternative alleles not found in the input file")
+            outgroup_allele = '-'
+        snp_dict['outgroup_allele'] = outgroup_allele
+        snp_dict['outgroup_context'] = '-' + outgroup_allele + '-'
+        
+        # Add flanking info if it is present
+        rflank, aflank = flanking_info
+        for field in info:
+            if rflank and field.startswith(rflank):
+                flank = field[len(rflank)+1:].upper()
+                if not (len(flank) == 2 or len(flank) == 3):
+                    continue
+                prevb, nextb = flank[0], flank[-1]
+                if prevb not in ['A','C','T','G']:
+                    prevb = '-'
+                if nextb not in ['A','C','T','G']:
+                    nextb = '-'
+                snp_dict['context'] = prevb + ref + nextb
+                continue
+            if aflank and field.startswith(aflank):
+                flank = field[len(aflank)+1:].upper()
+                if not (len(flank) == 2 or len(flank) == 3):
+                    continue
+                prevb, nextb = flank[0], flank[-1]
+                if prevb not in ['A','C','T','G']:
+                    prevb = '-'
+                if nextb not in ['A','C','T','G']:
+                    nextb = '-'
+                snp_dict['outgroup_context'] = prevb + outgroup_allele + nextb
+        
+        calls_dict = {}
+        subsample_dict = {}
+        gtindex = cols[8].split(':').index('GT')
+        
+        # === New Feature Addition ===
+        coverage_dict = {}
+        
+        try:
+            covindex = cols[8].split(':').index('AD')
+        except:
+            covindex = None
+        
+        if do_subsampling:
+            # Collect data for all genotyped samples
+            for pop, sample in zip(poplist, cols[9:]):
+                if pop is None:
+                    continue
+                gt = sample.split(':')[gtindex]
+                
+                if pop not in subsample_dict:
+                    subsample_dict[pop] = []
+                    coverage_dict[pop] = ()
+                if '.' not in gt:
+                    subsample_dict[pop].append(gt)
+            
+                if covindex is not None:
+                    coverages = coverage_dict[pop]
+                    coverage = sample.split(':')[covindex].split(',')
+                    coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
+                    coverage_dict[pop] = coverages + (coverage_count, )
+            
+            # key-value pairs here are population names
+            # and a list of genotypes to subsample from
+            for pop, genotypes in subsample_dict.items():
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0, 0)
+                if len(genotypes) < subsample[pop]:
+                    # Not enough calls for this SNP
+                    break
+                # Choose which individuals to use
+                idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
+                for ii in idx:
+                    gt = subsample_dict[pop][ii]
+                    refcalls, altcalls = calls_dict[pop]
+                    refcalls += gt[::2].count('0')
+                    altcalls += gt[::2].count('1')
+                    calls_dict[pop] = (refcalls, altcalls)
+            else:
+                # Only runs if we didn't break out of this loop
+                snp_dict['calls'] = calls_dict
+                
+                # === New Feature Addition ===
+                if covindex is not None:
+                    snp_dict['coverage'] = coverage_dict
+                else:
+                    snp_dict['coverage'] = '-'
+                
+                data_dict[snp_id] = snp_dict
+        else:
+            for pop, sample in zip(poplist, cols[9:]):
+                if pop is None:
+                    continue
+                if pop not in calls_dict:
+                    calls_dict[pop] = (0,0)
+                    coverage_dict[pop] = ()
+                # Genotype in VCF format 0|1|1|0:...
+                gt = sample.split(':')[gtindex]
+                #g1, g2 = gt[0], gt[2]
+                #if g1 == '.' or g2 == '.':
+                #    continue
+                    #full_info = False
+                    #break
+                
+                refcalls, altcalls = calls_dict[pop]
+                #refcalls += int(g1 == '0') + int(g2 == '0')
+                #altcalls += int(g1 == '1') + int(g2 == '1')
+                
+                # Assume biallelic variants
+                refcalls += gt[::2].count('0')
+                altcalls += gt[::2].count('1')
+                calls_dict[pop] = (refcalls, altcalls)
+                
+                # === New Feature Addition ===
+                coverages = coverage_dict[pop]
+                
+                coverage = sample.split(':')[covindex].split(',')
+                coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
+                coverage_dict[pop] = coverages + (coverage_count, )
+            
+            snp_dict['calls'] = calls_dict
+            
+            # === New Feature Addition ===
+            if covindex is not None:
+                snp_dict['coverage'] = coverage_dict
+            else:
+                snp_dict['coverage'] = '-'
+            
+            data_dict[snp_id] = snp_dict
+    
+    vcf_file.close()
+    return data_dict
+
+
+def _get_popinfo(popinfo_file):
+    """
+    Helper function for make_data_dict_vcf. Takes an open file that contains
+    information on the population designations of each sample within a VCF file,
+    and returns a dictionary containing {"SAMPLE_NAME" : "POP_NAME"} pairs.
+    
+    The file should be formatted as a table, with columns delimited by
+    whitespace, and rows delimited by new lines. Lines beginning with '#' are
+    considered comments and will be ignored. Each sample must appear on its own
+    line. If no header information is provided, the first column will be assumed
+    to be the SAMPLE_NAME column, while the second column will be assumed to be
+    the POP_NAME column. If a header is present, it must be the first
+    non-comment line of the file. The column positions of the words "SAMPLE" and
+    "POP" (ignoring case) in this header will be used to determine proper
+    positions of the SAMPLE_NAME and POP_NAME columns in the table.
+    
+    popinfo_file : An open text file of the format described above.
+    """
+    popinfo_dict = {}
+    sample_col = 0
+    pop_col = 1
+    header = False
+    
+    # check for header info
+    for line in popinfo_file:
+        if line.startswith('#'):
+            continue
+        cols = [col.lower() for col in line.split()]
+        if 'sample' in cols:
+            header = True
+            sample_col = cols.index('sample')
+        if 'pop' in cols:
+            header = True
+            pop_col = cols.index('pop')
+        break
+    
+    # read in population information for each sample
+    popinfo_file.seek(0)
+    for line in popinfo_file:
+        if line.startswith('#') or not line.strip():
+            continue
+        cols = line.split()
+        sample = cols[sample_col]
+        pop = cols[pop_col]
+        # avoid adding header to dict
+        if (sample.lower() == 'sample' or pop.lower() == 'pop') and header:
+            header = False
+            continue
+        popinfo_dict[sample] = pop
+    
+    
+    return popinfo_dict
+
+
+def compute_cov_dist(data_dict, pop_ids):
+    try:
+        # Dictionary comprehension to compute the coverage distribution
+        coverage_distribution = {pop: numpy.array([
+            *numpy.unique(numpy.concatenate([numpy.array(list(entry['coverage'][pop])) for entry in data_dict.values()]), return_counts=True)
+        ]) for pop in pop_ids}
+        
+        # Normalize counts
+        coverage_distribution = {pop: numpy.array([elements, counts / counts.sum()]) for pop, (elements, counts) in coverage_distribution.items()}
+        
+        return coverage_distribution
+    except:
+        raise ValueError("Information about allelic depths for the reference and alternative alleles not found in the data dictionary")
 
 
 def partitions_and_probabilities(n_sequenced, partition_type, allele_frequency=None):
@@ -119,44 +402,6 @@ def partitions_and_probabilities(n_sequenced, partition_type, allele_frequency=N
             raise ValueError("Invalid partition_type. Use 'allele_frequency' or 'genotype'.")
         
         return partitions, partition_probabilities
-
-
-def calculate_coverage_distribution(vcf_file, population_file, population):
-    """
-    Calculate coverage distribution for specified populations from a VCF file.
-    
-    Args:
-        vcf_file (str): The path to the VCF file.
-        population_file (str): The path to the population information file.
-        population (list): A list of population names to calculate coverage for.
-    
-    Returns:
-        list: A list of Pandas Series, each representing the coverage distribution for a population.
-    """
-    # Read VCF data
-    vcf_data = read_vcf(vcf_file)  
-    
-    # Get the index of the 'FORMAT' column and extract format information
-    format_index = list(vcf_data.columns).index('FORMAT')
-    format_info = vcf_data.iloc[1, format_index].split(':')
-    
-    # Read the population information
-    population_info = pd.read_csv(population_file, header=None, sep='\s+|\t', engine='python')
-    
-    # Calculate coverage for all individuals in the VCF data
-    coverage = vcf_data.iloc[:, 9:].applymap(lambda x: extract_coverage(x, format_info))
-    
-    coverage_distribution = []
-    for pop in population:
-        # Filter the population info DataFrame for the specified population
-        population_sub = population_info[population_info.iloc[:, 1] == pop]
-        population_sub = population_sub.iloc[:, 0]
-        
-        # Calculate individual coverage distribution for the population
-        individual_coverage = coverage[population_sub].stack().value_counts(normalize=True).sort_index()
-        coverage_distribution.append(individual_coverage)
-    
-    return coverage_distribution
 
 
 def split_list_by_lengths(input_list, lengths_list):
@@ -525,7 +770,7 @@ def calling_error_matrix(coverage_distribution, n_subsampling):
                 afs_after_error = allele_freq + net_change
                 
                 # Record where error alleles end up
-                trans_matrix[allele_freq, afs_after_error] += part_prob * p_nerr * p_nref
+                trans_matrix[afs_after_error, allele_freq] += part_prob * p_nerr * p_nref
     
     return trans_matrix
 
