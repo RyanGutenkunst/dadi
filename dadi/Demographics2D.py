@@ -5,6 +5,7 @@ import numpy
 
 from dadi import Numerics, PhiManip, Integration
 from dadi.Spectrum_mod import Spectrum
+from dadi.PortikModels.portik_models_2d import *
 
 def snm_2d(notused, ns, pts):
     """
