@@ -12,7 +12,7 @@ ret = dadi.Demes.Inference.optimize(
     deme_graph,
     options_file,
     data_file,
-    grids=[30, 40, 50],
+    pts=[30, 40, 50],
     perturb=0.1,
     verbose=10,
     maxiter=10,

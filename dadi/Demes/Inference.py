@@ -323,7 +323,7 @@ _counter = 0
 def _object_func(
     params,
     data,
-    grids,
+    pts,
     builder,
     options,
     lower_bound=None,
@@ -370,12 +370,20 @@ def _object_func(
         else:
             sample_times.append(end_times[deme])
 
-    model = dadi.Numerics.make_extrap_func(dadi.Demes.SFS)(
-        g, input_sampled_demes, sample_sizes, sample_times, None, grids
-    )
+    # model = dadi.Demes.SFS(
+    #     g, input_sampled_demes, sample_sizes, sample_times, pts
+    # )
     
-    if fit_ancestral_misid:
-        model = dadi.Numerics.make_anc_state_misid_func(model)
+    # if fit_ancestral_misid:
+    #     model = dadi.Numerics.make_anc_state_misid_func(model)
+
+    model = dadi.Spectrum.from_demes(
+        g,
+        sampled_demes,
+        sample_sizes,
+        pts,
+        ancestral_misid=fit_ancestral_misid
+    )
 
     # get log-likelihood
     if uL is not None:
@@ -407,7 +415,7 @@ def optimize(
     deme_graph,
     inference_options,
     data,
-    grids,
+    pts,
     maxiter=1000,
     perturb=0,
     verbose=0,
@@ -430,7 +438,7 @@ def optimize(
     :param data: The SFS to fit, which must have pop_ids specified. Can either be a Spectrum
         object or the file path to the stored frequency spectrum. The populations
         in the SFS need to be present (with matching IDs) in the deme graph.
-    :param grids: List of grid points to extrapolate.
+    :param pts: List of grid points to extrapolate.
     :param maxiter: The maximum number of iterations to run optimization. Defaults
         to 1000. Note: maxiter does not seem to work with the Powell method! This
         appears to be a bug within scipy.optimize.
@@ -514,7 +522,7 @@ def optimize(
     print("builder:",builder)
     args = (
         data,
-        grids,
+        pts,
         builder,
         options,
         lower_bound,

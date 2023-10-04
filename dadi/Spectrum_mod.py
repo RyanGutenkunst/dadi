@@ -2395,7 +2395,7 @@ class Spectrum(numpy.ma.masked_array):
 
     @staticmethod
     def from_demes(
-        g, sampled_demes, sample_sizes, pts, log_extrap=False, sample_times=None, Ne=None):
+        g, sampled_demes, sample_sizes, pts, log_extrap=False, sample_times=None, Ne=None, ancestral_misid=False,):
         """
         Takes a deme graph and computes the SFS. ``demes`` is a package for
         specifying demographic models in a user-friendly, human-readable YAML
@@ -2448,8 +2448,12 @@ class Spectrum(numpy.ma.masked_array):
             dg = demes.load(g)
         else:
             dg = g
+        if ancestral_misid==False:
+            func_ex = dadi.Numerics.make_extrap_func(Demes.SFS)
+        if ancestral_misid==True:
+            dadi.Numerics.make_anc_state_misid_func(Demes.SFS)
+            func_ex = dadi.Numerics.make_extrap_func(misid_func)
 
-        func_ex = dadi.Numerics.make_extrap_func(Demes.SFS)
 
         fs = func_ex(
             dg,
