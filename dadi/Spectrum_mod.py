@@ -2455,9 +2455,9 @@ class Spectrum(numpy.ma.masked_array):
             dg,
             sampled_demes,
             sample_sizes,
-            sample_times,
-            Ne,
-            pts,
+            pts=pts,
+            sample_times=sample_times,
+            Ne=Ne,
         )
         return fs
 
