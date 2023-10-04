@@ -2451,7 +2451,7 @@ class Spectrum(numpy.ma.masked_array):
         if ancestral_misid==False:
             func_ex = dadi.Numerics.make_extrap_func(Demes.SFS)
         if ancestral_misid==True:
-            dadi.Numerics.make_anc_state_misid_func(Demes.SFS)
+            misid_func = dadi.Numerics.make_anc_state_misid_func(Demes.SFS)
             func_ex = dadi.Numerics.make_extrap_func(misid_func)
 
 
