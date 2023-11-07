@@ -1,5 +1,5 @@
 import itertools
-import numpy as np
+import numpy
 import dadi
 import warnings
 import os
@@ -52,21 +52,21 @@ def part_inbreeding_probability(parts, Fx):
     - Fx (float): Inbreeding coefficient.
 
     Returns:
-    - np.array: Normalized genotype partition probabilities.
+    - numpy.array: Normalized genotype partition probabilities.
     """
-    part_prob = np.array([])
+    part_prob = numpy.array([])
     for part in parts:
         if sum(part) != 0 and sum(part) != 2*len(part):
             p = (2 * part.count(2) + part.count(1))/(2*len(part))
             alpha = p*((1.0-Fx)/Fx)
             beta  = (1.0-p)*((1.0-Fx)/Fx)
             
-            p00, p01, p11 = np.exp([dadi.Numerics.BetaBinomln(_,2,alpha,beta) for _ in range(2+1)])
+            p00, p01, p11 = numpy.exp([dadi.Numerics.BetaBinomln(_,2,alpha,beta) for _ in range(2+1)])
             n, n00, n01, n11 = len(part), part.count(0), part.count(1), part.count(2)
             
-            part_prob = np.append(part_prob, (factorial(n) / (factorial(n00) * factorial(n01) * factorial(n11))) * (p00 ** n00) * (p01 ** n01) * (p11 ** n11))
+            part_prob = numpy.append(part_prob, (factorial(n) / (factorial(n00) * factorial(n01) * factorial(n11))) * (p00 ** n00) * (p01 ** n01) * (p11 ** n11))
         else:
-            part_prob = np.append(part_prob, 1)
+            part_prob = numpy.append(part_prob, 1)
         
     return part_prob / sum(part_prob)
 
