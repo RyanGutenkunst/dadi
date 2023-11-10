@@ -596,7 +596,8 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreed
     
     def lowcov_func(*args, **kwargs):
         ns = args[1]
-        Fx = [args[0][-1] if inbreeding else 0]
+        #Fx = [args[0][-len(ns)] if inbreeding else 0]
+        Fx = args[0][-len(nseq):] if inbreeding else [0] * len(ns)
         new_args = [args[0]] + [nseq] + list(args[2:])
         model = func(*new_args, **kwargs)
         if model.folded:
