@@ -249,7 +249,7 @@ class Spectrum(numpy.ma.masked_array):
                 pop_ids = None
 
         data = numpy.fromstring(fid.readline().strip(), 
-                                count=numpy.product(shape), sep=' ')
+                                count=numpy.prod(shape), sep=' ')
         # fromfile returns a 1-d array. Reshape it to the proper form.
         data = data.reshape(*shape)
 
@@ -260,7 +260,7 @@ class Spectrum(numpy.ma.masked_array):
         else:
             # This case handles the new file format
             mask = numpy.fromstring(maskline, 
-                                    count=numpy.product(shape), sep=' ')
+                                    count=numpy.prod(shape), sep=' ')
             mask = mask.reshape(*shape)
 
         fs = Spectrum(data, mask, mask_corners, data_folded=folded,

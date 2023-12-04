@@ -660,6 +660,69 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
     if show:
         pylab.show()
 
+def plot_3d_pairwise(data, vmin=None, vmax=None,
+                     fig_num=None, pop_ids=None, 
+                     adjust=True, show=True):
+    """
+    Poisson comparison between 3d model and data.
+
+
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    adjust: Should method use automatic 'subplots_adjust'? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
+    """
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(10,4))
+
+    pylab.clf()
+    # pylab.tight_layout()
+    # if adjust:
+    #     pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+    max_toplot = max(data.sum(axis=sax).max() for sax in range(3))
+    min_toplot = min(data.sum(axis=sax).min() for sax in range(3))
+
+    if vmax is None:
+        vmax = max_toplot
+    if vmin is None:
+        vmin = min_toplot
+    extend = _extend_mapping[vmin <= min_toplot, vmax >= max_toplot]
+
+    if pop_ids is not None:
+        if len(pop_ids) != 3:
+            raise ValueError('pop_ids must be of length 3.')
+        data_ids = model_ids = resid_ids = pop_ids
+    else:
+        data_ids = data.pop_ids
+
+    for sax in range(3):
+        marg_data = data.sum(axis=2-sax)
+        marg_model = data.sum(axis=2-sax)
+
+        if data_ids is None:
+            ids = ['pop0', 'pop1', 'pop2']
+        else:
+            ids = list(data_ids)
+        del ids[2-sax]
+
+        ax = pylab.subplot(1,3,sax+1)
+        plot_colorbar = (sax == 2)
+        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=ids,
+                           extend=extend, colorbar=plot_colorbar)
+
+        # ax.set_yticks([])
+    pylab.tight_layout()
+    if show:
+        pylab.show()
+
 def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None,
                      show=True):
     """
