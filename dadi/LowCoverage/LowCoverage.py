@@ -2,11 +2,10 @@ import itertools
 import numpy
 import dadi
 import warnings
-import os
 
 import math
 from scipy.special import comb
-import scipy.stats as ss, scipy.stats.distributions as ssd, scipy.optimize as sopt
+import scipy.stats as ss, scipy.stats.distributions as ssd
 from itertools import combinations
 from math import factorial
 
@@ -433,7 +432,23 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
     return prob_enough_individuals_covered
 
 
+import numpy
+from itertools import combinations
+
 def projection_inbreeding(partition, k):
+    """
+    Calculate the distribution of inbreeding coefficients for a given partition.
+    
+    Args:
+    - partition (iterable): A collection of indices representing the individuals in the partition.
+    - k (int): The total number of individuals considered in each combination.
+    
+    Returns:
+    - numpy.ndarray: An array representing the distribution of inbreeding coefficients. Each index in the array corresponds 
+      to the total number of shared alleles in a combination, and the values represent the corresponding frequencies normalized 
+      by the total number of combinations.
+    ```
+    """
     result = numpy.zeros_like(range(k+1))
 
     # Generate all possible combinations of partition indices
@@ -444,7 +459,6 @@ def projection_inbreeding(partition, k):
         result[sum(p)] += 1
 
     return result/sum(result)
-
 
 
 def projection_matrix(n_sequenced, n_subsampling, F):
@@ -530,16 +544,18 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
 def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
     """
     Calculate transformation matrices for low-coverage calling model.
+
+    Args:
+        nsub: Final sample size (in haplotypes)
+        nseq: Sequenced sample size (in haplotypes)
+        cov_dist: Coverage distribution (list of one array per population)
+        sim_threshold: This method uses the probability an allele is not called
+                    to switch between analytic and simulation-based methods.
+                    Setting this threshold to 0 will always use simulations,
+                    while setting it to 1 will always use analytics.
+        nsim: For simulations, number of simulations per allele frequency combination
+        """
     
-    nsub: Final sample size (in haplotypes)
-    nseq: Sequenced sample size (in haplotypes)
-    cov_dist: Coverage distribution (list of one array per population)
-    sim_threshold: This method uses the probability an allele is not called
-                   to switch between analytic and simulation-based methods.
-                   Setting this threshold to 0 will always use simulations,
-                   while setting it to 1 will always use analytics.
-    nsim: For simulations, number of simulations per allele frequency combination
-    """
     # As a lower bound on the probability that a allele with a given frequency is not called,
     # use the probability it is not called considering only the reads in each individual population.
     # We calculate them separately, then combine them into a single matrix
@@ -570,25 +586,21 @@ def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
 
 def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreeding=False):
     """
-    Generage a version of func accounting for low coverage distortion
-    
-    func: The frequency spectrum generating function to which distortion will
-          be applied. It is assumed that the second argument is the final
-          sample size (in haplotypes).
-    vcf_file: The original data VCF file, from which coverage information will
-              extracted.
-    popfile: Name of file containing the population assignments for
-             each sample in the VCF. If a sample in the VCF file does
-             not have a corresponding entry in this file, it will be
-             skipped. See dadi.Misc._get_popinfo for information on how this
-             file must be formatted.
-    nseq: Number of sequenced individuals. # XXX: We should just extract this when we parse the VCF file.
-    sim_threshold: This method uses the probability an allele is not called
-                   to switch between analytic and simulation-based methods.
-                   Setting this threshold to 0 will always use simulations,
-                   while setting it to 1 will always use analytics.
+    Generate a version of func accounting for low coverage distortion.
+
+    Args:
+        demo_model: Specified demographic model in dadi.
+        data_dict: A data dictionary comprising information extracted from a VCF file.
+        pop_ids: Population names to be analyzed.
+        nseq: Total number of samples for a given population.
+        nsub: Subsampled number of samples for a given population.
+        sim_threshold: This method switches between analytic and simulation-based methods. 
+            Setting this threshold to 0 will always use simulations, while setting it to 1 will always use analytics. 
+            Values in between indicate that simulations will be employed for thresholds below that value.
+        inbreeding (bool): If True, the model accounts for inbreeding; if False, it does not.
+
     """
-    # XXX: Should automatically extract nseq from the vcf file
+    # Compute coverage distribution
     cov_dist = compute_cov_dist(dd, pop_ids)
     
     # Used to cache matrices used for low-coverage transformation
@@ -596,7 +608,6 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreed
     
     def lowcov_func(*args, **kwargs):
         ns = args[1]
-        #Fx = [args[0][-len(ns)] if inbreeding else 0]
         Fx = args[0][-len(nseq):] if inbreeding else [0] * len(ns)
         new_args = [args[0]] + [nseq] + list(args[2:])
         model = func(*new_args, **kwargs)
