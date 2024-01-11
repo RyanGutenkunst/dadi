@@ -592,8 +592,8 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreed
         demo_model: Specified demographic model in dadi.
         data_dict: A data dictionary comprising information extracted from a VCF file.
         pop_ids: Population names to be analyzed.
-        nseq: Total number of samples for a given population.
-        nsub: Subsampled number of samples for a given population.
+        nseq: Sequenced sample size (in haplotypes).
+        nsub: Final sample size (in haplotypes)
         sim_threshold: This method switches between analytic and simulation-based methods. 
             Setting this threshold to 0 will always use simulations, while setting it to 1 will always use analytics. 
             Values in between indicate that simulations will be employed for thresholds below that value.
