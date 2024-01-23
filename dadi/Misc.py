@@ -433,7 +433,7 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
 
     return dd, sample_sizes
 
-def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=True,
+def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=True, calc_coverage=False,
                        flanking_info=[None, None]):
     """
     Parse a VCF file containing genomic sequence information, along with a file
@@ -604,12 +604,13 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         gtindex = cols[8].split(':').index('GT')
         
         # === New Feature Addition ===
-        coverage_dict = {}
-        
-        try:
-            covindex = cols[8].split(':').index('AD')
-        except:
-            covindex = None
+        if calc_coverage:
+            coverage_dict = {}
+            
+            try:
+                covindex = cols[8].split(':').index('AD')
+            except:
+                covindex = None
         
         if do_subsampling:
             # Collect data for all genotyped samples
@@ -620,15 +621,17 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                    coverage_dict[pop] = ()
+                    if calc_coverage:
+                        coverage_dict[pop] = ()
                 if '.' not in gt:
                     subsample_dict[pop].append(gt)
-            
-                if covindex is not None:
-                    coverages = coverage_dict[pop]
-                    coverage = sample.split(':')[covindex].split(',')
-                    coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
-                    coverage_dict[pop] = coverages + (coverage_count, )
+
+                if calc_coverage:
+                    if covindex is not None:
+                        coverages = coverage_dict[pop]
+                        coverage = sample.split(':')[covindex].split(',')
+                        coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
+                        coverage_dict[pop] = coverages + (coverage_count, )
             
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
@@ -651,10 +654,11 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 snp_dict['calls'] = calls_dict
                 
                 # === New Feature Addition ===
-                if covindex is not None:
-                    snp_dict['coverage'] = coverage_dict
-                else:
-                    snp_dict['coverage'] = '-'
+                if calc_coverage:
+                    if covindex is not None:
+                        snp_dict['coverage'] = coverage_dict
+                    else:
+                        snp_dict['coverage'] = '-'
                 
                 data_dict[snp_id] = snp_dict
         else:
@@ -663,7 +667,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     continue
                 if pop not in calls_dict:
                     calls_dict[pop] = (0,0)
-                    coverage_dict[pop] = ()
+                    if calc_coverage:
+                        coverage_dict[pop] = ()
                 # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
                 #g1, g2 = gt[0], gt[2]
@@ -682,21 +687,23 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 calls_dict[pop] = (refcalls, altcalls)
                 
                 # === New Feature Addition ===
-                coverages = coverage_dict[pop]
-                
-                coverage = sample.split(':')[covindex].split(',')
-                coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
-                coverage_dict[pop] = coverages + (coverage_count, )
+                if calc_coverage:
+                    coverages = coverage_dict[pop]
+                    
+                    coverage = sample.split(':')[covindex].split(',')
+                    coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
+                    coverage_dict[pop] = coverages + (coverage_count, )
             
             snp_dict['calls'] = calls_dict
             
             # === New Feature Addition ===
-            if covindex is not None:
-                snp_dict['coverage'] = coverage_dict
-            else:
-                snp_dict['coverage'] = '-'
-            
-            data_dict[snp_id] = snp_dict
+            if calc_coverage:
+                if covindex is not None:
+                    snp_dict['coverage'] = coverage_dict
+                else:
+                    snp_dict['coverage'] = '-'
+                
+                data_dict[snp_id] = snp_dict
     
     vcf_file.close()
     return data_dict
