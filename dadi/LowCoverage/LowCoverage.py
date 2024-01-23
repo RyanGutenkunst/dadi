@@ -584,7 +584,7 @@ def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
     return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
 
 
-def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreeding=False):
+def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
     """
     Generate a version of func accounting for low coverage distortion.
 
@@ -597,7 +597,7 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreed
         sim_threshold: This method switches between analytic and simulation-based methods. 
             Setting this threshold to 0 will always use simulations, while setting it to 1 will always use analytics. 
             Values in between indicate that simulations will be employed for thresholds below that value.
-        inbreeding (bool): If True, the model accounts for inbreeding; if False, it does not.
+        Fx: Inbreeding coefficient.
 
     """
     # Compute coverage distribution
@@ -607,9 +607,12 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, inbreed
     precalc_cache = {}
     
     def lowcov_func(*args, **kwargs):
-        ns = args[1]
-        Fx = args[0][-len(nseq):] if inbreeding else [0] * len(ns)
-        new_args = [args[0]] + [nseq] + list(args[2:])
+        nonlocal Fx
+        if Fx is not None:
+            new_args = [args[0] + Fx] + [nseq] + list(args[2:])
+        else:
+            Fx = [0] * len(nseq)
+            new_args = [args[0]] + [nseq] + list(args[2:])
         model = func(*new_args, **kwargs)
         if model.folded:
             raise ValueError('Low coverage model not tested for folded model spectra yet.')
