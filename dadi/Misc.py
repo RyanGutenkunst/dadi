@@ -604,6 +604,11 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         gtindex = cols[8].split(':').index('GT')
         
         # === New Feature Addition ===
+        try:
+            dpindex = cols[8].split(':').index('DP')
+        except ValueError:
+            dpindex = None
+
         if calc_coverage:
             coverage_dict = {}
             
@@ -618,12 +623,21 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 if pop is None:
                     continue
                 gt = sample.split(':')[gtindex]
+
+                try:
+                    dp = sample.split(':')[dpindex]
+                except TypeError:
+                    dp = None
                 
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
                     if calc_coverage:
                         coverage_dict[pop] = ()
-                if '.' not in gt:
+                
+                # Check that there is an allele
+                # . is an old format for a missing allele
+                # DP = 0 is the new method for checking a missing allele
+                if '.' not in gt and dp != '0':
                     subsample_dict[pop].append(gt)
 
                 if calc_coverage:
@@ -661,10 +675,17 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                         snp_dict['coverage'] = '-'
                 
                 data_dict[snp_id] = snp_dict
+######################## Continue here, if no subsampling, do we need to worry about >2 alleles?
         else:
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
+                # Skip if DP=0
+                try:
+                    if sample.split(':')[dpindex] == '0':
+                        continue
+                except: 
+                    pass
                 if pop not in calls_dict:
                     calls_dict[pop] = (0,0)
                     if calc_coverage:
