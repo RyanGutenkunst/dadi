@@ -724,7 +724,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 else:
                     snp_dict['coverage'] = '-'
                 
-                data_dict[snp_id] = snp_dict
+            data_dict[snp_id] = snp_dict
     
     vcf_file.close()
     return data_dict
