@@ -609,10 +609,8 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None
     def lowcov_func(*args, **kwargs):
         nonlocal Fx
         if Fx is not None:
-            new_args = [args[0] + Fx] + [nseq] + list(args[2:])
-        else:
             Fx = [0] * len(nseq)
-            new_args = [args[0]] + [nseq] + list(args[2:])
+        new_args = [args[0]] + [nseq] + list(args[2:])
         model = func(*new_args, **kwargs)
         if model.folded:
             raise ValueError('Low coverage model not tested for folded model spectra yet.')
