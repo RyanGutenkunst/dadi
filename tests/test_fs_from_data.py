@@ -9,6 +9,13 @@ def test_details():
     pytest.pop_ids, pytest.ns = ['YRI','CEU'], [20,24]
     pytest.chunk_size = 1e6
 
+    # File names for the VCF update removing GT=./.
+    pytest.vcf_update_datafile = 'tests/test_data/vcf-dot-ref-update.vcf'
+    pytest.vcf_update_popfile = 'tests/test_data/dot-update-popfile_2D.txt'
+    pytest.pre_update_fs = dadi.Spectrum.from_file('tests/test_data/pre-dot-update-unit-test.fs')
+    pytest.post_update_fs = dadi.Spectrum.from_file('tests/test_data/post-dot-update-unit-test.fs')
+    pytest.vcf_update_pop_ids, pytest.vcf_update_ns = ['pop1','pop2'], [10,10]
+
 def test_basic_loading(test_details):
     dd = dadi.Misc.make_data_dict_vcf(pytest.datafile, pytest.popfile)
     fs = dadi.Spectrum.from_data_dict(dd, pytest.pop_ids, pytest.ns)
@@ -110,3 +117,12 @@ def test_subsample_bootstrap(test_details):
     boots_subsample = dadi.Misc.bootstraps_subsample_vcf(pytest.datafile, pytest.popfile,
                                                          subsample={'YRI': pytest.ns[0]//2, 'CEU': pytest.ns[1]//2}, Nboot=2, 
                                                          chunk_size=pytest.chunk_size, pop_ids=pytest.pop_ids)
+
+# Test for VCF removing GT=./.
+def test_vcf_dot_reference_update(test_details):
+    dd = dadi.Misc.make_data_dict_vcf(pytest.vcf_update_datafile, pytest.vcf_update_popfile)
+    fs = dadi.Spectrum.from_data_dict(dd, pytest.vcf_update_pop_ids, pytest.vcf_update_ns, polarized=False)
+    # Test that the fs generated is close to the know answer for the update
+    assert(np.allclose(fs, pytest.post_update_fs))
+    # Test that the fs generated is NOT close to the old VCF parser answer
+    assert(not np.allclose(fs, pytest.pre_update_fs))
