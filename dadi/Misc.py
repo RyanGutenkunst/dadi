@@ -637,7 +637,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 # Check that there is an allele
                 # . is an old format for a missing allele
                 # DP = 0 is the new method for checking a missing allele
-                if '.' not in gt and dp != '0':
+                if '.' not in gt and not (dp == '0' or dp == '.'):
                     subsample_dict[pop].append(gt)
 
                 if calc_coverage:
@@ -680,9 +680,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
-                # Skip if DP=0
+                # Skip if DP=0 or DP=.
                 try:
-                    if sample.split(':')[dpindex] == '0':
+                    if sample.split(':')[dpindex] == '0' or sample.split(':')[dpindex] == '.':
                         continue
                 except: 
                     pass
