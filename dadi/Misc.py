@@ -434,7 +434,7 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     return dd, sample_sizes
 
 def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=True,
-                       flanking_info=[None, None]):
+                       flanking_info=[None, None], extract_ploidy=False):
     """
     Parse a VCF file containing genomic sequence information, along with a file
     identifying the population of each sample, and store the information in
@@ -521,6 +521,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         vcf_file = open(vcf_filename)
 
     data_dict = {}
+    ploidy = ''
     for line in vcf_file:
         # decoding lines for Python 3 - probably a better way to handle this
         try:
@@ -602,6 +603,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         calls_dict = {}
         subsample_dict = {}
         gtindex = cols[8].split(':').index('GT')
+        if extract_ploidy and ploidy == '':
+            ploidy = len(cols[9].split(':')[gtindex][::2])
         if do_subsampling:
             # Collect data for all genotyped samples
             for pop, sample in zip(poplist, cols[9:]):
@@ -659,7 +662,10 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             data_dict[snp_id] = snp_dict
 
     vcf_file.close()
-    return data_dict
+    if extract_ploidy:
+        return data_dict, ploidy
+    else:
+        return data_dict
 
 def _get_popinfo(popinfo_file):
     """
