@@ -34,7 +34,7 @@ _ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: '%i' % (x-0.4))
 
 from dadi import Numerics, Inference
 
-def plot_1d_fs(fs, fig_num=None, show=False):
+def plot_1d_fs(fs, fig_num=None, show=True):
     """
     Plot a 1-dimensional frequency spectrum.
 
@@ -62,7 +62,7 @@ def plot_1d_fs(fs, fig_num=None, show=False):
         fig.show()
 
 def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
-                          plot_masked=False, show=False):
+                          plot_masked=False, show=True):
     """
     Mulitnomial comparison between 1d model and data.
 
@@ -84,10 +84,10 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
     model = Inference.optimally_scaled_sfs(model, data)
 
     plot_1d_comp_Poisson(model, data, fig_num, residual,
-                         plot_masked, show)
+                         plot_masked, show=show)
 
 def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
-                         plot_masked=False, show=False):
+                         plot_masked=False, show=True):
     """
     Poisson comparison between 1d model and data.
 
@@ -141,7 +141,7 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
                        pop_ids=None, extend='neither', colorbar=True,
-                       cmap=pylab.cm.viridis_r, show=False):
+                       cmap=pylab.cm.viridis_r, show=True):
     """
     Heatmap of single 2d SFS. 
     
@@ -281,7 +281,7 @@ _extend_mapping = {(True, True): 'neither',
 def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
                           pop_ids=None, residual='Anscombe',
-                          adjust=True,show=False):
+                          adjust=True,show=True):
     """
     Mulitnomial comparison between 2d model and data.
 
@@ -314,7 +314,7 @@ def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
 
 def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
                        fig_num=None, pop_ids=None, 
-                       adjust=True, show=False):
+                       adjust=True, show=True):
 
     """
     Comparison between 2d nonsynonymous residual and 2d synonymous residual.
@@ -412,7 +412,7 @@ def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
 def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None,
                          pop_ids=None, residual='Anscombe',
-                         adjust=True, show=False):
+                         adjust=True, show=True):
     """
     Poisson comparison between 2d model and data.
 
@@ -471,12 +471,12 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
-                       pop_ids=data_pop_ids, colorbar=False)
+                       pop_ids=data_pop_ids, colorbar=False, show=False)
     ax.set_title('data')
 
     ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
-                       pop_ids=model_pop_ids, extend=extend)
+                       pop_ids=model_pop_ids, extend=extend, show=False)
     ax2.set_title('model')
 
     if residual == 'Anscombe':
@@ -509,7 +509,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
 def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
                           resid_range=None, fig_num=None,
-                          pop_ids=None, residual='Anscombe', adjust=True, show=False):
+                          pop_ids=None, residual='Anscombe', adjust=True, show=True):
     """
     Multinomial comparison between 3d model and data.
 
@@ -541,7 +541,7 @@ def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
 
 def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
                          resid_range=None, fig_num=None, pop_ids=None, 
-                         residual='Anscombe', adjust=True, show=False):
+                         residual='Anscombe', adjust=True, show=True):
     """
     Poisson comparison between 3d model and data.
 
@@ -644,11 +644,11 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         ax = pylab.subplot(4,3,sax+1)
         plot_colorbar = (sax == 2)
         plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=curr_ids[0],
-                           extend=extend, colorbar=plot_colorbar)
+                           extend=extend, colorbar=plot_colorbar, show=False)
 
         pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
         plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax, 
-                           pop_ids=curr_ids[1], extend=extend, colorbar=False)
+                           pop_ids=curr_ids[1], extend=extend, colorbar=False, show=False)
 
         resid = resids[sax]
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
@@ -665,7 +665,7 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
 
 def plot_3d_pairwise(data, vmin=None, vmax=None,
                      fig_num=None, pop_ids=None, 
-                     adjust=True, show=False):
+                     adjust=True, show=True):
     """
     Poisson comparison between 3d model and data.
 
@@ -719,7 +719,7 @@ def plot_3d_pairwise(data, vmin=None, vmax=None,
         ax = pylab.subplot(1,3,sax+1)
         plot_colorbar = (sax == 2)
         plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=ids,
-                           extend=extend, colorbar=plot_colorbar)
+                           extend=extend, colorbar=plot_colorbar, show=False)
 
         # ax.set_yticks([])
     pylab.tight_layout()
@@ -727,7 +727,7 @@ def plot_3d_pairwise(data, vmin=None, vmax=None,
         pylab.show()
 
 def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None,
-                     show=False):
+                     show=True):
     """
     Logarithmic heatmap of single 3d FS.
 
@@ -837,7 +837,7 @@ def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None,
         pylab.show()
 
 def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None, 
-                            pop_ids=None, show=False):
+                            pop_ids=None, show=True):
     """
     Logarithmic heatmap of single 3d FS.
 
