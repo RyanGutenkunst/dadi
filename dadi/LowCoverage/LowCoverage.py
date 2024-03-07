@@ -605,11 +605,16 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None
     
     # Used to cache matrices used for low-coverage transformation
     precalc_cache = {}
+
+    if Fx is None:
+        Fx = [0] * len(nseq)
+    elif np.any(np.asarray(Fx) == 1):
+        raise ValueError("Cannot apply low-coverage correction assuming perfect inbreeding "
+                         "Fx=1. If organism is truly perfectly inbreed, then it can be "
+                         "treated as haploid, so low coverge does not introduce bias.")
     
     def lowcov_func(*args, **kwargs):
         nonlocal Fx
-        if Fx is None:
-            Fx = [0] * len(nseq)
         new_args = [args[0]] + [nseq] + list(args[2:])
         model = func(*new_args, **kwargs)
         if model.folded:

@@ -2077,6 +2077,8 @@ class Spectrum(numpy.ma.masked_array):
             raise ValueError("If used, het_ascertained must be 'xx', 'yy', or "
                              "'zz'.")
 
+        Fs = np.minimum(Fs, 1 - 1e-10)
+
         if admix_props and het_ascertained:
             error = """admix_props and het_ascertained options cannot be used 
             simultaneously. Instead, please use the PhiManip methods to 
