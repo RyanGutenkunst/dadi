@@ -565,7 +565,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         info = cols[7].split(';')
         for field in info:
             if field.startswith('AA=') or field.startswith('AA_ensembl=') or field.startswith('AA_chimp='):
-                outgroup_allele = field.split('=')[1].upper()
+                outgroup_allele = field.split('=')[1].upper().split("|")[0]
                 if outgroup_allele not in ['A','C','G','T']:
                     # Skip if ancestral not single base A, C, G, or T
                     outgroup_allele = '-'
