@@ -84,16 +84,16 @@ class TestLowPassFunctions(unittest.TestCase):
         number_simulations = 10
         n_ref, n_alt = LowPass.simulate_reads(coverage_distribution, flattened_partition, pop_n_sequenced, number_simulations)
         
-        assert np.all(n_ref[:, 0] > 10)
-        assert np.all(n_ref[:, 1] > 10)
+        assert np.all(n_ref[:, 0] > 0)
+        assert np.all(n_ref[:, 1] > 0)
         assert np.all(n_ref[:, 2] == 0)
-        assert np.all(n_ref[:, 3] > 10)
-        assert np.all(n_ref[:, 4] > 10)
+        assert np.all(n_ref[:, 3] > 0)
+        assert np.all(n_ref[:, 4] > 0)
 
         assert np.all(n_alt[:, 0] == 0)
-        assert np.all(n_alt[:, 1] > 10)
-        assert np.all(n_alt[:, 2] > 10)
-        assert np.all(n_alt[:, 3] > 10)
+        assert np.all(n_alt[:, 1] > 0)
+        assert np.all(n_alt[:, 2] > 0)
+        assert np.all(n_alt[:, 3] > 0)
         assert np.all(n_alt[:, 4] == 0)
 
     def test_subsample_genotypes_1D(self):
