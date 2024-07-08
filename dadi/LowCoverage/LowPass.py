@@ -584,7 +584,7 @@ def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_
     return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
 
 
-def make_low_cov_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
+def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
     """
     Generate a version of func accounting for low-pass distortion based on the GATK multi-sample algorithm.
 
@@ -606,7 +606,7 @@ def make_low_cov_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_thresh
     # Used to cache matrices used for low-pass transformation
     precalc_cache = {}
     
-    def lowcov_func(*args, **kwargs):
+    def lowpass_func(*args, **kwargs):
         nonlocal Fx
         if Fx is None:
             Fx = [0] * len(nseq)
@@ -639,6 +639,6 @@ def make_low_cov_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_thresh
         output.extrap_x = model.extrap_x
         
         return output
-    lowcov_func.__name__ = func.__name__ + '_lowcov'
-    lowcov_func.__doc__ = func.__doc__
-    return lowcov_func
+    lowpass_func.__name__ = func.__name__ + '_lowcov'
+    lowpass_func.__doc__ = func.__doc__
+    return lowpass_func
