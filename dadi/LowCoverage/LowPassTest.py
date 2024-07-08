@@ -82,6 +82,8 @@ class TestLowPassFunctions(unittest.TestCase):
         
         pop_n_sequenced = [5]
         number_simulations = 10
+        
+        np.random.seed(42)
         n_ref, n_alt = LowPass.simulate_reads(coverage_distribution, flattened_partition, pop_n_sequenced, number_simulations)
         
         assert np.all(n_ref[:, 0] > 0)
@@ -97,7 +99,7 @@ class TestLowPassFunctions(unittest.TestCase):
         assert np.all(n_alt[:, 4] == 0)
 
     def test_subsample_genotypes_1D(self):
-        genotype_calls = np.array([[99, 1, 2, 99], [99, 1, 0, 99], [99, 99, 99, 99]])
+        genotype_calls = np.array([[99, 1, 2, 99], [1, 99, 0, 99], [99, 99, 99, 99]])
         n_subsampling = 4
         
         result = LowPass.subsample_genotypes_1D(genotype_calls, n_subsampling)
@@ -118,6 +120,8 @@ class TestLowPassFunctions(unittest.TestCase):
         n_subsampling = [4]
         number_simulations = 100
         Fx = [0]
+        
+        np.random.seed(42)
         result = LowPass.simulate_GATK_multisample_calling(coverage_distribution, allele_frequency, n_sequenced, n_subsampling, number_simulations, Fx)
         
         expected_result = np.array([0, 1, 0, 0, 0])
