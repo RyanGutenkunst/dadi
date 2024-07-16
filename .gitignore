@@ -22,3 +22,6 @@ dadi/TwoLocus/*.c
 *.pyd
 *~
 tests/test.fs
+dadi/integration_c.c
+dadi/tridiag_cython.c
+dadi/DFE/PDFs_cython.c
