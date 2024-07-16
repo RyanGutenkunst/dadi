@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger('Numerics')
 
 import functools, os
-import numpy
+import numpy, math
 # Account for difference in scipy installations.
 from scipy.special import comb
 from scipy.special import gammaln, betaln, beta
@@ -67,6 +67,26 @@ def part(x, n, minval=0, maxval=2):
             for p in part(x - val, n - 1, val, maxval):
                 yield [val] + p
 
+_part_precalc_cache = {}
+def cached_part_precalc(x,n,minval=0,maxval=2):
+    """
+    Partition counts and multinomial coefficients, for fast
+    convolution calculation
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    """
+    if (x,n,minval,maxval) not in _part_precalc_cache:
+        partitions = cached_part(x,n,minval,maxval)
+        all_counts, all_multi = [], []
+        for prt in partitions:
+            all_counts.append([prt.count(val) for val in range(minval, maxval+1)])
+            all_multi.append(multinomln(all_counts[-1]))
+        _part_precalc_cache[x,n,minval,maxval] = all_counts, all_multi
+    return _part_precalc_cache[x,n,minval,maxval]
+
 def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
     """
     Returns the probability of observing i 'successes' across
@@ -79,17 +99,19 @@ def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
     # the cached BetaBinomln. Caching in BetaBinomln is still
     # marginally useful, even after caching at this level.
     BetaBinomln_cache = [BetaBinomln(_,ploidy,alpha,beta) for _ in range(ploidy+1)]
-    partitions = cached_part(i,n,maxval=ploidy)
-    for prt in partitions:
-        tmp=0.0
-        # Partitions p have many repeated elements. It's faster
-        # to count each unique element and use that, rather than 
-        # iterating through all elements
-        coeff = [prt.count(p) for p in range(ploidy+1)]
-        for p in range(ploidy+1):
-            tmp += BetaBinomln_cache[p]*coeff[p]
-        tmp += multinomln(coeff)
-        res += numpy.exp(tmp)
+
+    all_coeff, all_multi = cached_part_precalc(i,n,maxval=ploidy)
+    # This could be reduced to array operations, but it's substantially slower 
+    #  (probably because the arrays small, because ploidy is)
+    for coeff, multi_coeff in zip(all_coeff, all_multi):
+        if ploidy == 2: # Skipping the for loop saves 10%
+            tmp = BetaBinomln_cache[0]*coeff[0] + BetaBinomln_cache[1]*coeff[1] + BetaBinomln_cache[2]*coeff[2] 
+        else:
+            tmp = 0
+            for p in range(ploidy+1):
+                tmp += BetaBinomln_cache[p]*coeff[p]
+        tmp += multi_coeff
+        res += math.exp(tmp)
     return res
 
 def apply_anc_state_misid(fs, p_misid):

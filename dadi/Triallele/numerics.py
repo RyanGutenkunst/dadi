@@ -2,7 +2,7 @@ import numpy as np
 from scipy.sparse import lil_matrix
 from scipy.sparse import identity
 from scipy.sparse.linalg import spsolve
-from scipy.integrate import trapz
+from numpy import trapz
 from scipy.special import gamma
 from numpy import newaxis as nuax
 from dadi import Numerics
