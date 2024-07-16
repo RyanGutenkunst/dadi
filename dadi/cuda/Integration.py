@@ -1,5 +1,7 @@
 import numpy as np
 
+from dadi import Demes
+
 def _inject_mutations_2D_valcalc(dt, xx, yy, theta0, frozen1, frozen2,
                                  nomut1, nomut2):
     """
@@ -198,6 +200,7 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
         buff_gpu.gpudata, phi_gpu.gpudata, L)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
+    demes_hist = [[0, [nu1,nu2], [m12,m21]]]
     while current_t < T:
         dt = min(dadi.Integration._compute_dt(dx,nu1,[m12],gamma1,h1),
                  dadi.Integration._compute_dt(dy,nu2,[m21],gamma2,h2))
@@ -210,6 +213,7 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
         gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
         h1,h2 = h1_f(next_t), h2_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2], [m12,m21]])
 
         val10, val01 = dadi.cuda.Integration._inject_mutations_2D_valcalc(this_dt, xx, yy, theta0, frozen1, frozen2,
                                                                           nomut1, nomut2)
@@ -283,7 +287,7 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
             phi_gpu, buff_gpu = buff_gpu, phiT_gpu
 
         current_t = next_t
-
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi_gpu.get()
 
 def _three_pops_const_params(phi, xx,
@@ -408,6 +412,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
         c_gpu.gpudata, phi_gpu.gpudata, L**2)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
+    demes_hist = [[0, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]]]
     while current_t < T:
         dt = min(dadi.Integration._compute_dt(dx, nu1, [m12, m13], gamma1, h1),
                  dadi.Integration._compute_dt(dy, nu2, [m21, m23], gamma2, h2),
@@ -424,6 +429,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
         gamma3 = gamma3_f(next_t)
         h1,h2,h3 = h1_f(next_t), h2_f(next_t), h3_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]])
 
         if np.any(np.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0], 0)):
             raise ValueError('A time, population size, migration rate, or '
@@ -535,7 +541,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
         phi_gpu, c_gpu = c_gpu.reshape(L,M*N), phi_gpu.reshape(L,M*N)
 
         current_t += this_dt
-
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi_gpu.get().reshape(L,M,N)
 
 def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f,
@@ -580,6 +586,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         c_gpu.gpudata, phi_gpu.gpudata, M*N*O)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
 
+    demes_hist = [[0, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]]]
     while current_t < T:
         dt = min(dadi.Integration._compute_dt(dx, nu1, [m12, m13, m14], gamma1, h1),
                  dadi.Integration._compute_dt(dy, nu2, [m21, m23, m24], gamma2, h2),
@@ -597,6 +604,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         m31, m32, m34 = m31_f(next_t), m32_f(next_t), m34_f(next_t)
         m41, m42, m43 = m41_f(next_t), m42_f(next_t), m43_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]])
 
         if np.any(np.less([T,nu1,nu2,nu3,nu4,m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43,theta0], 0)):
             raise ValueError('A time, population size, migration rate, or '
@@ -739,7 +747,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         phi_gpu, c_gpu = c_gpu.reshape(L,M*N*O), phi_gpu.reshape(L,M*N*O)
 
         current_t += this_dt
-
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi_gpu.get().reshape(L,M,N,O)
 
 def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
@@ -786,7 +794,7 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         cusparse_handle, 0, L, a_gpu.gpudata, b_gpu.gpudata,
         c_gpu.gpudata, phi_gpu.gpudata, M*N*O*P)
     pBuffer = pycuda.driver.mem_alloc(bsize_int)
-
+    demes_hist = [[0, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]]
     while current_t < T:
         dt = min(dadi.Integration._compute_dt(dx, nu1, [m12,m13,m14,m15], gamma1, h1),
                  dadi.Integration._compute_dt(dy, nu2, [m21,m23,m24,m25], gamma2, h2),
@@ -806,6 +814,7 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         m41, m42, m43, m45 = m41_f(next_t), m42_f(next_t), m43_f(next_t), m45_f(next_t)
         m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
         theta0 = theta0_f(next_t)
+        demes_hist.append([[next_t, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]])
 
         if np.any(np.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
                                  m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
@@ -982,5 +991,5 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
         phi_gpu, c_gpu = c_gpu.reshape(L,M*N*O*P), phi_gpu.reshape(L,M*N*O*P)
 
         current_t += this_dt
-
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi_gpu.get().reshape(L,M,N,O,P)

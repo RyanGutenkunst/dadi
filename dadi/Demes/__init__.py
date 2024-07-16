@@ -87,7 +87,6 @@ class Pulse(Event):
         self.sources = [sources[_] for _ in range(len(proportions)) if proportions[_] != 0]
         self.proportions= [proportions[_] for _ in range(len(proportions)) if proportions[_] != 0]
 
-import numpy as np
 import demes
 def output(Nref=None, deme_mapping=None, generation_time=None):
     """
@@ -146,8 +145,6 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
             b = demes.Builder(time_units='years', generation_time=generation_time)
 
     # Build up info for each deme
-    #XXX: Need to handle changing deme name without split
-    #XXX: And what if there's a Pulse in between?
     for deme in all_demes:
         epochs = []
         start_time, ancestors, proportions = None, None, None
