@@ -176,7 +176,7 @@ def _compute_dt(dx, nu, ms, gamma, h):
     return dt
 
 def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0, 
-            frozen=False, beta=1):
+            frozen=False, beta=1, deme_ids=None):
     """
     Integrate a 1-dimensional phi foward.
 
@@ -198,6 +198,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
     frozen: If True, population is 'frozen' so that it does not change.
             In the one_pop case, this is equivalent to not running the
             integration at all.
+    deme_ids: sequence of strings representing the names of demes
     """
     phi = phi.copy()
 
@@ -214,7 +215,7 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
 
     vars_to_check = (nu, gamma, h, theta0, beta)
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu]))
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
         return _one_pop_const_params(phi, xx, T, nu, gamma, h, theta0, 
                                      initial_t, beta)
 
@@ -255,12 +256,12 @@ def one_pop(phi, xx, T, nu=1, gamma=0, h=0.5, theta0=1.0, initial_t=0,
         phi = int_c.implicit_1Dx(phi, xx, nu, gamma, h, beta, this_dt, 
                                  use_delj_trick=use_delj_trick)
         current_t = next_t
-    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist))
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
 def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
              h1=0.5, h2=0.5, theta0=1, initial_t=0, frozen1=False,
-             frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False):
+             frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False, deme_ids=None):
     """
     Integrate a 2-dimensional phi foward.
 
@@ -289,6 +290,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
 
     enable_cuda_cached: If True, enable CUDA integration with slower constant
                        parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
@@ -312,7 +314,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
         Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
-                           start_sizes = [nu1, nu2], mig = [m12,m21]))
+                           start_sizes = [nu1, nu2], mig = [m12,m21], deme_ids=deme_ids))
         if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
             return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
                     gamma1, gamma2, h1, h2, theta0, initial_t,
@@ -375,14 +377,14 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
                                      this_dt, use_delj_trick)
 
         current_t = next_t
-    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist))
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
                gamma1=0, gamma2=0, gamma3=0, h1=0.5, h2=0.5, h3=0.5,
                theta0=1, initial_t=0, frozen1=False, frozen2=False,
-               frozen3=False, enable_cuda_cached=False):
+               frozen3=False, enable_cuda_cached=False, deme_ids=None):
     """
     Integrate a 3-dimensional phi foward.
 
@@ -404,6 +406,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
 
     enable_cuda_cached: If True, enable CUDA integration with slower constant
                        parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
@@ -431,7 +434,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
             Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
                                start_sizes = [nu1, nu2, nu3],
-                               mig = [m12, m13, m21, m23, m31, m32]))
+                               mig = [m12, m13, m21, m23, m31, m32], deme_ids=deme_ids))
             return _three_pops_const_params(phi, xx, T, nu1, nu2, nu3,
                                             m12, m13, m21, m23, m31, m32,
                                             gamma1, gamma2, gamma3, h1, h2, h3,
@@ -513,7 +516,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                                      gamma3, h3, this_dt, use_delj_trick)
 
         current_t = next_t
-    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist))
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
 def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
@@ -522,7 +525,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
               gamma1=0, gamma2=0, gamma3=0, gamma4=0, 
               h1=0.5, h2=0.5, h3=0.5, h4=0.5,
               theta0=1, initial_t=0, frozen1=False, frozen2=False,
-              frozen3=False, frozen4=False):
+              frozen3=False, frozen4=False, deme_ids=None):
     """
     Integrate a 4-dimensional phi foward.
 
@@ -544,6 +547,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
 
     enable_cuda_const: If True, enable CUDA integration with slower constant
                        parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
@@ -595,6 +599,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     m41, m42, m43 = m41_f(current_t), m42_f(current_t), m43_f(current_t)
 
     dx,dy,dz,da = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa)
+    demes_hist = [[0, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]]]
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12,m13,m14],gamma1,h1),
                  _compute_dt(dy,nu2,[m21,m23,m24],gamma2,h2),
@@ -613,6 +618,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
         m41, m42, m43 = m41_f(next_t), m42_f(next_t), m43_f(next_t)
         theta0 = theta0_f(next_t)
 
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]])
         if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,m12,m13,m14,m21,
                                  m23, m24, m31, m32, m34, m41, m42, m43, theta0],
                                 0)):
@@ -638,6 +644,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                                      gamma4, h4, this_dt, use_delj_trick)
 
         current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
 def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
@@ -647,7 +654,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
               gamma1=0, gamma2=0, gamma3=0, gamma4=0, gamma5=0,
               h1=0.5, h2=0.5, h3=0.5, h4=0.5, h5=0.5,
               theta0=1, initial_t=0, frozen1=False, frozen2=False,
-              frozen3=False, frozen4=False, frozen5=False):
+              frozen3=False, frozen4=False, frozen5=False, deme_ids=None):
     """
     Integrate a 5-dimensional phi foward.
 
@@ -666,6 +673,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
+    deme_ids: sequence of strings representing the names of demes
 
     Note: Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
@@ -724,6 +732,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     m51, m52, m53, m54 = m51_f(current_t), m52_f(current_t), m53_f(current_t), m54_f(current_t)
 
     dx,dy,dz,da,db = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa),numpy.diff(bb)
+    demes_hist = [[0, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]]
     while current_t < T:
         dt = min(_compute_dt(dx,nu1,[m12,m13,m14,m15],gamma1,h1),
                  _compute_dt(dy,nu2,[m21,m23,m24,m25],gamma2,h2),
@@ -744,6 +753,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
         theta0 = theta0_f(next_t)
 
+        demes_hist.append([[0, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]])
         if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
                                  m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
                                  m51,m52,m53,m54, theta0],
@@ -773,6 +783,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                                      gamma5, h5, this_dt, use_delj_trick)
 
         current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
 

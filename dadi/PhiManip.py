@@ -9,7 +9,7 @@ import scipy.integrate
 from dadi import Numerics
 from dadi import Demes
 
-def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
+def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1, deme_ids=None):
     """
     One-dimensional phi for a constant-sized population with genic selection.
 
@@ -25,10 +25,11 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
        genic selection.
     theta: deprecated in favor of distinct nu and theta0 arguments, for 
            consistency with Integration functions.
+    deme_ids: sequence of strings representing the names of demes
 
     Returns a new phi array.
     """
-    Demes.cache = [Demes.Initiation(nu)]
+    Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
 
     if theta is not None:
         raise ValueError('The parameter theta has been deprecated in favor of '
@@ -196,18 +197,19 @@ def check_xx(xx):
         raise ValueError('Input xx argument is not monotonically increasing. '
                          'Have you passed in an incorrect argument?')
 
-def phi_1D_to_2D(xx, phi_1D):
+def phi_1D_to_2D(xx, phi_1D, deme_ids=None):
     """
     Implement a one-to-two population split.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
     phi1D: initial probability density
+    deme_ids: sequence of strings representing the names of demes after split
 
     Returns a new two-dimensional phi array.
     """
     check_xx(xx)
     
-    Demes.cache.append(Demes.Split(proportions=[1]))
+    Demes.cache.append(Demes.Split(proportions=[1], deme_ids=deme_ids))
 
     pts = len(xx)
     phi_2D = numpy.zeros((pts, pts))
@@ -215,31 +217,33 @@ def phi_1D_to_2D(xx, phi_1D):
         phi_2D[ii,ii] = phi_1D[ii] * 2/(xx[ii+1]-xx[ii-1])
     return phi_2D
 
-def phi_2D_to_3D_split_2(xx, phi_2D):
+def phi_2D_to_3D_split_2(xx, phi_2D, deme_ids=None):
     """
     Split population 2 into populations 2 and 3.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
     phi2D: initial probability density
+    deme_ids: sequence of strings representing the names of demes after split
 
     Returns a new three-dimensional phi array.
     """
     check_xx(xx)
 
-    return phi_2D_to_3D_admix(phi_2D,0,xx,xx,xx)
+    return phi_2D_to_3D_admix(phi_2D,0,xx,xx,xx, deme_ids)
 
-def phi_2D_to_3D_split_1(xx, phi_2D):
+def phi_2D_to_3D_split_1(xx, phi_2D, deme_ids=None):
     """
     Split population 1 into populations 1 and 3.
 
     xx: one-dimensional grid of frequencies upon which phi is defined
     phi2D: initial probability density
+    deme_ids: sequence of strings representing the names of demes after split
 
     Returns a new three-dimensional phi array.
     """
     check_xx(xx)
 
-    return phi_2D_to_3D_admix(phi_2D,1,xx,xx,xx)
+    return phi_2D_to_3D_admix(phi_2D,1,xx,xx,xx, deme_ids)
 
 def _admixture_intermediates(phi, ad_z, zz):
     # Find where those z values map to in the zz array.
@@ -345,7 +349,7 @@ def _five_pop_admixture_intermediates(phi_5D, f1,f2,f3,f4, xx,yy,zz,aa,bb,cc):
     return lower_w_index, upper_w_index, frac_lower, frac_upper, norm
 
 
-def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
+def phi_2D_to_3D_admix(phi, f1, xx,yy,zz, deme_ids=None):
     """
     Create population 3 admixed from populations 1 and 2.
 
@@ -356,8 +360,9 @@ def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
              will be derived from population 2.)
     xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
     zz:    Frequency mapping that will be used along population 3 axis.
+    deme_ids: sequence of strings representing the names of demes after split
     """
-    Demes.cache.append(Demes.Split(proportions=[f1, 1-f1]))
+    Demes.cache.append(Demes.Split(proportions=[f1, 1-f1], deme_ids=deme_ids))
 
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _two_pop_admixture_intermediates(phi, f1, xx,yy,zz)
@@ -379,7 +384,7 @@ def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
     return phi_3D
 phi_2D_to_3D = phi_2D_to_3D_admix
 
-def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa):
+def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa, deme_ids=None):
     """
     Create population 4 from populations 1, 2, and 3.
 
@@ -391,7 +396,10 @@ def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa):
            (A fraction 1-f1-f2 will be derived from population 3.)
     xx,yy,zz: Mapping of points in phi to frequencies in populations 1, 2, and 3.
     aa:    Frequency mapping that will be used along population 4 axis.
+    deme_ids: sequence of strings representing the names of demes after split
     """
+    Demes.cache.append(Demes.Split(proportions=[f1, f2, 1-f1-f2], deme_ids=deme_ids))
+
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _three_pop_admixture_intermediates(phi, f1, f2, xx,yy,zz, aa)
 
@@ -411,7 +419,7 @@ def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa):
 
     return phi_4D
 
-def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb):
+def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb, deme_ids=None):
     """
     Create population 5 from populations 1, 2, 3, and 4.
 
@@ -420,11 +428,14 @@ def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb):
     phi:   phi corresponding to original 3 populations
     f1:    Fraction of population 4 derived from population 1.
     f2:    Fraction of population 4 derived from population 2.
-    f4:    Fraction of population 4 derived from population 3.
+    f3:    Fraction of population 4 derived from population 3.
            (A fraction 1-f1-f2-f3 will be derived from population 4.)
     xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1, 2, 3, 4.
     bb:    Frequency mapping that will be used along population bb axis.
+    deme_ids: sequence of strings representing the names of demes after split
     """
+    Demes.cache.append(Demes.Split(proportions=[f1, f2, f3, 1-f1-f2-f3], deme_ids=deme_ids))
+
     lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
             = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, bb)
 

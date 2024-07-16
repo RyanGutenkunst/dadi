@@ -1,3 +1,4 @@
+import numpy as np
 from . import Demes, Inference, DemesUtil
 
 from .Demes import SFS
@@ -9,39 +10,63 @@ from .Demes import SFS
 cache = []
 
 class Event:
-    def __init__(self, duration=0):
+    def __init__(self, duration=0, deme_ids=None):
         self.duration = duration
         self.end_time = None
         self.deme_ids = None
+        if deme_ids is not None:
+            self.deme_ids = tuple(deme_ids)
 
 class Initiation(Event):
-    def __init__(self, nu):
-        super().__init__(np.inf)
+    def __init__(self, nu, deme_ids=None):
+        super().__init__(np.inf, deme_ids=deme_ids)
         self.start_sizes = [nu]
         self.end_sizes = None
 
 class Integration(Event):
-    def __init__(self, duration):
-        super().__init__(duration)
+    def __init__(self, duration, deme_ids):
+        super().__init__(duration, deme_ids=deme_ids)
 
 class IntegrationConst(Integration):
-    def __init__(self, duration, start_sizes, mig=[]):
-        super().__init__(duration)
+    def __init__(self, duration, start_sizes, mig=[], deme_ids=None):
+        super().__init__(duration, deme_ids=deme_ids)
         self.start_sizes = start_sizes
         self.end_sizes = None
         self.mig = mig
 
 class IntegrationNonConst(Integration):
-    def __init__(self, history):
-        super().__init__(duration = history[-1][0] - history[0][0])
+    def __init__(self, history, deme_ids=None):
+        super().__init__(duration = history[-1][0] - history[0][0], deme_ids=deme_ids)
         self.start_sizes = history[0][1]
         self.end_sizes = history[-1][1]
         self.mig = history[0][2]
         self.history = history
+        self.linear = self.check_linear()
+    def check_linear(self):
+        """
+        For each pop, check whether size change was linear.
+
+        Does so by checking steps at duration * (1/3, 1/2, and 2/3)
+        """
+        # To store result
+        pop_linear = [True]*len(self.history[0][1])
+        # Steps to check
+        steps_to_check = [len(self.history)//2, len(self.history)//3, len(self.history)*2//3]
+
+        start_time = self.history[0][0]
+        for pop_ii in range(len(self.history[0][1])):
+            start_size, final_size = self.history[0][1][pop_ii], self.history[-1][1][pop_ii]
+            slope = (final_size - start_size)/self.duration
+            for step_ii in steps_to_check:
+                pred_size = start_size + slope * (self.history[step_ii][0] - start_time)
+                if not np.allclose(pred_size, self.history[step_ii][1][pop_ii]):
+                    pop_linear[pop_ii] = False
+                    break
+        return pop_linear
 
 class Split(Event):
-    def __init__(self, proportions):
-        super().__init__()
+    def __init__(self, proportions, deme_ids=None):
+        super().__init__(deme_ids=deme_ids)
         self.proportions = proportions
 
 class Remove(Event):
@@ -78,15 +103,19 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
     # XXX: Should I number demes as d{pop_number}.{era}?
 
     # Create and propagate names for all demes, starting from d0
-    cache[0].deme_ids, era = ['d1_1'], 1
+    # If we don't have deme names
+    if cache[0].deme_ids is None:
+        cache[0].deme_ids = ['d1_1']
+    era = 1
     for older, younger in zip(cache[:-1], cache[1:]):
         if younger.deme_ids is None:
             if isinstance(younger, Split):
                 era += 1
                 younger.deme_ids = ['d{0}_{1}'.format(ii+1, era) for ii in range(len(older.deme_ids)+1)]
             elif isinstance(younger, Remove):
-                younger.deme_ids = older.deme_ids[:]
+                younger.deme_ids = list(older.deme_ids)
                 del younger.deme_ids[younger.removed-1]
+                younger.deme_ids = tuple(younger.deme_ids)
             elif isinstance(younger, Reorder):
                 younger.deme_ids = [older.deme_ids[_-1] for _ in younger.neworder]
             else:
@@ -99,7 +128,7 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
             for oldname in oldnames:
                 map[oldname] = newname
         for e in cache:
-            e.deme_ids = [map[d] for d in e.deme_ids]
+            e.deme_ids = [map.get(d, d) for d in e.deme_ids]
 
     # Collect all demes in the history, in order from oldest to newest.
     all_demes = []
@@ -117,6 +146,8 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
             b = demes.Builder(time_units='years', generation_time=generation_time)
 
     # Build up info for each deme
+    #XXX: Need to handle changing deme name without split
+    #XXX: And what if there's a Pulse in between?
     for deme in all_demes:
         epochs = []
         start_time, ancestors, proportions = None, None, None
@@ -129,6 +160,8 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
                 epochs.append({'end_time':e.end_time, 'start_size':e.start_sizes[d_ii]})
                 if isinstance(e, IntegrationNonConst):
                     epochs[-1]['end_size'] = e.end_sizes[d_ii]
+                    if e.linear[d_ii]:
+                        epochs[-1]['size_function'] = 'linear'
                 if Nref is not None:
                     epochs[-1]['end_time'] *= 2*Nref
                     if generation_time is not None:
@@ -136,6 +169,16 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
                     epochs[-1]['start_size'] *= Nref
                     if isinstance(e, IntegrationNonConst):
                         epochs[-1]['end_size'] *= Nref
+                if ii > 0 and ancestors is None and deme not in cache[ii-1].deme_ids:
+                    # If demes is new due to Integration
+                    start_time = e.end_time + e.duration
+                    if Nref is not None:
+                        start_time *= 2*Nref
+                        if generation_time is not None:
+                            start_time *= generation_time
+                    d_ii = e.deme_ids.index(deme)
+                    ancestors = [cache[ii-1].deme_ids[d_ii]]
+                    proportions = [1]
             if isinstance(e, Split): 
                 prev_e = cache[ii-1]
                 if deme not in prev_e.deme_ids: # If new deme
@@ -196,6 +239,10 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
         if isinstance(e, Pulse) and len(e.sources) > 0:
             sources = [e.deme_ids[ii-1] for ii in e.sources]
             dest = e.deme_ids[e.dest-1]
+            if Nref is not None:
+                e.end_time *= 2*Nref
+                if generation_time is not None:
+                    e.end_time *= generation_time
             b.add_pulse(sources=sources, dest=dest, proportions = e.proportions, time=e.end_time)
 
     graph = b.resolve()

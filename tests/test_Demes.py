@@ -5,12 +5,10 @@ import numpy as np
 # Check if Demes is installed
 try:
     from dadi.Demes import Demes
-    dadi.Spectrum.from_demes(
-                            "examples/demes_test/gutenkunst_ooa.yml", 
+    dadi.Spectrum.from_demes("tests/demes/gutenkunst_ooa.yaml", 
                             sampled_demes=["YRI", "CEU", "CHB"], 
-                            sample_sizes=[10, 10, 10], 
-                            pts=[15,20,25]
-                            )
+                            sample_sizes=[2, 3, 4], 
+                            pts=[15,20,25])
     skip = False
 except:
     print("ImportError: demes is not installed, need to `pip install demes`")
@@ -19,7 +17,7 @@ except:
 @pytest.fixture
 def test_details():
     #simple model to test splits up to three populations
-    pytest.model = "examples/demes_test/gutenkunst_ooa.yml"
+    pytest.model = "tests/demes/gutenkunst_ooa.yaml"
     pytest.sampled_demes = ["YRI", "CEU", "CHB"]
     pytest.sample_sizes = [10, 10, 10]
 
@@ -38,28 +36,28 @@ def test_split(test_details):
     pop_ids = ['1']
     parent = '1'
     children=['A', 'B']
-    demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
+    demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent, new_pop_ids=children)
     assert(np.allclose(demes_phi2D, dadi_phi2D))
 
     pop_ids = ['A','B']
     for i, parent in zip(range(2),pop_ids):
         phifunc = [dadi.PhiManip.phi_2D_to_3D_split_1,dadi.PhiManip.phi_2D_to_3D_split_2][i]
         dadi_phi3D = phifunc(xx, dadi_phi2D)
-        demes_phi3D = Demes._split_phi(demes_phi2D, xx, pop_ids, parent)
+        demes_phi3D = Demes._split_phi(demes_phi2D, xx, pop_ids, parent, new_pop_ids=['A','B','C'])
         assert(np.allclose(demes_phi3D, dadi_phi3D))
     
     pop_ids = ['A','B','C']
     proportions = [[1,0,0], [0,1,0], [0,0,1]]
     for props, parent in zip(proportions, pop_ids):
         dadi_phi4D = dadi.PhiManip.phi_3D_to_4D(dadi_phi3D, props[0], props[1], xx,xx,xx,xx)
-        demes_phi4D = Demes._split_phi(dadi_phi3D, xx, pop_ids, parent)
+        demes_phi4D = Demes._split_phi(dadi_phi3D, xx, pop_ids, parent, new_pop_ids=['A','B','C','D'])
         assert(np.allclose(demes_phi4D, dadi_phi4D))
 
     pop_ids = ['A','B','C','D']
     proportions = [[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]]
     for props, parent in zip(proportions, pop_ids):
         dadi_phi5D = dadi.PhiManip.phi_4D_to_5D(dadi_phi4D, props[0], props[1], props[2], xx,xx,xx,xx,xx)
-        demes_phi5D = Demes._split_phi(dadi_phi4D, xx, pop_ids, parent)
+        demes_phi5D = Demes._split_phi(dadi_phi4D, xx, pop_ids, parent, new_pop_ids=['A','B','C','D','E'])
         assert(np.allclose(demes_phi5D, dadi_phi5D))
 
 @pytest.mark.skipif(skip, reason="Could not load Demes")
@@ -107,7 +105,7 @@ def test_admix(test_details):
     pop_ids = ['1']
     parent = '1'
     children=['A', 'B']
-    demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
+    demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent, new_pop_ids=children)
 
     proportions, pop_ids = [0.7, children]
     for sources, dest in zip(pop_ids, pop_ids[::-1]):
@@ -130,11 +128,11 @@ def test_admix_new_pop(test_details):
     pop_ids = ['1']
     parent = '1'
     children=['A', 'B']
-    demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent)
+    demes_phi2D = Demes._split_phi(phi1D, xx, pop_ids, parent, new_pop_ids=children)
 
     proportions, pop_ids, parents = [[0.7, 0.3], children, children]
     dadi_phi3D = dadi.PhiManip.phi_2D_to_3D_admix(dadi_phi2D, proportions[0], xx,xx,xx)
-    demes_phi3D = Demes._admix_new_pop_phi(demes_phi2D, xx, proportions, pop_ids, parents)
+    demes_phi3D = Demes._admix_new_pop_phi(demes_phi2D, xx, proportions, pop_ids, parents, new_pop_ids=children)
     assert(np.allclose(demes_phi3D, dadi_phi3D))
 
 @pytest.mark.skipif(skip, reason="Could not load Demes")
@@ -204,3 +202,56 @@ def test_demes_vs_dadi(test_details):
     assert(np.allclose(fs_demes, fs_dadi))
     #self.assertTrue(np.allclose(fs_demes[6,3,2], fs_demes[6,3,2]))
 
+def import_export_match(fname, sampled_demes, sample_sizes, pts, Nref, generation_time, deme_mapping=None):
+    import demes
+    gin = demes.load(fname)
+    demes_ex = dadi.Numerics.make_extrap_func(dadi.Demes.SFS)
+    fsin = demes_ex(gin, sampled_demes, sample_sizes, pts)
+    gout = dadi.Demes.output(Nref, deme_mapping, generation_time)
+    fsout = demes_ex(gout, sampled_demes, sample_sizes, pts)
+    assert(np.allclose(fsin,fsout, rtol=1e-3, atol=1e-4))
+
+@pytest.mark.skipif(skip, reason="Could not load Demes")
+def test_demes_export_match():
+    import_export_match('tests/demes/bottleneck.yaml', ['our_population'], [5], 10, 1e4, 1)
+    import_export_match('tests/demes/browning_america.yaml', ['AFR', 'EAS', 'EUR', 'ADMIX'], [2,3,4,5], 5, 7310, 1)
+     # cloning_example.yaml: dadi doesn't implement cloning
+    import_export_match('tests/demes/gutenkunst_ooa.yaml', ['YRI','CEU','CHB'], [3,5,8], [10,15,20], 7300, 25)
+    # jacobs_papuans.yaml: too many populations for dadi
+    import_export_match('tests/demes/linear_size_function_example.yaml', ['pop_1','pop_2'], [4,5], 20, 100, 1)
+    import_export_match('tests/demes/offshoots.yaml', ['ancestral','offshoot1','offshoot2'], [3,5,8], 20, 1000, 1)
+    # selfing_example.yaml: dadi doesn't implement selfing
+    import_export_match('tests/demes/two_epoch.yaml', ['deme0'], [10], 20, 1000, 1)
+    import_export_match('tests/demes/zigzag.yaml', ['generic'], [10], 20, 7156, 1)
+
+@pytest.mark.skipif(skip, reason="Could not load Demes")
+def test_export_mapping():
+    def three_test(params, ns, pts):
+        xx = dadi.Numerics.default_grid(pts)
+        phi = dadi.PhiManip.phi_1D(xx, nu=2)
+
+        phi = dadi.Integration.one_pop(phi, xx, T=0.1, nu=2)
+
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+
+        nu_func = lambda t: 0.1 * (3/0.1)**(t/0.2)
+        phi = dadi.Integration.two_pops(phi, xx, 0.2, nu_func, 3, m12=2)
+        phi = dadi.Integration.two_pops(phi, xx, 0.2, 0.2, 0.3, m21=0.1)
+
+        phi = dadi.PhiManip.phi_2D_to_3D(phi, 0.3, xx, xx, xx)
+
+        phi = dadi.Integration.three_pops(phi, xx, 0.3, 1, 2, 3, m12=2, m13=4)
+        phi = dadi.PhiManip.phi_3D_admix_1_and_3_into_2(phi, 0.2, 0, xx,xx,xx)
+        phi = dadi.PhiManip.reorder_pops(phi, [3,2,1])
+        phi = dadi.Integration.three_pops(phi, xx, 0.2, 3, 2, 1)
+
+        phi = dadi.PhiManip.filter_pops(phi, xx, [1])
+        #phi = dadi.Integration.two_pops(phi, xx, 0.2, 0.4, 0.1, m21=0.1)
+        phi = dadi.Integration.one_pop(phi, xx, T=0.1, nu=2)
+
+        return dadi.Spectrum.from_phi(phi, ns, [xx])
+
+    fs = three_test(None, [2], 4)
+    g = dadi.Demes.output(deme_mapping={'YRI':['d1_1', 'd1_2', 'd1_3'], 'Bottle':['d2_2'],
+                                                'CEU':['d2_3'], 'CHB':['d3_3']})
+    # The correctness test here is visual. Here just testing whether method crashes.

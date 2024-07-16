@@ -548,7 +548,7 @@ def _compute_sfs(
     if h is None:
         h = 0.5
     xx = dadi.Numerics.default_grid(pts)
-    phi = dadi.PhiManip.phi_1D(xx, theta0=theta, gamma=gamma, h=h)
+    phi = dadi.PhiManip.phi_1D(xx, theta0=theta, gamma=gamma, h=h, deme_ids=[root_deme])
     
     # for each set of demographic events and integration epochs, step through
     # integration, apply events, and then reorder populations to align with demes
@@ -617,16 +617,18 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
             # split into multiple children demes
             if len(children) + len(pop_ids) - 1 > 5:
                 raise ValueError("Cannot apply split that creates more than 5 demes")
-            phi= _split_phi(phi, xx, pop_ids, parent)
+            new_pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
+            phi= _split_phi(phi, xx, pop_ids, parent, new_pop_ids)
             # When dadi splits a population, one of the new children is always the last in the phi matrix
-            pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
+            pop_ids = new_pop_ids
     elif e == "branch":
         # branch is a split, but keep the pop_id of parent
         parent = event[1]
         parent_i = pop_ids.index(parent)
         child = event[2]
         children = [parent, child]
-        phi = _split_phi(phi, xx, pop_ids, parent)
+        new_pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
+        phi = _split_phi(phi, xx, pop_ids, parent, new_pop_ids)
         # When dadi splits a population, one of the new children is always the last in the phi matrix
         pop_ids = pop_ids[:parent_i] + [children[0]] + pop_ids[parent_i+1:] + [children[1]]
     elif e in ["admix", "merge"]:
@@ -638,10 +640,11 @@ def _apply_event(phi, xx, pop_ids, event, interval, sample_sizes, demes_present)
             pop_ids.append(child)
             if len(pop_ids)>5:
                 raise ValueError("Cannot apply admix that creates more than 5 demes")
-            phi = _admix_new_pop_phi(phi, xx, proportions, pop_ids[:-1], parents)
+            phi = _admix_new_pop_phi(phi, xx, proportions, pop_ids[:-1], parents, pop_ids)
         else:
             # admixture from one or more populations to another existing population
             # with some proportion
+            # XXX: This should crash
             phi = _admix_phi(phi, xx, proportions, pop_ids, sources, dest)
         if e == "merge":
             for parent in parents:
@@ -667,15 +670,15 @@ def _integrate_phi(phi, xx, integration_params, pop_ids):
     if len(pop_ids) == 1:
         phi = dadi.Integration.one_pop(
             phi, xx, T, nu[0], 
-            gamma=gamma[0], h=h[0], theta0=theta, frozen=frozen[0]
-            )
+            gamma=gamma[0], h=h[0], theta0=theta, frozen=frozen[0],
+            deme_ids=pop_ids)
     elif len(pop_ids) == 2:
         phi = dadi.Integration.two_pops(
             phi, xx, T, nu1=nu[0], nu2=nu[1], m12=M[0,1], m21=M[1,0], 
             gamma1=gamma[0], gamma2=gamma[1], h1=h[0], h2=h[1], theta0=theta, 
             # initial_t=0, 
-            frozen1=frozen[0], frozen2=frozen[1]
-            )
+            frozen1=frozen[0], frozen2=frozen[1],
+            deme_ids=pop_ids)
     elif len(pop_ids) == 3:
         phi = dadi.Integration.three_pops(
            phi, xx, T, nu1=nu[0], nu2=nu[1], nu3=nu[2],
@@ -683,16 +686,16 @@ def _integrate_phi(phi, xx, integration_params, pop_ids):
            gamma1=gamma[0], gamma2=gamma[1], gamma3=gamma[2], h1=h[0], h2=h[1], h3=h[2],
            theta0=theta, 
            # initial_t=0, 
-           frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2]
-           )
+           frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2],
+           deme_ids=pop_ids)
     elif len(pop_ids) == 4:
         phi = dadi.Integration.four_pops(
             phi, xx, T, nu1=nu[0], nu2=nu[1], nu3=nu[2], nu4=nu[3],
            m12=M[0,1], m13=M[0,2], m14=M[0,3], m21=M[1,0], m23=M[1,2], m24=M[1,3], 
            m31=M[2,0], m32=M[2,1], m34=M[2,3], m41=M[3,0], m42=M[3,1], m43=M[3,2],
            gamma1=gamma[0], gamma2=gamma[1], gamma3=gamma[2], gamma4=gamma[3], h1=h[0], h2=h[1], h3=h[2], h4=h[3],
-           theta0=theta, initial_t=0, frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2], frozen4=frozen[3]
-           )
+           theta0=theta, initial_t=0, frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2], frozen4=frozen[3],
+           deme_ids=pop_ids)
     elif len(pop_ids) == 5:
         phi = dadi.Integration.five_pops(
            phi, xx, T, nu1=nu[0], nu2=nu[1], nu3=nu[2], nu4=nu[3], nu5=nu[4],
@@ -706,29 +709,30 @@ def _integrate_phi(phi, xx, integration_params, pop_ids):
            h1=h[0], h2=h[1], h3=h[2], h4=h[3], h5=h[4],
            theta0=theta, initial_t=0, 
            frozen1=frozen[0], frozen2=frozen[1], frozen3=frozen[2], 
-           frozen4=frozen[3], frozen5=frozen[3]
+           frozen4=frozen[3], frozen5=frozen[3],
+           deme_ids=pop_ids
            )
     return phi
 
-def _split_phi(phi, xx, pop_ids, parent):
+def _split_phi(phi, xx, pop_ids, parent, new_pop_ids):
     """
     Split the phi into children from the deme at pop_ids.index(parent).
     """
     parent_i = pop_ids.index(parent)
     if len(pop_ids) == 1:
-        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi, deme_ids=new_pop_ids)
     elif len(pop_ids) == 2:
         phimanip_func = [dadi.PhiManip.phi_2D_to_3D_split_1, dadi.PhiManip.phi_2D_to_3D_split_2][parent_i]
-        phi = phimanip_func(xx, phi)
+        phi = phimanip_func(xx, phi, deme_ids=new_pop_ids)
     elif len(pop_ids) == 3:
         proportions = [[1,0,0], [0,1,0], [0,0,1]][parent_i]
-        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportions[0],proportions[1], xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportions[0],proportions[1], xx,xx,xx,xx, deme_ids=new_pop_ids)
     elif len(pop_ids) == 4:
         proportions = [[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]][parent_i]
-        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportions[0],proportions[1],proportions[2], xx,xx,xx,xx,xx, deme_ids=new_pop_ids)
     return phi
 
-def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents):
+def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents, new_pop_ids):
     """
     This function is for when admixture and mergining events result in a new population.
     Merge events remove the parental demes, while admixture events do not.
@@ -738,11 +742,11 @@ def _admix_new_pop_phi(phi, xx, proportions, pop_ids, parents):
         parent_i.append(pop_ids.index(parent))
     proportion_l = _make_sorted_proportions_list(proportions, parent_i, None, pop_ids)
     if len(pop_ids) == 2:
-        phi = dadi.PhiManip.phi_2D_to_3D_admix(phi, proportion_l[0], xx,xx,xx)
+        phi = dadi.PhiManip.phi_2D_to_3D_admix(phi, proportion_l[0], xx,xx,xx, deme_ids=new_pop_ids)
     if len(pop_ids) == 3:
-        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportion_l[0],proportion_l[1], xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_3D_to_4D(phi, proportion_l[0],proportion_l[1], xx,xx,xx,xx, deme_ids=new_pop_ids)
     if len(pop_ids) == 4:
-        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportion_l[0],proportion_l[1],proportion_l[2], xx,xx,xx,xx,xx)
+        phi = dadi.PhiManip.phi_4D_to_5D(phi, proportion_l[0],proportion_l[1],proportion_l[2], xx,xx,xx,xx,xx, deme_ids=new_pop_ids)
     return phi
 
 def _admix_phi(phi, xx, proportions, pop_ids, sources, dest):
