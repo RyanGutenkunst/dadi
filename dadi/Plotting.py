@@ -84,7 +84,7 @@ def plot_1d_comp_multinom(model, data, fig_num=None, residual='Anscombe',
     model = Inference.optimally_scaled_sfs(model, data)
 
     plot_1d_comp_Poisson(model, data, fig_num, residual,
-                         plot_masked, show)
+                         plot_masked, show=show)
 
 def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
                          plot_masked=False, show=True):
@@ -141,7 +141,7 @@ def plot_1d_comp_Poisson(model, data, fig_num=None, residual='Anscombe',
 
 def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
                        pop_ids=None, extend='neither', colorbar=True,
-                       cmap=pylab.cm.viridis_r):
+                       cmap=pylab.cm.viridis_r, show=True):
     """
     Heatmap of single 2d SFS. 
     
@@ -208,6 +208,9 @@ def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None,
 
     ax.set_xlim(0, sfs.shape[1])
     ax.set_ylim(0, sfs.shape[0])
+
+    if show:
+        pylab.show()
 
     return cb
 
@@ -468,12 +471,12 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
 
     ax = pylab.subplot(2,2,1)
     plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
-                       pop_ids=data_pop_ids, colorbar=False)
+                       pop_ids=data_pop_ids, colorbar=False, show=False)
     ax.set_title('data')
 
     ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
     plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
-                       pop_ids=model_pop_ids, extend=extend)
+                       pop_ids=model_pop_ids, extend=extend, show=False)
     ax2.set_title('model')
 
     if residual == 'Anscombe':
@@ -641,11 +644,11 @@ def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
         ax = pylab.subplot(4,3,sax+1)
         plot_colorbar = (sax == 2)
         plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=curr_ids[0],
-                           extend=extend, colorbar=plot_colorbar)
+                           extend=extend, colorbar=plot_colorbar, show=False)
 
         pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
         plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax, 
-                           pop_ids=curr_ids[1], extend=extend, colorbar=False)
+                           pop_ids=curr_ids[1], extend=extend, colorbar=False, show=False)
 
         resid = resids[sax]
         pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
@@ -716,7 +719,7 @@ def plot_3d_pairwise(data, vmin=None, vmax=None,
         ax = pylab.subplot(1,3,sax+1)
         plot_colorbar = (sax == 2)
         plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=ids,
-                           extend=extend, colorbar=plot_colorbar)
+                           extend=extend, colorbar=plot_colorbar, show=False)
 
         # ax.set_yticks([])
     pylab.tight_layout()

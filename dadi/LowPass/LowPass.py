@@ -14,22 +14,22 @@ rng = numpy.random.default_rng()
 
 def compute_cov_dist(data_dict, pop_ids):
     """
-    Compute the coverage distribution for each population.
+    Compute the depth of coverage distribution for each population.
 
     Args:
     - data_dict (dict): A dictionary containing data entries.
-    - pop_ids (list): A list of population identifiers for which coverage distribution is computed.
+    - pop_ids (list): A list of population identifiers for which depth of coverage distribution is computed.
 
     Returns:
     - dict: A dictionary where keys are population identifiers, and values are arrays representing
-            the coverage distribution for each population.
+            the depth of coverage distribution for each population.
     
     Raises:
     - ValueError: If information about allelic depths for the reference and alternative alleles
                   is not found in the data dictionary.
     """
     try:
-        # Dictionary comprehension to compute the coverage distribution
+        # Dictionary comprehension to compute the depth of coverage distribution
         coverage_distribution = {pop: numpy.array([
             *numpy.unique(numpy.concatenate([numpy.array(list(entry['coverage'][pop])) for entry in data_dict.values()]), return_counts=True)
         ]) for pop in pop_ids}
@@ -191,7 +191,7 @@ def simulate_reads(coverage_distribution, flattened_partition, pop_n_sequenced, 
     Simulate reads across a given genotype partition.
     
     Args:
-        coverage_distribution (list): Coverage distribution for each population.
+        coverage_distribution (list): Depth of coverage distribution for each population.
         flattened_partition (list): Flattened genotype partition.
         pop_n_sequenced (list): Number of sequenced haplotypes for each population.
         number_simulations (int): Number of simulations to perform.
@@ -272,12 +272,12 @@ def subsample_genotypes_1D(genotype_calls, n_subsampling):
     return numpy.concatenate(subsampled_data)
 
 
-def simulate_genotype_calling(coverage_distribution, allele_frequency, n_sequenced, n_subsampling, number_simulations, Fx):
+def simulate_GATK_multisample_calling(coverage_distribution, allele_frequency, n_sequenced, n_subsampling, number_simulations, Fx):
     """
-    Simulate the calling algorithm for alleles of a given frequency.
+    Simulate the GATK multi-sample calling algorithm for alleles of a given frequency.
     
     Args:
-        coverage_distribution (list): Coverage distribution for each population.
+        coverage_distribution (list): Depth of coverage distribution for each population.
         allele_frequency (list): True allele frequency in sequenced samples for each population.
         n_sequenced (list): Number of sequenced haplotypes for each population.
         n_subsampling (list): Number of haplotypes after subsampling to account for missing data for each population.
@@ -350,12 +350,12 @@ def simulate_genotype_calling(coverage_distribution, allele_frequency, n_sequenc
     return output_freqs / numpy.sum(output_freqs)
 
 
-def probability_of_no_call_1D(coverage_distribution, n_sequenced, Fx):
+def probability_of_no_call_1D_GATK_multisample(coverage_distribution, n_sequenced, Fx):
     """
-    Calculate the probability of no genotype call for all allele frequencies.
+    Calculate the GATK multi-sample probability of no genotype call for all allele frequencies.
     
     Args:
-        coverage_distribution (numpy.ndarray): Coverage distribution.
+        coverage_distribution (numpy.ndarray): Depth of coverage distribution.
         n_sequenced (int): Number of sequenced haplotypes.
     
     Returns:
@@ -364,7 +364,7 @@ def probability_of_no_call_1D(coverage_distribution, n_sequenced, Fx):
     # Extract partitions and their probabilities for a given number of samples
     partitions, partitions_probabilities = partitions_and_probabilities(n_sequenced, 'genotype', Fx)
     
-    # Array of depths corresponding to coverage_distribution
+    # Array of depths corresponding to depth of coverage_distribution
     depths = numpy.arange(len(coverage_distribution[0]))
     
     # Create an empty array to store the final probabilities of no genotype calling
@@ -410,7 +410,7 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
     Calculate the probability of having enough individuals covered to obtain n_subsampling successful genotypes.
     
     Args:
-        coverage_distribution (numpy.ndarray): Coverage distribution.
+        coverage_distribution (numpy.ndarray): Depth of coverage distribution.
         n_sequenced (int): Number of sequenced haplotypes.
         n_subsampling (int): Number of haplotypes to subsample.
     
@@ -493,10 +493,10 @@ def projection_matrix(n_sequenced, n_subsampling, F):
 
 def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     """
-        Calculate the calling error matrix based on the coverage distribution and subsampling.
+        Calculate the calling error matrix based on the depth of coverage distribution and subsampling.
         
         Args:
-            coverage_distribution (numpy.ndarray): Coverage distribution.
+            coverage_distribution (numpy.ndarray): Depth of coverage distribution.
             n_subsampling (int): Number of haplotypes to subsample.
         
         Returns:
@@ -505,7 +505,7 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     # Extract partitions and their probabilities for a given number of samples
     partitions, partitions_probabilities = partitions_and_probabilities(n_subsampling, 'genotype', Fx)
     
-    # Array of depths corresopnding to coverage distribution
+    # Array of depths corresopnding to depth of coverage distribution
     depths = coverage_distribution[0][1:]
     
     # Probability that a heterozygote is called incorrectly
@@ -541,14 +541,14 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     
     return trans_matrix
 
-def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
+def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
     """
-    Calculate transformation matrices for low-coverage calling model.
+    Calculate transformation matrices for the low-pass calling model based on the GATK multi-sample algorithm.
 
     Args:
         nsub: Final sample size (in haplotypes)
         nseq: Sequenced sample size (in haplotypes)
-        cov_dist: Coverage distribution (list of one array per population)
+        cov_dist: Depth of coverage distribution (list of one array per population)
         sim_threshold: This method uses the probability an allele is not called
                     to switch between analytic and simulation-based methods.
                     Setting this threshold to 0 will always use simulations,
@@ -559,7 +559,7 @@ def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
     # As a lower bound on the probability that a allele with a given frequency is not called,
     # use the probability it is not called considering only the reads in each individual population.
     # We calculate them separately, then combine them into a single matrix
-    prob_nocall_by_pop = [probability_of_no_call_1D(cov_dist_, nseq_, Fx_) for (cov_dist_, nseq_, Fx_) in zip(cov_dist.values(), nseq, Fx)]
+    prob_nocall_by_pop = [probability_of_no_call_1D_GATK_multisample(cov_dist_, nseq_, Fx_) for (cov_dist_, nseq_, Fx_) in zip(cov_dist.values(), nseq, Fx)]
     prob_nocall_ND = 1
     for apn_1D in prob_nocall_by_pop:
         prob_nocall_ND = numpy.multiply.outer(prob_nocall_ND, apn_1D)
@@ -578,15 +578,15 @@ def low_cov_precalc(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
     ### For simulation calling model
     # Indices of entries in afs where we should use simulation
     simulated_indices = numpy.argwhere(use_sim_mat)
-    # Do the simulations (Note, arbitrarily using 1000 per entry here. Should think harder about tradeoffs.)
-    sim_outputs = {tuple(af):simulate_genotype_calling(cov_dist, af, nseq, nsub, nsim, Fx) for af in simulated_indices}
+    # Do the simulations
+    sim_outputs = {tuple(af):simulate_GATK_multisample_calling(cov_dist, af, nseq, nsub, nsim, Fx) for af in simulated_indices}
     
     return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
 
 
-def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
+def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
     """
-    Generate a version of func accounting for low coverage distortion.
+    Generate a version of func accounting for low-pass distortion based on the GATK multi-sample algorithm.
 
     Args:
         demo_model: Specified demographic model in dadi.
@@ -600,10 +600,10 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None
         Fx: Inbreeding coefficient.
 
     """
-    # Compute coverage distribution
+    # Compute depth of coverage distribution
     cov_dist = compute_cov_dist(dd, pop_ids)
     
-    # Used to cache matrices used for low-coverage transformation
+    # Used to cache matrices used for low-pass transformation
     precalc_cache = {}
 
     if Fx is None:
@@ -613,15 +613,15 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None
                          "Fx=1. If organism is truly perfectly inbreed, then it can be "
                          "treated as haploid, so low coverge does not introduce bias.")
     
-    def lowcov_func(*args, **kwargs):
+    def lowpass_func(*args, **kwargs):
         nonlocal Fx
         new_args = [args[0]] + [nseq] + list(args[2:])
         model = func(*new_args, **kwargs)
         if model.folded:
-            raise ValueError('Low coverage model not tested for folded model spectra yet.')
+            raise ValueError('Low-pass model not tested for folded model spectra yet.')
         
         if tuple(nsub) not in precalc_cache:
-            precalc_cache[tuple(nsub)] = low_cov_precalc(nsub, nseq, cov_dist, sim_threshold, Fx)
+            precalc_cache[tuple(nsub)] = low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold, Fx)
         prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs = precalc_cache[tuple(nsub)]
         # First, transform entries we do analytically. We zero out the entries
         # we'll simulate, since we'll handle their contribution later.
@@ -644,6 +644,6 @@ def make_low_cov_func(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None
         output.extrap_x = model.extrap_x
         
         return output
-    lowcov_func.__name__ = func.__name__ + '_lowcov'
-    lowcov_func.__doc__ = func.__doc__
-    return lowcov_func
+    lowpass_func.__name__ = func.__name__ + '_lowcov'
+    lowpass_func.__doc__ = func.__doc__
+    return lowpass_func
