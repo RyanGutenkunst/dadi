@@ -27,7 +27,8 @@ dependencies = [
     "matplotlib",
     "numpy<2",
     "scipy",
-    "nlopt",
+    "demes",
+    #"nlopt",
 ]
 
 [project.urls]
