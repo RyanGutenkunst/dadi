@@ -608,7 +608,7 @@ def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_thres
 
     if Fx is None:
         Fx = [0] * len(nseq)
-    elif numpy.any(np.asarray(Fx) == 1):
+    elif numpy.any(numpy.asarray(Fx) == 1):
         raise ValueError("Cannot apply low-coverage correction assuming perfect inbreeding "
                          "Fx=1. If organism is truly perfectly inbreed, then it can be "
                          "treated as haploid, so low coverge does not introduce bias.")
