@@ -203,12 +203,9 @@ def test_demes_vs_dadi(test_details):
     #self.assertTrue(np.allclose(fs_demes[6,3,2], fs_demes[6,3,2]))
 
 def import_export_match(fname, sampled_demes, sample_sizes, pts, Nref, generation_time, deme_mapping=None):
-    import demes
-    gin = demes.load(fname)
-    demes_ex = dadi.Numerics.make_extrap_func(dadi.Demes.SFS)
-    fsin = demes_ex(gin, sampled_demes, sample_sizes, pts)
+    fsin = dadi.Spectrum.from_demes(fname, sampled_demes, sample_sizes, pts)
     gout = dadi.Demes.output(Nref, deme_mapping, generation_time)
-    fsout = demes_ex(gout, sampled_demes, sample_sizes, pts)
+    fsout = dadi.Spectrum.from_demes(gout, sampled_demes, sample_sizes, pts)
     assert(np.allclose(fsin,fsout, rtol=1e-3, atol=1e-4))
 
 @pytest.mark.skipif(skip, reason="Could not load Demes")
