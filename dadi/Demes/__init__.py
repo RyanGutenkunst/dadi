@@ -110,13 +110,16 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
         if younger.deme_ids is None:
             if isinstance(younger, Split):
                 era += 1
-                younger.deme_ids = ['d{0}_{1}'.format(ii+1, era) for ii in range(len(older.deme_ids)+1)]
+                younger.deme_ids = ['d{0}_{1}'.format(era, ii+1) for ii in range(len(older.deme_ids)+1)]
             elif isinstance(younger, Remove):
                 younger.deme_ids = list(older.deme_ids)
                 del younger.deme_ids[younger.removed-1]
                 younger.deme_ids = tuple(younger.deme_ids)
             elif isinstance(younger, Reorder):
                 younger.deme_ids = [older.deme_ids[_-1] for _ in younger.neworder]
+            elif younger.duration > 0 and older.duration > 0:
+                era += 1
+                younger.deme_ids = ['d{0}_{1}'.format(era, ii+1) for ii in range(len(older.deme_ids))]
             else:
                 younger.deme_ids = older.deme_ids
 
