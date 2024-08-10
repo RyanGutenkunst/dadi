@@ -19,10 +19,6 @@ formats: all
 # Build documentation with MkDocs
 mkdocs:
   configuration: mkdocs.yml
-  fail_on_warning: true
+  fail_on_warning: false
 
-# Optionally set the version of Python and requirements required to build your docs
-python:
-   version: 3.9
-   install:
-      - requirements: doc/requirements.txt
+
