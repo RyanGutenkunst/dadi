@@ -28,7 +28,7 @@ dependencies = [
     "numpy<2",
     "scipy",
     "demes",
-    #"nlopt",
+    "nlopt",
 ]
 
 [project.urls]
