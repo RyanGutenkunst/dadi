@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dadi"
-version= "2.3.6"
+version= "2.3.7"
 
 description = "Fit population genetic models of demography and selection using diffusion approximations to the allele frequency spectrum"
 readme = "README.md"
