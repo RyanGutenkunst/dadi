@@ -584,7 +584,7 @@ def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_
     return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
 
 
-def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
+def make_low_pass_func_GATK_multisample(func, cov_dist, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
     """
     Generate a version of func accounting for low-pass distortion based on the GATK multi-sample algorithm.
 
@@ -600,8 +600,8 @@ def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_thres
         Fx: Inbreeding coefficient.
 
     """
-    # Compute depth of coverage distribution
-    cov_dist = compute_cov_dist(dd, pop_ids)
+    # # Compute depth of coverage distribution
+    # cov_dist = compute_cov_dist(dd, pop_ids)
     
     # Used to cache matrices used for low-pass transformation
     precalc_cache = {}
