@@ -512,7 +512,7 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     # Probability that a heterozygote is called incorrectly
     # Note that zero reads would be no call, so it isn't included here
     coverage_distribution_ = [x/coverage_distribution[1][1:].sum() for x in coverage_distribution[1][1:]]
-    prob_het_err = numpy.sum(coverage_distribution_ * 0.5**depths)
+    prob_het_err = 2*numpy.sum(coverage_distribution_ * 0.5**depths)
     
     # Transformation matrix
     trans_matrix = numpy.zeros((n_subsampling+1,n_subsampling+1))
