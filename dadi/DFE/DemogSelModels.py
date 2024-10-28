@@ -45,7 +45,7 @@ def two_epoch_sel(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 two_epoch_sel.__param_names__ = ['nu', 'T', 'gamma']
-two_epoch = two_epoch_sel
+# two_epoch = two_epoch_sel
 
 def IM_pre_sel(params, ns, pts):
     """
@@ -92,7 +92,7 @@ def IM_pre_sel(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 IM_pre_sel.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma1', 'gamma2']
-IM_pre = IM_pre_sel
+# IM_pre = IM_pre_sel
 
 def IM_pre_sel_single_gamma(params, ns, pts):
     """
@@ -103,7 +103,7 @@ def IM_pre_sel_single_gamma(params, ns, pts):
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
     return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
 IM_pre_sel_single_gamma.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma']
-IM_pre_single_gamma = IM_pre_sel_single_gamma
+# IM_pre_single_gamma = IM_pre_sel_single_gamma
 
 def IM_sel(params, ns, pts):
     """
@@ -131,7 +131,7 @@ def IM_sel(params, ns, pts):
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
     return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
 IM_sel.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma1', 'gamma2']
-IM = IM_sel
+# IM = IM_sel
 
 def IM_sel_single_gamma(params, ns, pts):
     """
@@ -142,7 +142,7 @@ def IM_sel_single_gamma(params, ns, pts):
     s,nu1,nu2,T,m12,m21,gamma = params
     return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
 IM_sel_single_gamma.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21', 'gamma']
-IM_single_gamma = IM_sel_single_gamma
+# IM_single_gamma = IM_sel_single_gamma
 
 def split_mig_sel(params, ns, pts):
     """
@@ -178,7 +178,7 @@ def split_mig_sel(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 split_mig_sel.__param_names__ = ['nu1', 'nu2', 'T', 'm', 'gamma1', 'gamma2']
-split_mig = split_mig_sel
+# split_mig = split_mig_sel
 
 def split_mig_sel_single_gamma(params, ns, pts):
     """
@@ -189,7 +189,7 @@ def split_mig_sel_single_gamma(params, ns, pts):
     nu1,nu2,T,m,gamma = params
     return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)
 split_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'T', 'm', 'gamma']
-split_mig_single_gamma = split_mig_sel_single_gamma
+# split_mig_single_gamma = split_mig_sel_single_gamma
 
 def split_asym_mig_sel(params, ns, pts):
     """
@@ -226,7 +226,7 @@ def split_asym_mig_sel(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 split_asym_mig_sel.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm21', 'gamma1', 'gamma2']
-split_asym_mig = split_asym_mig_sel
+# split_asym_mig = split_asym_mig_sel
 
 def split_asym_mig_sel_single_gamma(params, ns, pts):
     """
@@ -237,7 +237,7 @@ def split_asym_mig_sel_single_gamma(params, ns, pts):
     nu1,nu2,T,m12,m21,gamma = params
     return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
 split_asym_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm21', 'gamma']
-split_asym_mig_single_gamma = split_asym_mig_sel_single_gamma
+# split_asym_mig_single_gamma = split_asym_mig_sel_single_gamma
 
 def split_delay_mig_sel(params, ns, pts):
     """
@@ -307,7 +307,7 @@ def three_epoch_sel(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
 three_epoch_sel.__param_names__ = ['nuB', 'nuF', 'TB', 'TF', 'gamma']
-three_epoch = three_epoch_sel
+# three_epoch = three_epoch_sel
 
 def bottlegrowth_2d_sel(params, ns, pts):
     """
