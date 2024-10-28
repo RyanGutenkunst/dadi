@@ -409,6 +409,9 @@ def probability_of_no_call_1D_GATK_multisample(coverage_distribution, n_sequence
 def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n_subsampling):
     """
     Calculate the probability of having enough individuals covered to obtain n_subsampling successful genotypes.
+
+    Note: Because we consider this only for sites already called as variant, it is already guaranteed that
+          at least one individual has coverage.
     
     Args:
         coverage_distribution (numpy.ndarray): Depth of coverage distribution.
@@ -421,13 +424,14 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
     # Initialize the probability of having enough individuals covered
     prob_enough_individuals_covered = 0
         
-    # Use math.ceil to round up, as you need a minimum of n_subsampling//2 covered individuals
-    for covered in range(int(math.ceil(n_subsampling/2)), n_sequenced//2+1):
+    # Use math.ceil to round up, as you need a minimum of n_subsampling//2-1 covered individuals
+    # (We already know at least one individual is covered, if the site is already called as variant.)
+    for covered in range(int(math.ceil(n_subsampling/2))-1, n_sequenced//2+1-1):
         # Calculate the probability of having enough individuals covered
         prob_enough_individuals_covered += (
-            coverage_distribution[1][0]**(n_sequenced//2 - covered) *
+            coverage_distribution[1][0]**(n_sequenced//2-1 - covered) *
             numpy.sum(coverage_distribution[1][1:]) ** covered *
-            comb(n_sequenced//2, covered)
+            comb(n_sequenced//2-1, covered)
         )
     
     return prob_enough_individuals_covered
