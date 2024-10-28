@@ -585,7 +585,7 @@ def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_
     return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
 
 
-def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
+def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None, nsim=1000):
     """
     Generate a version of func accounting for low-pass distortion based on the GATK multi-sample algorithm.
 
@@ -599,7 +599,7 @@ def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_thres
             Setting this threshold to 0 will always use simulations, while setting it to 1 will always use analytics. 
             Values in between indicate that simulations will be employed for thresholds below that value.
         Fx: Inbreeding coefficient.
-
+        nsim: Number of simulations to use per potential allele frequency combination
     """
     # Compute depth of coverage distribution
     cov_dist = compute_cov_dist(dd, pop_ids)
@@ -622,7 +622,7 @@ def make_low_pass_func_GATK_multisample(func, dd, pop_ids, nseq, nsub, sim_thres
             raise ValueError('Low-pass model not tested for folded model spectra yet.')
         
         if tuple(nsub) not in precalc_cache:
-            precalc_cache[tuple(nsub)] = low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold, Fx)
+            precalc_cache[tuple(nsub)] = low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold, Fx, nsim=nsim)
         prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs = precalc_cache[tuple(nsub)]
         # First, transform entries we do analytically. We zero out the entries
         # we'll simulate, since we'll handle their contribution later.
