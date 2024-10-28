@@ -7,13 +7,13 @@ class TestLowPassFunctions(unittest.TestCase):
 
     def test_compute_cov_dist(self):
         data_dict = {
-            'entry1': {'coverage': {'pop1': [1, 2, 2, 3, 4], 'pop2': [2, 1, 3, 3, 1]}},
-            'entry2': {'coverage': {'pop1': [1, 1, 2, 2, 3], 'pop2': [1, 3, 3, 4, 1]}},
+            'entry1': {'coverage': {'pop1': [1, 2, 2, 3, 6], 'pop2': [2, 1, 3, 3, 1]}},
+            'entry2': {'coverage': {'pop1': [1, 1, 2, 2, 3], 'pop2': [1, 3, 3, 6, 1]}},
         }
         pop_ids = ['pop1', 'pop2']
         expected_result = {
-            'pop1': np.array([[1, 2, 3, 4], [0.3, 0.4, 0.2, 0.1]]),
-            'pop2': np.array([[1, 2, 3, 4], [0.4, 0.1, 0.4, 0.1]])
+            'pop1': np.array([[0, 1, 2, 3, 4, 5, 6], [0, 0.3, 0.4, 0.2, 0, 0, 0.1]]),
+            'pop2': np.array([[0, 1, 2, 3, 4, 5, 6], [0, 0.4, 0.1, 0.4, 0, 0, 0.1]])
         }
         result = LowPass.compute_cov_dist(data_dict, pop_ids)
         for pop in pop_ids:

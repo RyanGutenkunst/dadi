@@ -1,5 +1,5 @@
 import itertools
-import numpy
+import numpy, numpy as np
 import dadi
 import warnings
 
@@ -29,11 +29,12 @@ def compute_cov_dist(data_dict, pop_ids):
                   is not found in the data dictionary.
     """
     try:
-        # Dictionary comprehension to compute the depth of coverage distribution
-        coverage_distribution = {pop: numpy.array([
-            *numpy.unique(numpy.concatenate([numpy.array(list(entry['coverage'][pop])) for entry in data_dict.values()]), return_counts=True)
-        ]) for pop in pop_ids}
-        
+        coverage_distribution = {}
+        for pop in pop_ids:
+            all_depths = numpy.concatenate([entry['coverage'][pop] for entry in data_dict.values()])
+            max_depth = all_depths.max()
+            binning = numpy.arange(max_depth+2)-0.5
+            coverage_distribution[pop] = [np.arange(max_depth+1), numpy.histogram(all_depths, bins=binning)[0]]
         # Normalize counts
         coverage_distribution = {pop: numpy.array([elements, counts / counts.sum()]) for pop, (elements, counts) in coverage_distribution.items()}
         
