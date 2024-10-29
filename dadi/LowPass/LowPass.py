@@ -546,7 +546,7 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     
     return trans_matrix
 
-def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
+def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1e4):
     """
     Calculate transformation matrices for the low-pass calling model based on the GATK multi-sample algorithm.
 
