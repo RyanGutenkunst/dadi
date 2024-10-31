@@ -386,10 +386,14 @@ def probability_of_no_call_1D_GATK_multisample(coverage_distribution, n_sequence
             
             # Probability of getting one read for the homozygous alt
             # P_case1a: Probability of 1 read in homozygous alt and 0 in heterozygous
-            P_case1a = (
-                num_hom_alt * coverage_distribution[1][1] * coverage_distribution[1][0]**(num_hom_alt - 1) *
-                numpy.sum(coverage_distribution[1] * 0.5**depths)**num_heterozygous
-            )
+            if num_hom_alt > 0:
+                P_case1a = (
+                    num_hom_alt * coverage_distribution[1][1] * coverage_distribution[1][0]**(num_hom_alt - 1) *
+                    numpy.sum(coverage_distribution[1] * 0.5**depths)**num_heterozygous
+                )
+            else:
+                # The above expression can return nan when it should be 0, if num_hom_alt==0 and coverage_distribution[1][0]==0.
+                P_case1a = 0
             
             # P_case1b: Probability of 1 read in heterozygous and 0 in homozygous alt
             P_case1b = (
