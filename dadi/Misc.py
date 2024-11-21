@@ -433,8 +433,250 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
 
     return dd, sample_sizes
 
+def make_data_dict_vcf_cyvcf2(vcf_filename, popinfo_filename, subsample=None, filter=True, calc_coverage=False,
+                       flanking_info=[None, None], extract_ploidy=False, ancestral_allele_entry="AA"):
+    """
+    Parse a VCF file containing genomic sequence information, along with a file
+    identifying the population of each sample, and store the information in
+    a properly formatted dictionary.
+    
+    Each file may be zipped (.zip) or gzipped (.gz). If a file is zipped,
+    it must be the only file in the archive, and the two files cannot be zipped
+    together. Both files must be present for the function to work.
+    
+    vcf_filename : Name of VCF file to work with. The function currently works
+                   for biallelic SNPs only, so if REF or ALT is anything other
+                   than a single base pair (A, C, T, or G), the allele will be
+                   skipped. Additionally, genotype information must be present
+                   in the FORMAT field GT, and genotype info must be known for
+                   every sample, else the SNP will be skipped. If the ancestral
+                   allele is known it should be specified in INFO field 'AA'.
+                   Otherwise, it will be set to '-'.
+    
+    popinfo_filename : Name of file containing the population assignments for
+                       each sample in the VCF. If a sample in the VCF file does
+                       not have a corresponding entry in this file, it will be
+                       skipped. See _get_popinfo for information on how this
+                       file must be formatted.
+    
+    subsample : Dictionary with population names used in the popinfo_filename
+                as keys and the desired sample size (in number of individuals)
+                for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
+                two populations.
+    
+    filter : If set to True, alleles will be skipped if they have not passed
+             all filters (i.e. either 'PASS' or '.' must be present in FILTER
+             column.
+    
+    flanking_info : Flanking information for the reference and/or ancestral
+                    allele can be provided as field(s) in the INFO column. To
+                    add this information to the dict, flanking_info should
+                    specify the names of the fields that contain this info as a
+                    list (e.g. ['RFL', 'AFL'].) If context info is given for
+                    only one allele, set the other item in the list to None,
+                    (e.g. ['RFL', None]). Information can be provided as a 3
+                    base-pair sequence or 2 base-pair sequence, where the first
+                    base-pair is the one immediately preceding the SNP, and the
+                    last base-pair is the one immediately following the Snumpy.
+    """
+    from cyvcf2 import VCF
+    do_subsampling = False
+    if subsample is not None:
+        do_subsampling = True
+        warnings.warn('Note on subsampling: If you will be including inbreeding in your model, '
+                      'do not project your data to smaller sample sizes in later steps of your analysis.')
+
+    if os.path.splitext(popinfo_filename)[1] == '.gz':
+        import gzip
+        popinfo_file = gzip.open(popinfo_filename)
+    elif os.path.splitext(popinfo_filename)[1] == '.zip':
+        import zipfile
+        archive = zipfile.ZipFile(popinfo_filename)
+        namelist = archive.namelist()
+        if len(namelist) != 1:
+            raise ValueError("Must be only a single popinfo file in zip "
+                             "archive: {}".format(popinfo_filename))
+        popinfo_file = archive.open(namelist[0])
+    else:
+        popinfo_file = open(popinfo_filename)
+
+    # pop_dict has key, value pairs of "SAMPLE_NAME" : "POP_NAME"
+    try:
+        popinfo_dict = _get_popinfo(popinfo_file)
+    except:
+        raise ValueError('Failed in parsing popinfo file.')
+
+    vcf = VCF(vcf_filename)
+    data_dict = {}
+    ploidy = ''
+    
+    # cyvcf2 sumarizes genotypes by a singal numeric value:
+    # 0, 1, 2, 3 == HOM_REF, HET, UNKNOWN (ex, ./.), HOM_ALT
+    gt_type_dict = {
+    0: numpy.array([2,0]),
+    1: numpy.array([1,1]),
+    2: numpy.array([0,0]),
+    3: numpy.array([0,2]),
+    }
+
+    poplist = []
+    pop_index = collections.defaultdict(list)
+    for sample in popinfo_dict:
+        pop = popinfo_dict[sample]
+        pop_index[pop].append(vcf.samples.index(sample))
+        poplist.append(pop)
+    popinfo_file.close()
+
+    for var in vcf:
+        if filter and 'PASS' not in var.FILTERS and '.' not in var.FILTERS:
+            continue
+        # Skip multiallelic sites
+        if not var.is_snp:
+            continue
+
+        ref, alt = var.REF, var.ALT[0]
+
+
+        if ref not in ['A', 'C', 'G', 'T'] or alt not in ['A', 'C', 'G', 'T']:
+            # Skip line if site is not an SNP
+            continue
+
+        snp_id = '_'.join([var.CHROM, str(var.POS)])
+        snp_dict = {}
+
+        snp_dict['segregating'] = (ref, alt)
+        snp_dict['context'] = f'-{ref}-'
+
+        outgroup_allele = '-'
+        if var.INFO.get(ancestral_allele_entry) != None:
+            outgroup_allele = var.INFO.get(ancestral_allele_entry).upper()
+        # elif var.INFO.get('AA_ensembl') != None:
+        #     outgroup_allele = var.INFO.get('AA_ensembl').upper()
+        # elif var.INFO.get('AA_chimp') != None:
+        #     outgroup_allele = var.INFO.get('AA_chimp').upper()
+        if outgroup_allele not in ['A','C','G','T']:
+            # Skip if ancestral not single base A, C, G, or T
+            outgroup_allele = '-'
+
+        snp_dict['outgroup_allele'] = outgroup_allele
+        snp_dict['outgroup_context'] = f'-{outgroup_allele}-'
+
+        # Need example of how this works
+        # # Add flanking info if it is present
+        # rflank, aflank = flanking_info
+        # for field in info:
+        #     if rflank and field.startswith(rflank):
+        #         flank = field[len(rflank)+1:].upper()
+        #         if not (len(flank) == 2 or len(flank) == 3):
+        #             continue
+        #         prevb, nextb = flank[0], flank[-1]
+        #         if prevb not in ['A','C','T','G']:
+        #             prevb = '-'
+        #         if nextb not in ['A','C','T','G']:
+        #             nextb = '-'
+        #         snp_dict['context'] = prevb + ref + nextb
+        #         continue
+        #     if aflank and field.startswith(aflank):
+        #         flank = field[len(aflank)+1:].upper()
+        #         if not (len(flank) == 2 or len(flank) == 3):
+        #             continue
+        #         prevb, nextb = flank[0], flank[-1]
+        #         if prevb not in ['A','C','T','G']:
+        #             prevb = '-'
+        #         if nextb not in ['A','C','T','G']:
+        #             nextb = '-'
+        #         snp_dict['outgroup_context'] = prevb + outgroup_allele + nextb
+        
+
+        # gtindex = var.FORMAT.index('GT')
+
+        # try:
+        #     dpindex = var.FORMAT.index('DP')
+        # except ValueError:
+        #     dpindex = None
+        # # if var.POS == 3262549:
+        # #     break
+
+
+
+        # Get the genotypes that were sequenced
+        gt_dict = {}
+        seqd_f = {}
+        for pop in pop_index:
+            # Only take samples where DP (read depth) is not 0:
+            seqd_dp = var.gt_depths[pop_index[pop]] == 0
+            # seqd_ad = var.gt_ref_depths[pop_index[pop]] + var.gt_alt_depths[pop_index[pop]] == 0
+            # Only take samples where GT is not ./.:
+            seqd_gt = var.gt_types[pop_index[pop]] == 2
+            # Switch True and False values to only grab sites
+            # where DP != 0 and GT != ./.
+            seqd_f[pop] = ~numpy.array(seqd_dp + seqd_gt)
+            # seqd_f[pop] = seqd_dp + seqd_gt + seqd_ad
+            gt_dict[pop] = var.gt_types[pop_index[pop]][seqd_f[pop]]
+
+        # === Coverage ===
+        if calc_coverage:
+            if 'AD' in var.FORMAT:
+                coverage_dict = collections.defaultdict(tuple)
+                for pop in pop_index:
+                    for i in range(len(gt_dict[pop])):
+                        coverage_dict[pop] += (
+                            int(var.gt_ref_depths[pop_index[pop]][seqd_f[pop]][i]) + 
+                            int(var.gt_alt_depths[pop_index[pop]][seqd_f[pop]][i]),
+                            )
+            else:
+                ###
+                # Should we be raising a warning here?
+                # If so, maybe even earlier?
+                ###
+                coverage_dict = '-'
+            snp_dict['coverage'] = dict(coverage_dict)
+
+        # Get the calls
+        subsample_dict = {}
+        calls_dict = {}
+        for pop in poplist:
+            calls = numpy.array([0, 0])
+            if do_subsampling:
+                # for pop in poplist:
+                # subsample_dict[pop] = []
+                if len(gt_dict[pop]) < subsample[pop]:
+                    # Not enough calls for this SNP
+                    break
+                idx = numpy.random.choice(
+                    [i for i in range(0,len(gt_dict[pop]))], subsample[pop], 
+                    replace=False)
+                for ii in idx:
+                    calls += gt_type_dict[int(gt_dict[pop][ii])]
+            else:
+                for gt in gt_dict[pop]:
+                    calls += gt_type_dict[gt]
+            calls_dict[pop] = tuple([int(call) for call in calls])
+            # calls_dict[pop] = calls
+        snp_dict['calls'] = calls_dict
+
+        # Add site to data_dict
+        data_dict[snp_id] = snp_dict
+
+    if extract_ploidy and ploidy == '':
+        ploidy = var.ploidy
+        return data_dict, ploidy
+    else:
+        return data_dict
+    # break
+
+    # dps = var.gt_depths[pop_index['Mmd_FRA']]
+
+    # dot_less = var.gt_types[pop_index['Mmd_FRA']]
+    # dot_less_2 = dot_less[dps != 0]
+
+    # gts = var.gt_types[pop_index['Mmd_FRA']]
+    # gts_2 = gts[dps != 0]
+    # gts_3 = gts_2[dot_less_2 != 2]
+
+
 def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=True, calc_coverage=False,
-                       flanking_info=[None, None], extract_ploidy=False):
+                       flanking_info=[None, None], extract_ploidy=False, seed=None):
     """
     Parse a VCF file containing genomic sequence information, along with a file
     identifying the population of each sample, and store the information in
@@ -504,7 +746,12 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     except:
         raise ValueError('Failed in parsing popinfo file.')
     popinfo_file.close()
-    
+
+    # Check that the popinfo_file populations match requested populations for subsampling
+    if len(subsample) != len(popinfo_dict):
+        warnings.warn("Length of subsample populations is less than populations in population info file. " +\
+            "Data dictionary will only be populated bypopulations in the subsample dictionary.")
+
     # Open VCF file
     if os.path.splitext(vcf_filename)[1] == '.gz':
         import gzip
@@ -609,6 +856,12 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         except ValueError:
             dpindex = None
 
+        try:
+            covindex = cols[8].split(':').index('AD')
+        except:
+            covindex = None
+
+
         # === New Feature Addition ===
         if calc_coverage:
             coverage_dict = {}
@@ -625,6 +878,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             # Collect data for all genotyped samples
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
+                    continue
+                if pop not in subsample:
                     continue
                 gt = sample.split(':')[gtindex]
 
@@ -654,6 +909,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
             for pop, genotypes in subsample_dict.items():
+                # print(pop, genotypes)
                 if pop not in calls_dict:
                     calls_dict[pop] = (0, 0)
                 if len(genotypes) < subsample[pop]:
@@ -684,16 +940,19 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             for pop, sample in zip(poplist, cols[9:]):
                 if pop is None:
                     continue
-                # Skip if DP=0 or DP=.
-                try:
-                    if sample.split(':')[dpindex] == '0' or sample.split(':')[dpindex] == '.':
-                        continue
-                except: 
-                    pass
+
                 if pop not in calls_dict:
                     calls_dict[pop] = (0,0)
                     if calc_coverage:
                         coverage_dict[pop] = ()
+
+                # Skip if DP=0 or DP=.
+                try:
+                    if sample.split(':')[covindex] == '0,0' or sample.split(':')[dpindex] == '0':
+                        continue
+                except: 
+                    pass
+
                 # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
                 #g1, g2 = gt[0], gt[2]
