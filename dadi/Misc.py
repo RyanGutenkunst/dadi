@@ -748,9 +748,10 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     popinfo_file.close()
 
     # Check that the popinfo_file populations match requested populations for subsampling
-    if len(subsample) != len(popinfo_dict):
-        warnings.warn("Length of subsample populations is less than populations in population info file. " +\
-            "Data dictionary will only be populated bypopulations in the subsample dictionary.")
+    if subsample is not None:
+        if len(subsample) != len(popinfo_dict):
+            warnings.warn("Length of subsample populations is less than populations in population info file. " +\
+                "Data dictionary will only be populated bypopulations in the subsample dictionary.")
 
     # Open VCF file
     if os.path.splitext(vcf_filename)[1] == '.gz':
