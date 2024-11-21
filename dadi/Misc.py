@@ -906,6 +906,12 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                         coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
                         coverage_dict[pop] = coverages + (coverage_count, )
             
+            # Set a seed if requested, to make subsampled SFS replicable
+            if seed == None:
+                pass
+            else:
+                numpy.random.seed(seed)
+
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
             for pop, genotypes in subsample_dict.items():
