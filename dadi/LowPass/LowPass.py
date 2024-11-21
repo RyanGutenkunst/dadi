@@ -1,5 +1,5 @@
 import itertools
-import numpy
+import numpy, numpy as np
 import dadi
 import warnings
 
@@ -29,11 +29,12 @@ def compute_cov_dist(data_dict, pop_ids):
                   is not found in the data dictionary.
     """
     try:
-        # Dictionary comprehension to compute the depth of coverage distribution
-        coverage_distribution = {pop: numpy.array([
-            *numpy.unique(numpy.concatenate([numpy.array(list(entry['coverage'][pop])) for entry in data_dict.values()]), return_counts=True)
-        ]) for pop in pop_ids}
-        
+        coverage_distribution = {}
+        for pop in pop_ids:
+            all_depths = numpy.concatenate([entry['coverage'][pop] for entry in data_dict.values()])
+            max_depth = all_depths.max()
+            binning = numpy.arange(max_depth+2)-0.5
+            coverage_distribution[pop] = [np.arange(max_depth+1), numpy.histogram(all_depths, bins=binning)[0]]
         # Normalize counts
         coverage_distribution = {pop: numpy.array([elements, counts / counts.sum()]) for pop, (elements, counts) in coverage_distribution.items()}
         
@@ -385,10 +386,14 @@ def probability_of_no_call_1D_GATK_multisample(coverage_distribution, n_sequence
             
             # Probability of getting one read for the homozygous alt
             # P_case1a: Probability of 1 read in homozygous alt and 0 in heterozygous
-            P_case1a = (
-                num_hom_alt * coverage_distribution[1][1] * coverage_distribution[1][0]**(num_hom_alt - 1) *
-                numpy.sum(coverage_distribution[1] * 0.5**depths)**num_heterozygous
-            )
+            if num_hom_alt > 0:
+                P_case1a = (
+                    num_hom_alt * coverage_distribution[1][1] * coverage_distribution[1][0]**(num_hom_alt - 1) *
+                    numpy.sum(coverage_distribution[1] * 0.5**depths)**num_heterozygous
+                )
+            else:
+                # The above expression can return nan when it should be 0, if num_hom_alt==0 and coverage_distribution[1][0]==0.
+                P_case1a = 0
             
             # P_case1b: Probability of 1 read in heterozygous and 0 in homozygous alt
             P_case1b = (
@@ -408,6 +413,9 @@ def probability_of_no_call_1D_GATK_multisample(coverage_distribution, n_sequence
 def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n_subsampling):
     """
     Calculate the probability of having enough individuals covered to obtain n_subsampling successful genotypes.
+
+    Note: Because we consider this only for sites already called as variant, it is already guaranteed that
+          at least one individual has coverage.
     
     Args:
         coverage_distribution (numpy.ndarray): Depth of coverage distribution.
@@ -420,13 +428,14 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
     # Initialize the probability of having enough individuals covered
     prob_enough_individuals_covered = 0
         
-    # Use math.ceil to round up, as you need a minimum of n_subsampling//2 covered individuals
-    for covered in range(int(math.ceil(n_subsampling/2)), n_sequenced//2+1):
+    # Use math.ceil to round up, as you need a minimum of n_subsampling//2-1 covered individuals
+    # (We already know at least one individual is covered, if the site is already called as variant.)
+    for covered in range(int(math.ceil(n_subsampling/2))-1, n_sequenced//2+1-1):
         # Calculate the probability of having enough individuals covered
         prob_enough_individuals_covered += (
-            coverage_distribution[1][0]**(n_sequenced//2 - covered) *
+            coverage_distribution[1][0]**(n_sequenced//2-1 - covered) *
             numpy.sum(coverage_distribution[1][1:]) ** covered *
-            comb(n_sequenced//2, covered)
+            comb(n_sequenced//2-1, covered)
         )
     
     return prob_enough_individuals_covered
@@ -511,7 +520,7 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     # Probability that a heterozygote is called incorrectly
     # Note that zero reads would be no call, so it isn't included here
     coverage_distribution_ = [x/coverage_distribution[1][1:].sum() for x in coverage_distribution[1][1:]]
-    prob_het_err = numpy.sum(coverage_distribution_ * 0.5**depths)
+    prob_het_err = 2*numpy.sum(coverage_distribution_ * 0.5**depths)
     
     # Transformation matrix
     trans_matrix = numpy.zeros((n_subsampling+1,n_subsampling+1))
@@ -541,7 +550,7 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
     
     return trans_matrix
 
-def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1000):
+def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold=1e-2, Fx=0, nsim=1e4):
     """
     Calculate transformation matrices for the low-pass calling model based on the GATK multi-sample algorithm.
 
@@ -583,8 +592,7 @@ def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_
     
     return prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs
 
-
-def make_low_pass_func_GATK_multisample(func, cov_dist, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None):
+def make_low_pass_func_GATK_multisample(func, cov_dist, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=None, nsim=1000):
     """
     Generate a version of func accounting for low-pass distortion based on the GATK multi-sample algorithm.
 
@@ -598,7 +606,7 @@ def make_low_pass_func_GATK_multisample(func, cov_dist, pop_ids, nseq, nsub, sim
             Setting this threshold to 0 will always use simulations, while setting it to 1 will always use analytics. 
             Values in between indicate that simulations will be employed for thresholds below that value.
         Fx: Inbreeding coefficient.
-
+        nsim: Number of simulations to use per potential allele frequency combination
     """
     # # Compute depth of coverage distribution
     # cov_dist = compute_cov_dist(dd, pop_ids)
@@ -621,7 +629,7 @@ def make_low_pass_func_GATK_multisample(func, cov_dist, pop_ids, nseq, nsub, sim
             raise ValueError('Low-pass model not tested for folded model spectra yet.')
         
         if tuple(nsub) not in precalc_cache:
-            precalc_cache[tuple(nsub)] = low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold, Fx)
+            precalc_cache[tuple(nsub)] = low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_threshold, Fx, nsim=nsim)
         prob_nocall_ND, use_sim_mat, proj_mats, heterr_mats, sim_outputs = precalc_cache[tuple(nsub)]
         # First, transform entries we do analytically. We zero out the entries
         # we'll simulate, since we'll handle their contribution later.
