@@ -23,7 +23,7 @@ nav:
         - 'Triallelic spectra': 'user-guide/triallelic-spectra.md'
         - 'DFE inference': 'user-guide/dfe-inference.md'
         - 'Inbreeding': 'user-guide/inbreeding.md'
-        - 'Low-Pass: user-guide/low-pass.md'
+        - 'Low-Pass': 'user-guide/low-pass.md'
         - 'Polyploid subgenomes': 'user-guide/polyploid-subgenomes.md'
         - 'GPU computing': 'user-guide/GPU-computing.md'
         - 'Demes integration': 'user-guide/demes.md'
