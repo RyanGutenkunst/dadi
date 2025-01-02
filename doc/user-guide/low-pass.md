@@ -33,7 +33,18 @@ demo_model = dadi.Numerics.make_extrap_func(dadi.Demographics1D.growth)
 
 #### Wrap the demographic model with low-pass model
 ```python
-demo_model_lp = LowCoverage.make_low_cov_func(demo_model, dd, pop_ids, nseq, nsub, sim_threshold=1e-2, Fx=[0])
+demo_model_lp = LowPass.make_low_cov_func(demo_model, cov_dist, nseq, nsub, sim_threshold=1e-2, Fx=[0])
+```
+
+
+#### Applying the Low-Pass Model to Any AFS
+The `LowPass.make_low_pass_func_GATK_multisample` method enables users to seamlessly apply the low-pass model to any AFS. By leveraging a straightforward passthrough function `(_passthrough_sfs)`, the method processes the AFS directly through the low-pass model.
+
+```python
+def _passthrough_sfs(sfs, *args, **kwargs):
+    return sfs
+apply_low_pass_GATK_multisample = LowPass.make_low_pass_func_GATK_multisample(_passthrough_sfs, cov_dist, [32], [32], sim_threshold=1e-2, Fx=[0])
+sfs_lowpass = apply_low_pass_GATK_multisample(sfs)
 ```
 
 **Notes**:
