@@ -33,7 +33,8 @@ demo_model = dadi.Numerics.make_extrap_func(dadi.Demographics1D.growth)
 
 #### Wrap the demographic model with low-pass model
 ```python
-demo_model_lp = LowPass.make_low_cov_func(demo_model, cov_dist, nseq, nsub, sim_threshold=1e-2, Fx=[0])
+from dadi.LowPass import LowPass
+demo_model_lp = LowPass.make_low_pass_func_GATK_multisample(demo_model, cov_dist, nseq, nsub, sim_threshold=1e-2, Fx=[0])
 ```
 
 
