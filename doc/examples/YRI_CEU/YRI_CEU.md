@@ -119,7 +119,7 @@ print('Beginning optimization ************************************************')
 popt = dadi.Inference.opt(p0, data, func_ex, pts_l, 
                           lower_bound=lower_bound,
                           upper_bound=upper_bound,
-                          verbose=len(p0), maxiter=3)
+                          verbose=len(p0), maxeval=60)
 # The verbose argument controls how often progress of the optimizer should be
 # printed. It's useful to keep track of optimization process.
 print('Finshed optimization **************************************************')

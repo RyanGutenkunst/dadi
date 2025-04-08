@@ -64,24 +64,24 @@ fig.clear()
 # Note that projection creates fractional entries in the spectrum,
 # so vmin < 1 is sensible.
 ax = fig.add_subplot(2,3,1)
-dadi.Plotting.plot_single_2d_sfs(fs, vmin=1e-2, ax=ax)
+dadi.Plotting.plot_single_2d_sfs(fs, vmin=1e-2, ax=ax, show=False)
 ax.set_title('Orignal data')
 
 ax = fig.add_subplot(2,3,2)
-dadi.Plotting.plot_single_2d_sfs(fs_folded, vmin=1e-2, ax=ax)
+dadi.Plotting.plot_single_2d_sfs(fs_folded, vmin=1e-2, ax=ax, show=False)
 ax.set_title('Folded original data')
 
 ax = fig.add_subplot(2,3,3)
-dadi.Plotting.plot_single_2d_sfs(boots[0], vmin=1e-2, ax=ax)
+dadi.Plotting.plot_single_2d_sfs(boots[0], vmin=1e-2, ax=ax, show=False)
 ax.set_title('Bootstrap from original data')
 
 # Subsampling does not create those fractional entries.
 ax = fig.add_subplot(2,3,4)
-dadi.Plotting.plot_single_2d_sfs(fs_subsample, vmin=1e-2, ax=ax)
+dadi.Plotting.plot_single_2d_sfs(fs_subsample, vmin=1e-2, ax=ax, show=False)
 ax.set_title('Subsampled original data')
 
 ax = fig.add_subplot(2,3,6)
-dadi.Plotting.plot_single_2d_sfs(boots_subsample[0], vmin=1e-2, ax=ax)
+dadi.Plotting.plot_single_2d_sfs(boots_subsample[0], vmin=1e-2, ax=ax, show=False)
 ax.set_title('Bootstrap subsampled data')
 
 fig.tight_layout()
