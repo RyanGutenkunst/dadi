@@ -25,13 +25,13 @@ if __name__ == '__main__':
     ns = [250]
 
     # Integrate over a range of gammas
-    #pts_l = [600, 800, 1000]
-    #spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch, pts_l=pts_l, 
-    #                      gamma_bounds=(1e-5, 500), gamma_pts=100, verbose=True,
-    #                      mp=True)
+    pts_l = [600, 800, 1000]
+    spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch_sel, pts=pts_l, 
+                         gamma_bounds=(1e-5, 500), gamma_pts=100, verbose=True,
+                         cpus=4)
     # The spectra can be pickled for usage later. This is especially convenient
     # if the process of generating the spectra takes a long time.
-    #pickle.dump(spectra, open('example_spectra.bpkl','wb'))
+    pickle.dump(spectra, open('example_spectra.bpkl','wb'))
     # To load them, use this code
     spectra = pickle.load(open('example_spectra.bpkl','rb'))
 ```
@@ -47,10 +47,10 @@ sel_params = [0.2, 1000.]
 lower_bound, upper_bound = [1e-3, 1e-2], [1, 50000.]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+popt, llopt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
                           func_args=[DFE.PDFs.gamma, theta_ns],
                           lower_bound=lower_bound, upper_bound=upper_bound, 
-                          verbose=len(sel_params), maxiter=10, multinom=False)
+                          verbose=len(sel_params), maxeval=10, multinom=False)
 
 # Get expected SFS for MLE
 model_sfs = spectra.integrate(popt, None, DFE.PDFs.gamma, theta_ns, None)
@@ -74,11 +74,11 @@ sel_params = [0.2, 0.2, 1000.]
 lower_bound, upper_bound = [1e-3, 1e-3, 1e-2], [1, 1, 50000.]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+popt, llopt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
                           func_args=[neugamma, theta_ns],
                           lower_bound=lower_bound, upper_bound=upper_bound, 
                           verbose=len(sel_params),
-                          maxiter=10, multinom=False)
+                          maxtime=10, multinom=False)
 ```
 
 
@@ -94,10 +94,10 @@ sel_params = [0.2, 1000., 0.2]
 lower_bound, upper_bound = [1e-3, 1e-2, 0], [1, 50000., 1]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.opt(p0, data, misid_func, pts=None,
+popt, llopt = dadi.Inference.opt(p0, data, misid_func, pts=None,
                           func_args=[DFE.PDFs.gamma, theta_ns],
                           lower_bound=lower_bound, upper_bound=upper_bound,
-                          verbose=len(sel_params), maxiter=10,
+                          verbose=len(sel_params), maxtime=10,
                           multinom=False)
 ```
 
@@ -108,17 +108,17 @@ popt = dadi.Inference.opt(p0, data, misid_func, pts=None,
 #
 data = dadi.Spectrum.from_file('example.fs')
 ppos = 0.1
-sel_data = theta_ns*DFE.DemogSelModels.two_epoch(tuple(demog_params) + (5,), ns, pts_l[-1])
+sel_data = theta_ns*DFE.DemogSelModels.two_epoch_sel(tuple(demog_params) + (5,), ns, pts_l[-1])
 data_pos = (1-ppos)*data + ppos*sel_data
 
 sel_params = [0.2, 1000., 0.2, 2]
 lower_bound, upper_bound = [1e-3, 1e-2, 0, 0], [1, 50000., 1, 50]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
-popt = dadi.Inference.opt(p0, data_pos, spectra.integrate_point_pos, pts=None,
-                          func_args=[DFE.PDFs.gamma, theta_ns, DFE.DemogSelModels.two_epoch], 
+popt, llopt = dadi.Inference.opt(p0, data_pos, spectra.integrate_point_pos, pts=None,
+                          func_args=[DFE.PDFs.gamma, theta_ns, DFE.DemogSelModels.two_epoch_sel], 
                           lower_bound=lower_bound, upper_bound=upper_bound, 
-                          verbose=len(sel_params), maxiter=10, multinom=False)
+                          verbose=len(sel_params), maxtime=10, multinom=False)
 ```
 
 
@@ -129,25 +129,26 @@ popt = dadi.Inference.opt(p0, data_pos, spectra.integrate_point_pos, pts=None,
 # Parameters are mu, sigma, ppops1, gammapos1, ppos2, gammapos2
 sel_params = [3,2,0.1,2,0.3,6]
 input_fs = spectra.integrate_point_pos(sel_params,None,DFE.PDFs.lognormal,theta_ns,
-                                       DFE.DemogSelModels.two_epoch, 2)
+                                       DFE.DemogSelModels.two_epoch_sel, 2)
 data = input_fs.sample()
 lower_bound, upper_bound = [-1,0.1,0,0,0,0], [5,5,1,10,1,20]
 p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
                               upper_bound=upper_bound)
 
-def ieq_constraint(p,*args):
+def ineq_constraint(p, grad):
     # Our constraint is that ppop1+ppos2 must be less than 1.
-    return [1-(p[2]-p[4])]
+    return (p[2]-p[4])-1
 
-popt = dadi.Inference.opt(p0, data, spectra.integrate_point_pos, pts=None,
-                          func_args=[DFE.PDFs.lognormal, theta_ns,
-                                     DFE.DemogSelModels.two_epoch, 2],
-                          lower_bound=lower_bound, upper_bound=upper_bound,
-                          ieq_constraint=ieq_constraint,
-                          # Fix gammapos1
-                          fixed_params=[None,None,None,2,None,None],
-                          verbose=len(sel_params),
-                          maxiter=10, multinom=False)
+popt, llopt = dadi.Inference.opt(p0, data, spectra.integrate_point_pos, pts=None,
+                                func_args=[DFE.PDFs.lognormal, theta_ns,
+                                           DFE.DemogSelModels.two_epoch_sel, 2],
+                                lower_bound=lower_bound, upper_bound=upper_bound,
+                                algorithm=nlopt.LN_COBYLA,
+                                ineq_constraints=[(ineq_constraint, 1e-6)],
+                                # Fix gammapos1
+                                fixed_params=[None, None, None, 2, None, None],
+                                verbose=len(sel_params),
+                                maxtime=10, multinom=False)
 ```
 
 ### 2D examples
@@ -199,14 +200,14 @@ if __name__ == '__main__':
     demo_params = [0.5,2,0.5,0.1,0,0]
     ns = [8, 12]
     pts_l = [60, 80, 100]
-    func_ex = DemogSelModels.IM
+    func_ex = DemogSelModels.IM_sel
     # Check whether we already have a chached set of 2d spectra. If not
     # generate them.
     try:
         s2 = pickle.load(open('test.spectra2d.bpkl', 'rb'))
     except IOError:
         s2 = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-                     gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+                     gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
                      additional_gammas=[1.2, 4.3])
         # Save spectra2d object
         fid = open('test.spectra2d.bpkl', 'wb')
@@ -220,16 +221,16 @@ if __name__ == '__main__':
         ## In this example, the 3 partial caches could be generate on independent
         ## nodes, then s2a,s2b,s2c would be saved to separate files, then loaded
         ## and combined later.
-        #s2a = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        # s2a = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+        #        gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
         #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=0)
-        #s2b = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        # s2b = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+        #        gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
         #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=1)
-        #s2c = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
-        #        gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+        # s2c = Cache2D(demo_params, ns, func_ex, pts=pts_l, gamma_pts=100,
+        #        gamma_bounds=(1e-2, 10), verbose=True, cpus=4,
         #        additional_gammas=[1.2, 4.3], split_jobs=3, this_job_id=2)
-        #s2 = Cache2D.merge([s2a, s2b, s2c]) 
+        # s2 = Cache2D.merge([s2a, s2b, s2c]) 
 ```
 
 
@@ -244,7 +245,7 @@ data = target.sample()
     
 # Parameters are mean, variance, and correlation coefficient
 p0 = [0,1.,0.8]
-popt = dadi.Inference.opt(p0, data, s2.integrate, pts=None,
+popt, llopt = dadi.Inference.opt(p0, data, s2.integrate, pts=None,
                           func_args=[sel_dist, theta],
                           lower_bound=[None,0,-1],
                           upper_bound=[None,None,1],
@@ -291,11 +292,11 @@ params = [-0.5,0.5,0.99, 0.1, 4.3]
 fs_biv = s2.integrate_symmetric_point_pos(params, None, PDFs.biv_lognormal, theta,
                                           pts=None)
     
-func_single_ex = DemogSelModels.IM_single_gamma
+func_single_ex = DemogSelModels.IM_sel_single_gamma
 try:
     s1 = pickle.load(open('test.spectra1d.bpkl', 'rb'))
 except IOError:
-    s1 = Cache1D(demo_params, ns, func_single_ex, pts_l=pts_l,
+    s1 = Cache1D(demo_params, ns, func_single_ex, pts=pts_l,
                  gamma_pts=100, gamma_bounds=(1e-2, 10), mp=True,
                  additional_gammas = [1.2, 4.3], verbose=False)
     fid = open('test.spectra1d.bpkl', 'wb')
@@ -336,7 +337,7 @@ data = target.sample()
 # symmetry if the length of the arguments is only three. If we wanted
 # asymmetric lognormal, we would pass in a p0 of total length 7.
 p0 = [0.3,0.3,0.1,0.2,1.2]
-popt = dadi.Inference.opt(p0, data,
+popt, llopt = dadi.Inference.opt(p0, data,
                           s2.integrate_symmetric_point_pos,
                           pts=None, func_args=[sel_dist, theta],
                           # Note that mu in principle has no lower or
@@ -393,7 +394,7 @@ input_params, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
 target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
                                      PDFs.biv_lognormal, theta)
 p0 = [0.3,0.3,0,0.2,1.2,0.3]
-popt = dadi.Inference.opt(p0, data, mixture_symmetric_point_pos, pts=None, 
+popt, llopt = dadi.Inference.opt(p0, data, mixture_symmetric_point_pos, pts=None, 
                           func_args=[s1, s2, PDFs.lognormal,
                                      PDFs.biv_lognormal, theta],
                           lower_bound=[None, 0.1,-1,0,None, 0],
@@ -401,7 +402,7 @@ popt = dadi.Inference.opt(p0, data, mixture_symmetric_point_pos, pts=None,
                           # We fix both the rho assumed for the 2D distribution,
                           # and the assumed value of positive selection.
                           fixed_params=[None,None,0,None,1.2,None],
-                          verbose=30, multinom=False, maxiter=1)
+                          verbose=30, multinom=False, maxeval=1)
 ```
 
     1320    , -2719       , array([ 0.189489   ,  0.293573   ,  0          ,  0.133956   ,  1.2        ,  0.439247   ])
@@ -423,7 +424,7 @@ data_pieces = [(fs0*(0.5 + (1.5-0.5)/99*ii)).sample() for ii in range(100)]
 # Add up those segments to get our data spectrum
 data = dadi.Spectrum(np.sum(data_pieces, axis=0))
 # Do the optimization
-popt = dadi.Inference.opt([0.2,0.2,0.15,0.3,1.2], data,
+popt, llopt = dadi.Inference.opt([0.2,0.2,0.15,0.3,1.2], data,
                           s2.integrate_symmetric_point_pos,
                           pts=None, func_args=[sel_dist, theta],
                           lower_bound=[-1,0.1,-1,0,0],
