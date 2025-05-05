@@ -161,7 +161,7 @@ def _two_pops_const_params(phi, xx,
     return phi
 
 def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f, gamma1_f,
-            gamma2_f, h1_f, h2_f, theta0_f, frozen1, frozen2, nomut1, nomut2):
+            gamma2_f, h1_f, h2_f, theta0_f, frozen1, frozen2, nomut1, nomut2, deme_ids):
     current_t = initial_t
     nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
     m12,m21 = m12_f(current_t), m21_f(current_t)
@@ -376,7 +376,7 @@ def _three_pops_const_params(phi, xx,
 def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, 
             m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
             gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f,
-            theta0_f, frozen1, frozen2, frozen3):
+            theta0_f, frozen1, frozen2, frozen3, deme_ids):
     if dadi.Integration.use_delj_trick:
         raise ValueError("delj trick not currently supported in CUDA execution")
 
@@ -547,7 +547,7 @@ def _three_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f,
 def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f,
             m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
             m41_f, m42_f, m43_f, gamma1_f, gamma2_f, gamma3_f, gamma4_f,
-            h1_f, h2_f, h3_f, h4_f, theta0_f, frozen1, frozen2, frozen3, frozen4):
+            h1_f, h2_f, h3_f, h4_f, theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids):
     if dadi.Integration.use_delj_trick:
         raise ValueError("delj trick not currently supported in CUDA execution")
 
@@ -754,7 +754,7 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
             m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
             m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
             gamma1_f, gamma2_f, gamma3_f, gamma4_f, gamma5_f,
-            h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5):
+            h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5, deme_ids):
     if dadi.Integration.use_delj_trick:
         raise ValueError("delj trick not currently supported in CUDA execution")
 
