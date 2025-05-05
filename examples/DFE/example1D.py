@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # Integrate over a range of gammas
     pts = [600, 800, 1000]
-    spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch, pts=pts, 
+    spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch_sel, pts=pts, 
                           gamma_bounds=(1e-5, 500), gamma_pts=100, verbose=True,
                           cpus=4)
     # The spectra can be pickled for usage later. This is especially convenient
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     #
     data = dadi.Spectrum.from_file('example.fs')
     ppos = 0.1
-    sel_data = theta_ns*DFE.DemogSelModels.two_epoch(tuple(demog_params) + (5,), ns, pts[-1])
+    sel_data = theta_ns*DFE.DemogSelModels.two_epoch_sel(tuple(demog_params) + (5,), ns, pts[-1])
     data_pos = (1-ppos)*data + ppos*sel_data
 
     sel_params = [0.2, 1000., 0.2, 2]
@@ -98,7 +98,7 @@ if __name__ == '__main__':
                                   upper_bound=upper_bound)
     popt, llopt = dadi.Inference.opt(p0, data_pos, spectra.integrate_point_pos, pts=None,
                                      func_args=[DFE.PDFs.gamma, theta_ns,
-                                                DFE.DemogSelModels.two_epoch],
+                                                DFE.DemogSelModels.two_epoch_sel],
                                        lower_bound=lower_bound, upper_bound=upper_bound, 
                                      verbose=len(sel_params), maxtime=10, multinom=False)
 

@@ -23,6 +23,7 @@ nav:
         - 'Triallelic spectra': 'user-guide/triallelic-spectra.md'
         - 'DFE inference': 'user-guide/dfe-inference.md'
         - 'Inbreeding': 'user-guide/inbreeding.md'
+        - 'Low-Pass': 'user-guide/low-pass.md'
         - 'Polyploid subgenomes': 'user-guide/polyploid-subgenomes.md'
         - 'GPU computing': 'user-guide/GPU-computing.md'
         - 'Demes integration': 'user-guide/demes.md'
@@ -39,4 +40,5 @@ nav:
         - 'Basic Workflow Cache Generation' : 'examples/basic_workflow/basic_workflow_cache_generation.md'
         - 'Basic Workflow 1D DFE' : 'examples/basic_workflow/basic_workflow_1d_dfe.md'
         - 'Basic Workflow 2D DFE' : 'examples/basic_workflow/basic_workflow_2d_dfe.md'
+        - 'Low-Pass Example' : 'examples/LowPass/low-pass.md'
 - API: 'api/dadi/index.html'
