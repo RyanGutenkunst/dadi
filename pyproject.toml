@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dadi"
-version= "2.4.0"
+version= "2.4.1"
 
 description = "Fit population genetic models of demography and selection using diffusion approximations to the allele frequency spectrum"
 readme = "README.md"
@@ -25,7 +25,7 @@ classifiers = [
 ]
 dependencies = [
     "matplotlib",
-    "numpy<2",
+    "numpy",
     "scipy",
     "demes",
     "nlopt",
