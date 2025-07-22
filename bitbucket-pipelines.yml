@@ -19,6 +19,6 @@ pipelines:
             - miniconda3
           script:
             - conda install -c conda-forge -y mamba
-            - mamba install -c conda-forge -y scipy matplotlib "numpy<2" pytest demes nlopt gcc cython python
+            - mamba install -c conda-forge -y scipy matplotlib numpy pytest demes nlopt gcc cython python
             - pip install -e .
             - pytest -v tests/test_*.py --junitxml=test-reports/report.xml
