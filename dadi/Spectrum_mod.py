@@ -12,7 +12,10 @@ from numpy import newaxis as nuax
 import numpy as np
 # Account for difference in scipy installations.
 from scipy.special import comb
-from numpy import trapezoid
+try:
+    from numpy import trapezoid as trapz
+except:
+    from numpy import trapz
 from scipy.special import betainc
 
 import dadi.Numerics
