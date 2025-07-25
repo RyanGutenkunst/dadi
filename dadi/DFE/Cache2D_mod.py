@@ -3,6 +3,10 @@ Developed by the Gutenkunst group, building off of the fitdadi code.
 """
 import sys, traceback
 import numpy as np
+try:
+    np.trapz = np.trapezoid
+except AttributeError:
+    pass
 import scipy.integrate
 
 class Cache2D:

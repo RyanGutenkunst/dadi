@@ -9,6 +9,10 @@ https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc .
 import operator
 import sys, traceback
 import numpy as np
+try:
+    np.trapz = np.trapezoid
+except AttributeError:
+    pass
 import scipy.stats.distributions
 import scipy.integrate
 import dadi

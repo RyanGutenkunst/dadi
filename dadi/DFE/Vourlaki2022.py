@@ -1,4 +1,8 @@
 import numpy as np, scipy.integrate
+try:
+    np.trapz = np.trapezoid
+except AttributeError:
+    pass
 import dadi
 from dadi.DFE import *
 
