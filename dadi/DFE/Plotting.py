@@ -2,6 +2,10 @@
 Miscellaneous functions for plotting DFEs
 """
 import numpy as np
+try:
+    np.trapz = np.trapezoid
+except AttributeError:
+    pass
 
 def plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=None,
                  xlabel='$\gamma_1$', ylabel='$\gamma_2$', cmap='gray_r',
