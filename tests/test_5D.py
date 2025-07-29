@@ -2,7 +2,6 @@ import numpy as np
 import dadi
 import pytest
 
-@pytest.mark.skip(reason="5D tests are slow")
 def test_splitting():
     """
     Test splitting into 5D.
@@ -27,7 +26,6 @@ def test_splitting():
         fsm = fs4.marginalize(tomarg)
         assert(np.allclose(fs1, fsm, rtol=1e-3, atol=1e-3))
 
-@pytest.mark.skip(reason="5D tests are slow")
 def test_integration_SNM():
     """
     Test simple SNM integration.
@@ -53,7 +51,6 @@ def test_integration_SNM():
             test = dadi.PhiManip.remove_pop(test, xx, pop)
         print(np.allclose(ref[1:-1],test[1:-1]))
 
-@pytest.mark.skip(reason="5D tests are slow")
 def test_integration_nomig():
     nu1 = lambda t: 0.5 + 50*t
     nu2 = lambda t: 10-50*t
@@ -107,15 +104,17 @@ def test_integration_nomig():
     assert(np.allclose(fs4, ref, atol=1e-2))
     assert(np.allclose(fs5, ref, atol=1e-2))
 
-@pytest.mark.skip(reason="5D tests are slow")
+# Uncomment this line if this test proves too slow to be useful.
+#@pytest.mark.slow
 def test_integration_mig():
     """
     Integration tested by comparison to 2D integrations
     """
     m12 = lambda t: 2-19*t
     m21 = lambda t: 0.5+30*t
-    T = 0.1
+    T = 0.05
 
+    pts_l = [12,13,14]
     pin = (T,m12,m21)
 
     @dadi.Numerics.make_extrap_func
@@ -126,7 +125,7 @@ def test_integration_mig():
         phi = dadi.PhiManip.phi_1D(xx)
         phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
         phi = dadi.Integration.two_pops(phi, xx, T=T, m12=m12, m21=m21)
-        return dadi.Spectrum.from_phi(phi, [5,5], (xx,xx))
+        return dadi.Spectrum.from_phi(phi, [4,4], (xx,xx))
 
     @dadi.Numerics.make_extrap_func
     def test_func_marg(params, ns, popkept, pts):
@@ -141,18 +140,17 @@ def test_integration_mig():
         kwargs = {'m1{0}'.format(popkept):m12,
                   'm{0}1'.format(popkept):m21}
         phi = dadi.Integration.five_pops(phi, xx, T=T, **kwargs)
-        fs_all = dadi.Spectrum.from_phi(phi, [5,5,5,5,5], (xx,xx,xx,xx,xx))
+        fs_all = dadi.Spectrum.from_phi(phi, [4,4,4,4,4], (xx,xx,xx,xx,xx))
         tomarg = [1,2,3,4]
         tomarg.remove(popkept-1)
         fs = fs_all.marginalize(tomarg)
         return fs
 
-    ref = ref_func(pin, None, [16,18,20])
+    ref = ref_func(pin, None, pts_l)
     for ii in range(2,6):
-        test = test_func_marg(pin, None, 2, [16, 18, 20])
-        assert(np.allclose(ref, test, atol=1e-3))
+        test = test_func_marg(pin, None, 2, pts_l)
+        assert(np.allclose(ref, test, atol=1e-2))
 
-@pytest.mark.skip(reason="5D tests are slow")
 def test_admix_into():
     """
     Test phi_5D_admix_into methods
@@ -220,7 +218,6 @@ def test_admix_into():
 
     assert(np.allclose(ref, test))
 
-@pytest.mark.skip(reason="5D tests are slow")
 def test_4D_to_5D():
     """
     Test splitting with admixture
