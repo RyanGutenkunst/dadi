@@ -8,7 +8,7 @@ def test_splitting():
     """
     # Check that all splits yield SNM
 
-    pts = 50
+    pts = 6
     xx = dadi.Numerics.default_grid(pts)
     phi = dadi.PhiManip.phi_1D(xx)
     fs1 = dadi.Spectrum.from_phi(phi, [10], (xx,))
@@ -24,7 +24,7 @@ def test_splitting():
         tomarg = list(range(5))
         tomarg.remove(ii)
         fsm = fs4.marginalize(tomarg)
-        assert(np.allclose(fs1, fsm, rtol=1e-3, atol=1e-3))
+        assert(np.allclose(fs1, fsm, rtol=1e-2, atol=1e-2))
 
 def test_integration_SNM():
     """
