@@ -335,7 +335,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, gamma1=0, gamma2=0,
         import dadi.cuda
         phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
                 nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
-                frozen1, frozen2, nomut1, nomut2)
+                frozen1, frozen2, nomut1, nomut2, deme_ids)
         return phi
 
     current_t = initial_t
@@ -464,7 +464,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
                 nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
                 gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f, 
-                theta0_f, frozen1, frozen2, frozen3)
+                theta0_f, frozen1, frozen2, frozen3, deme_ids)
         return phi
 
     current_t = initial_t
@@ -586,7 +586,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
         phi = dadi.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
                 nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
                 m41_f, m42_f, m43_f, gamma1_f, gamma2_f, gamma3_f, gamma4_f, h1_f, h2_f, h3_f, h4_f,
-                theta0_f, frozen1, frozen2, frozen3, frozen4)
+                theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids)
         return phi
 
     current_t = initial_t
@@ -718,7 +718,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
             m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
             m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
             gamma1_f, gamma2_f, gamma3_f, gamma4_f, gamma5_f,
-            h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5)
+            h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5, deme_ids)
         return phi
 
     current_t = initial_t
@@ -753,7 +753,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
         theta0 = theta0_f(next_t)
 
-        demes_hist.append([[next_t, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]])
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]])
         if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
                                  m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
                                  m51,m52,m53,m54, theta0],
