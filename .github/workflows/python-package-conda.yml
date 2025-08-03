@@ -23,4 +23,4 @@ jobs:
         conda env create --file build-env.yml
     - name: Test with pytest
       run: |
-        conda run -n dadi pytest
+        conda run -n dadi pytest -v
