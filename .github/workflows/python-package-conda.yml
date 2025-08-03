@@ -20,4 +20,4 @@ jobs:
         mamba env update --file build-env.yml --name base
     - name: Test with pytest
       run: |
-        micromamba run -n dadi pytest -vv
+        pytest -vv
