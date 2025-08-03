@@ -22,4 +22,4 @@ jobs:
         environment-file: build-env.yml
     - name: Test with pytest
       run: |
-        micromamba run -n dadi-cli pytest -vv
+        micromamba run -n dadi pytest -vv
