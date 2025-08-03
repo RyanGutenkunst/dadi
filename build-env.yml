@@ -1,7 +1,5 @@
-name: dadi
 channels:
   - conda-forge
-  - bioconda
 dependencies:
   - demes
   - matplotlib
