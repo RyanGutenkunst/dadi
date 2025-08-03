@@ -1,3 +1,4 @@
+name: dadi
 channels:
   - conda-forge
 dependencies:
