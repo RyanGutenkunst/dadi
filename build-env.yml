@@ -8,8 +8,10 @@ dependencies:
   - nlopt
   - numpy
   - pip
-  - pytest-cov
-  - python==3.10
+  - python
   - scipy
+  - pytest
+  - cython
+  - gcc
   - pip:
       - .
