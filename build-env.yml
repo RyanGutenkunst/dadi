@@ -7,7 +7,7 @@ dependencies:
   - numpy
   - pip
   - pytest
-  - python==3.10
+  - python
   - cython
   - gcc
   - scipy
