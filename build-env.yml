@@ -12,4 +12,4 @@ dependencies:
   - gcc
   - scipy
   - pip:
-      - .
+      - -e .
