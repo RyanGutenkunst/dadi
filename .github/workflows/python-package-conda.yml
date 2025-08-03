@@ -18,9 +18,12 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
-      run: |
-        conda env create --file build-env.yml
+    - name: Add micromamba to system path
+      uses: mamba-org/setup-micromamba@main
+      with:
+        environment-name: dadi-cli
+        activate-environment: dadi-cli
+        environment-file: build-env.yml
     - name: Test with pytest
       run: |
-        conda run -n dadi pytest -v
+        micromamba run -n dadi pytest -v
