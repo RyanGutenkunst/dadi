@@ -19,4 +19,5 @@ jobs:
         conda env update --file build-env.yml --name base
     - name: Test with pytest
       run: |
+        conda activate base
         pytest -vv
