@@ -4,7 +4,7 @@ import numpy
 from numpy import newaxis as nuax
 import scipy.integrate
 import dadi.tridiag_cython as tridiag
-import dadi.Polyploids.Int1D_poly as int1D
+import dadi.Polyploidy.Int1D_poly as int1D
 from enum import IntEnum
 
 ### ==========================================================================

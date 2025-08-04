@@ -50,12 +50,12 @@ def summarize_phi(phi, xx, model_name="No name specified"):
     """
     # normalize phi to be a probability density, since phi can lose mass in the theta0=0 regime
     # This also helps with comparing to the results of the WF sims when using density = True in plt.hist()
-    phi /= np.trapz(phi, xx)
+    phi /= np.trapezoid(phi, xx)
     # Then, we compute the mean
-    mean = np.trapz(phi*xx, xx)
+    mean = np.trapezoid(phi*xx, xx)
     print(f"Mean: {mean}")
     # and the variance
-    var = np.trapz(phi*xx**2, xx) - mean**2
+    var = np.trapezoid(phi*xx**2, xx) - mean**2
     print(f"Variance: {var}")
 
     # plot phi
