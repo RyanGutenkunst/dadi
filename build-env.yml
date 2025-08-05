@@ -1,7 +1,6 @@
 name: dadi
 channels:
   - conda-forge
-  - bioconda
 dependencies:
   - demes
   - matplotlib
@@ -9,9 +8,9 @@ dependencies:
   - numpy
   - pip
   - pytest
-  - python==3.10
+  - python
   - cython
   - gcc
   - scipy
   - pip:
-      - .
+      - -e .
