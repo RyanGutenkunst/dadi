@@ -783,7 +783,6 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
 
 
     for line in vcf_file:
-        print(line)
         # decoding lines for Python 3 - probably a better way to handle this
         try:
             line = line.decode()
