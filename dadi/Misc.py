@@ -725,8 +725,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     if subsample is not None:
         do_subsampling = True
         warnings.warn('Note on subsampling: If you will be including inbreeding in your model, '
-                      'do not project your data to smaller sample sizes in later steps of your analysis.')
-    
+                        'do not project your data to smaller sample sizes in later steps of your analysis.')
+
     if os.path.splitext(popinfo_filename)[1] == '.gz':
         import gzip
         popinfo_file = gzip.open(popinfo_filename)
@@ -736,7 +736,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         namelist = archive.namelist()
         if len(namelist) != 1:
             raise ValueError("Must be only a single popinfo file in zip "
-                             "archive: {}".format(popinfo_filename))
+                                "archive: {}".format(popinfo_filename))
         popinfo_file = archive.open(namelist[0])
     else:
         popinfo_file = open(popinfo_filename)
@@ -763,14 +763,27 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         namelist = archive.namelist()
         if len(namelist) != 1:
             raise ValueError("Must be only a single vcf file in zip "
-                             "archive: {}".format(vcf_filename))
+                                "archive: {}".format(vcf_filename))
         vcf_file = archive.open(namelist[0])
     else:
         vcf_file = open(vcf_filename)
-    
+
     data_dict = {}
-    ploidy = ''
+    ploidy = {}
+    if extract_ploidy:
+        import collections
+        pop_2_sample = collections.defaultdict(list)
+        for key, value in popinfo_dict.items():
+            pop_2_sample[value].append(key)
+        pop_ind = {}
+        for pop in list(pop_2_sample.keys()):
+            ploidy[pop] = ''
+            pop_ind[pop] = None
+
+
+
     for line in vcf_file:
+        print(line)
         # decoding lines for Python 3 - probably a better way to handle this
         try:
             line = line.decode()
@@ -787,9 +800,15 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 raise ValueError("No samples in VCF file")
             # Use popinfo_dict to get the order of populations present in VCF
             poplist = [popinfo_dict[sample] if sample in popinfo_dict else None
-                       for sample in header_cols[9:]]
+                        for sample in header_cols[9:]]
+            if extract_ploidy:
+                for sample_id in header_cols[9:]:
+                    for pop in pop_2_sample:
+                        if sample_id in pop_2_sample[pop]:
+                            pop_ind[pop] = header_cols[9:].index(sample_id)
+                            continue
             continue
-        
+
         # Read SNP data
         # Data lines in VCF file are tab-delimited
         # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
@@ -872,8 +891,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             except:
                 covindex = None
 
-        if extract_ploidy and ploidy == '':
-            ploidy = len(cols[9].split(':')[gtindex][::2])
+        if extract_ploidy and ploidy != {}:
+            for pop in ploidy:
+                ploidy[pop] = len(cols[pop_ind[pop]].split(':')[gtindex][::2])
 
         if do_subsampling:
             # Collect data for all genotyped samples
