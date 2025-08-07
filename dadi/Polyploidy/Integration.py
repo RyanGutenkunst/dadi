@@ -6,9 +6,10 @@ import scipy.integrate
 import dadi.tridiag_cython as tridiag
 import dadi.Polyploidy.Int1D_poly as int1D
 from enum import IntEnum
+import dadi.integration_c as int_c
 
 ### ==========================================================================
-### CONSTANTS + CODE FROM DIPLOID IMPLEMENTATION
+### CONSTANTS
 ### ==========================================================================
 
 #: Controls use of GPUs and multiprocessing
@@ -26,11 +27,10 @@ use_old_timestep = False
 #: Factor for told timestep method.
 old_timescale_factor = 0.1
 
-# TODO ask Ryan about this
-# I think this needs to be split up across ploidy types
-# Now, the diploid selection params could be zeros and 
-# compute dt would naively take in the auto params
-# potential concern is that the timestep seems to affect the Richardson extrapolation
+### ==========================================================================
+### COMPUTE DT FUNCTIONS
+### ==========================================================================
+
 def _compute_dt(dx, nu, ms, gamma, h):
     """
     Compute the appropriate timestep given the current demographic params.
@@ -132,6 +132,19 @@ def _inject_mutations_1D_auto(dt, xx, theta0):
     new_mut = dt/xx[1] * theta0/4 * 2/(xx[2] - xx[0]) 
     return new_mut
 
+def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
+                         nomut1, nomut2):
+    """
+    Inject novel mutations for a timestep.
+    """
+    # Population 1
+    if not frozen1 and not nomut1:
+        phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
+    # Population 2
+    if not frozen2 and not nomut2:
+        phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+    return phi
+
 ### ==========================================================================
 ### CLASS DEFINITION FOR SPECIFYING PLOIDY
 ### ==========================================================================
@@ -177,10 +190,9 @@ class PloidyType(IntEnum):
         return sel_params
 
 ### ==========================================================================
-### MAIN INTEGRATION FUNCTIONS
+### MAIN INTEGRATION FUNCTIONS FOR EACH DIMENSION
 ### ==========================================================================
 
-# TODO remove bypass_const_params option - just for testing usage
 def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.0, initial_t=0, 
             frozen=False, deme_ids=None, bypass_const_params=False):
     """
@@ -191,9 +203,6 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
 
     nu, gamma, and theta0 may be functions of time.
     nu: Population size
-    gamma: Selection coefficient on *all* segregating alleles
-    h: Dominance coefficient. h = 0.5 corresponds to genic selection. 
-       Heterozygotes have fitness 1+2sh and homozygotes have fitness 1+2s.
     theta0: Propotional to ancestral size. Typically constant.
     beta: Breeding ratio, beta=Nf/Nm.
 
@@ -222,7 +231,6 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
                          'intial_time (%f). Integration cannot be run '
                          'backwards.' % (T, initial_t))
     
-    # need this to be intc for compatibility with Cython integration
     ploidy = numpy.zeros(2, dtype=numpy.intc)
     ploidy[ploidyflag] = 1
     # get the selection variables
@@ -233,126 +241,6 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
             Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
             return _one_pop_const_params(phi, xx, T, sel[0], sel[1], sel[2], sel[3], ploidy,
                                       nu, theta0, initial_t)
-
-
-    # The user will only pass in selection params/funcs for one type of pop
-    # But, we can't anticipate which one they'll pass in
-    # So, we define all possible params as 0 and then overwrite them as needed
-    gamma = h = gam1 = gam2 = gam3 = gam4 = 0
-
-    # overwrite the above params with the passed in params
-    # (this allows me to come back to the class and add wrappers for other selection models)
-    if ploidyflag == PloidyType.DIPLOID:
-        gamma, h = sel[0], sel[1]
-    elif ploidyflag == PloidyType.AUTO: 
-        gam1, gam2, gam3, gam4 = sel[0], sel[1], sel[2], sel[3]    
-
-    nu_f = Misc.ensure_1arg_func(nu)
-    gamma_f = Misc.ensure_1arg_func(gamma)
-    h_f = Misc.ensure_1arg_func(h)
-    gam1_f = Misc.ensure_1arg_func(gam1)
-    gam2_f = Misc.ensure_1arg_func(gam2)
-    gam3_f = Misc.ensure_1arg_func(gam3)    
-    gam4_f = Misc.ensure_1arg_func(gam4)
-    theta0_f = Misc.ensure_1arg_func(theta0)
-
-    current_t = initial_t
-    nu = nu_f(current_t)
-    gamma, h =  gamma_f(current_t), h_f(current_t)
-    gam1, gam2, gam3, gam4 = gam1_f(current_t), gam2_f(current_t), gam3_f(current_t), gam4_f(current_t)
-
-    dx = numpy.diff(xx)
-    demes_hist = [[0, [nu], []]]
-    while current_t < T:
-        dt = ploidy[0] * _compute_dt(dx,nu,[0],gamma,h)
-        dt_auto = ploidy[1] * _compute_dt_auto(dx,nu,[0],gam1,gam2,gam3,gam4)
-        this_dt = min(max(dt, dt_auto), T - current_t)
-
-        # Because this is an implicit method, I need the *next* time's params.
-        # So there's a little inconsistency here, in that I'm estimating dt
-        # using the last timepoints nu,gamma,h.
-        next_t = current_t + this_dt
-        nu = nu_f(next_t)
-        gamma, h = gamma_f(next_t), h_f(next_t)
-        gam1, gam2, gam3, gam4 = gam1_f(next_t), gam2_f(next_t), gam3_f(next_t), gam4_f(next_t)
-        theta0 = theta0_f(next_t)
-        # define the sel_vec for the current time to pass to the integrator
-        # this is a little subtle, but essentially one set of sel params will always be
-        # set to zero, so this is either [gamma, h, 0, 0] or [gam1, gam2, gam3, gam4]
-        sel_vec = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
-       
-        demes_hist.append([next_t, [nu], []])
-
-        if numpy.any(numpy.less([T,nu,theta0], 0)):
-            raise ValueError('A time, population size, migration rate, or '
-                             'theta0 is < 0. Has the model been mis-specified?')
-        if numpy.any(numpy.equal([nu], 0)):
-            raise ValueError('A population size is 0. Has the model been '
-                             'mis-specified?')
-
-        phi[1] += ploidy[0]*_inject_mutations_1D(this_dt, xx, theta0)
-        phi[1] += ploidy[1]*_inject_mutations_1D_auto(this_dt, xx, theta0)
-        # Do each step in C, since it will be faster to compute the a,b,c
-        # matrices there.
-        phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
-                                 use_delj_trick=use_delj_trick, ploidy=ploidy)
-        current_t = next_t
-    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
-    return phi
-
-def one_pop_branching(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.0, initial_t=0, 
-            frozen=False, deme_ids=None, bypass_const_params=False):
-    """
-    Integrate a 1-dimensional phi foward.
-
-    phi: Initial 1-dimensional phi
-    xx: Grid upon (0,1) overwhich phi is defined.
-
-    nu, gamma, and theta0 may be functions of time.
-    nu: Population size
-    gamma: Selection coefficient on *all* segregating alleles
-    h: Dominance coefficient. h = 0.5 corresponds to genic selection. 
-       Heterozygotes have fitness 1+2sh and homozygotes have fitness 1+2s.
-    theta0: Propotional to ancestral size. Typically constant.
-    beta: Breeding ratio, beta=Nf/Nm.
-
-    T: Time at which to halt integration
-    initial_t: Time at which to start integration. (Note that this only matters
-               if one of the demographic parameters is a function of time.)
-
-    ploidyflag: 0 for diploid, 1 for auto
-    sel_dict: dictionary of selection parameters for given ploidy type
-
-    frozen: If True, population is 'frozen' so that it does not change.
-            In the one_pop case, this is equivalent to not running the
-            integration at all.
-    deme_ids: sequence of strings representing the names of demes
-    """
-    phi = phi.copy()
-
-    # For a one population integration, freezing means just not integrating.
-    if frozen:
-        return phi
-
-    if T - initial_t == 0:
-        return phi
-    elif T - initial_t < 0:
-        raise ValueError('Final integration time T (%f) is less than '
-                         'intial_time (%f). Integration cannot be run '
-                         'backwards.' % (T, initial_t))
-
-    
-    ploidy = numpy.zeros(2, dtype=numpy.intc)
-    ploidy[ploidyflag] = 1
-    # get the selection variables
-    sel = ploidyflag.pack_sel_params(sel_dict=sel_dict)
-    vars_to_check = (nu, sel[0], sel[1], sel[2], sel[3], theta0)
-    if not bypass_const_params:
-        if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-            Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
-            return _one_pop_const_params_branching(phi, xx, T, sel[0], sel[1], sel[2], sel[3], ploidy,
-                                      nu, theta0, initial_t)
-
 
     # The user will only pass in selection params/funcs for one type of pop
     # But, we can't anticipate which one they'll pass in
@@ -421,7 +309,7 @@ def one_pop_branching(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1,
             phi[1] += _inject_mutations_1D_auto(this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
-        phi = int1D.implicit_1Dx_branching(phi, xx, nu, sel_vec, this_dt, 
+        phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
                                  use_delj_trick=use_delj_trick, ploidy=ploidy)
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
@@ -444,9 +332,11 @@ def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
     return x * (1 - x) * 2 * poly
 
 def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
-    return mxy * (y-x) + x*(1-x) * 2*(gam1 + (- 6*gam1 + 3*gam2)*x 
-                                      + (9*gam1 - 9*gam2 + 3*gam3 )*x**2 
-                                      + (-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x**3)
+    poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+            (9*gam1 - 9*gam2 + 3*gam3)) * x +
+           (-6*gam1 + 3*gam2)) * x + 
+           gam1)
+    return mxy * (y-x) + x*(1-x) * 2 * poly
 
 def _Vfunc(x, nu):
     return 1./nu * x*(1-x) 
@@ -510,70 +400,6 @@ def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, thet
         raise ValueError('A population size is 0. Has the model been '
                          'mis-specified?')
 
-    M = ploidy[0] * _Mfunc1D(xx, sel0, sel1)
-    M += ploidy[1] * _Mfunc1D_auto(xx, sel0, sel1, sel2, sel3)
-    
-    MInt = ploidy[0] * _Mfunc1D((xx[:-1] + xx[1:])/2, sel0, sel1)
-    MInt += ploidy[1] * _Mfunc1D_auto((xx[:-1] + xx[1:])/2, sel0, sel1, sel2, sel3)
-
-    V = ploidy[0] * _Vfunc(xx, nu)
-    V += ploidy[1] * _Vfunc_auto(xx, nu)
-
-    VInt = ploidy[0] * _Vfunc((xx[:-1] + xx[1:])/2, nu)
-    VInt += ploidy[1] * _Vfunc_auto((xx[:-1] + xx[1:])/2, nu)
-
-    dx = numpy.diff(xx)
-    dfactor = _compute_dfactor(dx)
-    delj = _compute_delj(dx, MInt, VInt)
-
-    a = numpy.zeros(phi.shape)
-    a[1:] += dfactor[1:]*(-MInt * delj - V[:-1]/(2*dx))
-
-    c = numpy.zeros(phi.shape)
-    c[:-1] += -dfactor[:-1]*(-MInt * (1-delj) + V[1:]/(2*dx))
-
-    b = numpy.zeros(phi.shape)
-    b[:-1] += -dfactor[:-1]*(-MInt * delj - V[:-1]/(2*dx))
-    b[1:] += dfactor[1:]*(-MInt * (1-delj) + V[1:]/(2*dx))
-
-    ### Here, the variance term is showing up again, but not explicitly
-    ### So, we also need to add both BCs multiplied by the ploidy coeff
-    if(M[0] <= 0):
-        b[0] += ploidy[0]*(0.5/nu - M[0])*2/dx[0]
-        b[0] += ploidy[1]*(0.25/nu - M[0])*2/dx[0]
-    if(M[-1] >= 0):
-        b[-1] += ploidy[0]*-(-0.5/nu - M[-1])*2/dx[-1]
-        b[-1] += ploidy[1]*-(-0.25/nu - M[-1])*2/dx[-1]
-
-    dt = ploidy[0] * _compute_dt(dx,nu,[0],sel0,sel1)
-    dt_auto = ploidy[1] * _compute_dt_auto(dx,nu,[0],sel0,sel1,sel2,sel3)
-    current_t = initial_t
-    while current_t < T:    
-        this_dt = min(max(dt, dt_auto), T - current_t)
-
-        phi[1] += ploidy[0]*_inject_mutations_1D(this_dt, xx, theta0)
-        phi[1] += ploidy[1]*_inject_mutations_1D_auto(this_dt, xx, theta0)
-        r = phi/this_dt
-        phi = tridiag.tridiag(a, b+1/this_dt, c, r)
-        current_t += this_dt
-    return phi
-
-def _one_pop_const_params_branching(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, theta0=1, 
-                          initial_t=0):
-    """
-    Integrate one population with constant parameters.
-
-    In this case, we can precompute our a,b,c matrices for the linear system
-    we need to evolve. This we can efficiently do in Python, rather than 
-    relying on C. The nice thing is that the Python is much faster to debug.
-    """
-    if numpy.any(numpy.less([T,nu,theta0], 0)):
-        raise ValueError('A time, population size, migration rate, or theta0 '
-                         'is < 0. Has the model been mis-specified?')
-    if numpy.any(numpy.equal([nu], 0)):
-        raise ValueError('A population size is 0. Has the model been '
-                         'mis-specified?')
-
     dx = numpy.diff(xx)
     dfactor = _compute_dfactor(dx)
 
@@ -582,14 +408,14 @@ def _one_pop_const_params_branching(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, 
         MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, sel0, sel1)
         V = _Vfunc(xx, nu)
         VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
-        bc_factor = 0.5
+        bc_factor = 0.5 # term for the Boundary Conditions
         dt = _compute_dt(dx,nu,[0],sel0,sel1)
     else:
         M = _Mfunc1D_auto(xx, sel0, sel1, sel2, sel3)
         MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, sel0, sel1, sel2, sel3)
         V = _Vfunc_auto(xx, nu)
         VInt = _Vfunc_auto((xx[:-1] + xx[1:])/2, nu)
-        bc_factor = 0.25
+        bc_factor = 0.25 # term for the Boundary Conditions
         dt = _compute_dt_auto(dx,nu,[0],sel0,sel1,sel2,sel3)
 
     delj = _compute_delj(dx, MInt, VInt)

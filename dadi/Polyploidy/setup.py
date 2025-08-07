@@ -30,7 +30,8 @@ setup(
             'wraparound': False,
             'cdivision': True,
             'language_level': 3,
-        }
+        }, 
+        annotate=True
     ),
     zip_safe=False,
 )
