@@ -31,9 +31,30 @@ old_timescale_factor = 0.1
 ### COMPUTE DT FUNCTIONS
 ### ==========================================================================
 
-def _compute_dt(dx, nu, ms, gamma, h):
+def _compute_dt(dx, nu, ms, sel, ploidy):
     """
-    Compute the appropriate timestep given the current demographic params.
+    Compute the timestep along a single dimension of phi. 
+
+    Acts as a wrapper and calls _compute_dt_* for the corresponding ploidy type.
+
+    sel: vector of selection parameters from unpacking the sel_dict
+    ploidy: vector of length 4 of of ploidy coefficients
+            e.g. [0, 1, 0, 0] specifies the current population as autotetraploid
+            e.g. [0, 0, 0, 1] specifies the current population as allotetraploid subgenome b
+    """
+    if ploidy[0]:
+        return _compute_dt_dip(dx, nu, ms, sel[0], sel[1])
+    elif ploidy[1]:
+        return _compute_dt_auto(dx, nu, ms, sel[0], sel[1], sel[2], sel[3])
+    elif ploidy[2]:
+        return _compute_dt_allo_a(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8])
+    elif ploidy[3]:
+        return _compute_dt_allo_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8])
+
+def _compute_dt_dip(dx, nu, ms, gamma, h):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for diploids.
 
     This is based on the maximum V or M expected in this direction. The
     timestep is scaled such that if the params are rescaled correctly by a
@@ -64,7 +85,8 @@ def _compute_dt(dx, nu, ms, gamma, h):
 
 def _compute_dt_auto(dx, nu, ms, gam1, gam2, gam3, gam4):
     """
-    Compute the appropriate timestep given the current demographic params.
+    Compute the appropriate timestep given the current demographic params
+    for autotetraploids.
 
     This is based on the maximum V or M expected in this direction. The
     timestep is scaled such that if the params are rescaled correctly by a
@@ -110,6 +132,84 @@ def _compute_dt_auto(dx, nu, ms, gam1, gam2, gam3, gam4):
                          % (nu, str(ms), gam1, gam2, gam3, gam4))
     return dt
 
+def _compute_dt_allo_a(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for allotetraploid subgenome a.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_a it 
+    # seems to be near x_a = 0.25, 0.5, 0.75 and x_b = 0, 1 
+    # the nice thing is that x_b = 0, 1 are much simpler than the full M function
+    
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g10 + (-2*g10 + g20)*0.25), # x_a = 0.25, x_b = 0
+                      0.5*(1-0.5)*numpy.abs(g10 + (-2*g10 + g20)*0.5), # x_a = 0.5, x_b = 0
+                      0.75*(1-0.75)*numpy.abs(g10 + (-2*g10 + g20)*0.75), # x_a = 0.75, x_b = 0
+                      0.25*(1-0.25)*numpy.abs(-g02 + g12 + (g02 -2*g12 + g22)*0.25), # x_a = 0.25, x_b = 1
+                      0.5*(1-0.5)*numpy.abs(-g02 + g12 + (g02 -2*g12 + g22)*0.5), # x_a = 0.5, x_b = 1
+                      0.75*(1-0.75)*numpy.abs(-g02 + g12 + (g02 -2*g12 + g22)*0.75))) # x_a = 0.75, x_b = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f' 
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22))
+    return dt
+
+def _compute_dt_allo_b(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for allotetraploid subgenome b.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_a it 
+    # seems to be near x_b = 0.25, 0.5, 0.75 and x_a = 0, 1 
+    # the nice thing is that x_a = 0, 1 are much simpler than the full M function
+    
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g01 + (-2*g01 + g02)*0.25), # x_a = 0.25, x_b = 0
+                      0.5*(1-0.5)*numpy.abs(g01 + (-2*g01 + g02)*0.5), # x_a = 0.5, x_b = 0
+                      0.75*(1-0.75)*numpy.abs(g01 + (-2*g01 + g02)*0.75), # x_a = 0.75, x_b = 0
+                      0.25*(1-0.25)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.25), # x_a = 0.25, x_b = 1
+                      0.5*(1-0.5)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.5), # x_a = 0.5, x_b = 1
+                      0.75*(1-0.75)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.75))) # x_a = 0.75, x_b = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f' 
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22))
+    return dt
+
 ### ==========================================================================
 ### INJECT MUTATIONS FUNCTIONS FOR ALL PLOIDIES + DIMENSIONS
 ### ==========================================================================
@@ -119,50 +219,54 @@ def _compute_dt_auto(dx, nu, ms, gam1, gam2, gam3, gam4):
 # can change these back if needed
 def _inject_mutations_1D(dt, xx, theta0):
     """
-    Inject novel mutations for a timestep.
+    Inject novel mutations for a timestep for diploids.
     """
     new_mut = dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
     return new_mut
 
 def _inject_mutations_1D_auto(dt, xx, theta0):
     """
-    Inject novel mutations for a timestep corrected for autotetraploids 
-    under T = 2N generations time scaling.
+    Inject novel mutations for a timestep for autotetraploids. 
+    This is corrected to account for the diffusion time scaling being in units of 2N generations.
     """
     new_mut = dt/xx[1] * theta0/4 * 2/(xx[2] - xx[0]) 
     return new_mut
 
-def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
-                         nomut1, nomut2):
+def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen, nomut):
     """
-    Inject novel mutations for a timestep.
+    Inject novel mutations for a timestep for diploids or allotetraploids.
     """
-    # Population 1
-    if not frozen1 and not nomut1:
+    if not frozen and not nomut:
         phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
-    # Population 2
-    if not frozen2 and not nomut2:
-        phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+    return phi
+
+def _inject_mutations_2D_auto(phi, dt, xx, yy, theta0, frozen, nomut):
+    """
+    Inject novel mutations for a timestep for autotetraploids. 
+    This is corrected to account for the diffusion time scaling being in units of 2N generations.
+    """
+    if not frozen and not nomut:
+        phi[1,0] += dt/xx[1] * theta0/4 * 4/((xx[2] - xx[0]) * yy[1])
     return phi
 
 ### ==========================================================================
 ### CLASS DEFINITION FOR SPECIFYING PLOIDY
 ### ==========================================================================
 
-# TODO think more about separating ALLO into ALLOA and ALLOB
-# TODO for now this is fine, but if we add hexaploids, we'll need to specify auto as autotet
-# TODO ask Ryan about this structure
 class PloidyType(IntEnum):
     DIPLOID = 0
     AUTO = 1
-    ALLO = 2
+    ALLOa = 2
+    ALLOb = 3
     
     def param_names(self):
         """Return parameter names for this ploidy type"""
         param_map = {
             PloidyType.DIPLOID: ['gamma', 'h'],
             PloidyType.AUTO: ['gamma1', 'gamma2', 'gamma3', 'gamma4'],
-            PloidyType.ALLO: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
+            PloidyType.ALLOa: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
+                              'gamma12', 'gamma20', 'gamma21', 'gamma22'],
+            PloidyType.ALLOb: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
                               'gamma12', 'gamma20', 'gamma21', 'gamma22']
         }
         return param_map[self]
@@ -182,7 +286,12 @@ class PloidyType(IntEnum):
                 sel_params[2] = sel_dict.get('gamma3', 0)
                 sel_params[3] = sel_dict.get('gamma4', 0)
                 
-        elif self == PloidyType.ALLO:
+        elif self == PloidyType.ALLOa:
+            param_names = self.param_names()
+            for i, param_name in enumerate(param_names):
+                sel_params[i] = sel_dict.get(param_name, 0)
+        
+        elif self == PloidyType.ALLOb:
             param_names = self.param_names()
             for i, param_name in enumerate(param_names):
                 sel_params[i] = sel_dict.get(param_name, 0)
@@ -194,7 +303,7 @@ class PloidyType(IntEnum):
 ### ==========================================================================
 
 def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.0, initial_t=0, 
-            frozen=False, deme_ids=None, bypass_const_params=False):
+            frozen=False, deme_ids=None):
     """
     Integrate a 1-dimensional phi foward.
 
@@ -231,15 +340,17 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
                          'intial_time (%f). Integration cannot be run '
                          'backwards.' % (T, initial_t))
     
+    # vector of ploidy coefficients 
+    # *only* for the 1 pop case is ploidy a vector of length 2
+    # e.g. [0, 1] specifies the current population as autotetraploid
     ploidy = numpy.zeros(2, dtype=numpy.intc)
     ploidy[ploidyflag] = 1
     # get the selection variables
     sel = ploidyflag.pack_sel_params(sel_dict=sel_dict)
     vars_to_check = (nu, sel[0], sel[1], sel[2], sel[3], theta0)
-    if not bypass_const_params:
-        if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
-            Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
-            return _one_pop_const_params(phi, xx, T, sel[0], sel[1], sel[2], sel[3], ploidy,
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
+        return _one_pop_const_params(phi, xx, T, sel[0], sel[1], sel[2], sel[3], ploidy,
                                       nu, theta0, initial_t)
 
     # The user will only pass in selection params/funcs for one type of pop
@@ -274,7 +385,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
     demes_hist = [[0, [nu], []]]
     while current_t < T:
         if ploidyflag == PloidyType.DIPLOID:
-            dt = ploidy[0] * _compute_dt(dx,nu,[0],gamma,h)
+            dt = ploidy[0] * _compute_dt_dip(dx,nu,[0],gamma,h)
         else:
             dt = ploidy[1] * _compute_dt_auto(dx,nu,[0],gam1,gam2,gam3,gam4)
         this_dt = min(dt, T - current_t)
@@ -315,7 +426,6 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
-
 # ============================================================================
 # PYTHON FUNCTIONS AND CONST_PARAMS INTEGRATION
 # ============================================================================
@@ -330,7 +440,6 @@ def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
            (-6*gam1 + 3*gam2)) * x + 
            gam1)
     return x * (1 - x) * 2 * poly
-
 def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
     poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
             (9*gam1 - 9*gam2 + 3*gam3)) * x +
@@ -409,7 +518,7 @@ def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, thet
         V = _Vfunc(xx, nu)
         VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.5 # term for the Boundary Conditions
-        dt = _compute_dt(dx,nu,[0],sel0,sel1)
+        dt = _compute_dt_dip(dx,nu,[0],sel0,sel1)
     else:
         M = _Mfunc1D_auto(xx, sel0, sel1, sel2, sel3)
         MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, sel0, sel1, sel2, sel3)
