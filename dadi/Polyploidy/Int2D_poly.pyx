@@ -468,7 +468,7 @@ def implicit_2Dy(np.ndarray[double, ndim=1] phi,
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_2Dx(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,
+    c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,
                     dy, dfactor, yInt, delj, MInt, V, VInt, 
                     a, b, c, r, temp)
     return phi                            

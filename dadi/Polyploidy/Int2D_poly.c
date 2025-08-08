@@ -23,15 +23,15 @@
             ".."
         ],
         "language": "c",
-        "name": "Int1D_poly",
+        "name": "Int2D_poly",
         "sources": [
-            "Int1D_poly.pyx",
+            "Int2D_poly.pyx",
             "integration_shared_poly.c",
             "../integration_shared.c",
             "../tridiag.c"
         ]
     },
-    "module_name": "Int1D_poly"
+    "module_name": "Int2D_poly"
 }
 END: Cython Metadata */
 
@@ -1147,8 +1147,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__Int1D_poly
-#define __PYX_HAVE_API__Int1D_poly
+#define __PYX_HAVE__Int2D_poly
+#define __PYX_HAVE_API__Int2D_poly
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -1394,7 +1394,7 @@ static const char *__pyx_filename;
 /* #### Code section: filename_table ### */
 
 static const char* const __pyx_f[] = {
-  "Int1D_poly.pyx",
+  "Int2D_poly.pyx",
   "<stringsource>",
   "../../../../miniconda3/envs/dadi-dev/lib/python3.10/site-packages/numpy/__init__.cython-30.pxd",
   "cpython/type.pxd",
@@ -2856,6 +2856,9 @@ static int __Pyx_ValidateAndInit_memviewslice(
                 PyObject *original_obj);
 
 /* ObjectToMemviewSlice.proto */
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_double(PyObject *, int writable_flag);
+
+/* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_double(PyObject *, int writable_flag);
 
 /* ObjectToMemviewSlice.proto */
@@ -3183,7 +3186,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__p
 
 /* Module declarations from "numpy" */
 
-/* Module declarations from "Int1D_poly" */
+/* Module declarations from "Int2D_poly" */
 static PyObject *__pyx_collections_abc_Sequence = 0;
 static PyObject *generic = 0;
 static PyObject *strided = 0;
@@ -3192,7 +3195,8 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice, __Pyx_memviewslice, double, __Pyx_memviewslice, double, int, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
+static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, double, __Pyx_memviewslice, double, int, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
+static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, double, __Pyx_memviewslice, double, int, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 static int __pyx_array_allocate_buffer(struct __pyx_array_obj *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char const *, char *); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo const *); /*proto*/
@@ -3231,11 +3235,11 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, 
 static const __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 static const __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, __PYX_IS_UNSIGNED(int) ? 'U' : 'I', __PYX_IS_UNSIGNED(int), 0 };
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "Int1D_poly"
-extern int __pyx_module_is_main_Int1D_poly;
-int __pyx_module_is_main_Int1D_poly = 0;
+#define __Pyx_MODULE_NAME "Int2D_poly"
+extern int __pyx_module_is_main_Int2D_poly;
+int __pyx_module_is_main_Int2D_poly = 0;
 
-/* Implementation of "Int1D_poly" */
+/* Implementation of "Int2D_poly" */
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin___import__;
@@ -3264,15 +3268,22 @@ static const char __pyx_k__5[] = ")";
 static const char __pyx_k__6[] = "?";
 static const char __pyx_k_dt[] = "dt";
 static const char __pyx_k_dx[] = "dx";
+static const char __pyx_k_dy[] = "dy";
 static const char __pyx_k_gc[] = "gc";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k_nu[] = "nu";
+static const char __pyx_k_s1[] = "s1";
+static const char __pyx_k_s2[] = "s2";
 static const char __pyx_k_xx[] = "xx";
+static const char __pyx_k_yy[] = "yy";
 static const char __pyx_k_abc[] = "abc";
 static const char __pyx_k_and[] = " and ";
 static const char __pyx_k_got[] = " (got ";
+static const char __pyx_k_m12[] = "m12";
+static const char __pyx_k_m21[] = "m21";
 static const char __pyx_k_new[] = "__new__";
+static const char __pyx_k_nu1[] = "nu1";
+static const char __pyx_k_nu2[] = "nu2";
 static const char __pyx_k_obj[] = "obj";
 static const char __pyx_k_phi[] = "phi";
 static const char __pyx_k_pop[] = "pop";
@@ -3291,8 +3302,10 @@ static const char __pyx_k_size[] = "size";
 static const char __pyx_k_spec[] = "__spec__";
 static const char __pyx_k_step[] = "step";
 static const char __pyx_k_stop[] = "stop";
+static const char __pyx_k_temp[] = "temp";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_xInt[] = "xInt";
+static const char __pyx_k_yInt[] = "yInt";
 static const char __pyx_k_ASCII[] = "ASCII";
 static const char __pyx_k_at_0x[] = " at 0x";
 static const char __pyx_k_class[] = "__class__";
@@ -3321,7 +3334,6 @@ static const char __pyx_k_dfactor[] = "dfactor";
 static const char __pyx_k_disable[] = "disable";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
-static const char __pyx_k_sel_vec[] = "sel_vec";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
 static const char __pyx_k_Sequence[] = "Sequence";
 static const char __pyx_k_add_note[] = "add_note";
@@ -3338,13 +3350,14 @@ static const char __pyx_k_isenabled[] = "isenabled";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_IndexError[] = "IndexError";
-static const char __pyx_k_Int1D_poly[] = "Int1D_poly";
+static const char __pyx_k_Int2D_poly[] = "Int2D_poly";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
-static const char __pyx_k_implicit_1Dx[] = "implicit_1Dx";
+static const char __pyx_k_implicit_2Dx[] = "implicit_2Dx";
+static const char __pyx_k_implicit_2Dy[] = "implicit_2Dy";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
@@ -3352,7 +3365,7 @@ static const char __pyx_k_MemoryView_of[] = "<MemoryView of ";
 static const char __pyx_k_class_getitem[] = "__class_getitem__";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_AssertionError[] = "AssertionError";
-static const char __pyx_k_Int1D_poly_pyx[] = "Int1D_poly.pyx";
+static const char __pyx_k_Int2D_poly_pyx[] = "Int2D_poly.pyx";
 static const char __pyx_k_use_delj_trick[] = "use_delj_trick";
 static const char __pyx_k_View_MemoryView[] = "View.MemoryView";
 static const char __pyx_k_allocate_buffer[] = "allocate_buffer";
@@ -3360,7 +3373,6 @@ static const char __pyx_k_collections_abc[] = "collections.abc";
 static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
-static const char __pyx_k_D_5_D_Q_IV6_s_3c_1[] = "\200\001\360D\002\000\005\023\220!\2205\230\004\230D\240\t\250\024\320-=\270Q\330 $\240I\250V\2606\270\026\270s\300!\330 #\2403\240c\250\021\330\004\013\2101";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
@@ -3368,6 +3380,7 @@ static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_Invalid_shape_in_axis[] = "Invalid shape in axis ";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
 static const char __pyx_k_Cannot_index_with_type[] = "Cannot index with type '";
+static const char __pyx_k_N_5_D_U_d2B_vV3a_s_S_1[] = "\200\001\360N\002\000\005\023\220!\2205\230\004\230D\240\005\240U\250$\250d\3202B\300!\330\024\030\230\t\240\026\240v\250V\2603\260a\330\024\027\220s\230#\230S\240\001\330\004\013\2101";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
 static const char __pyx_k_Dimension_d_is_not_direct[] = "Dimension %d is not direct";
 static const char __pyx_k_Index_out_of_bounds_axis_d[] = "Index out of bounds (axis %d)";
@@ -3435,7 +3448,8 @@ static void __pyx_memoryviewslice___pyx_pf_15View_dot_MemoryView_16_memoryviewsl
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_phi, PyArrayObject *__pyx_v_xx, double __pyx_v_nu, PyArrayObject *__pyx_v_sel_vec, double __pyx_v_dt, int __pyx_v_use_delj_trick, PyArrayObject *__pyx_v_ploidy, PyArrayObject *__pyx_v_dx, PyArrayObject *__pyx_v_dfactor, PyArrayObject *__pyx_v_xInt, PyArrayObject *__pyx_v_delj, PyArrayObject *__pyx_v_MInt, PyArrayObject *__pyx_v_V, PyArrayObject *__pyx_v_VInt, PyArrayObject *__pyx_v_a, PyArrayObject *__pyx_v_b, PyArrayObject *__pyx_v_c, PyArrayObject *__pyx_v_r); /* proto */
+static PyObject *__pyx_pf_10Int2D_poly_implicit_2Dx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_phi, PyArrayObject *__pyx_v_xx, PyArrayObject *__pyx_v_yy, double __pyx_v_nu1, double __pyx_v_m12, PyArrayObject *__pyx_v_s1, double __pyx_v_dt, int __pyx_v_use_delj_trick, PyArrayObject *__pyx_v_ploidy, PyArrayObject *__pyx_v_dx, PyArrayObject *__pyx_v_dfactor, PyArrayObject *__pyx_v_xInt, PyArrayObject *__pyx_v_delj, PyArrayObject *__pyx_v_MInt, PyArrayObject *__pyx_v_V, PyArrayObject *__pyx_v_VInt, PyArrayObject *__pyx_v_a, PyArrayObject *__pyx_v_b, PyArrayObject *__pyx_v_c, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_temp); /* proto */
+static PyObject *__pyx_pf_10Int2D_poly_2implicit_2Dy(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_phi, PyArrayObject *__pyx_v_xx, PyArrayObject *__pyx_v_yy, double __pyx_v_nu2, double __pyx_v_m21, PyArrayObject *__pyx_v_s2, double __pyx_v_dt, int __pyx_v_use_delj_trick, PyArrayObject *__pyx_v_ploidy, PyArrayObject *__pyx_v_dy, PyArrayObject *__pyx_v_dfactor, PyArrayObject *__pyx_v_yInt, PyArrayObject *__pyx_v_delj, PyArrayObject *__pyx_v_MInt, PyArrayObject *__pyx_v_V, PyArrayObject *__pyx_v_VInt, PyArrayObject *__pyx_v_a, PyArrayObject *__pyx_v_b, PyArrayObject *__pyx_v_c, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_temp); /* proto */
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -3505,8 +3519,8 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   PyObject *__pyx_slice[1];
   PyObject *__pyx_tuple[2];
-  PyObject *__pyx_codeobj_tab[1];
-  PyObject *__pyx_string_tab[143];
+  PyObject *__pyx_codeobj_tab[2];
+  PyObject *__pyx_string_tab[152];
   PyObject *__pyx_int_0;
   PyObject *__pyx_int_1;
   PyObject *__pyx_int_112105877;
@@ -3568,8 +3582,8 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_IndexError __pyx_string_tab[15]
 #define __pyx_kp_u_Index_out_of_bounds_axis_d __pyx_string_tab[16]
 #define __pyx_kp_u_Indirect_dimensions_not_supporte __pyx_string_tab[17]
-#define __pyx_n_u_Int1D_poly __pyx_string_tab[18]
-#define __pyx_kp_u_Int1D_poly_pyx __pyx_string_tab[19]
+#define __pyx_n_u_Int2D_poly __pyx_string_tab[18]
+#define __pyx_kp_u_Int2D_poly_pyx __pyx_string_tab[19]
 #define __pyx_kp_u_Invalid_mode_expected_c_or_fortr __pyx_string_tab[20]
 #define __pyx_kp_u_Invalid_shape_in_axis __pyx_string_tab[21]
 #define __pyx_n_u_MInt __pyx_string_tab[22]
@@ -3616,83 +3630,92 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_dt __pyx_string_tab[63]
 #define __pyx_n_u_dtype_is_object __pyx_string_tab[64]
 #define __pyx_n_u_dx __pyx_string_tab[65]
-#define __pyx_kp_u_enable __pyx_string_tab[66]
-#define __pyx_n_u_encode __pyx_string_tab[67]
-#define __pyx_n_u_enumerate __pyx_string_tab[68]
-#define __pyx_n_u_error __pyx_string_tab[69]
-#define __pyx_n_u_flags __pyx_string_tab[70]
-#define __pyx_n_u_format __pyx_string_tab[71]
-#define __pyx_n_u_fortran __pyx_string_tab[72]
-#define __pyx_n_u_func __pyx_string_tab[73]
-#define __pyx_kp_u_gc __pyx_string_tab[74]
-#define __pyx_n_u_getstate __pyx_string_tab[75]
-#define __pyx_kp_u_got __pyx_string_tab[76]
-#define __pyx_kp_u_got_differing_extents_in_dimensi __pyx_string_tab[77]
-#define __pyx_n_u_id __pyx_string_tab[78]
-#define __pyx_n_u_implicit_1Dx __pyx_string_tab[79]
-#define __pyx_n_u_import __pyx_string_tab[80]
-#define __pyx_n_u_index __pyx_string_tab[81]
-#define __pyx_n_u_initializing __pyx_string_tab[82]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[83]
-#define __pyx_kp_u_isenabled __pyx_string_tab[84]
-#define __pyx_n_u_itemsize __pyx_string_tab[85]
-#define __pyx_kp_u_itemsize_0_for_cython_array __pyx_string_tab[86]
-#define __pyx_n_u_main __pyx_string_tab[87]
-#define __pyx_n_u_memview __pyx_string_tab[88]
-#define __pyx_n_u_mode __pyx_string_tab[89]
-#define __pyx_n_u_module __pyx_string_tab[90]
-#define __pyx_n_u_name __pyx_string_tab[91]
-#define __pyx_n_u_name_2 __pyx_string_tab[92]
-#define __pyx_n_u_ndim __pyx_string_tab[93]
-#define __pyx_n_u_new __pyx_string_tab[94]
-#define __pyx_kp_u_no_default___reduce___due_to_non __pyx_string_tab[95]
-#define __pyx_n_u_np __pyx_string_tab[96]
-#define __pyx_n_u_nu __pyx_string_tab[97]
-#define __pyx_n_u_numpy __pyx_string_tab[98]
-#define __pyx_kp_u_numpy__core_multiarray_failed_to __pyx_string_tab[99]
-#define __pyx_kp_u_numpy__core_umath_failed_to_impo __pyx_string_tab[100]
-#define __pyx_n_u_obj __pyx_string_tab[101]
-#define __pyx_kp_u_object __pyx_string_tab[102]
-#define __pyx_n_u_pack __pyx_string_tab[103]
-#define __pyx_n_u_phi __pyx_string_tab[104]
-#define __pyx_n_u_pickle __pyx_string_tab[105]
-#define __pyx_n_u_ploidy __pyx_string_tab[106]
-#define __pyx_n_u_pop __pyx_string_tab[107]
-#define __pyx_n_u_pyx_checksum __pyx_string_tab[108]
-#define __pyx_n_u_pyx_state __pyx_string_tab[109]
-#define __pyx_n_u_pyx_type __pyx_string_tab[110]
-#define __pyx_n_u_pyx_unpickle_Enum __pyx_string_tab[111]
-#define __pyx_n_u_pyx_vtable __pyx_string_tab[112]
-#define __pyx_n_u_qualname __pyx_string_tab[113]
-#define __pyx_n_u_r __pyx_string_tab[114]
-#define __pyx_n_u_range __pyx_string_tab[115]
-#define __pyx_n_u_reduce __pyx_string_tab[116]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[117]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[118]
-#define __pyx_n_u_register __pyx_string_tab[119]
-#define __pyx_n_u_sel_vec __pyx_string_tab[120]
-#define __pyx_n_u_set_name __pyx_string_tab[121]
-#define __pyx_n_u_setstate __pyx_string_tab[122]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[123]
-#define __pyx_n_u_shape __pyx_string_tab[124]
-#define __pyx_n_u_size __pyx_string_tab[125]
-#define __pyx_n_u_spec __pyx_string_tab[126]
-#define __pyx_n_u_start __pyx_string_tab[127]
-#define __pyx_n_u_step __pyx_string_tab[128]
-#define __pyx_n_u_stop __pyx_string_tab[129]
-#define __pyx_kp_u_strided_and_direct __pyx_string_tab[130]
-#define __pyx_kp_u_strided_and_direct_or_indirect __pyx_string_tab[131]
-#define __pyx_kp_u_strided_and_indirect __pyx_string_tab[132]
-#define __pyx_n_u_struct __pyx_string_tab[133]
-#define __pyx_n_u_test __pyx_string_tab[134]
-#define __pyx_kp_u_unable_to_allocate_array_data __pyx_string_tab[135]
-#define __pyx_kp_u_unable_to_allocate_shape_and_str __pyx_string_tab[136]
-#define __pyx_n_u_unpack __pyx_string_tab[137]
-#define __pyx_n_u_update __pyx_string_tab[138]
-#define __pyx_n_u_use_delj_trick __pyx_string_tab[139]
-#define __pyx_n_u_x __pyx_string_tab[140]
-#define __pyx_n_u_xInt __pyx_string_tab[141]
-#define __pyx_n_u_xx __pyx_string_tab[142]
+#define __pyx_n_u_dy __pyx_string_tab[66]
+#define __pyx_kp_u_enable __pyx_string_tab[67]
+#define __pyx_n_u_encode __pyx_string_tab[68]
+#define __pyx_n_u_enumerate __pyx_string_tab[69]
+#define __pyx_n_u_error __pyx_string_tab[70]
+#define __pyx_n_u_flags __pyx_string_tab[71]
+#define __pyx_n_u_format __pyx_string_tab[72]
+#define __pyx_n_u_fortran __pyx_string_tab[73]
+#define __pyx_n_u_func __pyx_string_tab[74]
+#define __pyx_kp_u_gc __pyx_string_tab[75]
+#define __pyx_n_u_getstate __pyx_string_tab[76]
+#define __pyx_kp_u_got __pyx_string_tab[77]
+#define __pyx_kp_u_got_differing_extents_in_dimensi __pyx_string_tab[78]
+#define __pyx_n_u_id __pyx_string_tab[79]
+#define __pyx_n_u_implicit_2Dx __pyx_string_tab[80]
+#define __pyx_n_u_implicit_2Dy __pyx_string_tab[81]
+#define __pyx_n_u_import __pyx_string_tab[82]
+#define __pyx_n_u_index __pyx_string_tab[83]
+#define __pyx_n_u_initializing __pyx_string_tab[84]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[85]
+#define __pyx_kp_u_isenabled __pyx_string_tab[86]
+#define __pyx_n_u_itemsize __pyx_string_tab[87]
+#define __pyx_kp_u_itemsize_0_for_cython_array __pyx_string_tab[88]
+#define __pyx_n_u_m12 __pyx_string_tab[89]
+#define __pyx_n_u_m21 __pyx_string_tab[90]
+#define __pyx_n_u_main __pyx_string_tab[91]
+#define __pyx_n_u_memview __pyx_string_tab[92]
+#define __pyx_n_u_mode __pyx_string_tab[93]
+#define __pyx_n_u_module __pyx_string_tab[94]
+#define __pyx_n_u_name __pyx_string_tab[95]
+#define __pyx_n_u_name_2 __pyx_string_tab[96]
+#define __pyx_n_u_ndim __pyx_string_tab[97]
+#define __pyx_n_u_new __pyx_string_tab[98]
+#define __pyx_kp_u_no_default___reduce___due_to_non __pyx_string_tab[99]
+#define __pyx_n_u_np __pyx_string_tab[100]
+#define __pyx_n_u_nu1 __pyx_string_tab[101]
+#define __pyx_n_u_nu2 __pyx_string_tab[102]
+#define __pyx_n_u_numpy __pyx_string_tab[103]
+#define __pyx_kp_u_numpy__core_multiarray_failed_to __pyx_string_tab[104]
+#define __pyx_kp_u_numpy__core_umath_failed_to_impo __pyx_string_tab[105]
+#define __pyx_n_u_obj __pyx_string_tab[106]
+#define __pyx_kp_u_object __pyx_string_tab[107]
+#define __pyx_n_u_pack __pyx_string_tab[108]
+#define __pyx_n_u_phi __pyx_string_tab[109]
+#define __pyx_n_u_pickle __pyx_string_tab[110]
+#define __pyx_n_u_ploidy __pyx_string_tab[111]
+#define __pyx_n_u_pop __pyx_string_tab[112]
+#define __pyx_n_u_pyx_checksum __pyx_string_tab[113]
+#define __pyx_n_u_pyx_state __pyx_string_tab[114]
+#define __pyx_n_u_pyx_type __pyx_string_tab[115]
+#define __pyx_n_u_pyx_unpickle_Enum __pyx_string_tab[116]
+#define __pyx_n_u_pyx_vtable __pyx_string_tab[117]
+#define __pyx_n_u_qualname __pyx_string_tab[118]
+#define __pyx_n_u_r __pyx_string_tab[119]
+#define __pyx_n_u_range __pyx_string_tab[120]
+#define __pyx_n_u_reduce __pyx_string_tab[121]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[122]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[123]
+#define __pyx_n_u_register __pyx_string_tab[124]
+#define __pyx_n_u_s1 __pyx_string_tab[125]
+#define __pyx_n_u_s2 __pyx_string_tab[126]
+#define __pyx_n_u_set_name __pyx_string_tab[127]
+#define __pyx_n_u_setstate __pyx_string_tab[128]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[129]
+#define __pyx_n_u_shape __pyx_string_tab[130]
+#define __pyx_n_u_size __pyx_string_tab[131]
+#define __pyx_n_u_spec __pyx_string_tab[132]
+#define __pyx_n_u_start __pyx_string_tab[133]
+#define __pyx_n_u_step __pyx_string_tab[134]
+#define __pyx_n_u_stop __pyx_string_tab[135]
+#define __pyx_kp_u_strided_and_direct __pyx_string_tab[136]
+#define __pyx_kp_u_strided_and_direct_or_indirect __pyx_string_tab[137]
+#define __pyx_kp_u_strided_and_indirect __pyx_string_tab[138]
+#define __pyx_n_u_struct __pyx_string_tab[139]
+#define __pyx_n_u_temp __pyx_string_tab[140]
+#define __pyx_n_u_test __pyx_string_tab[141]
+#define __pyx_kp_u_unable_to_allocate_array_data __pyx_string_tab[142]
+#define __pyx_kp_u_unable_to_allocate_shape_and_str __pyx_string_tab[143]
+#define __pyx_n_u_unpack __pyx_string_tab[144]
+#define __pyx_n_u_update __pyx_string_tab[145]
+#define __pyx_n_u_use_delj_trick __pyx_string_tab[146]
+#define __pyx_n_u_x __pyx_string_tab[147]
+#define __pyx_n_u_xInt __pyx_string_tab[148]
+#define __pyx_n_u_xx __pyx_string_tab[149]
+#define __pyx_n_u_yInt __pyx_string_tab[150]
+#define __pyx_n_u_yy __pyx_string_tab[151]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -3739,8 +3762,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_type___pyx_memoryviewslice);
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_slice[i]); }
   for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<143; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<152; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   Py_CLEAR(clear_module_state->__pyx_int_0);
   Py_CLEAR(clear_module_state->__pyx_int_1);
   Py_CLEAR(clear_module_state->__pyx_int_112105877);
@@ -3793,8 +3816,8 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_type___pyx_memoryviewslice);
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_slice[i]); }
   for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<143; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<152; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_0);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_1);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_112105877);
@@ -18903,68 +18926,107 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "Int1D_poly.pyx":36
- * # CYTHON 1D INTEGRATION FUNCTION
+/* "Int2D_poly.pyx":43
  * # =========================================================
- * cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_vec,             # <<<<<<<<<<<<<<
+ * 
+ * cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,             # <<<<<<<<<<<<<<
+ *                         double nu1, double m12, double[:] s1,
  *                         double dt, int use_delj_trick, int[:] ploidy,
- *                         double[:] dx, double[:] dfactor, double[:] xInt, double[:] delj,
 */
 
-static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, __Pyx_memviewslice __pyx_v_xx, double __pyx_v_nu, __Pyx_memviewslice __pyx_v_sel_vec, double __pyx_v_dt, int __pyx_v_use_delj_trick, __Pyx_memviewslice __pyx_v_ploidy, __Pyx_memviewslice __pyx_v_dx, __Pyx_memviewslice __pyx_v_dfactor, __Pyx_memviewslice __pyx_v_xInt, __Pyx_memviewslice __pyx_v_delj, __Pyx_memviewslice __pyx_v_MInt, __Pyx_memviewslice __pyx_v_V, __Pyx_memviewslice __pyx_v_VInt, __Pyx_memviewslice __pyx_v_a, __Pyx_memviewslice __pyx_v_b, __Pyx_memviewslice __pyx_v_c, __Pyx_memviewslice __pyx_v_r) {
+static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, __Pyx_memviewslice __pyx_v_xx, __Pyx_memviewslice __pyx_v_yy, double __pyx_v_nu1, double __pyx_v_m12, __Pyx_memviewslice __pyx_v_s1, double __pyx_v_dt, int __pyx_v_use_delj_trick, __Pyx_memviewslice __pyx_v_ploidy, __Pyx_memviewslice __pyx_v_dx, __Pyx_memviewslice __pyx_v_dfactor, __Pyx_memviewslice __pyx_v_xInt, __Pyx_memviewslice __pyx_v_delj, __Pyx_memviewslice __pyx_v_MInt, __Pyx_memviewslice __pyx_v_V, __Pyx_memviewslice __pyx_v_VInt, __Pyx_memviewslice __pyx_v_a, __Pyx_memviewslice __pyx_v_b, __Pyx_memviewslice __pyx_v_c, __Pyx_memviewslice __pyx_v_r, __Pyx_memviewslice __pyx_v_temp) {
   int __pyx_v_L;
+  int __pyx_v_M;
   int __pyx_v_ii;
+  int __pyx_v_jj;
+  double __pyx_v_y;
   double __pyx_v_Mfirst;
   double __pyx_v_Mlast;
   int __pyx_v_is_diploid;
   int __pyx_v_is_auto;
+  int __pyx_v_is_alloa;
+  int __pyx_v_is_allob;
   Py_ssize_t __pyx_t_1;
   Py_ssize_t __pyx_t_2;
   int __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
+  int __pyx_t_4;
   int __pyx_t_5;
   int __pyx_t_6;
-  int __pyx_t_7;
+  long __pyx_t_7;
   long __pyx_t_8;
-  long __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
+  Py_ssize_t __pyx_t_9;
+  int __pyx_t_10;
   Py_ssize_t __pyx_t_11;
   Py_ssize_t __pyx_t_12;
   Py_ssize_t __pyx_t_13;
   Py_ssize_t __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  int __pyx_t_16;
+  int __pyx_t_17;
+  Py_ssize_t __pyx_t_18;
+  Py_ssize_t __pyx_t_19;
 
-  /* "Int1D_poly.pyx":46
- *     ### Note: most of the arrays used here are preallocated once in Python for efficiency
- * 
- *     cdef int L = xx.shape[0] # number of grid points             # <<<<<<<<<<<<<<
- *     cdef int ii # loop index
- *     cdef double Mfirst, Mlast
+  /* "Int2D_poly.pyx":52
+ *     # define memory for non-array variables
+ *     # Note: all of the arrays are preallocated for efficiency
+ *     cdef int L = xx.shape[0] # number of grid points in x direction             # <<<<<<<<<<<<<<
+ *     cdef int M = yy.shape[0] # number of grid points in y direction
+ *     cdef int ii # loop index for x
 */
   __pyx_v_L = (__pyx_v_xx.shape[0]);
 
-  /* "Int1D_poly.pyx":50
+  /* "Int2D_poly.pyx":53
+ *     # Note: all of the arrays are preallocated for efficiency
+ *     cdef int L = xx.shape[0] # number of grid points in x direction
+ *     cdef int M = yy.shape[0] # number of grid points in y direction             # <<<<<<<<<<<<<<
+ *     cdef int ii # loop index for x
+ *     cdef int jj # loop index for y
+*/
+  __pyx_v_M = (__pyx_v_yy.shape[0]);
+
+  /* "Int2D_poly.pyx":59
  *     cdef double Mfirst, Mlast
- *     # weights/coefficients for scaling
+ *     ### weights/coefficients for scaling
  *     cdef int is_diploid = ploidy[0]             # <<<<<<<<<<<<<<
  *     cdef int is_auto = ploidy[1]
- * 
+ *     cdef int is_alloa = ploidy[2]
 */
   __pyx_t_1 = 0;
   __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
 
-  /* "Int1D_poly.pyx":51
- *     # weights/coefficients for scaling
+  /* "Int2D_poly.pyx":60
+ *     ### weights/coefficients for scaling
  *     cdef int is_diploid = ploidy[0]
  *     cdef int is_auto = ploidy[1]             # <<<<<<<<<<<<<<
- * 
- *     # call the C functions for the grid spacings and other numerical details
+ *     cdef int is_alloa = ploidy[2]
+ *     cdef int is_allob = ploidy[3]
 */
   __pyx_t_1 = 1;
   __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
 
-  /* "Int1D_poly.pyx":54
+  /* "Int2D_poly.pyx":61
+ *     cdef int is_diploid = ploidy[0]
+ *     cdef int is_auto = ploidy[1]
+ *     cdef int is_alloa = ploidy[2]             # <<<<<<<<<<<<<<
+ *     cdef int is_allob = ploidy[3]
  * 
- *     # call the C functions for the grid spacings and other numerical details
+*/
+  __pyx_t_1 = 2;
+  __pyx_v_is_alloa = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
+
+  /* "Int2D_poly.pyx":62
+ *     cdef int is_auto = ploidy[1]
+ *     cdef int is_alloa = ploidy[2]
+ *     cdef int is_allob = ploidy[3]             # <<<<<<<<<<<<<<
+ * 
+ *     # compute the x step size and intermediate x values
+*/
+  __pyx_t_1 = 3;
+  __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
+
+  /* "Int2D_poly.pyx":65
+ * 
+ *     # compute the x step size and intermediate x values
  *     compute_dx(&xx[0], L, &dx[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dx[0], L, &dfactor[0])
  *     compute_xInt(&xx[0], L, &xInt[0])
@@ -18973,490 +19035,2680 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_2 = 0;
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_1 * __pyx_v_xx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_2 * __pyx_v_dx.strides[0]) )))));
 
-  /* "Int1D_poly.pyx":55
- *     # call the C functions for the grid spacings and other numerical details
+  /* "Int2D_poly.pyx":66
+ *     # compute the x step size and intermediate x values
  *     compute_dx(&xx[0], L, &dx[0])
  *     compute_dfactor(&dx[0], L, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&xx[0], L, &xInt[0])
- * 
+ *     # dynamic allocation of memory for tridiag
 */
   __pyx_t_2 = 0;
   __pyx_t_1 = 0;
   compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_2 * __pyx_v_dx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_1 * __pyx_v_dfactor.strides[0]) )))));
 
-  /* "Int1D_poly.pyx":56
+  /* "Int2D_poly.pyx":67
  *     compute_dx(&xx[0], L, &dx[0])
  *     compute_dfactor(&dx[0], L, &dfactor[0])
  *     compute_xInt(&xx[0], L, &xInt[0])             # <<<<<<<<<<<<<<
- * 
- *     # branch on ploidy type here
+ *     # dynamic allocation of memory for tridiag
+ *     tridiag_malloc(L)
 */
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
   compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_1 * __pyx_v_xx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_2 * __pyx_v_xInt.strides[0]) )))));
 
-  /* "Int1D_poly.pyx":59
+  /* "Int2D_poly.pyx":69
+ *     compute_xInt(&xx[0], L, &xInt[0])
+ *     # dynamic allocation of memory for tridiag
+ *     tridiag_malloc(L)             # <<<<<<<<<<<<<<
  * 
- *     # branch on ploidy type here
+ *     # branch on ploidy
+*/
+  tridiag_malloc(__pyx_v_L);
+
+  /* "Int2D_poly.pyx":72
+ * 
+ *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
- *         Mfirst = Mfunc1D(xx[0], sel_vec[0], sel_vec[1])
- *         Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1])
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
 */
   __pyx_t_3 = (__pyx_v_is_diploid != 0);
   if (__pyx_t_3) {
 
-    /* "Int1D_poly.pyx":60
- *     # branch on ploidy type here
+    /* "Int2D_poly.pyx":74
  *     if is_diploid:
- *         Mfirst = Mfunc1D(xx[0], sel_vec[0], sel_vec[1])             # <<<<<<<<<<<<<<
- *         Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1])
- * 
-*/
-    __pyx_t_2 = 0;
-    __pyx_t_1 = 0;
-    __pyx_t_4 = 1;
-    __pyx_v_Mfirst = Mfunc1D((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_2 * __pyx_v_xx.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_1 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_4 * __pyx_v_sel_vec.strides[0]) ))));
-
-    /* "Int1D_poly.pyx":61
- *     if is_diploid:
- *         Mfirst = Mfunc1D(xx[0], sel_vec[0], sel_vec[1])
- *         Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1])             # <<<<<<<<<<<<<<
- * 
- *         for ii in range(0, L):
-*/
-    __pyx_t_4 = (__pyx_v_L - 1);
-    __pyx_t_1 = 0;
-    __pyx_t_2 = 1;
-    __pyx_v_Mlast = Mfunc1D((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_4 * __pyx_v_xx.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_1 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_2 * __pyx_v_sel_vec.strides[0]) ))));
-
-    /* "Int1D_poly.pyx":63
- *         Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1])
- * 
+ *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
- *             V[ii] = Vfunc(xx[ii], nu)
- * 
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):
 */
-    __pyx_t_5 = __pyx_v_L;
-    __pyx_t_6 = __pyx_t_5;
-    for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
-      __pyx_v_ii = __pyx_t_7;
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
 
-      /* "Int1D_poly.pyx":64
- * 
+      /* "Int2D_poly.pyx":75
+ *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
- *             V[ii] = Vfunc(xx[ii], nu)             # <<<<<<<<<<<<<<
- * 
+ *             V[ii] = Vfunc(xx[ii], nu1)             # <<<<<<<<<<<<<<
  *         for ii in range(0, L-1):
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
 */
       __pyx_t_2 = __pyx_v_ii;
       __pyx_t_1 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_1 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_2 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_1 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_2 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int1D_poly.pyx":66
- *             V[ii] = Vfunc(xx[ii], nu)
- * 
+    /* "Int2D_poly.pyx":76
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *             MInt[ii] = Mfunc1D(xInt[ii], sel_vec[0], sel_vec[1])
- *             VInt[ii] = Vfunc(xInt[ii], nu)
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+ *         # loop through y values
 */
-    __pyx_t_8 = (__pyx_v_L - 1);
-    __pyx_t_9 = __pyx_t_8;
-    for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_9; __pyx_t_5+=1) {
-      __pyx_v_ii = __pyx_t_5;
+    __pyx_t_7 = (__pyx_v_L - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_ii = __pyx_t_4;
 
-      /* "Int1D_poly.pyx":67
- * 
+      /* "Int2D_poly.pyx":77
+ *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):
- *             MInt[ii] = Mfunc1D(xInt[ii], sel_vec[0], sel_vec[1])             # <<<<<<<<<<<<<<
- *             VInt[ii] = Vfunc(xInt[ii], nu)
- * 
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)             # <<<<<<<<<<<<<<
+ *         # loop through y values
+ *         for jj in range(M):
 */
       __pyx_t_2 = __pyx_v_ii;
-      __pyx_t_1 = 0;
-      __pyx_t_4 = 1;
-      __pyx_t_10 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_10 * __pyx_v_MInt.strides[0]) )) = Mfunc1D((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_2 * __pyx_v_xInt.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_1 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_4 * __pyx_v_sel_vec.strides[0]) ))));
-
-      /* "Int1D_poly.pyx":68
- *         for ii in range(0, L-1):
- *             MInt[ii] = Mfunc1D(xInt[ii], sel_vec[0], sel_vec[1])
- *             VInt[ii] = Vfunc(xInt[ii], nu)             # <<<<<<<<<<<<<<
- * 
- *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-*/
-      __pyx_t_4 = __pyx_v_ii;
       __pyx_t_1 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_1 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_4 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_1 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_2 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int1D_poly.pyx":70
- *             VInt[ii] = Vfunc(xInt[ii], nu)
- * 
- *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+    /* "Int2D_poly.pyx":79
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+ *         # loop through y values
+ *         for jj in range(M):             # <<<<<<<<<<<<<<
+ *             y = yy[jj]
  * 
 */
-    __pyx_t_4 = 0;
-    __pyx_t_1 = 0;
-    __pyx_t_2 = 0;
-    __pyx_t_10 = 0;
-    compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_4 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_1 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_2 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_10 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
 
-    /* "Int1D_poly.pyx":71
+      /* "Int2D_poly.pyx":80
+ *         # loop through y values
+ *         for jj in range(M):
+ *             y = yy[jj]             # <<<<<<<<<<<<<<
  * 
- *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- * 
- *         if Mfirst <= 0:
+ *             Mfirst = Mfunc2D(xx[0], y, m12, s1[0], s1[1])
 */
-    __pyx_t_10 = 0;
-    __pyx_t_2 = 0;
-    __pyx_t_1 = 0;
-    __pyx_t_4 = 0;
-    __pyx_t_11 = 0;
-    __pyx_t_12 = 0;
-    __pyx_t_13 = 0;
-    __pyx_t_14 = 0;
-    compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_10 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_2 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_1 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_4 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_11 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_12 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_13 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_14 * __pyx_v_c.strides[0]) )))));
+      __pyx_t_2 = __pyx_v_jj;
+      __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_2 * __pyx_v_yy.strides[0]) )));
 
-    /* "Int1D_poly.pyx":73
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+      /* "Int2D_poly.pyx":82
+ *             y = yy[jj]
  * 
- *         if Mfirst <= 0:             # <<<<<<<<<<<<<<
- *             b[0] += (0.5/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:
+ *             Mfirst = Mfunc2D(xx[0], y, m12, s1[0], s1[1])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D(xx[L-1], y, m12, s1[0], s1[1])
+ *             for ii in range(0, L-1):
 */
-    __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
-    if (__pyx_t_3) {
+      __pyx_t_2 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 1;
+      __pyx_v_Mfirst = Mfunc2D((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_2 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))));
 
-      /* "Int1D_poly.pyx":74
+      /* "Int2D_poly.pyx":83
  * 
- *         if Mfirst <= 0:
- *             b[0] += (0.5/nu - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *         if Mlast >= 0:
- *             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
+ *             Mfirst = Mfunc2D(xx[0], y, m12, s1[0], s1[1])
+ *             Mlast = Mfunc2D(xx[L-1], y, m12, s1[0], s1[1])             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])
+*/
+      __pyx_t_9 = (__pyx_v_L - 1);
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 1;
+      __pyx_v_Mlast = Mfunc2D((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":84
+ *             Mfirst = Mfunc2D(xx[0], y, m12, s1[0], s1[1])
+ *             Mlast = Mfunc2D(xx[L-1], y, m12, s1[0], s1[1])
+ *             for ii in range(0, L-1):             # <<<<<<<<<<<<<<
+ *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_L - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_ii = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":85
+ *             Mlast = Mfunc2D(xx[L-1], y, m12, s1[0], s1[1])
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_2 = __pyx_v_ii;
+        __pyx_t_1 = 0;
+        __pyx_t_9 = 1;
+        __pyx_t_11 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_11 * __pyx_v_MInt.strides[0]) )) = Mfunc2D((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_2 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":86
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_9 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_1 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_2 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_11 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":87
+ *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+*/
+      __pyx_t_11 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_11 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_2 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_1 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_12 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_13 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_14 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_15 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":88
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":89
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+*/
+        __pyx_t_15 = 0;
+        __pyx_t_14 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_14 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_15 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":88
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":90
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":91
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for ii in range(0, L):
+*/
+        __pyx_t_15 = (__pyx_v_L - 2);
+        __pyx_t_14 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_14 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_15 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":90
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":93
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":94
+ * 
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+*/
+        __pyx_t_15 = __pyx_v_ii;
+        __pyx_t_14 = __pyx_v_jj;
+        __pyx_t_13 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_13 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_15 * __pyx_v_phi.strides[0]) ) + __pyx_t_14 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":95
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]
 */
       __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
       __pyx_t_13 = 0;
-      *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_13 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_14 * __pyx_v_dx.strides[0]) ))));
+      __pyx_t_12 = 0;
+      __pyx_t_9 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_14 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_15 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_13 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_12 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_9 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
 
-      /* "Int1D_poly.pyx":73
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+      /* "Int2D_poly.pyx":96
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[ii]
  * 
- *         if Mfirst <= 0:             # <<<<<<<<<<<<<<
- *             b[0] += (0.5/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:
 */
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":97
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]             # <<<<<<<<<<<<<<
+ * 
+ *     elif is_auto:
+*/
+        __pyx_t_9 = __pyx_v_ii;
+        __pyx_t_12 = __pyx_v_ii;
+        __pyx_t_13 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_12 * __pyx_v_phi.strides[0]) ) + __pyx_t_13 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_9 * __pyx_v_temp.strides[0]) )));
+      }
     }
 
-    /* "Int1D_poly.pyx":75
- *         if Mfirst <= 0:
- *             b[0] += (0.5/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:             # <<<<<<<<<<<<<<
- *             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
+    /* "Int2D_poly.pyx":72
  * 
-*/
-    __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
-    if (__pyx_t_3) {
-
-      /* "Int1D_poly.pyx":76
- *             b[0] += (0.5/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:
- *             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
- * 
- *     if is_auto:
-*/
-      __pyx_t_14 = (__pyx_v_L - 2);
-      __pyx_t_13 = (__pyx_v_L - 1);
-      *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_13 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_14 * __pyx_v_dx.strides[0]) ))));
-
-      /* "Int1D_poly.pyx":75
- *         if Mfirst <= 0:
- *             b[0] += (0.5/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:             # <<<<<<<<<<<<<<
- *             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
- * 
-*/
-    }
-
-    /* "Int1D_poly.pyx":59
- * 
- *     # branch on ploidy type here
+ *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
- *         Mfirst = Mfunc1D(xx[0], sel_vec[0], sel_vec[1])
- *         Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1])
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
 */
+    goto __pyx_L3;
   }
 
-  /* "Int1D_poly.pyx":78
- *             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
+  /* "Int2D_poly.pyx":99
+ *                 phi[ii, jj] = temp[ii]
  * 
- *     if is_auto:             # <<<<<<<<<<<<<<
- *         Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+ *     elif is_auto:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
 */
   __pyx_t_3 = (__pyx_v_is_auto != 0);
   if (__pyx_t_3) {
 
-    /* "Int1D_poly.pyx":79
- * 
- *     if is_auto:
- *         Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])             # <<<<<<<<<<<<<<
- *         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- * 
-*/
-    __pyx_t_14 = 0;
-    __pyx_t_13 = 0;
-    __pyx_t_12 = 1;
-    __pyx_t_11 = 2;
-    __pyx_t_4 = 3;
-    __pyx_v_Mfirst = Mfunc1D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_13 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_12 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_11 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_4 * __pyx_v_sel_vec.strides[0]) ))));
-
-    /* "Int1D_poly.pyx":80
- *     if is_auto:
- *         Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])             # <<<<<<<<<<<<<<
- * 
- *         for ii in range(0, L):
-*/
-    __pyx_t_4 = (__pyx_v_L - 1);
-    __pyx_t_11 = 0;
-    __pyx_t_12 = 1;
-    __pyx_t_13 = 2;
-    __pyx_t_14 = 3;
-    __pyx_v_Mlast = Mfunc1D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_4 * __pyx_v_xx.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_11 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_12 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_13 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_14 * __pyx_v_sel_vec.strides[0]) ))));
-
-    /* "Int1D_poly.pyx":82
- *         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- * 
+    /* "Int2D_poly.pyx":101
+ *     elif is_auto:
+ *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
- *             V[ii] = Vfunc_auto(xx[ii], nu)
- * 
-*/
-    __pyx_t_5 = __pyx_v_L;
-    __pyx_t_6 = __pyx_t_5;
-    for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
-      __pyx_v_ii = __pyx_t_7;
-
-      /* "Int1D_poly.pyx":83
- * 
- *         for ii in range(0, L):
- *             V[ii] = Vfunc_auto(xx[ii], nu)             # <<<<<<<<<<<<<<
- * 
+ *             V[ii] = Vfunc_auto(xx[ii], nu1)
  *         for ii in range(0, L-1):
 */
-      __pyx_t_14 = __pyx_v_ii;
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":102
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc_auto(xx[ii], nu1)             # <<<<<<<<<<<<<<
+ *         for ii in range(0, L-1):
+ *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+*/
+      __pyx_t_9 = __pyx_v_ii;
       __pyx_t_13 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_13 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_13 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int1D_poly.pyx":85
- *             V[ii] = Vfunc_auto(xx[ii], nu)
- * 
+    /* "Int2D_poly.pyx":103
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc_auto(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)
+ *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *         # loop through y values
 */
-    __pyx_t_8 = (__pyx_v_L - 1);
-    __pyx_t_9 = __pyx_t_8;
-    for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_9; __pyx_t_5+=1) {
-      __pyx_v_ii = __pyx_t_5;
+    __pyx_t_7 = (__pyx_v_L - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_ii = __pyx_t_4;
 
-      /* "Int1D_poly.pyx":86
- * 
+      /* "Int2D_poly.pyx":104
+ *             V[ii] = Vfunc_auto(xx[ii], nu1)
  *         for ii in range(0, L-1):
- *             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])             # <<<<<<<<<<<<<<
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)
+ *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)             # <<<<<<<<<<<<<<
+ *         # loop through y values
+ *         for jj in range(M):
+*/
+      __pyx_t_9 = __pyx_v_ii;
+      __pyx_t_13 = __pyx_v_ii;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_13 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_9 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
+    }
+
+    /* "Int2D_poly.pyx":106
+ *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *         # loop through y values
+ *         for jj in range(M):             # <<<<<<<<<<<<<<
+ *             y = yy[jj]
  * 
 */
-      __pyx_t_14 = __pyx_v_ii;
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":107
+ *         # loop through y values
+ *         for jj in range(M):
+ *             y = yy[jj]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3])
+*/
+      __pyx_t_9 = __pyx_v_jj;
+      __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) )));
+
+      /* "Int2D_poly.pyx":109
+ *             y = yy[jj]
+ * 
+ *             Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             for ii in range(0, L-1):
+*/
+      __pyx_t_9 = 0;
       __pyx_t_13 = 0;
       __pyx_t_12 = 1;
-      __pyx_t_11 = 2;
-      __pyx_t_4 = 3;
-      __pyx_t_1 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_1 * __pyx_v_MInt.strides[0]) )) = Mfunc1D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_14 * __pyx_v_xInt.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_13 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_12 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_11 * __pyx_v_sel_vec.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_sel_vec.data + __pyx_t_4 * __pyx_v_sel_vec.strides[0]) ))));
+      __pyx_t_15 = 2;
+      __pyx_t_14 = 3;
+      __pyx_v_Mfirst = Mfunc2D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_14 * __pyx_v_s1.strides[0]) ))));
 
-      /* "Int1D_poly.pyx":87
- *         for ii in range(0, L-1):
- *             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)             # <<<<<<<<<<<<<<
+      /* "Int2D_poly.pyx":110
  * 
- *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3])             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])
 */
-      __pyx_t_4 = __pyx_v_ii;
-      __pyx_t_11 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_11 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_4 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu);
-    }
+      __pyx_t_14 = (__pyx_v_L - 1);
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_13 = 2;
+      __pyx_t_9 = 3;
+      __pyx_v_Mlast = Mfunc2D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))));
 
-    /* "Int1D_poly.pyx":89
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)
- * 
- *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
- * 
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+      /* "Int2D_poly.pyx":111
+ *             Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             for ii in range(0, L-1):             # <<<<<<<<<<<<<<
+ *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 */
-    __pyx_t_4 = 0;
-    __pyx_t_11 = 0;
-    __pyx_t_12 = 0;
-    __pyx_t_13 = 0;
-    compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_4 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_11 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+      __pyx_t_7 = (__pyx_v_L - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_ii = __pyx_t_10;
 
-    /* "Int1D_poly.pyx":91
- *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
- * 
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- * 
- *         if Mfirst <= 0:
+        /* "Int2D_poly.pyx":112
+ *             Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
 */
-    __pyx_t_13 = 0;
-    __pyx_t_12 = 0;
-    __pyx_t_11 = 0;
-    __pyx_t_4 = 0;
-    __pyx_t_14 = 0;
-    __pyx_t_1 = 0;
-    __pyx_t_2 = 0;
-    __pyx_t_10 = 0;
-    compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_13 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_11 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_4 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_14 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_1 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))));
+        __pyx_t_9 = __pyx_v_ii;
+        __pyx_t_13 = 0;
+        __pyx_t_12 = 1;
+        __pyx_t_15 = 2;
+        __pyx_t_14 = 3;
+        __pyx_t_1 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_1 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_9 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_14 * __pyx_v_s1.strides[0]) ))));
+      }
 
-    /* "Int1D_poly.pyx":93
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- * 
- *         if Mfirst <= 0:             # <<<<<<<<<<<<<<
- *             b[0] +=(0.25/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:
+      /* "Int2D_poly.pyx":113
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
 */
-    __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
-    if (__pyx_t_3) {
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_14 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_15 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-      /* "Int1D_poly.pyx":94
- * 
- *         if Mfirst <= 0:
- *             b[0] +=(0.25/nu - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *         if Mlast >= 0:
- *             b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]
+      /* "Int2D_poly.pyx":114
+ *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
 */
-      __pyx_t_10 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_14 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
       __pyx_t_2 = 0;
-      *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_10 * __pyx_v_dx.strides[0]) ))));
+      __pyx_t_11 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_13 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_15 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_14 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_1 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_11 * __pyx_v_c.strides[0]) )))));
 
-      /* "Int1D_poly.pyx":93
- *         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- * 
- *         if Mfirst <= 0:             # <<<<<<<<<<<<<<
- *             b[0] +=(0.25/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:
+      /* "Int2D_poly.pyx":115
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
 */
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":116
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
+*/
+        __pyx_t_11 = 0;
+        __pyx_t_2 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_11 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":115
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":117
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":118
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for ii in range(0, L):
+*/
+        __pyx_t_11 = (__pyx_v_L - 2);
+        __pyx_t_2 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_11 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":117
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":120
+ *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
+ * 
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":121
+ * 
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+*/
+        __pyx_t_11 = __pyx_v_ii;
+        __pyx_t_2 = __pyx_v_jj;
+        __pyx_t_1 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_1 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_11 * __pyx_v_phi.strides[0]) ) + __pyx_t_2 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":122
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]
+*/
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_14 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_2 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_11 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_9 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":123
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[ii]
+ * 
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":124
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]             # <<<<<<<<<<<<<<
+ * 
+ *     elif is_alloa:
+*/
+        __pyx_t_14 = __pyx_v_ii;
+        __pyx_t_9 = __pyx_v_ii;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_9 * __pyx_v_phi.strides[0]) ) + __pyx_t_1 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )));
+      }
     }
 
-    /* "Int1D_poly.pyx":95
- *         if Mfirst <= 0:
- *             b[0] +=(0.25/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:             # <<<<<<<<<<<<<<
- *             b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]
+    /* "Int2D_poly.pyx":99
+ *                 phi[ii, jj] = temp[ii]
  * 
+ *     elif is_auto:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
 */
-    __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
-    if (__pyx_t_3) {
+    goto __pyx_L3;
+  }
 
-      /* "Int1D_poly.pyx":96
- *             b[0] +=(0.25/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:
- *             b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
+  /* "Int2D_poly.pyx":126
+ *                 phi[ii, jj] = temp[ii]
  * 
- *     # calculate the RHS of the tridiagonal problem
+ *     elif is_alloa:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
 */
-      __pyx_t_10 = (__pyx_v_L - 2);
-      __pyx_t_2 = (__pyx_v_L - 1);
-      *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_10 * __pyx_v_dx.strides[0]) ))));
+  __pyx_t_3 = (__pyx_v_is_alloa != 0);
+  if (__pyx_t_3) {
 
-      /* "Int1D_poly.pyx":95
- *         if Mfirst <= 0:
- *             b[0] +=(0.25/nu - Mfirst)*2/dx[0]
- *         if Mlast >= 0:             # <<<<<<<<<<<<<<
- *             b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]
- * 
+    /* "Int2D_poly.pyx":128
+ *     elif is_alloa:
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):
 */
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":129
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc(xx[ii], nu1)             # <<<<<<<<<<<<<<
+ *         for ii in range(0, L-1):
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+*/
+      __pyx_t_14 = __pyx_v_ii;
+      __pyx_t_1 = __pyx_v_ii;
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_1 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int1D_poly.pyx":78
- *             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
- * 
- *     if is_auto:             # <<<<<<<<<<<<<<
- *         Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+    /* "Int2D_poly.pyx":130
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+ *         # loop through y values
 */
+    __pyx_t_7 = (__pyx_v_L - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_ii = __pyx_t_4;
+
+      /* "Int2D_poly.pyx":131
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)             # <<<<<<<<<<<<<<
+ *         # loop through y values
+ *         for jj in range(M):
+*/
+      __pyx_t_14 = __pyx_v_ii;
+      __pyx_t_1 = __pyx_v_ii;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_1 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_14 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
+    }
+
+    /* "Int2D_poly.pyx":133
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+ *         # loop through y values
+ *         for jj in range(M):             # <<<<<<<<<<<<<<
+ *             y = yy[jj]
+ * 
+*/
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":134
+ *         # loop through y values
+ *         for jj in range(M):
+ *             y = yy[jj]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+*/
+      __pyx_t_14 = __pyx_v_jj;
+      __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_14 * __pyx_v_yy.strides[0]) )));
+
+      /* "Int2D_poly.pyx":136
+ *             y = yy[jj]
+ * 
+ *             Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             for ii in range(0, L-1):
+*/
+      __pyx_t_14 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 1;
+      __pyx_t_11 = 2;
+      __pyx_t_2 = 3;
+      __pyx_t_15 = 4;
+      __pyx_t_12 = 5;
+      __pyx_t_13 = 6;
+      __pyx_t_18 = 7;
+      __pyx_v_Mfirst = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_11 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_18 * __pyx_v_s1.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":137
+ * 
+ *             Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+*/
+      __pyx_t_18 = (__pyx_v_L - 1);
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_15 = 2;
+      __pyx_t_2 = 3;
+      __pyx_t_11 = 4;
+      __pyx_t_9 = 5;
+      __pyx_t_1 = 6;
+      __pyx_t_14 = 7;
+      __pyx_v_Mlast = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_18 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_11 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_14 * __pyx_v_s1.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":138
+ *             Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             for ii in range(0, L-1):             # <<<<<<<<<<<<<<
+ *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_L - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_ii = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":139
+ *             Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_14 = __pyx_v_ii;
+        __pyx_t_1 = 0;
+        __pyx_t_9 = 1;
+        __pyx_t_11 = 2;
+        __pyx_t_2 = 3;
+        __pyx_t_15 = 4;
+        __pyx_t_12 = 5;
+        __pyx_t_13 = 6;
+        __pyx_t_18 = 7;
+        __pyx_t_19 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_19 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_14 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_11 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_18 * __pyx_v_s1.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":140
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_18 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_15 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_18 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_13 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_15 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":141
+ *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+*/
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_18 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_15 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_18 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_2 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_11 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":142
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":143
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+*/
+        __pyx_t_1 = 0;
+        __pyx_t_9 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_1 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":142
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":144
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":145
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for ii in range(0, L):
+*/
+        __pyx_t_1 = (__pyx_v_L - 2);
+        __pyx_t_9 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_1 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":144
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":147
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":148
+ * 
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+*/
+        __pyx_t_1 = __pyx_v_ii;
+        __pyx_t_9 = __pyx_v_jj;
+        __pyx_t_11 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_11 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_1 * __pyx_v_phi.strides[0]) ) + __pyx_t_9 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":149
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]
+*/
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_18 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_1 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_11 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_2 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_18 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":150
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[ii]
+ * 
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":151
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]             # <<<<<<<<<<<<<<
+ * 
+ *     elif is_allob:
+*/
+        __pyx_t_18 = __pyx_v_ii;
+        __pyx_t_2 = __pyx_v_ii;
+        __pyx_t_11 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_2 * __pyx_v_phi.strides[0]) ) + __pyx_t_11 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_18 * __pyx_v_temp.strides[0]) )));
+      }
+    }
+
+    /* "Int2D_poly.pyx":126
+ *                 phi[ii, jj] = temp[ii]
+ * 
+ *     elif is_alloa:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
+*/
+    goto __pyx_L3;
   }
 
-  /* "Int1D_poly.pyx":99
+  /* "Int2D_poly.pyx":153
+ *                 phi[ii, jj] = temp[ii]
  * 
- *     # calculate the RHS of the tridiagonal problem
- *     for ii in range(0, L):             # <<<<<<<<<<<<<<
- *         r[ii] = phi[ii]/dt
- * 
+ *     elif is_allob:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
 */
-  __pyx_t_5 = __pyx_v_L;
-  __pyx_t_6 = __pyx_t_5;
-  for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
-    __pyx_v_ii = __pyx_t_7;
+  __pyx_t_3 = (__pyx_v_is_allob != 0);
+  if (__pyx_t_3) {
 
-    /* "Int1D_poly.pyx":100
- *     # calculate the RHS of the tridiagonal problem
- *     for ii in range(0, L):
- *         r[ii] = phi[ii]/dt             # <<<<<<<<<<<<<<
- * 
- *     # solve the tridiagonal matrix
+    /* "Int2D_poly.pyx":155
+ *     elif is_allob:
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):
 */
-    __pyx_t_10 = __pyx_v_ii;
-    __pyx_t_2 = __pyx_v_ii;
-    *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_2 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_10 * __pyx_v_phi.strides[0]) ))) / __pyx_v_dt);
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":156
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc(xx[ii], nu1)             # <<<<<<<<<<<<<<
+ *         for ii in range(0, L-1):
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+*/
+      __pyx_t_18 = __pyx_v_ii;
+      __pyx_t_11 = __pyx_v_ii;
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_11 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_18 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
+    }
+
+    /* "Int2D_poly.pyx":157
+ *         for ii in range(0, L):
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+ *         # loop through y values
+*/
+    __pyx_t_7 = (__pyx_v_L - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_ii = __pyx_t_4;
+
+      /* "Int2D_poly.pyx":158
+ *             V[ii] = Vfunc(xx[ii], nu1)
+ *         for ii in range(0, L-1):
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)             # <<<<<<<<<<<<<<
+ *         # loop through y values
+ *         for jj in range(M):
+*/
+      __pyx_t_18 = __pyx_v_ii;
+      __pyx_t_11 = __pyx_v_ii;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_11 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_18 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
+    }
+
+    /* "Int2D_poly.pyx":160
+ *             VInt[ii] = Vfunc(xInt[ii], nu1)
+ *         # loop through y values
+ *         for jj in range(M):             # <<<<<<<<<<<<<<
+ *             y = yy[jj]
+ * 
+*/
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":161
+ *         # loop through y values
+ *         for jj in range(M):
+ *             y = yy[jj]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+*/
+      __pyx_t_18 = __pyx_v_jj;
+      __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_18 * __pyx_v_yy.strides[0]) )));
+
+      /* "Int2D_poly.pyx":163
+ *             y = yy[jj]
+ * 
+ *             Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             for ii in range(0, L-1):
+*/
+      __pyx_t_18 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_2 = 1;
+      __pyx_t_1 = 2;
+      __pyx_t_9 = 3;
+      __pyx_t_13 = 4;
+      __pyx_t_12 = 5;
+      __pyx_t_15 = 6;
+      __pyx_t_14 = 7;
+      __pyx_v_Mfirst = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_18 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_11 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_14 * __pyx_v_s1.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":164
+ * 
+ *             Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+*/
+      __pyx_t_14 = (__pyx_v_L - 1);
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_13 = 2;
+      __pyx_t_9 = 3;
+      __pyx_t_1 = 4;
+      __pyx_t_2 = 5;
+      __pyx_t_11 = 6;
+      __pyx_t_18 = 7;
+      __pyx_v_Mlast = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_11 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_18 * __pyx_v_s1.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":165
+ *             Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             for ii in range(0, L-1):             # <<<<<<<<<<<<<<
+ *                 MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_L - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_ii = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":166
+ *             Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_18 = __pyx_v_ii;
+        __pyx_t_11 = 0;
+        __pyx_t_2 = 1;
+        __pyx_t_1 = 2;
+        __pyx_t_9 = 3;
+        __pyx_t_13 = 4;
+        __pyx_t_12 = 5;
+        __pyx_t_15 = 6;
+        __pyx_t_14 = 7;
+        __pyx_t_19 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_19 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_18 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_11 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_2 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_1 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_13 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_12 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_15 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_14 * __pyx_v_s1.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":167
+ *             for ii in range(0, L-1):
+ *                 MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_14 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_15 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":168
+ *                 MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+*/
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_14 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_13 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_15 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_14 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_1 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_11 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":169
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":170
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+*/
+        __pyx_t_11 = 0;
+        __pyx_t_2 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_11 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":169
+ *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":171
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":172
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for ii in range(0, L):
+*/
+        __pyx_t_11 = (__pyx_v_L - 2);
+        __pyx_t_2 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_11 * __pyx_v_dx.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":171
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":174
+ *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+ * 
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":175
+ * 
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+*/
+        __pyx_t_11 = __pyx_v_ii;
+        __pyx_t_2 = __pyx_v_jj;
+        __pyx_t_1 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_1 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_11 * __pyx_v_phi.strides[0]) ) + __pyx_t_2 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":176
+ *             for ii in range(0, L):
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]
+*/
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_14 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_2 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_11 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_9 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":177
+ *                 r[ii] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[ii]
+ * 
+*/
+      __pyx_t_10 = __pyx_v_L;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_ii = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":178
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for ii in range(0, L):
+ *                 phi[ii, jj] = temp[ii]             # <<<<<<<<<<<<<<
+ * 
+ *     tridiag_free()
+*/
+        __pyx_t_14 = __pyx_v_ii;
+        __pyx_t_9 = __pyx_v_ii;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_9 * __pyx_v_phi.strides[0]) ) + __pyx_t_1 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )));
+      }
+    }
+
+    /* "Int2D_poly.pyx":153
+ *                 phi[ii, jj] = temp[ii]
+ * 
+ *     elif is_allob:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for ii in range(0, L):
+*/
   }
+  __pyx_L3:;
 
-  /* "Int1D_poly.pyx":103
+  /* "Int2D_poly.pyx":180
+ *                 phi[ii, jj] = temp[ii]
  * 
- *     # solve the tridiagonal matrix
- *     tridiag(&a[0], &b[0], &c[0], &r[0], &phi[0], L)             # <<<<<<<<<<<<<<
+ *     tridiag_free()             # <<<<<<<<<<<<<<
  * 
- * ### ==========================================================================
+ * cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
 */
-  __pyx_t_10 = 0;
-  __pyx_t_2 = 0;
-  __pyx_t_1 = 0;
-  __pyx_t_14 = 0;
-  __pyx_t_4 = 0;
-  tridiag((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_10 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_14 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_4 * __pyx_v_phi.strides[0]) )))), __pyx_v_L);
+  tridiag_free();
 
-  /* "Int1D_poly.pyx":36
- * # CYTHON 1D INTEGRATION FUNCTION
+  /* "Int2D_poly.pyx":43
  * # =========================================================
- * cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_vec,             # <<<<<<<<<<<<<<
+ * 
+ * cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,             # <<<<<<<<<<<<<<
+ *                         double nu1, double m12, double[:] s1,
  *                         double dt, int use_delj_trick, int[:] ploidy,
- *                         double[:] dx, double[:] dfactor, double[:] xInt, double[:] delj,
 */
 
   /* function exit code */
 }
 
-/* "Int1D_poly.pyx":108
- * ### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
- * ### ==========================================================================
- * def implicit_1Dx(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
+/* "Int2D_poly.pyx":182
+ *     tridiag_free()
+ * 
+ * cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,             # <<<<<<<<<<<<<<
+ *                         double nu2, double m21, double[:] s2,
+ *                         double dt, int use_delj_trick, int[:] ploidy,
+*/
+
+static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, __Pyx_memviewslice __pyx_v_xx, __Pyx_memviewslice __pyx_v_yy, double __pyx_v_nu2, double __pyx_v_m21, __Pyx_memviewslice __pyx_v_s2, double __pyx_v_dt, int __pyx_v_use_delj_trick, __Pyx_memviewslice __pyx_v_ploidy, __Pyx_memviewslice __pyx_v_dy, __Pyx_memviewslice __pyx_v_dfactor, __Pyx_memviewslice __pyx_v_yInt, __Pyx_memviewslice __pyx_v_delj, __Pyx_memviewslice __pyx_v_MInt, __Pyx_memviewslice __pyx_v_V, __Pyx_memviewslice __pyx_v_VInt, __Pyx_memviewslice __pyx_v_a, __Pyx_memviewslice __pyx_v_b, __Pyx_memviewslice __pyx_v_c, __Pyx_memviewslice __pyx_v_r, __Pyx_memviewslice __pyx_v_temp) {
+  int __pyx_v_L;
+  int __pyx_v_M;
+  int __pyx_v_ii;
+  int __pyx_v_jj;
+  double __pyx_v_x;
+  double __pyx_v_Mfirst;
+  double __pyx_v_Mlast;
+  int __pyx_v_is_diploid;
+  int __pyx_v_is_auto;
+  int __pyx_v_is_alloa;
+  int __pyx_v_is_allob;
+  Py_ssize_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  int __pyx_t_3;
+  int __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_t_6;
+  long __pyx_t_7;
+  long __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  int __pyx_t_10;
+  Py_ssize_t __pyx_t_11;
+  Py_ssize_t __pyx_t_12;
+  Py_ssize_t __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  int __pyx_t_16;
+  int __pyx_t_17;
+  Py_ssize_t __pyx_t_18;
+  Py_ssize_t __pyx_t_19;
+
+  /* "Int2D_poly.pyx":191
+ *     # define memory for non-array variables
+ *     # Note: all of the arrays are preallocated for efficiency
+ *     cdef int L = xx.shape[0] # number of grid points in x direction             # <<<<<<<<<<<<<<
+ *     cdef int M = yy.shape[0] # number of grid points in y direction
+ *     cdef int ii # loop index for x
+*/
+  __pyx_v_L = (__pyx_v_xx.shape[0]);
+
+  /* "Int2D_poly.pyx":192
+ *     # Note: all of the arrays are preallocated for efficiency
+ *     cdef int L = xx.shape[0] # number of grid points in x direction
+ *     cdef int M = yy.shape[0] # number of grid points in y direction             # <<<<<<<<<<<<<<
+ *     cdef int ii # loop index for x
+ *     cdef int jj # loop index for y
+*/
+  __pyx_v_M = (__pyx_v_yy.shape[0]);
+
+  /* "Int2D_poly.pyx":198
+ *     cdef double Mfirst, Mlast
+ *     ### weights/coefficients for scaling
+ *     cdef int is_diploid = ploidy[0]             # <<<<<<<<<<<<<<
+ *     cdef int is_auto = ploidy[1]
+ *     cdef int is_alloa = ploidy[2]
+*/
+  __pyx_t_1 = 0;
+  __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
+
+  /* "Int2D_poly.pyx":199
+ *     ### weights/coefficients for scaling
+ *     cdef int is_diploid = ploidy[0]
+ *     cdef int is_auto = ploidy[1]             # <<<<<<<<<<<<<<
+ *     cdef int is_alloa = ploidy[2]
+ *     cdef int is_allob = ploidy[3]
+*/
+  __pyx_t_1 = 1;
+  __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
+
+  /* "Int2D_poly.pyx":200
+ *     cdef int is_diploid = ploidy[0]
+ *     cdef int is_auto = ploidy[1]
+ *     cdef int is_alloa = ploidy[2]             # <<<<<<<<<<<<<<
+ *     cdef int is_allob = ploidy[3]
+ * 
+*/
+  __pyx_t_1 = 2;
+  __pyx_v_is_alloa = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
+
+  /* "Int2D_poly.pyx":201
+ *     cdef int is_auto = ploidy[1]
+ *     cdef int is_alloa = ploidy[2]
+ *     cdef int is_allob = ploidy[3]             # <<<<<<<<<<<<<<
+ * 
+ *     # compute the y step size and intermediate y values
+*/
+  __pyx_t_1 = 3;
+  __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
+
+  /* "Int2D_poly.pyx":204
+ * 
+ *     # compute the y step size and intermediate y values
+ *     compute_dx(&yy[0], M, &dy[0])             # <<<<<<<<<<<<<<
+ *     compute_dfactor(&dy[0], M, &dfactor[0])
+ *     compute_xInt(&yy[0], M, &yInt[0])
+*/
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_1 * __pyx_v_yy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_2 * __pyx_v_dy.strides[0]) )))));
+
+  /* "Int2D_poly.pyx":205
+ *     # compute the y step size and intermediate y values
+ *     compute_dx(&yy[0], M, &dy[0])
+ *     compute_dfactor(&dy[0], M, &dfactor[0])             # <<<<<<<<<<<<<<
+ *     compute_xInt(&yy[0], M, &yInt[0])
+ *     # dynamic allocation of memory for tridiag
+*/
+  __pyx_t_2 = 0;
+  __pyx_t_1 = 0;
+  compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_2 * __pyx_v_dy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_1 * __pyx_v_dfactor.strides[0]) )))));
+
+  /* "Int2D_poly.pyx":206
+ *     compute_dx(&yy[0], M, &dy[0])
+ *     compute_dfactor(&dy[0], M, &dfactor[0])
+ *     compute_xInt(&yy[0], M, &yInt[0])             # <<<<<<<<<<<<<<
+ *     # dynamic allocation of memory for tridiag
+ *     tridiag_malloc(M)
+*/
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_1 * __pyx_v_yy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_2 * __pyx_v_yInt.strides[0]) )))));
+
+  /* "Int2D_poly.pyx":208
+ *     compute_xInt(&yy[0], M, &yInt[0])
+ *     # dynamic allocation of memory for tridiag
+ *     tridiag_malloc(M)             # <<<<<<<<<<<<<<
+ * 
+ *     # branch on ploidy
+*/
+  tridiag_malloc(__pyx_v_M);
+
+  /* "Int2D_poly.pyx":211
+ * 
+ *     # branch on ploidy
+ *     if is_diploid:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+  __pyx_t_3 = (__pyx_v_is_diploid != 0);
+  if (__pyx_t_3) {
+
+    /* "Int2D_poly.pyx":213
+ *     if is_diploid:
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+*/
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":214
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc(yy[jj], nu2)             # <<<<<<<<<<<<<<
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+*/
+      __pyx_t_2 = __pyx_v_jj;
+      __pyx_t_1 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_1 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_2 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":215
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+ *         # loop through x values
+*/
+    __pyx_t_7 = (__pyx_v_M - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_jj = __pyx_t_4;
+
+      /* "Int2D_poly.pyx":216
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)             # <<<<<<<<<<<<<<
+ *         # loop through x values
+ *         for ii in range(L):
+*/
+      __pyx_t_2 = __pyx_v_jj;
+      __pyx_t_1 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_1 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_2 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":218
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+ *         # loop through x values
+ *         for ii in range(L):             # <<<<<<<<<<<<<<
+ *             x = xx[ii]
+ * 
+*/
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":219
+ *         # loop through x values
+ *         for ii in range(L):
+ *             x = xx[ii]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D(yy[0], x, m21, s2[0], s2[1])
+*/
+      __pyx_t_2 = __pyx_v_ii;
+      __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_2 * __pyx_v_xx.strides[0]) )));
+
+      /* "Int2D_poly.pyx":221
+ *             x = xx[ii]
+ * 
+ *             Mfirst = Mfunc2D(yy[0], x, m21, s2[0], s2[1])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])
+ *             for jj in range(0, M-1):
+*/
+      __pyx_t_2 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 1;
+      __pyx_v_Mfirst = Mfunc2D((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_2 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":222
+ * 
+ *             Mfirst = Mfunc2D(yy[0], x, m21, s2[0], s2[1])
+ *             Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1])
+*/
+      __pyx_t_9 = (__pyx_v_M - 1);
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 1;
+      __pyx_v_Mlast = Mfunc2D((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":223
+ *             Mfirst = Mfunc2D(yy[0], x, m21, s2[0], s2[1])
+ *             Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])
+ *             for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *                 MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_M - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_jj = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":224
+ *             Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_2 = __pyx_v_jj;
+        __pyx_t_1 = 0;
+        __pyx_t_9 = 1;
+        __pyx_t_11 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_11 * __pyx_v_MInt.strides[0]) )) = Mfunc2D((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_2 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":225
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_9 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_1 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_2 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_11 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":226
+ *                 MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+*/
+      __pyx_t_11 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_11 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_2 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_1 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_12 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_13 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_14 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_15 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":227
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":228
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+*/
+        __pyx_t_15 = 0;
+        __pyx_t_14 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_14 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_15 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":227
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":229
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":230
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for jj in range(0, M):
+*/
+        __pyx_t_15 = (__pyx_v_L - 2);
+        __pyx_t_14 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_14 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_15 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":229
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":232
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":233
+ * 
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+*/
+        __pyx_t_15 = __pyx_v_ii;
+        __pyx_t_14 = __pyx_v_jj;
+        __pyx_t_13 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_13 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_15 * __pyx_v_phi.strides[0]) ) + __pyx_t_14 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":234
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]
+*/
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_9 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_14 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_15 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_13 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_12 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_9 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":235
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[jj]
+ * 
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":236
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]             # <<<<<<<<<<<<<<
+ * 
+ *     elif is_auto:
+*/
+        __pyx_t_9 = __pyx_v_jj;
+        __pyx_t_12 = __pyx_v_ii;
+        __pyx_t_13 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_12 * __pyx_v_phi.strides[0]) ) + __pyx_t_13 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_9 * __pyx_v_temp.strides[0]) )));
+      }
+    }
+
+    /* "Int2D_poly.pyx":211
+ * 
+ *     # branch on ploidy
+ *     if is_diploid:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+    goto __pyx_L3;
+  }
+
+  /* "Int2D_poly.pyx":238
+ *                 phi[ii, jj] = temp[jj]
+ * 
+ *     elif is_auto:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+  __pyx_t_3 = (__pyx_v_is_auto != 0);
+  if (__pyx_t_3) {
+
+    /* "Int2D_poly.pyx":240
+ *     elif is_auto:
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+*/
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":241
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc_auto(yy[jj], nu2)             # <<<<<<<<<<<<<<
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+*/
+      __pyx_t_9 = __pyx_v_jj;
+      __pyx_t_13 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_13 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":242
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *         # loop through x values
+*/
+    __pyx_t_7 = (__pyx_v_M - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_jj = __pyx_t_4;
+
+      /* "Int2D_poly.pyx":243
+ *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)             # <<<<<<<<<<<<<<
+ *         # loop through x values
+ *         for ii in range(L):
+*/
+      __pyx_t_9 = __pyx_v_jj;
+      __pyx_t_13 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_13 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_9 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":245
+ *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *         # loop through x values
+ *         for ii in range(L):             # <<<<<<<<<<<<<<
+ *             x = xx[ii]
+ * 
+*/
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":246
+ *         # loop through x values
+ *         for ii in range(L):
+ *             x = xx[ii]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3])
+*/
+      __pyx_t_9 = __pyx_v_ii;
+      __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) )));
+
+      /* "Int2D_poly.pyx":248
+ *             x = xx[ii]
+ * 
+ *             Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             for jj in range(0, M-1):
+*/
+      __pyx_t_9 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_15 = 2;
+      __pyx_t_14 = 3;
+      __pyx_v_Mfirst = Mfunc2D_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_14 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":249
+ * 
+ *             Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
+*/
+      __pyx_t_14 = (__pyx_v_M - 1);
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_13 = 2;
+      __pyx_t_9 = 3;
+      __pyx_v_Mlast = Mfunc2D_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_14 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":250
+ *             Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_M - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_jj = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":251
+ *             Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_9 = __pyx_v_jj;
+        __pyx_t_13 = 0;
+        __pyx_t_12 = 1;
+        __pyx_t_15 = 2;
+        __pyx_t_14 = 3;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_1 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_auto((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_9 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_14 * __pyx_v_s2.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":252
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_14 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_15 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":253
+ *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
+*/
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_14 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_13 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_15 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_14 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_1 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_11 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":254
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":255
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
+*/
+        __pyx_t_11 = 0;
+        __pyx_t_2 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_11 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":254
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":256
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":257
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for jj in range(0, M):
+*/
+        __pyx_t_11 = (__pyx_v_L - 2);
+        __pyx_t_2 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_11 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":256
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":259
+ *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
+ * 
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":260
+ * 
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+*/
+        __pyx_t_11 = __pyx_v_ii;
+        __pyx_t_2 = __pyx_v_jj;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_1 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_11 * __pyx_v_phi.strides[0]) ) + __pyx_t_2 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":261
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]
+*/
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_14 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_2 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_11 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_9 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":262
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[jj]
+ * 
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":263
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]             # <<<<<<<<<<<<<<
+ * 
+ *     if is_alloa:
+*/
+        __pyx_t_14 = __pyx_v_jj;
+        __pyx_t_9 = __pyx_v_ii;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_9 * __pyx_v_phi.strides[0]) ) + __pyx_t_1 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )));
+      }
+    }
+
+    /* "Int2D_poly.pyx":238
+ *                 phi[ii, jj] = temp[jj]
+ * 
+ *     elif is_auto:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+  }
+  __pyx_L3:;
+
+  /* "Int2D_poly.pyx":265
+ *                 phi[ii, jj] = temp[jj]
+ * 
+ *     if is_alloa:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+  __pyx_t_3 = (__pyx_v_is_alloa != 0);
+  if (__pyx_t_3) {
+
+    /* "Int2D_poly.pyx":267
+ *     if is_alloa:
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+*/
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":268
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc(yy[jj], nu2)             # <<<<<<<<<<<<<<
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+*/
+      __pyx_t_14 = __pyx_v_jj;
+      __pyx_t_1 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_1 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_14 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":269
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+ *         # loop through x values
+*/
+    __pyx_t_7 = (__pyx_v_M - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_jj = __pyx_t_4;
+
+      /* "Int2D_poly.pyx":270
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)             # <<<<<<<<<<<<<<
+ *         # loop through x values
+ *         for ii in range(L):
+*/
+      __pyx_t_14 = __pyx_v_jj;
+      __pyx_t_1 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_1 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_14 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":272
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+ *         # loop through x values
+ *         for ii in range(L):             # <<<<<<<<<<<<<<
+ *             x = xx[ii]
+ * 
+*/
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":273
+ *         # loop through x values
+ *         for ii in range(L):
+ *             x = xx[ii]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+*/
+      __pyx_t_14 = __pyx_v_ii;
+      __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_14 * __pyx_v_xx.strides[0]) )));
+
+      /* "Int2D_poly.pyx":275
+ *             x = xx[ii]
+ * 
+ *             Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             for jj in range(0, M-1):
+*/
+      __pyx_t_14 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 1;
+      __pyx_t_11 = 2;
+      __pyx_t_2 = 3;
+      __pyx_t_15 = 4;
+      __pyx_t_12 = 5;
+      __pyx_t_13 = 6;
+      __pyx_t_18 = 7;
+      __pyx_v_Mfirst = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_14 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_11 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_18 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":276
+ * 
+ *             Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+*/
+      __pyx_t_18 = (__pyx_v_M - 1);
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_15 = 2;
+      __pyx_t_2 = 3;
+      __pyx_t_11 = 4;
+      __pyx_t_9 = 5;
+      __pyx_t_1 = 6;
+      __pyx_t_14 = 7;
+      __pyx_v_Mlast = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_18 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_11 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_14 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":277
+ *             Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_M - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_jj = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":278
+ *             Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_14 = __pyx_v_jj;
+        __pyx_t_1 = 0;
+        __pyx_t_9 = 1;
+        __pyx_t_11 = 2;
+        __pyx_t_2 = 3;
+        __pyx_t_15 = 4;
+        __pyx_t_12 = 5;
+        __pyx_t_13 = 6;
+        __pyx_t_18 = 7;
+        __pyx_t_19 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_19 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_14 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_11 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_18 * __pyx_v_s2.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":279
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_18 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_15 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_18 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_13 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_15 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":280
+ *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+*/
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      __pyx_t_18 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_15 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_18 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_2 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_11 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":281
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":282
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+*/
+        __pyx_t_1 = 0;
+        __pyx_t_9 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_1 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":281
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":283
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":284
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for jj in range(0, M):
+*/
+        __pyx_t_1 = (__pyx_v_L - 2);
+        __pyx_t_9 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_1 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":283
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":286
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":287
+ * 
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+*/
+        __pyx_t_1 = __pyx_v_ii;
+        __pyx_t_9 = __pyx_v_jj;
+        __pyx_t_11 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_11 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_1 * __pyx_v_phi.strides[0]) ) + __pyx_t_9 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":288
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]
+*/
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_18 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_1 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_11 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_2 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_18 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":289
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[jj]
+ * 
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":290
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]             # <<<<<<<<<<<<<<
+ * 
+ *     elif is_allob:
+*/
+        __pyx_t_18 = __pyx_v_jj;
+        __pyx_t_2 = __pyx_v_ii;
+        __pyx_t_11 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_2 * __pyx_v_phi.strides[0]) ) + __pyx_t_11 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_18 * __pyx_v_temp.strides[0]) )));
+      }
+    }
+
+    /* "Int2D_poly.pyx":265
+ *                 phi[ii, jj] = temp[jj]
+ * 
+ *     if is_alloa:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+    goto __pyx_L32;
+  }
+
+  /* "Int2D_poly.pyx":292
+ *                 phi[ii, jj] = temp[jj]
+ * 
+ *     elif is_allob:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+  __pyx_t_3 = (__pyx_v_is_allob != 0);
+  if (__pyx_t_3) {
+
+    /* "Int2D_poly.pyx":294
+ *     elif is_allob:
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+*/
+    __pyx_t_4 = __pyx_v_M;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_jj = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":295
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc(yy[jj], nu2)             # <<<<<<<<<<<<<<
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+*/
+      __pyx_t_18 = __pyx_v_jj;
+      __pyx_t_11 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_11 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_18 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":296
+ *         for jj in range(0, M):
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+ *         # loop through x values
+*/
+    __pyx_t_7 = (__pyx_v_M - 1);
+    __pyx_t_8 = __pyx_t_7;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_8; __pyx_t_4+=1) {
+      __pyx_v_jj = __pyx_t_4;
+
+      /* "Int2D_poly.pyx":297
+ *             V[jj] = Vfunc(yy[jj], nu2)
+ *         for jj in range(0, M-1):
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)             # <<<<<<<<<<<<<<
+ *         # loop through x values
+ *         for ii in range(L):
+*/
+      __pyx_t_18 = __pyx_v_jj;
+      __pyx_t_11 = __pyx_v_jj;
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_11 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_18 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
+    }
+
+    /* "Int2D_poly.pyx":299
+ *             VInt[jj] = Vfunc(yInt[jj], nu2)
+ *         # loop through x values
+ *         for ii in range(L):             # <<<<<<<<<<<<<<
+ *             x = xx[ii]
+ * 
+*/
+    __pyx_t_4 = __pyx_v_L;
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_ii = __pyx_t_6;
+
+      /* "Int2D_poly.pyx":300
+ *         # loop through x values
+ *         for ii in range(L):
+ *             x = xx[ii]             # <<<<<<<<<<<<<<
+ * 
+ *             Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+*/
+      __pyx_t_18 = __pyx_v_ii;
+      __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_18 * __pyx_v_xx.strides[0]) )));
+
+      /* "Int2D_poly.pyx":302
+ *             x = xx[ii]
+ * 
+ *             Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])             # <<<<<<<<<<<<<<
+ *             Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             for jj in range(0, M-1):
+*/
+      __pyx_t_18 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_2 = 1;
+      __pyx_t_1 = 2;
+      __pyx_t_9 = 3;
+      __pyx_t_13 = 4;
+      __pyx_t_12 = 5;
+      __pyx_t_15 = 6;
+      __pyx_t_14 = 7;
+      __pyx_v_Mfirst = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_18 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_11 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_14 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":303
+ * 
+ *             Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+*/
+      __pyx_t_14 = (__pyx_v_M - 1);
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 1;
+      __pyx_t_13 = 2;
+      __pyx_t_9 = 3;
+      __pyx_t_1 = 4;
+      __pyx_t_2 = 5;
+      __pyx_t_11 = 6;
+      __pyx_t_18 = 7;
+      __pyx_v_Mlast = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_14 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_11 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_18 * __pyx_v_s2.strides[0]) ))));
+
+      /* "Int2D_poly.pyx":304
+ *             Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             for jj in range(0, M-1):             # <<<<<<<<<<<<<<
+ *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+*/
+      __pyx_t_7 = (__pyx_v_M - 1);
+      __pyx_t_8 = __pyx_t_7;
+      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_8; __pyx_t_10+=1) {
+        __pyx_v_jj = __pyx_t_10;
+
+        /* "Int2D_poly.pyx":305
+ *             Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])             # <<<<<<<<<<<<<<
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+*/
+        __pyx_t_18 = __pyx_v_jj;
+        __pyx_t_11 = 0;
+        __pyx_t_2 = 1;
+        __pyx_t_1 = 2;
+        __pyx_t_9 = 3;
+        __pyx_t_13 = 4;
+        __pyx_t_12 = 5;
+        __pyx_t_15 = 6;
+        __pyx_t_14 = 7;
+        __pyx_t_19 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_19 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_18 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_m21, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_11 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_2 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_1 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_13 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_12 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_15 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_14 * __pyx_v_s2.strides[0]) ))));
+      }
+
+      /* "Int2D_poly.pyx":306
+ *             for jj in range(0, M-1):
+ *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+*/
+      __pyx_t_14 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_13 = 0;
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_14 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_15 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_12 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_13 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+
+      /* "Int2D_poly.pyx":307
+ *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+*/
+      __pyx_t_13 = 0;
+      __pyx_t_12 = 0;
+      __pyx_t_15 = 0;
+      __pyx_t_14 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_13 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_12 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_15 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_14 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_1 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_11 * __pyx_v_c.strides[0]) )))));
+
+      /* "Int2D_poly.pyx":308
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      __pyx_t_3 = (__pyx_v_Mfirst <= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":309
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+*/
+        __pyx_t_11 = 0;
+        __pyx_t_2 = 0;
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_11 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":308
+ *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+ *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+ *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+*/
+      }
+
+      /* "Int2D_poly.pyx":310
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      __pyx_t_3 = (__pyx_v_Mlast >= 0.0);
+      if (__pyx_t_3) {
+
+        /* "Int2D_poly.pyx":311
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
+ * 
+ *             for jj in range(0, M):
+*/
+        __pyx_t_11 = (__pyx_v_L - 2);
+        __pyx_t_2 = (__pyx_v_L - 1);
+        *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_2 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_11 * __pyx_v_dy.strides[0]) ))));
+
+        /* "Int2D_poly.pyx":310
+ *             if Mfirst <= 0:
+ *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
+ *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+*/
+      }
+
+      /* "Int2D_poly.pyx":313
+ *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+ * 
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":314
+ * 
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt             # <<<<<<<<<<<<<<
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+*/
+        __pyx_t_11 = __pyx_v_ii;
+        __pyx_t_2 = __pyx_v_jj;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_1 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_11 * __pyx_v_phi.strides[0]) ) + __pyx_t_2 * __pyx_v_phi.strides[1]) ))) / __pyx_v_dt);
+      }
+
+      /* "Int2D_poly.pyx":315
+ *             for jj in range(0, M):
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]
+*/
+      __pyx_t_2 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_1 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_14 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_2 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_11 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_1 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_9 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+
+      /* "Int2D_poly.pyx":316
+ *                 r[jj] = phi[ii, jj]/dt
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):             # <<<<<<<<<<<<<<
+ *                 phi[ii, jj] = temp[jj]
+ *     tridiag_free()
+*/
+      __pyx_t_10 = __pyx_v_M;
+      __pyx_t_16 = __pyx_t_10;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_jj = __pyx_t_17;
+
+        /* "Int2D_poly.pyx":317
+ *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]             # <<<<<<<<<<<<<<
+ *     tridiag_free()
+ * 
+*/
+        __pyx_t_14 = __pyx_v_jj;
+        __pyx_t_9 = __pyx_v_ii;
+        __pyx_t_1 = __pyx_v_jj;
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_9 * __pyx_v_phi.strides[0]) ) + __pyx_t_1 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_14 * __pyx_v_temp.strides[0]) )));
+      }
+    }
+
+    /* "Int2D_poly.pyx":292
+ *                 phi[ii, jj] = temp[jj]
+ * 
+ *     elif is_allob:             # <<<<<<<<<<<<<<
+ *         # compute everything we can outside of the spatial loop
+ *         for jj in range(0, M):
+*/
+  }
+  __pyx_L32:;
+
+  /* "Int2D_poly.pyx":318
+ *             for jj in range(0, M):
+ *                 phi[ii, jj] = temp[jj]
+ *     tridiag_free()             # <<<<<<<<<<<<<<
+ * 
+ * # =========================================================
+*/
+  tridiag_free();
+
+  /* "Int2D_poly.pyx":182
+ *     tridiag_free()
+ * 
+ * cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,             # <<<<<<<<<<<<<<
+ *                         double nu2, double m21, double[:] s2,
+ *                         double dt, int use_delj_trick, int[:] ploidy,
+*/
+
+  /* function exit code */
+}
+
+/* "Int2D_poly.pyx":324
+ * # =========================================================
+ * 
+ * def implicit_2Dx(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
- *                  double nu,
+ *                  np.ndarray[double, ndim=1] yy,
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10Int1D_poly_1implicit_1Dx(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_10Int2D_poly_1implicit_2Dx(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_10Int1D_poly_implicit_1Dx, "\n    Implicit 1D integration function for 1D diffusion equation.\n    This version uses pre-allocated memory views for all intermediate arrays.\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx : numpy array (float64) \n        Grid points\n    nu : float\n        Population size parameter\n    sel_vec : numpy array (float64)\n        Selection parameters [gamma, h, gam1, gam2, gam3, gam4]\n    dt : float\n        Time step\n    use_delj_trick : int\n        Whether to use delj optimization (0 or 1)\n    ploidy : numpy array (int)\n        Ploidy coefficients [diploid_coeff, auto_coeff]\n        Either 0 or 1\n    dx : numpy array (L-1) (float64)\n        Grid spacings\n    dfactor : numpy array (float64)\n        Factors for scaling\n    xInt : numpy array (L-1) (float64)\n        Integration points\n    delj : numpy array (L-1) (float64)\n        Values of delj\n    MInt : numpy array (L-1) (float64)\n        Values of MInt\n    V : numpy array (float64)\n        Values of V\n    VInt : numpy array (L-1) (float64)\n        Values of VInt\n    a : numpy array (float64)\n        Values of a\n    b : numpy array (float64)\n        Values of b\n    c : numpy array (float64)\n        Values of c\n    r : numpy array (float64)\n    \n    Returns:\n    --------\n    numpy array : Modified phi array\n    ");
-static PyMethodDef __pyx_mdef_10Int1D_poly_1implicit_1Dx = {"implicit_1Dx", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10Int1D_poly_1implicit_1Dx, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_10Int1D_poly_implicit_1Dx};
-static PyObject *__pyx_pw_10Int1D_poly_1implicit_1Dx(PyObject *__pyx_self, 
+PyDoc_STRVAR(__pyx_doc_10Int2D_poly_implicit_2Dx, "\n    Implicit 2D integration function for x direction of 2D diffusion equation.\n    This version uses pre-allocated memory views for all intermediate arrays.\n    (Hence the extra parameters at the end.)\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx : numpy array (float64) \n        Grid points\n    yy : numpy array (float64) \n        Grid points\n    nu1 : float\n        Population size for pop1\n    s1 : numpy array (float64)\n        Selection params for pop1\n    dt : float\n        Time step\n    use_delj_trick : int\n        Whether to use delj optimization (0 or 1)\n    ploidy : numpy array (int)\n        Vector of ploidy Booleans (0 or 1)\n        [dip, auto, alloa, allob]\n    dx : numpy array (float64)\n        Grid spacings\n    dfactor : numpy array (float64)\n        Factors for scaling\n    xInt : numpy array(float64)\n        Integration points\n    delj : numpy array (float64)\n        Values of delj\n    MInt : numpy array (float64)\n        Values of MInt\n    V : numpy array (float64)\n        Values of V\n    VInt : numpy array (float64)\n        Values of VInt\n    a : numpy array (float64)\n        a, b, c, r, and temp arrays are for tridiagonal matrix solver\n    b : numpy array (float64)\n    c : numpy array (float64)\n    r : numpy array (float64)\n    temp : numpy array (float64)\n\n    Returns:\n    --------\n    phi : modified phi after integration in x direction\n    ");
+static PyMethodDef __pyx_mdef_10Int2D_poly_1implicit_2Dx = {"implicit_2Dx", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10Int2D_poly_1implicit_2Dx, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_10Int2D_poly_implicit_2Dx};
+static PyObject *__pyx_pw_10Int2D_poly_1implicit_2Dx(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -19465,8 +21717,10 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 ) {
   PyArrayObject *__pyx_v_phi = 0;
   PyArrayObject *__pyx_v_xx = 0;
-  double __pyx_v_nu;
-  PyArrayObject *__pyx_v_sel_vec = 0;
+  PyArrayObject *__pyx_v_yy = 0;
+  double __pyx_v_nu1;
+  double __pyx_v_m12;
+  PyArrayObject *__pyx_v_s1 = 0;
   double __pyx_v_dt;
   int __pyx_v_use_delj_trick;
   PyArrayObject *__pyx_v_ploidy = 0;
@@ -19481,17 +21735,18 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   PyArrayObject *__pyx_v_b = 0;
   PyArrayObject *__pyx_v_c = 0;
   PyArrayObject *__pyx_v_r = 0;
+  PyArrayObject *__pyx_v_temp = 0;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  PyObject* values[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("implicit_1Dx (wrapper)", 0);
+  __Pyx_RefNannySetupContext("implicit_2Dx (wrapper)", 0);
   #if !CYTHON_METH_FASTCALL
   #if CYTHON_ASSUME_SAFE_SIZE
   __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
@@ -19501,179 +21756,202 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   #endif
   __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
   {
-    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_nu,&__pyx_mstate_global->__pyx_n_u_sel_vec,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy,&__pyx_mstate_global->__pyx_n_u_dx,&__pyx_mstate_global->__pyx_n_u_dfactor,&__pyx_mstate_global->__pyx_n_u_xInt,&__pyx_mstate_global->__pyx_n_u_delj,&__pyx_mstate_global->__pyx_n_u_MInt,&__pyx_mstate_global->__pyx_n_u_V,&__pyx_mstate_global->__pyx_n_u_VInt,&__pyx_mstate_global->__pyx_n_u_a,&__pyx_mstate_global->__pyx_n_u_b,&__pyx_mstate_global->__pyx_n_u_c,&__pyx_mstate_global->__pyx_n_u_r,0};
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_yy,&__pyx_mstate_global->__pyx_n_u_nu1,&__pyx_mstate_global->__pyx_n_u_m12,&__pyx_mstate_global->__pyx_n_u_s1,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy,&__pyx_mstate_global->__pyx_n_u_dx,&__pyx_mstate_global->__pyx_n_u_dfactor,&__pyx_mstate_global->__pyx_n_u_xInt,&__pyx_mstate_global->__pyx_n_u_delj,&__pyx_mstate_global->__pyx_n_u_MInt,&__pyx_mstate_global->__pyx_n_u_V,&__pyx_mstate_global->__pyx_n_u_VInt,&__pyx_mstate_global->__pyx_n_u_a,&__pyx_mstate_global->__pyx_n_u_b,&__pyx_mstate_global->__pyx_n_u_c,&__pyx_mstate_global->__pyx_n_u_r,&__pyx_mstate_global->__pyx_n_u_temp,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 108, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 324, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
+        case 21:
+        values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 324, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 20:
+        values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 324, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 19:
+        values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 324, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
         case 18:
         values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 17:
         values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 16:
         values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 15:
         values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 14:
         values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 13:
         values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 12:
         values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 11:
         values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 10:
         values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  9:
         values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 108, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 324, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_1Dx", 0) < 0) __PYX_ERR(0, 108, __pyx_L3_error)
-      for (Py_ssize_t i = __pyx_nargs; i < 18; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_1Dx", 1, 18, 18, i); __PYX_ERR(0, 108, __pyx_L3_error) }
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_2Dx", 0) < 0) __PYX_ERR(0, 324, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 21; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_2Dx", 1, 21, 21, i); __PYX_ERR(0, 324, __pyx_L3_error) }
       }
-    } else if (unlikely(__pyx_nargs != 18)) {
+    } else if (unlikely(__pyx_nargs != 21)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 324, __pyx_L3_error)
       values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 108, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 324, __pyx_L3_error)
+      values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 324, __pyx_L3_error)
+      values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 324, __pyx_L3_error)
+      values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 324, __pyx_L3_error)
     }
     __pyx_v_phi = ((PyArrayObject *)values[0]);
     __pyx_v_xx = ((PyArrayObject *)values[1]);
-    __pyx_v_nu = __Pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_nu == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L3_error)
-    __pyx_v_sel_vec = ((PyArrayObject *)values[3]);
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L3_error)
-    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[5]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L3_error)
-    __pyx_v_ploidy = ((PyArrayObject *)values[6]);
-    __pyx_v_dx = ((PyArrayObject *)values[7]);
-    __pyx_v_dfactor = ((PyArrayObject *)values[8]);
-    __pyx_v_xInt = ((PyArrayObject *)values[9]);
-    __pyx_v_delj = ((PyArrayObject *)values[10]);
-    __pyx_v_MInt = ((PyArrayObject *)values[11]);
-    __pyx_v_V = ((PyArrayObject *)values[12]);
-    __pyx_v_VInt = ((PyArrayObject *)values[13]);
-    __pyx_v_a = ((PyArrayObject *)values[14]);
-    __pyx_v_b = ((PyArrayObject *)values[15]);
-    __pyx_v_c = ((PyArrayObject *)values[16]);
-    __pyx_v_r = ((PyArrayObject *)values[17]);
+    __pyx_v_yy = ((PyArrayObject *)values[2]);
+    __pyx_v_nu1 = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_nu1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 327, __pyx_L3_error)
+    __pyx_v_m12 = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_m12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 328, __pyx_L3_error)
+    __pyx_v_s1 = ((PyArrayObject *)values[5]);
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 330, __pyx_L3_error)
+    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[7]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 331, __pyx_L3_error)
+    __pyx_v_ploidy = ((PyArrayObject *)values[8]);
+    __pyx_v_dx = ((PyArrayObject *)values[9]);
+    __pyx_v_dfactor = ((PyArrayObject *)values[10]);
+    __pyx_v_xInt = ((PyArrayObject *)values[11]);
+    __pyx_v_delj = ((PyArrayObject *)values[12]);
+    __pyx_v_MInt = ((PyArrayObject *)values[13]);
+    __pyx_v_V = ((PyArrayObject *)values[14]);
+    __pyx_v_VInt = ((PyArrayObject *)values[15]);
+    __pyx_v_a = ((PyArrayObject *)values[16]);
+    __pyx_v_b = ((PyArrayObject *)values[17]);
+    __pyx_v_c = ((PyArrayObject *)values[18]);
+    __pyx_v_r = ((PyArrayObject *)values[19]);
+    __pyx_v_temp = ((PyArrayObject *)values[20]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("implicit_1Dx", 1, 18, 18, __pyx_nargs); __PYX_ERR(0, 108, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("implicit_2Dx", 1, 21, 21, __pyx_nargs); __PYX_ERR(0, 324, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  __Pyx_AddTraceback("Int1D_poly.implicit_1Dx", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("Int2D_poly.implicit_2Dx", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 108, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 109, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sel_vec), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "sel_vec", 0))) __PYX_ERR(0, 111, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy", 0))) __PYX_ERR(0, 114, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "dx", 0))) __PYX_ERR(0, 115, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dfactor), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "dfactor", 0))) __PYX_ERR(0, 116, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xInt", 0))) __PYX_ERR(0, 117, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delj), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "delj", 0))) __PYX_ERR(0, 118, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_MInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "MInt", 0))) __PYX_ERR(0, 119, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_V), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "V", 0))) __PYX_ERR(0, 120, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_VInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "VInt", 0))) __PYX_ERR(0, 121, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_a), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "a", 0))) __PYX_ERR(0, 122, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_b), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "b", 0))) __PYX_ERR(0, 123, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_c), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "c", 0))) __PYX_ERR(0, 124, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "r", 0))) __PYX_ERR(0, 125, __pyx_L1_error)
-  __pyx_r = __pyx_pf_10Int1D_poly_implicit_1Dx(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_nu, __pyx_v_sel_vec, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy, __pyx_v_dx, __pyx_v_dfactor, __pyx_v_xInt, __pyx_v_delj, __pyx_v_MInt, __pyx_v_V, __pyx_v_VInt, __pyx_v_a, __pyx_v_b, __pyx_v_c, __pyx_v_r);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 326, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s1), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s1", 0))) __PYX_ERR(0, 329, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy", 0))) __PYX_ERR(0, 332, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "dx", 0))) __PYX_ERR(0, 333, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dfactor), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "dfactor", 0))) __PYX_ERR(0, 334, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xInt", 0))) __PYX_ERR(0, 335, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delj), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "delj", 0))) __PYX_ERR(0, 336, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_MInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "MInt", 0))) __PYX_ERR(0, 337, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_V), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "V", 0))) __PYX_ERR(0, 338, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_VInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "VInt", 0))) __PYX_ERR(0, 339, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_a), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "a", 0))) __PYX_ERR(0, 340, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_b), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "b", 0))) __PYX_ERR(0, 341, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_c), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "c", 0))) __PYX_ERR(0, 342, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "r", 0))) __PYX_ERR(0, 343, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_temp), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "temp", 0))) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_r = __pyx_pf_10Int2D_poly_implicit_2Dx(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_yy, __pyx_v_nu1, __pyx_v_m12, __pyx_v_s1, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy, __pyx_v_dx, __pyx_v_dfactor, __pyx_v_xInt, __pyx_v_delj, __pyx_v_MInt, __pyx_v_V, __pyx_v_VInt, __pyx_v_a, __pyx_v_b, __pyx_v_c, __pyx_v_r, __pyx_v_temp);
 
   /* function exit code */
   goto __pyx_L0;
@@ -19692,7 +21970,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_phi, PyArrayObject *__pyx_v_xx, double __pyx_v_nu, PyArrayObject *__pyx_v_sel_vec, double __pyx_v_dt, int __pyx_v_use_delj_trick, PyArrayObject *__pyx_v_ploidy, PyArrayObject *__pyx_v_dx, PyArrayObject *__pyx_v_dfactor, PyArrayObject *__pyx_v_xInt, PyArrayObject *__pyx_v_delj, PyArrayObject *__pyx_v_MInt, PyArrayObject *__pyx_v_V, PyArrayObject *__pyx_v_VInt, PyArrayObject *__pyx_v_a, PyArrayObject *__pyx_v_b, PyArrayObject *__pyx_v_c, PyArrayObject *__pyx_v_r) {
+static PyObject *__pyx_pf_10Int2D_poly_implicit_2Dx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_phi, PyArrayObject *__pyx_v_xx, PyArrayObject *__pyx_v_yy, double __pyx_v_nu1, double __pyx_v_m12, PyArrayObject *__pyx_v_s1, double __pyx_v_dt, int __pyx_v_use_delj_trick, PyArrayObject *__pyx_v_ploidy, PyArrayObject *__pyx_v_dx, PyArrayObject *__pyx_v_dfactor, PyArrayObject *__pyx_v_xInt, PyArrayObject *__pyx_v_delj, PyArrayObject *__pyx_v_MInt, PyArrayObject *__pyx_v_V, PyArrayObject *__pyx_v_VInt, PyArrayObject *__pyx_v_a, PyArrayObject *__pyx_v_b, PyArrayObject *__pyx_v_c, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_temp) {
   __Pyx_LocalBuf_ND __pyx_pybuffernd_MInt;
   __Pyx_Buffer __pyx_pybuffer_MInt;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_V;
@@ -19717,12 +21995,16 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __Pyx_Buffer __pyx_pybuffer_ploidy;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_r;
   __Pyx_Buffer __pyx_pybuffer_r;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_sel_vec;
-  __Pyx_Buffer __pyx_pybuffer_sel_vec;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_s1;
+  __Pyx_Buffer __pyx_pybuffer_s1;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_temp;
+  __Pyx_Buffer __pyx_pybuffer_temp;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_xInt;
   __Pyx_Buffer __pyx_pybuffer_xInt;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_xx;
   __Pyx_Buffer __pyx_pybuffer_xx;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_yy;
+  __Pyx_Buffer __pyx_pybuffer_yy;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -19740,10 +22022,12 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __Pyx_memviewslice __pyx_t_13 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_14 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_15 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_16 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_17 = { 0, 0, { 0 }, { 0 }, { 0 } };
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("implicit_1Dx", 0);
+  __Pyx_RefNannySetupContext("implicit_2Dx", 0);
   __pyx_pybuffer_phi.pybuffer.buf = NULL;
   __pyx_pybuffer_phi.refcount = 0;
   __pyx_pybuffernd_phi.data = NULL;
@@ -19752,10 +22036,14 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __pyx_pybuffer_xx.refcount = 0;
   __pyx_pybuffernd_xx.data = NULL;
   __pyx_pybuffernd_xx.rcbuffer = &__pyx_pybuffer_xx;
-  __pyx_pybuffer_sel_vec.pybuffer.buf = NULL;
-  __pyx_pybuffer_sel_vec.refcount = 0;
-  __pyx_pybuffernd_sel_vec.data = NULL;
-  __pyx_pybuffernd_sel_vec.rcbuffer = &__pyx_pybuffer_sel_vec;
+  __pyx_pybuffer_yy.pybuffer.buf = NULL;
+  __pyx_pybuffer_yy.refcount = 0;
+  __pyx_pybuffernd_yy.data = NULL;
+  __pyx_pybuffernd_yy.rcbuffer = &__pyx_pybuffer_yy;
+  __pyx_pybuffer_s1.pybuffer.buf = NULL;
+  __pyx_pybuffer_s1.refcount = 0;
+  __pyx_pybuffernd_s1.data = NULL;
+  __pyx_pybuffernd_s1.rcbuffer = &__pyx_pybuffer_s1;
   __pyx_pybuffer_ploidy.pybuffer.buf = NULL;
   __pyx_pybuffer_ploidy.refcount = 0;
   __pyx_pybuffernd_ploidy.data = NULL;
@@ -19804,128 +22092,145 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __pyx_pybuffer_r.refcount = 0;
   __pyx_pybuffernd_r.data = NULL;
   __pyx_pybuffernd_r.rcbuffer = &__pyx_pybuffer_r;
+  __pyx_pybuffer_temp.pybuffer.buf = NULL;
+  __pyx_pybuffer_temp.refcount = 0;
+  __pyx_pybuffernd_temp.data = NULL;
+  __pyx_pybuffernd_temp.rcbuffer = &__pyx_pybuffer_temp;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_xx.diminfo[0].strides = __pyx_pybuffernd_xx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xx.diminfo[0].shape = __pyx_pybuffernd_xx.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_sel_vec.rcbuffer->pybuffer, (PyObject*)__pyx_v_sel_vec, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
-  __pyx_pybuffernd_sel_vec.diminfo[0].strides = __pyx_pybuffernd_sel_vec.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_sel_vec.diminfo[0].shape = __pyx_pybuffernd_sel_vec.rcbuffer->pybuffer.shape[0];
+  __pyx_pybuffernd_yy.diminfo[0].strides = __pyx_pybuffernd_yy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yy.diminfo[0].shape = __pyx_pybuffernd_yy.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s1.rcbuffer->pybuffer, (PyObject*)__pyx_v_s1, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_s1.diminfo[0].strides = __pyx_pybuffernd_s1.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_s1.diminfo[0].shape = __pyx_pybuffernd_s1.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_ploidy.diminfo[0].strides = __pyx_pybuffernd_ploidy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy.diminfo[0].shape = __pyx_pybuffernd_ploidy.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dx.rcbuffer->pybuffer, (PyObject*)__pyx_v_dx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dx.rcbuffer->pybuffer, (PyObject*)__pyx_v_dx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_dx.diminfo[0].strides = __pyx_pybuffernd_dx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dx.diminfo[0].shape = __pyx_pybuffernd_dx.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dfactor.rcbuffer->pybuffer, (PyObject*)__pyx_v_dfactor, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dfactor.rcbuffer->pybuffer, (PyObject*)__pyx_v_dfactor, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_dfactor.diminfo[0].strides = __pyx_pybuffernd_dfactor.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dfactor.diminfo[0].shape = __pyx_pybuffernd_dfactor.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_xInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_xInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_xInt.diminfo[0].strides = __pyx_pybuffernd_xInt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xInt.diminfo[0].shape = __pyx_pybuffernd_xInt.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_delj.rcbuffer->pybuffer, (PyObject*)__pyx_v_delj, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_delj.rcbuffer->pybuffer, (PyObject*)__pyx_v_delj, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_delj.diminfo[0].strides = __pyx_pybuffernd_delj.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_delj.diminfo[0].shape = __pyx_pybuffernd_delj.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_MInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_MInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_MInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_MInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_MInt.diminfo[0].strides = __pyx_pybuffernd_MInt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_MInt.diminfo[0].shape = __pyx_pybuffernd_MInt.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_V.rcbuffer->pybuffer, (PyObject*)__pyx_v_V, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_V.rcbuffer->pybuffer, (PyObject*)__pyx_v_V, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_V.diminfo[0].strides = __pyx_pybuffernd_V.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_V.diminfo[0].shape = __pyx_pybuffernd_V.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_VInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_VInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_VInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_VInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_VInt.diminfo[0].strides = __pyx_pybuffernd_VInt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_VInt.diminfo[0].shape = __pyx_pybuffernd_VInt.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_a.rcbuffer->pybuffer, (PyObject*)__pyx_v_a, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_a.rcbuffer->pybuffer, (PyObject*)__pyx_v_a, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_a.diminfo[0].strides = __pyx_pybuffernd_a.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_a.diminfo[0].shape = __pyx_pybuffernd_a.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_b.diminfo[0].strides = __pyx_pybuffernd_b.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_b.diminfo[0].shape = __pyx_pybuffernd_b.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_c.rcbuffer->pybuffer, (PyObject*)__pyx_v_c, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_c.rcbuffer->pybuffer, (PyObject*)__pyx_v_c, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_c.diminfo[0].strides = __pyx_pybuffernd_c.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_c.diminfo[0].shape = __pyx_pybuffernd_c.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_temp.rcbuffer->pybuffer, (PyObject*)__pyx_v_temp, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 324, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_temp.diminfo[0].strides = __pyx_pybuffernd_temp.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_temp.diminfo[0].shape = __pyx_pybuffernd_temp.rcbuffer->pybuffer.shape[0];
 
-  /* "Int1D_poly.pyx":174
+  /* "Int2D_poly.pyx":395
  *     """
  *     # Call the cdef function with memory views
- *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy,             # <<<<<<<<<<<<<<
- *                                 dx, dfactor, xInt, delj, MInt, V, VInt,
- *                                 a, b, c, r)
+ *     c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy,             # <<<<<<<<<<<<<<
+ *                     dx, dfactor, xInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)
 */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 174, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 174, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_sel_vec), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 174, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 395, __pyx_L1_error)
 
-  /* "Int1D_poly.pyx":175
+  /* "Int2D_poly.pyx":396
  *     # Call the cdef function with memory views
- *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy,
- *                                 dx, dfactor, xInt, delj, MInt, V, VInt,             # <<<<<<<<<<<<<<
- *                                 a, b, c, r)
+ *     c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy,
+ *                     dx, dfactor, xInt, delj, MInt, V, VInt,             # <<<<<<<<<<<<<<
+ *                     a, b, c, r, temp)
  *     return phi
 */
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_dx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_dfactor), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_delj), PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_MInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_V), PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_VInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_dx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_dfactor), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_delj), PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_MInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_V), PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_VInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_12.memview)) __PYX_ERR(0, 396, __pyx_L1_error)
 
-  /* "Int1D_poly.pyx":176
- *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy,
- *                                 dx, dfactor, xInt, delj, MInt, V, VInt,
- *                                 a, b, c, r)             # <<<<<<<<<<<<<<
+  /* "Int2D_poly.pyx":397
+ *     c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy,
+ *                     dx, dfactor, xInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)             # <<<<<<<<<<<<<<
  *     return phi
+ * 
 */
-  __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_a), PyBUF_WRITABLE); if (unlikely(!__pyx_t_12.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_b), PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_c), PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_r), PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_a), PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 397, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_b), PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 397, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_c), PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 397, __pyx_L1_error)
+  __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_r), PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 397, __pyx_L1_error)
+  __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_temp), PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 397, __pyx_L1_error)
 
-  /* "Int1D_poly.pyx":174
+  /* "Int2D_poly.pyx":395
  *     """
  *     # Call the cdef function with memory views
- *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy,             # <<<<<<<<<<<<<<
- *                                 dx, dfactor, xInt, delj, MInt, V, VInt,
- *                                 a, b, c, r)
+ *     c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy,             # <<<<<<<<<<<<<<
+ *                     dx, dfactor, xInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)
 */
-  __pyx_f_10Int1D_poly_c_implicit_1Dx(__pyx_t_1, __pyx_t_2, __pyx_v_nu, __pyx_t_3, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_4, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_f_10Int2D_poly_c_implicit_2Dx(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_v_nu1, __pyx_v_m12, __pyx_t_4, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 395, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
   __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
@@ -19956,23 +22261,29 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __pyx_t_14.memview = NULL; __pyx_t_14.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_15, 1);
   __pyx_t_15.memview = NULL; __pyx_t_15.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_16, 1);
+  __pyx_t_16.memview = NULL; __pyx_t_16.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_17, 1);
+  __pyx_t_17.memview = NULL; __pyx_t_17.data = NULL;
 
-  /* "Int1D_poly.pyx":177
- *                                 dx, dfactor, xInt, delj, MInt, V, VInt,
- *                                 a, b, c, r)
+  /* "Int2D_poly.pyx":398
+ *                     dx, dfactor, xInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)
  *     return phi             # <<<<<<<<<<<<<<
+ * 
+ * def implicit_2Dy(np.ndarray[double, ndim=1] phi,
 */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF((PyObject *)__pyx_v_phi);
   __pyx_r = ((PyObject *)__pyx_v_phi);
   goto __pyx_L0;
 
-  /* "Int1D_poly.pyx":108
- * ### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
- * ### ==========================================================================
- * def implicit_1Dx(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
+  /* "Int2D_poly.pyx":324
+ * # =========================================================
+ * 
+ * def implicit_2Dx(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
- *                  double nu,
+ *                  np.ndarray[double, ndim=1] yy,
 */
 
   /* function exit code */
@@ -19992,6 +22303,8 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_13, 1);
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_14, 1);
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_15, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_16, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_17, 1);
   { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
     __Pyx_PyThreadState_declare
     __Pyx_PyThreadState_assign
@@ -20008,11 +22321,13 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_phi.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_sel_vec.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s1.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_temp.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xInt.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xx.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yy.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Int1D_poly.implicit_1Dx", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("Int2D_poly.implicit_2Dx", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -20028,9 +22343,672 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_phi.rcbuffer->pybuffer);
   __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer);
   __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_sel_vec.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s1.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_temp.rcbuffer->pybuffer);
   __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xInt.rcbuffer->pybuffer);
   __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xx.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yy.rcbuffer->pybuffer);
+  __pyx_L2:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "Int2D_poly.pyx":400
+ *     return phi
+ * 
+ * def implicit_2Dy(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
+ *                  np.ndarray[double, ndim=1] xx,
+ *                  np.ndarray[double, ndim=1] yy,
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10Int2D_poly_3implicit_2Dy(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_10Int2D_poly_2implicit_2Dy, "\n    Implicit 2D integration function for y direction of 2D diffusion equation.\n    This version uses pre-allocated memory views for all intermediate arrays.\n    (Hence the extra parameters at the end.)\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx : numpy array (float64) \n        Grid points\n    yy : numpy array (float64) \n        Grid points\n    nu2 : float\n        Population size for pop2\n    s2 : numpy array (float64)\n        Selection params for pop2\n    dt : float\n        Time step\n    use_delj_trick : int\n        Whether to use delj optimization (0 or 1)\n    ploidy : numpy array (int)\n        Vector of ploidy Booleans (0 or 1)\n        [dip, auto, alloa, allob]\n    dy : numpy array (float64)\n        Grid spacings\n    dfactor : numpy array (float64)\n        Factors for scaling\n    yInt : numpy array(float64)\n        Integration points\n    delj : numpy array (float64)\n        Values of delj\n    MInt : numpy array (float64)\n        Values of MInt\n    V : numpy array (float64)\n        Values of V\n    VInt : numpy array (float64)\n        Values of VInt\n    a : numpy array (float64)\n        a, b, c, r, and temp arrays are for tridiagonal matrix solver\n    b : numpy array (float64)\n    c : numpy array (float64)\n    r : numpy array (float64)\n    temp : numpy array (float64)\n\n    Returns:\n    --------\n    phi : modified phi after integration in x direction\n    ");
+static PyMethodDef __pyx_mdef_10Int2D_poly_3implicit_2Dy = {"implicit_2Dy", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10Int2D_poly_3implicit_2Dy, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_10Int2D_poly_2implicit_2Dy};
+static PyObject *__pyx_pw_10Int2D_poly_3implicit_2Dy(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyArrayObject *__pyx_v_phi = 0;
+  PyArrayObject *__pyx_v_xx = 0;
+  PyArrayObject *__pyx_v_yy = 0;
+  double __pyx_v_nu2;
+  double __pyx_v_m21;
+  PyArrayObject *__pyx_v_s2 = 0;
+  double __pyx_v_dt;
+  int __pyx_v_use_delj_trick;
+  PyArrayObject *__pyx_v_ploidy = 0;
+  PyArrayObject *__pyx_v_dy = 0;
+  PyArrayObject *__pyx_v_dfactor = 0;
+  PyArrayObject *__pyx_v_yInt = 0;
+  PyArrayObject *__pyx_v_delj = 0;
+  PyArrayObject *__pyx_v_MInt = 0;
+  PyArrayObject *__pyx_v_V = 0;
+  PyArrayObject *__pyx_v_VInt = 0;
+  PyArrayObject *__pyx_v_a = 0;
+  PyArrayObject *__pyx_v_b = 0;
+  PyArrayObject *__pyx_v_c = 0;
+  PyArrayObject *__pyx_v_r = 0;
+  PyArrayObject *__pyx_v_temp = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("implicit_2Dy (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_yy,&__pyx_mstate_global->__pyx_n_u_nu2,&__pyx_mstate_global->__pyx_n_u_m21,&__pyx_mstate_global->__pyx_n_u_s2,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy,&__pyx_mstate_global->__pyx_n_u_dy,&__pyx_mstate_global->__pyx_n_u_dfactor,&__pyx_mstate_global->__pyx_n_u_yInt,&__pyx_mstate_global->__pyx_n_u_delj,&__pyx_mstate_global->__pyx_n_u_MInt,&__pyx_mstate_global->__pyx_n_u_V,&__pyx_mstate_global->__pyx_n_u_VInt,&__pyx_mstate_global->__pyx_n_u_a,&__pyx_mstate_global->__pyx_n_u_b,&__pyx_mstate_global->__pyx_n_u_c,&__pyx_mstate_global->__pyx_n_u_r,&__pyx_mstate_global->__pyx_n_u_temp,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 400, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case 21:
+        values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 20:
+        values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 19:
+        values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 18:
+        values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 17:
+        values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 16:
+        values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 15:
+        values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 14:
+        values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 13:
+        values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 12:
+        values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 11:
+        values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case 10:
+        values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  9:
+        values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  8:
+        values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  7:
+        values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  6:
+        values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  5:
+        values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  4:
+        values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  3:
+        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 400, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_2Dy", 0) < 0) __PYX_ERR(0, 400, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 21; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_2Dy", 1, 21, 21, i); __PYX_ERR(0, 400, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 21)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[13] = __Pyx_ArgRef_FASTCALL(__pyx_args, 13);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[13])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[14] = __Pyx_ArgRef_FASTCALL(__pyx_args, 14);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[14])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[15] = __Pyx_ArgRef_FASTCALL(__pyx_args, 15);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[15])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[16] = __Pyx_ArgRef_FASTCALL(__pyx_args, 16);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[16])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[17] = __Pyx_ArgRef_FASTCALL(__pyx_args, 17);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[17])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[18] = __Pyx_ArgRef_FASTCALL(__pyx_args, 18);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[18])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[19] = __Pyx_ArgRef_FASTCALL(__pyx_args, 19);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[19])) __PYX_ERR(0, 400, __pyx_L3_error)
+      values[20] = __Pyx_ArgRef_FASTCALL(__pyx_args, 20);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[20])) __PYX_ERR(0, 400, __pyx_L3_error)
+    }
+    __pyx_v_phi = ((PyArrayObject *)values[0]);
+    __pyx_v_xx = ((PyArrayObject *)values[1]);
+    __pyx_v_yy = ((PyArrayObject *)values[2]);
+    __pyx_v_nu2 = __Pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_nu2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 403, __pyx_L3_error)
+    __pyx_v_m21 = __Pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_m21 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 404, __pyx_L3_error)
+    __pyx_v_s2 = ((PyArrayObject *)values[5]);
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 406, __pyx_L3_error)
+    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[7]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 407, __pyx_L3_error)
+    __pyx_v_ploidy = ((PyArrayObject *)values[8]);
+    __pyx_v_dy = ((PyArrayObject *)values[9]);
+    __pyx_v_dfactor = ((PyArrayObject *)values[10]);
+    __pyx_v_yInt = ((PyArrayObject *)values[11]);
+    __pyx_v_delj = ((PyArrayObject *)values[12]);
+    __pyx_v_MInt = ((PyArrayObject *)values[13]);
+    __pyx_v_V = ((PyArrayObject *)values[14]);
+    __pyx_v_VInt = ((PyArrayObject *)values[15]);
+    __pyx_v_a = ((PyArrayObject *)values[16]);
+    __pyx_v_b = ((PyArrayObject *)values[17]);
+    __pyx_v_c = ((PyArrayObject *)values[18]);
+    __pyx_v_r = ((PyArrayObject *)values[19]);
+    __pyx_v_temp = ((PyArrayObject *)values[20]);
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("implicit_2Dy", 1, 21, 21, __pyx_nargs); __PYX_ERR(0, 400, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("Int2D_poly.implicit_2Dy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 400, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 401, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 402, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s2), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s2", 0))) __PYX_ERR(0, 405, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy", 0))) __PYX_ERR(0, 408, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "dy", 0))) __PYX_ERR(0, 409, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dfactor), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "dfactor", 0))) __PYX_ERR(0, 410, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yInt", 0))) __PYX_ERR(0, 411, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delj), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "delj", 0))) __PYX_ERR(0, 412, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_MInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "MInt", 0))) __PYX_ERR(0, 413, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_V), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "V", 0))) __PYX_ERR(0, 414, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_VInt), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "VInt", 0))) __PYX_ERR(0, 415, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_a), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "a", 0))) __PYX_ERR(0, 416, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_b), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "b", 0))) __PYX_ERR(0, 417, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_c), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "c", 0))) __PYX_ERR(0, 418, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "r", 0))) __PYX_ERR(0, 419, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_temp), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "temp", 0))) __PYX_ERR(0, 420, __pyx_L1_error)
+  __pyx_r = __pyx_pf_10Int2D_poly_2implicit_2Dy(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_yy, __pyx_v_nu2, __pyx_v_m21, __pyx_v_s2, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy, __pyx_v_dy, __pyx_v_dfactor, __pyx_v_yInt, __pyx_v_delj, __pyx_v_MInt, __pyx_v_V, __pyx_v_VInt, __pyx_v_a, __pyx_v_b, __pyx_v_c, __pyx_v_r, __pyx_v_temp);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10Int2D_poly_2implicit_2Dy(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_phi, PyArrayObject *__pyx_v_xx, PyArrayObject *__pyx_v_yy, double __pyx_v_nu2, double __pyx_v_m21, PyArrayObject *__pyx_v_s2, double __pyx_v_dt, int __pyx_v_use_delj_trick, PyArrayObject *__pyx_v_ploidy, PyArrayObject *__pyx_v_dy, PyArrayObject *__pyx_v_dfactor, PyArrayObject *__pyx_v_yInt, PyArrayObject *__pyx_v_delj, PyArrayObject *__pyx_v_MInt, PyArrayObject *__pyx_v_V, PyArrayObject *__pyx_v_VInt, PyArrayObject *__pyx_v_a, PyArrayObject *__pyx_v_b, PyArrayObject *__pyx_v_c, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_temp) {
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_MInt;
+  __Pyx_Buffer __pyx_pybuffer_MInt;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_V;
+  __Pyx_Buffer __pyx_pybuffer_V;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_VInt;
+  __Pyx_Buffer __pyx_pybuffer_VInt;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_a;
+  __Pyx_Buffer __pyx_pybuffer_a;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_b;
+  __Pyx_Buffer __pyx_pybuffer_b;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_c;
+  __Pyx_Buffer __pyx_pybuffer_c;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_delj;
+  __Pyx_Buffer __pyx_pybuffer_delj;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_dfactor;
+  __Pyx_Buffer __pyx_pybuffer_dfactor;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_dy;
+  __Pyx_Buffer __pyx_pybuffer_dy;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_phi;
+  __Pyx_Buffer __pyx_pybuffer_phi;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_ploidy;
+  __Pyx_Buffer __pyx_pybuffer_ploidy;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_r;
+  __Pyx_Buffer __pyx_pybuffer_r;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_s2;
+  __Pyx_Buffer __pyx_pybuffer_s2;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_temp;
+  __Pyx_Buffer __pyx_pybuffer_temp;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_xx;
+  __Pyx_Buffer __pyx_pybuffer_xx;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_yInt;
+  __Pyx_Buffer __pyx_pybuffer_yInt;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_yy;
+  __Pyx_Buffer __pyx_pybuffer_yy;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_4 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_8 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_11 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_12 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_13 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_14 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_15 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_16 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_17 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("implicit_2Dy", 0);
+  __pyx_pybuffer_phi.pybuffer.buf = NULL;
+  __pyx_pybuffer_phi.refcount = 0;
+  __pyx_pybuffernd_phi.data = NULL;
+  __pyx_pybuffernd_phi.rcbuffer = &__pyx_pybuffer_phi;
+  __pyx_pybuffer_xx.pybuffer.buf = NULL;
+  __pyx_pybuffer_xx.refcount = 0;
+  __pyx_pybuffernd_xx.data = NULL;
+  __pyx_pybuffernd_xx.rcbuffer = &__pyx_pybuffer_xx;
+  __pyx_pybuffer_yy.pybuffer.buf = NULL;
+  __pyx_pybuffer_yy.refcount = 0;
+  __pyx_pybuffernd_yy.data = NULL;
+  __pyx_pybuffernd_yy.rcbuffer = &__pyx_pybuffer_yy;
+  __pyx_pybuffer_s2.pybuffer.buf = NULL;
+  __pyx_pybuffer_s2.refcount = 0;
+  __pyx_pybuffernd_s2.data = NULL;
+  __pyx_pybuffernd_s2.rcbuffer = &__pyx_pybuffer_s2;
+  __pyx_pybuffer_ploidy.pybuffer.buf = NULL;
+  __pyx_pybuffer_ploidy.refcount = 0;
+  __pyx_pybuffernd_ploidy.data = NULL;
+  __pyx_pybuffernd_ploidy.rcbuffer = &__pyx_pybuffer_ploidy;
+  __pyx_pybuffer_dy.pybuffer.buf = NULL;
+  __pyx_pybuffer_dy.refcount = 0;
+  __pyx_pybuffernd_dy.data = NULL;
+  __pyx_pybuffernd_dy.rcbuffer = &__pyx_pybuffer_dy;
+  __pyx_pybuffer_dfactor.pybuffer.buf = NULL;
+  __pyx_pybuffer_dfactor.refcount = 0;
+  __pyx_pybuffernd_dfactor.data = NULL;
+  __pyx_pybuffernd_dfactor.rcbuffer = &__pyx_pybuffer_dfactor;
+  __pyx_pybuffer_yInt.pybuffer.buf = NULL;
+  __pyx_pybuffer_yInt.refcount = 0;
+  __pyx_pybuffernd_yInt.data = NULL;
+  __pyx_pybuffernd_yInt.rcbuffer = &__pyx_pybuffer_yInt;
+  __pyx_pybuffer_delj.pybuffer.buf = NULL;
+  __pyx_pybuffer_delj.refcount = 0;
+  __pyx_pybuffernd_delj.data = NULL;
+  __pyx_pybuffernd_delj.rcbuffer = &__pyx_pybuffer_delj;
+  __pyx_pybuffer_MInt.pybuffer.buf = NULL;
+  __pyx_pybuffer_MInt.refcount = 0;
+  __pyx_pybuffernd_MInt.data = NULL;
+  __pyx_pybuffernd_MInt.rcbuffer = &__pyx_pybuffer_MInt;
+  __pyx_pybuffer_V.pybuffer.buf = NULL;
+  __pyx_pybuffer_V.refcount = 0;
+  __pyx_pybuffernd_V.data = NULL;
+  __pyx_pybuffernd_V.rcbuffer = &__pyx_pybuffer_V;
+  __pyx_pybuffer_VInt.pybuffer.buf = NULL;
+  __pyx_pybuffer_VInt.refcount = 0;
+  __pyx_pybuffernd_VInt.data = NULL;
+  __pyx_pybuffernd_VInt.rcbuffer = &__pyx_pybuffer_VInt;
+  __pyx_pybuffer_a.pybuffer.buf = NULL;
+  __pyx_pybuffer_a.refcount = 0;
+  __pyx_pybuffernd_a.data = NULL;
+  __pyx_pybuffernd_a.rcbuffer = &__pyx_pybuffer_a;
+  __pyx_pybuffer_b.pybuffer.buf = NULL;
+  __pyx_pybuffer_b.refcount = 0;
+  __pyx_pybuffernd_b.data = NULL;
+  __pyx_pybuffernd_b.rcbuffer = &__pyx_pybuffer_b;
+  __pyx_pybuffer_c.pybuffer.buf = NULL;
+  __pyx_pybuffer_c.refcount = 0;
+  __pyx_pybuffernd_c.data = NULL;
+  __pyx_pybuffernd_c.rcbuffer = &__pyx_pybuffer_c;
+  __pyx_pybuffer_r.pybuffer.buf = NULL;
+  __pyx_pybuffer_r.refcount = 0;
+  __pyx_pybuffernd_r.data = NULL;
+  __pyx_pybuffernd_r.rcbuffer = &__pyx_pybuffer_r;
+  __pyx_pybuffer_temp.pybuffer.buf = NULL;
+  __pyx_pybuffer_temp.refcount = 0;
+  __pyx_pybuffernd_temp.data = NULL;
+  __pyx_pybuffernd_temp.rcbuffer = &__pyx_pybuffer_temp;
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_xx.diminfo[0].strides = __pyx_pybuffernd_xx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xx.diminfo[0].shape = __pyx_pybuffernd_xx.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_yy.diminfo[0].strides = __pyx_pybuffernd_yy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yy.diminfo[0].shape = __pyx_pybuffernd_yy.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s2.rcbuffer->pybuffer, (PyObject*)__pyx_v_s2, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_s2.diminfo[0].strides = __pyx_pybuffernd_s2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_s2.diminfo[0].shape = __pyx_pybuffernd_s2.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_ploidy.diminfo[0].strides = __pyx_pybuffernd_ploidy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy.diminfo[0].shape = __pyx_pybuffernd_ploidy.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dy.rcbuffer->pybuffer, (PyObject*)__pyx_v_dy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_dy.diminfo[0].strides = __pyx_pybuffernd_dy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dy.diminfo[0].shape = __pyx_pybuffernd_dy.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dfactor.rcbuffer->pybuffer, (PyObject*)__pyx_v_dfactor, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_dfactor.diminfo[0].strides = __pyx_pybuffernd_dfactor.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dfactor.diminfo[0].shape = __pyx_pybuffernd_dfactor.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_yInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_yInt.diminfo[0].strides = __pyx_pybuffernd_yInt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yInt.diminfo[0].shape = __pyx_pybuffernd_yInt.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_delj.rcbuffer->pybuffer, (PyObject*)__pyx_v_delj, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_delj.diminfo[0].strides = __pyx_pybuffernd_delj.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_delj.diminfo[0].shape = __pyx_pybuffernd_delj.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_MInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_MInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_MInt.diminfo[0].strides = __pyx_pybuffernd_MInt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_MInt.diminfo[0].shape = __pyx_pybuffernd_MInt.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_V.rcbuffer->pybuffer, (PyObject*)__pyx_v_V, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_V.diminfo[0].strides = __pyx_pybuffernd_V.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_V.diminfo[0].shape = __pyx_pybuffernd_V.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_VInt.rcbuffer->pybuffer, (PyObject*)__pyx_v_VInt, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_VInt.diminfo[0].strides = __pyx_pybuffernd_VInt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_VInt.diminfo[0].shape = __pyx_pybuffernd_VInt.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_a.rcbuffer->pybuffer, (PyObject*)__pyx_v_a, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_a.diminfo[0].strides = __pyx_pybuffernd_a.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_a.diminfo[0].shape = __pyx_pybuffernd_a.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_b.diminfo[0].strides = __pyx_pybuffernd_b.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_b.diminfo[0].shape = __pyx_pybuffernd_b.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_c.rcbuffer->pybuffer, (PyObject*)__pyx_v_c, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_c.diminfo[0].strides = __pyx_pybuffernd_c.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_c.diminfo[0].shape = __pyx_pybuffernd_c.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_temp.rcbuffer->pybuffer, (PyObject*)__pyx_v_temp, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 400, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_temp.diminfo[0].strides = __pyx_pybuffernd_temp.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_temp.diminfo[0].shape = __pyx_pybuffernd_temp.rcbuffer->pybuffer.shape[0];
+
+  /* "Int2D_poly.pyx":471
+ *     """
+ *     # Call the cdef function with memory views
+ *     c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,             # <<<<<<<<<<<<<<
+ *                     dy, dfactor, yInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)
+*/
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 471, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 471, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 471, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s2), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 471, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 471, __pyx_L1_error)
+
+  /* "Int2D_poly.pyx":472
+ *     # Call the cdef function with memory views
+ *     c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,
+ *                     dy, dfactor, yInt, delj, MInt, V, VInt,             # <<<<<<<<<<<<<<
+ *                     a, b, c, r, temp)
+ *     return phi
+*/
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_dy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_dfactor), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_delj), PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_MInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_V), PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_VInt), PyBUF_WRITABLE); if (unlikely(!__pyx_t_12.memview)) __PYX_ERR(0, 472, __pyx_L1_error)
+
+  /* "Int2D_poly.pyx":473
+ *     c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,
+ *                     dy, dfactor, yInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)             # <<<<<<<<<<<<<<
+ *     return phi
+*/
+  __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_a), PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 473, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_b), PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 473, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_c), PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 473, __pyx_L1_error)
+  __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_r), PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 473, __pyx_L1_error)
+  __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_temp), PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 473, __pyx_L1_error)
+
+  /* "Int2D_poly.pyx":471
+ *     """
+ *     # Call the cdef function with memory views
+ *     c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,             # <<<<<<<<<<<<<<
+ *                     dy, dfactor, yInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)
+*/
+  __pyx_f_10Int2D_poly_c_implicit_2Dy(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_v_nu2, __pyx_v_m21, __pyx_t_4, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 471, __pyx_L1_error)
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
+  __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
+  __pyx_t_2.memview = NULL; __pyx_t_2.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_3, 1);
+  __pyx_t_3.memview = NULL; __pyx_t_3.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_4, 1);
+  __pyx_t_4.memview = NULL; __pyx_t_4.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_5, 1);
+  __pyx_t_5.memview = NULL; __pyx_t_5.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_6, 1);
+  __pyx_t_6.memview = NULL; __pyx_t_6.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_7, 1);
+  __pyx_t_7.memview = NULL; __pyx_t_7.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_8, 1);
+  __pyx_t_8.memview = NULL; __pyx_t_8.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_9, 1);
+  __pyx_t_9.memview = NULL; __pyx_t_9.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_10, 1);
+  __pyx_t_10.memview = NULL; __pyx_t_10.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_11, 1);
+  __pyx_t_11.memview = NULL; __pyx_t_11.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_12, 1);
+  __pyx_t_12.memview = NULL; __pyx_t_12.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_13, 1);
+  __pyx_t_13.memview = NULL; __pyx_t_13.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_14, 1);
+  __pyx_t_14.memview = NULL; __pyx_t_14.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_15, 1);
+  __pyx_t_15.memview = NULL; __pyx_t_15.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_16, 1);
+  __pyx_t_16.memview = NULL; __pyx_t_16.data = NULL;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_17, 1);
+  __pyx_t_17.memview = NULL; __pyx_t_17.data = NULL;
+
+  /* "Int2D_poly.pyx":474
+ *                     dy, dfactor, yInt, delj, MInt, V, VInt,
+ *                     a, b, c, r, temp)
+ *     return phi             # <<<<<<<<<<<<<<
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF((PyObject *)__pyx_v_phi);
+  __pyx_r = ((PyObject *)__pyx_v_phi);
+  goto __pyx_L0;
+
+  /* "Int2D_poly.pyx":400
+ *     return phi
+ * 
+ * def implicit_2Dy(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
+ *                  np.ndarray[double, ndim=1] xx,
+ *                  np.ndarray[double, ndim=1] yy,
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_3, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_4, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_5, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_6, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_7, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_8, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_9, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_10, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_11, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_12, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_13, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_14, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_15, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_16, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_17, 1);
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_MInt.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_V.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_VInt.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_a.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_b.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_c.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_delj.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dfactor.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dy.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_phi.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s2.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_temp.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xx.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yInt.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yy.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
+  __Pyx_AddTraceback("Int2D_poly.implicit_2Dy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  goto __pyx_L2;
+  __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_MInt.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_V.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_VInt.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_a.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_b.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_c.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_delj.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dfactor.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dy.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_phi.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ploidy.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s2.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_temp.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xx.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yInt.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yy.rcbuffer->pybuffer);
   __pyx_L2:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -20168,7 +23146,7 @@ static PyType_Slot __pyx_type___pyx_array_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_array_spec = {
-  "Int1D_poly.array",
+  "Int2D_poly.array",
   sizeof(struct __pyx_array_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_SEQUENCE,
@@ -20202,7 +23180,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "Int1D_poly.""array", /*tp_name*/
+  "Int2D_poly.""array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -20357,7 +23335,7 @@ static PyType_Slot __pyx_type___pyx_MemviewEnum_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_MemviewEnum_spec = {
-  "Int1D_poly.Enum",
+  "Int2D_poly.Enum",
   sizeof(struct __pyx_MemviewEnum_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
@@ -20367,7 +23345,7 @@ static PyType_Spec __pyx_type___pyx_MemviewEnum_spec = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "Int1D_poly.""Enum", /*tp_name*/
+  "Int2D_poly.""Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -20652,7 +23630,7 @@ static PyType_Slot __pyx_type___pyx_memoryview_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_memoryview_spec = {
-  "Int1D_poly.memoryview",
+  "Int2D_poly.memoryview",
   sizeof(struct __pyx_memoryview_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
@@ -20686,7 +23664,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "Int1D_poly.""memoryview", /*tp_name*/
+  "Int2D_poly.""memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -20834,7 +23812,7 @@ static PyType_Slot __pyx_type___pyx_memoryviewslice_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_memoryviewslice_spec = {
-  "Int1D_poly._memoryviewslice",
+  "Int2D_poly._memoryviewslice",
   sizeof(struct __pyx_memoryviewslice_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_SEQUENCE,
@@ -20844,7 +23822,7 @@ static PyType_Spec __pyx_type___pyx_memoryviewslice_spec = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "Int1D_poly.""_memoryviewslice", /*tp_name*/
+  "Int2D_poly.""_memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -21297,10 +24275,10 @@ static int __Pyx_modinit_function_import_code(__pyx_mstatetype *__pyx_mstate) {
 
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_Int1D_poly(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_Int2D_poly(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_Int1D_poly},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_Int2D_poly},
   #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
   {Py_mod_gil, Py_MOD_GIL_USED},
   #endif
@@ -21319,7 +24297,7 @@ namespace {
   #endif
   {
       PyModuleDef_HEAD_INIT,
-      "Int1D_poly",
+      "Int2D_poly",
       0, /* m_doc */
     #if CYTHON_USE_MODULE_STATE
       sizeof(__pyx_mstatetype), /* m_size */
@@ -21357,8 +24335,8 @@ namespace {
   #endif
 #endif
 
-__Pyx_PyMODINIT_FUNC PyInit_Int1D_poly(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_Int1D_poly(void)
+__Pyx_PyMODINIT_FUNC PyInit_Int2D_poly(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_Int2D_poly(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -21461,7 +24439,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_Int1D_poly(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_Int2D_poly(PyObject *__pyx_pyinit_module)
 #endif
 {
   int stringtab_initialized = 0;
@@ -21485,7 +24463,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_Int1D_poly(PyObject *__pyx_pyinit_
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'Int1D_poly' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'Int2D_poly' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #else
@@ -21501,7 +24479,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_Int1D_poly(PyObject *__pyx_pyinit_
   #if CYTHON_USE_MODULE_STATE
   {
     int add_module_result = __Pyx_State_AddModule(__pyx_t_1, &__pyx_moduledef);
-    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "Int1D_poly" pseudovariable */
+    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "Int2D_poly" pseudovariable */
     if (unlikely((add_module_result < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     pystate_addmodule_run = 1;
   }
@@ -21529,7 +24507,7 @@ if (!__Pyx_RefNanny) {
 }
 #endif
 
-__Pyx_RefNannySetupContext("PyInit_Int1D_poly", 0);
+__Pyx_RefNannySetupContext("PyInit_Int2D_poly", 0);
   if (__Pyx_check_binary_version(__PYX_LIMITED_VERSION_HEX, __Pyx_get_runtime_version(), CYTHON_COMPILING_IN_LIMITED_API) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -21560,13 +24538,13 @@ __Pyx_RefNannySetupContext("PyInit_Int1D_poly", 0);
   if (__pyx_AsyncGen_init(__pyx_m) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   /*--- Library function declarations ---*/
-  if (__pyx_module_is_main_Int1D_poly) {
+  if (__pyx_module_is_main_Int2D_poly) {
     if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_name_2, __pyx_mstate_global->__pyx_n_u_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "Int1D_poly")) {
-      if (unlikely((PyDict_SetItemString(modules, "Int1D_poly", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "Int2D_poly")) {
+      if (unlikely((PyDict_SetItemString(modules, "Int2D_poly", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   /*--- Builtin init code ---*/
@@ -22116,7 +25094,7 @@ __Pyx_RefNannySetupContext("PyInit_Int1D_poly", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Enum, __pyx_t_5) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int1D_poly.pyx":2
+  /* "Int2D_poly.pyx":2
  * #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
  * import numpy as np             # <<<<<<<<<<<<<<
  * cimport numpy as np
@@ -22127,19 +25105,31 @@ __Pyx_RefNannySetupContext("PyInit_Int1D_poly", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_np, __pyx_t_5) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int1D_poly.pyx":108
- * ### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
- * ### ==========================================================================
- * def implicit_1Dx(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
+  /* "Int2D_poly.pyx":324
+ * # =========================================================
+ * 
+ * def implicit_2Dx(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
- *                  double nu,
+ *                  np.ndarray[double, ndim=1] yy,
 */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int1D_poly_1implicit_1Dx, 0, __pyx_mstate_global->__pyx_n_u_implicit_1Dx, NULL, __pyx_mstate_global->__pyx_n_u_Int1D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int2D_poly_1implicit_2Dx, 0, __pyx_mstate_global->__pyx_n_u_implicit_2Dx, NULL, __pyx_mstate_global->__pyx_n_u_Int2D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_1Dx, __pyx_t_5) < 0) __PYX_ERR(0, 108, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_2Dx, __pyx_t_5) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int1D_poly.pyx":1
+  /* "Int2D_poly.pyx":400
+ *     return phi
+ * 
+ * def implicit_2Dy(np.ndarray[double, ndim=1] phi,             # <<<<<<<<<<<<<<
+ *                  np.ndarray[double, ndim=1] xx,
+ *                  np.ndarray[double, ndim=1] yy,
+*/
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int2D_poly_3implicit_2Dy, 0, __pyx_mstate_global->__pyx_n_u_implicit_2Dy, NULL, __pyx_mstate_global->__pyx_n_u_Int2D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_2Dy, __pyx_t_5) < 0) __PYX_ERR(0, 400, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "Int2D_poly.pyx":1
  * #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION             # <<<<<<<<<<<<<<
  * import numpy as np
  * cimport numpy as np
@@ -22158,7 +25148,7 @@ __Pyx_RefNannySetupContext("PyInit_Int1D_poly", 0);
   __Pyx_XDECREF(__pyx_t_6);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init Int1D_poly", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init Int2D_poly", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -22172,7 +25162,7 @@ __Pyx_RefNannySetupContext("PyInit_Int1D_poly", 0);
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init Int1D_poly");
+    PyErr_SetString(PyExc_ImportError, "init Int2D_poly");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -22227,8 +25217,8 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 1, 1}, /* PyObject cname: __pyx_n_u_IndexError */
   {__pyx_k_Index_out_of_bounds_axis_d, sizeof(__pyx_k_Index_out_of_bounds_axis_d), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Index_out_of_bounds_axis_d */
   {__pyx_k_Indirect_dimensions_not_supporte, sizeof(__pyx_k_Indirect_dimensions_not_supporte), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Indirect_dimensions_not_supporte */
-  {__pyx_k_Int1D_poly, sizeof(__pyx_k_Int1D_poly), 0, 1, 1}, /* PyObject cname: __pyx_n_u_Int1D_poly */
-  {__pyx_k_Int1D_poly_pyx, sizeof(__pyx_k_Int1D_poly_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Int1D_poly_pyx */
+  {__pyx_k_Int2D_poly, sizeof(__pyx_k_Int2D_poly), 0, 1, 1}, /* PyObject cname: __pyx_n_u_Int2D_poly */
+  {__pyx_k_Int2D_poly_pyx, sizeof(__pyx_k_Int2D_poly_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Int2D_poly_pyx */
   {__pyx_k_Invalid_mode_expected_c_or_fortr, sizeof(__pyx_k_Invalid_mode_expected_c_or_fortr), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Invalid_mode_expected_c_or_fortr */
   {__pyx_k_Invalid_shape_in_axis, sizeof(__pyx_k_Invalid_shape_in_axis), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Invalid_shape_in_axis */
   {__pyx_k_MInt, sizeof(__pyx_k_MInt), 0, 1, 1}, /* PyObject cname: __pyx_n_u_MInt */
@@ -22275,6 +25265,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_dt, sizeof(__pyx_k_dt), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dt */
   {__pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dtype_is_object */
   {__pyx_k_dx, sizeof(__pyx_k_dx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dx */
+  {__pyx_k_dy, sizeof(__pyx_k_dy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_dy */
   {__pyx_k_enable, sizeof(__pyx_k_enable), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_enable */
   {__pyx_k_encode, sizeof(__pyx_k_encode), 0, 1, 1}, /* PyObject cname: __pyx_n_u_encode */
   {__pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 1, 1}, /* PyObject cname: __pyx_n_u_enumerate */
@@ -22288,7 +25279,8 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_got, sizeof(__pyx_k_got), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_got */
   {__pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_got_differing_extents_in_dimensi */
   {__pyx_k_id, sizeof(__pyx_k_id), 0, 1, 1}, /* PyObject cname: __pyx_n_u_id */
-  {__pyx_k_implicit_1Dx, sizeof(__pyx_k_implicit_1Dx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_implicit_1Dx */
+  {__pyx_k_implicit_2Dx, sizeof(__pyx_k_implicit_2Dx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_implicit_2Dx */
+  {__pyx_k_implicit_2Dy, sizeof(__pyx_k_implicit_2Dy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_implicit_2Dy */
   {__pyx_k_import, sizeof(__pyx_k_import), 0, 1, 1}, /* PyObject cname: __pyx_n_u_import */
   {__pyx_k_index, sizeof(__pyx_k_index), 0, 1, 1}, /* PyObject cname: __pyx_n_u_index */
   {__pyx_k_initializing, sizeof(__pyx_k_initializing), 0, 1, 1}, /* PyObject cname: __pyx_n_u_initializing */
@@ -22296,6 +25288,8 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_isenabled */
   {__pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 1, 1}, /* PyObject cname: __pyx_n_u_itemsize */
   {__pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_itemsize_0_for_cython_array */
+  {__pyx_k_m12, sizeof(__pyx_k_m12), 0, 1, 1}, /* PyObject cname: __pyx_n_u_m12 */
+  {__pyx_k_m21, sizeof(__pyx_k_m21), 0, 1, 1}, /* PyObject cname: __pyx_n_u_m21 */
   {__pyx_k_main, sizeof(__pyx_k_main), 0, 1, 1}, /* PyObject cname: __pyx_n_u_main */
   {__pyx_k_memview, sizeof(__pyx_k_memview), 0, 1, 1}, /* PyObject cname: __pyx_n_u_memview */
   {__pyx_k_mode, sizeof(__pyx_k_mode), 0, 1, 1}, /* PyObject cname: __pyx_n_u_mode */
@@ -22306,7 +25300,8 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_new, sizeof(__pyx_k_new), 0, 1, 1}, /* PyObject cname: __pyx_n_u_new */
   {__pyx_k_no_default___reduce___due_to_non, sizeof(__pyx_k_no_default___reduce___due_to_non), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_no_default___reduce___due_to_non */
   {__pyx_k_np, sizeof(__pyx_k_np), 0, 1, 1}, /* PyObject cname: __pyx_n_u_np */
-  {__pyx_k_nu, sizeof(__pyx_k_nu), 0, 1, 1}, /* PyObject cname: __pyx_n_u_nu */
+  {__pyx_k_nu1, sizeof(__pyx_k_nu1), 0, 1, 1}, /* PyObject cname: __pyx_n_u_nu1 */
+  {__pyx_k_nu2, sizeof(__pyx_k_nu2), 0, 1, 1}, /* PyObject cname: __pyx_n_u_nu2 */
   {__pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_numpy */
   {__pyx_k_numpy__core_multiarray_failed_to, sizeof(__pyx_k_numpy__core_multiarray_failed_to), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_numpy__core_multiarray_failed_to */
   {__pyx_k_numpy__core_umath_failed_to_impo, sizeof(__pyx_k_numpy__core_umath_failed_to_impo), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_numpy__core_umath_failed_to_impo */
@@ -22329,7 +25324,8 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 1, 1}, /* PyObject cname: __pyx_n_u_reduce_cython */
   {__pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 1, 1}, /* PyObject cname: __pyx_n_u_reduce_ex */
   {__pyx_k_register, sizeof(__pyx_k_register), 0, 1, 1}, /* PyObject cname: __pyx_n_u_register */
-  {__pyx_k_sel_vec, sizeof(__pyx_k_sel_vec), 0, 1, 1}, /* PyObject cname: __pyx_n_u_sel_vec */
+  {__pyx_k_s1, sizeof(__pyx_k_s1), 0, 1, 1}, /* PyObject cname: __pyx_n_u_s1 */
+  {__pyx_k_s2, sizeof(__pyx_k_s2), 0, 1, 1}, /* PyObject cname: __pyx_n_u_s2 */
   {__pyx_k_set_name, sizeof(__pyx_k_set_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_set_name */
   {__pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 1, 1}, /* PyObject cname: __pyx_n_u_setstate */
   {__pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 1, 1}, /* PyObject cname: __pyx_n_u_setstate_cython */
@@ -22343,6 +25339,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_strided_and_direct_or_indirect, sizeof(__pyx_k_strided_and_direct_or_indirect), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_strided_and_direct_or_indirect */
   {__pyx_k_strided_and_indirect, sizeof(__pyx_k_strided_and_indirect), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_strided_and_indirect */
   {__pyx_k_struct, sizeof(__pyx_k_struct), 0, 1, 1}, /* PyObject cname: __pyx_n_u_struct */
+  {__pyx_k_temp, sizeof(__pyx_k_temp), 0, 1, 1}, /* PyObject cname: __pyx_n_u_temp */
   {__pyx_k_test, sizeof(__pyx_k_test), 0, 1, 1}, /* PyObject cname: __pyx_n_u_test */
   {__pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_unable_to_allocate_array_data */
   {__pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_unable_to_allocate_shape_and_str */
@@ -22352,6 +25349,8 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_x, sizeof(__pyx_k_x), 0, 1, 1}, /* PyObject cname: __pyx_n_u_x */
   {__pyx_k_xInt, sizeof(__pyx_k_xInt), 0, 1, 1}, /* PyObject cname: __pyx_n_u_xInt */
   {__pyx_k_xx, sizeof(__pyx_k_xx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_xx */
+  {__pyx_k_yInt, sizeof(__pyx_k_yInt), 0, 1, 1}, /* PyObject cname: __pyx_n_u_yInt */
+  {__pyx_k_yy, sizeof(__pyx_k_yy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_yy */
   {0, 0, 0, 0, 0}
 };
 /* InitStrings.proto */
@@ -22361,7 +25360,7 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 74, __pyx_L1_error)
   __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_import); if (!__pyx_builtin___import__) __PYX_ERR(1, 101, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 139, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 154, __pyx_L1_error)
@@ -22449,7 +25448,7 @@ static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
             unsigned int num_kwonly_args : 1;
             unsigned int nlocals : 5;
             unsigned int flags : 10;
-            unsigned int first_line : 7;
+            unsigned int first_line : 9;
             unsigned int line_table_length : 11;
         } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
@@ -22467,9 +25466,14 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {18, 0, 0, 18, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 108, 54};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_nu, __pyx_mstate->__pyx_n_u_sel_vec, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy, __pyx_mstate->__pyx_n_u_dx, __pyx_mstate->__pyx_n_u_dfactor, __pyx_mstate->__pyx_n_u_xInt, __pyx_mstate->__pyx_n_u_delj, __pyx_mstate->__pyx_n_u_MInt, __pyx_mstate->__pyx_n_u_V, __pyx_mstate->__pyx_n_u_VInt, __pyx_mstate->__pyx_n_u_a, __pyx_mstate->__pyx_n_u_b, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_r};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int1D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_1Dx, __pyx_k_D_5_D_Q_IV6_s_3c_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {21, 0, 0, 21, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 324, 60};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_yy, __pyx_mstate->__pyx_n_u_nu1, __pyx_mstate->__pyx_n_u_m12, __pyx_mstate->__pyx_n_u_s1, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy, __pyx_mstate->__pyx_n_u_dx, __pyx_mstate->__pyx_n_u_dfactor, __pyx_mstate->__pyx_n_u_xInt, __pyx_mstate->__pyx_n_u_delj, __pyx_mstate->__pyx_n_u_MInt, __pyx_mstate->__pyx_n_u_V, __pyx_mstate->__pyx_n_u_VInt, __pyx_mstate->__pyx_n_u_a, __pyx_mstate->__pyx_n_u_b, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_r, __pyx_mstate->__pyx_n_u_temp};
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int2D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_2Dx, __pyx_k_N_5_D_U_d2B_vV3a_s_S_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {21, 0, 0, 21, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 400, 60};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_yy, __pyx_mstate->__pyx_n_u_nu2, __pyx_mstate->__pyx_n_u_m21, __pyx_mstate->__pyx_n_u_s2, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy, __pyx_mstate->__pyx_n_u_dy, __pyx_mstate->__pyx_n_u_dfactor, __pyx_mstate->__pyx_n_u_yInt, __pyx_mstate->__pyx_n_u_delj, __pyx_mstate->__pyx_n_u_MInt, __pyx_mstate->__pyx_n_u_V, __pyx_mstate->__pyx_n_u_VInt, __pyx_mstate->__pyx_n_u_a, __pyx_mstate->__pyx_n_u_b, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_r, __pyx_mstate->__pyx_n_u_temp};
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int2D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_2Dy, __pyx_k_N_5_D_U_d2B_vV3a_s_S_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -28575,6 +31579,29 @@ fail:
 no_fail:
     __Pyx_RefNannyFinishContext();
     return retval;
+}
+
+/* ObjectToMemviewSlice */
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_double(PyObject *obj, int writable_flag) {
+    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
+    __Pyx_BufFmt_StackElem stack[1];
+    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
+    int retcode;
+    if (obj == Py_None) {
+        result.memview = (struct __pyx_memoryview_obj *) Py_None;
+        return result;
+    }
+    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
+                                                 PyBUF_RECORDS_RO | writable_flag, 2,
+                                                 &__Pyx_TypeInfo_double, stack,
+                                                 &result, obj);
+    if (unlikely(retcode == -1))
+        goto __pyx_fail;
+    return result;
+__pyx_fail:
+    result.memview = NULL;
+    result.data = NULL;
+    return result;
 }
 
 /* ObjectToMemviewSlice */
