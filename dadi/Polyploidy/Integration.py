@@ -1,4 +1,5 @@
 import dadi.Misc as Misc
+import dadi.Polyploidy.MiscPoly as MiscPoly
 import dadi.Demes as Demes
 import numpy
 from numpy import newaxis as nuax
@@ -213,36 +214,31 @@ def _compute_dt_allo_b(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
 ### ==========================================================================
 # these are slightly restructured from Ryan's versions to be more compatible with 
 # the ploidy arguments which specify which injection function to use
-def _inject_mutations_1D(dt, xx, theta0):
+def _inject_mutations_1D(phi, dt, xx, theta0, ploidy):
     """
     Inject novel mutations for a timestep for diploids.
     """
-    new_mut = dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
-    return new_mut
-
-def _inject_mutations_1D_auto(dt, xx, theta0):
-    """
-    Inject novel mutations for a timestep for autotetraploids. 
-    This is corrected to account for the diffusion time scaling being in units of 2N generations.
-    """
-    new_mut = dt/xx[1] * theta0/4 * 2/(xx[2] - xx[0]) 
-    return new_mut
-
-def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen, nomut):
-    """
-    Inject novel mutations for a timestep for diploids or allotetraploids.
-    """
-    if not frozen and not nomut:
-        phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
+    if ploidy[0]:
+        phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
+    elif ploidy[1]:
+        phi[1] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * xx[1])
     return phi
 
-def _inject_mutations_2D_auto(phi, dt, xx, yy, theta0, frozen, nomut):
+def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
+                         nomut1, nomut2, ploidy1, ploidy2):
     """
-    Inject novel mutations for a timestep for autotetraploids. 
-    This is corrected to account for the diffusion time scaling being in units of 2N generations.
+    Inject novel mutations for a timestep.
     """
-    if not frozen and not nomut:
-        phi[1,0] += dt/xx[1] * theta0/4 * 4/((xx[2] - xx[0]) * yy[1])
+    if not frozen1 and not nomut1:
+        if not ploidy1[1]: # this reads as if not autotetraploid
+            phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
+        else:
+            phi[1,0] += dt/xx[1] * theta0/4 * 4/((xx[2] - xx[0]) * yy[1])
+    if not frozen2 and not nomut2:
+        if not ploidy2[1]:
+            phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+        else:
+            phi[0,1] += dt/yy[1] * theta0/4 * 4/((yy[2] - yy[0]) * xx[1])
     return phi
 
 ### ==========================================================================
@@ -307,7 +303,6 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
     nu, gamma, and theta0 may be functions of time.
     nu: Population size
     theta0: Propotional to ancestral size. Typically constant.
-    beta: Breeding ratio, beta=Nf/Nm.
 
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
@@ -337,44 +332,26 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
     # vector of ploidy coefficients 
     # *only* for the 1 pop case is ploidy a vector of length 2
     # e.g. [0, 1] specifies the current population as autotetraploid
+    # this is more convenient than calling if ploidyflag == PloidyType.xxx
     ploidy = numpy.zeros(2, dtype=numpy.intc)
     ploidy[ploidyflag] = 1
-    # get the selection variables
-    sel = ploidyflag.pack_sel_params(sel_dict=sel_dict)
-    vars_to_check = (nu, sel[0], sel[1], sel[2], sel[3], theta0)
+    # unpack the selection parameters from dict to list
+    sel = ploidyflag.pack_sel_params(sel_dict)
+    vars_to_check = [nu,sel,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
-        return _one_pop_const_params(phi, xx, T, sel[0], sel[1], sel[2], sel[3], ploidy,
-                                      nu, theta0, initial_t)
+        return _one_pop_const_params(phi, xx, T, sel, ploidy, nu, theta0, initial_t)
 
-    # The user will only pass in selection params/funcs for one type of pop
-    # But, we can't anticipate which one they'll pass in
-    # So, we define all possible params as 0 and then overwrite them only as needed
-    gamma = h = gam1 = gam2 = gam3 = gam4 = 0
-
-    # overwrite the above params with the passed in params
-    # (this allows me to come back to the class and add wrappers for other selection models)
-    if ploidyflag == PloidyType.DIPLOID:
-        gamma, h = sel[0], sel[1]
-        gamma_f = Misc.ensure_1arg_func(gamma)
-        h_f = Misc.ensure_1arg_func(h)
-    else: 
-        gam1, gam2, gam3, gam4 = sel[0], sel[1], sel[2], sel[3] 
-        gam1_f = Misc.ensure_1arg_func(gam1)
-        gam2_f = Misc.ensure_1arg_func(gam2)
-        gam3_f = Misc.ensure_1arg_func(gam3)    
-        gam4_f = Misc.ensure_1arg_func(gam4)   
-
+    # for convenience, we'll keep the sel_f as a vector of functions
+    # this avoids explicitly writing all of the selection parameters for all of the ploidy types
+    # and avoids many if statements which might slow things down
+    sel_f = MiscPoly.ensure_1arg_func_vectorized(sel)
     nu_f = Misc.ensure_1arg_func(nu)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
     current_t = initial_t
     nu = nu_f(current_t)
-    if ploidyflag == PloidyType.DIPLOID:
-        gamma, h =  gamma_f(current_t), h_f(current_t)
-    else:
-        gam1, gam2, gam3, gam4 = gam1_f(current_t), gam2_f(current_t), gam3_f(current_t), gam4_f(current_t)
-    sel = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
+    sel = sel_f(current_t)
 
     dx = numpy.diff(xx)
 
@@ -387,16 +364,9 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
         # So there's a little inconsistency here, in that I'm estimating dt
         # using the last timepoints nu,gamma,h.
         next_t = current_t + this_dt
-        if ploidyflag == PloidyType.DIPLOID:
-            gamma, h = gamma_f(next_t), h_f(next_t)
-        else:
-            gam1, gam2, gam3, gam4 = gam1_f(next_t), gam2_f(next_t), gam3_f(next_t), gam4_f(next_t)
+        sel = sel_f(next_t)
         nu = nu_f(next_t)
         theta0 = theta0_f(next_t)
-        # define the sel_vec for the current time to pass to the integrator
-        # this is a little subtle, but essentially one set of sel params will always be
-        # set to zero, so this is either [gamma, h, 0, 0] or [gam1, gam2, gam3, gam4]
-        sel = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
        
         demes_hist.append([next_t, [nu], []])
 
@@ -407,10 +377,7 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
         
-        if ploidyflag == PloidyType.DIPLOID:
-            phi[1] += _inject_mutations_1D(this_dt, xx, theta0)
-        else:
-            phi[1] += _inject_mutations_1D_auto(this_dt, xx, theta0)
+        _inject_mutations_1D(phi, this_dt, xx, theta0, ploidy)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
         phi = int1D.implicit_1Dx(phi, xx, nu, sel, this_dt, 
@@ -434,8 +401,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     m12,m21: Migration rates. Note that m12 is the rate *into 1 from 2*.
     theta0: Propotional to ancestral size. Typically constant.
 
-    ploidyflag: See PloidyType class. 0 for diploid, 1 for auto, 2 for alloa, 3 for allob
-    sel_dict: dictionary of selection parameters for given ploidy type
+    ploidyflag1,2: See PloidyType class. 0 for diploid, 1 for auto, 2 for alloa, 3 for allob
+    sel_dict1,2: dictionary of selection parameters for corresponding ploidy type of that population
 
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
@@ -469,55 +436,68 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     if (frozen1 or frozen2) and (m12 != 0 or m21 != 0):
         raise ValueError('Population cannot be frozen and have non-zero '
                          'migration to or from it.')
+    if cuda_enabled:
+        raise ValueError('CUDA integration is not currently supported for polyploid models.')
 
-    vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
+    # create ploidy vectors with intc
+    ploidy1 = numpy.zeros(4, numpy.intc)
+    ploidy2 = numpy.zeros(4, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+
+    # unpack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+
+    vars_to_check = [nu1,nu2,m12,m21,sel1,sel2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
         Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
                            start_sizes = [nu1, nu2], mig = [m12,m21], deme_ids=deme_ids))
         if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
-            return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
-                    gamma1, gamma2, h1, h2, theta0, initial_t,
-                    frozen1, frozen2, nomut1, nomut2)
+            return _two_pops_const_params(phi, xx, T, sel1, sel2, ploidy1, ploidy2, 
+                                          nu1, nu2, m12, m21,theta0, initial_t,
+                                          frozen1, frozen2, nomut1, nomut2)
+
     yy = xx
 
+    sel1_f = MiscPoly.ensure_1arg_func_vectorized(sel1)
+    sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel2)
     nu1_f = Misc.ensure_1arg_func(nu1)
     nu2_f = Misc.ensure_1arg_func(nu2)
     m12_f = Misc.ensure_1arg_func(m12)
     m21_f = Misc.ensure_1arg_func(m21)
-    gamma1_f = Misc.ensure_1arg_func(gamma1)
-    gamma2_f = Misc.ensure_1arg_func(gamma2)
-    h1_f = Misc.ensure_1arg_func(h1)
-    h2_f = Misc.ensure_1arg_func(h2)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    if cuda_enabled:
-        import dadi.cuda
-        phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
-                nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
-                frozen1, frozen2, nomut1, nomut2, deme_ids)
-        return phi
+    # TODO: CUDA integration
+    ### Ryan will need to implement this? 
+    ### it is something I could take a look at... 
+    # if cuda_enabled:
+    #     import dadi.cuda
+    #     phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
+    #             nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
+    #             frozen1, frozen2, nomut1, nomut2, deme_ids)
+    #     return phi
 
     current_t = initial_t
     nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
     m12,m21 = m12_f(current_t), m21_f(current_t)
-    gamma1,gamma2 = gamma1_f(current_t), gamma2_f(current_t)
-    h1,h2 = h1_f(current_t), h2_f(current_t)
+    sel1, sel2 = sel1_f(current_t), sel2_f(current_t)
+    
     dx,dy = numpy.diff(xx),numpy.diff(yy)
 
     demes_hist = [[0, [nu1,nu2], [m12,m21]]]
     while current_t < T:
-        dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
-                 _compute_dt(dy,nu2,[m21],gamma2,h2))
+        dt = min(_compute_dt(dx,nu1,[m12],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21],sel2,ploidy2))
         this_dt = min(dt, T - current_t)
 
         next_t = current_t + this_dt
 
         nu1,nu2 = nu1_f(next_t), nu2_f(next_t)
         m12,m21 = m12_f(next_t), m21_f(next_t)
-        gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
-        h1,h2 = h1_f(next_t), h2_f(next_t)
+        sel1, sel2 = sel1_f(next_t), sel2_f(next_t)
         theta0 = theta0_f(next_t)
         demes_hist.append([next_t, [nu1,nu2], [m12,m21]])
 
@@ -529,13 +509,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
                              'mis-specified?')
 
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
-                             nomut1, nomut2)
+                             nomut1, nomut2, ploidy1, ploidy2)
         if not frozen1:
-            phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
-                                     this_dt, use_delj_trick)
+            phi = int2D.implicit_2Dx(phi, xx, yy, nu1, m12, sel1,
+                                     this_dt, use_delj_trick, ploidy1)
         if not frozen2:
-            phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
-                                     this_dt, use_delj_trick)
+            phi = int2D.implicit_2Dy(phi, xx, yy, nu2, m21, sel2,
+                                     this_dt, use_delj_trick, ploidy2)
 
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
@@ -570,7 +550,7 @@ def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
            gam1)
     return mxy * (y-x) + x*(1-x) * 2 * poly
 # allotetraploid
-def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22)
+def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
     # x is x_a, y is x_b
     # gij refers to gamma_ij (not a gamete frequency!)
     xy = x*y
@@ -583,7 +563,7 @@ def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22
                   (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
     return mxy * (y-x) + x * (1. - x) * 2. * poly
 
-def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22)
+def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
     # x is x_b, y is x_a
     xy = x*y
     yy = y*y
@@ -687,10 +667,7 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
     while current_t < T:    
         this_dt = min(dt, T - current_t)
 
-        if ploidy[0]:
-            phi[1] += _inject_mutations_1D(this_dt, xx, theta0)
-        else:
-            phi[1] += _inject_mutations_1D_auto(this_dt, xx, theta0)
+        _inject_mutations_1D(phi, dt, xx, theta0, ploidy)
         r = phi/this_dt
         phi = tridiag.tridiag(a, b+1/this_dt, c, r)
         current_t += this_dt
@@ -817,7 +794,7 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     while current_t < T:
         this_dt = min(dt, T - current_t)
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
-                            nomut1, nomut2)
+                            nomut1, nomut2, ploidy1, ploidy2)
         if not frozen1:
             phi = int2D.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:
