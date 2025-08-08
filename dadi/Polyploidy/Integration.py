@@ -392,6 +392,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
     # also, for simple things like dx and xInt, 
     # we can precompute in Python for all times and dimensions
     dx = numpy.diff(xx)
+    xInt = (xx[:-1] + xx[1:])/2 
 
     demes_hist = [[0, [nu], []]]
     while current_t < T:
@@ -431,6 +432,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
             phi[1] += _inject_mutations_1D_auto(this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
+        phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
         phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
                                  use_delj_trick, ploidy, dx, dfactor, xInt, delj,
                                  MInt, V, VInt, a, b, c, r)

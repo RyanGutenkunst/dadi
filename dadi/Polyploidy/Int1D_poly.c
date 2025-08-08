@@ -18962,9 +18962,11 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_1 = 1;
   __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_1 * __pyx_v_ploidy.strides[0]) )));
 
+  /* "Int1D_poly.pyx":55
   /* "Int1D_poly.pyx":54
  * 
  *     # call the C functions for the grid spacings and other numerical details
+ *     #compute_dx(&xx[0], L, &dx[0])
  *     compute_dx(&xx[0], L, &dx[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dx[0], L, &dfactor[0])
  *     compute_xInt(&xx[0], L, &xInt[0])
@@ -18977,23 +18979,12 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     # call the C functions for the grid spacings and other numerical details
  *     compute_dx(&xx[0], L, &dx[0])
  *     compute_dfactor(&dx[0], L, &dfactor[0])             # <<<<<<<<<<<<<<
- *     compute_xInt(&xx[0], L, &xInt[0])
+ *     #compute_xInt(&xx[0], L, &xInt[0])
  * 
-*/
-  __pyx_t_2 = 0;
-  __pyx_t_1 = 0;
-  compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_2 * __pyx_v_dx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_1 * __pyx_v_dfactor.strides[0]) )))));
-
-  /* "Int1D_poly.pyx":56
- *     compute_dx(&xx[0], L, &dx[0])
- *     compute_dfactor(&dx[0], L, &dfactor[0])
- *     compute_xInt(&xx[0], L, &xInt[0])             # <<<<<<<<<<<<<<
- * 
- *     # branch on ploidy type here
 */
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_1 * __pyx_v_xx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_2 * __pyx_v_xInt.strides[0]) )))));
+  compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_1 * __pyx_v_dx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_2 * __pyx_v_dfactor.strides[0]) )))));
 
   /* "Int1D_poly.pyx":59
  * 

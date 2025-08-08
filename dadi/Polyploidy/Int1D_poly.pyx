@@ -51,9 +51,9 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
     cdef int is_auto = ploidy[1]
 
     # call the C functions for the grid spacings and other numerical details
-    compute_dx(&xx[0], L, &dx[0])
+    #compute_dx(&xx[0], L, &dx[0])
     compute_dfactor(&dx[0], L, &dfactor[0])
-    compute_xInt(&xx[0], L, &xInt[0])
+    #compute_xInt(&xx[0], L, &xInt[0])
 
     # branch on ploidy type here
     if is_diploid:
