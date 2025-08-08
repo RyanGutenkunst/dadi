@@ -5,7 +5,6 @@ cimport numpy as cnp
 # =========================================================
 # SHARED AND DIPLOID C FUNCTIONS
 # =========================================================
-
 cdef extern from "integration_shared.h":
     double Vfunc(double x, double nu)
     double Mfunc2D(double x, double y, double mxy, double gamma, double h)
@@ -17,11 +16,10 @@ cdef extern from "integration_shared.h":
     void compute_abc_nobc(double *dx, double *dfactor, 
             double *delj, double *MInt, double *V, double dt, int N,
             double *a, double *b, double *c)
-            
+
 # =========================================================
 # C FUNCTIONS FOR POLYPLOIDS
 # =========================================================
-
 cdef extern from "integration_shared_poly.h":
     double Vfunc_auto(double x, double nu)
     double Mfunc2D_auto(double x, double y, double mxy, double gam1, double gam2, double gam3, double gam4)
@@ -31,10 +29,17 @@ cdef extern from "integration_shared_poly.h":
 # =========================================================
 # C TRIDIAGONAL MATRIX SOLVER
 # =========================================================
-
+# for higher dimensions, we want to preallocate memory outside of the spatial loop(s)
+# so, we will use this set of functions instead of the regular tridiagonal solver
 cdef extern from "tridiag.h":
-    void tridiag(double *a, double *b, double *c, double *r, double *u, int n)
+    void tridiag_malloc(int n)
+    void tridiag_premalloc(double *a, double *b, double *c, double *r, double *u, int n)
+    void tridiag_free()
 
 # =========================================================
-# CYTHON 2D INTEGRATION FUNCTION 
+# CYTHON 2D INTEGRATION FUNCTIONS
 # =========================================================
+
+# x direction here
+
+# y direction here

@@ -11,7 +11,6 @@ import dadi.integration_c as int_c
 ### ==========================================================================
 ### CONSTANTS
 ### ==========================================================================
-
 #: Controls use of GPUs and multiprocessing
 cuda_enabled = False
 
@@ -30,7 +29,6 @@ old_timescale_factor = 0.1
 ### ==========================================================================
 ### COMPUTE DT FUNCTIONS
 ### ==========================================================================
-
 def _compute_dt(dx, nu, ms, sel, ploidy):
     """
     Compute the timestep along a single dimension of phi. 
@@ -213,10 +211,8 @@ def _compute_dt_allo_b(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
 ### ==========================================================================
 ### INJECT MUTATIONS FUNCTIONS FOR ALL PLOIDIES + DIMENSIONS
 ### ==========================================================================
-
 # these are slightly restructured from Ryan's versions to be more compatible with 
 # the ploidy arguments which specify which injection function to use
-# can change these back if needed
 def _inject_mutations_1D(dt, xx, theta0):
     """
     Inject novel mutations for a timestep for diploids.
@@ -252,7 +248,6 @@ def _inject_mutations_2D_auto(phi, dt, xx, yy, theta0, frozen, nomut):
 ### ==========================================================================
 ### CLASS DEFINITION FOR SPECIFYING PLOIDY
 ### ==========================================================================
-
 class PloidyType(IntEnum):
     DIPLOID = 0
     AUTO = 1
@@ -301,7 +296,6 @@ class PloidyType(IntEnum):
 ### ==========================================================================
 ### MAIN INTEGRATION FUNCTIONS FOR EACH DIMENSION
 ### ==========================================================================
-
 def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.0, initial_t=0, 
             frozen=False, deme_ids=None):
     """
@@ -429,11 +423,19 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
 # ============================================================================
 # PYTHON FUNCTIONS AND CONST_PARAMS INTEGRATION
 # ============================================================================
-
 # Python versions of the popgen functions
+# diploid
+def _Vfunc(x, nu):
+    return 1./nu * x*(1-x) 
+def _Mfunc1D(x, gamma, h):
+    return gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+def _Mfunc2D(x,y, mxy, gamma, h):
+    return mxy * (y-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
+    return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+# autotetraploid
 def _Vfunc_auto(x, nu):
     return 1./(2.*nu) * x*(1-x) 
-# use Horner's method here to evaluate the polynomial as an easy optimization
 def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
     poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
             (9*gam1 - 9*gam2 + 3*gam3)) * x +
@@ -446,15 +448,7 @@ def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
            (-6*gam1 + 3*gam2)) * x + 
            gam1)
     return mxy * (y-x) + x*(1-x) * 2 * poly
-
-def _Vfunc(x, nu):
-    return 1./nu * x*(1-x) 
-def _Mfunc1D(x, gamma, h):
-    return gamma * 2*(h + (1-2*h)*x) * x*(1-x)
-def _Mfunc2D(x,y, mxy, gamma, h):
-    return mxy * (y-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
-def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
-    return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+# allotetraploid
 
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
@@ -490,7 +484,6 @@ def _compute_delj(dx, MInt, VInt, axis=0):
     else:
         delj = 0.5
     return delj
-
 
 # Constant parameters, 1D integration
 def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, theta0=1, 

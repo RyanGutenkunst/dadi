@@ -36,6 +36,7 @@ double Mfunc2D_auto(double x, double y, double mxy, double gam1, double gam2, do
 double Mfunc2D_allo_a(double x, double y, double mxy, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22){
     /*
     * x is x_a, y is x_b
+    * gij refers to gamma_ij (not a gamete frequency!)
     */
     double xy = x*y;
     double yy = y*y;

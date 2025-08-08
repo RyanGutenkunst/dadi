@@ -1,11 +1,10 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 import numpy as np
-cimport numpy as cnp
+cimport numpy as np
 
 # =========================================================
 # SHARED AND DIPLOID C FUNCTIONS
 # =========================================================
-
 cdef extern from "integration_shared.h":
     double Vfunc(double x, double nu)
     double Mfunc1D(double x, double gamma, double h)
@@ -21,7 +20,6 @@ cdef extern from "integration_shared.h":
 # =========================================================
 # C FUNCTIONS FOR POLYPLOIDS
 # =========================================================
-
 cdef extern from "integration_shared_poly.h":
     double Vfunc_auto(double x, double nu)
     double Mfunc1D_auto(double x, double gam1, double gam2, double gam3, double gam4)
@@ -29,7 +27,6 @@ cdef extern from "integration_shared_poly.h":
 # =========================================================
 # C TRIDIAGONAL MATRIX SOLVER
 # =========================================================
-
 cdef extern from "tridiag.h":
     void tridiag(double *a, double *b, double *c, double *r, double *u, int n)
 
@@ -65,8 +62,8 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
     cdef double[:] c = np.empty(L, dtype=np.float64)
     cdef double[:] r = np.empty(L, dtype=np.float64)
     ### weights/coefficients for scaling
-    cdef double is_diploid = ploidy[0]
-    cdef double is_auto = ploidy[1]
+    cdef int is_diploid = ploidy[0]
+    cdef int is_auto = ploidy[1]
 
     # call the C functions for the grid spacings and other numerical details
     compute_dx(&xx[0], L, &dx[0])
@@ -121,15 +118,15 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
     tridiag(&a[0], &b[0], &c[0], &r[0], &phi[0], L)
 
 ### ==========================================================================
-### CREATE A PYTHON CALLABLE 1D INTEGRATION FUNCTION
+### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
 ### ==========================================================================  
-def implicit_1Dx(cnp.ndarray[double, ndim=1] phi, 
-                 cnp.ndarray[double, ndim=1] xx, 
+def implicit_1Dx(np.ndarray[double, ndim=1] phi, 
+                 np.ndarray[double, ndim=1] xx, 
                  double nu, 
-                 cnp.ndarray[double, ndim=1] sel_vec, 
+                 np.ndarray[double, ndim=1] sel_vec, 
                  double dt, 
                  int use_delj_trick,  
-                 cnp.ndarray[int, ndim=1] ploidy):
+                 np.ndarray[int, ndim=1] ploidy):
     """
     Implicit 1D integration function for 1D diffusion equation.
     This version uses branching outside the loops, so it only computes the
