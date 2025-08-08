@@ -117,6 +117,84 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
     # solve the tridiagonal matrix
     tridiag(&a[0], &b[0], &c[0], &r[0], &phi[0], L)
 
+cdef void c_implicit_1Dx_preallocated(double[:] phi, double[:] xx, double nu, double[:] sel_vec, 
+                        double dt, int use_delj_trick, int[:] ploidy,
+                        double[:] dx, double[:] dfactor, double[:] xInt, double[:] delj, 
+                        double[:] MInt, double[:] V, double[:] VInt, 
+                        double[:] a, double[:] b, double[:] c, double[:] r):
+
+    # since we only need the sel_vec to accommodate a certain max number of params, 
+    # we can put n params into the first n slots of sel_vec
+    # where n is the number of params for the given ploidy
+    # this saves us from creating very long arrays or dealing with variable length arrays
+    # Here, sel_vec = [param1, param2, param3, param4] b/c we only consider diploids and autotetraploids
+
+    cdef int L = xx.shape[0] # number of grid points
+    cdef int ii # loop index
+
+    # Create memory views for everything we need to compute
+    ### grid spacings and integration points
+    # preallocated above
+    ### population genetic functions
+    cdef double Mfirst, Mlast
+    ### for the tridiagonal matrix solver
+    # preallocated above
+    ### weights/coefficients for scaling
+    cdef int is_diploid = ploidy[0]
+    cdef int is_auto = ploidy[1]
+
+    # call the C functions for the grid spacings and other numerical details
+    compute_dx(&xx[0], L, &dx[0])
+    compute_dfactor(&dx[0], L, &dfactor[0])
+    compute_xInt(&xx[0], L, &xInt[0])
+    
+    # branch on ploidy type here
+    if is_diploid:
+        Mfirst = Mfunc1D(xx[0], sel_vec[0], sel_vec[1]) 
+        Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1]) 
+
+        for ii in range(0, L):
+            V[ii] = Vfunc(xx[ii], nu)
+
+        for ii in range(0, L-1):
+            MInt[ii] = Mfunc1D(xInt[ii], sel_vec[0], sel_vec[1]) 
+            VInt[ii] = Vfunc(xInt[ii], nu)
+
+        compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+        compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+        
+        if Mfirst <= 0:
+            b[0] += (0.5/nu - Mfirst)*2/dx[0] 
+        if Mlast >= 0:
+            b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2] 
+
+    if is_auto:
+        Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+        Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+    
+        for ii in range(0, L):
+            V[ii] = Vfunc_auto(xx[ii], nu)
+    
+        for ii in range(0, L-1):
+            MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+            VInt[ii] = Vfunc_auto(xInt[ii], nu)
+
+        compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+
+        compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+    
+        if Mfirst <= 0:
+            b[0] +=(0.25/nu - Mfirst)*2/dx[0]
+        if Mlast >= 0:
+            b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]
+
+    # calculate the RHS of the tridiagonal problem
+    for ii in range(0, L):
+        r[ii] = phi[ii]/dt
+
+    # solve the tridiagonal matrix
+    tridiag(&a[0], &b[0], &c[0], &r[0], &phi[0], L)
+
 ### ==========================================================================
 ### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
 ### ==========================================================================  
@@ -157,3 +235,74 @@ def implicit_1Dx(np.ndarray[double, ndim=1] phi,
     # Call the cdef function with memory views
     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
     return phi
+
+def implicit_1Dx_preallocated(np.ndarray[double, ndim=1] phi, 
+                 np.ndarray[double, ndim=1] xx, 
+                 double nu, 
+                 np.ndarray[double, ndim=1] sel_vec, 
+                 double dt, 
+                 int use_delj_trick,  
+                 np.ndarray[int, ndim=1] ploidy,
+                 np.ndarray[double, ndim=1] dx, 
+                 np.ndarray[double, ndim=1] dfactor, 
+                 np.ndarray[double, ndim=1] xInt, 
+                 np.ndarray[double, ndim=1] delj, 
+                 np.ndarray[double, ndim=1] MInt, 
+                 np.ndarray[double, ndim=1] V, 
+                 np.ndarray[double, ndim=1] VInt, 
+                 np.ndarray[double, ndim=1] a, 
+                 np.ndarray[double, ndim=1] b, 
+                 np.ndarray[double, ndim=1] c, 
+                 np.ndarray[double, ndim=1] r):
+    """
+    Implicit 1D integration function for 1D diffusion equation.
+    This version uses pre-allocated memory views for all intermediate arrays.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx : numpy array (float64) 
+        Grid points
+    nu : float
+        Population size parameter
+    sel_vec : numpy array (float64)
+        Selection parameters [gamma, h, gam1, gam2, gam3, gam4]
+    dt : float
+        Time step
+    use_delj_trick : int
+        Whether to use delj optimization (0 or 1)
+    ploidy : numpy array (int)
+        Ploidy coefficients [diploid_coeff, auto_coeff]
+        Either 0 or 1
+    dx : numpy array (L-1) (float64)
+        Grid spacings
+    dfactor : numpy array (float64)
+        Factors for scaling
+    xInt : numpy array (L-1) (float64)
+        Integration points
+    delj : numpy array (L-1) (float64)
+        Values of delj
+    MInt : numpy array (L-1) (float64)
+        Values of MInt
+    V : numpy array (float64)
+        Values of V
+    VInt : numpy array (L-1) (float64)
+        Values of VInt
+    a : numpy array (float64)
+        Values of a
+    b : numpy array (float64)
+        Values of b
+    c : numpy array (float64)
+        Values of c
+    r : numpy array (float64)
+    
+    Returns:
+    --------
+    numpy array : Modified phi array
+    """
+    # Call the cdef function with memory views
+    c_implicit_1Dx_preallocated(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy,
+                                dx, dfactor, xInt, delj, MInt, V, VInt, 
+                                a, b, c, r)
+    return phi                    

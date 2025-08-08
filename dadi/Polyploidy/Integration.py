@@ -420,6 +420,148 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
+def one_pop_preallocated(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.0, initial_t=0, 
+            frozen=False, deme_ids=None):
+    """
+    Integrate a 1-dimensional phi foward.
+
+    phi: Initial 1-dimensional phi
+    xx: Grid upon (0,1) overwhich phi is defined.
+
+    nu, gamma, and theta0 may be functions of time.
+    nu: Population size
+    theta0: Propotional to ancestral size. Typically constant.
+    beta: Breeding ratio, beta=Nf/Nm.
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    ploidyflag: 0 for diploid, 1 for auto
+    sel_dict: dictionary of selection parameters for given ploidy type
+
+    frozen: If True, population is 'frozen' so that it does not change.
+            In the one_pop case, this is equivalent to not running the
+            integration at all.
+    deme_ids: sequence of strings representing the names of demes
+    """
+    phi = phi.copy()
+
+    # For a one population integration, freezing means just not integrating.
+    if frozen:
+        return phi
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+    
+    # vector of ploidy coefficients 
+    # *only* for the 1 pop case is ploidy a vector of length 2
+    # e.g. [0, 1] specifies the current population as autotetraploid
+    ploidy = numpy.zeros(2, dtype=numpy.intc)
+    ploidy[ploidyflag] = 1
+    # get the selection variables
+    sel = ploidyflag.pack_sel_params(sel_dict=sel_dict)
+    vars_to_check = (nu, sel[0], sel[1], sel[2], sel[3], theta0)
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
+        return _one_pop_const_params(phi, xx, T, sel[0], sel[1], sel[2], sel[3], ploidy,
+                                      nu, theta0, initial_t)
+
+    # The user will only pass in selection params/funcs for one type of pop
+    # But, we can't anticipate which one they'll pass in
+    # So, we define all possible params as 0 and then overwrite them only as needed
+    gamma = h = gam1 = gam2 = gam3 = gam4 = 0
+
+    # overwrite the above params with the passed in params
+    # (this allows me to come back to the class and add wrappers for other selection models)
+    if ploidyflag == PloidyType.DIPLOID:
+        gamma, h = sel[0], sel[1]
+        gamma_f = Misc.ensure_1arg_func(gamma)
+        h_f = Misc.ensure_1arg_func(h)
+    else: 
+        gam1, gam2, gam3, gam4 = sel[0], sel[1], sel[2], sel[3] 
+        gam1_f = Misc.ensure_1arg_func(gam1)
+        gam2_f = Misc.ensure_1arg_func(gam2)
+        gam3_f = Misc.ensure_1arg_func(gam3)    
+        gam4_f = Misc.ensure_1arg_func(gam4)   
+
+    nu_f = Misc.ensure_1arg_func(nu)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    current_t = initial_t
+    nu = nu_f(current_t)
+    if ploidyflag == PloidyType.DIPLOID:
+        gamma, h =  gamma_f(current_t), h_f(current_t)
+    else:
+        gam1, gam2, gam3, gam4 = gam1_f(current_t), gam2_f(current_t), gam3_f(current_t), gam4_f(current_t)
+
+
+    # preallocate memory for all the intermediate arrays 
+    # (except dx, which is already computed)
+    # this should be faster than re-allocating in Cython each timestep
+    dfactor = numpy.empty(xx.shape[0], dtype=numpy.float64)
+    delj = numpy.empty(xx.shape[0]-1, dtype=numpy.float64)
+    MInt = numpy.empty(xx.shape[0]-1, dtype=numpy.float64)
+    V = numpy.empty(xx.shape[0], dtype=numpy.float64)
+    VInt = numpy.empty(xx.shape[0]-1, dtype=numpy.float64)
+    a = numpy.empty(xx.shape[0], dtype=numpy.float64)
+    b = numpy.empty(xx.shape[0], dtype=numpy.float64)
+    c = numpy.empty(xx.shape[0], dtype=numpy.float64)
+    r = numpy.empty(xx.shape[0], dtype=numpy.float64)
+    # also, for simple things like dx and xInt, 
+    # we can precompute in Python for all times and dimensions
+    dx = numpy.diff(xx)
+    xInt = (xx[:-1] + xx[1:])/2
+
+    demes_hist = [[0, [nu], []]]
+    while current_t < T:
+        if ploidyflag == PloidyType.DIPLOID:
+            dt = ploidy[0] * _compute_dt_dip(dx,nu,[0],gamma,h)
+        else:
+            dt = ploidy[1] * _compute_dt_auto(dx,nu,[0],gam1,gam2,gam3,gam4)
+        this_dt = min(dt, T - current_t)
+
+        # Because this is an implicit method, I need the *next* time's params.
+        # So there's a little inconsistency here, in that I'm estimating dt
+        # using the last timepoints nu,gamma,h.
+        next_t = current_t + this_dt
+        if ploidyflag == PloidyType.DIPLOID:
+            gamma, h = gamma_f(next_t), h_f(next_t)
+        else:
+            gam1, gam2, gam3, gam4 = gam1_f(next_t), gam2_f(next_t), gam3_f(next_t), gam4_f(next_t)
+        nu = nu_f(next_t)
+        theta0 = theta0_f(next_t)
+        # define the sel_vec for the current time to pass to the integrator
+        # this is a little subtle, but essentially one set of sel params will always be
+        # set to zero, so this is either [gamma, h, 0, 0] or [gam1, gam2, gam3, gam4]
+        sel_vec = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
+       
+        demes_hist.append([next_t, [nu], []])
+
+        if numpy.any(numpy.less([T,nu,theta0], 0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+        
+        if ploidyflag == PloidyType.DIPLOID:
+            phi[1] += _inject_mutations_1D(this_dt, xx, theta0)
+        else:
+            phi[1] += _inject_mutations_1D_auto(this_dt, xx, theta0)
+        # Do each step in C, since it will be faster to compute the a,b,c
+        # matrices there.
+        phi = int1D.implicit_1Dx_preallocated(phi, xx, nu, sel_vec, this_dt, 
+                                 use_delj_trick, ploidy, dx, dfactor, xInt, delj,
+                                 MInt, V, VInt, a, b, c, r)
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
 # ============================================================================
 # PYTHON FUNCTIONS AND CONST_PARAMS INTEGRATION
 # ============================================================================
