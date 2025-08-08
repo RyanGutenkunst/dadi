@@ -375,24 +375,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
     else:
         gam1, gam2, gam3, gam4 = gam1_f(current_t), gam2_f(current_t), gam3_f(current_t), gam4_f(current_t)
 
-    # preallocate memory for all the intermediate arrays 
-    # (except dx, which is already computed)
-    # this should be faster than re-allocating in Cython each timestep
-    L = xx.shape[0]
-    dfactor = numpy.empty(L, dtype=numpy.float64)
-    delj = numpy.empty(L-1, dtype=numpy.float64)
-    xInt = numpy.empty(L-1, dtype=numpy.float64)
-    MInt = numpy.empty(L-1, dtype=numpy.float64)
-    V = numpy.empty(L, dtype=numpy.float64)
-    VInt = numpy.empty(L-1, dtype=numpy.float64)
-    a = numpy.empty(L, dtype=numpy.float64)
-    b = numpy.empty(L, dtype=numpy.float64)
-    c = numpy.empty(L, dtype=numpy.float64)
-    r = numpy.empty(L, dtype=numpy.float64)
-    # also, for simple things like dx and xInt, 
-    # we can precompute in Python for all times and dimensions
     dx = numpy.diff(xx)
-    xInt = (xx[:-1] + xx[1:])/2 
 
     demes_hist = [[0, [nu], []]]
     while current_t < T:
@@ -433,9 +416,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
         phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
-        phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
-                                 use_delj_trick, ploidy, dx, dfactor, xInt, delj,
-                                 MInt, V, VInt, a, b, c, r)
+                                 use_delj_trick, ploidy)
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi

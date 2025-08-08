@@ -34,10 +34,7 @@ cdef extern from "tridiag.h":
 # CYTHON 1D INTEGRATION FUNCTION 
 # =========================================================
 cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_vec, 
-                        double dt, int use_delj_trick, int[:] ploidy,
-                        double[:] dx, double[:] dfactor, double[:] xInt, double[:] delj, 
-                        double[:] MInt, double[:] V, double[:] VInt, 
-                        double[:] a, double[:] b, double[:] c, double[:] r):
+                        double dt, int use_delj_trick, int[:] ploidy):
 
     # Here, sel_vec = [param1, param2, param3, param4] b/c we only consider diploids and autotetraploids
 
@@ -45,15 +42,31 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
 
     cdef int L = xx.shape[0] # number of grid points
     cdef int ii # loop index
+    
+    # Create memory views for everything we need to compute
+    ### grid spacings and integration points
+    cdef double[:] dx = np.empty(L-1, dtype=np.float64)
+    cdef double[:] dfactor = np.empty(L, dtype=np.float64) 
+    cdef double[:] xInt = np.empty(L-1, dtype=np.float64)
+    cdef double[:] delj = np.empty(L-1, dtype=np.float64)
+    ### population genetic functions
     cdef double Mfirst, Mlast
-    # weights/coefficients for scaling
-    cdef int is_diploid = ploidy[0]
-    cdef int is_auto = ploidy[1]
+    cdef double[:] MInt = np.empty(L-1, dtype=np.float64)
+    cdef double[:] V = np.empty(L, dtype=np.float64)
+    cdef double[:] VInt = np.empty(L-1, dtype=np.float64)
+    ### for the tridiagonal matrix solver
+    cdef double[:] a = np.empty(L, dtype=np.float64)
+    cdef double[:] b = np.empty(L, dtype=np.float64)
+    cdef double[:] c = np.empty(L, dtype=np.float64)
+    cdef double[:] r = np.empty(L, dtype=np.float64)
+    ### weights/coefficients for scaling
+    cdef double is_diploid = ploidy[0]
+    cdef double is_auto = ploidy[1]
 
     # call the C functions for the grid spacings and other numerical details
-    #compute_dx(&xx[0], L, &dx[0])
+    compute_dx(&xx[0], L, &dx[0])
     compute_dfactor(&dx[0], L, &dfactor[0])
-    #compute_xInt(&xx[0], L, &xInt[0])
+    compute_xInt(&xx[0], L, &xInt[0])
 
     # branch on ploidy type here
     if is_diploid:
@@ -105,24 +118,13 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
 ### ==========================================================================
 ### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
 ### ==========================================================================  
-def implicit_1Dx(np.ndarray[double, ndim=1] phi, 
-                 np.ndarray[double, ndim=1] xx, 
+def implicit_1Dx(np.ndarray phi, 
+                 np.ndarray xx, 
                  double nu, 
-                 np.ndarray[double, ndim=1] sel_vec, 
+                 np.ndarray sel_vec, 
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy,
-                 np.ndarray[double, ndim=1] dx, 
-                 np.ndarray[double, ndim=1] dfactor, 
-                 np.ndarray[double, ndim=1] xInt, 
-                 np.ndarray[double, ndim=1] delj, 
-                 np.ndarray[double, ndim=1] MInt, 
-                 np.ndarray[double, ndim=1] V, 
-                 np.ndarray[double, ndim=1] VInt, 
-                 np.ndarray[double, ndim=1] a, 
-                 np.ndarray[double, ndim=1] b, 
-                 np.ndarray[double, ndim=1] c, 
-                 np.ndarray[double, ndim=1] r):
+                 np.ndarray ploidy):
     """
     Implicit 1D integration function for 1D diffusion equation.
     This version uses pre-allocated memory views for all intermediate arrays.
@@ -144,34 +146,11 @@ def implicit_1Dx(np.ndarray[double, ndim=1] phi,
     ploidy : numpy array (int)
         Ploidy coefficients [diploid_coeff, auto_coeff]
         Either 0 or 1
-    dx : numpy array (L-1) (float64)
-        Grid spacings
-    dfactor : numpy array (float64)
-        Factors for scaling
-    xInt : numpy array (L-1) (float64)
-        Integration points
-    delj : numpy array (L-1) (float64)
-        Values of delj
-    MInt : numpy array (L-1) (float64)
-        Values of MInt
-    V : numpy array (float64)
-        Values of V
-    VInt : numpy array (L-1) (float64)
-        Values of VInt
-    a : numpy array (float64)
-        Values of a
-    b : numpy array (float64)
-        Values of b
-    c : numpy array (float64)
-        Values of c
-    r : numpy array (float64)
     
     Returns:
     --------
     numpy array : Modified phi array
     """
     # Call the cdef function with memory views
-    c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy,
-                                dx, dfactor, xInt, delj, MInt, V, VInt, 
-                                a, b, c, r)
+    c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
     return phi                    
