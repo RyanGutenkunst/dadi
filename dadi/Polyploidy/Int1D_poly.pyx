@@ -118,13 +118,13 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
 ### ==========================================================================
 ### MAKE THE INTEGRATION FUNCTION CALLABLE FROM PYTHON
 ### ==========================================================================  
-def implicit_1Dx(np.ndarray phi, 
-                 np.ndarray xx, 
+def implicit_1Dx(np.ndarray[double, ndim=1] phi, 
+                 np.ndarray[double, ndim=1] xx, 
                  double nu, 
-                 np.ndarray sel_vec, 
+                 np.ndarray[double, ndim=1] sel_vec, 
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray ploidy):
+                 np.ndarray[int, ndim=1] ploidy):
     """
     Implicit 1D integration function for 1D diffusion equation.
     This version uses pre-allocated memory views for all intermediate arrays.

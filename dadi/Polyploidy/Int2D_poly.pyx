@@ -37,24 +37,38 @@ cdef extern from "tridiag.h":
     void tridiag_free()
 
 # =========================================================
-# CYTHON 2D INTEGRATION FUNCTIONS
+# CYTHON 2D INTEGRATION FUNCTIONS - VARIABLE PARAMS
 # =========================================================
 
 cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu1, double m12, double[:] s1, 
-                        double dt, int use_delj_trick, int[:] ploidy,
-                        double[:] dx, double[:] dfactor, double[:] xInt, double[:] delj, 
-                        double[:] MInt, double[:] V, double[:] VInt, 
-                        double[:] a, double[:] b, double[:] c, double[:] r, double[:] temp):
+                        double dt, int use_delj_trick, int[:] ploidy):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
-    cdef int L = xx.shape[0] # number of grid points in x direction
-    cdef int M = yy.shape[0] # number of grid points in y direction
-    cdef int ii # loop index for x
-    cdef int jj # loop index for y
+    cdef int L = xx.shape[0] # number of grid points in x dim
+    cdef int M = yy.shape[0] # number of grid points in y dim
+    cdef int ii # loop index for x dim
+    cdef int jj # loop index for y dim
     cdef double y # single y value from the grid yy
+    
+    # Create memory views for everything we need to compute
+    ### grid spacings and integration points
+    cdef double[:] dx = np.empty(L-1, dtype=np.float64)
+    cdef double[:] dfactor = np.empty(L, dtype=np.float64) 
+    cdef double[:] xInt = np.empty(L-1, dtype=np.float64)
+    cdef double[:] delj = np.empty(L-1, dtype=np.float64)
+    ### population genetic functions
     cdef double Mfirst, Mlast
+    cdef double[:] MInt = np.empty(L-1, dtype=np.float64)
+    cdef double[:] V = np.empty(L, dtype=np.float64)
+    cdef double[:] VInt = np.empty(L-1, dtype=np.float64)
+    ### for the tridiagonal matrix solver
+    cdef double[:] a = np.empty(L, dtype=np.float64)
+    cdef double[:] b = np.empty(L, dtype=np.float64)
+    cdef double[:] c = np.empty(L, dtype=np.float64)
+    cdef double[:] r = np.empty(L, dtype=np.float64)
+    cdef double[:] temp = np.empty(L, dtype=np.float64)
     ### weights/coefficients for scaling
     cdef int is_diploid = ploidy[0]
     cdef int is_auto = ploidy[1]
@@ -181,10 +195,7 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
             
 cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu2, double m21, double[:] s2, 
-                        double dt, int use_delj_trick, int[:] ploidy,
-                        double[:] dy, double[:] dfactor, double[:] yInt, double[:] delj, 
-                        double[:] MInt, double[:] V, double[:] VInt, 
-                        double[:] a, double[:] b, double[:] c, double[:] r, double[:] temp):
+                        double dt, int use_delj_trick, int[:] ploidy):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
@@ -193,7 +204,24 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     cdef int ii # loop index for x
     cdef int jj # loop index for y
     cdef double x # single x value from the grid xx
+    
+    # Create memory views for everything we need to compute
+    ### grid spacings and integration points
+    cdef double[:] dy = np.empty(M-1, dtype=np.float64)
+    cdef double[:] dfactor = np.empty(M, dtype=np.float64) 
+    cdef double[:] yInt = np.empty(M-1, dtype=np.float64)
+    cdef double[:] delj = np.empty(M-1, dtype=np.float64)
+    ### population genetic functions
     cdef double Mfirst, Mlast
+    cdef double[:] MInt = np.empty(M-1, dtype=np.float64)
+    cdef double[:] V = np.empty(M, dtype=np.float64)
+    cdef double[:] VInt = np.empty(M-1, dtype=np.float64)
+    ### for the tridiagonal matrix solver
+    cdef double[:] a = np.empty(M, dtype=np.float64)
+    cdef double[:] b = np.empty(M, dtype=np.float64)
+    cdef double[:] c = np.empty(M, dtype=np.float64)
+    cdef double[:] r = np.empty(M, dtype=np.float64)
+    cdef double[:] temp = np.empty(M, dtype=np.float64)
     ### weights/coefficients for scaling
     cdef int is_diploid = ploidy[0]
     cdef int is_auto = ploidy[1]
@@ -318,6 +346,63 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     tridiag_free()
 
 # =========================================================
+# CYTHON 2D INTEGRATION FUNCTIONS - CONSTANT PARAMS    
+# =========================================================
+cdef void c_implicit_precalc_2Dx(double[:,:] phi, double[:,:] ax, double[:,:] bx,
+                                 double[:,:] cx, double dt):
+    cdef int ii, jj
+    cdef int L = phi.shape[0]
+    cdef int M = phi.shape[1]
+
+    # create memory views for the tridiagonal solver
+    cdef double[:] a = np.empty(L, dtype=np.float64)
+    cdef double[:] b = np.empty(L, dtype=np.float64)
+    cdef double[:] c = np.empty(L, dtype=np.float64)
+    cdef double[:] r = np.empty(L, dtype=np.float64)
+    cdef double[:] temp = np.empty(L, dtype=np.float64)
+
+    tridiag_malloc(L)
+
+    for jj in range(0, M):
+        for ii in range(0, L):
+            a[ii] = ax[ii, jj]
+            b[ii] = bx[ii, jj] + 1/dt
+            c[ii] = cx[ii, jj]
+            r[ii] = phi[ii, jj]/dt
+        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+        for ii in range(0, L):
+            phi[ii, jj] = temp[ii]
+
+    tridiag_free()
+
+cdef void c_implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
+                                 double[:,:] cy, double dt):
+    cdef int ii, jj
+    cdef int L = phi.shape[0]
+    cdef int M = phi.shape[1]
+
+    # create memory views for the tridiagonal solver
+    cdef double[:] a = np.empty(M, dtype=np.float64)
+    cdef double[:] b = np.empty(M, dtype=np.float64)
+    cdef double[:] c = np.empty(M, dtype=np.float64)
+    cdef double[:] r = np.empty(M, dtype=np.float64)
+    cdef double[:] temp = np.empty(M, dtype=np.float64)
+
+    tridiag_malloc(M)
+
+    for ii in range(0, L):
+        for jj in range(0, M):
+            a[jj] = ay[ii, jj]
+            b[jj] = by[ii, jj] + 1/dt
+            c[jj] = cy[ii, jj]
+            r[jj] = phi[ii, jj]/dt
+        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+        for jj in range(0, M):
+            phi[ii, jj] = temp[jj]
+
+    tridiag_free()
+
+# =========================================================
 # MAKE THE INTEGRATION FUNCTIONS CALLABLE FROM PYTHON
 # =========================================================
 
@@ -329,23 +414,9 @@ def implicit_2Dx(np.ndarray[double, ndim=1] phi,
                  np.ndarray[double, ndim=1] s1, 
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy,
-                 np.ndarray[double, ndim=1] dx, 
-                 np.ndarray[double, ndim=1] dfactor, 
-                 np.ndarray[double, ndim=1] xInt, 
-                 np.ndarray[double, ndim=1] delj, 
-                 np.ndarray[double, ndim=1] MInt, 
-                 np.ndarray[double, ndim=1] V, 
-                 np.ndarray[double, ndim=1] VInt, 
-                 np.ndarray[double, ndim=1] a, 
-                 np.ndarray[double, ndim=1] b, 
-                 np.ndarray[double, ndim=1] c, 
-                 np.ndarray[double, ndim=1] r,
-                 np.ndarray[double, ndim=1] temp):
+                 np.ndarray[int, ndim=1] ploidy):
     """
     Implicit 2D integration function for x direction of 2D diffusion equation.
-    This version uses pre-allocated memory views for all intermediate arrays.
-    (Hence the extra parameters at the end.)
     
     Parameters:
     -----------
@@ -366,35 +437,13 @@ def implicit_2Dx(np.ndarray[double, ndim=1] phi,
     ploidy : numpy array (int)
         Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
-    dx : numpy array (float64)
-        Grid spacings
-    dfactor : numpy array (float64)
-        Factors for scaling
-    xInt : numpy array(float64)
-        Integration points
-    delj : numpy array (float64)
-        Values of delj
-    MInt : numpy array (float64)
-        Values of MInt
-    V : numpy array (float64)
-        Values of V
-    VInt : numpy array (float64)
-        Values of VInt
-    a : numpy array (float64)
-        a, b, c, r, and temp arrays are for tridiagonal matrix solver
-    b : numpy array (float64)
-    c : numpy array (float64)
-    r : numpy array (float64)
-    temp : numpy array (float64)
 
     Returns:
     --------
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy,
-                    dx, dfactor, xInt, delj, MInt, V, VInt, 
-                    a, b, c, r, temp)
+    c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy)
     return phi         
 
 def implicit_2Dy(np.ndarray[double, ndim=1] phi, 
@@ -405,23 +454,9 @@ def implicit_2Dy(np.ndarray[double, ndim=1] phi,
                  np.ndarray[double, ndim=1] s2, 
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy,
-                 np.ndarray[double, ndim=1] dy, 
-                 np.ndarray[double, ndim=1] dfactor, 
-                 np.ndarray[double, ndim=1] yInt, 
-                 np.ndarray[double, ndim=1] delj, 
-                 np.ndarray[double, ndim=1] MInt, 
-                 np.ndarray[double, ndim=1] V, 
-                 np.ndarray[double, ndim=1] VInt, 
-                 np.ndarray[double, ndim=1] a, 
-                 np.ndarray[double, ndim=1] b, 
-                 np.ndarray[double, ndim=1] c, 
-                 np.ndarray[double, ndim=1] r,
-                 np.ndarray[double, ndim=1] temp):
+                 np.ndarray[int, ndim=1] ploidy):
     """
     Implicit 2D integration function for y direction of 2D diffusion equation.
-    This version uses pre-allocated memory views for all intermediate arrays.
-    (Hence the extra parameters at the end.)
     
     Parameters:
     -----------
@@ -442,33 +477,68 @@ def implicit_2Dy(np.ndarray[double, ndim=1] phi,
     ploidy : numpy array (int)
         Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
-    dy : numpy array (float64)
-        Grid spacings
-    dfactor : numpy array (float64)
-        Factors for scaling
-    yInt : numpy array(float64)
-        Integration points
-    delj : numpy array (float64)
-        Values of delj
-    MInt : numpy array (float64)
-        Values of MInt
-    V : numpy array (float64)
-        Values of V
-    VInt : numpy array (float64)
-        Values of VInt
-    a : numpy array (float64)
-        a, b, c, r, and temp arrays are for tridiagonal matrix solver
-    b : numpy array (float64)
-    c : numpy array (float64)
-    r : numpy array (float64)
-    temp : numpy array (float64)
 
     Returns:
     --------
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy,
-                    dy, dfactor, yInt, delj, MInt, V, VInt, 
-                    a, b, c, r, temp)
+    c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy)
     return phi                            
+
+def implicit_precalc_2Dx(np.ndarray[double, ndim=2] phi, 
+                         np.ndarray[double, ndim=2] ax, 
+                         np.ndarray[double, ndim=2] bx, 
+                         np.ndarray[double, ndim=2] cx, 
+                         double dt):
+    """
+    Implicit 2D integration function for x direction of 2D diffusion equation.
+    Uses pre-computed tridiagonal entries for constant parameters.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ax : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    bx : numpy array (float64)
+    cx : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_precalc_2Dx(phi, ax, bx, cx, dt)
+    return phi
+
+def implicit_precalc_2Dy(np.ndarray[double, ndim=2] phi, 
+                         np.ndarray[double, ndim=2] ay, 
+                         np.ndarray[double, ndim=2] by, 
+                         np.ndarray[double, ndim=2] cy, 
+                         double dt):
+    """
+    Implicit 2D integration function for y direction of 2D diffusion equation.
+    Uses pre-computed tridiagonal entries for constant parameters.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ay : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    by : numpy array (float64)
+    cy : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_precalc_2Dy(phi, ay, by, cy, dt)
+    return phi
+ 

@@ -5,8 +5,8 @@ from numpy import newaxis as nuax
 import scipy.integrate
 import dadi.tridiag_cython as tridiag
 import dadi.Polyploidy.Int1D_poly as int1D
+import dadi.Polyploidy.Int2D_poly as int2D
 from enum import IntEnum
-import dadi.integration_c as int_c
 
 ### ==========================================================================
 ### CONSTANTS
@@ -296,7 +296,7 @@ class PloidyType(IntEnum):
 ### ==========================================================================
 ### MAIN INTEGRATION FUNCTIONS FOR EACH DIMENSION
 ### ==========================================================================
-def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.0, initial_t=0, 
+def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=PloidyType.DIPLOID, theta0=1.0, initial_t=0, 
             frozen=False, deme_ids=None):
     """
     Integrate a 1-dimensional phi foward.
@@ -313,7 +313,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
 
-    ploidyflag: 0 for diploid, 1 for auto
+    ploidyflag: See PloidyType class. 0 for diploid, 1 for auto
     sel_dict: dictionary of selection parameters for given ploidy type
 
     frozen: If True, population is 'frozen' so that it does not change.
@@ -374,15 +374,13 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
         gamma, h =  gamma_f(current_t), h_f(current_t)
     else:
         gam1, gam2, gam3, gam4 = gam1_f(current_t), gam2_f(current_t), gam3_f(current_t), gam4_f(current_t)
+    sel = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
 
     dx = numpy.diff(xx)
 
     demes_hist = [[0, [nu], []]]
     while current_t < T:
-        if ploidyflag == PloidyType.DIPLOID:
-            dt = ploidy[0] * _compute_dt_dip(dx,nu,[0],gamma,h)
-        else:
-            dt = ploidy[1] * _compute_dt_auto(dx,nu,[0],gam1,gam2,gam3,gam4)
+        dt = _compute_dt(dx,nu,[0],sel,ploidy)
         this_dt = min(dt, T - current_t)
 
         # Because this is an implicit method, I need the *next* time's params.
@@ -398,7 +396,7 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
         # define the sel_vec for the current time to pass to the integrator
         # this is a little subtle, but essentially one set of sel params will always be
         # set to zero, so this is either [gamma, h, 0, 0] or [gam1, gam2, gam3, gam4]
-        sel_vec = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
+        sel = numpy.array([gamma+gam1, h+gam2, gam3, gam4])
        
         demes_hist.append([next_t, [nu], []])
 
@@ -415,8 +413,130 @@ def one_pop(phi, xx, T, sel_dict, ploidyflag=PloidyType.DIPLOID, nu=1, theta0=1.
             phi[1] += _inject_mutations_1D_auto(this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
-        phi = int1D.implicit_1Dx(phi, xx, nu, sel_vec, this_dt, 
+        phi = int1D.implicit_1Dx(phi, xx, nu, sel, this_dt, 
                                  use_delj_trick, ploidy)
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h':0.5}, sel_dict2 = {'gamma':0, 'h':0.5},
+            ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, theta0=1, initial_t=0, frozen1=False,
+             frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False, deme_ids=None):
+    """
+    Integrate a 2-dimensional phi foward.
+
+    phi: Initial 2-dimensional phi
+    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+        that this grid is used in all dimensions.
+
+    nu's, gamma's, m's, h's, and theta0 may be functions of time.
+    nu1,nu2: Population sizes
+    m12,m21: Migration rates. Note that m12 is the rate *into 1 from 2*.
+    theta0: Propotional to ancestral size. Typically constant.
+
+    ploidyflag: See PloidyType class. 0 for diploid, 1 for auto, 2 for alloa, 3 for allob
+    sel_dict: dictionary of selection parameters for given ploidy type
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    frozen1,frozen2: If True, the corresponding population is "frozen" in time
+                     (no new mutations and no drift), so the resulting spectrum
+                     will correspond to an ancient DNA sample from that
+                     population.
+
+    nomut1,nomut2: If True, no new mutations will be introduced into the
+                   given population.
+
+    enable_cuda_cached: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
+
+    Note: Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+    """
+    phi = phi.copy()
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 or frozen2) and (m12 != 0 or m21 != 0):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+
+    vars_to_check = [nu1,nu2,m12,m21,gamma1,gamma2,h1,h2,theta0]
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        # Constant integration with CUDA turns out to be slower,
+        # so we only use it in specific circumsances.
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
+                           start_sizes = [nu1, nu2], mig = [m12,m21], deme_ids=deme_ids))
+        if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
+            return _two_pops_const_params(phi, xx, T, nu1, nu2, m12, m21,
+                    gamma1, gamma2, h1, h2, theta0, initial_t,
+                    frozen1, frozen2, nomut1, nomut2)
+    yy = xx
+
+    nu1_f = Misc.ensure_1arg_func(nu1)
+    nu2_f = Misc.ensure_1arg_func(nu2)
+    m12_f = Misc.ensure_1arg_func(m12)
+    m21_f = Misc.ensure_1arg_func(m21)
+    gamma1_f = Misc.ensure_1arg_func(gamma1)
+    gamma2_f = Misc.ensure_1arg_func(gamma2)
+    h1_f = Misc.ensure_1arg_func(h1)
+    h2_f = Misc.ensure_1arg_func(h2)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
+                frozen1, frozen2, nomut1, nomut2, deme_ids)
+        return phi
+
+    current_t = initial_t
+    nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
+    m12,m21 = m12_f(current_t), m21_f(current_t)
+    gamma1,gamma2 = gamma1_f(current_t), gamma2_f(current_t)
+    h1,h2 = h1_f(current_t), h2_f(current_t)
+    dx,dy = numpy.diff(xx),numpy.diff(yy)
+
+    demes_hist = [[0, [nu1,nu2], [m12,m21]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12],gamma1,h1),
+                 _compute_dt(dy,nu2,[m21],gamma2,h2))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1,nu2 = nu1_f(next_t), nu2_f(next_t)
+        m12,m21 = m12_f(next_t), m21_f(next_t)
+        gamma1,gamma2 = gamma1_f(next_t), gamma2_f(next_t)
+        h1,h2 = h1_f(next_t), h2_f(next_t)
+        theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2], [m12,m21]])
+
+        if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
+                             nomut1, nomut2)
+        if not frozen1:
+            phi = int_c.implicit_2Dx(phi, xx, yy, nu1, m12, gamma1, h1,
+                                     this_dt, use_delj_trick)
+        if not frozen2:
+            phi = int_c.implicit_2Dy(phi, xx, yy, nu2, m21, gamma2, h2,
+                                     this_dt, use_delj_trick)
+
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
@@ -450,6 +570,30 @@ def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
            gam1)
     return mxy * (y-x) + x*(1-x) * 2 * poly
 # allotetraploid
+def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22)
+    # x is x_a, y is x_b
+    # gij refers to gamma_ij (not a gamete frequency!)
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g10 + (-2*g10 + g20)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g01 - g02 + g10 -2*g11 + g12)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
+    return mxy * (y-x) + x * (1. - x) * 2. * poly
+
+def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22)
+    # x is x_b, y is x_a
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g01 + (-2*g01 + g02)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g10 - g20 + g01 -2*g11 + g21)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
+    return mxy * (y-x) + x * (1. - x) * 2. * poly
 
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
@@ -487,7 +631,7 @@ def _compute_delj(dx, MInt, VInt, axis=0):
     return delj
 
 # Constant parameters, 1D integration
-def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, theta0=1, 
+def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1, 
                           initial_t=0):
     """
     Integrate one population with constant parameters.
@@ -507,19 +651,17 @@ def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, thet
     dfactor = _compute_dfactor(dx)
 
     if ploidy[0]:
-        M = _Mfunc1D(xx, sel0, sel1)
-        MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, sel0, sel1)
+        M = _Mfunc1D(xx, s[0], s[1])
+        MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, s[0], s[1])
         V = _Vfunc(xx, nu)
         VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.5 # term for the Boundary Conditions
-        dt = _compute_dt_dip(dx,nu,[0],sel0,sel1)
     else:
-        M = _Mfunc1D_auto(xx, sel0, sel1, sel2, sel3)
-        MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, sel0, sel1, sel2, sel3)
+        M = _Mfunc1D_auto(xx, s[0], s[1], s[2], s[3])
+        MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3])
         V = _Vfunc_auto(xx, nu)
         VInt = _Vfunc_auto((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.25 # term for the Boundary Conditions
-        dt = _compute_dt_auto(dx,nu,[0],sel0,sel1,sel2,sel3)
 
     delj = _compute_delj(dx, MInt, VInt)
 
@@ -540,6 +682,7 @@ def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, thet
     if(M[-1] >= 0):
         b[-1] += -(-bc_factor/nu - M[-1])*2/dx[-1]
 
+    dt = _compute_dt(dx,nu,[0],s,ploidy)
     current_t = initial_t
     while current_t < T:    
         this_dt = min(dt, T - current_t)
@@ -551,4 +694,134 @@ def _one_pop_const_params(phi, xx, T, sel0, sel1, sel2, sel3, ploidy, nu=1, thet
         r = phi/this_dt
         phi = tridiag.tridiag(a, b+1/this_dt, c, r)
         current_t += this_dt
+    return phi
+
+def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m12=0, m21=0,
+                           theta0=1, initial_t=0, frozen1=False, frozen2=False,
+                           nomut1=False, nomut2=False):
+    """
+    Integrate two populations with constant parameters.
+    """
+    if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu1,nu2], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
+    yy = xx
+
+    # The use of nuax (= numpy.newaxis) here is for memory conservation. We
+    # could just create big X and Y arrays which only varied along one axis,
+    # but that would be wasteful.
+
+    # implicit in the x direction
+    dx = numpy.diff(xx)
+    dfact_x = _compute_dfactor(dx)
+
+    if ploidy1[0]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D(xx[:,nuax], yy[nuax,:], m12, s1[0], s1[1])
+        MxInt = _Mfunc2D((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0], s1[1])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factor = 0.5 # term for the Boundary Conditions
+    elif ploidy1[1]:
+        Vx = _Vfunc_auto(xx, nu1)
+        VxInt = _Vfunc_auto((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_auto(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
+        MxInt = _Mfunc2D_auto((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factor = 0.25 # term for the Boundary Conditions
+    elif ploidy1[2]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_allo_a(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        MxInt = _Mfunc2D_allo_a((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factor = 0.5 # term for the Boundary Conditions
+    elif ploidy1[3]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_allo_b(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        MxInt = _Mfunc2D_allo_b((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factor = 0.5 # term for the Boundary Conditions
+    # The nuax's here broadcast the our various arrays to have the proper shape
+    # to fit into ax,bx,cx
+    ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
+    ax[ 1:] += dfact_x[ 1:,nuax]*(-MxInt*deljx    - Vx[:-1,nuax]/(2*dx[:,nuax]))
+    cx[:-1] += dfact_x[:-1,nuax]*( MxInt*(1-deljx)- Vx[ 1:,nuax]/(2*dx[:,nuax]))
+    bx[:-1] += dfact_x[:-1,nuax]*( MxInt*deljx    + Vx[:-1,nuax]/(2*dx[:,nuax]))
+    bx[ 1:] += dfact_x[ 1:,nuax]*(-MxInt*(1-deljx)+ Vx[ 1:,nuax]/(2*dx[:,nuax]))
+
+    if Mx[0,0] <= 0:
+        bx[0,0] += (bc_factor/nu1 - Mx[0,0])*2/dx[0]
+    if Mx[-1,-1] >= 0:
+        bx[-1,-1] += -(-bc_factor/nu1 - Mx[-1,-1])*2/dx[-1]
+
+    # implicit in the y direction
+    dy = numpy.diff(yy)
+    dfact_y = _compute_dfactor(dy)
+
+    if ploidy1[0]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1])
+        MyInt = _Mfunc2D((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factor = 0.5 # term for the Boundary Conditions
+    elif ploidy1[1]:
+        Vy = _Vfunc_auto(yy, nu2)
+        VyInt = _Vfunc_auto((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_auto(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
+        MyInt = _Mfunc2D_auto((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factor = 0.25 # term for the Boundary Conditions
+    elif ploidy1[2]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_allo_a(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc2D_allo_a((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factor = 0.5 # term for the Boundary Conditions
+    elif ploidy1[3]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_allo_b(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc2D_allo_b((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factor = 0.5 # term for the Boundary Conditions
+    # The nuax's here broadcast the our various arrays to have the proper shape
+    # to fit into ax,bx,cx
+    ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
+    ay[:, 1:] += dfact_y[ 1:]*(-MyInt*deljy     - Vy[nuax,:-1]/(2*dy))
+    cy[:,:-1] += dfact_y[:-1]*( MyInt*(1-deljy) - Vy[nuax, 1:]/(2*dy))
+    by[:,:-1] += dfact_y[:-1]*( MyInt*deljy     + Vy[nuax,:-1]/(2*dy))
+    by[:, 1:] += dfact_y[ 1:]*(-MyInt*(1-deljy) + Vy[nuax, 1:]/(2*dy))
+
+    if My[0,0] <= 0:
+        by[0,0] += (bc_factor/nu2 - My[0,0])*2/dy[0]
+    if My[-1,-1] >= 0:
+        by[-1,-1] += -(-bc_factor/nu2 - My[-1,-1])*2/dy[-1]
+
+    dt = min(_compute_dt(dx,nu1,[m12],s1,ploidy1),
+             _compute_dt(dy,nu2,[m21],s2,ploidy2))
+    current_t = initial_t
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._two_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, nomut1, nomut2, ax, bx, cx, ay,
+                by, cy, current_t, dt, T)
+        return phi
+
+    while current_t < T:
+        this_dt = min(dt, T - current_t)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
+                            nomut1, nomut2)
+        if not frozen1:
+            phi = int2D.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            phi = int2D.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
+        current_t += this_dt
+
     return phi
