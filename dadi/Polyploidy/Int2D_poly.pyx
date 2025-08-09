@@ -406,7 +406,7 @@ cdef void c_implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by
 # MAKE THE INTEGRATION FUNCTIONS CALLABLE FROM PYTHON
 # =========================================================
 
-def implicit_2Dx(np.ndarray[double, ndim=1] phi, 
+def implicit_2Dx(np.ndarray[double, ndim=2] phi, 
                  np.ndarray[double, ndim=1] xx, 
                  np.ndarray[double, ndim=1] yy, 
                  double nu1, 
@@ -446,7 +446,7 @@ def implicit_2Dx(np.ndarray[double, ndim=1] phi,
     c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy)
     return phi         
 
-def implicit_2Dy(np.ndarray[double, ndim=1] phi, 
+def implicit_2Dy(np.ndarray[double, ndim=2] phi, 
                  np.ndarray[double, ndim=1] xx, 
                  np.ndarray[double, ndim=1] yy, 
                  double nu2, 
