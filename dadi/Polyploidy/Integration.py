@@ -46,9 +46,9 @@ def _compute_dt(dx, nu, ms, sel, ploidy):
     elif ploidy[1]:
         return _compute_dt_auto(dx, nu, ms, sel[0], sel[1], sel[2], sel[3])
     elif ploidy[2]:
-        return _compute_dt_allo_a(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8])
+        return _compute_dt_allo_a(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
     elif ploidy[3]:
-        return _compute_dt_allo_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8])
+        return _compute_dt_allo_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
 
 def _compute_dt_dip(dx, nu, ms, gamma, h):
     """
