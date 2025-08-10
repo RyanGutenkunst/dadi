@@ -439,7 +439,22 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     if cuda_enabled:
         raise ValueError('CUDA integration is not currently supported for polyploid models.')
 
-    # create ploidy vectors with intc
+    if ploidyflag1 == PloidyType.ALLOa and ploidyflag2 != PloidyType.ALLOb:
+        raise ValueError('Population 1 is alloa, but population 2 is not allob.'
+                         'To model allotetraploids, the last two populations specified must subgenome a and subgenome b (in that order).')
+    if ploidyflag2 == PloidyType.ALLOb and ploidyflag2 != PloidyType.ALLOa:
+        raise ValueError('Population 2 is allob, but population 1 is not alloa.'
+                         'To model allotetraploids, the last two populations specified must subgenome a and subgenome b (in that order).')
+    
+    if ploidyflag1 == PloidyType.ALLOa or ploidyflag2 == PloidyType.ALLOa or ploidyflag1 == PloidyType.ALLOb or ploidyflag2 == PloidyType.ALLOb:
+        if m12 != m21:
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
+                             'Here, the migration rates should specify a single exchange parameter, and must be equal.'
+                             'See Blischak et al. (2023) for details.')
+        if nu1 != nu2:
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both must have the same population size.')
+
+    # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(4, numpy.intc)
     ploidy2 = numpy.zeros(4, numpy.intc)
     ploidy1[ploidyflag1] = 1
