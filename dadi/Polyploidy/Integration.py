@@ -5,8 +5,8 @@ import numpy
 from numpy import newaxis as nuax
 import scipy.integrate
 import dadi.tridiag_cython as tridiag
-import dadi.Polyploidy.Int1D_poly as int1D
-import dadi.Polyploidy.Int2D_poly as int2D
+from . import Int1D_poly as int1D
+from . import Int2D_poly as int2D
 from enum import IntEnum
 
 ### ==========================================================================
@@ -192,12 +192,12 @@ def _compute_dt_allo_b(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
     # shown that extrapolation is much more reliable when the same timesteps
     # are used in evaluations at different grid sizes.
     maxVM = max(0.25/nu, sum(ms),\
-                2*max(0.25*(1-0.25)*numpy.abs(g01 + (-2*g01 + g02)*0.25), # x_a = 0.25, x_b = 0
-                      0.5*(1-0.5)*numpy.abs(g01 + (-2*g01 + g02)*0.5), # x_a = 0.5, x_b = 0
-                      0.75*(1-0.75)*numpy.abs(g01 + (-2*g01 + g02)*0.75), # x_a = 0.75, x_b = 0
-                      0.25*(1-0.25)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.25), # x_a = 0.25, x_b = 1
-                      0.5*(1-0.5)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.5), # x_a = 0.5, x_b = 1
-                      0.75*(1-0.75)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.75))) # x_a = 0.75, x_b = 1
+                2*max(0.25*(1-0.25)*numpy.abs(g01 + (-2*g01 + g02)*0.25), # x_a = 0, x_b = 0.25
+                      0.5*(1-0.5)*numpy.abs(g01 + (-2*g01 + g02)*0.5), # x_a = 0, x_b = 0.5
+                      0.75*(1-0.75)*numpy.abs(g01 + (-2*g01 + g02)*0.75), # x_a = 0, x_b = 0.75
+                      0.25*(1-0.25)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.25), # x_a = 1, x_b = 0.25
+                      0.5*(1-0.5)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.5), # x_a = 1, x_b = 0.5
+                      0.75*(1-0.75)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.75))) # x_a = 1, x_b = 0.75
     if maxVM > 0:
         dt = timescale_factor / maxVM
     else:
@@ -449,7 +449,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     sel1 = ploidyflag1.pack_sel_params(sel_dict1)
     sel2 = ploidyflag2.pack_sel_params(sel_dict2)
 
-    vars_to_check = [nu1,nu2,m12,m21,sel1,sel2,theta0]
+    vars_to_check = [nu1,nu2,m12,m21,*sel1,*sel2,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
@@ -536,7 +536,7 @@ def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
     return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
 # autotetraploid
 def _Vfunc_auto(x, nu):
-    return 1./(2.*nu) * x*(1-x) 
+    return 1./nu * x*(1-x) / 2.
 def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
     poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
             (9*gam1 - 9*gam2 + 3*gam3)) * x +
@@ -740,28 +740,28 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     dy = numpy.diff(yy)
     dfact_y = _compute_dfactor(dy)
 
-    if ploidy1[0]:
+    if ploidy2[0]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1])
         MyInt = _Mfunc2D((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factor = 0.5 # term for the Boundary Conditions
-    elif ploidy1[1]:
+    elif ploidy2[1]:
         Vy = _Vfunc_auto(yy, nu2)
         VyInt = _Vfunc_auto((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_auto(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
         MyInt = _Mfunc2D_auto((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factor = 0.25 # term for the Boundary Conditions
-    elif ploidy1[2]:
+    elif ploidy2[2]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_allo_a(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         MyInt = _Mfunc2D_allo_a((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factor = 0.5 # term for the Boundary Conditions
-    elif ploidy1[3]:
+    elif ploidy2[3]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_allo_b(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])

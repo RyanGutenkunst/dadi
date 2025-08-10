@@ -3,4 +3,7 @@ Modeling polyploid populations.
 """
 
 from . import Integration, wrightfisher
-PloidyType = Integration.PloidyType 
+from .Integration import PloidyType
+
+# Make Integration available for direct import
+__all__ = ['Integration', 'wrightfisher', 'PloidyType']

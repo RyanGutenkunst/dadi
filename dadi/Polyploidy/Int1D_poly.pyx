@@ -154,3 +154,4 @@ def implicit_1Dx(np.ndarray[double, ndim=1] phi,
     # Call the cdef function with memory views
     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
     return phi                    
+    
