@@ -439,14 +439,12 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     if cuda_enabled:
         raise ValueError('CUDA integration is not currently supported for polyploid models.')
 
-    if ploidyflag1 == PloidyType.ALLOa and ploidyflag2 != PloidyType.ALLOb:
-        raise ValueError('Population 1 is alloa, but population 2 is not allob.'
-                         'To model allotetraploids, the last two populations specified must subgenome a and subgenome b (in that order).')
-    if ploidyflag2 == PloidyType.ALLOb and ploidyflag2 != PloidyType.ALLOa:
-        raise ValueError('Population 2 is allob, but population 1 is not alloa.'
-                         'To model allotetraploids, the last two populations specified must subgenome a and subgenome b (in that order).')
-    
-    if ploidyflag1 == PloidyType.ALLOa or ploidyflag2 == PloidyType.ALLOa or ploidyflag1 == PloidyType.ALLOb or ploidyflag2 == PloidyType.ALLOb:
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    if (ploidyflag1 in allo_types) and (ploidyflag2 not in allo_types):
+        raise ValueError('Either population 1 and 2 is specified as allotetraploid subgenomes but not the other.'
+                         'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
         if m12 != m21:
             raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
                              'Here, the migration rates should specify a single exchange parameter, and must be equal.'
