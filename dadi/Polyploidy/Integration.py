@@ -286,29 +286,101 @@ class PloidyType(IntEnum):
         return param_map[self]
     
     def pack_sel_params(self, sel_dict, max_params=8):
-        """Pack selection parameters into standardized array"""
+        """Pack selection parameters into standardized array.
+        
+        For each ploidy type, there are different ways to specify the selection
+        parameters. This function takes a dictionary of selection parameters
+        and packs them into an array of length max_params. 
+        
+        If the dictionary contains a single key 'gamma', then the array will
+        contain the appropriate selection parameters assuming additive dominance.
+
+        If the dictionary contains a single 'gamma' and a dominance coefficient 
+        'h', 'h_i', 'h_ij', etc., for each possible genotype of that ploidy type, then
+        the array will contain the appropriate selection parameters given that dominance.
+
+        Finally, if the dictionary contains a list of keys 'gamma1', 'gamma2', etc., 
+        which correspond to the selection parameters for each possible genotype of that
+        ploidy type, then the array will pack those selection parameters.
+
+        Otherwise, a value error will be raised.
+        """
         # Initialize with zeros
         sel_params = [0.0] * max_params
         
         if self == PloidyType.DIPLOID:
-            sel_params[0] = sel_dict.get('gamma', 0)
-            sel_params[1] = sel_dict.get('h', 0)
+            keys_to_check = ['gamma', 'h']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                sel_params[0] = sel_dict.get('gamma', 0) # gamma  
+                sel_params[1] = 0.5 # h
+            elif all(key in sel_dict for key in keys_to_check) and len(sel_dict) == 2:
+                sel_params[0] = sel_dict.get('gamma', 0)
+                sel_params[1] = sel_dict.get('h', 0)
+            else:
+                raise ValueError('For a DIPLOID ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: ' \
+                                 '1. 1 key: gamma ' \
+                                 '2. 2 keys: gamma, h.')
             
         elif self == PloidyType.AUTO:
-                sel_params[0] = sel_dict.get('gamma1', 0)
-                sel_params[1] = sel_dict.get('gamma2', 0)
-                sel_params[2] = sel_dict.get('gamma3', 0)
-                sel_params[3] = sel_dict.get('gamma4', 0)
-                
-        elif self == PloidyType.ALLOa:
-            param_names = self.param_names()
-            for i, param_name in enumerate(param_names):
-                sel_params[i] = sel_dict.get(param_name, 0)
-        
-        elif self == PloidyType.ALLOb:
-            param_names = self.param_names()
-            for i, param_name in enumerate(param_names):
-                sel_params[i] = sel_dict.get(param_name, 0)
+            keys_dominance = ['h1', 'h2', 'h3', 'gamma']
+            keys_gammas = ['gamma1', 'gamma2', 'gamma3', 'gamma4']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma / 4     
+                sel_params[1] = base_gamma / 2     
+                sel_params[2] = 3 * base_gamma / 4 
+                sel_params[3] = base_gamma
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 4:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma * sel_dict['h1']     
+                sel_params[1] = base_gamma * sel_dict['h2']     
+                sel_params[2] = base_gamma * sel_dict['h3'] 
+                sel_params[3] = base_gamma    
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 4:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For an AUTO ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: ' \
+                                 '1. 1 key: gamma ' \
+                                 '2. 4 keys: gamma, h1, h2, h3 ' \
+                                 '3. 4 keys: gamma1, gamma2, gamma3, gamma4.')
+            
+        elif self == PloidyType.ALLOa or self == PloidyType.ALLOb:
+            keys_dominance = ['h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'gamma']
+            keys_gammas = ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 'gamma20', 'gamma21', 'gamma22']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma / 4     
+                sel_params[1] = base_gamma / 2     
+                sel_params[2] = base_gamma / 4 
+                sel_params[3] = base_gamma / 2     
+                sel_params[4] = 3 * base_gamma / 4     
+                sel_params[5] = base_gamma / 2 
+                sel_params[6] = 3 * base_gamma / 4
+                sel_params[7] = base_gamma
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 8:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma * sel_dict['h01']     
+                sel_params[1] = base_gamma * sel_dict['h02']     
+                sel_params[2] = base_gamma * sel_dict['h10'] 
+                sel_params[3] = base_gamma * sel_dict['h11'] 
+                sel_params[4] = base_gamma * sel_dict['h12'] 
+                sel_params[5] = base_gamma * sel_dict['h20'] 
+                sel_params[6] = base_gamma * sel_dict['h21'] 
+                sel_params[7] = base_gamma 
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 8:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For an ALLO ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: ' \
+                                 '1. 1 key: gamma ' \
+                                 '2. 8 keys: gamma, h01, h02, h10, h11, h12, h20, h21 ' \
+                                 '3. 8 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22.')
         
         return sel_params
 
@@ -1245,7 +1317,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     while current_t < T:    
         this_dt = min(dt, T - current_t)
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3)
+                             frozen1, frozen2, frozen3, 
+                             ploidy1, ploidy2, ploidy3)
         if not frozen1:
             phi = int3D.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:

@@ -418,7 +418,7 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     if is_diploid:
         # compute everything we can outside of the spatial loop
         for kk in range(0, N):
-            V[kk] = Vfunc(yy[kk], nu2)
+            V[kk] = Vfunc(zz[kk], nu2)
         for kk in range(0, N-1):
             VInt[kk] = Vfunc(zInt[kk], nu2)
         # loop through x and y dimensions
@@ -450,7 +450,7 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for kk in range(0, N):
-            V[kk] = Vfunc_auto(yy[kk], nu2)
+            V[kk] = Vfunc_auto(zz[kk], nu2)
         for kk in range(0, N-1):
             VInt[kk] = Vfunc_auto(zInt[kk], nu2)
         # loop through x and y dimensions
@@ -479,9 +479,9 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     elif is_alloa:
         # compute everything we can outside of the spatial loop
         for kk in range(0, N):
-            V[kk] = Vfunc_auto(yy[kk], nu2)
+            V[kk] = Vfunc(zz[kk], nu2)
         for kk in range(0, N-1):
-            VInt[kk] = Vfunc_auto(zInt[kk], nu2)
+            VInt[kk] = Vfunc(zInt[kk], nu2)
         # loop through x and y dimensions
         for ii in range(L):
             for jj in range(M):
@@ -505,7 +505,14 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 for kk in range(0, N):
                     phi[ii, jj, kk] = temp[kk]
 
-    for ii in range(L):
+    if is_allob:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc(zz[kk], nu2)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc(zInt[kk], nu2)
+        # loop through x and y dimensions
+        for ii in range(L):
             for jj in range(M):
                 x = xx[ii]
                 y = yy[jj]
