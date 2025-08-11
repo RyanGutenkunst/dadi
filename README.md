@@ -1,4 +1,4 @@
-**The latest dadi updates will now be on [GitHub](https://github.com/RyanGutenkunst/dadi)**
+**Future dadi updates will now only be on [GitHub](https://github.com/RyanGutenkunst/dadi)**
 
 **Diffusion Approximation for Demographic Inference**
 
