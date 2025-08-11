@@ -7,6 +7,7 @@ import scipy.integrate
 import dadi.tridiag_cython as tridiag
 from . import Int1D_poly as int1D
 from . import Int2D_poly as int2D
+from . import Int3D_poly as int3D
 from enum import IntEnum
 
 ### ==========================================================================
@@ -239,6 +240,28 @@ def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
             phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
         else:
             phi[0,1] += dt/yy[1] * theta0/4 * 4/((yy[2] - yy[0]) * xx[1])
+    return phi
+
+def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2,
+                         frozen3, ploidy1, ploidy2, ploidy3):
+    """
+    Inject novel mutations for a timestep.
+    """
+    if not frozen1:
+        if not ploidy1[1]: # this reads as if not autotetraploid
+            phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+        else:
+            phi[1,0,0] += dt/xx[1] * theta0/4 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+    if not frozen2:
+        if not ploidy2[1]:
+            phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+        else:
+            phi[0,1,0] += dt/yy[1] * theta0/4 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+    if not frozen3:
+        if not ploidy3[1]:
+            phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+        else:
+            phi[0,0,1] += dt/zz[1] * theta0/4 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
     return phi
 
 ### ==========================================================================
@@ -564,10 +587,16 @@ def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
            (-6*gam1 + 3*gam2)) * x + 
            gam1)
     return mxy * (y-x) + x*(1-x) * 2 * poly
+def _Mfunc3D_auto(x, y, z, mxy, mxz, gam1, gam2, gam3, gam4):
+    poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+            (9*gam1 - 9*gam2 + 3*gam3)) * x +
+           (-6*gam1 + 3*gam2)) * x + 
+           gam1)
+    return mxy * (y-x) + mxz * (z-x) + x*(1-x) * 2 * poly 
 # allotetraploid
+# here, g_ij refers to gamma_ij (not a gamete frequency!)
 def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
     # x is x_a, y is x_b
-    # gij refers to gamma_ij (not a gamete frequency!)
     xy = x*y
     yy = y*y
     xyy = xy*y
@@ -589,6 +618,30 @@ def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22
                   (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
                   (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
     return mxy * (y-x) + x * (1. - x) * 2. * poly
+
+def _Mfunc3D_allo_a( x,  y, z,  mxy,  mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
+    # x is x_a, y is x_b, z is a separate population
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g10 + (-2*g10 + g20)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g01 - g02 + g10 -2*g11 + g12)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
+    return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
+
+def _Mfunc3D_allo_b( x,  y, z, mxy, mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
+    # x is x_b, y is x_a, z is a separate population
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g01 + (-2*g01 + g02)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g10 - g20 + g01 -2*g11 + g21)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
+    return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
 
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
@@ -650,13 +703,13 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
         MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, s[0], s[1])
         V = _Vfunc(xx, nu)
         VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factor = 0.5 # term for BCs, = (1-2x)/k eval. at x=0/x=1 for a k-ploid 
     else:
         M = _Mfunc1D_auto(xx, s[0], s[1], s[2], s[3])
         MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3])
         V = _Vfunc_auto(xx, nu)
         VInt = _Vfunc_auto((xx[:-1] + xx[1:])/2, nu)
-        bc_factor = 0.25 # term for the Boundary Conditions
+        bc_factor = 0.25 
 
     delj = _compute_delj(dx, MInt, VInt)
 
@@ -670,8 +723,6 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
     b[:-1] += -dfactor[:-1]*(-MInt * delj - V[:-1]/(2*dx))
     b[1:] += dfactor[1:]*(-MInt * (1-delj) + V[1:]/(2*dx))
 
-    ### Here, the variance term is showing up again, but not explicitly
-    ### So, we also need to adjust the BCs for ploidy
     if(M[0] <= 0):
         b[0] += (bc_factor/nu - M[0])*2/dx[0]
     if(M[-1] >= 0):
@@ -716,28 +767,28 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         Mx = _Mfunc2D(xx[:,nuax], yy[nuax,:], m12, s1[0], s1[1])
         MxInt = _Mfunc2D((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0], s1[1])
         deljx = _compute_delj(dx, MxInt, VxInt)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factorx = 0.5 
     elif ploidy1[1]:
         Vx = _Vfunc_auto(xx, nu1)
         VxInt = _Vfunc_auto((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_auto(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
         MxInt = _Mfunc2D_auto((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
         deljx = _compute_delj(dx, MxInt, VxInt)
-        bc_factor = 0.25 # term for the Boundary Conditions
+        bc_factorx = 0.25 
     elif ploidy1[2]:
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_allo_a(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         MxInt = _Mfunc2D_allo_a((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         deljx = _compute_delj(dx, MxInt, VxInt)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factorx = 0.5 
     elif ploidy1[3]:
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_allo_b(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         MxInt = _Mfunc2D_allo_b((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         deljx = _compute_delj(dx, MxInt, VxInt)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factorx = 0.5 
     # The nuax's here broadcast the our various arrays to have the proper shape
     # to fit into ax,bx,cx
     ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
@@ -747,9 +798,9 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     bx[ 1:] += dfact_x[ 1:,nuax]*(-MxInt*(1-deljx)+ Vx[ 1:,nuax]/(2*dx[:,nuax]))
 
     if Mx[0,0] <= 0:
-        bx[0,0] += (bc_factor/nu1 - Mx[0,0])*2/dx[0]
+        bx[0,0] += (bc_factorx/nu1 - Mx[0,0])*2/dx[0]
     if Mx[-1,-1] >= 0:
-        bx[-1,-1] += -(-bc_factor/nu1 - Mx[-1,-1])*2/dx[-1]
+        bx[-1,-1] += -(-bc_factorx/nu1 - Mx[-1,-1])*2/dx[-1]
 
     # implicit in the y direction
     dy = numpy.diff(yy)
@@ -761,28 +812,28 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         My = _Mfunc2D(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1])
         MyInt = _Mfunc2D((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factory = 0.5 
     elif ploidy2[1]:
         Vy = _Vfunc_auto(yy, nu2)
         VyInt = _Vfunc_auto((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_auto(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
         MyInt = _Mfunc2D_auto((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
-        bc_factor = 0.25 # term for the Boundary Conditions
+        bc_factory = 0.25 
     elif ploidy2[2]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_allo_a(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         MyInt = _Mfunc2D_allo_a((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factory = 0.5 
     elif ploidy2[3]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_allo_b(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         MyInt = _Mfunc2D_allo_b((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
-        bc_factor = 0.5 # term for the Boundary Conditions
+        bc_factory = 0.5 
     # The nuax's here broadcast the our various arrays to have the proper shape
     # to fit into ax,bx,cx
     ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
@@ -792,13 +843,14 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     by[:, 1:] += dfact_y[ 1:]*(-MyInt*(1-deljy) + Vy[nuax, 1:]/(2*dy))
 
     if My[0,0] <= 0:
-        by[0,0] += (bc_factor/nu2 - My[0,0])*2/dy[0]
+        by[0,0] += (bc_factory/nu2 - My[0,0])*2/dy[0]
     if My[-1,-1] >= 0:
-        by[-1,-1] += -(-bc_factor/nu2 - My[-1,-1])*2/dy[-1]
+        by[-1,-1] += -(-bc_factory/nu2 - My[-1,-1])*2/dy[-1]
 
     dt = min(_compute_dt(dx,nu1,[m12],s1,ploidy1),
              _compute_dt(dy,nu2,[m21],s2,ploidy2))
     current_t = initial_t
+    # TODO: CUDA integration
     if cuda_enabled:
         import dadi.cuda
         phi = dadi.cuda.Integration._two_pops_const_params(phi, xx,
@@ -816,4 +868,215 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
             phi = int2D.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
         current_t += this_dt
 
+    return phi
+
+def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3, 
+                             nu1=1, nu2=1, nu3=1, 
+                             m12=0, m13=0, m21=0, m23=0, m31=0, m32=0, 
+                             theta0=1, initial_t=0,
+                             frozen1=False, frozen2=False, frozen3=False):
+    """
+    Integrate three population with constant parameters.
+    """
+    if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu1,nu2,nu3], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
+    zz = yy = xx
+
+    dx = numpy.diff(xx)
+    dfact_x = _compute_dfactor(dx)
+
+    if ploidy1[0]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0], s1[1])
+        MxInt = _Mfunc3D((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0], s1[1])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5
+    if ploidy1[1]:
+        Vx = _Vfunc_auto(xx, nu1)
+        VxInt = _Vfunc_auto((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_auto(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0],s1[1],s1[2],s1[3])
+        MxInt = _Mfunc3D_auto((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.25 
+    if ploidy1[2]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_allo_a(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        MxInt = _Mfunc3D_allo_a((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5 
+    if ploidy1[3]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_allo_b(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        MxInt = _Mfunc3D_allo_b((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5 
+
+
+    ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
+    ax[ 1:] += dfact_x[ 1:,nuax,nuax]*(-MxInt*deljx    
+                                        - Vx[:-1,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    cx[:-1] += dfact_x[:-1,nuax,nuax]*( MxInt*(1-deljx)
+                                        - Vx[ 1:,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    bx[:-1] += dfact_x[:-1,nuax,nuax]*( MxInt*deljx    
+                                        + Vx[:-1,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    bx[ 1:] += dfact_x[ 1:,nuax,nuax]*(-MxInt*(1-deljx)
+                                        + Vx[ 1:,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    if Mx[0,0,0] <= 0:
+        bx[0,0,0] += (bc_factorx/nu1 - Mx[0,0,0])*2/dx[0]
+    if Mx[-1,-1,-1] >= 0:
+        bx[-1,-1,-1] += -(-bc_factorx/nu1 - Mx[-1,-1,-1])*2/dx[-1]
+
+    # Memory consumption can be an issue in 3D, so we delete arrays after we're
+    # done with them.
+    del Vx,VxInt,Mx,MxInt,deljx
+
+    dy = numpy.diff(yy)
+    dfact_y = _compute_dfactor(dy)
+    if ploidy2[0]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        # note that the order of the params passed to _Mfunc3D for y and z is different from 
+        # Ryan's original code. This is for consistency with the allo cases where
+        # the first two dimensions passed to _Mfunc need to be the allo subgenomes 
+        # and the subgenomes are always passed to the integrator as y and z.
+        My = _Mfunc3D(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0], s2[1])
+        MyInt = _Mfunc3D((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0], s2[1])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    if ploidy2[1]:
+        Vy = _Vfunc_auto(yy, nu2)
+        VyInt = _Vfunc_auto((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_auto(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3])
+        MyInt = _Mfunc3D_auto((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25
+    if ploidy2[2]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_allo_a(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc3D_allo_a((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    if ploidy2[3]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_allo_b(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc3D_allo_b((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+  
+    ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
+    ay[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*deljy     
+                                    - Vy[nuax,:-1,nuax]/(2*dy[nuax,:,nuax]))
+    cy[:,:-1] += dfact_y[nuax,:-1,nuax]*( MyInt*(1-deljy) 
+                                    - Vy[nuax, 1:,nuax]/(2*dy[nuax,:,nuax]))
+    by[:,:-1] += dfact_y[nuax,:-1,nuax]*( MyInt*deljy     
+                                    + Vy[nuax,:-1,nuax]/(2*dy[nuax,:,nuax]))
+    by[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*(1-deljy) 
+                                    + Vy[nuax, 1:,nuax]/(2*dy[nuax,:,nuax]))
+    if My[0,0,0] <= 0:
+        by[0,0,0] += (bc_factory/nu2 - My[0,0,0])*2/dy[0]
+    if My[-1,-1,-1] >= 0:
+        by[-1,-1,-1] += -(-bc_factory/nu2 - My[-1,-1,-1])*2/dy[-1]
+
+    del Vy,VyInt,My,MyInt,deljy
+
+    dz = numpy.diff(zz)
+    dfact_z = _compute_dfactor(dz)
+    if ploidy3[0]:  
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0], s3[1])
+        MzInt = _Mfunc3D((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0], s3[1])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    if ploidy3[1]:  
+        Vz = _Vfunc_auto(zz, nu3)
+        VzInt = _Vfunc_auto((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_auto(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3])
+        MzInt = _Mfunc3D_auto((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.25
+    if ploidy3[2]:  
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_allo_a(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        MzInt = _Mfunc3D_allo_a((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    if ploidy3[3]:  
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_allo_b(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        MzInt = _Mfunc3D_allo_b((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+
+    az, bz, cz = [numpy.zeros(phi.shape) for ii in range(3)]
+    az[:,:, 1:] += dfact_z[ 1:]*(-MzInt*deljz     - Vz[nuax,nuax,:-1]/(2*dz))
+    cz[:,:,:-1] += dfact_z[:-1]*( MzInt*(1-deljz) - Vz[nuax,nuax, 1:]/(2*dz))
+    bz[:,:,:-1] += dfact_z[:-1]*( MzInt*deljz     + Vz[nuax,nuax,:-1]/(2*dz))
+    bz[:,:, 1:] += dfact_z[ 1:]*(-MzInt*(1-deljz) + Vz[nuax,nuax, 1:]/(2*dz))
+    if Mz[0,0,0] <= 0:
+        bz[0,0,0] += (bc_factorz/nu3 - Mz[0,0,0])*2/dz[0]
+    if Mz[-1,-1,-1] >= 0:
+        bz[-1,-1,-1] += -(-bc_factorz/nu3 - Mz[-1,-1,-1])*2/dz[-1]
+
+    del Vz,VzInt,Mz,MzInt,deljz
+
+    dt = min(_compute_dt(dx,nu1,[m12,m13],s1,ploidy1),
+             _compute_dt(dy,nu2,[m21,m23],s2,ploidy2),
+             _compute_dt(dz,nu3,[m31,m32],s3,ploidy3))
+    current_t = initial_t
+    # TODO: CUDA integration
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._three_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, frozen3, 
+                ax, bx, cx, ay, by, cy, az, bz, cz,
+                current_t, dt, T)
+        return phi
+
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
+                             frozen1, frozen2, frozen3)
+        if not frozen1:
+            phi = int3D.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            phi = int3D.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
+        if not frozen3:
+            phi = int3D.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
+        current_t += this_dt
     return phi

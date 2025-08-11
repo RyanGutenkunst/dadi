@@ -536,7 +536,7 @@ def implicit_precalc_2Dy(np.ndarray[double, ndim=2] phi,
 
     Returns:
     --------
-    phi : modified phi after integration in x direction
+    phi : modified phi after integration in y direction
     """
     # Call the cdef function with memory views
     c_implicit_precalc_2Dy(phi, ay, by, cy, dt)

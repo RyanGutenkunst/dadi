@@ -157,7 +157,7 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 z = zz[kk]
 
                 Mfirst = Mfunc3D_allo_a(xx[0], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                Mlast = Mfunc3D_allo_a(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1)
+                Mlast = Mfunc3D_allo_a(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                 for ii in range(0, L-1):
                     MInt[ii] = Mfunc3D_allo_a(xInt[ii], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                 compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
@@ -185,7 +185,7 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 z = zz[kk]
 
                 Mfirst = Mfunc3D_allo_b(xx[0], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                Mlast = Mfunc3D_allo_b(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1)
+                Mlast = Mfunc3D_allo_b(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                 for ii in range(0, L-1):
                     MInt[ii] = Mfunc3D_allo_b(xInt[ii], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                 compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
