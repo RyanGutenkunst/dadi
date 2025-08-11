@@ -331,8 +331,8 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
 
-    ploidyflag: See PloidyType class. 0 for diploid, 1 for auto
     sel_dict: dictionary of selection parameters for given ploidy type
+    ploidyflag: See PloidyType class. 
 
     frozen: If True, population is 'frozen' so that it does not change.
             In the one_pop case, this is equivalent to not running the
@@ -424,9 +424,9 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     m12,m21: Migration rates. Note that m12 is the rate *into 1 from 2*.
     theta0: Propotional to ancestral size. Typically constant.
 
-    ploidyflag1,2: See PloidyType class. 0 for diploid, 1 for auto, 2 for alloa, 3 for allob
     sel_dict1,2: dictionary of selection parameters for corresponding ploidy type of that population
-
+    ploidyflag1,2: See PloidyType class. 
+    
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
                if one of the demographic parameters is a function of time.)
@@ -463,17 +463,20 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
         raise ValueError('CUDA integration is not currently supported for polyploid models.')
 
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
-    if (ploidyflag1 in allo_types) and (ploidyflag2 not in allo_types):
+    # check that at least one of the populations is an allo subgenome,
+    # but the pair has not been specified as allo subgenomes of different types
+    if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
         raise ValueError('Either population 1 and 2 is specified as allotetraploid subgenomes but not the other.'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
 
     if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
         if m12 != m21:
             raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
-                             'Here, the migration rates should specify a single exchange parameter, and must be equal.'
+                             'Here, the migration rates jointly specify a single exchange parameter and must be equal.'
                              'See Blischak et al. (2023) for details.')
         if nu1 != nu2:
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same population size.')
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but populations 1 and 2 do not have the same population size.'
+                             'Has the model been mis-specified?')
         if sel_dict1 != sel_dict2:
             raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
 
@@ -487,7 +490,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     sel1 = ploidyflag1.pack_sel_params(sel_dict1)
     sel2 = ploidyflag2.pack_sel_params(sel_dict2)
 
-    vars_to_check = [nu1,nu2,m12,m21,*sel1,*sel2,theta0]
+    # since sel1 and sel2 are lists, we need to unpack them using *
+    vars_to_check = [nu1,nu2,m12,m21,*sel1,*sel2,theta0] 
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         # Constant integration with CUDA turns out to be slower,
         # so we only use it in specific circumsances.
@@ -558,6 +562,176 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
+
+def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
+               m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
+               sel_dict1 = {'gamma':0, 'h':0.5}, sel_dict2 = {'gamma':0, 'h':0.5}, sel_dict3 = {'gamma':0, 'h':0.5},
+               ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID,
+               theta0=1, initial_t=0, frozen1=False, frozen2=False,
+               frozen3=False, enable_cuda_cached=False, deme_ids=None):
+    """
+    Integrate a 3-dimensional phi foward.
+
+    phi: Initial 3-dimensional phi
+    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+        that this grid is used in all dimensions.
+
+    nu's, gamma's, m's, and theta0 may be functions of time.
+    nu1,nu2,nu3: Population sizes
+    m12,m13,m21,m23,m31,m32: Migration rates. Note that m12 is the rate 
+                             *into 1 from 2*.
+    theta0: Propotional to ancestral size. Typically constant.
+
+    sel_dict1,2,3: dictionary of selection parameters for corresponding ploidy type of that population
+    ploidyflag1,2,3: See PloidyType class. 
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    enable_cuda_cached: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
+
+    Note: Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+    """
+    phi = phi.copy()
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 !=0 or m32 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    # check that at least one of the last two populations is an allo subgenome,
+    # but the pair has not been specified as allo subgenomes of different types
+    if ({ploidyflag2, ploidyflag3} in allo_types) and ({ploidyflag2, ploidyflag3} != allo_types):
+        raise ValueError('Either population 1 and 2 is specified as allotetraploid subgenomes but not the other.'
+                         'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
+
+    if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types):
+        if m23 != m32:
+            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
+                             'Here, the migration rates jointly specify a single exchange parameter and must be equal.'
+                             'See Blischak et al. (2023) for details.')
+        if nu1 != nu2:
+            raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but populations 2 and 3 do not have the same population size.'
+                             'Has the model been mis-specified?')
+        if sel_dict1 != sel_dict2:
+            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
+    if ploidyflag1 in allo_types:
+        raise ValueError('Population 1 is an allotetraploid subgenome.'  
+                         'To model allotetraploids, the last two populations specified must be a pair of subgenomes.'
+                         'The first population cannot be an allotetraploid subgenome.')
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(4, numpy.intc)
+    ploidy2 = numpy.zeros(4, numpy.intc)
+    ploidy3 = numpy.zeros(4, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+    ploidy3[ploidyflag3] = 1
+
+    # unpack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+    sel3 = ploidyflag3.pack_sel_params(sel_dict3)
+
+    # since sel1,2,3 are lists, we need to unpack them using *
+    vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,*sel1,*sel2,*sel3,theta0]
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
+            Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
+                               start_sizes = [nu1, nu2, nu3],
+                               mig = [m12, m13, m21, m23, m31, m32], deme_ids=deme_ids))
+            return _three_pops_const_params(phi, xx, T, 
+                                            sel1, sel2, sel3,
+                                            ploidy1, ploidy2, ploidy3,
+                                            nu1, nu2, nu3,
+                                            m12, m13, m21, m23, m31, m32,
+                                            theta0, initial_t,
+                                            frozen1, frozen2, frozen3)
+    zz = yy = xx
+
+    nu1_f, nu2_f, nu3_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2), Misc.ensure_1arg_func(nu3)
+    m12_f, m13_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13)
+    m21_f, m23_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23)
+    m31_f, m32_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32)
+    sel1_f, sel2_f, sel3_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2), MiscPoly.ensure_1arg_func_vectorized(sel3)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    # TODO: CUDA integration
+    # if cuda_enabled:
+    #     import dadi.cuda
+    #     phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
+    #             nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
+    #             gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f, 
+    #             theta0_f, frozen1, frozen2, frozen3, deme_ids)
+    #     return phi
+
+    current_t = initial_t
+    nu1,nu2,nu3 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t)
+    m12,m13 = m12_f(current_t), m13_f(current_t)
+    m21,m23 = m21_f(current_t), m23_f(current_t)
+    m31,m32 = m31_f(current_t), m32_f(current_t)
+    sel1, sel2, sel3 = sel1_f(current_t), sel2_f(current_t), sel3_f(current_t)
+    
+    dx,dy,dz = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz)
+    
+    demes_hist = [[0, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21,m23],sel2,ploidy2),
+                 _compute_dt(dz,nu3,[m31,m32],sel3,ploidy3))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1,nu2,nu3 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t)
+        m12,m13 = m12_f(next_t), m13_f(next_t)
+        m21,m23 = m21_f(next_t), m23_f(next_t)
+        m31,m32 = m31_f(next_t), m32_f(next_t)
+        sel1, sel2, sel3 = sel1_f(next_t), sel2_f(next_t), sel3_f(next_t)
+        theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]])
+
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
+                             frozen1, frozen2, frozen3,
+                             ploidy1, ploidy2, ploidy3)
+        if not frozen1:
+            phi = int3D.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
+                                     sel1, this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            phi = int3D.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
+                                     sel2, this_dt, use_delj_trick, ploidy2)
+        if not frozen3:
+            phi = int3D.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+                                     sel3, this_dt, use_delj_trick, ploidy3)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
 
 # ============================================================================
 # PYTHON FUNCTIONS AND CONST_PARAMS INTEGRATION
