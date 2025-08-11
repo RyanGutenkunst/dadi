@@ -18985,9 +18985,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
   Py_ssize_t __pyx_t_23;
   int __pyx_t_24;
   int __pyx_t_25;
-  Py_ssize_t __pyx_t_26;
+  int __pyx_t_26;
   Py_ssize_t __pyx_t_27;
-  int __pyx_t_28;
+  Py_ssize_t __pyx_t_28;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -19852,7 +19852,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
 */
       __pyx_t_17 = 0;
       __pyx_t_9 = 0;
@@ -19864,7 +19864,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1])
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
 */
       __pyx_t_19 = 0;
@@ -19880,18 +19880,27 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":102
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
 */
-      __pyx_t_11 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_23 = __pyx_v_jj;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L13_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L13_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":103
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 */
         __pyx_t_23 = 0;
@@ -19901,25 +19910,34 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         /* "Int2D_poly.pyx":102
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
 */
       }
 
       /* "Int2D_poly.pyx":104
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
-      __pyx_t_11 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_23 = __pyx_v_jj;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L16_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L16_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":105
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *             for ii in range(0, L):
@@ -19929,9 +19947,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_22 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_23 * __pyx_v_dx.strides[0]) ))));
 
         /* "Int2D_poly.pyx":104
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -19945,9 +19963,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":108
  * 
@@ -19984,9 +20002,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":111
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
@@ -20153,7 +20171,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
 */
       __pyx_t_22 = 0;
       __pyx_t_23 = 0;
@@ -20165,7 +20183,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3])
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
 */
       __pyx_t_21 = 0;
@@ -20181,18 +20199,27 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":129
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
 */
-      __pyx_t_11 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_19 = __pyx_v_jj;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_19 * __pyx_v_yy.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L31_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L31_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":130
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
 */
         __pyx_t_19 = 0;
@@ -20202,25 +20229,34 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         /* "Int2D_poly.pyx":129
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
 */
       }
 
       /* "Int2D_poly.pyx":131
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
  * 
 */
-      __pyx_t_11 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_19 = __pyx_v_jj;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_19 * __pyx_v_yy.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L34_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L34_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":132
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *             for ii in range(0, L):
@@ -20230,9 +20266,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_19 * __pyx_v_dx.strides[0]) ))));
 
         /* "Int2D_poly.pyx":131
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20246,9 +20282,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":135
  * 
@@ -20285,9 +20321,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":138
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
@@ -20408,8 +20444,8 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_t_23 = 4;
       __pyx_t_20 = 5;
       __pyx_t_21 = 6;
-      __pyx_t_26 = 7;
-      __pyx_v_Mfirst = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_22 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))));
+      __pyx_t_27 = 7;
+      __pyx_v_Mfirst = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_22 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))));
 
       /* "Int2D_poly.pyx":151
  * 
@@ -20418,7 +20454,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             for ii in range(0, L-1):
  *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
 */
-      __pyx_t_26 = (__pyx_v_L - 1);
+      __pyx_t_27 = (__pyx_v_L - 1);
       __pyx_t_21 = 0;
       __pyx_t_20 = 1;
       __pyx_t_23 = 2;
@@ -20427,7 +20463,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_t_17 = 5;
       __pyx_t_9 = 6;
       __pyx_t_22 = 7;
-      __pyx_v_Mlast = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_26 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_22 * __pyx_v_s1.strides[0]) ))));
+      __pyx_v_Mlast = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_27 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_22 * __pyx_v_s1.strides[0]) ))));
 
       /* "Int2D_poly.pyx":152
  *             Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
@@ -20456,9 +20492,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         __pyx_t_23 = 4;
         __pyx_t_20 = 5;
         __pyx_t_21 = 6;
-        __pyx_t_26 = 7;
-        __pyx_t_27 = __pyx_v_ii;
-        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_27 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_22 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))));
+        __pyx_t_27 = 7;
+        __pyx_t_28 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_22 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))));
       }
 
       /* "Int2D_poly.pyx":154
@@ -20466,46 +20502,55 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
 */
-      __pyx_t_26 = 0;
+      __pyx_t_27 = 0;
       __pyx_t_21 = 0;
       __pyx_t_20 = 0;
       __pyx_t_23 = 0;
-      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_26 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_21 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_20 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_23 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
+      compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_27 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_21 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_20 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_23 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
       /* "Int2D_poly.pyx":155
  *                 MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
 */
       __pyx_t_23 = 0;
       __pyx_t_20 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_26 = 0;
+      __pyx_t_27 = 0;
       __pyx_t_10 = 0;
       __pyx_t_19 = 0;
       __pyx_t_17 = 0;
       __pyx_t_9 = 0;
-      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_23 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_20 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_21 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_26 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_10 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_19 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_17 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_9 * __pyx_v_c.strides[0]) )))));
+      compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_23 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_20 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_21 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_27 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_10 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_19 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_17 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_9 * __pyx_v_c.strides[0]) )))));
 
       /* "Int2D_poly.pyx":156
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
 */
-      __pyx_t_11 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_9 = __pyx_v_jj;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L49_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L49_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":157
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 */
         __pyx_t_9 = 0;
@@ -20515,25 +20560,34 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         /* "Int2D_poly.pyx":156
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
 */
       }
 
       /* "Int2D_poly.pyx":158
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
-      __pyx_t_11 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_9 = __pyx_v_jj;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L52_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L52_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":159
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:
+ *             if yy[jj]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *             for ii in range(0, L):
@@ -20543,9 +20597,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_17 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_9 * __pyx_v_dx.strides[0]) ))));
 
         /* "Int2D_poly.pyx":158
- *             if Mfirst <= 0:
+ *             if yy[jj]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if yy[jj]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20559,9 +20613,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":162
  * 
@@ -20587,8 +20641,8 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_t_9 = 0;
       __pyx_t_19 = 0;
       __pyx_t_10 = 0;
-      __pyx_t_26 = 0;
-      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_17 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_19 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_10 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_26 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
+      __pyx_t_27 = 0;
+      tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_17 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_19 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_10 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_27 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
 
       /* "Int2D_poly.pyx":164
  *                 r[ii] = phi[ii, jj]/dt
@@ -20598,9 +20652,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":165
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
@@ -20609,10 +20663,10 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
  *     elif is_allob:
 */
-        __pyx_t_26 = __pyx_v_ii;
+        __pyx_t_27 = __pyx_v_ii;
         __pyx_t_10 = __pyx_v_ii;
         __pyx_t_19 = __pyx_v_jj;
-        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_10 * __pyx_v_phi.strides[0]) ) + __pyx_t_19 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_26 * __pyx_v_temp.strides[0]) )));
+        *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_10 * __pyx_v_phi.strides[0]) ) + __pyx_t_19 * __pyx_v_phi.strides[1]) )) = (*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_27 * __pyx_v_temp.strides[0]) )));
       }
     }
 
@@ -20655,9 +20709,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *         for ii in range(0, L-1):
  *             VInt[ii] = Vfunc(xInt[ii], nu1)
 */
-      __pyx_t_26 = __pyx_v_ii;
+      __pyx_t_27 = __pyx_v_ii;
       __pyx_t_19 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_19 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_26 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_19 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_27 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
     /* "Int2D_poly.pyx":171
@@ -20679,9 +20733,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *         # loop through y values
  *         for jj in range(M):
 */
-      __pyx_t_26 = __pyx_v_ii;
+      __pyx_t_27 = __pyx_v_ii;
       __pyx_t_19 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_19 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_26 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_19 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_27 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
     /* "Int2D_poly.pyx":174
@@ -20703,8 +20757,8 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
  *             Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
 */
-      __pyx_t_26 = __pyx_v_jj;
-      __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_26 * __pyx_v_yy.strides[0]) )));
+      __pyx_t_27 = __pyx_v_jj;
+      __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_27 * __pyx_v_yy.strides[0]) )));
 
       /* "Int2D_poly.pyx":177
  *             y = yy[jj]
@@ -20713,7 +20767,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
  *             for ii in range(0, L-1):
 */
-      __pyx_t_26 = 0;
+      __pyx_t_27 = 0;
       __pyx_t_19 = 0;
       __pyx_t_10 = 1;
       __pyx_t_9 = 2;
@@ -20722,7 +20776,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_t_20 = 5;
       __pyx_t_23 = 6;
       __pyx_t_22 = 7;
-      __pyx_v_Mfirst = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_26 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_22 * __pyx_v_s1.strides[0]) ))));
+      __pyx_v_Mfirst = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_27 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_22 * __pyx_v_s1.strides[0]) ))));
 
       /* "Int2D_poly.pyx":178
  * 
@@ -20739,8 +20793,8 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_t_9 = 4;
       __pyx_t_10 = 5;
       __pyx_t_19 = 6;
-      __pyx_t_26 = 7;
-      __pyx_v_Mlast = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_22 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))));
+      __pyx_t_27 = 7;
+      __pyx_v_Mlast = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_22 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))));
 
       /* "Int2D_poly.pyx":179
  *             Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
@@ -20761,7 +20815,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
 */
-        __pyx_t_26 = __pyx_v_ii;
+        __pyx_t_27 = __pyx_v_ii;
         __pyx_t_19 = 0;
         __pyx_t_10 = 1;
         __pyx_t_9 = 2;
@@ -20770,8 +20824,8 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
         __pyx_t_20 = 5;
         __pyx_t_23 = 6;
         __pyx_t_22 = 7;
-        __pyx_t_27 = __pyx_v_ii;
-        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_27 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_26 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_22 * __pyx_v_s1.strides[0]) ))));
+        __pyx_t_28 = __pyx_v_ii;
+        *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )) = Mfunc2D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_27 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_m12, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_19 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_17 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_21 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_20 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_22 * __pyx_v_s1.strides[0]) ))));
       }
 
       /* "Int2D_poly.pyx":181
@@ -20812,15 +20866,15 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             if yy[jj]==1 and Mlast >= 0:
 */
       __pyx_t_19 = __pyx_v_jj;
-      __pyx_t_28 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_19 * __pyx_v_yy.strides[0]) ))) == 0.0);
-      if (__pyx_t_28) {
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_19 * __pyx_v_yy.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
       } else {
-        __pyx_t_11 = __pyx_t_28;
-        goto __pyx_L55_bool_binop_done;
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L67_bool_binop_done;
       }
-      __pyx_t_28 = (__pyx_v_Mfirst <= 0.0);
-      __pyx_t_11 = __pyx_t_28;
-      __pyx_L55_bool_binop_done:;
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L67_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":184
@@ -20851,15 +20905,15 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
 */
       __pyx_t_19 = __pyx_v_jj;
-      __pyx_t_28 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_19 * __pyx_v_yy.strides[0]) ))) == 1.0);
-      if (__pyx_t_28) {
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_19 * __pyx_v_yy.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
       } else {
-        __pyx_t_11 = __pyx_t_28;
-        goto __pyx_L58_bool_binop_done;
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L70_bool_binop_done;
       }
-      __pyx_t_28 = (__pyx_v_Mlast >= 0.0);
-      __pyx_t_11 = __pyx_t_28;
-      __pyx_L58_bool_binop_done:;
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L70_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":186
@@ -20890,9 +20944,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":189
  * 
@@ -20929,9 +20983,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
 */
       __pyx_t_18 = __pyx_v_L;
-      __pyx_t_24 = __pyx_t_18;
-      for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_24; __pyx_t_25+=1) {
-        __pyx_v_ii = __pyx_t_25;
+      __pyx_t_25 = __pyx_t_18;
+      for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+        __pyx_v_ii = __pyx_t_26;
 
         /* "Int2D_poly.pyx":192
  *             tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
@@ -22245,7 +22299,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
 */
       __pyx_t_22 = 0;
       __pyx_t_23 = 0;
@@ -22257,7 +22311,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
 */
       __pyx_t_21 = 0;
@@ -22273,18 +22327,27 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":282
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
 */
-      __pyx_t_11 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_19 = __pyx_v_ii;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_19 * __pyx_v_xx.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L31_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L31_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":283
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
 */
         __pyx_t_19 = 0;
@@ -22294,25 +22357,34 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
         /* "Int2D_poly.pyx":282
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
 */
       }
 
       /* "Int2D_poly.pyx":284
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
  * 
 */
-      __pyx_t_11 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_19 = __pyx_v_ii;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_19 * __pyx_v_xx.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L34_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L34_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":285
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
  * 
  *             for jj in range(0, M):
@@ -22322,9 +22394,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
         *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_19 * __pyx_v_dy.strides[0]) ))));
 
         /* "Int2D_poly.pyx":284
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
  * 
 */
@@ -22558,7 +22630,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
 */
       __pyx_t_27 = 0;
       __pyx_t_21 = 0;
@@ -22570,7 +22642,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
 */
       __pyx_t_23 = 0;
@@ -22586,18 +22658,27 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":309
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
 */
-      __pyx_t_11 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_9 = __pyx_v_ii;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L50_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L50_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":310
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
 */
         __pyx_t_9 = 0;
@@ -22607,25 +22688,34 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
         /* "Int2D_poly.pyx":309
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
 */
       }
 
       /* "Int2D_poly.pyx":311
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
  * 
 */
-      __pyx_t_11 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_9 = __pyx_v_ii;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L53_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L53_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":312
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
  * 
  *             for jj in range(0, M):
@@ -22635,9 +22725,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
         *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_17 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_9 * __pyx_v_dy.strides[0]) ))));
 
         /* "Int2D_poly.pyx":311
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
  * 
 */
@@ -22715,7 +22805,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
 */
-    goto __pyx_L36;
+    goto __pyx_L40;
   }
 
   /* "Int2D_poly.pyx":320
@@ -22871,7 +22961,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
 */
       __pyx_t_22 = 0;
       __pyx_t_23 = 0;
@@ -22883,7 +22973,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
 */
       __pyx_t_21 = 0;
@@ -22899,18 +22989,27 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":336
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
 */
-      __pyx_t_11 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_19 = __pyx_v_ii;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_19 * __pyx_v_xx.strides[0]) ))) == 0.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L68_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mfirst <= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L68_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":337
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
 */
         __pyx_t_19 = 0;
@@ -22920,25 +23019,34 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
         /* "Int2D_poly.pyx":336
  *             compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
- *             if Mfirst <= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
 */
       }
 
       /* "Int2D_poly.pyx":338
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
  * 
 */
-      __pyx_t_11 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_19 = __pyx_v_ii;
+      __pyx_t_24 = ((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_19 * __pyx_v_xx.strides[0]) ))) == 1.0);
+      if (__pyx_t_24) {
+      } else {
+        __pyx_t_11 = __pyx_t_24;
+        goto __pyx_L71_bool_binop_done;
+      }
+      __pyx_t_24 = (__pyx_v_Mlast >= 0.0);
+      __pyx_t_11 = __pyx_t_24;
+      __pyx_L71_bool_binop_done:;
       if (__pyx_t_11) {
 
         /* "Int2D_poly.pyx":339
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:
+ *             if xx[ii]==1 and Mlast >= 0:
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]             # <<<<<<<<<<<<<<
  * 
  *             for jj in range(0, M):
@@ -22948,9 +23056,9 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
         *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_19 * __pyx_v_dy.strides[0]) ))));
 
         /* "Int2D_poly.pyx":338
- *             if Mfirst <= 0:
+ *             if xx[ii]==0 and Mfirst <= 0:
  *                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
- *             if Mlast >= 0:             # <<<<<<<<<<<<<<
+ *             if xx[ii]==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                 b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
  * 
 */
@@ -23029,7 +23137,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *         for jj in range(0, M):
 */
   }
-  __pyx_L36:;
+  __pyx_L40:;
 
   /* "Int2D_poly.pyx":346
  *             for jj in range(0, M):

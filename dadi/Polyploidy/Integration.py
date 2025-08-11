@@ -450,7 +450,9 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
                              'Here, the migration rates should specify a single exchange parameter, and must be equal.'
                              'See Blischak et al. (2023) for details.')
         if nu1 != nu2:
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both must have the same population size.')
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same population size.')
+        if sel_dict1 != sel_dict2:
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(4, numpy.intc)
