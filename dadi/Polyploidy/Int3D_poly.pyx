@@ -39,7 +39,7 @@ cdef extern from "tridiag.h":
 # =========================================================
 # CYTHON 3D INTEGRATION FUNCTIONS - VARIABLE PARAMS
 # =========================================================
-cdef void c_implicit_2Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
+cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu1, double m12, double m13, double[:] s1, 
                         double dt, int use_delj_trick, int[:] ploidy):
     
@@ -71,7 +71,7 @@ cdef void c_implicit_2Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef double[:] c = np.empty(L, dtype=np.float64)
     cdef double[:] r = np.empty(L, dtype=np.float64)
     cdef double[:] temp = np.empty(L, dtype=np.float64)
-    ### weights/coefficients for scaling
+    ### specify ploidy of the x direction
     cdef int is_diploid = ploidy[0]
     cdef int is_auto = ploidy[1]
     cdef int is_alloa = ploidy[2]
@@ -95,23 +95,24 @@ cdef void c_implicit_2Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
         for jj in range(M):
             for kk in range(N):
                 y = yy[jj]
+                z = zz[kk]
 
-                Mfirst = Mfunc2D(xx[0], y, m12, s1[0], s1[1])
-                Mlast = Mfunc2D(xx[L-1], y, m12, s1[0], s1[1])
+                Mfirst = Mfunc3D(xx[0], y, z, m12, m13, s1[0], s1[1])
+                Mlast = Mfunc3D(xx[L-1], y, z, m12, m13, s1[0], s1[1])
                 for ii in range(0, L-1):
-                    MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1]) 
+                    MInt[ii] = Mfunc3D(xInt[ii], y, z, m12, m13, s1[0], s1[1]) 
                 compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-                if Mfirst <= 0:
+                if y==0 and z==0 and Mfirst <= 0:
                     b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-                if Mlast >= 0:
+                if y==1 and z==1 and Mlast >= 0:
                     b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
                 for ii in range(0, L):
-                    r[ii] = phi[ii, jj]/dt
+                    r[ii] = phi[ii, jj, kk]/dt
                 tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
                 for ii in range(0, L):
-                    phi[ii, jj] = temp[ii]
+                    phi[ii, jj, kk] = temp[ii]
 
     elif is_auto:
         # compute everything we can outside of the spatial loop
@@ -119,94 +120,103 @@ cdef void c_implicit_2Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             V[ii] = Vfunc_auto(xx[ii], nu1)
         for ii in range(0, L-1):
             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
-        # loop through y values
+        # loop through y and z dimensions
         for jj in range(M):
-            y = yy[jj]
+            for kk in range(N):
+                y = yy[jj]
+                z = zz[kk]
 
-            Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3])
-            Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3])   
-            for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3]) 
-            compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if Mfirst <= 0:
-                b[0] += (0.25/nu1 - Mfirst)*2/dx[0] 
-            if Mlast >= 0:
-                b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
+                Mfirst = Mfunc3D_auto(xx[0], y, z, m12, m13, s1[0], s1[1], s1[2], s1[3])
+                Mlast = Mfunc3D_auto(xx[L-1], y, z, m12, m13, s1[0], s1[1], s1[2], s1[3])
+                for ii in range(0, L-1):
+                    MInt[ii] = Mfunc3D_auto(xInt[ii], y, z, m12, m13, s1[0], s1[1], s1[2], s1[3]) 
+                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if y==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.25/nu1 - Mfirst)*2/dx[0] 
+                if y==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
 
-            for ii in range(0, L):
-                r[ii] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for ii in range(0, L):
-                phi[ii, jj] = temp[ii]
+                for ii in range(0, L):
+                    r[ii] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for ii in range(0, L):
+                    phi[ii, jj, kk] = temp[ii]
 
+    ### TODO: this should never be called, because we require alloa and allob to be the y and z dimensions (i.e. the last two populations specified)
     elif is_alloa:
         # compute everything we can outside of the spatial loop
         for ii in range(0, L):
             V[ii] = Vfunc(xx[ii], nu1)
         for ii in range(0, L-1):
             VInt[ii] = Vfunc(xInt[ii], nu1)
-        # loop through y values
+        # loop through y and z dimensions
         for jj in range(M):
-            y = yy[jj]
+            for kk in range(N):
+                y = yy[jj]
+                z = zz[kk]
 
-            Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
-            Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])   
-            for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7]) 
-            compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if Mfirst <= 0:
-                b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-            if Mlast >= 0:
-                b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+                Mfirst = Mfunc3D_allo_a(xx[0], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                Mlast = Mfunc3D_allo_a(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1)
+                for ii in range(0, L-1):
+                    MInt[ii] = Mfunc3D_allo_a(xInt[ii], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if y==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
+                if y==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
-            for ii in range(0, L):
-                r[ii] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for ii in range(0, L):
-                phi[ii, jj] = temp[ii]
-    
+                for ii in range(0, L):
+                    r[ii] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for ii in range(0, L):
+                    phi[ii, jj, kk] = temp[ii]
+    ### TODO: see above; this should never be called
     elif is_allob:
         # compute everything we can outside of the spatial loop
         for ii in range(0, L):
             V[ii] = Vfunc(xx[ii], nu1)
         for ii in range(0, L-1):
             VInt[ii] = Vfunc(xInt[ii], nu1)
-        # loop through y values
         for jj in range(M):
-            y = yy[jj]
+            for kk in range(N):
+                y = yy[jj]
+                z = zz[kk]
 
-            Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
-            Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])   
-            for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7]) 
-            compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if yy[jj]==0 and Mfirst <= 0:
-                b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-            if yy[jj]==1 and Mlast >= 0:
-                b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+                Mfirst = Mfunc3D_allo_b(xx[0], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                Mlast = Mfunc3D_allo_b(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1)
+                for ii in range(0, L-1):
+                    MInt[ii] = Mfunc3D_allo_b(xInt[ii], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if y==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
+                if y==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
-            for ii in range(0, L):
-                r[ii] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for ii in range(0, L):
-                phi[ii, jj] = temp[ii]
+                for ii in range(0, L):
+                    r[ii] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for ii in range(0, L):
+                    phi[ii, jj, kk] = temp[ii]
     
     tridiag_free()
             
-cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy, 
-                        double nu2, double m21, double[:] s2, 
+cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
+                        double nu2, double m21, double m23, double[:] s2, 
                         double dt, int use_delj_trick, int[:] ploidy):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
     cdef int M = yy.shape[0] # number of grid points in y direction
+    cdef int N = zz.shape[0] # number of grid points in z direction
     cdef int ii # loop index for x
     cdef int jj # loop index for y
+    cdef int kk # loop index for z
     cdef double x # single x value from the grid xx
+    cdef double z # single z value from the grid zz
     
     # Create memory views for everything we need to compute
     ### grid spacings and integration points
@@ -225,7 +235,7 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     cdef double[:] c = np.empty(M, dtype=np.float64)
     cdef double[:] r = np.empty(M, dtype=np.float64)
     cdef double[:] temp = np.empty(M, dtype=np.float64)
-    ### weights/coefficients for scaling
+    ### specify ploidy of the y direction
     cdef int is_diploid = ploidy[0]
     cdef int is_auto = ploidy[1]
     cdef int is_alloa = ploidy[2]
@@ -245,26 +255,31 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             V[jj] = Vfunc(yy[jj], nu2)
         for jj in range(0, M-1):
             VInt[jj] = Vfunc(yInt[jj], nu2)
-        # loop through x values
+        # loop through x and z dimensions
         for ii in range(L):
-            x = xx[ii]
+            for kk in range(N):
+                x = xx[ii]
+                z = zz[kk]
+                ### Note: the order of the params being passed here is different from 
+                # Ryan's original code. This is for consistency with the allo cases where
+                # the first two dimensions passed to Mfunc need to be the allo subgenomes 
+                # and the subgenomes are always passed as y and z.
+                Mfirst = Mfunc3D(yy[0], z, x, m23, m21, s2[0], s2[1])
+                Mlast = Mfunc3D(yy[M-1], z, x, m23, m21, s2[0], s2[1])  
+                for jj in range(0, M-1):
+                    MInt[jj] = Mfunc3D(yInt[jj], z, x, m23, m21, s2[0], s2[1])
+                compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
+                if x==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
 
-            Mfirst = Mfunc2D(yy[0], x, m21, s2[0], s2[1])
-            Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])
-            for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1]) 
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if xx[ii]==0 and Mfirst <= 0:
-                b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
-            if xx[ii]==1 and Mlast >= 0:
-                b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
-
-            for jj in range(0, M):
-                r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for jj in range(0, M):
-                phi[ii, jj] = temp[jj]
+                for jj in range(0, M):
+                    r[jj] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for jj in range(0, M):
+                    phi[ii, jj, kk] = temp[jj]
     
     elif is_auto:
         # compute everything we can outside of the spatial loop
@@ -274,24 +289,26 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
         # loop through x values
         for ii in range(L):
-            x = xx[ii]
+            for kk in range(N):
+                x = xx[ii]
+                z = zz[kk]
+                # see note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_auto(yy[0], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3])
+                Mlast = Mfunc3D_auto(yy[M-1], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3])
+                for jj in range(0, M-1):
+                    MInt[jj] = Mfunc3D_auto(yInt[jj], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3])
+                compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.25/nu2 - Mfirst)*2/dy[0] 
+                if x==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
 
-            Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3])
-            Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])
-            for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if Mfirst <= 0:
-                b[0] += (0.25/nu2 - Mfirst)*2/dy[0] 
-            if Mlast >= 0:
-                b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
-
-            for jj in range(0, M):
-                r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for jj in range(0, M):
-                phi[ii, jj] = temp[jj]
+                for jj in range(0, M):
+                    r[jj] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for jj in range(0, M):
+                    phi[ii, jj, kk] = temp[jj]
     
     if is_alloa:
         # compute everything we can outside of the spatial loop
@@ -301,24 +318,26 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             VInt[jj] = Vfunc(yInt[jj], nu2)
         # loop through x values
         for ii in range(L):
-            x = xx[ii]
+            for kk in range(N):
+                x = xx[ii]
+                z = zz[kk]
+                # see note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_allo_a(yy[0], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mlast = Mfunc3D_allo_a(yy[M-1], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                for jj in range(0, M-1):
+                    MInt[jj] = Mfunc3D_allo_a(yInt[jj], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
+                if x==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
 
-            Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7]) 
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if Mfirst <= 0:
-                b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
-            if Mlast >= 0:
-                b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
-
-            for jj in range(0, M):
-                r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for jj in range(0, M):
-                phi[ii, jj] = temp[jj]
+                for jj in range(0, M):
+                    r[jj] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for jj in range(0, M):
+                    phi[ii, jj, kk] = temp[jj]
     
     elif is_allob:
         # compute everything we can outside of the spatial loop
@@ -328,22 +347,485 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             VInt[jj] = Vfunc(yInt[jj], nu2)
         # loop through x values
         for ii in range(L):
-            x = xx[ii]
+            for kk in range(N):
+                x = xx[ii]
+                z = zz[kk]
+                # see note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_allo_b(yy[0], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mlast = Mfunc3D_allo_b(yy[M-1], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                for jj in range(0, M-1):
+                    MInt[jj] = Mfunc3D_allo_b(yInt[jj], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
+                if x==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
 
-            Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-            if Mfirst <= 0:
-                b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
-            if Mlast >= 0:
-                b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
-
-            for jj in range(0, M):
-                r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-            for jj in range(0, M):
-                phi[ii, jj] = temp[jj]
+                for jj in range(0, M):
+                    r[jj] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for jj in range(0, M):
+                    phi[ii, jj, kk] = temp[jj]
     tridiag_free()
+
+cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
+                        double nu2, double m31, double m32, double[:] s2, 
+                        double dt, int use_delj_trick, int[:] ploidy):
+    
+    # define memory for non-array variables
+    # Note: all of the arrays are preallocated for efficiency
+    cdef int L = xx.shape[0] # number of grid points in x direction
+    cdef int M = yy.shape[0] # number of grid points in y direction
+    cdef int N = zz.shape[0] # number of grid points in z direction
+    cdef int ii # loop index for x
+    cdef int jj # loop index for y
+    cdef int kk # loop index for z
+    cdef double x # single x value from the grid xx
+    cdef double y # single y value from the grid yy
+    
+    # Create memory views for everything we need to compute
+    ### grid spacings and integration points
+    cdef double[:] dz = np.empty(M-1, dtype=np.float64)
+    cdef double[:] dfactor = np.empty(M, dtype=np.float64) 
+    cdef double[:] zInt = np.empty(M-1, dtype=np.float64)
+    cdef double[:] delj = np.empty(M-1, dtype=np.float64)
+    ### population genetic functions
+    cdef double Mfirst, Mlast
+    cdef double[:] MInt = np.empty(M-1, dtype=np.float64)
+    cdef double[:] V = np.empty(M, dtype=np.float64)
+    cdef double[:] VInt = np.empty(M-1, dtype=np.float64)
+    ### for the tridiagonal matrix solver
+    cdef double[:] a = np.empty(M, dtype=np.float64)
+    cdef double[:] b = np.empty(M, dtype=np.float64)
+    cdef double[:] c = np.empty(M, dtype=np.float64)
+    cdef double[:] r = np.empty(M, dtype=np.float64)
+    cdef double[:] temp = np.empty(M, dtype=np.float64)
+    ### specify ploidy of the y direction
+    cdef int is_diploid = ploidy[0]
+    cdef int is_auto = ploidy[1]
+    cdef int is_alloa = ploidy[2]
+    cdef int is_allob = ploidy[3]
+
+    # compute the y step size and intermediate y values
+    compute_dx(&yy[0], M, &dz[0])
+    compute_dfactor(&dz[0], M, &dfactor[0])
+    compute_xInt(&yy[0], M, &zInt[0])
+    # dynamic allocation of memory for tridiag
+    tridiag_malloc(M)
+
+    # branch on ploidy
+    if is_diploid:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc(yy[kk], nu2)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc(zInt[kk], nu2)
+        # loop through x and y dimensions
+        for ii in range(L):
+            for jj in range(M):
+                x = xx[ii]
+                y = yy[jj]
+                ### Note: the order of the params being passed here is different from 
+                # Ryan's original code. This is for consistency with the allo cases where
+                # the first two dimensions passed to Mfunc need to be the allo subgenomes 
+                # and the subgenomes are always passed as y and z.
+                Mfirst = Mfunc3D(zz[0], y, x, m32, m31, s2[0], s2[1])
+                Mlast = Mfunc3D(zz[M-1], y, x, m32, m31, s2[0], s2[1])  
+                for kk in range(0, N-1):
+                    MInt[kk] = Mfunc3D(zInt[kk], y, x, m32, m31, s2[0], s2[1])
+                compute_delj(&dz[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and y==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dz[0] 
+                if x==1 and y==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu2 - Mlast)*2/dz[L-2]
+
+                for kk in range(0, N):
+                    r[kk] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for kk in range(0, N):
+                    phi[ii, jj, kk] = temp[kk]
+    
+    elif is_auto:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc_auto(yy[kk], nu2)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc_auto(zInt[kk], nu2)
+        # loop through x and y dimensions
+        for ii in range(L):
+            for jj in range(M):
+                x = xx[ii]
+                y = yy[jj]
+                # See note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_auto(zz[0], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3])
+                Mlast = Mfunc3D_auto(zz[M-1], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3])
+                for kk in range(0, N-1):
+                    MInt[kk] = Mfunc3D_auto(zInt[kk], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3])
+                compute_delj(&dz[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and y==0 and Mfirst <= 0:
+                    b[0] += (0.25/nu2 - Mfirst)*2/dz[0] 
+                if x==1 and y==1 and Mlast >= 0:
+                    b[L-1] += -(-0.25/nu2 - Mlast)*2/dz[L-2]
+
+                for kk in range(0, N):
+                    r[kk] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for kk in range(0, N):
+                    phi[ii, jj, kk] = temp[kk]
+
+    elif is_alloa:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc_auto(yy[kk], nu2)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc_auto(zInt[kk], nu2)
+        # loop through x and y dimensions
+        for ii in range(L):
+            for jj in range(M):
+                x = xx[ii]
+                y = yy[jj]
+                # See note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_allo_a(zz[0], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mlast = Mfunc3D_allo_a(zz[M-1], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                for kk in range(0, N-1):
+                    MInt[kk] = Mfunc3D_allo_a(zInt[kk], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                compute_delj(&dz[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and y==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dz[0] 
+                if x==1 and y==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu2 - Mlast)*2/dz[L-2]
+
+                for kk in range(0, N):
+                    r[kk] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for kk in range(0, N):
+                    phi[ii, jj, kk] = temp[kk]
+
+    for ii in range(L):
+            for jj in range(M):
+                x = xx[ii]
+                y = yy[jj]
+                # See note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_allo_b(zz[0], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mlast = Mfunc3D_allo_b(zz[M-1], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                for kk in range(0, N-1):
+                    MInt[kk] = Mfunc3D_allo_b(zInt[kk], y, x, m32, m31, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                compute_delj(&dz[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if x==0 and y==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dz[0] 
+                if x==1 and y==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu2 - Mlast)*2/dz[L-2]
+
+                for kk in range(0, N):
+                    r[kk] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for kk in range(0, N):
+                    phi[ii, jj, kk] = temp[kk]
+    tridiag_free()
+
+### ==========================================================================
+### CYTHON 3D INTEGRATION FUNCTIONS - CONSTANT PARAMS
+### ==========================================================================
+
+cdef void c_implicit_precalc_3Dx(double[:,:,:] phi, double[:,:,:] ax, double[:,:,:] bx,
+                                 double[:,:,:] cx, double dt):
+    cdef int ii, jj, kk
+    cdef int L = phi.shape[0]
+    cdef int M = phi.shape[1]
+    cdef int N = phi.shape[2]
+
+    # create memory views for the tridiagonal solver
+    cdef double[:] a = np.empty(L, dtype=np.float64)
+    cdef double[:] b = np.empty(L, dtype=np.float64)
+    cdef double[:] c = np.empty(L, dtype=np.float64)
+    cdef double[:] r = np.empty(L, dtype=np.float64)
+    cdef double[:] temp = np.empty(L, dtype=np.float64)
+
+    tridiag_malloc(L)
+
+    for jj in range(0, M):
+        for kk in range(0, N):
+            for ii in range(0, L):
+                a[ii] = ax[ii, jj, kk]
+                b[ii] = bx[ii, jj, kk] + 1/dt
+                c[ii] = cx[ii, jj, kk]
+                r[ii] = phi[ii, jj, kk]/dt
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+            for ii in range(0, L):
+                phi[ii, jj, kk] = temp[ii]
+
+    tridiag_free()
+
+cdef void c_implicit_precalc_3Dy(double[:,:,:] phi, double[:,:,:] ay, double[:,:,:] by,
+                                 double[:,:,:] cy, double dt):
+    cdef int ii, jj, kk
+    cdef int L = phi.shape[0]
+    cdef int M = phi.shape[1]
+    cdef int N = phi.shape[2]
+
+    # create memory views for the tridiagonal solver
+    cdef double[:] a = np.empty(M, dtype=np.float64)
+    cdef double[:] b = np.empty(M, dtype=np.float64)
+    cdef double[:] c = np.empty(M, dtype=np.float64)
+    cdef double[:] r = np.empty(M, dtype=np.float64)
+    cdef double[:] temp = np.empty(M, dtype=np.float64)
+
+    tridiag_malloc(M)
+
+    for ii in range(0, L):
+        for kk in range(0, N):
+            for jj in range(0, M):
+                a[jj] = ay[ii, jj, kk]
+                b[jj] = by[ii, jj, kk] + 1/dt
+                c[jj] = cy[ii, jj, kk]
+                r[jj] = phi[ii, jj, kk]/dt
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+            for jj in range(0, M):
+                phi[ii, jj, kk] = temp[jj]
+
+    tridiag_free()
+
+cdef void c_implicit_precalc_3Dz(double[:,:,:] phi, double[:,:,:] az, double[:,:,:] bz,
+                                 double[:,:,:] cz, double dt):
+    cdef int ii, jj, kk
+    cdef int L = phi.shape[0]
+    cdef int M = phi.shape[1]
+    cdef int N = phi.shape[2]
+
+    # create memory views for the tridiagonal solver
+    cdef double[:] a = np.empty(N, dtype=np.float64)
+    cdef double[:] b = np.empty(N, dtype=np.float64)
+    cdef double[:] c = np.empty(N, dtype=np.float64)
+    cdef double[:] r = np.empty(N, dtype=np.float64)
+    cdef double[:] temp = np.empty(N, dtype=np.float64)
+
+    tridiag_malloc(N)
+
+    for ii in range(0, L):
+        for jj in range(0, M):
+            for kk in range(0, N):
+                a[kk] = az[ii, jj, kk]
+                b[kk] = bz[ii, jj, kk] + 1/dt
+                c[kk] = cz[ii, jj, kk]
+                r[kk] = phi[ii, jj, kk]/dt
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+            for kk in range(0, N):
+                phi[ii, jj, kk] = temp[kk]
+
+    tridiag_free()
+
+### ==========================================================================
+### MAKE THE INTEGRATION FUNCTIONS CALLABLE FROM PYTHON
+### ==========================================================================
+
+def implicit_3Dx(np.ndarray[double, ndim=3] phi, 
+                 np.ndarray[double, ndim=1] xx, 
+                 np.ndarray[double, ndim=1] yy, 
+                 np.ndarray[double, ndim=1] zz, 
+                 double nu1, 
+                 double m12, 
+                 double m13, 
+                 np.ndarray[double, ndim=1] s1,
+                 double dt, 
+                 int use_delj_trick,  
+                 np.ndarray[int, ndim=1] ploidy):
+    """
+    Implicit 3D integration function for x direction of 3D diffusion equation.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx : numpy array (float64) 
+        Grid points
+    yy : numpy array (float64) 
+        Grid points (y)
+    zz : numpy array (float64) 
+        Grid points (z)
+    nu1: Population size for pop1
+    m12: Migration rate to pop1 from pop2
+    m13: Migration rate to pop1 from pop3
+    s1: vector of selection parameters for pop1
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, s1, dt, use_delj_trick, ploidy)
+    return phi
+
+def implicit_3Dy(np.ndarray[double, ndim=3] phi, 
+                 np.ndarray[double, ndim=1] xx, 
+                 np.ndarray[double, ndim=1] yy, 
+                 np.ndarray[double, ndim=1] zz, 
+                 double nu2, 
+                 double m21, 
+                 double m23, 
+                 np.ndarray[double, ndim=1] s2,
+                 double dt, 
+                 int use_delj_trick,  
+                 np.ndarray[int, ndim=1] ploidy):
+    """
+    Implicit 3D integration function for y direction of 3D diffusion equation.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx : numpy array (float64) 
+        Grid points
+    yy : numpy array (float64) 
+        Grid points (y)
+    zz : numpy array (float64) 
+        Grid points (z)
+    nu2: Population size for pop2
+    m21: Migration rate to pop2 from pop1
+    m23: Migration rate to pop2 from pop3
+    s2: vector of selection parameters for pop2
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, s2, dt, use_delj_trick, ploidy)
+    return phi
+
+def implicit_3Dz(np.ndarray[double, ndim=3] phi, 
+                 np.ndarray[double, ndim=1] xx, 
+                 np.ndarray[double, ndim=1] yy, 
+                 np.ndarray[double, ndim=1] zz, 
+                 double nu3, 
+                 double m31, 
+                 double m32, 
+                 np.ndarray[double, ndim=1] s3,
+                 double dt, 
+                 int use_delj_trick,  
+                 np.ndarray[int, ndim=1] ploidy):
+    """
+    Implicit 3D integration function for z direction of 3D diffusion equation.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx : numpy array (float64) 
+        Grid points
+    yy : numpy array (float64) 
+        Grid points (y)
+    zz : numpy array (float64) 
+        Grid points (z)
+    nu3: Population size for pop3
+    m31: Migration rate to pop3 from pop1
+    m32: Migration rate to pop3 from pop2
+    s3: vector of selection parameters for pop3
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, s3, dt, use_delj_trick, ploidy)
+    return phi
+
+def implicit_precalc_3Dx(np.ndarray[double, ndim=3] phi, 
+                         np.ndarray[double, ndim=3] ax, 
+                         np.ndarray[double, ndim=3] bx, 
+                         np.ndarray[double, ndim=3] cx, 
+                         double dt):
+    """
+    Implicit 3D integration function for x direction of 3D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ax : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    bx : numpy array (float64)
+    cx : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_precalc_3Dx(phi, ax, bx, cx, dt)
+    return phi
+
+def implicit_precalc_3Dy(np.ndarray[double, ndim=3] phi, 
+                         np.ndarray[double, ndim=3] ay, 
+                         np.ndarray[double, ndim=3] by, 
+                         np.ndarray[double, ndim=3] cy, 
+                         double dt):
+    """
+    Implicit 3D integration function for y direction of 3D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ay : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    by : numpy array (float64)
+    cy : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in y direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_precalc_3Dy(phi, ay, by, cy, dt)
+    return phi
+
+def implicit_precalc_3Dz(np.ndarray[double, ndim=3] phi, 
+                         np.ndarray[double, ndim=3] az, 
+                         np.ndarray[double, ndim=3] bz, 
+                         np.ndarray[double, ndim=3] cz, 
+                         double dt):
+    """
+    Implicit 3D integration function for z direction of 3D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    az : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    bz : numpy array (float64)
+    cz : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in z direction
+    """
+    # Call the cdef function with memory views
+    c_implicit_precalc_3Dz(phi, az, bz, cz, dt)
+    return phi

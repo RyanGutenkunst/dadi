@@ -69,7 +69,7 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
     cdef double[:] c = np.empty(L, dtype=np.float64)
     cdef double[:] r = np.empty(L, dtype=np.float64)
     cdef double[:] temp = np.empty(L, dtype=np.float64)
-    ### weights/coefficients for scaling
+    ### specify ploidy of the x direction
     cdef int is_diploid = ploidy[0]
     cdef int is_auto = ploidy[1]
     cdef int is_alloa = ploidy[2]
@@ -222,7 +222,7 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     cdef double[:] c = np.empty(M, dtype=np.float64)
     cdef double[:] r = np.empty(M, dtype=np.float64)
     cdef double[:] temp = np.empty(M, dtype=np.float64)
-    ### weights/coefficients for scaling
+    ### specify ploidy of the y direction
     cdef int is_diploid = ploidy[0]
     cdef int is_auto = ploidy[1]
     cdef int is_alloa = ploidy[2]
@@ -493,7 +493,7 @@ def implicit_precalc_2Dx(np.ndarray[double, ndim=2] phi,
                          double dt):
     """
     Implicit 2D integration function for x direction of 2D diffusion equation.
-    Uses pre-computed tridiagonal entries for constant parameters.
+    Uses arrays pre-computed in Python for a, b, c.
 
     Parameters:
     -----------
@@ -521,7 +521,7 @@ def implicit_precalc_2Dy(np.ndarray[double, ndim=2] phi,
                          double dt):
     """
     Implicit 2D integration function for y direction of 2D diffusion equation.
-    Uses pre-computed tridiagonal entries for constant parameters.
+    Uses arrays pre-computed in Python for a, b, c.
     
     Parameters:
     -----------

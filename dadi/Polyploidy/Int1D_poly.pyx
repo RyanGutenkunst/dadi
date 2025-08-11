@@ -59,7 +59,7 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
     cdef double[:] b = np.empty(L, dtype=np.float64)
     cdef double[:] c = np.empty(L, dtype=np.float64)
     cdef double[:] r = np.empty(L, dtype=np.float64)
-    ### weights/coefficients for scaling
+    ### specify ploidy of the x direction
     cdef double is_diploid = ploidy[0]
     cdef double is_auto = ploidy[1]
 
@@ -86,7 +86,7 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
         if Mfirst <= 0:
             b[0] += (0.5/nu - Mfirst)*2/dx[0] 
         if Mlast >= 0:
-            b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2] 
+            b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
 
     if is_auto:
         Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])

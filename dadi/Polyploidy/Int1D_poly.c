@@ -20259,6 +20259,7 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
  *     # Call the cdef function with memory views
  *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)             # <<<<<<<<<<<<<<
  *     return phi
+ * 
 */
   __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
   __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
@@ -20278,6 +20279,7 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
  *     # Call the cdef function with memory views
  *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
  *     return phi             # <<<<<<<<<<<<<<
+ * 
 */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF((PyObject *)__pyx_v_phi);
