@@ -318,8 +318,8 @@ class PloidyType(IntEnum):
                 sel_params[1] = sel_dict.get('h', 0)
             else:
                 raise ValueError('For a DIPLOID ploidy, the selection parameters must be ' 
-                                 'specified as one of the following: ' \
-                                 '1. 1 key: gamma ' \
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
                                  '2. 2 keys: gamma, h.')
             
         elif self == PloidyType.AUTO:
@@ -343,9 +343,9 @@ class PloidyType(IntEnum):
                     sel_params[i] = sel_dict.get(param_name, 0)
             else:
                 raise ValueError('For an AUTO ploidy, the selection parameters must be ' 
-                                 'specified as one of the following: ' \
-                                 '1. 1 key: gamma ' \
-                                 '2. 4 keys: gamma, h1, h2, h3 ' \
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 4 keys: gamma, h1, h2, h3 \n' 
                                  '3. 4 keys: gamma1, gamma2, gamma3, gamma4.')
             
         elif self == PloidyType.ALLOa or self == PloidyType.ALLOb:
@@ -377,9 +377,9 @@ class PloidyType(IntEnum):
                     sel_params[i] = sel_dict.get(param_name, 0)
             else:
                 raise ValueError('For an ALLO ploidy, the selection parameters must be ' 
-                                 'specified as one of the following: ' \
-                                 '1. 1 key: gamma ' \
-                                 '2. 8 keys: gamma, h01, h02, h10, h11, h12, h20, h21 ' \
+                                 'specified as one of the following: \n'
+                                 '1. 1 key: gamma \n' 
+                                 '2. 8 keys: gamma, h01, h02, h10, h11, h12, h20, h21 \n' 
                                  '3. 8 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22.')
         
         return sel_params
@@ -544,9 +544,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
         if m12 != m21:
             raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
-                             'Here, the migration rates jointly specify a single exchange parameter and must be equal.'
+                             'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal.'
                              'See Blischak et al. (2023) for details.')
-        if nu1 != nu2:
+        if numpy.isscalar(nu1) and numpy.isscalar(nu2):
+            if nu1 != nu2:
+                raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but populations 1 and 2 do not have the same population size.'
+                                 'Has the model been mis-specified?')
+        elif nu1(0) != nu2(0):
             raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but populations 1 and 2 do not have the same population size.'
                              'Has the model been mis-specified?')
         if sel_dict1 != sel_dict2:
@@ -695,18 +699,21 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types):
         if m23 != m32:
             raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
-                             'Here, the migration rates jointly specify a single exchange parameter and must be equal.'
+                             'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal.'
                              'See Blischak et al. (2023) for details.')
-        if nu1 != nu2:
+        if numpy.isscalar(nu1) and numpy.isscalar(nu2):
+            if nu1 != nu2:
+                raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but populations 2 and 3 do not have the same population size.'
+                                 'Has the model been mis-specified?')
+        elif nu1(0) != nu2(0):
             raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but populations 2 and 3 do not have the same population size.'
                              'Has the model been mis-specified?')
-        if sel_dict1 != sel_dict2:
+        if sel_dict2 != sel_dict3:
             raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
 
     if ploidyflag1 in allo_types:
         raise ValueError('Population 1 is an allotetraploid subgenome.'  
-                         'To model allotetraploids, the last two populations specified must be a pair of subgenomes.'
-                         'The first population cannot be an allotetraploid subgenome.')
+                         'To model allotetraploids, only the last two populations can be specified as an allotetraploid subgenome.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(4, numpy.intc)
