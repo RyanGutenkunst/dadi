@@ -6,7 +6,7 @@ dadi is a powerful software tool for simulating the joint frequency spectrum (FS
 
 #### Getting help
 
-Please join the `dadi-user` Google group: [https://groups.google.com/group/dadi-user](https://groups.google.com/group/dadi-user). `dadi-user` is the preferred forum for asking questions and getting help. Before posting a question, take a moment to look through the `dadi-user` archives to see if your question has already been addressed. There are example scripts included in the source distribution: [https://bitbucket.org/gutenkunstlab/dadi/src/master/examples](https://bitbucket.org/gutenkunstlab/dadi/src/master/examples).
+Please join the `dadi-user` Google group: [https://groups.google.com/group/dadi-user](https://groups.google.com/group/dadi-user). `dadi-user` is the preferred forum for asking questions and getting help. Before posting a question, take a moment to look through the `dadi-user` archives to see if your question has already been addressed. There are example scripts included in the source distribution: [https://github.com/RyanGutenkunst/dadi/tree/master/examples](https://github.com/RyanGutenkunst/dadi/tree/master/examples).
 
 #### Helping us
 
