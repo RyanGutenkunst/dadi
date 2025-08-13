@@ -11,11 +11,11 @@ extra_javascript:
 plugins:
   - search
   - mkdocs-autoapi:
-      autoapi_dir: dadi
-      autoapi_ignore: [__init__.py, LICSENSE]
+      # autoapi_dir: dadi
+      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py]
       autoapi_file_patterns:
         - "dadi/*.py"
-        - "dadi/LowPass/*.py"
+        - "dadi/*/*.py"
       autoapi_add_nav_entry: API
   - mkdocstrings:
       default_handler: python
@@ -55,5 +55,5 @@ nav:
         - 'Basic Workflow 1D DFE' : 'examples/basic_workflow/basic_workflow_1d_dfe.md'
         - 'Basic Workflow 2D DFE' : 'examples/basic_workflow/basic_workflow_2d_dfe.md'
         - 'Low-Pass Example' : 'examples/LowPass/low-pass.md'
-- API: autoapi/
+# - API: autoapi/
 # - API: 'api/dadi/index.html'
