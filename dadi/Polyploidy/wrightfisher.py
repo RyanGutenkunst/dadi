@@ -81,12 +81,79 @@ def dip_selection(q, s, h):
         q_post_sel: allele frequency post selection
     """
     
-    # the RHS expression was computed symbolically in Matlab
+    #the RHS expression was computed symbolically in Matlab
     q_post_sel = (q**2*(2*s + 1) - 
-                  q*(2*h*s + 1)*(q - 1))/((q - 1)**2 + 
-                  q**2*(2*s + 1) - 2*q*(2*h*s + 1)*(q - 1))
- 
+                 q*(2*h*s + 1)*(q - 1))/((q - 1)**2 + 
+                 q**2*(2*s + 1) - 2*q*(2*h*s + 1)*(q - 1))
+
     return q_post_sel
+
+
+def dip_freq_weighted_sel(q, s, h, samples, rng):
+    """
+    Evaluates new value of q after one generation of selection for diploids.
+
+    q: allele frequency before selection
+    s: selection coefficient
+    h: dominance coefficient for heterozygotes
+    samples: number of draws from binomial distribution, 2 * N * nu
+    rng: random number generator
+
+    Returns:
+        q_post_sel: allele frequency post selection
+    """
+    
+    G0 = (1-q)**2
+    G1 = 2*q*(1-q)
+    G2 = q**2
+
+    w0 = 1
+    w1 = 1 + 2*h*s
+    w2 = 1 + 2*s
+
+    w_bar = G0*w0 + G1*w1 + G2*w2
+
+    # probability of sampling a derived allele from G2
+    # every G2 individual produces 2 derived alleles 
+    p_from_G2 = G2 * w2 * 2 / (2 * w_bar)
+    # probability of sampling a derived allele from G1
+    # every G2 individual produces 1 derived allele
+    p_from_G1 = G1 * w1 * 1 / (2 * w_bar)
+
+    # total probability of sampling a derived allele
+    prob_derived = p_from_G1 + p_from_G2
+
+    q_post_sel = rng.binomial(samples, prob_derived)/(samples)
+
+    return q_post_sel
+
+
+
+
+def dip_calc_N_e(q, s, h, N):
+    """
+    Calculates the effective population size for a diploid given the allele frequency and selection coefficient.
+
+    q: allele frequency
+    s: selection coefficient
+    h: dominance coefficient
+    N: census size
+
+    Returns:
+        N_e: effective population size
+    """
+    # these are the normalized fitnesses
+    fitness_vec = np.array([1, 1+2*h*s, 1+2*s])
+
+    fitness_var = ((fitness_vec[0]-1)**2 + (fitness_vec[1]-1)**2 + (fitness_vec[2]-1)**2)/3
+
+    fitness_mean = (fitness_vec[0] + fitness_vec[1] + fitness_vec[2])/3
+
+    correction_factor = fitness_var/(fitness_mean**2)
+
+    N_e = N / (1 + 4*correction_factor)
+
+    return N_e
 
 def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = False, track_all = False):
     """
@@ -167,6 +234,85 @@ def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = Fals
 
     return allele_freqs
 
+def dip_allelic_WF_FIXED(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = False, track_all = False):
+    """
+    Simple Wright-Fisher model of genetic drift in diploids.
+
+    N: ancestral population size (number of individuals)
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    gamma: population-scaled selection coefficient (<0 is purifying, >0 is positive)
+        gamma = 2Ns 
+        if A is the selected allele, aa has fitness 1, 
+        Aa has fitness 1+2sh, AA has fitness 1+2s
+    h: dominance coefficient for heterozygote
+    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
+    nu: population size relative to ancestral population size
+        nu can be a constant or a function of diffusion-scaled time
+    replicates: number of times to run the simulation
+    plot: Boolean input to either show a plot of individual trajectories or not
+    track_all: Boolean input to either track and return all trajectories or not
+        This usage and plot are not recommended for analysis, but are reasonable usages for debuggging
+        They are very memory intensive options and also slow down the code up to 50%
+        
+    Returns:
+        allele_freqs: array of allele frequencies, either just final 
+            or if track_all = True, then over time
+    """
+
+    if np.less(N, 0) or np.less(T, 0):
+        raise(ValueError("The population size or time is less than zero." 
+                        " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_q, 0)) or np.any(np.greater(init_q, 1)):
+        raise(ValueError("At least one initial q_value is less than zero"
+                         " or greater than one."))
+    
+    if len(init_q) != replicates:
+        raise ValueError("Length of init_q must equal number of replicates.")
+    
+    nu_f = ensure_1arg_func(nu)
+
+    # if we want to plot, we need to track all of the trajectories
+    if plot:
+        track_all = True
+
+    # calculate s from gamma because we will need it for our generation based simulation
+    s = gamma/(2*N)
+
+    # create matrix to store allele frequencies
+    if track_all:
+        allele_freqs = np.empty((replicates, int(2*N*T+1)))
+        allele_freqs[:, 0] = init_q
+    else:
+        allele_freqs = init_q
+
+    s_vec = np.full(replicates, s)
+    h_vec = np.full(replicates, h)
+
+    rng = np.random.default_rng()
+
+    total_gens = int(2*N*T)  
+    for t in range(total_gens):
+        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
+        samples = int(2*N*nu) 
+        if track_all:
+            q_post_sel = dip_freq_weighted_sel(allele_freqs[:, t], s_vec, h_vec, samples, rng)
+            allele_freqs[:, t+1] = q_post_sel
+        else:
+            q_post_sel = dip_freq_weighted_sel(allele_freqs, s_vec, h_vec, samples, rng)
+            allele_freqs = q_post_sel
+
+    if plot:
+        plt.plot(allele_freqs.T, color='gray', alpha=0.025)
+        plt.plot(np.mean(allele_freqs, axis=0), color='black', lw=2)
+        plt.xlabel('Generation')
+        plt.ylabel('Mutant Allele Frequency')
+        plt.title('Autotetraploid Allelic Drift Simulation')
+        plt.ylim(-.1, 1.1)
+        plt.show()
+
+    return allele_freqs
+
 # Autotetraploid model based on allele sampling
 def auto_selection(q, s1, s2, s3, s4):
     """
@@ -183,9 +329,9 @@ def auto_selection(q, s1, s2, s3, s4):
     """
     # the RHS expression was computed symbolically in Matlab
     q_post_sel = (q*(2*s1 - 6*q*s1 + 6*q*s2 + 6*q**2*s1 - 12*q**2*s2 - 2*q**3*s1
-                      + 6*q**2*s3 + 6*q**3*s2 - 6*q**3*s3 + 2*q**3*s4 + 1)
-                      )/(8*q*s1 - 24*q**2*s1 + 12*q**2*s2 + 24*q**3*s1 - 24*q**3*s2 
-                         - 8*q**4*s1 + 8*q**3*s3 + 12*q**4*s2 - 8*q**4*s3 + 2*q**4*s4 + 1)
+                     + 6*q**2*s3 + 6*q**3*s2 - 6*q**3*s3 + 2*q**3*s4 + 1)
+                     )/(8*q*s1 - 24*q**2*s1 + 12*q**2*s2 + 24*q**3*s1 - 24*q**3*s2 
+                        - 8*q**4*s1 + 8*q**3*s3 + 12*q**4*s2 - 8*q**4*s3 + 2*q**4*s4 + 1)
 
     return q_post_sel
 
@@ -767,11 +913,11 @@ def allo_gametic_WF(N, T, gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, 
 
     return allele_freqs
 
-### 2D model
+### 2D models
 
 def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
     """
-    Simple Wright-Fisher model of genetic drift in autotetraploids based on allele frequency sampling. 
+    Wright-Fisher model of two populations. 
         pop1: diploids
         pop2: autotetraploids
     
@@ -792,7 +938,7 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
 
     Returns: 
         allele_freqs: tensor of allele frequencies over generations
-            first dimension separates each population (autos = 0, dips = 0)
+            first dimension separates each population (autos = 0, dips = 1)
             second dimension corresponds to replicates
             third dimension corresponds to time
             e.g. allele_freqs[0, :, :] is the auto data
@@ -855,8 +1001,8 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
         samples1 = int(2*N*nu1)
         samples2 = int(4*N*nu2) # autos, so 4N
 
-        # Here let's try reversing the order of migration and selection to see if that matters
-        # Note: that was not contributing to the error and the order shouldn't matter!
+        
+
         if track_all:
             dip = dip_selection(dip_freqs[:, t], s_dip_vec, h_vec)
             auto = auto_selection(auto_freqs[:, t], s1_vec, s2_vec, s3_vec, s4_vec)
@@ -866,18 +1012,13 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
             
             dip_freqs[:, t+1] = rng_dip.binomial(samples1, dip_final)/(samples1)
             auto_freqs[:, t+1] = rng_auto.binomial(samples2, auto_final)/(samples2)
+
         else:
-            # dip = dip_selection(dip_freqs, s_dip_vec, h_vec)
-            # auto = auto_selection(auto_freqs, s1_vec, s2_vec, s3_vec, s4_vec)
+            dip = dip_selection(dip_freqs, s_dip_vec, h_vec)
+            auto = auto_selection(auto_freqs, s1_vec, s2_vec, s3_vec, s4_vec)
 
-            # dip_final = dip + m_12*(auto - dip)
-            # auto_final = auto + m_21*(dip - auto)
-
-            dip = dip_freqs + m_12*(auto_freqs - dip_freqs)
-            auto = auto_freqs + m_21*(dip_freqs - auto_freqs)
-
-            dip_final = dip_selection(dip, s_dip_vec, h_vec)
-            auto_final = auto_selection(auto, s1_vec, s2_vec, s3_vec, s4_vec)
+            dip_final = dip + m_12*(auto - dip)
+            auto_final = auto + m_21*(dip - auto)
 
             dip_freqs = rng_dip.binomial(samples1, dip_final)/(samples1)
             auto_freqs = rng_auto.binomial(samples2, auto_final)/(samples2)
@@ -901,6 +1042,253 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
         plt.show()
 
     allele_freqs = np.array([auto_freqs, dip_freqs])
+    
+    return allele_freqs
+
+
+def dip_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
+    """
+    Wright-Fisher model of two populations. 
+        pop1: diploids
+        pop2: diploids
+    
+    N: population size (number of individuals) for each population 
+        I think this must be the same for the model to be defined appropriately
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    M_12: population scaled migration rate from pop2 to pop1 (2Nm_12)
+    M_21: population scaled migration rate from pop1 to pop2 (2Nm_21)
+    s1: vector of selection coefficients for pop1 ([gamma, h, ...])
+    s2: vector of selection coefficients for pop2 ([gamma, h, ...])
+    init_q1: vector of initial allele frequencies for selected allele in pop1
+        must have size = replicates
+    init_q2: vector of initial allele frequencies for selected allele in pop2
+        must have size = replicates
+    replicates: number of times to run the simulation
+    plot: Boolean input to either show a plot of individual trajectories or not
+    track_all: Boolean input to either track and return all trajectories or not
+
+    Returns: 
+        allele_freqs: tensor/matrix of allele frequencies over generations
+            first dimension separates each population (pop1 = 0, pop2 = 1)
+    """
+
+    if np.any(np.less([N, T, M_12, M_21], 0)):
+        raise(ValueError("A population size, time, or migration rate is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_q1, 0)) or np.any(np.greater(init_q1, 1)) or np.any(np.less(init_q2, 0)) or np.any(np.greater(init_q2, 1)):
+        raise(ValueError("At least one initial q_value is less than zero"
+                         " or greater than one."))
+    
+    if len(init_q1) != replicates:
+        raise ValueError("Length of init_q1 must equal number of replicates.")
+    
+    if len(init_q2) != replicates:
+        raise ValueError("Length of init_q2 must equal number of replicates.")
+    
+    nu1_f, nu2_f = ensure_1arg_func(nu1), ensure_1arg_func(nu2)
+
+    # if we want to plot, we need to track all of the trajectories
+    if plot:
+        track_all = True
+    
+    # calculate s from gamma because we will need it for our generation based simulation
+    s1, h1 = sel1[0]/(2*N), sel1[1]/(2*N)
+    s2, h2 = sel2[0]/(2*N), sel2[1]/(2*N)
+
+    # calculate m from M similarly
+    m_12 = M_12/(2*N)
+    m_21 = M_21/(2*N)
+
+    if track_all:
+        # create matrices to store allele frequencies
+        pop1_freqs = np.empty((replicates, int(2*N*T+1)))
+        pop1_freqs[:, 0] = init_q1
+
+        pop2_freqs = np.empty((replicates, int(2*N*T+1)))
+        pop2_freqs[:, 0] = init_q2
+    else:
+        pop1_freqs = init_q1
+        pop2_freqs = init_q2
+
+    # create vectors of parameters for parallel evaluation of selection
+    s1_vec = np.full(replicates, s1)
+    h1_vec = np.full(replicates, h1)
+
+    s2_vec = np.full(replicates, s2)
+    h2_vec = np.full(replicates, h2)
+
+    rng = np.random.default_rng()
+    total_gens = int(2*N*T)
+    for t in range(total_gens):
+        nu1, nu2 = nu1_f(t/(2*N)), nu2_f(t/(2*N))
+        samples1 = int(2*N*nu1)
+        samples2 = int(2*N*nu2) 
+
+        if track_all:
+            q1 = dip_selection(pop1_freqs[:, t], s1_vec, h1_vec)
+            q2 = dip_selection(pop2_freqs[:, t], s2_vec, h2_vec)
+
+            q1_final = q1 + m_12*(q2 - q1)
+            q2_final = q2 + m_21*(q1 - q2)
+            
+            pop1_freqs[:, t+1] = rng.binomial(samples1, q1_final)/(samples1)
+            pop2_freqs[:, t+1] = rng.binomial(samples2, q2_final)/(samples2)
+
+        else:
+            q1 = dip_selection(pop1_freqs, s1_vec, h1_vec)
+            q2 = dip_selection(pop2_freqs, s2_vec, h2_vec)
+
+            q1_final = q1 + m_12*(q2 - q1)
+            q2_final = q2 + m_21*(q1 - q2)
+
+            pop1_freqs = rng.binomial(samples1, q1_final)/(samples1)
+            pop2_freqs = rng.binomial(samples2, q2_final)/(samples2)
+
+
+    if plot:
+        plt.plot(pop1_freqs.T, color='gray', alpha=0.025)
+        plt.plot(np.mean(pop1_freqs, axis=0), color='black', lw=2)
+        plt.xlabel('Generation')
+        plt.ylabel('Mutant Allele Frequency')
+        plt.title('Diploid (pop1) Allelic Drift Simulation')
+        plt.ylim(-.1, 1.1)
+        plt.show()
+
+        plt.plot(pop2_freqs.T, color='gray', alpha=0.025)
+        plt.plot(np.mean(pop2_freqs, axis=0), color='black', lw=2)
+        plt.xlabel('Generation')
+        plt.ylabel('Mutant Allele Frequency')
+        plt.title('Diploid (pop2) Allelic Drift Simulation')
+        plt.ylim(-.1, 1.1)
+        plt.show()
+
+    allele_freqs = np.array([pop1_freqs, pop2_freqs])
+    
+    return allele_freqs
+
+def auto_auto_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
+    """
+    Wright-Fisher model of two populations. 
+        pop1: autotetraploids
+        pop2: autotetraploids
+    
+    N: population size (number of individuals) for each population 
+        I think this must be the same for the model to be defined appropriately
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    M_12: population scaled migration rate from pop2 to pop1 (2Nm_12)
+    M_21: population scaled migration rate from pop1 to pop2 (2Nm_21)
+    s1: vector of selection coefficients for pop1 ([gamma1, gamma2, gamma3, gamma4, ...])
+    s2: vector of selection coefficients for pop2 ([gamma1, gamma2, gamma3, gamma4, ...])
+    init_q1: vector of initial allele frequencies for selected allele in pop1
+        must have size = replicates
+    init_q2: vector of initial allele frequencies for selected allele in pop2
+        must have size = replicates
+    replicates: number of times to run the simulation
+    plot: Boolean input to either show a plot of individual trajectories or not
+    track_all: Boolean input to either track and return all trajectories or not
+
+    Returns: 
+        allele_freqs: tensor/matrix of allele frequencies over generations
+            first dimension separates each population (pop1 = 0, pop2 = 1)
+    """
+
+    if np.any(np.less([N, T, M_12, M_21], 0)):
+        raise(ValueError("A population size, time, or migration rate is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_q1, 0)) or np.any(np.greater(init_q1, 1)) or np.any(np.less(init_q2, 0)) or np.any(np.greater(init_q2, 1)):
+        raise(ValueError("At least one initial q_value is less than zero"
+                         " or greater than one."))
+    
+    if len(init_q1) != replicates:
+        raise ValueError("Length of init_q1 must equal number of replicates.")
+    
+    if len(init_q2) != replicates:
+        raise ValueError("Length of init_q2 must equal number of replicates.")
+    
+    nu1_f, nu2_f = ensure_1arg_func(nu1), ensure_1arg_func(nu2)
+
+    # if we want to plot, we need to track all of the trajectories
+    if plot:
+        track_all = True
+    
+    # calculate s from gamma because we will need it for our generation based simulation
+    s1_1, s1_2, s1_3, s1_4 = sel1[0]/(2*N), sel1[1]/(2*N), sel1[2]/(2*N), sel1[3]/(2*N)
+    s2_1, s2_2, s2_3, s2_4 = sel2[0]/(2*N), sel2[1]/(2*N), sel2[2]/(2*N), sel2[3]/(2*N)
+
+    # calculate m from M similarly
+    m_12 = M_12/(2*N)
+    m_21 = M_21/(2*N)
+
+    if track_all:
+        # create matrices to store allele frequencies
+        pop1_freqs = np.empty((replicates, int(2*N*T+1)))
+        pop1_freqs[:, 0] = init_q1
+
+        pop2_freqs = np.empty((replicates, int(2*N*T+1)))
+        pop2_freqs[:, 0] = init_q2
+    else:
+        pop1_freqs = init_q1
+        pop2_freqs = init_q2
+
+    # create vectors of parameters for parallel evaluation of selection
+    s1_1_vec = np.full(replicates, s1_1)
+    s1_2_vec = np.full(replicates, s1_2)
+    s1_3_vec = np.full(replicates, s1_3)
+    s1_4_vec = np.full(replicates, s1_4)
+
+    s2_1_vec = np.full(replicates, s2_1)
+    s2_2_vec = np.full(replicates, s2_2)
+    s2_3_vec = np.full(replicates, s2_3)
+    s2_4_vec = np.full(replicates, s2_4)
+
+    rng = np.random.default_rng()
+    total_gens = int(2*N*T)
+    for t in range(total_gens):
+        nu1, nu2 = nu1_f(t/(2*N)), nu2_f(t/(2*N))
+        samples1 = int(4*N*nu1)
+        samples2 = int(4*N*nu2) 
+
+        if track_all:
+            q1 = auto_selection(pop1_freqs[:, t], s1_1_vec, s1_2_vec, s1_3_vec, s1_4_vec)
+            q2 = auto_selection(pop2_freqs[:, t], s2_1_vec, s2_2_vec, s2_3_vec, s2_4_vec)
+
+            q1_final = q1 + m_12*(q2 - q1)
+            q2_final = q2 + m_21*(q1 - q2)
+            
+            pop1_freqs[:, t+1] = rng.binomial(samples1, q1_final)/(samples1)
+            pop2_freqs[:, t+1] = rng.binomial(samples2, q2_final)/(samples2)
+
+        else:
+            q1 = auto_selection(pop1_freqs, s1_1_vec, s1_2_vec, s1_3_vec, s1_4_vec)
+            q2 = auto_selection(pop2_freqs, s2_1_vec, s2_2_vec, s2_3_vec, s2_4_vec)
+
+            q1_final = q1 + m_12*(q2 - q1)
+            q2_final = q2 + m_21*(q1 - q2)
+
+            pop1_freqs = rng.binomial(samples1, q1_final)/(samples1)
+            pop2_freqs = rng.binomial(samples2, q2_final)/(samples2)
+
+
+    if plot:
+        plt.plot(pop1_freqs.T, color='gray', alpha=0.025)
+        plt.plot(np.mean(pop1_freqs, axis=0), color='black', lw=2)
+        plt.xlabel('Generation')
+        plt.ylabel('Mutant Allele Frequency')
+        plt.title('Diploid (pop1) Allelic Drift Simulation')
+        plt.ylim(-.1, 1.1)
+        plt.show()
+
+        plt.plot(pop2_freqs.T, color='gray', alpha=0.025)
+        plt.plot(np.mean(pop2_freqs, axis=0), color='black', lw=2)
+        plt.xlabel('Generation')
+        plt.ylabel('Mutant Allele Frequency')
+        plt.title('Diploid (pop2) Allelic Drift Simulation')
+        plt.ylim(-.1, 1.1)
+        plt.show()
+
+    allele_freqs = np.array([pop1_freqs, pop2_freqs])
     
     return allele_freqs
 
