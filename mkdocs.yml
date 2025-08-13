@@ -17,11 +17,11 @@ plugins:
         - "dadi/*.py"
         - "dadi/*/*.py"
       autoapi_add_nav_entry: API
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python:
-          paths: [src]
+  - mkdocstrings
+      # default_handler: python
+      # handlers:
+      #   python:
+      #     paths: [src]
 nav:
 - Home: 'index.md'
 - User Guide:
