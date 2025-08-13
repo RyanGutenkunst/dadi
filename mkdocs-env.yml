@@ -1,11 +1,14 @@
-name: dadi-cli
+name: readthedocs
 channels:
   - conda-forge
 dependencies:
-  - numpy<2
+  - numpy
   - scipy
   - matplotlib
   - nlopt
   - demes
+  - mkdocstrings
+  - mkdocstrings-python
   - pip:
+      - mkdocs-autoapi
       - .
