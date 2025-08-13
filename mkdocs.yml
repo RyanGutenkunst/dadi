@@ -8,6 +8,20 @@ markdown_extensions:
   - fenced_code
 extra_javascript:
   - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
+plugins:
+  - search
+  - mkdocs-autoapi:
+      # autoapi_dir: dadi
+      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py, dadi/*.c, dadi/*.h, dadi/*.pyx, dadi/cuda/*, build/*]
+      autoapi_file_patterns:
+        - "dadi/*.py"
+        - "dadi/*/*.py"
+      autoapi_add_nav_entry: API
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
 nav:
 - Home: 'index.md'
 - User Guide:
@@ -41,4 +55,5 @@ nav:
         - 'Basic Workflow 1D DFE' : 'examples/basic_workflow/basic_workflow_1d_dfe.md'
         - 'Basic Workflow 2D DFE' : 'examples/basic_workflow/basic_workflow_2d_dfe.md'
         - 'Low-Pass Example' : 'examples/LowPass/low-pass.md'
-- API: 'api/dadi/index.html'
+# - API: autoapi/
+# - API: 'api/dadi/index.html'
