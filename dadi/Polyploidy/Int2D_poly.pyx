@@ -42,7 +42,7 @@ cdef extern from "tridiag.h":
 
 cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu1, double m12, double[:] s1, 
-                        double dt, int use_delj_trick, int[:] ploidy):
+                        double dt, int use_delj_trick, int[:] ploidy1):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
@@ -70,10 +70,10 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
     cdef double[:] r = np.empty(L, dtype=np.float64)
     cdef double[:] temp = np.empty(L, dtype=np.float64)
     ### specify ploidy of the x direction
-    cdef int is_diploid = ploidy[0]
-    cdef int is_auto = ploidy[1]
-    cdef int is_alloa = ploidy[2]
-    cdef int is_allob = ploidy[3]
+    cdef int is_diploid = ploidy1[0]
+    cdef int is_auto = ploidy1[1]
+    cdef int is_alloa = ploidy1[2]
+    cdef int is_allob = ploidy1[3]
 
     # compute the x step size and intermediate x values
     compute_dx(&xx[0], L, &dx[0])
@@ -195,7 +195,7 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
             
 cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu2, double m21, double[:] s2, 
-                        double dt, int use_delj_trick, int[:] ploidy):
+                        double dt, int use_delj_trick, int[:] ploidy2):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
@@ -223,10 +223,10 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     cdef double[:] r = np.empty(M, dtype=np.float64)
     cdef double[:] temp = np.empty(M, dtype=np.float64)
     ### specify ploidy of the y direction
-    cdef int is_diploid = ploidy[0]
-    cdef int is_auto = ploidy[1]
-    cdef int is_alloa = ploidy[2]
-    cdef int is_allob = ploidy[3]
+    cdef int is_diploid = ploidy2[0]
+    cdef int is_auto = ploidy2[1]
+    cdef int is_alloa = ploidy2[2]
+    cdef int is_allob = ploidy2[3]
 
     # compute the y step size and intermediate y values
     compute_dx(&yy[0], M, &dy[0])
@@ -414,28 +414,22 @@ def implicit_2Dx(np.ndarray[double, ndim=2] phi,
                  np.ndarray[double, ndim=1] s1, 
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy):
+                 np.ndarray[int, ndim=1] ploidy1):
     """
     Implicit 2D integration function for x direction of 2D diffusion equation.
     
     Parameters:
     -----------
-    phi : numpy array (float64)
+    phi: numpy array (float64)
         Population frequency array (modified in-place)
-    xx : numpy array (float64) 
-        Grid points
-    yy : numpy array (float64) 
-        Grid points
-    nu1 : float
-        Population size for pop1
-    s1 : numpy array (float64)
-        Selection params for pop1
-    dt : float
-        Time step
-    use_delj_trick : int
-        Whether to use delj optimization (0 or 1)
-    ploidy : numpy array (int)
-        Vector of ploidy Booleans (0 or 1)
+    xx, yy: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu1: Population size for pop1
+    m12: Migration rate to pop1 from pop2
+    s1: vector of selection parameters for pop1
+    dt: Time step
+    use_delj_trick: Whether to use delj optimization (0 or 1)
+    ploidy1: Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
 
     Returns:
@@ -443,7 +437,7 @@ def implicit_2Dx(np.ndarray[double, ndim=2] phi,
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy)
+    c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy1)
     return phi         
 
 def implicit_2Dy(np.ndarray[double, ndim=2] phi, 
@@ -454,36 +448,30 @@ def implicit_2Dy(np.ndarray[double, ndim=2] phi,
                  np.ndarray[double, ndim=1] s2, 
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy):
+                 np.ndarray[int, ndim=1] ploidy2):
     """
     Implicit 2D integration function for y direction of 2D diffusion equation.
     
     Parameters:
     -----------
-    phi : numpy array (float64)
+    phi: numpy array (float64)
         Population frequency array (modified in-place)
-    xx : numpy array (float64) 
-        Grid points
-    yy : numpy array (float64) 
-        Grid points
-    nu2 : float
-        Population size for pop2
-    s2 : numpy array (float64)
-        Selection params for pop2
-    dt : float
-        Time step
-    use_delj_trick : int
-        Whether to use delj optimization (0 or 1)
-    ploidy : numpy array (int)
-        Vector of ploidy Booleans (0 or 1)
+    xx, yy: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu2: Population size for pop2
+    m21: Migration rate to pop2 from pop1
+    s2: vector of selection parameters for pop2
+    dt: Time step
+    use_delj_trick: Whether to use delj optimization (0 or 1)
+    ploidy2: Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
 
     Returns:
     --------
-    phi : modified phi after integration in x direction
+    phi: modified phi after integration in y direction
     """
     # Call the cdef function with memory views
-    c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy)
+    c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy2)
     return phi                            
 
 def implicit_precalc_2Dx(np.ndarray[double, ndim=2] phi, 

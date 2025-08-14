@@ -41,7 +41,7 @@ cdef extern from "tridiag.h":
 # =========================================================
 cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu1, double m12, double m13, double[:] s1, 
-                        double dt, int use_delj_trick, int[:] ploidy):
+                        double dt, int use_delj_trick, int[:] ploidy1):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
@@ -69,10 +69,10 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef double[:] r = np.empty(L, dtype=np.float64)
     cdef double[:] temp = np.empty(L, dtype=np.float64)
     ### specify ploidy of the x direction
-    cdef int is_diploid = ploidy[0]
-    cdef int is_auto = ploidy[1]
-    cdef int is_alloa = ploidy[2]
-    cdef int is_allob = ploidy[3]
+    cdef int is_diploid = ploidy1[0]
+    cdef int is_auto = ploidy1[1]
+    cdef int is_alloa = ploidy1[2]
+    cdef int is_allob = ploidy1[3]
 
     # compute the x step size and intermediate x values
     compute_dx(&xx[0], L, &dx[0])
@@ -202,7 +202,7 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             
 cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu2, double m21, double m23, double[:] s2, 
-                        double dt, int use_delj_trick, int[:] ploidy):
+                        double dt, int use_delj_trick, int[:] ploidy2):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
@@ -230,10 +230,10 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef double[:] r = np.empty(M, dtype=np.float64)
     cdef double[:] temp = np.empty(M, dtype=np.float64)
     ### specify ploidy of the y direction
-    cdef int is_diploid = ploidy[0]
-    cdef int is_auto = ploidy[1]
-    cdef int is_alloa = ploidy[2]
-    cdef int is_allob = ploidy[3]
+    cdef int is_diploid = ploidy2[0]
+    cdef int is_auto = ploidy2[1]
+    cdef int is_alloa = ploidy2[2]
+    cdef int is_allob = ploidy2[3]
 
     # compute the y step size and intermediate y values
     compute_dx(&yy[0], M, &dy[0])
@@ -304,7 +304,7 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 for jj in range(0, M):
                     phi[ii, jj, kk] = temp[jj]
     
-    if is_alloa:
+    elif is_alloa:
         # compute everything we can outside of the spatial loop
         for jj in range(0, M):
             V[jj] = Vfunc(yy[jj], nu2)
@@ -365,7 +365,7 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
 
 cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu3, double m31, double m32, double[:] s3, 
-                        double dt, int use_delj_trick, int[:] ploidy):
+                        double dt, int use_delj_trick, int[:] ploidy3):
     
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
@@ -393,15 +393,15 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef double[:] r = np.empty(N, dtype=np.float64)
     cdef double[:] temp = np.empty(N, dtype=np.float64)
     ### specify ploidy of the y direction
-    cdef int is_diploid = ploidy[0]
-    cdef int is_auto = ploidy[1]
-    cdef int is_alloa = ploidy[2]
-    cdef int is_allob = ploidy[3]
+    cdef int is_diploid = ploidy3[0]
+    cdef int is_auto = ploidy3[1]
+    cdef int is_alloa = ploidy3[2]
+    cdef int is_allob = ploidy3[3]
 
     # compute the y step size and intermediate y values
-    compute_dx(&yy[0], N, &dz[0])
+    compute_dx(&zz[0], N, &dz[0])
     compute_dfactor(&dz[0], N, &dfactor[0])
-    compute_xInt(&yy[0], N, &zInt[0])
+    compute_xInt(&zz[0], N, &zInt[0])
     # dynamic allocation of memory for tridiag
     tridiag_malloc(N)
 
@@ -496,7 +496,7 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 for kk in range(0, N):
                     phi[ii, jj, kk] = temp[kk]
 
-    if is_allob:
+    elif is_allob:
         # compute everything we can outside of the spatial loop
         for kk in range(0, N):
             V[kk] = Vfunc(zz[kk], nu3)
@@ -631,7 +631,7 @@ def implicit_3Dx(np.ndarray[double, ndim=3] phi,
                  np.ndarray[double, ndim=1] s1,
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy):
+                 np.ndarray[int, ndim=1] ploidy1):
     """
     Implicit 3D integration function for x direction of 3D diffusion equation.
     
@@ -639,19 +639,15 @@ def implicit_3Dx(np.ndarray[double, ndim=3] phi,
     -----------
     phi : numpy array (float64)
         Population frequency array (modified in-place)
-    xx : numpy array (float64) 
-        Grid points
-    yy : numpy array (float64) 
-        Grid points (y)
-    zz : numpy array (float64) 
-        Grid points (z)
+    xx, yy, zz: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
     nu1: Population size for pop1
     m12: Migration rate to pop1 from pop2
     m13: Migration rate to pop1 from pop3
     s1: vector of selection parameters for pop1
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
+    ploidy1: Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
 
     Returns:
@@ -659,7 +655,7 @@ def implicit_3Dx(np.ndarray[double, ndim=3] phi,
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, s1, dt, use_delj_trick, ploidy)
+    c_implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, s1, dt, use_delj_trick, ploidy1)
     return phi
 
 def implicit_3Dy(np.ndarray[double, ndim=3] phi, 
@@ -672,7 +668,7 @@ def implicit_3Dy(np.ndarray[double, ndim=3] phi,
                  np.ndarray[double, ndim=1] s2,
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy):
+                 np.ndarray[int, ndim=1] ploidy2):
     """
     Implicit 3D integration function for y direction of 3D diffusion equation.
     
@@ -680,19 +676,15 @@ def implicit_3Dy(np.ndarray[double, ndim=3] phi,
     -----------
     phi : numpy array (float64)
         Population frequency array (modified in-place)
-    xx : numpy array (float64) 
-        Grid points
-    yy : numpy array (float64) 
-        Grid points (y)
-    zz : numpy array (float64) 
-        Grid points (z)
+    xx, yy, zz: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
     nu2: Population size for pop2
     m21: Migration rate to pop2 from pop1
     m23: Migration rate to pop2 from pop3
     s2: vector of selection parameters for pop2
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
+    ploidy2: Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
 
     Returns:
@@ -700,7 +692,7 @@ def implicit_3Dy(np.ndarray[double, ndim=3] phi,
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, s2, dt, use_delj_trick, ploidy)
+    c_implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, s2, dt, use_delj_trick, ploidy2)
     return phi
 
 def implicit_3Dz(np.ndarray[double, ndim=3] phi, 
@@ -713,7 +705,7 @@ def implicit_3Dz(np.ndarray[double, ndim=3] phi,
                  np.ndarray[double, ndim=1] s3,
                  double dt, 
                  int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy):
+                 np.ndarray[int, ndim=1] ploidy3):
     """
     Implicit 3D integration function for z direction of 3D diffusion equation.
     
@@ -721,19 +713,15 @@ def implicit_3Dz(np.ndarray[double, ndim=3] phi,
     -----------
     phi : numpy array (float64)
         Population frequency array (modified in-place)
-    xx : numpy array (float64) 
-        Grid points
-    yy : numpy array (float64) 
-        Grid points (y)
-    zz : numpy array (float64) 
-        Grid points (z)
+    xx, yy, zz: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
     nu3: Population size for pop3
     m31: Migration rate to pop3 from pop1
     m32: Migration rate to pop3 from pop2
     s3: vector of selection parameters for pop3
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
+    ploidy3: Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
 
     Returns:
@@ -741,7 +729,7 @@ def implicit_3Dz(np.ndarray[double, ndim=3] phi,
     phi : modified phi after integration in x direction
     """
     # Call the cdef function with memory views
-    c_implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, s3, dt, use_delj_trick, ploidy)
+    c_implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, s3, dt, use_delj_trick, ploidy3)
     return phi
 
 def implicit_precalc_3Dx(np.ndarray[double, ndim=3] phi, 
@@ -761,8 +749,7 @@ def implicit_precalc_3Dx(np.ndarray[double, ndim=3] phi,
         a, b, c, arrays are for tridiagonal matrix solver
     bx : numpy array (float64)
     cx : numpy array (float64)
-    dt : float
-        Time step
+    dt : Time step
 
     Returns:
     --------
@@ -789,8 +776,7 @@ def implicit_precalc_3Dy(np.ndarray[double, ndim=3] phi,
         a, b, c, arrays are for tridiagonal matrix solver
     by : numpy array (float64)
     cy : numpy array (float64)
-    dt : float
-        Time step
+    dt : Time step
 
     Returns:
     --------
@@ -817,8 +803,7 @@ def implicit_precalc_3Dz(np.ndarray[double, ndim=3] phi,
         a, b, c, arrays are for tridiagonal matrix solver
     bz : numpy array (float64)
     cz : numpy array (float64)
-    dt : float
-        Time step
+    dt : Time step
 
     Returns:
     --------

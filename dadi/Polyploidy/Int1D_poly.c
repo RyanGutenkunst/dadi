@@ -3325,7 +3325,7 @@ static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_register[] = "register";
 static const char __pyx_k_set_name[] = "__set_name__";
 static const char __pyx_k_setstate[] = "__setstate__";
-static const char __pyx_k_D_5_D_Q_1[] = "\200\001\360D\001\000\005\023\220!\2205\230\004\230D\240\t\250\024\320-=\270Q\330\004\013\2101";
+static const char __pyx_k_8_5_D_Q_1[] = "\200\001\3608\000\005\023\220!\2205\230\004\230D\240\t\250\024\320-=\270Q\330\004\013\2101";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_isenabled[] = "isenabled";
@@ -19425,7 +19425,7 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] b = np.empty(L, dtype=np.float64)
  *     cdef double[:] c = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
  *     cdef double[:] r = np.empty(L, dtype=np.float64)
- *     ### weights/coefficients for scaling
+ *     ### specify ploidy of the x direction
 */
   __pyx_t_2 = NULL;
   __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 60, __pyx_L1_error)
@@ -19476,7 +19476,7 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] b = np.empty(L, dtype=np.float64)
  *     cdef double[:] c = np.empty(L, dtype=np.float64)
  *     cdef double[:] r = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
- *     ### weights/coefficients for scaling
+ *     ### specify ploidy of the x direction
  *     cdef double is_diploid = ploidy[0]
 */
   __pyx_t_4 = NULL;
@@ -19526,7 +19526,7 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
 
   /* "Int1D_poly.pyx":63
  *     cdef double[:] r = np.empty(L, dtype=np.float64)
- *     ### weights/coefficients for scaling
+ *     ### specify ploidy of the x direction
  *     cdef double is_diploid = ploidy[0]             # <<<<<<<<<<<<<<
  *     cdef double is_auto = ploidy[1]
  * 
@@ -19535,7 +19535,7 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy.data + __pyx_t_9 * __pyx_v_ploidy.strides[0]) )));
 
   /* "Int1D_poly.pyx":64
- *     ### weights/coefficients for scaling
+ *     ### specify ploidy of the x direction
  *     cdef double is_diploid = ploidy[0]
  *     cdef double is_auto = ploidy[1]             # <<<<<<<<<<<<<<
  * 
@@ -20059,7 +20059,7 @@ PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_10Int1D_poly_implicit_1Dx, "\n    Implicit 1D integration function for 1D diffusion equation.\n    This version uses pre-allocated memory views for all intermediate arrays.\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx : numpy array (float64) \n        Grid points\n    nu : float\n        Population size parameter\n    sel_vec : numpy array (float64)\n        Selection parameters [gamma, h, gam1, gam2, gam3, gam4]\n    dt : float\n        Time step\n    use_delj_trick : int\n        Whether to use delj optimization (0 or 1)\n    ploidy : numpy array (int)\n        Ploidy coefficients [diploid_coeff, auto_coeff]\n        Either 0 or 1\n    \n    Returns:\n    --------\n    numpy array : Modified phi array\n    ");
+PyDoc_STRVAR(__pyx_doc_10Int1D_poly_implicit_1Dx, "\n    Implicit 1D integration function for 1D diffusion equation.\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx: numpy array (float64)\n        discrete numerical grid for spatial dimension\n    nu: Population size\n    s: vector of selection parameters\n    dt: Time step\n    use_delj_trick: Whether to use delj optimization (0 or 1)\n    ploidy: Vector of ploidy Booleans (0 or 1)\n        [dip, auto, alloa, allob]\n    \n    Returns:\n    --------\n    numpy array: Modified phi array\n    ");
 static PyMethodDef __pyx_mdef_10Int1D_poly_1implicit_1Dx = {"implicit_1Dx", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10Int1D_poly_1implicit_1Dx, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_10Int1D_poly_implicit_1Dx};
 static PyObject *__pyx_pw_10Int1D_poly_1implicit_1Dx(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
@@ -20254,18 +20254,18 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   }
   __pyx_pybuffernd_ploidy.diminfo[0].strides = __pyx_pybuffernd_ploidy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy.diminfo[0].shape = __pyx_pybuffernd_ploidy.rcbuffer->pybuffer.shape[0];
 
-  /* "Int1D_poly.pyx":155
+  /* "Int1D_poly.pyx":149
  *     """
  *     # Call the cdef function with memory views
  *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)             # <<<<<<<<<<<<<<
  *     return phi
  * 
 */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_sel_vec), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __pyx_f_10Int1D_poly_c_implicit_1Dx(__pyx_t_1, __pyx_t_2, __pyx_v_nu, __pyx_t_3, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_4); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_sel_vec), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_f_10Int1D_poly_c_implicit_1Dx(__pyx_t_1, __pyx_t_2, __pyx_v_nu, __pyx_t_3, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_4); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 149, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
   __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
@@ -20275,7 +20275,7 @@ static PyObject *__pyx_pf_10Int1D_poly_implicit_1Dx(CYTHON_UNUSED PyObject *__py
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_4, 1);
   __pyx_t_4.memview = NULL; __pyx_t_4.data = NULL;
 
-  /* "Int1D_poly.pyx":156
+  /* "Int1D_poly.pyx":150
  *     # Call the cdef function with memory views
  *     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
  *     return phi             # <<<<<<<<<<<<<<
@@ -22746,9 +22746,9 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {7, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 121, 30};
+    const __Pyx_PyCode_New_function_description descr = {7, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 121, 29};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_nu, __pyx_mstate->__pyx_n_u_sel_vec, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int1D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_1Dx, __pyx_k_D_5_D_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int1D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_1Dx, __pyx_k_8_5_D_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;

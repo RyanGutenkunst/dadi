@@ -127,29 +127,23 @@ def implicit_1Dx(np.ndarray[double, ndim=1] phi,
                  np.ndarray[int, ndim=1] ploidy):
     """
     Implicit 1D integration function for 1D diffusion equation.
-    This version uses pre-allocated memory views for all intermediate arrays.
     
     Parameters:
     -----------
     phi : numpy array (float64)
         Population frequency array (modified in-place)
-    xx : numpy array (float64) 
-        Grid points
-    nu : float
-        Population size parameter
-    sel_vec : numpy array (float64)
-        Selection parameters [gamma, h, gam1, gam2, gam3, gam4]
-    dt : float
-        Time step
-    use_delj_trick : int
-        Whether to use delj optimization (0 or 1)
-    ploidy : numpy array (int)
-        Ploidy coefficients [diploid_coeff, auto_coeff]
-        Either 0 or 1
+    xx: numpy array (float64)
+        discrete numerical grid for spatial dimension
+    nu: Population size
+    s: vector of selection parameters
+    dt: Time step
+    use_delj_trick: Whether to use delj optimization (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
     
     Returns:
     --------
-    numpy array : Modified phi array
+    numpy array: Modified phi array
     """
     # Call the cdef function with memory views
     c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
