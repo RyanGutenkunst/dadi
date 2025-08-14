@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <math.h>
 
-// shared new delta_j function
+/* shared new delta_j function
+* note: this is not used in the integration; instead we use Ryan's compute_delj function
+* from integration_shared.c in the main dadi directory
+*/
 void compute_delj(double *dx, double *MInt, double *VInt, double *VIntprime,
         int N, double *delj, int use_delj_trick){
     int ii;
@@ -20,7 +23,6 @@ void compute_delj(double *dx, double *MInt, double *VInt, double *VIntprime,
             delj[ii] = 0.5;
     }
 }
-
 
 // related derivatives of the variance
 double Vfunc_prime(double x, double nu){

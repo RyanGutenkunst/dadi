@@ -8,6 +8,7 @@ import dadi.tridiag_cython as tridiag
 from . import Int1D_poly as int1D
 from . import Int2D_poly as int2D
 from . import Int3D_poly as int3D
+from . import Int4D_poly as int4D 
 from enum import IntEnum
 
 ### ==========================================================================
@@ -264,6 +265,40 @@ def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2,
             phi[0,0,1] += dt/zz[1] * theta0/4 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
     return phi
 
+def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0, 
+                         frozen1, frozen2, frozen3, frozen4,
+                         ploidy1, ploidy2, ploidy3, ploidy4):
+    """
+    Inject novel mutations for a timestep.
+    """
+    # Population 1
+    # Normalization based on the multi-dimensional trapezoid rule is 
+    # implemented                      ************** here ***************
+    if not frozen1:
+        if not ploidy1[1]: # this reads as if not autotetraploid
+            phi[1,0,0,0] += dt/xx[1] * theta0/2 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
+        else:
+            phi[1,0,0,0] += dt/xx[1] * theta0/4 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
+    # Population 2
+    if not frozen2:
+        if not ploidy2[1]:
+            phi[0,1,0,0] += dt/yy[1] * theta0/2 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
+        else:
+            phi[0,1,0,0] += dt/yy[1] * theta0/4 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
+    # Population 3
+    if not frozen3:
+        if not ploidy3[1]:
+            phi[0,0,1,0] += dt/zz[1] * theta0/2 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
+        else:
+            phi[0,0,1,0] += dt/zz[1] * theta0/4 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
+    # Population 4
+    if not frozen4:
+        if not ploidy4[1]:
+            phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
+        else:
+            phi[0,0,0,1] += dt/aa[1] * theta0/4 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
+    return phi
+    
 ### ==========================================================================
 ### CLASS DEFINITION FOR SPECIFYING PLOIDY
 ### ==========================================================================
@@ -387,7 +422,7 @@ class PloidyType(IntEnum):
 ### ==========================================================================
 ### MAIN INTEGRATION FUNCTIONS FOR EACH DIMENSION
 ### ==========================================================================
-def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=PloidyType.DIPLOID, theta0=1.0, initial_t=0, 
+def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPLOID, theta0=1.0, initial_t=0, 
             frozen=False, deme_ids=None):
     """
     Integrate a 1-dimensional phi foward.
@@ -404,7 +439,8 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
                if one of the demographic parameters is a function of time.)
 
     sel_dict: dictionary of selection parameters for given ploidy type
-    ploidyflag: See PloidyType class. 
+    ploidyflag: Specifies ploidy type of population and handles selection params.
+        See PloidyType class for details. 
 
     frozen: If True, population is 'frozen' so that it does not change.
             In the one_pop case, this is equivalent to not running the
@@ -481,7 +517,7 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0, 'h':0.5}, ploidyflag=Ploidy
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
-def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h':0.5}, sel_dict2 = {'gamma':0, 'h':0.5},
+def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0},
             ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, theta0=1, initial_t=0, frozen1=False,
              frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False, deme_ids=None):
     """
@@ -497,7 +533,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     theta0: Propotional to ancestral size. Typically constant.
 
     sel_dict1,2: dictionary of selection parameters for corresponding ploidy type of that population
-    ploidyflag1,2: See PloidyType class. 
+    ploidyflag1,2: Specifies ploidy type of population and handles selection params.
+        See PloidyType class for details.  
     
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
@@ -538,23 +575,9 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     # check that at least one of the populations is an allo subgenome,
     # but the pair has not been specified as allo subgenomes of different types
     if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
-        raise ValueError('Either population 1 and 2 is specified as allotetraploid subgenomes but not the other.'
+        raise ValueError('Either population 2 and 3 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
-
-    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
-        if m12 != m21:
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
-                             'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal.'
-                             'See Blischak et al. (2023) for details.')
-        if numpy.isscalar(nu1) and numpy.isscalar(nu2):
-            if nu1 != nu2:
-                raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but populations 1 and 2 do not have the same population size.'
-                                 'Has the model been mis-specified?')
-        elif nu1(0) != nu2(0):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but populations 1 and 2 do not have the same population size.'
-                             'Has the model been mis-specified?')
-        if sel_dict1 != sel_dict2:
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(4, numpy.intc)
@@ -587,6 +610,18 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
     m12_f = Misc.ensure_1arg_func(m12)
     m21_f = Misc.ensure_1arg_func(m21)
     theta0_f = Misc.ensure_1arg_func(theta0)
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
+        if m12_f(T/2) != m21_f(T/2):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) != nu2_f(T/2):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but do not have the same population size. \n'
+                             'Allotetraploid subgenomes must have the same population size. \n')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
 
     # TODO: CUDA integration
     ### Ryan will need to implement this? 
@@ -641,7 +676,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0, 'h'
 
 def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
-               sel_dict1 = {'gamma':0, 'h':0.5}, sel_dict2 = {'gamma':0, 'h':0.5}, sel_dict3 = {'gamma':0, 'h':0.5},
+               sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0}, sel_dict3 = {'gamma':0},
                ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID,
                theta0=1, initial_t=0, frozen1=False, frozen2=False,
                frozen3=False, enable_cuda_cached=False, deme_ids=None):
@@ -659,7 +694,8 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     theta0: Propotional to ancestral size. Typically constant.
 
     sel_dict1,2,3: dictionary of selection parameters for corresponding ploidy type of that population
-    ploidyflag1,2,3: See PloidyType class. 
+    ploidyflag1,2,3: Specifies ploidy type of population and handles selection params.
+        See PloidyType class for details. 
 
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
@@ -693,27 +729,13 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     # check that at least one of the last two populations is an allo subgenome,
     # but the pair has not been specified as allo subgenomes of different types
     if ({ploidyflag2, ploidyflag3} in allo_types) and ({ploidyflag2, ploidyflag3} != allo_types):
-        raise ValueError('Either population 1 and 2 is specified as allotetraploid subgenomes but not the other.'
+        raise ValueError('Either population 2 and 3 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
 
-    if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types):
-        if m23 != m32:
-            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both subgenomes must have the same migration rate.' 
-                             'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal.'
-                             'See Blischak et al. (2023) for details.')
-        if numpy.isscalar(nu1) and numpy.isscalar(nu2):
-            if nu1 != nu2:
-                raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but populations 2 and 3 do not have the same population size.'
-                                 'Has the model been mis-specified?')
-        elif nu1(0) != nu2(0):
-            raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but populations 2 and 3 do not have the same population size.'
-                             'Has the model been mis-specified?')
-        if sel_dict2 != sel_dict3:
-            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
-
     if ploidyflag1 in allo_types:
-        raise ValueError('Population 1 is an allotetraploid subgenome.'  
-                         'To model allotetraploids, only the last two populations can be specified as an allotetraploid subgenome.')
+        raise ValueError('Population 1 is an allotetraploid subgenome. \n'  
+                         'To model allotetraploids in a 3D model, only the last two populations can be specified as an allotetraploid subgenome.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(4, numpy.intc)
@@ -723,7 +745,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     ploidy2[ploidyflag2] = 1
     ploidy3[ploidyflag3] = 1
 
-    # unpack selection params from dict to list
+    # pack selection params from dict to list
     sel1 = ploidyflag1.pack_sel_params(sel_dict1)
     sel2 = ploidyflag2.pack_sel_params(sel_dict2)
     sel3 = ploidyflag3.pack_sel_params(sel_dict3)
@@ -750,6 +772,18 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     m31_f, m32_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32)
     sel1_f, sel2_f, sel3_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2), MiscPoly.ensure_1arg_func_vectorized(sel3)
     theta0_f = Misc.ensure_1arg_func(theta0)
+
+    if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types):
+        if m23_f(T/2) != m32_f(T/2):
+            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu2_f(T/2) != nu3_f(T/2):
+            raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but do not have the same population size. \n'
+                             'Allotetraploid subgenomes must have the same population size.')
+        if numpy.any(sel2_f(T/2) != sel3_f(T/2)):
+            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
 
     # TODO: CUDA integration
     # if cuda_enabled:
@@ -806,6 +840,188 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         if not frozen3:
             phi = int3D.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
                                      sel3, this_dt, use_delj_trick, ploidy3)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
+              m12=0, m13=0, m14=0, m21=0, m23=0, m24=0, 
+              m31=0, m32=0, m34=0, m41=0, m42=0, m43=0,
+              sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0}, sel_dict3 = {'gamma':0}, sel_dict4 = {'gamma':0},
+              ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID, ploidyflag4=PloidyType.DIPLOID,
+              theta0=1, initial_t=0, 
+              frozen1=False, frozen2=False, frozen3=False, frozen4=False, deme_ids=None):
+    """
+    Integrate a 4-dimensional phi foward.
+
+    phi: Initial 4-dimensional phi
+    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+        that this grid is used in all dimensions.
+
+    nu's, gamma's, m's, and theta0 may be functions of time.
+    nu1,nu2,nu3,nu4: Population sizes
+    m12,m13,m21,m23,m31,m32, ...: Migration rates. Note that m12 is the rate 
+                             *into 1 from 2*.
+    theta0: Proportional to ancestral size. Typically constant.
+
+    sel_dict1,2,3,4: dictionary of selection parameters for corresponding ploidy type of that population
+    ploidyflag1,2,3,4: Specifies ploidy type of population and handles selection params.
+        See PloidyType class for details. 
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    enable_cuda_const: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
+
+    Note: Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+    """
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0 or m34 != 0 or m43 != 0))\
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 !=0 or m42 != 0 or m34 != 0 or m43 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    # here, we allow for the two allotetraploid populations (so two pairs of subgenomes) to be modeled
+    # to do so, we have to enforce that the first two populations form a pair of subgenomes AND 
+    # that the last two populations form a pair of subgenomes
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    
+    if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+        raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    
+    if ({ploidyflag3, ploidyflag4} in allo_types) and ({ploidyflag3, ploidyflag4} != allo_types):
+        raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    aa = zz = yy = xx
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(4, numpy.intc)
+    ploidy2 = numpy.zeros(4, numpy.intc)
+    ploidy3 = numpy.zeros(4, numpy.intc)
+    ploidy4 = numpy.zeros(4, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+    ploidy3[ploidyflag3] = 1
+    ploidy4[ploidyflag4] = 1
+
+    # pack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+    sel3 = ploidyflag3.pack_sel_params(sel_dict3)
+    sel4 = ploidyflag4.pack_sel_params(sel_dict4)
+
+    nu1_f, nu2_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2)
+    nu3_f, nu4_f = Misc.ensure_1arg_func(nu3), Misc.ensure_1arg_func(nu4)
+    m12_f, m13_f, m14_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13), Misc.ensure_1arg_func(m14)
+    m21_f, m23_f, m24_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23), Misc.ensure_1arg_func(m24)
+    m31_f, m32_f, m34_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32), Misc.ensure_1arg_func(m34)
+    m41_f, m42_f, m43_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    sel1_f, sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2)
+    sel3_f, sel4_f = MiscPoly.ensure_1arg_func_vectorized(sel3), MiscPoly.ensure_1arg_func_vectorized(sel4)
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
+        if m12_f(T/2) != m21_f(T/2):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) != nu2_f(T/2):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but do not have the same population size. \n'
+                             'Allotetraploid subgenomes must have the same population size.')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag3 in allo_types) or (ploidyflag4 in allo_types):
+        if m34_f(T/2) != m43_f(T/2):
+            raise ValueError('Population 3 or 4 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu3_f(T/2) != nu4_f(T/2):
+            raise ValueError('Population 3 or 4 is an allotetraploid subgenome, but do not have the same population size. \n'
+                             'Allotetraploid subgenomes must have the same population size.')
+        if numpy.any(sel3_f(T/2) != sel4_f(T/2)):
+            raise ValueError('Population 3 or 4 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
+
+    # TODO: CUDA integration
+    # if cuda_enabled:
+    #     import dadi.cuda
+    #     phi = dadi.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
+    #             nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
+    #             m41_f, m42_f, m43_f, gamma1_f, gamma2_f, gamma3_f, gamma4_f, h1_f, h2_f, h3_f, h4_f,
+    #             theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids)
+    #     return phi
+
+    current_t = initial_t
+    nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
+    m12, m13, m14 = m12_f(current_t), m13_f(current_t), m14_f(current_t)
+    m21, m23, m24 = m21_f(current_t), m23_f(current_t), m24_f(current_t)
+    m31, m32, m34 = m31_f(current_t), m32_f(current_t), m34_f(current_t)
+    m41, m42, m43 = m41_f(current_t), m42_f(current_t), m43_f(current_t)
+    sel1, sel2, sel3, sel4 = sel1_f(current_t), sel2_f(current_t), sel3_f(current_t), sel4_f(current_t)
+    
+    dx,dy,dz,da = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa)
+    demes_hist = [[0, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13,m14],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21,m23,m24],sel2,ploidy2),
+                 _compute_dt(dz,nu3,[m31,m32,m34],sel3,ploidy3),
+                 _compute_dt(da,nu4,[m41,m42,m43],sel4,ploidy4))         
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1, nu2, nu3, nu4 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t)
+        m12, m13, m14 = m12_f(next_t), m13_f(next_t), m14_f(next_t)
+        m21, m23, m24 = m21_f(next_t), m23_f(next_t), m24_f(next_t)
+        m31, m32, m34 = m31_f(next_t), m32_f(next_t), m34_f(next_t)
+        m41, m42, m43 = m41_f(next_t), m42_f(next_t), m43_f(next_t)
+        sel1, sel2, sel3, sel4 = sel1_f(next_t), sel2_f(next_t), sel3_f(next_t), sel4_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]])
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,m12,m13,m14,m21,
+                                 m23, m24, m31, m32, m34, m41, m42, m43, theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3,nu4], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_4D(phi, this_dt, xx, yy, zz, aa, theta0,
+                             frozen1, frozen2, frozen3, frozen4,
+                             ploidy1, ploidy2, ploidy3, ploidy4)
+        if not frozen1:
+            phi = int4D.implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14,
+                                     sel1, this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            phi = int4D.implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24,
+                                     sel2, this_dt, use_delj_trick, ploidy2)
+        if not frozen3:
+            phi = int4D.implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34,
+                                     sel3, this_dt, use_delj_trick, ploidy3)
+        if not frozen4:
+            phi = int4D.implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43,
+                                     sel4, this_dt, use_delj_trick, ploidy4)
 
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
@@ -938,6 +1154,10 @@ def _compute_delj(dx, MInt, VInt, axis=0):
         delj = 0.5
     return delj
 
+# this is a different version of the delj trick that I developed
+# it shows marginally better results, but requires additional computation
+# and is not enough of an improvement in the results
+# just leaving it here for reference
 def _compute_delj_new(dx, MInt, VInt, VIntprime, axis=0):
     r"""
     Chang and Cooper's \delta_j term. Typically we set this to 0.5.
