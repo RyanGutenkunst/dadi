@@ -250,16 +250,16 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])
             for jj in range(0, M-1):
                 MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1]) 
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+            compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
             if x==1 and Mlast >= 0:
-                b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+                b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
 
             for jj in range(0, M):
                 r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
             for jj in range(0, M):
                 phi[ii, jj] = temp[jj]
     
@@ -277,20 +277,20 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])
             for jj in range(0, M-1):
                 MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+            compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
                 b[0] += (0.25/nu2 - Mfirst)*2/dy[0] 
             if x==1 and Mlast >= 0:
-                b[L-1] += -(-0.25/nu2 - Mlast)*2/dy[L-2]
+                b[M-1] += -(-0.25/nu2 - Mlast)*2/dy[M-2]
 
             for jj in range(0, M):
                 r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
             for jj in range(0, M):
                 phi[ii, jj] = temp[jj]
     
-    if is_alloa:
+    elif is_alloa:
         # compute everything we can outside of the spatial loop
         for jj in range(0, M):
             V[jj] = Vfunc(yy[jj], nu2)
@@ -304,16 +304,16 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
             for jj in range(0, M-1):
                 MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7]) 
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+            compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
             if x==1 and Mlast >= 0:
-                b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+                b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
 
             for jj in range(0, M):
                 r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
             for jj in range(0, M):
                 phi[ii, jj] = temp[jj]
     
@@ -331,16 +331,16 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
             Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
             for jj in range(0, M-1):
                 MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            compute_delj(&dy[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+            compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
             if x==1 and Mlast >= 0:
-                b[L-1] += -(-0.5/nu2 - Mlast)*2/dy[L-2]
+                b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
 
             for jj in range(0, M):
                 r[jj] = phi[ii, jj]/dt
-            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
             for jj in range(0, M):
                 phi[ii, jj] = temp[jj]
     tridiag_free()

@@ -31,6 +31,15 @@ double Mfunc3D_auto(double x, double y, double z, double mxy, double mxz,
                   gam1;
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
 }
+double Mfunc4D_auto(double x, double y, double z, double a,
+                    double mxy, double mxz, double mxa,
+                    double gam1, double gam2, double gam3, double gam4){
+    double poly = ((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
+                  (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
+                  (-6.*gam1 + 3.*gam2) * x + 
+                  gam1;
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
+}
 
 /*
 * ALLOTETRAPLOIDS POP GEN FUNCTIONS 
@@ -108,4 +117,38 @@ double Mfunc3D_allo_b(double x, double y, double z, double mxy, double mxz,
                   (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
                   (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy;
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
+}
+double Mfunc4D_allo_a(double x, double y, double z, double a,
+                      double mxy, double mxz, double mxa,
+                      double g01, double g02, double g10, double g11, 
+                      double g12, double g20, double g21, double g22){
+    /*
+    * x is x_a, y is x_b, z and a are separate populations
+    */
+    double xy = x*y;
+    double yy = y*y;
+    double xyy = xy*y;
+    double poly = g10 + (-2*g10 + g20)*x + 
+                  (-2*g01 - 2*g10 + 2*g11)*y +
+                  (2*g01 - g02 + g10 -2*g11 + g12)*yy +
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
+                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy;
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
+}
+double Mfunc4D_allo_b(double x, double y, double z, double a,
+                      double mxy, double mxz, double mxa,
+                      double g01, double g02, double g10, double g11, 
+                      double g12, double g20, double g21, double g22){
+    /*
+    * x is x_b, y is x_a, z and a are separate populations
+    */
+    double xy = x*y;
+    double yy = y*y;
+    double xyy = xy*y;
+    double poly = g01 + (-2*g01 + g02)*x + 
+                  (-2*g01 - 2*g10 + 2*g11)*y +
+                  (2*g10 - g20 + g01 -2*g11 + g21)*yy +
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
+                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy;
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
 }

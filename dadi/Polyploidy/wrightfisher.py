@@ -88,51 +88,11 @@ def dip_selection(q, s, h):
 
     return q_post_sel
 
-
-def dip_freq_weighted_sel(q, s, h, samples, rng):
-    """
-    Evaluates new value of q after one generation of selection for diploids.
-
-    q: allele frequency before selection
-    s: selection coefficient
-    h: dominance coefficient for heterozygotes
-    samples: number of draws from binomial distribution, 2 * N * nu
-    rng: random number generator
-
-    Returns:
-        q_post_sel: allele frequency post selection
-    """
-    
-    G0 = (1-q)**2
-    G1 = 2*q*(1-q)
-    G2 = q**2
-
-    w0 = 1
-    w1 = 1 + 2*h*s
-    w2 = 1 + 2*s
-
-    w_bar = G0*w0 + G1*w1 + G2*w2
-
-    # probability of sampling a derived allele from G2
-    # every G2 individual produces 2 derived alleles 
-    p_from_G2 = G2 * w2 * 2 / (2 * w_bar)
-    # probability of sampling a derived allele from G1
-    # every G2 individual produces 1 derived allele
-    p_from_G1 = G1 * w1 * 1 / (2 * w_bar)
-
-    # total probability of sampling a derived allele
-    prob_derived = p_from_G1 + p_from_G2
-
-    q_post_sel = rng.binomial(samples, prob_derived)/(samples)
-
-    return q_post_sel
-
-
-
-
-def dip_calc_N_e(q, s, h, N):
+def dip_calc_N_e(s, h, N):
     """
     Calculates the effective population size for a diploid given the allele frequency and selection coefficient.
+
+    See Robertson (1961), Crow and Kimura (1970), or Waples (2025) for more details.
 
     q: allele frequency
     s: selection coefficient
@@ -142,7 +102,6 @@ def dip_calc_N_e(q, s, h, N):
     Returns:
         N_e: effective population size
     """
-    # these are the normalized fitnesses
     fitness_vec = np.array([1, 1+2*h*s, 1+2*s])
 
     fitness_var = ((fitness_vec[0]-1)**2 + (fitness_vec[1]-1)**2 + (fitness_vec[2]-1)**2)/3
@@ -151,7 +110,7 @@ def dip_calc_N_e(q, s, h, N):
 
     correction_factor = fitness_var/(fitness_mean**2)
 
-    N_e = N / (1 + 4*correction_factor)
+    N_e = N / (1 + correction_factor)
 
     return N_e
 
@@ -222,85 +181,6 @@ def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = Fals
         else:
             q_post_sel = dip_selection(allele_freqs, s_vec, h_vec)
             allele_freqs = rng.binomial(samples, q_post_sel)/(samples)
-
-    if plot:
-        plt.plot(allele_freqs.T, color='gray', alpha=0.025)
-        plt.plot(np.mean(allele_freqs, axis=0), color='black', lw=2)
-        plt.xlabel('Generation')
-        plt.ylabel('Mutant Allele Frequency')
-        plt.title('Autotetraploid Allelic Drift Simulation')
-        plt.ylim(-.1, 1.1)
-        plt.show()
-
-    return allele_freqs
-
-def dip_allelic_WF_FIXED(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = False, track_all = False):
-    """
-    Simple Wright-Fisher model of genetic drift in diploids.
-
-    N: ancestral population size (number of individuals)
-    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
-    gamma: population-scaled selection coefficient (<0 is purifying, >0 is positive)
-        gamma = 2Ns 
-        if A is the selected allele, aa has fitness 1, 
-        Aa has fitness 1+2sh, AA has fitness 1+2s
-    h: dominance coefficient for heterozygote
-    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
-    nu: population size relative to ancestral population size
-        nu can be a constant or a function of diffusion-scaled time
-    replicates: number of times to run the simulation
-    plot: Boolean input to either show a plot of individual trajectories or not
-    track_all: Boolean input to either track and return all trajectories or not
-        This usage and plot are not recommended for analysis, but are reasonable usages for debuggging
-        They are very memory intensive options and also slow down the code up to 50%
-        
-    Returns:
-        allele_freqs: array of allele frequencies, either just final 
-            or if track_all = True, then over time
-    """
-
-    if np.less(N, 0) or np.less(T, 0):
-        raise(ValueError("The population size or time is less than zero." 
-                        " Has the model been misspecified?"))
-    
-    if np.any(np.less(init_q, 0)) or np.any(np.greater(init_q, 1)):
-        raise(ValueError("At least one initial q_value is less than zero"
-                         " or greater than one."))
-    
-    if len(init_q) != replicates:
-        raise ValueError("Length of init_q must equal number of replicates.")
-    
-    nu_f = ensure_1arg_func(nu)
-
-    # if we want to plot, we need to track all of the trajectories
-    if plot:
-        track_all = True
-
-    # calculate s from gamma because we will need it for our generation based simulation
-    s = gamma/(2*N)
-
-    # create matrix to store allele frequencies
-    if track_all:
-        allele_freqs = np.empty((replicates, int(2*N*T+1)))
-        allele_freqs[:, 0] = init_q
-    else:
-        allele_freqs = init_q
-
-    s_vec = np.full(replicates, s)
-    h_vec = np.full(replicates, h)
-
-    rng = np.random.default_rng()
-
-    total_gens = int(2*N*T)  
-    for t in range(total_gens):
-        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
-        samples = int(2*N*nu) 
-        if track_all:
-            q_post_sel = dip_freq_weighted_sel(allele_freqs[:, t], s_vec, h_vec, samples, rng)
-            allele_freqs[:, t+1] = q_post_sel
-        else:
-            q_post_sel = dip_freq_weighted_sel(allele_freqs, s_vec, h_vec, samples, rng)
-            allele_freqs = q_post_sel
 
     if plot:
         plt.plot(allele_freqs.T, color='gray', alpha=0.025)
@@ -998,6 +878,9 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
     total_gens = int(2*N*T)
     for t in range(total_gens):
         nu1, nu2 = nu1_f(t/(2*N)), nu2_f(t/(2*N))
+
+        # N_e_1 = dip_calc_N_e(s_dip, h, N)
+
         samples1 = int(2*N*nu1)
         samples2 = int(4*N*nu2) # autos, so 4N
 
