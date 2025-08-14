@@ -1,6 +1,12 @@
 /* Population genetic functions modified for tetraploids
 */
 
+// shared new delta_j function
+void compute_delj(double *dx, double *MInt, double *VInt, double *VIntprime,
+        int N, double *delj, int use_delj_trick);
+double Vfunc_prime(double x, double nu);
+double Vfunc_auto_prime(double x, double nu);
+
 // First, for the autos
 double Vfunc_auto(double x, double nu);
 double Mfunc1D_auto(double x, double gam1, double gam2, double gam3, double gam4);

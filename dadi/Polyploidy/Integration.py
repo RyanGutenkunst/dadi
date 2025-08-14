@@ -896,6 +896,13 @@ def _Mfunc3D_allo_b( x,  y, z, mxy, mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g2
                   (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
 
+# extra functions for calculating Vprime for the new delta j
+def _Vfunc_prime(x, nu, beta=1):
+    return 1./nu * (1-2*x) * (beta+1.)**2/(4.*beta)
+
+def _Vfunc_auto_prime(x, nu, beta=1):
+    return 1./(2.*nu) * (1-2*x) * (beta+1.)**2/(4.*beta)
+
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
     r"""
@@ -924,6 +931,30 @@ def _compute_delj(dx, MInt, VInt, axis=0):
         wj = 2 *MInt*dx[tuple(upslice)]
         epsj = numpy.exp(wj/VInt[tuple(upslice)])
         delj = (-epsj*wj + epsj * VInt[tuple(upslice)] - VInt[tuple(upslice)])/(wj - epsj*wj)
+        # These where statements filter out edge case for delj
+        delj = numpy.where(numpy.isnan(delj), 0.5, delj)
+        delj = numpy.where(numpy.isinf(delj), 0.5, delj)
+    else:
+        delj = 0.5
+    return delj
+
+def _compute_delj_new(dx, MInt, VInt, VIntprime, axis=0):
+    r"""
+    Chang and Cooper's \delta_j term. Typically we set this to 0.5.
+    """
+    # Chang and Cooper's fancy delta j trick...
+    if use_delj_trick:
+        # upslice will raise the dimensionality of dx and VInt to be appropriate
+        # for functioning with MInt.
+        upslice = [nuax for ii in range(MInt.ndim)]
+        upslice [axis] = slice(None)
+
+        wj = ((VIntprime[tuple(upslice)]-2*MInt)*dx[tuple(upslice)])/VInt[tuple(upslice)]
+        delj = numpy.where(
+            numpy.abs(wj) < 1e-10,
+            0.5,  # Pure diffusion limit
+            (1.0/wj) - 1.0/(numpy.exp(wj) - 1.0)
+        )
         # These where statements filter out edge case for delj
         delj = numpy.where(numpy.isnan(delj), 0.5, delj)
         delj = numpy.where(numpy.isinf(delj), 0.5, delj)
@@ -1009,7 +1040,6 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     # The use of nuax (= numpy.newaxis) here is for memory conservation. We
     # could just create big X and Y arrays which only varied along one axis,
     # but that would be wasteful.
-
     # implicit in the x direction
     dx = numpy.diff(xx)
     dfact_x = _compute_dfactor(dx)

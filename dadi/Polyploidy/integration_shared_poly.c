@@ -1,6 +1,36 @@
 #include <stdio.h>
 #include <math.h>
 
+// shared new delta_j function
+void compute_delj(double *dx, double *MInt, double *VInt, double *VIntprime,
+        int N, double *delj, int use_delj_trick){
+    int ii;
+    double wj, expwj;
+    if(!use_delj_trick){
+        for(ii=0; ii < N-1; ii++)
+            delj[ii] = 0.5;
+        return;
+    }
+    for(ii=0; ii < N-1; ii++){
+        wj = dx[ii] * ((VIntprime[ii] - 2. * MInt[ii]) / VInt[ii]);
+        expwj = exp(wj);
+        if((expwj != 1.0) && (wj != 0))
+            delj[ii] = (1.0/wj) - (1.0/(expwj - 1.0));
+        else
+            delj[ii] = 0.5;
+    }
+}
+
+
+// related derivatives of the variance
+double Vfunc_prime(double x, double nu){
+    return 1./(nu) * (1.-2.*x);
+}
+double Vfunc_auto_prime(double x, double nu){
+    return 1./(2.*nu) * (1.-2.*x);
+}
+
+
 /*
 * AUTOTETRAPLOIDS POP GEN FUNCTIONS
 */

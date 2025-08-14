@@ -80,39 +80,14 @@ def dip_selection(q, s, h):
     Returns:
         q_post_sel: allele frequency post selection
     """
-    
+    #delta_q = s * 2*(h + (1-2*h)*q) * q*(1-q)
+    #return delta_q
     #the RHS expression was computed symbolically in Matlab
     q_post_sel = (q**2*(2*s + 1) - 
                  q*(2*h*s + 1)*(q - 1))/((q - 1)**2 + 
                  q**2*(2*s + 1) - 2*q*(2*h*s + 1)*(q - 1))
 
     return q_post_sel
-
-def dip_calc_N_e(s, h, N):
-    """
-    Calculates the effective population size for a diploid given the allele frequency and selection coefficient.
-
-    See Robertson (1961), Crow and Kimura (1970), or Waples (2025) for more details.
-
-    q: allele frequency
-    s: selection coefficient
-    h: dominance coefficient
-    N: census size
-
-    Returns:
-        N_e: effective population size
-    """
-    fitness_vec = np.array([1, 1+2*h*s, 1+2*s])
-
-    fitness_var = ((fitness_vec[0]-1)**2 + (fitness_vec[1]-1)**2 + (fitness_vec[2]-1)**2)/3
-
-    fitness_mean = (fitness_vec[0] + fitness_vec[1] + fitness_vec[2])/3
-
-    correction_factor = fitness_var/(fitness_mean**2)
-
-    N_e = N / (1 + correction_factor)
-
-    return N_e
 
 def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = False, track_all = False):
     """
@@ -846,7 +821,7 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
         track_all = True
     
     # calculate s from gamma because we will need it for our generation based simulation
-    s_dip, h = sel1[0]/(2*N), sel1[1]/(2*N)
+    s_dip, h = sel1[0]/(2*N), sel1[1]
     s1, s2, s3, s4 = sel2[0]/(2*N), sel2[1]/(2*N), sel2[2]/(2*N), sel2[3]/(2*N)
 
     # calculate m from M similarly
@@ -976,8 +951,8 @@ def dip_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0,
         track_all = True
     
     # calculate s from gamma because we will need it for our generation based simulation
-    s1, h1 = sel1[0]/(2*N), sel1[1]/(2*N)
-    s2, h2 = sel2[0]/(2*N), sel2[1]/(2*N)
+    s1, h1 = sel1[0]/(2*N), sel1[1]
+    s2, h2 = sel2[0]/(2*N), sel2[1]
 
     # calculate m from M similarly
     m_12 = M_12/(2*N)
@@ -1237,7 +1212,7 @@ def dip_allo_WF(N, T, M12, M21, M13, M31, M23, M32,
     s01, s02, s10, s11 = sel2[0]/(2*N), sel2[1]/(2*N), sel2[2]/(2*N), sel2[3]/(2*N)
     s12, s20, s21, s22 = sel2[4]/(2*N), sel2[5]/(2*N), sel2[6]/(2*N), sel2[7]/(2*N)
 
-    s_dip, h = sel1[0]/(2*N), sel1[1]/(2*N)
+    s_dip, h = sel1[0]/(2*N), sel1[1]
 
     # same for mij's
     m12, m21, m13, m31, m23, m32 = M12/(2*N), M21/(2*N), M13/(2*N), M31/(2*N), M23/(2*N), M32/(2*N)
