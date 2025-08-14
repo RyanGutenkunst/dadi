@@ -463,24 +463,6 @@ def allo_selection(qa, qb, s01, s02, s10, s11, s12, s20, s21, s22):
 
     return q_post_sel
 
-def allelic_exchange(qa, qb, e):
-    """
-    Evaluates new values of qa and qb due to allelic exchange
-
-    qa: allele frequency in subgenome a before allelic exchange
-    qb: allele frequency in subgenome b before allelic exchange
-    e: rate of allelic exchange between subgenomes
-
-    Returns:
-        q_post_exchange: matrix of vectors for qa and qb, the allele frequencies post exchange
-    """
-
-    qa_post = qa+e*(qb - qa)
-    qb_post = qb+e*(qa - qb)
-
-    q_post_exchange = np.array([qa_post, qb_post])
-    return(q_post_exchange)
-
 def allo_allelic_WF(N, T, E, gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22, 
                     init_qa, init_qb, nu=1, replicates = 1, plot = False, track_all=False):
     """
@@ -579,17 +561,25 @@ def allo_allelic_WF(N, T, E, gamma01, gamma02, gamma10, gamma11, gamma12, gamma2
         # It sees to have no effect, but ask Ryan and Justin about this still
         ###
         if track_all:
-            q_post_exchange = allelic_exchange(allele_freqs[0, :, t], allele_freqs[1, :, t], e)
-            q_post_sel = allo_selection(q_post_exchange[0, :], q_post_exchange[1, :], s01_vec, s02_vec, 
+            q_next = allo_selection(allele_freqs[0, :, t], allele_freqs[1, :, t], s01_vec, s02_vec, 
                                         s10_vec, s11_vec, s12_vec, s20_vec, s21_vec, s22_vec)
-            allele_freqs[0, :, t+1] = rng.binomial(samples, q_post_sel[0, :])/(samples)
-            allele_freqs[1, :, t+1] = rng.binomial(samples, q_post_sel[1, :])/(samples)
+            # add the changes due to migration/HEs
+            # here, we use the old allele freqs to avoid issues with applying selection
+            # and migration simultaneously
+            q_next[0, :] += e*(allele_freqs[1, :, t] - allele_freqs[0, :, t])
+            q_next[1, :] += e*(allele_freqs[0, :, t] - allele_freqs[1, :, t])
+            
+            allele_freqs[0, :, t+1] = rng.binomial(samples, q_next[0, :])/(samples)
+            allele_freqs[1, :, t+1] = rng.binomial(samples, q_next[1, :])/(samples)
         else:
-            q_post_exchange = allelic_exchange(allele_freqs[0, :], allele_freqs[1, :], e)
-            q_post_sel = allo_selection(q_post_exchange[0, :], q_post_exchange[1, :], s01_vec, s02_vec, 
+            q_next = allo_selection(allele_freqs[0, :], allele_freqs[1, :], s01_vec, s02_vec, 
                                         s10_vec, s11_vec, s12_vec, s20_vec, s21_vec, s22_vec)
-            allele_freqs[0, :] = rng.binomial(samples, q_post_sel[0, :])/(samples)
-            allele_freqs[1, :] = rng.binomial(samples, q_post_sel[1, :])/(samples)
+            
+            q_next[0, :] += e*(allele_freqs[1, :] - allele_freqs[0, :])
+            q_next[1, :] += e*(allele_freqs[0, :] - allele_freqs[1, :])
+
+            allele_freqs[0, :] = rng.binomial(samples, q_next[0, :])/(samples)
+            allele_freqs[1, :] = rng.binomial(samples, q_next[1, :])/(samples)
 
     if plot:
         fig, axs = plt.subplots(3, 1, sharex = 'col', sharey = 'row')
@@ -859,27 +849,24 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
         samples1 = int(2*N*nu1)
         samples2 = int(4*N*nu2) # autos, so 4N
 
-        
-
         if track_all:
-            dip = dip_selection(dip_freqs[:, t], s_dip_vec, h_vec)
-            auto = auto_selection(auto_freqs[:, t], s1_vec, s2_vec, s3_vec, s4_vec)
+            dip_next = dip_selection(dip_freqs[:, t], s_dip_vec, h_vec)
+            auto_next = auto_selection(auto_freqs[:, t], s1_vec, s2_vec, s3_vec, s4_vec)
 
-            dip_final = dip + m_12*(auto - dip)
-            auto_final = auto + m_21*(dip - auto)
+            dip_next += m_12*(auto_freqs[:, t] - dip_freqs[:, t])
+            auto_next += m_21*(dip_freqs[:, t] - auto_freqs[:, t])
             
-            dip_freqs[:, t+1] = rng_dip.binomial(samples1, dip_final)/(samples1)
-            auto_freqs[:, t+1] = rng_auto.binomial(samples2, auto_final)/(samples2)
-
+            dip_freqs[:, t+1] = rng_dip.binomial(samples1, dip_next)/(samples1)
+            auto_freqs[:, t+1] = rng_auto.binomial(samples2, auto_next)/(samples2)
         else:
-            dip = dip_selection(dip_freqs, s_dip_vec, h_vec)
-            auto = auto_selection(auto_freqs, s1_vec, s2_vec, s3_vec, s4_vec)
+            dip_next = dip_selection(dip_freqs, s_dip_vec, h_vec)
+            auto_next = auto_selection(auto_freqs, s1_vec, s2_vec, s3_vec, s4_vec)
 
-            dip_final = dip + m_12*(auto - dip)
-            auto_final = auto + m_21*(dip - auto)
+            dip_next += m_12*(auto_freqs - dip_freqs)
+            auto_next += m_21*(dip_freqs - auto_freqs)
 
-            dip_freqs = rng_dip.binomial(samples1, dip_final)/(samples1)
-            auto_freqs = rng_auto.binomial(samples2, auto_final)/(samples2)
+            dip_freqs = rng_dip.binomial(samples1, dip_next)/(samples1)
+            auto_freqs = rng_auto.binomial(samples2, auto_next)/(samples2)
 
 
     if plot:
@@ -984,24 +971,24 @@ def dip_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0,
         samples2 = int(2*N*nu2) 
 
         if track_all:
-            q1 = dip_selection(pop1_freqs[:, t], s1_vec, h1_vec)
-            q2 = dip_selection(pop2_freqs[:, t], s2_vec, h2_vec)
+            q1_next = dip_selection(pop1_freqs[:, t], s1_vec, h1_vec)
+            q2_next = dip_selection(pop2_freqs[:, t], s2_vec, h2_vec)
 
-            q1_final = q1 + m_12*(q2 - q1)
-            q2_final = q2 + m_21*(q1 - q2)
+            q1_next += m_12*(pop2_freqs[:, t] - pop1_freqs[:, t])
+            q2_next += m_21*(pop1_freqs[:, t] - pop2_freqs[:, t])
             
-            pop1_freqs[:, t+1] = rng.binomial(samples1, q1_final)/(samples1)
-            pop2_freqs[:, t+1] = rng.binomial(samples2, q2_final)/(samples2)
+            pop1_freqs[:, t+1] = rng.binomial(samples1, q1_next)/(samples1)
+            pop2_freqs[:, t+1] = rng.binomial(samples2, q2_next)/(samples2)
 
         else:
-            q1 = dip_selection(pop1_freqs, s1_vec, h1_vec)
-            q2 = dip_selection(pop2_freqs, s2_vec, h2_vec)
+            q1_next = dip_selection(pop1_freqs, s1_vec, h1_vec)
+            q2_next = dip_selection(pop2_freqs, s2_vec, h2_vec)
 
-            q1_final = q1 + m_12*(q2 - q1)
-            q2_final = q2 + m_21*(q1 - q2)
+            q1_next += m_12*(pop2_freqs - pop1_freqs)
+            q2_next += m_21*(pop1_freqs - pop2_freqs)
 
-            pop1_freqs = rng.binomial(samples1, q1_final)/(samples1)
-            pop2_freqs = rng.binomial(samples2, q2_final)/(samples2)
+            pop1_freqs = rng.binomial(samples1, q1_next)/(samples1)
+            pop2_freqs = rng.binomial(samples2, q2_next)/(samples2)
 
 
     if plot:
@@ -1109,24 +1096,24 @@ def auto_auto_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 
         samples2 = int(4*N*nu2) 
 
         if track_all:
-            q1 = auto_selection(pop1_freqs[:, t], s1_1_vec, s1_2_vec, s1_3_vec, s1_4_vec)
-            q2 = auto_selection(pop2_freqs[:, t], s2_1_vec, s2_2_vec, s2_3_vec, s2_4_vec)
+            q1_next = auto_selection(pop1_freqs[:, t], s1_1_vec, s1_2_vec, s1_3_vec, s1_4_vec)
+            q2_next = auto_selection(pop2_freqs[:, t], s2_1_vec, s2_2_vec, s2_3_vec, s2_4_vec)
 
-            q1_final = q1 + m_12*(q2 - q1)
-            q2_final = q2 + m_21*(q1 - q2)
+            q1_next += m_12*(pop2_freqs[:, t] - pop1_freqs[:, t])
+            q2_next += m_21*(pop1_freqs[:, t] - pop2_freqs[:, t])
             
-            pop1_freqs[:, t+1] = rng.binomial(samples1, q1_final)/(samples1)
-            pop2_freqs[:, t+1] = rng.binomial(samples2, q2_final)/(samples2)
+            pop1_freqs[:, t+1] = rng.binomial(samples1, q1_next)/(samples1)
+            pop2_freqs[:, t+1] = rng.binomial(samples2, q2_next)/(samples2)
 
         else:
-            q1 = auto_selection(pop1_freqs, s1_1_vec, s1_2_vec, s1_3_vec, s1_4_vec)
-            q2 = auto_selection(pop2_freqs, s2_1_vec, s2_2_vec, s2_3_vec, s2_4_vec)
+            q1_next = auto_selection(pop1_freqs, s1_1_vec, s1_2_vec, s1_3_vec, s1_4_vec)
+            q2_next = auto_selection(pop2_freqs, s2_1_vec, s2_2_vec, s2_3_vec, s2_4_vec)
 
-            q1_final = q1 + m_12*(q2 - q1)
-            q2_final = q2 + m_21*(q1 - q2)
+            q1_next += m_12*(pop2_freqs - pop1_freqs)
+            q2_next += m_21*(pop1_freqs - pop2_freqs)
 
-            pop1_freqs = rng.binomial(samples1, q1_final)/(samples1)
-            pop2_freqs = rng.binomial(samples2, q2_final)/(samples2)
+            pop1_freqs = rng.binomial(samples1, q1_next)/(samples1)
+            pop2_freqs = rng.binomial(samples2, q2_next)/(samples2)
 
 
     if plot:
@@ -1247,17 +1234,20 @@ def dip_allo_WF(N, T, M12, M21, M13, M31, M23, M32,
 
         nu2 = nu2_f(t/(2*N)) 
         samples2 = int(2*N*nu2)
-        
-        q_dip_post_mig = q_freqs[0, :] + m12*(q_freqs[1, :] - q_freqs[0, :]) + m13*(q_freqs[2, :] - q_freqs[0, :])
-        q_alloa_post_mig = q_freqs[1, :] + m21*(q_freqs[0, :] - q_freqs[1, :]) + m23*(q_freqs[2, :] - q_freqs[1, :])
-        q_allob_post_mig = q_freqs[2, :] + m31*(q_freqs[0, :] - q_freqs[2, :]) + m32*(q_freqs[1, :] - q_freqs[2, :])
-        
-        q_dip_post_sel = dip_selection(q_dip_post_mig, sdip_vec, h_vec)
-        q_allos_post_sel = allo_selection(q_alloa_post_mig, q_allob_post_mig, s01_vec, s02_vec, 
+
+        q_dip_next = dip_selection(q_freqs[0, :], sdip_vec, h_vec)
+        q_allos_next = allo_selection(q_freqs[1, :], q_freqs[2, :], s01_vec, s02_vec,
                                         s10_vec, s11_vec, s12_vec, s20_vec, s21_vec, s22_vec)
-        q_freqs[0, :] = rng.binomial(samples1, q_dip_post_sel)/(samples1)
-        q_freqs[1, :] = rng.binomial(samples2, q_allos_post_sel[0, :])/(samples2)
-        q_freqs[2, :] = rng.binomial(samples2, q_allos_post_sel[1, :])/(samples2)
+        # q_allos_next has shape (2, replicates) with [0, :] indexing the a subgenome 
+        # and [1, :] indexing the b subgenome   
+        
+        q_dip_next += m12*(q_freqs[1, :] - q_freqs[0, :]) + m13*(q_freqs[2, :] - q_freqs[0, :])
+        q_allos_next[0, :] += m21*(q_freqs[0, :] - q_freqs[1, :]) + m23*(q_freqs[2, :] - q_freqs[1, :])
+        q_allos_next[1, :] += m31*(q_freqs[0, :] - q_freqs[2, :]) + m32*(q_freqs[1, :] - q_freqs[2, :])
+        
+        q_freqs[0, :] = rng.binomial(samples1, q_dip_next)/(samples1)
+        q_freqs[1, :] = rng.binomial(samples2, q_allos_next[0, :])/(samples2)
+        q_freqs[2, :] = rng.binomial(samples2, q_allos_next[1, :])/(samples2)
 
     return q_freqs
 
