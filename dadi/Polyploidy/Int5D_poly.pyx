@@ -577,7 +577,7 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         x = xx[ii]
                         y = yy[jj]
                         z = zz[kk]
-                        b_ = bb[ll]
+                        b_ = bb[mm]
             
                         Mfirst = Mfunc5D(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1])
                         Mlast = Mfunc5D(aa[O-1], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1])  
@@ -610,7 +610,7 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         x = xx[ii]
                         y = yy[jj]
                         z = zz[kk]
-                        b_ = bb[ll]
+                        b_ = bb[mm]
             
                         Mfirst = Mfunc5D_auto(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3])
                         Mlast = Mfunc5D_auto(aa[O-1], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3])
@@ -643,7 +643,7 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         x = xx[ii]
                         y = yy[jj]
                         z = zz[kk]
-                        b_ = bb[ll]
+                        b_ = bb[mm]
                         ### Note: the order of migration params and grids being passed here is different 
                         # This is for consistency with the allo cases where the first two dimensions passed
                         # to Mfunc need to be the allo subgenomes and the subgenomes are always passed 
@@ -679,7 +679,7 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         x = xx[ii]
                         y = yy[jj]
                         z = zz[kk]
-                        b_ = bb[ll]
+                        b_ = bb[mm]
                         # see note above about the order of the params passed to Mfuncs here
                         Mfirst = Mfunc5D_allo_a(aa[0], b_,x,y,z, m45,m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
                         Mlast = Mfunc5D_allo_a(aa[O-1], b_,x,y,z, m45,m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])

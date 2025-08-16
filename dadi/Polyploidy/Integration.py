@@ -643,7 +643,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
     # check that at least one of the populations is an allo subgenome,
     # but the pair has not been specified as allo subgenomes of different types
-    if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+    if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
         raise ValueError('Either population 2 and 3 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
@@ -797,7 +797,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
     # check that at least one of the last two populations is an allo subgenome,
     # but the pair has not been specified as allo subgenomes of different types
-    if ({ploidyflag2, ploidyflag3} in allo_types) and ({ploidyflag2, ploidyflag3} != allo_types):
+    if ({ploidyflag2, ploidyflag3} & allo_types) and ({ploidyflag2, ploidyflag3} != allo_types):
         raise ValueError('Either population 2 and 3 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
@@ -969,12 +969,12 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     # that the last two populations form a pair of subgenomes
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
     
-    if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+    if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
         raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
     
-    if ({ploidyflag3, ploidyflag4} in allo_types) and ({ploidyflag3, ploidyflag4} != allo_types):
+    if ({ploidyflag3, ploidyflag4} & allo_types) and ({ploidyflag3, ploidyflag4} != allo_types):
         raise ValueError('Either population 3 or 4 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
@@ -1155,12 +1155,12 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     # this also means that the middle population cannot be allotetraploid
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
     
-    if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+    if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
         raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
     
-    if ({ploidyflag4, ploidyflag5} in allo_types) and ({ploidyflag4, ploidyflag5} != allo_types):
+    if ({ploidyflag4, ploidyflag5} & allo_types) and ({ploidyflag4, ploidyflag5} != allo_types):
         raise ValueError('Either population 4 or 5 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')

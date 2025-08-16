@@ -26859,7 +26859,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]             # <<<<<<<<<<<<<<
  *                         z = zz[kk]
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
 */
             __pyx_t_10 = __pyx_v_jj;
             __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_10 * __pyx_v_yy.strides[0]) )));
@@ -26868,7 +26868,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]
  *                         z = zz[kk]             # <<<<<<<<<<<<<<
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  * 
 */
             __pyx_t_10 = __pyx_v_kk;
@@ -26877,15 +26877,15 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
             /* "Int5D_poly.pyx":580
  *                         y = yy[jj]
  *                         z = zz[kk]
- *                         b_ = bb[ll]             # <<<<<<<<<<<<<<
+ *                         b_ = bb[mm]             # <<<<<<<<<<<<<<
  * 
  *                         Mfirst = Mfunc5D(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1])
 */
-            __pyx_t_10 = __pyx_v_ll;
+            __pyx_t_10 = __pyx_v_mm;
             __pyx_v_b_ = (*((double *) ( /* dim=0 */ (__pyx_v_bb.data + __pyx_t_10 * __pyx_v_bb.strides[0]) )));
 
             /* "Int5D_poly.pyx":582
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  * 
  *                         Mfirst = Mfunc5D(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1])             # <<<<<<<<<<<<<<
  *                         Mlast = Mfunc5D(aa[O-1], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1])
@@ -27281,7 +27281,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]             # <<<<<<<<<<<<<<
  *                         z = zz[kk]
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
 */
             __pyx_t_32 = __pyx_v_jj;
             __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_32 * __pyx_v_yy.strides[0]) )));
@@ -27290,7 +27290,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]
  *                         z = zz[kk]             # <<<<<<<<<<<<<<
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  * 
 */
             __pyx_t_32 = __pyx_v_kk;
@@ -27299,15 +27299,15 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
             /* "Int5D_poly.pyx":613
  *                         y = yy[jj]
  *                         z = zz[kk]
- *                         b_ = bb[ll]             # <<<<<<<<<<<<<<
+ *                         b_ = bb[mm]             # <<<<<<<<<<<<<<
  * 
  *                         Mfirst = Mfunc5D_auto(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3])
 */
-            __pyx_t_32 = __pyx_v_ll;
+            __pyx_t_32 = __pyx_v_mm;
             __pyx_v_b_ = (*((double *) ( /* dim=0 */ (__pyx_v_bb.data + __pyx_t_32 * __pyx_v_bb.strides[0]) )));
 
             /* "Int5D_poly.pyx":615
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  * 
  *                         Mfirst = Mfunc5D_auto(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
  *                         Mlast = Mfunc5D_auto(aa[O-1], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3])
@@ -27709,7 +27709,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]             # <<<<<<<<<<<<<<
  *                         z = zz[kk]
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
 */
             __pyx_t_28 = __pyx_v_jj;
             __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_28 * __pyx_v_yy.strides[0]) )));
@@ -27718,7 +27718,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]
  *                         z = zz[kk]             # <<<<<<<<<<<<<<
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  *                         ### Note: the order of migration params and grids being passed here is different
 */
             __pyx_t_28 = __pyx_v_kk;
@@ -27727,11 +27727,11 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
             /* "Int5D_poly.pyx":646
  *                         y = yy[jj]
  *                         z = zz[kk]
- *                         b_ = bb[ll]             # <<<<<<<<<<<<<<
+ *                         b_ = bb[mm]             # <<<<<<<<<<<<<<
  *                         ### Note: the order of migration params and grids being passed here is different
  *                         # This is for consistency with the allo cases where the first two dimensions passed
 */
-            __pyx_t_28 = __pyx_v_ll;
+            __pyx_t_28 = __pyx_v_mm;
             __pyx_v_b_ = (*((double *) ( /* dim=0 */ (__pyx_v_bb.data + __pyx_t_28 * __pyx_v_bb.strides[0]) )));
 
             /* "Int5D_poly.pyx":651
@@ -28149,7 +28149,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]             # <<<<<<<<<<<<<<
  *                         z = zz[kk]
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
 */
             __pyx_t_29 = __pyx_v_jj;
             __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) )));
@@ -28158,7 +28158,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
  *                         x = xx[ii]
  *                         y = yy[jj]
  *                         z = zz[kk]             # <<<<<<<<<<<<<<
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  *                         # see note above about the order of the params passed to Mfuncs here
 */
             __pyx_t_29 = __pyx_v_kk;
@@ -28167,15 +28167,15 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Da(__Pyx_memviewslice __pyx_v_phi, 
             /* "Int5D_poly.pyx":682
  *                         y = yy[jj]
  *                         z = zz[kk]
- *                         b_ = bb[ll]             # <<<<<<<<<<<<<<
+ *                         b_ = bb[mm]             # <<<<<<<<<<<<<<
  *                         # see note above about the order of the params passed to Mfuncs here
  *                         Mfirst = Mfunc5D_allo_a(aa[0], b_,x,y,z, m45,m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
 */
-            __pyx_t_29 = __pyx_v_ll;
+            __pyx_t_29 = __pyx_v_mm;
             __pyx_v_b_ = (*((double *) ( /* dim=0 */ (__pyx_v_bb.data + __pyx_t_29 * __pyx_v_bb.strides[0]) )));
 
             /* "Int5D_poly.pyx":684
- *                         b_ = bb[ll]
+ *                         b_ = bb[mm]
  *                         # see note above about the order of the params passed to Mfuncs here
  *                         Mfirst = Mfunc5D_allo_a(aa[0], b_,x,y,z, m45,m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
  *                         Mlast = Mfunc5D_allo_a(aa[O-1], b_,x,y,z, m45,m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
