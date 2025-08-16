@@ -9,44 +9,44 @@ double Vfunc_tetra(double x, double nu){
 }
 // Use Horner's method here to evaluate the polynomial is an easy optimization
 double Mfunc1D_auto(double x, double gam1, double gam2, double gam3, double gam4){
-    double poly = ((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
-                  (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
-                  (-6.*gam1 + 3.*gam2) * x +
-                  gam1;
+    double poly = (((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
+                    (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
+                    (-6.*gam1 + 3.*gam2)) * x +
+                    gam1;
     return x * (1. - x) * 2. * poly;
 }
 double Mfunc2D_auto(double x, double y, double mxy, 
                     double gam1, double gam2, double gam3, double gam4){
-    double poly = ((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
-                  (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
-                  (-6.*gam1 + 3.*gam2) * x + 
-                  gam1;
+    double poly = (((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
+                    (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
+                    (-6.*gam1 + 3.*gam2)) * x +
+                    gam1;
     return mxy * (y-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc3D_auto(double x, double y, double z, double mxy, double mxz, 
                     double gam1, double gam2, double gam3, double gam4){
-    double poly = ((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
-                  (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
-                  (-6.*gam1 + 3.*gam2) * x + 
-                  gam1;
+    double poly = (((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
+                    (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
+                    (-6.*gam1 + 3.*gam2)) * x +
+                    gam1;
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc4D_auto(double x, double y, double z, double a,
                     double mxy, double mxz, double mxa,
                     double gam1, double gam2, double gam3, double gam4){
-    double poly = ((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
-                  (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
-                  (-6.*gam1 + 3.*gam2) * x + 
-                  gam1;
+    double poly = (((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
+                    (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
+                    (-6.*gam1 + 3.*gam2)) * x +
+                    gam1;
     return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc5D_auto(double x, double y, double z, double a, double b,
                     double mxy, double mxz, double mxa, double mxb,
                     double gam1, double gam2, double gam3, double gam4){
-    double poly = ((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
-                  (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
-                  (-6.*gam1 + 3.*gam2) * x + 
-                  gam1;
+    double poly = (((-4.*gam1 + 6.*gam2 - 4.*gam3 + gam4) * x +
+                    (9.*gam1 - 9.*gam2 + 3.*gam3)) * x +
+                    (-6.*gam1 + 3.*gam2)) * x +
+                    gam1;
     return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
 }
 
@@ -72,11 +72,11 @@ double Mfunc2D_allo_a(double x, double y, double exy,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g10 + (-2*g10 + g20)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g01 - g02 + g10 -2*g11 + g12)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy;
+    double poly = g10 + (-2.*g10 + g20)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g01 - g02 + g10 -2.*g11 + g12)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g01 + 4.*g10 -4.*g11 -2.*g20 +2.*g21)*xy;
     return exy * (y-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc2D_allo_b(double x, double y, double exy, 
@@ -88,11 +88,11 @@ double Mfunc2D_allo_b(double x, double y, double exy,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g01 + (-2*g01 + g02)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g10 - g20 + g01 -2*g11 + g21)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy;
+    double poly = g01 + (-2.*g01 + g02)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g10 - g20 + g01 -2.*g11 + g21)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g10 + 4.*g01 -4.*g11 -2.*g02 +2.*g12)*xy;
     return exy * (y-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc3D_allo_a(double x, double y, double z, double exy, double mxz, 
@@ -104,11 +104,11 @@ double Mfunc3D_allo_a(double x, double y, double z, double exy, double mxz,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g10 + (-2*g10 + g20)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g01 - g02 + g10 -2*g11 + g12)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy;
+    double poly = g10 + (-2.*g10 + g20)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g01 - g02 + g10 -2.*g11 + g12)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g01 + 4.*g10 -4.*g11 -2.*g20 +2.*g21)*xy;
     return exy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc3D_allo_b(double x, double y, double z, double exy, double mxz, 
@@ -120,11 +120,11 @@ double Mfunc3D_allo_b(double x, double y, double z, double exy, double mxz,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g01 + (-2*g01 + g02)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g10 - g20 + g01 -2*g11 + g21)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy;
+    double poly = g01 + (-2.*g01 + g02)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g10 - g20 + g01 -2.*g11 + g21)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g10 + 4.*g01 -4.*g11 -2.*g02 +2.*g12)*xy;
     return exy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc4D_allo_a(double x, double y, double z, double a,
@@ -137,11 +137,11 @@ double Mfunc4D_allo_a(double x, double y, double z, double a,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g10 + (-2*g10 + g20)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g01 - g02 + g10 -2*g11 + g12)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy;
+    double poly = g10 + (-2.*g10 + g20)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g01 - g02 + g10 -2.*g11 + g12)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g01 + 4.*g10 -4.*g11 -2.*g20 +2.*g21)*xy;
     return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc4D_allo_b(double x, double y, double z, double a,
@@ -154,11 +154,11 @@ double Mfunc4D_allo_b(double x, double y, double z, double a,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g01 + (-2*g01 + g02)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g10 - g20 + g01 -2*g11 + g21)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy;
+    double poly = g01 + (-2.*g01 + g02)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g10 - g20 + g01 -2.*g11 + g21)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g10 + 4.*g01 -4.*g11 -2.*g02 +2.*g12)*xy;
     return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc5D_allo_a(double x, double y, double z, double a, double b,
@@ -171,11 +171,11 @@ double Mfunc5D_allo_a(double x, double y, double z, double a, double b,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g10 + (-2*g10 + g20)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g01 - g02 + g10 -2*g11 + g12)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy;
+    double poly = g10 + (-2.*g10 + g20)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g01 - g02 + g10 -2.*g11 + g12)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g01 + 4.*g10 -4.*g11 -2.*g20 +2.*g21)*xy;
     return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
 }
 double Mfunc5D_allo_b(double x, double y, double z, double a, double b,
@@ -188,10 +188,67 @@ double Mfunc5D_allo_b(double x, double y, double z, double a, double b,
     double xy = x*y;
     double yy = y*y;
     double xyy = xy*y;
-    double poly = g01 + (-2*g01 + g02)*x + 
-                  (-2*g01 - 2*g10 + 2*g11)*y +
-                  (2*g10 - g20 + g01 -2*g11 + g21)*yy +
-                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + 
-                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy;
+    double poly = g01 + (-2.*g01 + g02)*x + 
+                  (-2.*g01 - 2.*g10 + 2.*g11)*y +
+                  (2.*g10 - g20 + g01 -2.*g11 + g21)*yy +
+                  (-2.*g01 + g02 - 2.*g10 + 4.*g11 -2.*g12 + g20 -2.*g21 + g22)*xyy + 
+                  (2.*g10 + 4.*g01 -4.*g11 -2.*g02 +2.*g12)*xy;
     return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
+}
+/*
+* AUTOHEXAPLOIDS POP GEN FUNCTIONS 
+* 
+* Note that gi refers to gamma_i (not a gamete frequency!)
+*/
+double Vfunc_hex(double x, double nu){
+    return 1./(3.*nu) * x*(1.-x);
+}
+double Mfunc1D_autohex(double x, double g1, double g2, double g3, double g4, double g5, double g6){
+    double poly = (((((-6.*g1 + 15.*g2 - 20.*g3 + 15.*g4 - 6.*g5 + g6) * x +
+                      (25.*g1 - 50.*g2 + 50.*g3 - 25.*g4 + 5.*g5)) * x +
+                      (-40.*g1 + 60.*g2 - 40.*g3 + 10.*g4)) * x +
+                      (30.*g1 - 30.*g2 + 10.*g3)) * x +
+                      (-10.*g1 + 5.*g2)) * x +
+                      g1;
+    return x * (1. - x) * 2. * poly;
+}
+double Mfunc2D_autohex(double x, double y, double mxy, double g1, double g2, double g3, double g4, double g5, double g6){
+    double poly = (((((-6.*g1 + 15.*g2 - 20.*g3 + 15.*g4 - 6.*g5 + g6) * x +
+                      (25.*g1 - 50.*g2 + 50.*g3 - 25.*g4 + 5.*g5)) * x +
+                      (-40.*g1 + 60.*g2 - 40.*g3 + 10.*g4)) * x +
+                      (30.*g1 - 30.*g2 + 10.*g3)) * x +
+                      (-10.*g1 + 5.*g2)) * x +
+                      g1;
+    return mxy * (y-x) + x * (1. - x) * 2. * poly;
+}
+double Mfunc3D_autohex(double x, double y, double z, double mxy, double mxz, 
+                   double g1, double g2, double g3, double g4, double g5, double g6){
+    double poly = (((((-6.*g1 + 15.*g2 - 20.*g3 + 15.*g4 - 6.*g5 + g6) * x +
+                      (25.*g1 - 50.*g2 + 50.*g3 - 25.*g4 + 5.*g5)) * x +
+                      (-40.*g1 + 60.*g2 - 40.*g3 + 10.*g4)) * x +
+                      (30.*g1 - 30.*g2 + 10.*g3)) * x +
+                      (-10.*g1 + 5.*g2)) * x +
+                      g1;
+    return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
+}
+double Mfunc4D_autohex(double x, double y, double z, double a, double mxy, double mxz, double mxa, 
+                   double g1, double g2, double g3, double g4, double g5, double g6){
+    double poly = (((((-6.*g1 + 15.*g2 - 20.*g3 + 15.*g4 - 6.*g5 + g6) * x +
+                      (25.*g1 - 50.*g2 + 50.*g3 - 25.*g4 + 5.*g5)) * x +
+                      (-40.*g1 + 60.*g2 - 40.*g3 + 10.*g4)) * x +
+                      (30.*g1 - 30.*g2 + 10.*g3)) * x +
+                      (-10.*g1 + 5.*g2)) * x +
+                      g1;
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
+}
+double Mfunc5D_autohex(double x, double y, double z, double a, double b,
+                   double mxy, double mxz, double mxa, double mxb,
+                   double g1, double g2, double g3, double g4, double g5, double g6){
+    double poly = (((((-6.*g1 + 15.*g2 - 20.*g3 + 15.*g4 - 6.*g5 + g6) * x +
+                      (25.*g1 - 50.*g2 + 50.*g3 - 25.*g4 + 5.*g5)) * x +
+                      (-40.*g1 + 60.*g2 - 40.*g3 + 10.*g4)) * x +
+                      (30.*g1 - 30.*g2 + 10.*g3)) * x +
+                      (-10.*g1 + 5.*g2)) * x +
+                      g1;
+    return mxy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
 }

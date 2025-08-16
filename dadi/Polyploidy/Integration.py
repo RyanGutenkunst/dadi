@@ -48,6 +48,8 @@ def _compute_dt(dx, nu, ms, sel, ploidy):
         return _compute_dt_allo_a(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
     elif ploidy[3]:
         return _compute_dt_allo_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
+    elif ploidy[4]:
+        return _compute_dt_autohex(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5])
 
 def _compute_dt_dip(dx, nu, ms, gamma, h):
     """
@@ -119,7 +121,8 @@ def _compute_dt_auto(dx, nu, ms, gam1, gam2, gam3, gam4):
                                                   (9*gam1 - 9*gam2 + 3*gam3)) * .75 +
                                                   (-6*gam1 + 3*gam2)) * .75 + 
                                                    gam1))
-                    ))
+                    )
+                )
     if maxVM > 0:
         dt = timescale_factor / maxVM
     else:
@@ -208,6 +211,54 @@ def _compute_dt_allo_b(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
                          % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22))
     return dt
 
+def _compute_dt_autohex(dx, nu, ms, g1, g2, g3, g4, g5, g6):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autohexaploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+    
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly or analytically where the maximum is,
+    # but for the autohexaploid selection function it seems to be close-ish 
+    # to x = 0.25, 0.5, or 0.75, so we will use those as an approximation.
+
+    maxVM = max(1/(6*nu), sum(ms), \
+                2*max(  0.25*(1-0.25)*numpy.abs((((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * 0.25 +
+                                                (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * 0.25 +
+                                                (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * 0.25 +
+                                                (30*g1 - 30*g2 + 10*g3)) * 0.25 +
+                                                (-10*g1 + 5*g2)) * 0.25 + g1), 
+                        0.5*(1-0.5)*numpy.abs((((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * 0.5 +
+                                                (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * 0.5 +
+                                                (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * 0.5 +
+                                                (30*g1 - 30*g2 + 10*g3)) * 0.5 +
+                                                (-10*g1 + 5*g2)) * 0.5 + g1), 
+                        0.75*(1-0.75)*numpy.abs((((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * 0.75 +
+                                                (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * 0.75 +
+                                                (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * 0.75 +
+                                                (30*g1 - 30*g2 + 10*g3)) * 0.75 +
+                                                (-10*g1 + 5*g2)) * 0.75 + g1) 
+                      )
+                )
+                
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma1=%f, gamma2=%f, gamma3=%f,'
+                         'gamma4=%f, gamma5=%f, gamma6=%f' 
+                         % (nu, str(ms), g1, g2, g3, g4, g5, g6))
+    return dt
+
 ### ==========================================================================
 ### INJECT MUTATIONS FUNCTIONS FOR ALL PLOIDIES + DIMENSIONS
 ### ==========================================================================
@@ -217,10 +268,12 @@ def _inject_mutations_1D(phi, dt, xx, theta0, ploidy):
     """
     Inject novel mutations for a timestep for diploids.
     """
-    if ploidy[0]:
+    if ploidy[0]: # if diploid
         phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
-    elif ploidy[1]:
-        phi[1] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * xx[1])
+    elif ploidy[1]: # if autotetraploid
+        phi[1] += dt/xx[1] * theta0/4 * 2/(xx[2] - xx[0])
+    elif ploidy[4]: # if autohexaploid
+        phi[1] += dt/xx[1] * theta0/6 * 2/(xx[2] - xx[0])
     return phi
 
 def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
@@ -229,15 +282,19 @@ def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
     Inject novel mutations for a timestep.
     """
     if not frozen1 and not nomut1:
-        if not ploidy1[1]: # this reads as if not autotetraploid
+        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
             phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
-        else:
+        elif not ploidy1[4]: # if not hexaploid
             phi[1,0] += dt/xx[1] * theta0/4 * 4/((xx[2] - xx[0]) * yy[1])
+        elif ploidy1[4]:
+            phi[1,0] += dt/xx[1] * theta0/6 * 4/((xx[2] - xx[0]) * yy[1])
     if not frozen2 and not nomut2:
-        if not ploidy2[1]:
+        if not ploidy2[1] and not ploidy2[4]: 
             phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
-        else:
+        elif not ploidy2[4]:
             phi[0,1] += dt/yy[1] * theta0/4 * 4/((yy[2] - yy[0]) * xx[1])
+        elif ploidy2[4]:
+            phi[0,1] += dt/yy[1] * theta0/6 * 4/((yy[2] - yy[0]) * xx[1])
     return phi
 
 def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2,
@@ -482,6 +539,35 @@ class PloidyType(IntEnum):
                                  '2. 8 keys: gamma, h01, h02, h10, h11, h12, h20, h21 \n' 
                                  '3. 8 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22.')
         
+        elif self == PloidyType.AUTOHEX:
+            keys_dominance = ['h1', 'h2', 'h3', 'h4', 'h5', 'gamma']
+            keys_gammas = ['gamma1', 'gamma2', 'gamma3', 'gamma4', 'gamma5', 'gamma6']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma / 6    
+                sel_params[1] = base_gamma / 3     
+                sel_params[2] = base_gamma / 2 
+                sel_params[3] = 2 * base_gamma / 3
+                sel_params[4] = 5 * base_gamma / 6     
+                sel_params[5] = base_gamma
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 6:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma * sel_dict['h1']     
+                sel_params[1] = base_gamma * sel_dict['h2']     
+                sel_params[2] = base_gamma * sel_dict['h3'] 
+                sel_params[3] = base_gamma * sel_dict['h4'] 
+                sel_params[4] = base_gamma * sel_dict['h5'] 
+                sel_params[5] = base_gamma
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 6:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For an AUTOHEX ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 6 keys: gamma, h1, h2, h3, h4, h5 \n'
+                                 '3. 6 keys: gamma1, gamma2, gamma3, gamma4, gamma5, gamma6.')
         return sel_params
 
 ### ==========================================================================
@@ -529,7 +615,7 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
     # *only* for the 1 pop case is ploidy a vector of length 2
     # e.g. [0, 1] specifies the current population as autotetraploid
     # this is more convenient than calling if ploidyflag == PloidyType.xxx
-    ploidy = numpy.zeros(2, dtype=numpy.intc)
+    ploidy = numpy.zeros(10, dtype=numpy.intc)
     ploidy[ploidyflag] = 1
     # unpack the selection parameters from dict to list
     sel = ploidyflag.pack_sel_params(sel_dict)
@@ -540,7 +626,8 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
 
     # for convenience, we'll keep the sel_f as a vector of functions
     # this avoids explicitly writing all of the selection parameters for all of the ploidy types
-    # and avoids many if statements which might slow things down
+    # and avoids some branching which might slow things down
+    # the trade off is that sel_f always has 26 elements, even for a diploid with only 2 selection params
     sel_f = MiscPoly.ensure_1arg_func_vectorized(sel)
     nu_f = Misc.ensure_1arg_func(nu)
     theta0_f = Misc.ensure_1arg_func(theta0)
@@ -645,8 +732,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
 
     # create ploidy vectors with C integers
-    ploidy1 = numpy.zeros(4, numpy.intc)
-    ploidy2 = numpy.zeros(4, numpy.intc)
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
     ploidy1[ploidyflag1] = 1
     ploidy2[ploidyflag2] = 1
 
@@ -1317,22 +1404,19 @@ def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
 def _Vfunc_tetra(x, nu):
     return 1./nu * x*(1-x) / 2.
 def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
-    poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
-            (9*gam1 - 9*gam2 + 3*gam3)) * x +
-           (-6*gam1 + 3*gam2)) * x + 
-           gam1)
+    poly =  (((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+              (9*gam1 - 9*gam2 + 3*gam3)) * x +
+              (-6*gam1 + 3*gam2)) * x + gam1
     return x * (1 - x) * 2 * poly
 def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
-    poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
-            (9*gam1 - 9*gam2 + 3*gam3)) * x +
-           (-6*gam1 + 3*gam2)) * x + 
-           gam1)
+    poly =  (((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+              (9*gam1 - 9*gam2 + 3*gam3)) * x +
+              (-6*gam1 + 3*gam2)) * x + gam1
     return mxy * (y-x) + x*(1-x) * 2 * poly
 def _Mfunc3D_auto(x, y, z, mxy, mxz, gam1, gam2, gam3, gam4):
-    poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
-            (9*gam1 - 9*gam2 + 3*gam3)) * x +
-           (-6*gam1 + 3*gam2)) * x + 
-           gam1)
+    poly =  (((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+              (9*gam1 - 9*gam2 + 3*gam3)) * x +
+              (-6*gam1 + 3*gam2)) * x + gam1
     return mxy * (y-x) + mxz * (z-x) + x*(1-x) * 2 * poly 
 # allotetraploid
 # here, g_ij refers to gamma_ij (not a gamete frequency!)
@@ -1383,6 +1467,30 @@ def _Mfunc3D_allo_b( x,  y, z, mxy, mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g2
                   (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
                   (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
+# autohexaploid
+def _Vfunc_hex(x, nu):
+    return 1./nu * x*(1-x) / 3.
+def _Mfunc1D_autohex(x, g1, g2, g3, g4, g5, g6):
+    poly = (((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * x +
+               (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * x +
+               (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * x +
+               (30*g1 - 30*g2 + 10*g3)) * x +
+               (-10*g1 + 5*g2)) * x + g1
+    return x * (1 - x) * 2 * poly
+def _Mfunc2D_autohex(x, y, mxy, g1, g2, g3, g4, g5, g6):
+    poly = (((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * x +
+               (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * x +
+               (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * x +
+               (30*g1 - 30*g2 + 10*g3)) * x +
+               (-10*g1 + 5*g2)) * x + g1
+    return mxy * (y-x) + x * (1 - x) * 2 * poly
+def _Mfunc3D_autohex(x, y, z, mxy, mxz, g1, g2, g3, g4, g5, g6):
+    poly = (((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * x +
+               (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * x +
+               (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * x +
+               (30*g1 - 30*g2 + 10*g3)) * x +
+               (-10*g1 + 5*g2)) * x + g1
+    return mxy * (y-x) + mxz * (z-x) + x * (1 - x) * 2 * poly
 
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
@@ -1445,12 +1553,18 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
         V = _Vfunc(xx, nu)
         VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.5 # term for BCs, = (1-2x)/k eval. at x=0/x=1 for a k-ploid 
-    else:
+    elif ploidy[1]:
         M = _Mfunc1D_auto(xx, s[0], s[1], s[2], s[3])
         MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3])
         V = _Vfunc_tetra(xx, nu)
         VInt = _Vfunc_tetra((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.25 
+    elif ploidy[4]:
+        M = _Mfunc1D_autohex(xx, s[0], s[1], s[2], s[3], s[4], s[5])
+        MInt = _Mfunc1D_autohex((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3], s[4], s[5])
+        V = _Vfunc_hex(xx, nu)
+        VInt = _Vfunc_hex((xx[:-1] + xx[1:])/2, nu)
+        bc_factor = 1/6
 
     delj = _compute_delj(dx, MInt, VInt)
 
@@ -1529,6 +1643,13 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         MxInt = _Mfunc2D_allo_b((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5 
+    elif ploidy1[4]:
+        Vx = _Vfunc_hex(xx, nu1)
+        VxInt = _Vfunc_hex((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_autohex(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        MxInt = _Mfunc2D_autohex((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 1/6
     # The nuax's here broadcast the our various arrays to have the proper shape
     # to fit into ax,bx,cx
     ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
@@ -1574,6 +1695,13 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         MyInt = _Mfunc2D_allo_b((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 0.5 
+    elif ploidy2[4]:
+        Vy = _Vfunc_hex(yy, nu2)
+        VyInt = _Vfunc_hex((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_autohex(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        MyInt = _Mfunc2D_autohex((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 1/6
     # The nuax's here broadcast the our various arrays to have the proper shape
     # to fit into ax,bx,cx
     ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]

@@ -37,6 +37,7 @@ cdef extern from "integration_shared_poly.h":
     double Mfunc5D_auto(double x, double y, double z, double a, double b,
                         double mxy, double mxz, double mxa, double mxb,
                         double gam1, double gam2, double gam3, double gam4)
+
     double Mfunc2D_allo_a(double x, double y, double exy, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
     double Mfunc2D_allo_b(double x, double y, double exy, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
     double Mfunc3D_allo_a(double x, double y, double z, double exy, double mxz, 
@@ -61,6 +62,17 @@ cdef extern from "integration_shared_poly.h":
                           double exy, double mxz, double mxa, double mxb,
                           double g01, double g02, double g10, double g11, 
                           double g12, double g20, double g21, double g22)
+
+    double Vfunc_hex(double x, double nu)
+    double Mfunc1D_autohex(double x, double g1, double g2, double g3, double g4, double g5, double g6)
+    double Mfunc2D_autohex(double x, double y, double mxy, double g1, double g2, double g3, double g4, double g5, double g6)
+    double Mfunc3D_autohex(double x, double y, double z, double mxy, double mxz, 
+                       double g1, double g2, double g3, double g4, double g5, double g6)
+    double Mfunc4D_autohex(double x, double y, double z, double a, double mxy, double mxz, double mxa, 
+                       double g1, double g2, double g3, double g4, double g5, double g6)
+    double Mfunc5D_autohex(double x, double y, double z, double a, double b,
+                       double mxy, double mxz, double mxa, double mxb,  
+                       double g1, double g2, double g3, double g4, double g5, double g6)
     
 # =========================================================
 # C TRIDIAGONAL MATRIX SOLVER
@@ -103,6 +115,7 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
     ### specify ploidy of the x direction
     cdef double is_diploid = ploidy[0]
     cdef double is_auto = ploidy[1]
+    cdef double is_autohex = ploidy[4]
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -149,6 +162,26 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
         if Mlast >= 0:
             b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]
 
+    if is_autohex:
+        Mfirst = Mfunc1D_autohex(xx[0], s[0], s[1], s[2], s[3], s[4], s[5])
+        Mlast = Mfunc1D_autohex(xx[L-1], s[0], s[1], s[2], s[3], s[4], s[5])
+    
+        for ii in range(0, L):
+            V[ii] = Vfunc_hex(xx[ii], nu)
+    
+        for ii in range(0, L-1):
+            MInt[ii] = Mfunc1D_autohex(xInt[ii], s[0], s[1], s[2], s[3], s[4], s[5])
+            VInt[ii] = Vfunc_hex(xInt[ii], nu)
+
+        compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+
+        compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+    
+        if Mfirst <= 0:
+            b[0] +=(1/(6*nu) - Mfirst)*2/dx[0]
+        if Mlast >= 0:
+            b[L-1] += -(-1/(6*nu) - Mlast)*2/dx[L-2]
+
     # calculate the RHS of the tridiagonal problem
     for ii in range(0, L):
         r[ii] = phi[ii]/dt
@@ -193,6 +226,7 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
     cdef int is_auto = ploidy1[1]
     cdef int is_alloa = ploidy1[2]
     cdef int is_allob = ploidy1[3]
+    cdef int is_autohex = ploidy1[4]
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -212,10 +246,10 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
         for jj in range(M):
             y = yy[jj]
 
-            Mfirst = Mfunc2D(xx[0], y, m12, s1[0], s1[1])
-            Mlast = Mfunc2D(xx[L-1], y, m12, s1[0], s1[1])
+            Mfirst = Mfunc2D(xx[0], y, m12, s1[0],s1[1])
+            Mlast = Mfunc2D(xx[L-1], y, m12, s1[0],s1[1])
             for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0], s1[1]) 
+                MInt[ii] = Mfunc2D(xInt[ii], y, m12, s1[0],s1[1]) 
             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
             if y==0 and Mfirst <= 0:
@@ -239,10 +273,10 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
         for jj in range(M):
             y = yy[jj]
 
-            Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3])
-            Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3])   
+            Mfirst = Mfunc2D_auto(xx[0], y, m12, s1[0],s1[1],s1[2],s1[3])
+            Mlast = Mfunc2D_auto(xx[L-1], y, m12, s1[0],s1[1],s1[2],s1[3])   
             for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3]) 
+                MInt[ii] = Mfunc2D_auto(xInt[ii], y, m12, s1[0],s1[1],s1[2],s1[3]) 
             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
             if y==0 and Mfirst <= 0:
@@ -266,10 +300,10 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
         for jj in range(M):
             y = yy[jj]
 
-            Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
-            Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])   
+            Mfirst = Mfunc2D_allo_a(xx[0], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+            Mlast = Mfunc2D_allo_a(xx[L-1], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])   
             for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7]) 
+                MInt[ii] = Mfunc2D_allo_a(xInt[ii], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7]) 
             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
             if y==0 and Mfirst <= 0:
@@ -293,16 +327,43 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
         for jj in range(M):
             y = yy[jj]
 
-            Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])
-            Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7])   
+            Mfirst = Mfunc2D_allo_b(xx[0], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+            Mlast = Mfunc2D_allo_b(xx[L-1], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])   
             for ii in range(0, L-1):
-                MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0], s1[1], s1[2], s1[3], s1[4], s1[5], s1[6], s1[7]) 
+                MInt[ii] = Mfunc2D_allo_b(xInt[ii], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7]) 
             compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
             compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
             if y==0 and Mfirst <= 0:
                 b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
             if y==1 and Mlast >= 0:
                 b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+
+            for ii in range(0, L):
+                r[ii] = phi[ii, jj]/dt
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+            for ii in range(0, L):
+                phi[ii, jj] = temp[ii]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for ii in range(0, L):
+            V[ii] = Vfunc_hex(xx[ii], nu1)
+        for ii in range(0, L-1):
+            VInt[ii] = Vfunc_hex(xInt[ii], nu1)
+        # loop through y values
+        for jj in range(M):
+            y = yy[jj]
+
+            Mfirst = Mfunc2D_autohex(xx[0], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+            Mlast = Mfunc2D_autohex(xx[L-1], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+            for ii in range(0, L-1):
+                MInt[ii] = Mfunc2D_autohex(xInt[ii], y, m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5]) 
+            compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+            compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+            if y==0 and Mfirst <= 0:
+                b[0] += (1/(6*nu1) - Mfirst)*2/dx[0] 
+            if y==1 and Mlast >= 0:
+                b[L-1] += -(-1/(6*nu1) - Mlast)*2/dx[L-2]
 
             for ii in range(0, L):
                 r[ii] = phi[ii, jj]/dt
@@ -346,6 +407,7 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     cdef int is_auto = ploidy2[1]
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
+    cdef int is_autohex = ploidy2[4]
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -365,10 +427,10 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
         for ii in range(L):
             x = xx[ii]
 
-            Mfirst = Mfunc2D(yy[0], x, m21, s2[0], s2[1])
-            Mlast = Mfunc2D(yy[M-1], x, m21, s2[0], s2[1])
+            Mfirst = Mfunc2D(yy[0], x, m21, s2[0],s2[1])
+            Mlast = Mfunc2D(yy[M-1], x, m21, s2[0],s2[1])
             for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0], s2[1]) 
+                MInt[jj] = Mfunc2D(yInt[jj], x, m21, s2[0],s2[1]) 
             compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
@@ -392,10 +454,10 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
         for ii in range(L):
             x = xx[ii]
 
-            Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3])
-            Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3])
+            Mfirst = Mfunc2D_auto(yy[0], x, m21, s2[0],s2[1],s2[2],s2[3])
+            Mlast = Mfunc2D_auto(yy[M-1], x, m21, s2[0],s2[1],s2[2],s2[3])
             for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3])
+                MInt[jj] = Mfunc2D_auto(yInt[jj], x, m21, s2[0],s2[1],s2[2],s2[3])
             compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
@@ -419,10 +481,10 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
         for ii in range(L):
             x = xx[ii]
 
-            Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+            Mfirst = Mfunc2D_allo_a(yy[0], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+            Mlast = Mfunc2D_allo_a(yy[M-1], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
             for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7]) 
+                MInt[jj] = Mfunc2D_allo_a(yInt[jj], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7]) 
             compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
@@ -446,16 +508,43 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
         for ii in range(L):
             x = xx[ii]
 
-            Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
-            Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+            Mfirst = Mfunc2D_allo_b(yy[0], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+            Mlast = Mfunc2D_allo_b(yy[M-1], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
             for jj in range(0, M-1):
-                MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0], s2[1], s2[2], s2[3], s2[4], s2[5], s2[6], s2[7])
+                MInt[jj] = Mfunc2D_allo_b(yInt[jj], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
             compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
             compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
             if x==0 and Mfirst <= 0:
                 b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
             if x==1 and Mlast >= 0:
                 b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
+
+            for jj in range(0, M):
+                r[jj] = phi[ii, jj]/dt
+            tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+            for jj in range(0, M):
+                phi[ii, jj] = temp[jj]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for jj in range(0, M):
+            V[jj] = Vfunc_hex(yy[jj], nu2)
+        for jj in range(0, M-1):
+            VInt[jj] = Vfunc_hex(yInt[jj], nu2)
+        # loop through x values
+        for ii in range(L):
+            x = xx[ii]
+
+            Mfirst = Mfunc2D_autohex(yy[0], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+            Mlast = Mfunc2D_autohex(yy[M-1], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+            for jj in range(0, M-1):
+                MInt[jj] = Mfunc2D_autohex(yInt[jj], x, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+            compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+            compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
+            if x==0 and Mfirst <= 0:
+                b[0] += (1/(6*nu2) - Mfirst)*2/dy[0] 
+            if x==1 and Mlast >= 0:
+                b[M-1] += -(-1/(6*nu2) - Mlast)*2/dy[M-2]
 
             for jj in range(0, M):
                 r[jj] = phi[ii, jj]/dt
