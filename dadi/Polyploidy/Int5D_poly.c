@@ -20046,7 +20046,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             __pyx_t_33 = (__pyx_v_y == 0.0);
             if (__pyx_t_33) {
@@ -20081,7 +20081,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 */
               __pyx_t_32 = 0;
@@ -20093,14 +20093,14 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             }
 
             /* "Int5D_poly.pyx":121
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20122,7 +20122,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               __pyx_t_11 = __pyx_t_33;
               goto __pyx_L25_bool_binop_done;
             }
-            __pyx_t_33 = (__pyx_v_b_ == 0.0);
+            __pyx_t_33 = (__pyx_v_b_ == 1.0);
             if (__pyx_t_33) {
             } else {
               __pyx_t_11 = __pyx_t_33;
@@ -20135,7 +20135,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
 
               /* "Int5D_poly.pyx":122
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *                         for ii in range(0, L):
@@ -20147,7 +20147,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               /* "Int5D_poly.pyx":121
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20474,7 +20474,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             __pyx_t_33 = (__pyx_v_y == 0.0);
             if (__pyx_t_33) {
@@ -20509,7 +20509,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
 */
               __pyx_t_28 = 0;
@@ -20521,14 +20521,14 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             }
 
             /* "Int5D_poly.pyx":154
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20550,7 +20550,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               __pyx_t_11 = __pyx_t_33;
               goto __pyx_L55_bool_binop_done;
             }
-            __pyx_t_33 = (__pyx_v_b_ == 0.0);
+            __pyx_t_33 = (__pyx_v_b_ == 1.0);
             if (__pyx_t_33) {
             } else {
               __pyx_t_11 = __pyx_t_33;
@@ -20563,7 +20563,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
 
               /* "Int5D_poly.pyx":155
  *                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *                         for ii in range(0, L):
@@ -20575,7 +20575,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               /* "Int5D_poly.pyx":154
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20914,7 +20914,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             __pyx_t_33 = (__pyx_v_y == 0.0);
             if (__pyx_t_33) {
@@ -20949,7 +20949,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 */
               __pyx_t_29 = 0;
@@ -20961,14 +20961,14 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             }
 
             /* "Int5D_poly.pyx":187
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -20990,7 +20990,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               __pyx_t_11 = __pyx_t_33;
               goto __pyx_L85_bool_binop_done;
             }
-            __pyx_t_33 = (__pyx_v_b_ == 0.0);
+            __pyx_t_33 = (__pyx_v_b_ == 1.0);
             if (__pyx_t_33) {
             } else {
               __pyx_t_11 = __pyx_t_33;
@@ -21003,7 +21003,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
 
               /* "Int5D_poly.pyx":188
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *                         for ii in range(0, L):
@@ -21015,7 +21015,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               /* "Int5D_poly.pyx":187
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -21354,7 +21354,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             __pyx_t_33 = (__pyx_v_y == 0.0);
             if (__pyx_t_33) {
@@ -21389,7 +21389,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 */
               __pyx_t_9 = 0;
@@ -21401,14 +21401,14 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
  *                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
 */
             }
 
             /* "Int5D_poly.pyx":220
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -21430,7 +21430,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               __pyx_t_11 = __pyx_t_33;
               goto __pyx_L115_bool_binop_done;
             }
-            __pyx_t_33 = (__pyx_v_b_ == 0.0);
+            __pyx_t_33 = (__pyx_v_b_ == 1.0);
             if (__pyx_t_33) {
             } else {
               __pyx_t_11 = __pyx_t_33;
@@ -21443,7 +21443,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
 
               /* "Int5D_poly.pyx":221
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
  * 
  *                         for ii in range(0, L):
@@ -21455,7 +21455,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Dx(__Pyx_memviewslice __pyx_v_phi, 
               /* "Int5D_poly.pyx":220
  *                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
  *                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
- *                         if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:             # <<<<<<<<<<<<<<
+ *                         if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
  *                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
 */
@@ -29310,7 +29310,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Db(__Pyx_memviewslice __pyx_v_phi, 
  *     # compute step size and intermediate values
  *     compute_dx(&bb[0], P, &db[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&db[0], P, &dfactor[0])
- *     compute_xInt(&aa[0], P, &bInt[0])
+ *     compute_xInt(&bb[0], P, &bInt[0])
 */
   __pyx_t_9 = 0;
   __pyx_t_10 = 0;
@@ -29320,7 +29320,7 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Db(__Pyx_memviewslice __pyx_v_phi, 
  *     # compute step size and intermediate values
  *     compute_dx(&bb[0], P, &db[0])
  *     compute_dfactor(&db[0], P, &dfactor[0])             # <<<<<<<<<<<<<<
- *     compute_xInt(&aa[0], P, &bInt[0])
+ *     compute_xInt(&bb[0], P, &bInt[0])
  *     # dynamic allocation of memory for tridiag
 */
   __pyx_t_10 = 0;
@@ -29330,16 +29330,16 @@ static void __pyx_f_10Int5D_poly_c_implicit_5Db(__Pyx_memviewslice __pyx_v_phi, 
   /* "Int5D_poly.pyx":743
  *     compute_dx(&bb[0], P, &db[0])
  *     compute_dfactor(&db[0], P, &dfactor[0])
- *     compute_xInt(&aa[0], P, &bInt[0])             # <<<<<<<<<<<<<<
+ *     compute_xInt(&bb[0], P, &bInt[0])             # <<<<<<<<<<<<<<
  *     # dynamic allocation of memory for tridiag
  *     tridiag_malloc(P)
 */
   __pyx_t_9 = 0;
   __pyx_t_10 = 0;
-  compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_9 * __pyx_v_aa.strides[0]) )))), __pyx_v_P, (&(*((double *) ( /* dim=0 */ (__pyx_v_bInt.data + __pyx_t_10 * __pyx_v_bInt.strides[0]) )))));
+  compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_bb.data + __pyx_t_9 * __pyx_v_bb.strides[0]) )))), __pyx_v_P, (&(*((double *) ( /* dim=0 */ (__pyx_v_bInt.data + __pyx_t_10 * __pyx_v_bInt.strides[0]) )))));
 
   /* "Int5D_poly.pyx":745
- *     compute_xInt(&aa[0], P, &bInt[0])
+ *     compute_xInt(&bb[0], P, &bInt[0])
  *     # dynamic allocation of memory for tridiag
  *     tridiag_malloc(P)             # <<<<<<<<<<<<<<
  * 

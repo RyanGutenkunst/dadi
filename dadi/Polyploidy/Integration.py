@@ -9,6 +9,7 @@ from . import Int1D_poly as int1D
 from . import Int2D_poly as int2D
 from . import Int3D_poly as int3D
 from . import Int4D_poly as int4D 
+from . import Int5D_poly as int5D
 from enum import IntEnum
 
 ### ==========================================================================
@@ -299,6 +300,46 @@ def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0,
             phi[0,0,0,1] += dt/aa[1] * theta0/4 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
     return phi
     
+def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0, 
+                         frozen1, frozen2, frozen3, frozen4, frozen5,
+                         ploidy1, ploidy2, ploidy3, ploidy4, ploidy5):
+    """
+    Inject novel mutations for a timestep.
+    """
+    # Population 1
+    # Normalization based on the multi-dimensional trapezoid rule is 
+    # implemented                      ************** here ***************
+    if not frozen1:
+        if not ploidy1[1]: # this reads as if not autotetraploid
+            phi[1,0,0,0,0] += dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
+        else:
+            phi[1,0,0,0,0] += dt/xx[1] * theta0/4 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
+    # Population 2
+    if not frozen2:
+        if not ploidy2[1]:
+            phi[0,1,0,0,0] += dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
+        else:
+            phi[0,1,0,0,0] += dt/yy[1] * theta0/4 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
+    # Population 3
+    if not frozen3:
+        if not ploidy3[1]:
+            phi[0,0,1,0,0] += dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
+        else:
+            phi[0,0,1,0,0] += dt/zz[1] * theta0/4 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
+    # Population 4
+    if not frozen4:
+        if not ploidy4[1]:
+            phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+        else:
+            phi[0,0,0,1,0] += dt/aa[1] * theta0/4 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+    # Population 5
+    if not frozen5:
+        if not ploidy5[1]:
+            phi[0,0,0,0,1] += dt/bb[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+        else:
+            phi[0,0,0,0,1] += dt/bb[1] * theta0/4 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+    return phi
+
 ### ==========================================================================
 ### CLASS DEFINITION FOR SPECIFYING PLOIDY
 ### ==========================================================================
@@ -934,7 +975,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
     
     if ({ploidyflag3, ploidyflag4} in allo_types) and ({ploidyflag3, ploidyflag4} != allo_types):
-        raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
+        raise ValueError('Either population 3 or 4 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
     aa = zz = yy = xx
@@ -1050,6 +1091,213 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
         if not frozen4:
             phi = int4D.implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43,
                                      sel4, this_dt, use_delj_trick, ploidy4)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
+              m12=0, m13=0, m14=0, m15=0, m21=0, m23=0, m24=0, m25=0,   
+              m31=0, m32=0, m34=0, m35=0, m41=0, m42=0, m43=0, m45=0,
+              m51=0, m52=0, m53=0, m54=0,
+              sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0}, sel_dict3 = {'gamma':0}, 
+              sel_dict4 = {'gamma':0}, sel_dict5 = {'gamma':0},
+              ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID, 
+              ploidyflag4=PloidyType.DIPLOID, ploidyflag5=PloidyType.DIPLOID,
+              theta0=1, initial_t=0, 
+              frozen1=False, frozen2=False, frozen3=False, frozen4=False, frozen5=False, deme_ids=None):
+    """
+    Integrate a 5-dimensional phi foward.
+
+    phi: Initial 5-dimensional phi
+    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+        that this grid is used in all dimensions.
+
+    nu's, gamma's, m's, and theta0 may be functions of time.
+    nu1,nu2,nu3,nu4,nu5: Population sizes
+    m12,m13,m21,m23,m31,m32, ...: Migration rates. Note that m12 is the rate 
+                             *into 1 from 2*.
+    theta0: Proportional to ancestral size. Typically constant.
+
+    sel_dict1,2,3,4,5: dictionary of selection parameters for corresponding ploidy type of that population
+    ploidyflag1,2,3,4,5: Specifies ploidy type of population and handles selection params.
+        See PloidyType class for details. 
+
+    T: Time at which to halt integration
+    initial_t: Time at which to start integration. (Note that this only matters
+               if one of the demographic parameters is a function of time.)
+
+    enable_cuda_const: If True, enable CUDA integration with slower constant
+                       parameter method. Likely useful only for benchmarking.
+    deme_ids: sequence of strings representing the names of demes
+
+    Note: Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+    """
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0 or m34 != 0 or m43 != 0))\
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 !=0 or m42 != 0 or m34 != 0 or m43 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    # here, we allow for the two allotetraploid populations (so two pairs of subgenomes) to be modeled
+    # to do so, we have to enforce that the first two populations form a pair of subgenomes AND 
+    # that the last two populations form a pair of subgenomes
+    # this also means that the middle population cannot be allotetraploid
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    
+    if ({ploidyflag1, ploidyflag2} in allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+        raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    
+    if ({ploidyflag4, ploidyflag5} in allo_types) and ({ploidyflag4, ploidyflag5} != allo_types):
+        raise ValueError('Either population 4 or 5 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    
+    if ploidyflag3 in allo_types:
+        raise ValueError('Population 3 is an allotetraploid subgenome. \n'  
+                         'To model allotetraploids in a 5D model, only the first two or last two populations can be specified as allotetraploid.')
+
+    
+    bb = aa = zz = yy = xx
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(4, numpy.intc)
+    ploidy2 = numpy.zeros(4, numpy.intc)
+    ploidy3 = numpy.zeros(4, numpy.intc)
+    ploidy4 = numpy.zeros(4, numpy.intc)
+    ploidy5 = numpy.zeros(4, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+    ploidy3[ploidyflag3] = 1
+    ploidy4[ploidyflag4] = 1
+    ploidy5[ploidyflag5] = 1
+
+    # pack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+    sel3 = ploidyflag3.pack_sel_params(sel_dict3)
+    sel4 = ploidyflag4.pack_sel_params(sel_dict4)
+    sel5 = ploidyflag5.pack_sel_params(sel_dict5)
+
+    nu1_f, nu2_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2)
+    nu3_f, nu4_f = Misc.ensure_1arg_func(nu3), Misc.ensure_1arg_func(nu4)
+    nu5_f = Misc.ensure_1arg_func(nu5)
+    m12_f, m13_f, m14_f, m15_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13), Misc.ensure_1arg_func(m14), Misc.ensure_1arg_func(m15)
+    m21_f, m23_f, m24_f, m25_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23), Misc.ensure_1arg_func(m24), Misc.ensure_1arg_func(m25)
+    m31_f, m32_f, m34_f, m35_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32), Misc.ensure_1arg_func(m34), Misc.ensure_1arg_func(m35)
+    m41_f, m42_f, m43_f, m45_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43), Misc.ensure_1arg_func(m45)
+    m51_f, m52_f, m53_f, m54_f = Misc.ensure_1arg_func(m51), Misc.ensure_1arg_func(m52), Misc.ensure_1arg_func(m53), Misc.ensure_1arg_func(m54)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    sel1_f, sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2)
+    sel3_f, sel4_f = MiscPoly.ensure_1arg_func_vectorized(sel3), MiscPoly.ensure_1arg_func_vectorized(sel4)
+    sel5_f = MiscPoly.ensure_1arg_func_vectorized(sel5)
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
+        if m12_f(T/2) != m21_f(T/2):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) != nu2_f(T/2):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but do not have the same population size. \n'
+                             'Allotetraploid subgenomes must have the same population size.')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
+            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag4 in allo_types) or (ploidyflag5 in allo_types):
+        if m45_f(T/2) != m54_f(T/2):
+            raise ValueError('Population 4 or 5 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu4_f(T/2) != nu5_f(T/2):
+            raise ValueError('Population 4 or 5 is an allotetraploid subgenome, but do not have the same population size. \n'
+                             'Allotetraploid subgenomes must have the same population size.')
+        if numpy.any(sel4_f(T/2) != sel5_f(T/2)):
+            raise ValueError('Population 4 or 5 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+
+
+    # TODO: CUDA integration
+    # if cuda_enabled:
+    #     import dadi.cuda
+    #     phi = dadi.cuda.Integration._five_pops_temporal_params(phi, xx, T, initial_t, 
+    #         nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
+    #         m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
+    #         m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
+    #         gamma1_f, gamma2_f, gamma3_f, gamma4_f, gamma5_f,
+    #         h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5, deme_ids)
+    #     return phi
+
+    current_t = initial_t
+    nu1, nu2, nu3, nu4, nu5 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t), nu5_f(current_t)
+    m12, m13, m14, m15 = m12_f(current_t), m13_f(current_t), m14_f(current_t), m15_f(current_t)
+    m21, m23, m24, m25 = m21_f(current_t), m23_f(current_t), m24_f(current_t), m25_f(current_t)
+    m31, m32, m34, m35 = m31_f(current_t), m32_f(current_t), m34_f(current_t), m35_f(current_t)
+    m41, m42, m43, m45 = m41_f(current_t), m42_f(current_t), m43_f(current_t), m45_f(current_t)
+    m51, m52, m53, m54 = m51_f(current_t), m52_f(current_t), m53_f(current_t), m54_f(current_t)
+    sel1, sel2, sel3, sel4, sel5 = sel1_f(current_t), sel2_f(current_t), sel3_f(current_t), sel4_f(current_t), sel5_f(current_t)
+    
+    dx,dy,dz,da,db = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa),numpy.diff(bb)
+    demes_hist = [[0, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13,m14,m15],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21,m23,m24,m25],sel2,ploidy2),
+                 _compute_dt(dz,nu3,[m31,m32,m34,m35],sel3,ploidy3),
+                 _compute_dt(da,nu4,[m41,m42,m43,m45],sel4,ploidy4),
+                 _compute_dt(db,nu5,[m51,m52,m53,m54],sel5,ploidy5))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1, nu2, nu3, nu4, nu5 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t), nu5_f(next_t)
+        m12, m13, m14, m15 = m12_f(next_t), m13_f(next_t), m14_f(next_t), m15_f(next_t)
+        m21, m23, m24, m25 = m21_f(next_t), m23_f(next_t), m24_f(next_t), m25_f(next_t)
+        m31, m32, m34, m35 = m31_f(next_t), m32_f(next_t), m34_f(next_t), m35_f(next_t)
+        m41, m42, m43, m45 = m41_f(next_t), m42_f(next_t), m43_f(next_t), m45_f(next_t)
+        m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
+        sel1, sel2, sel3, sel4, sel5 = sel1_f(next_t), sel2_f(next_t), sel3_f(next_t), sel4_f(next_t), sel5_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]])
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
+                                 m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
+                                 m51,m52,m53,m54, theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3,nu4,nu5], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_5D(phi, this_dt, xx, yy, zz, aa, bb, theta0,
+                             frozen1, frozen2, frozen3, frozen4, frozen5,
+                             ploidy1, ploidy2, ploidy3, ploidy4, ploidy5)
+        if not frozen1:
+            phi = int5D.implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15,
+                                     sel1, this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            phi = int5D.implicit_5Dy(phi, xx, yy, zz, aa, bb, nu2, m21, m23, m24, m25,
+                                     sel2, this_dt, use_delj_trick, ploidy2)
+        if not frozen3:
+            phi = int5D.implicit_5Dz(phi, xx, yy, zz, aa, bb, nu3, m31, m32, m34, m35,
+                                     sel3, this_dt, use_delj_trick, ploidy3)
+        if not frozen4:
+            phi = int5D.implicit_5Da(phi, xx, yy, zz, aa, bb, nu4, m41, m42, m43, m45,
+                                     sel4, this_dt, use_delj_trick, ploidy4)
+        if not frozen5:
+            phi = int5D.implicit_5Db(phi, xx, yy, zz, aa, bb, nu5, m51, m52, m53, m54,
+                                     sel5, this_dt, use_delj_trick, ploidy5)
 
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))

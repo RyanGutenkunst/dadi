@@ -118,7 +118,7 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-                        if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+                        if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
                         for ii in range(0, L):
@@ -151,7 +151,7 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
                             b[0] += (0.25/nu1 - Mfirst)*2/dx[0] 
-                        if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+                        if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
                             b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
 
                         for ii in range(0, L):
@@ -184,7 +184,7 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-                        if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+                        if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
                         for ii in range(0, L):
@@ -217,7 +217,7 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                         if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
                             b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-                        if y==1 and z==1 and a_==1 and b_==0 and Mlast >= 0:
+                        if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
                             b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
                         for ii in range(0, L):
@@ -740,7 +740,7 @@ cdef void c_implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
     # compute step size and intermediate values
     compute_dx(&bb[0], P, &db[0])
     compute_dfactor(&db[0], P, &dfactor[0])
-    compute_xInt(&aa[0], P, &bInt[0])
+    compute_xInt(&bb[0], P, &bInt[0])
     # dynamic allocation of memory for tridiag
     tridiag_malloc(P)
 
