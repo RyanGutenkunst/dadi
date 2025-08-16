@@ -4,9 +4,9 @@ import numpy
 
 extensions = [
     Extension(
-        "Int1D_poly",  # Just the module name
+        "PolyIntegration",  # Just the module name
         sources=[
-            "Int1D_poly.pyx",           # Local Cython file
+            "PolyIntegration.pyx",           # Local Cython file
             "integration_shared_poly.c", # Local polyploid functions
             "../integration_shared.c",   # Parent directory
             "../tridiag.c"              # Parent directory
@@ -22,7 +22,7 @@ extensions = [
 ]
 
 setup(
-    name="Int1D_poly",
+    name="PolyIntegration",
     ext_modules=cythonize(
         extensions,
         compiler_directives={
