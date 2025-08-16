@@ -19813,7 +19813,7 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
  *         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
  * 
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
- *             V[ii] = Vfunc_auto(xx[ii], nu)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu)
  * 
 */
     __pyx_t_13 = __pyx_v_L;
@@ -19824,21 +19824,21 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int1D_poly.pyx":96
  * 
  *         for ii in range(0, L):
- *             V[ii] = Vfunc_auto(xx[ii], nu)             # <<<<<<<<<<<<<<
+ *             V[ii] = Vfunc_tetra(xx[ii], nu)             # <<<<<<<<<<<<<<
  * 
  *         for ii in range(0, L-1):
 */
       __pyx_t_22 = __pyx_v_ii;
       __pyx_t_21 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_21 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_22 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_21 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_22 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu);
     }
 
     /* "Int1D_poly.pyx":98
- *             V[ii] = Vfunc_auto(xx[ii], nu)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu)
  * 
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
  *             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu)
 */
     __pyx_t_16 = (__pyx_v_L - 1);
     __pyx_t_17 = __pyx_t_16;
@@ -19849,7 +19849,7 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
  * 
  *         for ii in range(0, L-1):
  *             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])             # <<<<<<<<<<<<<<
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu)
  * 
 */
       __pyx_t_22 = __pyx_v_ii;
@@ -19863,17 +19863,17 @@ static void __pyx_f_10Int1D_poly_c_implicit_1Dx(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int1D_poly.pyx":100
  *         for ii in range(0, L-1):
  *             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)             # <<<<<<<<<<<<<<
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu)             # <<<<<<<<<<<<<<
  * 
  *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 */
       __pyx_t_12 = __pyx_v_ii;
       __pyx_t_19 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_19 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_12 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_19 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_12 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu);
     }
 
     /* "Int1D_poly.pyx":102
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu)
  * 
  *         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  * 

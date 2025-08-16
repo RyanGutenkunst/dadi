@@ -22,9 +22,14 @@ cdef extern from "integration_shared.h":
 # =========================================================
 cdef extern from "integration_shared_poly.h":
     double Vfunc_tetra(double x, double nu)
-    double Mfunc3D_auto(double x, double y, double z, double mxy, double mxz, double gam1, double gam2, double gam3, double gam4)
-    double Mfunc3D_allo_a(double x, double y, double z, double mxy, double mxz, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
-    double Mfunc3D_allo_b(double x, double y, double z, double mxy, double mxz, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
+    double Mfunc3D_auto(double x, double y, double z, double mxy, double mxz, 
+                        double gam1, double gam2, double gam3, double gam4)
+    double Mfunc3D_allo_a(double x, double y, double z, double exy, double mxz, 
+                          double g01, double g02, double g10, double g11, 
+                          double g12, double g20, double g21, double g22)
+    double Mfunc3D_allo_b(double x, double y, double z, double exy, double mxz, 
+                          double g01, double g02, double g10, double g11, 
+                          double g12, double g20, double g21, double g22)
 
 # =========================================================
 # C TRIDIAGONAL MATRIX SOLVER

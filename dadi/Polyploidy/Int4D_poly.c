@@ -20171,7 +20171,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
- *             V[ii] = Vfunc_auto(xx[ii], nu1)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):
 */
     __pyx_t_12 = __pyx_v_L;
@@ -20182,20 +20182,20 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int4D_poly.pyx":127
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
- *             V[ii] = Vfunc_auto(xx[ii], nu1)             # <<<<<<<<<<<<<<
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)             # <<<<<<<<<<<<<<
  *         for ii in range(0, L-1):
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
 */
       __pyx_t_23 = __pyx_v_ii;
       __pyx_t_26 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
     /* "Int4D_poly.pyx":128
  *         for ii in range(0, L):
- *             V[ii] = Vfunc_auto(xx[ii], nu1)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
  *         # loop through y, z, and a dimensions
 */
     __pyx_t_15 = (__pyx_v_L - 1);
@@ -20204,19 +20204,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_v_ii = __pyx_t_12;
 
       /* "Int4D_poly.pyx":129
- *             V[ii] = Vfunc_auto(xx[ii], nu1)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)             # <<<<<<<<<<<<<<
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)             # <<<<<<<<<<<<<<
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):
 */
       __pyx_t_23 = __pyx_v_ii;
       __pyx_t_26 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_23 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_23 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
     /* "Int4D_poly.pyx":131
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):             # <<<<<<<<<<<<<<
  *             for kk in range(N):
@@ -22617,7 +22617,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):             # <<<<<<<<<<<<<<
- *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):
 */
     __pyx_t_12 = __pyx_v_M;
@@ -22628,20 +22628,20 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int4D_poly.pyx":297
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
- *             V[jj] = Vfunc_auto(yy[jj], nu2)             # <<<<<<<<<<<<<<
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)             # <<<<<<<<<<<<<<
  *         for jj in range(0, M-1):
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
 */
       __pyx_t_23 = __pyx_v_jj;
       __pyx_t_26 = __pyx_v_jj;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
     }
 
     /* "Int4D_poly.pyx":298
  *         for jj in range(0, M):
- *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
  *         # loop through x, z, and a dimensions
 */
     __pyx_t_15 = (__pyx_v_M - 1);
@@ -22650,19 +22650,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_v_jj = __pyx_t_12;
 
       /* "Int4D_poly.pyx":299
- *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)             # <<<<<<<<<<<<<<
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)             # <<<<<<<<<<<<<<
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):
 */
       __pyx_t_23 = __pyx_v_jj;
       __pyx_t_26 = __pyx_v_jj;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_23 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_23 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
     }
 
     /* "Int4D_poly.pyx":301
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
  *             for kk in range(N):
@@ -25063,7 +25063,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):             # <<<<<<<<<<<<<<
- *             V[kk] = Vfunc_auto(zz[kk], nu3)
+ *             V[kk] = Vfunc_tetra(zz[kk], nu3)
  *         for kk in range(0, N-1):
 */
     __pyx_t_12 = __pyx_v_N;
@@ -25074,20 +25074,20 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int4D_poly.pyx":472
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):
- *             V[kk] = Vfunc_auto(zz[kk], nu3)             # <<<<<<<<<<<<<<
+ *             V[kk] = Vfunc_tetra(zz[kk], nu3)             # <<<<<<<<<<<<<<
  *         for kk in range(0, N-1):
- *             VInt[kk] = Vfunc_auto(zInt[kk], nu3)
+ *             VInt[kk] = Vfunc_tetra(zInt[kk], nu3)
 */
       __pyx_t_23 = __pyx_v_kk;
       __pyx_t_26 = __pyx_v_kk;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_nu3);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_nu3);
     }
 
     /* "Int4D_poly.pyx":473
  *         for kk in range(0, N):
- *             V[kk] = Vfunc_auto(zz[kk], nu3)
+ *             V[kk] = Vfunc_tetra(zz[kk], nu3)
  *         for kk in range(0, N-1):             # <<<<<<<<<<<<<<
- *             VInt[kk] = Vfunc_auto(zInt[kk], nu3)
+ *             VInt[kk] = Vfunc_tetra(zInt[kk], nu3)
  *         # loop through x, y, and a dimensions
 */
     __pyx_t_15 = (__pyx_v_N - 1);
@@ -25096,19 +25096,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_v_kk = __pyx_t_12;
 
       /* "Int4D_poly.pyx":474
- *             V[kk] = Vfunc_auto(zz[kk], nu3)
+ *             V[kk] = Vfunc_tetra(zz[kk], nu3)
  *         for kk in range(0, N-1):
- *             VInt[kk] = Vfunc_auto(zInt[kk], nu3)             # <<<<<<<<<<<<<<
+ *             VInt[kk] = Vfunc_tetra(zInt[kk], nu3)             # <<<<<<<<<<<<<<
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):
 */
       __pyx_t_23 = __pyx_v_kk;
       __pyx_t_26 = __pyx_v_kk;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_23 * __pyx_v_zInt.strides[0]) ))), __pyx_v_nu3);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_23 * __pyx_v_zInt.strides[0]) ))), __pyx_v_nu3);
     }
 
     /* "Int4D_poly.pyx":476
- *             VInt[kk] = Vfunc_auto(zInt[kk], nu3)
+ *             VInt[kk] = Vfunc_tetra(zInt[kk], nu3)
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
  *             for jj in range(M):
@@ -27509,7 +27509,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):             # <<<<<<<<<<<<<<
- *             V[ll] = Vfunc_auto(aa[ll], nu4)
+ *             V[ll] = Vfunc_tetra(aa[ll], nu4)
  *         for ll in range(0, O-1):
 */
     __pyx_t_12 = __pyx_v_O;
@@ -27520,20 +27520,20 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int4D_poly.pyx":647
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):
- *             V[ll] = Vfunc_auto(aa[ll], nu4)             # <<<<<<<<<<<<<<
+ *             V[ll] = Vfunc_tetra(aa[ll], nu4)             # <<<<<<<<<<<<<<
  *         for ll in range(0, O-1):
- *             VInt[ll] = Vfunc_auto(aInt[ll], nu4)
+ *             VInt[ll] = Vfunc_tetra(aInt[ll], nu4)
 */
       __pyx_t_23 = __pyx_v_ll;
       __pyx_t_26 = __pyx_v_ll;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_nu4);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_nu4);
     }
 
     /* "Int4D_poly.pyx":648
  *         for ll in range(0, O):
- *             V[ll] = Vfunc_auto(aa[ll], nu4)
+ *             V[ll] = Vfunc_tetra(aa[ll], nu4)
  *         for ll in range(0, O-1):             # <<<<<<<<<<<<<<
- *             VInt[ll] = Vfunc_auto(aInt[ll], nu4)
+ *             VInt[ll] = Vfunc_tetra(aInt[ll], nu4)
  *         # loop through x, y, and z dimensions
 */
     __pyx_t_15 = (__pyx_v_O - 1);
@@ -27542,19 +27542,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_v_ll = __pyx_t_12;
 
       /* "Int4D_poly.pyx":649
- *             V[ll] = Vfunc_auto(aa[ll], nu4)
+ *             V[ll] = Vfunc_tetra(aa[ll], nu4)
  *         for ll in range(0, O-1):
- *             VInt[ll] = Vfunc_auto(aInt[ll], nu4)             # <<<<<<<<<<<<<<
+ *             VInt[ll] = Vfunc_tetra(aInt[ll], nu4)             # <<<<<<<<<<<<<<
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):
 */
       __pyx_t_23 = __pyx_v_ll;
       __pyx_t_26 = __pyx_v_ll;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_23 * __pyx_v_aInt.strides[0]) ))), __pyx_v_nu4);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_23 * __pyx_v_aInt.strides[0]) ))), __pyx_v_nu4);
     }
 
     /* "Int4D_poly.pyx":651
- *             VInt[ll] = Vfunc_auto(aInt[ll], nu4)
+ *             VInt[ll] = Vfunc_tetra(aInt[ll], nu4)
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
  *             for jj in range(M):

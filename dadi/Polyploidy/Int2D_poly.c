@@ -20044,7 +20044,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
- *             V[ii] = Vfunc_auto(xx[ii], nu1)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):
 */
     __pyx_t_12 = __pyx_v_L;
@@ -20055,20 +20055,20 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":116
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
- *             V[ii] = Vfunc_auto(xx[ii], nu1)             # <<<<<<<<<<<<<<
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)             # <<<<<<<<<<<<<<
  *         for ii in range(0, L-1):
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
 */
       __pyx_t_17 = __pyx_v_ii;
       __pyx_t_21 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_21 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_17 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_21 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_17 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
     /* "Int2D_poly.pyx":117
  *         for ii in range(0, L):
- *             V[ii] = Vfunc_auto(xx[ii], nu1)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
  *         # loop through y values
 */
     __pyx_t_15 = (__pyx_v_L - 1);
@@ -20077,19 +20077,19 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_v_ii = __pyx_t_12;
 
       /* "Int2D_poly.pyx":118
- *             V[ii] = Vfunc_auto(xx[ii], nu1)
+ *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)             # <<<<<<<<<<<<<<
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)             # <<<<<<<<<<<<<<
  *         # loop through y values
  *         for jj in range(M):
 */
       __pyx_t_17 = __pyx_v_ii;
       __pyx_t_21 = __pyx_v_ii;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_21 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_17 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_21 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_17 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
     /* "Int2D_poly.pyx":120
- *             VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+ *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
  *         # loop through y values
  *         for jj in range(M):             # <<<<<<<<<<<<<<
  *             y = yy[jj]
@@ -22164,7 +22164,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):             # <<<<<<<<<<<<<<
- *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):
 */
     __pyx_t_12 = __pyx_v_M;
@@ -22175,20 +22175,20 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
       /* "Int2D_poly.pyx":269
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
- *             V[jj] = Vfunc_auto(yy[jj], nu2)             # <<<<<<<<<<<<<<
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)             # <<<<<<<<<<<<<<
  *         for jj in range(0, M-1):
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
 */
       __pyx_t_17 = __pyx_v_jj;
       __pyx_t_21 = __pyx_v_jj;
-      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_21 * __pyx_v_V.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_17 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
+      *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_21 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_17 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
     }
 
     /* "Int2D_poly.pyx":270
  *         for jj in range(0, M):
- *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
  *         # loop through x values
 */
     __pyx_t_15 = (__pyx_v_M - 1);
@@ -22197,19 +22197,19 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
       __pyx_v_jj = __pyx_t_12;
 
       /* "Int2D_poly.pyx":271
- *             V[jj] = Vfunc_auto(yy[jj], nu2)
+ *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)             # <<<<<<<<<<<<<<
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)             # <<<<<<<<<<<<<<
  *         # loop through x values
  *         for ii in range(L):
 */
       __pyx_t_17 = __pyx_v_jj;
       __pyx_t_21 = __pyx_v_jj;
-      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_21 * __pyx_v_VInt.strides[0]) )) = Vfunc_auto((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_17 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
+      *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_21 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_17 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
     }
 
     /* "Int2D_poly.pyx":273
- *             VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+ *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
  *         # loop through x values
  *         for ii in range(L):             # <<<<<<<<<<<<<<
  *             x = xx[ii]
