@@ -75,7 +75,7 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
     cdef int is_alloa = ploidy1[2]
     cdef int is_allob = ploidy1[3]
 
-    # compute the x step size and intermediate x values
+    # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
     compute_dfactor(&dx[0], L, &dfactor[0])
     compute_xInt(&xx[0], L, &xInt[0])
@@ -228,7 +228,7 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
 
-    # compute the y step size and intermediate y values
+    # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
     compute_dfactor(&dy[0], M, &dfactor[0])
     compute_xInt(&yy[0], M, &yInt[0])

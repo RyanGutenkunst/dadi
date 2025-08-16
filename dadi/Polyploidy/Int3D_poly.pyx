@@ -76,10 +76,9 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     ### specify ploidy of the x direction
     cdef int is_diploid = ploidy1[0]
     cdef int is_auto = ploidy1[1]
-    cdef int is_alloa = ploidy1[2]
-    cdef int is_allob = ploidy1[3]
+    # note: we don't support alloa and allob as being the first dimension of the phi array in 3D
 
-    # compute the x step size and intermediate x values
+    # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
     compute_dfactor(&dx[0], L, &dfactor[0])
     compute_xInt(&xx[0], L, &xInt[0])
@@ -99,10 +98,10 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 y = yy[jj]
                 z = zz[kk]
 
-                Mfirst = Mfunc3D(xx[0], y, z, m12, m13, s1[0], s1[1])
-                Mlast = Mfunc3D(xx[L-1], y, z, m12, m13, s1[0], s1[1])
+                Mfirst = Mfunc3D(xx[0], y,z, m12,m13, s1[0],s1[1])
+                Mlast = Mfunc3D(xx[L-1], y,z, m12,m13, s1[0],s1[1])
                 for ii in range(0, L-1):
-                    MInt[ii] = Mfunc3D(xInt[ii], y, z, m12, m13, s1[0], s1[1]) 
+                    MInt[ii] = Mfunc3D(xInt[ii], y,z, m12,m13, s1[0],s1[1]) 
                 compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                 if y==0 and z==0 and Mfirst <= 0:
@@ -128,74 +127,16 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 y = yy[jj]
                 z = zz[kk]
 
-                Mfirst = Mfunc3D_auto(xx[0], y, z, m12, m13, s1[0], s1[1], s1[2], s1[3])
-                Mlast = Mfunc3D_auto(xx[L-1], y, z, m12, m13, s1[0], s1[1], s1[2], s1[3])
+                Mfirst = Mfunc3D_auto(xx[0], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3])
+                Mlast = Mfunc3D_auto(xx[L-1], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3])
                 for ii in range(0, L-1):
-                    MInt[ii] = Mfunc3D_auto(xInt[ii], y, z, m12, m13, s1[0], s1[1], s1[2], s1[3]) 
+                    MInt[ii] = Mfunc3D_auto(xInt[ii], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3]) 
                 compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                 if y==0 and z==0 and Mfirst <= 0:
                     b[0] += (0.25/nu1 - Mfirst)*2/dx[0] 
                 if y==1 and z==1 and Mlast >= 0:
                     b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
-
-                for ii in range(0, L):
-                    r[ii] = phi[ii, jj, kk]/dt
-                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-                for ii in range(0, L):
-                    phi[ii, jj, kk] = temp[ii]
-
-    ### TODO: this should never be called, because we require alloa and allob to be the y and z dimensions (i.e. the last two populations specified)
-    elif is_alloa:
-        # compute everything we can outside of the spatial loop
-        for ii in range(0, L):
-            V[ii] = Vfunc(xx[ii], nu1)
-        for ii in range(0, L-1):
-            VInt[ii] = Vfunc(xInt[ii], nu1)
-        # loop through y and z dimensions
-        for jj in range(M):
-            for kk in range(N):
-                y = yy[jj]
-                z = zz[kk]
-
-                Mfirst = Mfunc3D_allo_a(xx[0], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                Mlast = Mfunc3D_allo_a(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                for ii in range(0, L-1):
-                    MInt[ii] = Mfunc3D_allo_a(xInt[ii], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-                if y==0 and z==0 and Mfirst <= 0:
-                    b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-                if y==1 and z==1 and Mlast >= 0:
-                    b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
-
-                for ii in range(0, L):
-                    r[ii] = phi[ii, jj, kk]/dt
-                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
-                for ii in range(0, L):
-                    phi[ii, jj, kk] = temp[ii]
-    ### TODO: see above; this should never be called
-    elif is_allob:
-        # compute everything we can outside of the spatial loop
-        for ii in range(0, L):
-            V[ii] = Vfunc(xx[ii], nu1)
-        for ii in range(0, L-1):
-            VInt[ii] = Vfunc(xInt[ii], nu1)
-        for jj in range(M):
-            for kk in range(N):
-                y = yy[jj]
-                z = zz[kk]
-
-                Mfirst = Mfunc3D_allo_b(xx[0], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                Mlast = Mfunc3D_allo_b(xx[L-1], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                for ii in range(0, L-1):
-                    MInt[ii] = Mfunc3D_allo_b(xInt[ii], y, z, m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
-                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
-                if y==0 and z==0 and Mfirst <= 0:
-                    b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
-                if y==1 and z==1 and Mlast >= 0:
-                    b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
 
                 for ii in range(0, L):
                     r[ii] = phi[ii, jj, kk]/dt
@@ -240,7 +181,7 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
 
-    # compute the y step size and intermediate y values
+    # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
     compute_dfactor(&dy[0], M, &dfactor[0])
     compute_xInt(&yy[0], M, &yInt[0])
@@ -259,14 +200,11 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             for kk in range(N):
                 x = xx[ii]
                 z = zz[kk]
-                ### Note: the order of the params being passed here is different from 
-                # Ryan's original code. This is for consistency with the allo cases where
-                # the first two dimensions passed to Mfunc need to be the allo subgenomes 
-                # and the subgenomes are always passed as y and z.
-                Mfirst = Mfunc3D(yy[0], z, x, m23, m21, s2[0], s2[1])
-                Mlast = Mfunc3D(yy[M-1], z, x, m23, m21, s2[0], s2[1])  
+                
+                Mfirst = Mfunc3D(yy[0], x,z, m21,m23, s2[0],s2[1])
+                Mlast = Mfunc3D(yy[M-1], x,z, m21,m23, s2[0],s2[1])  
                 for jj in range(0, M-1):
-                    MInt[jj] = Mfunc3D(yInt[jj], z, x, m23, m21, s2[0], s2[1])
+                    MInt[jj] = Mfunc3D(yInt[jj], x,z, m21,m23, s2[0],s2[1])
                 compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                 if x==0 and z==0 and Mfirst <= 0:
@@ -291,11 +229,11 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             for kk in range(N):
                 x = xx[ii]
                 z = zz[kk]
-                # see note above about the order of the params passed to Mfuncs here
-                Mfirst = Mfunc3D_auto(yy[0], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3])
-                Mlast = Mfunc3D_auto(yy[M-1], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3])
+                
+                Mfirst = Mfunc3D_auto(yy[0], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3])
+                Mlast = Mfunc3D_auto(yy[M-1], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3])
                 for jj in range(0, M-1):
-                    MInt[jj] = Mfunc3D_auto(yInt[jj], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3])
+                    MInt[jj] = Mfunc3D_auto(yInt[jj], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3])
                 compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                 if x==0 and z==0 and Mfirst <= 0:
@@ -320,11 +258,13 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             for kk in range(N):
                 x = xx[ii]
                 z = zz[kk]
-                # see note above about the order of the params passed to Mfuncs here
-                Mfirst = Mfunc3D_allo_a(yy[0], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
-                Mlast = Mfunc3D_allo_a(yy[M-1], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                ### Note: the order of migration params and grids being passed here is different 
+                # This is for consistency with the allo cases where the first two dimensions passed
+                # to Mfunc need to be the allo subgenomes and the subgenomes are always passed as y and z.
+                Mfirst = Mfunc3D_allo_a(yy[0], z,x, m23,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mlast = Mfunc3D_allo_a(yy[M-1], z,x, m23,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                 for jj in range(0, M-1):
-                    MInt[jj] = Mfunc3D_allo_a(yInt[jj], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                    MInt[jj] = Mfunc3D_allo_a(yInt[jj], z,x, m23,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                 compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                 if x==0 and z==0 and Mfirst <= 0:
@@ -350,10 +290,10 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 x = xx[ii]
                 z = zz[kk]
                 # see note above about the order of the params passed to Mfuncs here
-                Mfirst = Mfunc3D_allo_b(yy[0], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
-                Mlast = Mfunc3D_allo_b(yy[M-1], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mfirst = Mfunc3D_allo_b(yy[0], z,x, m23,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                Mlast = Mfunc3D_allo_b(yy[M-1], z,x, m23,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                 for jj in range(0, M-1):
-                    MInt[jj] = Mfunc3D_allo_b(yInt[jj], z, x, m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                    MInt[jj] = Mfunc3D_allo_b(yInt[jj], z,x, m23,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                 compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                 if x==0 and z==0 and Mfirst <= 0:
@@ -397,13 +337,13 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef double[:] c = np.empty(N, dtype=np.float64)
     cdef double[:] r = np.empty(N, dtype=np.float64)
     cdef double[:] temp = np.empty(N, dtype=np.float64)
-    ### specify ploidy of the y direction
+    ### specify ploidy of the z direction
     cdef int is_diploid = ploidy3[0]
     cdef int is_auto = ploidy3[1]
     cdef int is_alloa = ploidy3[2]
     cdef int is_allob = ploidy3[3]
 
-    # compute the y step size and intermediate y values
+    # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
     compute_dfactor(&dz[0], N, &dfactor[0])
     compute_xInt(&zz[0], N, &zInt[0])
@@ -422,14 +362,11 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             for jj in range(M):
                 x = xx[ii]
                 y = yy[jj]
-                ### Note: the order of the params being passed here is different from 
-                # Ryan's original code. This is for consistency with the allo cases where
-                # the first two dimensions passed to Mfunc need to be the allo subgenomes 
-                # and the subgenomes are always passed as y and z.
-                Mfirst = Mfunc3D(zz[0], y, x, m32, m31, s3[0], s3[1])
-                Mlast = Mfunc3D(zz[N-1], y, x, m32, m31, s3[0], s3[1])  
+                
+                Mfirst = Mfunc3D(zz[0], x,y, m31,m32, s3[0],s3[1])
+                Mlast = Mfunc3D(zz[N-1], x,y, m31,m32, s3[0],s3[1])  
                 for kk in range(0, N-1):
-                    MInt[kk] = Mfunc3D(zInt[kk], y, x, m32, m31, s3[0], s3[1])
+                    MInt[kk] = Mfunc3D(zInt[kk], x,y, m31,m32, s3[0],s3[1])
                 compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                 if x==0 and y==0 and Mfirst <= 0:
@@ -454,11 +391,11 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             for jj in range(M):
                 x = xx[ii]
                 y = yy[jj]
-                # See note above about the order of the params passed to Mfuncs here
-                Mfirst = Mfunc3D_auto(zz[0], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3])
-                Mlast = Mfunc3D_auto(zz[N-1], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3])
+                
+                Mfirst = Mfunc3D_auto(zz[0], x,y, m31,m32, s3[0],s3[1],s3[2],s3[3])
+                Mlast = Mfunc3D_auto(zz[N-1], x,y, m31,m32, s3[0],s3[1],s3[2],s3[3])
                 for kk in range(0, N-1):
-                    MInt[kk] = Mfunc3D_auto(zInt[kk], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3])
+                    MInt[kk] = Mfunc3D_auto(zInt[kk], x,y, m31,m32, s3[0],s3[1],s3[2],s3[3])
                 compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                 if x==0 and y==0 and Mfirst <= 0:
@@ -483,11 +420,13 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
             for jj in range(M):
                 x = xx[ii]
                 y = yy[jj]
-                # See note above about the order of the params passed to Mfuncs here
-                Mfirst = Mfunc3D_allo_a(zz[0], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
-                Mlast = Mfunc3D_allo_a(zz[N-1], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                ### Note: the order of migration params and grids being passed here is different 
+                # This is for consistency with the allo cases where the first two dimensions passed
+                # to Mfunc need to be the allo subgenomes and the subgenomes are always passed as y and z.
+                Mfirst = Mfunc3D_allo_a(zz[0], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                Mlast = Mfunc3D_allo_a(zz[N-1], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                 for kk in range(0, N-1):
-                    MInt[kk] = Mfunc3D_allo_a(zInt[kk], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                    MInt[kk] = Mfunc3D_allo_a(zInt[kk], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                 compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                 if x==0 and y==0 and Mfirst <= 0:
@@ -513,10 +452,10 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 x = xx[ii]
                 y = yy[jj]
                 # See note above about the order of the params passed to Mfuncs here
-                Mfirst = Mfunc3D_allo_b(zz[0], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
-                Mlast = Mfunc3D_allo_b(zz[N-1], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                Mfirst = Mfunc3D_allo_b(zz[0], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                Mlast = Mfunc3D_allo_b(zz[N-1], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                 for kk in range(0, N-1):
-                    MInt[kk] = Mfunc3D_allo_b(zInt[kk], y, x, m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                    MInt[kk] = Mfunc3D_allo_b(zInt[kk], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                 compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                 compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                 if x==0 and y==0 and Mfirst <= 0:

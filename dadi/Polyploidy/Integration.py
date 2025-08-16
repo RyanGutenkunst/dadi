@@ -307,20 +307,48 @@ class PloidyType(IntEnum):
     AUTO = 1
     ALLOa = 2
     ALLOb = 3
-    
+    AUTOHEX = 4
+    HEX_tetra = 5
+    HEX_dip = 6
+    HEXa = 7
+    HEXb = 8
+    HEXc = 9
+
     def param_names(self):
         """Return parameter names for this ploidy type"""
         param_map = {
-            PloidyType.DIPLOID: ['gamma', 'h'],
-            PloidyType.AUTO: ['gamma1', 'gamma2', 'gamma3', 'gamma4'],
-            PloidyType.ALLOa: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
-                              'gamma12', 'gamma20', 'gamma21', 'gamma22'],
-            PloidyType.ALLOb: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
-                              'gamma12', 'gamma20', 'gamma21', 'gamma22']
+            PloidyType.DIPLOID:   ['gamma', 'h'],
+            PloidyType.AUTO:      ['gamma1', 'gamma2', 'gamma3', 'gamma4'],
+            PloidyType.ALLOa:     ['gamma01', 'gamma02', 'gamma10', 'gamma11',
+                                   'gamma12', 'gamma20', 'gamma21', 'gamma22'],
+            PloidyType.ALLOb:     ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
+                                   'gamma12', 'gamma20', 'gamma21', 'gamma22'],
+            PloidyType.AUTOHEX:   ['gamma1', 'gamma2', 'gamma3', 'gamma4', 'gamma5', 'gamma6'],
+            PloidyType.HEX_tetra: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 
+                                   'gamma20', 'gamma21', 'gamma22', 'gamma30', 'gamma31', 'gamma32',
+                                   'gamma40', 'gamma41', 'gamma42'],
+            PloidyType.HEX_dip:   ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 
+                                   'gamma20', 'gamma21', 'gamma22', 'gamma30', 'gamma31', 'gamma32',
+                                   'gamma40', 'gamma41', 'gamma42'],
+            PloidyType.HEXa:      ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 
+                                   'gamma020', 'gamma021', 'gamma022', 'gamma100', 'gamma101', 'gamma102',
+                                   'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                                   'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212',
+                                   'gamma220', 'gamma221', 'gamma222'],
+            PloidyType.HEXb:      ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 
+                                   'gamma020', 'gamma021', 'gamma022', 'gamma100', 'gamma101', 'gamma102',
+                                   'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                                   'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212',
+                                   'gamma220', 'gamma221', 'gamma222'],
+            PloidyType.HEXc:      ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 
+                                   'gamma020', 'gamma021', 'gamma022', 'gamma100', 'gamma101', 'gamma102',
+                                   'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                                   'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212',
+                                   'gamma220', 'gamma221', 'gamma222'],                                              
         }
         return param_map[self]
     
-    def pack_sel_params(self, sel_dict, max_params=8):
+    def pack_sel_params(self, sel_dict, max_params=26):
         """Pack selection parameters into standardized array.
         
         For each ploidy type, there are different ways to specify the selection

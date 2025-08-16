@@ -33,7 +33,7 @@ cdef extern from "tridiag.h":
 # =========================================================
 # CYTHON 1D INTEGRATION FUNCTION 
 # =========================================================
-cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_vec, 
+cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s, 
                         double dt, int use_delj_trick, int[:] ploidy):
 
     # Here, sel_vec = [param1, param2, param3, param4] b/c we only consider diploids and autotetraploids
@@ -63,21 +63,21 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
     cdef double is_diploid = ploidy[0]
     cdef double is_auto = ploidy[1]
 
-    # call the C functions for the grid spacings and other numerical details
+    # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
     compute_dfactor(&dx[0], L, &dfactor[0])
     compute_xInt(&xx[0], L, &xInt[0])
 
     # branch on ploidy type here
     if is_diploid:
-        Mfirst = Mfunc1D(xx[0], sel_vec[0], sel_vec[1]) 
-        Mlast =  Mfunc1D(xx[L-1], sel_vec[0], sel_vec[1]) 
+        Mfirst = Mfunc1D(xx[0], s[0], s[1]) 
+        Mlast =  Mfunc1D(xx[L-1], s[0], s[1]) 
 
         for ii in range(0, L):
             V[ii] = Vfunc(xx[ii], nu)
 
         for ii in range(0, L-1):
-            MInt[ii] = Mfunc1D(xInt[ii], sel_vec[0], sel_vec[1]) 
+            MInt[ii] = Mfunc1D(xInt[ii], s[0], s[1]) 
             VInt[ii] = Vfunc(xInt[ii], nu)
 
         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
@@ -89,14 +89,14 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
 
     if is_auto:
-        Mfirst = Mfunc1D_auto(xx[0], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
-        Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+        Mfirst = Mfunc1D_auto(xx[0], s[0], s[1], s[2], s[3])
+        Mlast = Mfunc1D_auto(xx[L-1], s[0], s[1], s[2], s[3])
     
         for ii in range(0, L):
             V[ii] = Vfunc_tetra(xx[ii], nu)
     
         for ii in range(0, L-1):
-            MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
+            MInt[ii] = Mfunc1D_auto(xInt[ii], s[0], s[1], s[2], s[3])
             VInt[ii] = Vfunc_tetra(xInt[ii], nu)
 
         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
@@ -121,7 +121,7 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
 def implicit_1Dx(np.ndarray[double, ndim=1] phi, 
                  np.ndarray[double, ndim=1] xx, 
                  double nu, 
-                 np.ndarray[double, ndim=1] sel_vec, 
+                 np.ndarray[double, ndim=1] s, 
                  double dt, 
                  int use_delj_trick,  
                  np.ndarray[int, ndim=1] ploidy):
@@ -146,6 +146,6 @@ def implicit_1Dx(np.ndarray[double, ndim=1] phi,
     numpy array: Modified phi array
     """
     # Call the cdef function with memory views
-    c_implicit_1Dx(phi, xx, nu, sel_vec, dt, use_delj_trick, ploidy)
+    c_implicit_1Dx(phi, xx, nu, s, dt, use_delj_trick, ploidy)
     return phi                    
     

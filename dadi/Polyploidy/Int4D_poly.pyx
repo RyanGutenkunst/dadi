@@ -28,10 +28,12 @@ cdef extern from "integration_shared_poly.h":
                         double gam1, double gam2, double gam3, double gam4)
     double Mfunc4D_allo_a(double x, double y, double z, double a, 
                           double exy, double mxz, double mxa, 
-                          double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
+                          double g01, double g02, double g10, double g11, 
+                          double g12, double g20, double g21, double g22)
     double Mfunc4D_allo_b(double x, double y, double z, double a, 
                           double exy, double mxz, double mxa, 
-                          double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
+                          double g01, double g02, double g10, double g11, 
+                          double g12, double g20, double g21, double g22)
     
 # =========================================================
 # C TRIDIAGONAL MATRIX SOLVER
@@ -82,7 +84,7 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef int is_alloa = ploidy1[2]
     cdef int is_allob = ploidy1[3]
 
-    # compute the x step size and intermediate x values
+    # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
     compute_dfactor(&dx[0], L, &dfactor[0])
     compute_xInt(&xx[0], L, &xInt[0])
@@ -104,10 +106,10 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D(xx[0], y, z, a_, m12, m13, m14, s1[0], s1[1])
-                    Mlast = Mfunc4D(xx[L-1], y, z, a_, m12, m13, m14, s1[0], s1[1])
+                    Mfirst = Mfunc4D(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1])
+                    Mlast = Mfunc4D(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1])
                     for ii in range(0, L-1):
-                        MInt[ii] = Mfunc4D(xInt[ii], y, z, a_, m12, m13, m14, s1[0], s1[1]) 
+                        MInt[ii] = Mfunc4D(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1]) 
                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -135,10 +137,10 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D_auto(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
-                    Mlast = Mfunc4D_auto(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+                    Mfirst = Mfunc4D_auto(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
+                    Mlast = Mfunc4D_auto(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
                     for ii in range(0, L-1):
-                        MInt[ii] = Mfunc4D_auto(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+                        MInt[ii] = Mfunc4D_auto(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -166,10 +168,10 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D_allo_a(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                    Mlast = Mfunc4D_allo_a(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                    Mfirst = Mfunc4D_allo_a(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                    Mlast = Mfunc4D_allo_a(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                     for ii in range(0, L-1):
-                        MInt[ii] = Mfunc4D_allo_a(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                        MInt[ii] = Mfunc4D_allo_a(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -197,10 +199,10 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D_allo_b(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-                    Mlast = Mfunc4D_allo_b(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                    Mfirst = Mfunc4D_allo_b(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                    Mlast = Mfunc4D_allo_b(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                     for ii in range(0, L-1):
-                        MInt[ii] = Mfunc4D_allo_b(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+                        MInt[ii] = Mfunc4D_allo_b(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -252,7 +254,7 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
 
-    # compute the y step size and intermediate y values
+    # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
     compute_dfactor(&dy[0], M, &dfactor[0])
     compute_xInt(&yy[0], M, &yInt[0])
@@ -274,10 +276,10 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D(yy[0], x, z, a_, m21, m23, m24, s2[0], s2[1])
-                    Mlast = Mfunc4D(yy[M-1], x, z, a_, m21, m23, m24, s2[0], s2[1])  
+                    Mfirst = Mfunc4D(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1])
+                    Mlast = Mfunc4D(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1])  
                     for jj in range(0, M-1):
-                        MInt[jj] = Mfunc4D(yInt[jj], x, z, a_, m21, m23, m24, s2[0], s2[1])
+                        MInt[jj] = Mfunc4D(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1])
                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -305,10 +307,10 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D_auto(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
-                    Mlast = Mfunc4D_auto(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+                    Mfirst = Mfunc4D_auto(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
+                    Mlast = Mfunc4D_auto(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
                     for jj in range(0, M-1):
-                        MInt[jj] = Mfunc4D_auto(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+                        MInt[jj] = Mfunc4D_auto(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -336,10 +338,10 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D_allo_a(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
-                    Mlast = Mfunc4D_allo_a(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                    Mfirst = Mfunc4D_allo_a(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                    Mlast = Mfunc4D_allo_a(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                     for jj in range(0, M-1):
-                        MInt[jj] = Mfunc4D_allo_a(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                        MInt[jj] = Mfunc4D_allo_a(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -367,10 +369,10 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     z = zz[kk]
                     a_ = aa[ll]
 
-                    Mfirst = Mfunc4D_allo_b(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
-                    Mlast = Mfunc4D_allo_b(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                    Mfirst = Mfunc4D_allo_b(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                    Mlast = Mfunc4D_allo_b(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                     for jj in range(0, M-1):
-                        MInt[jj] = Mfunc4D_allo_b(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+                        MInt[jj] = Mfunc4D_allo_b(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -415,13 +417,13 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef double[:] c = np.empty(N, dtype=np.float64)
     cdef double[:] r = np.empty(N, dtype=np.float64)
     cdef double[:] temp = np.empty(N, dtype=np.float64)
-    ### specify ploidy of the y direction
+    ### specify ploidy of the z direction
     cdef int is_diploid = ploidy3[0]
     cdef int is_auto = ploidy3[1]
     cdef int is_alloa = ploidy3[2]
     cdef int is_allob = ploidy3[3]
 
-    # compute the y step size and intermediate y values
+    # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
     compute_dfactor(&dz[0], N, &dfactor[0])
     compute_xInt(&zz[0], N, &zInt[0])
@@ -443,16 +445,10 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     y = yy[jj]
                     a_ = aa[ll]
                 
-                    ### Note: the order of the params being passed here is different from 
-                    # Ryan's original code. This is for consistency with the allo cases where
-                    # the first two dimensions passed to Mfunc need to be the allo subgenomes 
-                    # and the subgenomes are required to be passed as the last two
-                    # dimensions of phi which are z and a.
-                
-                    Mfirst = Mfunc4D(zz[0], a_, x, y, m34, m31, m32, s3[0], s3[1])
-                    Mlast = Mfunc4D(zz[N-1], a_, x, y, m34, m31, m32, s3[0], s3[1])  
+                    Mfirst = Mfunc4D(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1])
+                    Mlast = Mfunc4D(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1])  
                     for kk in range(0, N-1):
-                        MInt[kk] = Mfunc4D(zInt[kk], a_, x, y, m34, m31, m32, s3[0], s3[1])
+                        MInt[kk] = Mfunc4D(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1])
                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -480,10 +476,10 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     y = yy[jj]
                     a_ = aa[ll]
                 
-                    Mfirst = Mfunc4D_auto(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
-                    Mlast = Mfunc4D_auto(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+                    Mfirst = Mfunc4D_auto(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
+                    Mlast = Mfunc4D_auto(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
                     for kk in range(0, N-1):
-                        MInt[kk] = Mfunc4D_auto(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+                        MInt[kk] = Mfunc4D_auto(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -510,11 +506,14 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     x = xx[ii]
                     y = yy[jj]
                     a_ = aa[ll]
-                
-                    Mfirst = Mfunc4D_allo_a(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
-                    Mlast = Mfunc4D_allo_a(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                    ### Note: the order of migration params and grids being passed here is different 
+                    # This is for consistency with the allo cases where the first two dimensions passed
+                    # to Mfunc need to be the allo subgenomes and the subgenomes are always passed 
+                    # to the integrator as z and a.
+                    Mfirst = Mfunc4D_allo_a(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                    Mlast = Mfunc4D_allo_a(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                     for kk in range(0, N-1):
-                        MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                        MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -541,11 +540,11 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     x = xx[ii]
                     y = yy[jj]
                     a_ = aa[ll]
-                
-                    Mfirst = Mfunc4D_allo_b(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
-                    Mlast = Mfunc4D_allo_b(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                    # see note above about the order of the params passed to Mfuncs here
+                    Mfirst = Mfunc4D_allo_b(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                    Mlast = Mfunc4D_allo_b(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                     for kk in range(0, N-1):
-                        MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+                        MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -590,13 +589,13 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef double[:] c = np.empty(O, dtype=np.float64)
     cdef double[:] r = np.empty(O, dtype=np.float64)
     cdef double[:] temp = np.empty(O, dtype=np.float64)
-    ### specify ploidy of the y direction
+    ### specify ploidy of the a direction
     cdef int is_diploid = ploidy4[0]
     cdef int is_auto = ploidy4[1]
     cdef int is_alloa = ploidy4[2]
     cdef int is_allob = ploidy4[3]
 
-    # compute the y step size and intermediate y values
+    # compute step size and intermediate values
     compute_dx(&aa[0], O, &da[0])
     compute_dfactor(&da[0], O, &dfactor[0])
     compute_xInt(&aa[0], O, &aInt[0])
@@ -618,16 +617,10 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     y = yy[jj]
                     z = zz[kk]
                 
-                    ### Note: the order of the params being passed here is different from 
-                    # Ryan's original code. This is for consistency with the allo cases where
-                    # the first two dimensions passed to Mfunc need to be the allo subgenomes 
-                    # and the subgenomes are required to be passed as the last two
-                    # dimensions of phi which are z and a.
-            
-                    Mfirst = Mfunc4D(aa[0], z, x, y, m43, m41, m42, s4[0], s4[1])
-                    Mlast = Mfunc4D(aa[O-1], z, x, y, m43, m41, m42, s4[0], s4[1])  
+                    Mfirst = Mfunc4D(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1])
+                    Mlast = Mfunc4D(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1])  
                     for ll in range(0, O-1):
-                        MInt[ll] = Mfunc4D(aInt[ll], z, x, y, m43, m41, m42, s4[0], s4[1])
+                        MInt[ll] = Mfunc4D(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1])
                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -655,10 +648,10 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     y = yy[jj]
                     z = zz[kk]
             
-                    Mfirst = Mfunc4D_auto(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
-                    Mlast = Mfunc4D_auto(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+                    Mfirst = Mfunc4D_auto(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
+                    Mlast = Mfunc4D_auto(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
                     for ll in range(0, O-1):
-                        MInt[ll] = Mfunc4D_auto(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+                        MInt[ll] = Mfunc4D_auto(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -685,11 +678,14 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     x = xx[ii]
                     y = yy[jj]
                     z = zz[kk]
-            
-                    Mfirst = Mfunc4D_allo_a(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
-                    Mlast = Mfunc4D_allo_a(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+                    ### Note: the order of migration params and grids being passed here is different 
+                    # This is for consistency with the allo cases where the first two dimensions passed
+                    # to Mfunc need to be the allo subgenomes and the subgenomes are always passed 
+                    # to the integrator as z and a.
+                    Mfirst = Mfunc4D_allo_a(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+                    Mlast = Mfunc4D_allo_a(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
                     for ll in range(0, O-1):
-                        MInt[ll] = Mfunc4D_allo_a(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+                        MInt[ll] = Mfunc4D_allo_a(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -716,11 +712,11 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     x = xx[ii]
                     y = yy[jj]
                     z = zz[kk]
-                
-                    Mfirst = Mfunc4D_allo_b(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
-                    Mlast = Mfunc4D_allo_b(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+                    # see note above about the order of the params passed to Mfuncs here
+                    Mfirst = Mfunc4D_allo_b(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+                    Mlast = Mfunc4D_allo_b(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
                     for ll in range(0, O-1):
-                        MInt[ll] = Mfunc4D_allo_b(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+                        MInt[ll] = Mfunc4D_allo_b(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -889,7 +885,7 @@ def implicit_4Da(np.ndarray[double, ndim=4] phi,
     s4: vector of selection parameters for pop4
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
+    ploidy4: Vector of ploidy Booleans (0 or 1)
         [dip, auto, alloa, allob]
 
     Returns:

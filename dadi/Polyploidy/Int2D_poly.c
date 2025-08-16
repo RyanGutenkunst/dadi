@@ -19672,14 +19672,14 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef int is_alloa = ploidy1[2]
  *     cdef int is_allob = ploidy1[3]             # <<<<<<<<<<<<<<
  * 
- *     # compute the x step size and intermediate x values
+ *     # compute step size and intermediate values
 */
   __pyx_t_9 = 3;
   __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy1.data + __pyx_t_9 * __pyx_v_ploidy1.strides[0]) )));
 
   /* "Int2D_poly.pyx":79
  * 
- *     # compute the x step size and intermediate x values
+ *     # compute step size and intermediate values
  *     compute_dx(&xx[0], L, &dx[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dx[0], L, &dfactor[0])
  *     compute_xInt(&xx[0], L, &xInt[0])
@@ -19689,7 +19689,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dx(__Pyx_memviewslice __pyx_v_phi, 
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_10 * __pyx_v_dx.strides[0]) )))));
 
   /* "Int2D_poly.pyx":80
- *     # compute the x step size and intermediate x values
+ *     # compute step size and intermediate values
  *     compute_dx(&xx[0], L, &dx[0])
  *     compute_dfactor(&dx[0], L, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&xx[0], L, &xInt[0])
@@ -21792,14 +21792,14 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef int is_alloa = ploidy2[2]
  *     cdef int is_allob = ploidy2[3]             # <<<<<<<<<<<<<<
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
 */
   __pyx_t_9 = 3;
   __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy2.data + __pyx_t_9 * __pyx_v_ploidy2.strides[0]) )));
 
   /* "Int2D_poly.pyx":232
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
  *     compute_dx(&yy[0], M, &dy[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dy[0], M, &dfactor[0])
  *     compute_xInt(&yy[0], M, &yInt[0])
@@ -21809,7 +21809,7 @@ static void __pyx_f_10Int2D_poly_c_implicit_2Dy(__Pyx_memviewslice __pyx_v_phi, 
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_10 * __pyx_v_dy.strides[0]) )))));
 
   /* "Int2D_poly.pyx":233
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
  *     compute_dx(&yy[0], M, &dy[0])
  *     compute_dfactor(&dy[0], M, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&yy[0], M, &yInt[0])

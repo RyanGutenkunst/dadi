@@ -18952,7 +18952,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "Int4D_poly.pyx":49
+/* "Int4D_poly.pyx":51
  * # CYTHON 4D INTEGRATION FUNCTIONS - VARIABLE PARAMS
  * # =========================================================
  * cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -19030,7 +19030,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("c_implicit_4Dx", 0);
 
-  /* "Int4D_poly.pyx":55
+  /* "Int4D_poly.pyx":57
  *     # define memory for non-array variables
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x dim             # <<<<<<<<<<<<<<
@@ -19039,7 +19039,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_L = (__pyx_v_xx.shape[0]);
 
-  /* "Int4D_poly.pyx":56
+  /* "Int4D_poly.pyx":58
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x dim
  *     cdef int M = yy.shape[0] # number of grid points in y dim             # <<<<<<<<<<<<<<
@@ -19048,7 +19048,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_M = (__pyx_v_yy.shape[0]);
 
-  /* "Int4D_poly.pyx":57
+  /* "Int4D_poly.pyx":59
  *     cdef int L = xx.shape[0] # number of grid points in x dim
  *     cdef int M = yy.shape[0] # number of grid points in y dim
  *     cdef int N = zz.shape[0] # number of grid points in z dim             # <<<<<<<<<<<<<<
@@ -19057,7 +19057,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_N = (__pyx_v_zz.shape[0]);
 
-  /* "Int4D_poly.pyx":58
+  /* "Int4D_poly.pyx":60
  *     cdef int M = yy.shape[0] # number of grid points in y dim
  *     cdef int N = zz.shape[0] # number of grid points in z dim
  *     cdef int O = aa.shape[0] # number of grid points in a dim             # <<<<<<<<<<<<<<
@@ -19066,7 +19066,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_O = (__pyx_v_aa.shape[0]);
 
-  /* "Int4D_poly.pyx":64
+  /* "Int4D_poly.pyx":66
  *     # Create memory views for everything we need to compute
  *     ### grid spacings and integration points
  *     cdef double[:] dx = np.empty(L-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19074,16 +19074,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] xInt = np.empty(L-1, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -19100,25 +19100,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 66, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dx = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":65
+  /* "Int4D_poly.pyx":67
  *     ### grid spacings and integration points
  *     cdef double[:] dx = np.empty(L-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19126,16 +19126,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] delj = np.empty(L-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -19152,25 +19152,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 65, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dfactor = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":66
+  /* "Int4D_poly.pyx":68
  *     cdef double[:] dx = np.empty(L-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(L, dtype=np.float64)
  *     cdef double[:] xInt = np.empty(L-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19178,16 +19178,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     ### population genetic functions
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -19204,25 +19204,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 68, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 66, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 68, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_xInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":67
+  /* "Int4D_poly.pyx":69
  *     cdef double[:] dfactor = np.empty(L, dtype=np.float64)
  *     cdef double[:] xInt = np.empty(L-1, dtype=np.float64)
  *     cdef double[:] delj = np.empty(L-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19230,16 +19230,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double Mfirst, Mlast
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -19256,25 +19256,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 69, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_delj = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":70
+  /* "Int4D_poly.pyx":72
  *     ### population genetic functions
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(L-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19282,16 +19282,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] VInt = np.empty(L-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -19308,25 +19308,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_MInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":71
+  /* "Int4D_poly.pyx":73
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(L-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19334,16 +19334,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     ### for the tridiagonal matrix solver
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -19360,25 +19360,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 73, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_V = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":72
+  /* "Int4D_poly.pyx":74
  *     cdef double[:] MInt = np.empty(L-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(L, dtype=np.float64)
  *     cdef double[:] VInt = np.empty(L-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19386,16 +19386,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] a = np.empty(L, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_L - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -19412,25 +19412,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 72, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_VInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":74
+  /* "Int4D_poly.pyx":76
  *     cdef double[:] VInt = np.empty(L-1, dtype=np.float64)
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19438,16 +19438,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] c = np.empty(L, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -19464,25 +19464,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_a = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":75
+  /* "Int4D_poly.pyx":77
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(L, dtype=np.float64)
  *     cdef double[:] b = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19490,16 +19490,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] r = np.empty(L, dtype=np.float64)
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -19516,25 +19516,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 75, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 75, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 75, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_b = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":76
+  /* "Int4D_poly.pyx":78
  *     cdef double[:] a = np.empty(L, dtype=np.float64)
  *     cdef double[:] b = np.empty(L, dtype=np.float64)
  *     cdef double[:] c = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19542,16 +19542,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] temp = np.empty(L, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -19568,25 +19568,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 76, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 78, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_c = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":77
+  /* "Int4D_poly.pyx":79
  *     cdef double[:] b = np.empty(L, dtype=np.float64)
  *     cdef double[:] c = np.empty(L, dtype=np.float64)
  *     cdef double[:] r = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19594,16 +19594,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     ### specify ploidy of the x direction
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -19620,25 +19620,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 79, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 79, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_r = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":78
+  /* "Int4D_poly.pyx":80
  *     cdef double[:] c = np.empty(L, dtype=np.float64)
  *     cdef double[:] r = np.empty(L, dtype=np.float64)
  *     cdef double[:] temp = np.empty(L, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -19646,16 +19646,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef int is_diploid = ploidy1[0]
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_L); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -19672,25 +19672,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 78, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 80, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_temp = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":80
+  /* "Int4D_poly.pyx":82
  *     cdef double[:] temp = np.empty(L, dtype=np.float64)
  *     ### specify ploidy of the x direction
  *     cdef int is_diploid = ploidy1[0]             # <<<<<<<<<<<<<<
@@ -19700,7 +19700,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy1.data + __pyx_t_9 * __pyx_v_ploidy1.strides[0]) )));
 
-  /* "Int4D_poly.pyx":81
+  /* "Int4D_poly.pyx":83
  *     ### specify ploidy of the x direction
  *     cdef int is_diploid = ploidy1[0]
  *     cdef int is_auto = ploidy1[1]             # <<<<<<<<<<<<<<
@@ -19710,7 +19710,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 1;
   __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy1.data + __pyx_t_9 * __pyx_v_ploidy1.strides[0]) )));
 
-  /* "Int4D_poly.pyx":82
+  /* "Int4D_poly.pyx":84
  *     cdef int is_diploid = ploidy1[0]
  *     cdef int is_auto = ploidy1[1]
  *     cdef int is_alloa = ploidy1[2]             # <<<<<<<<<<<<<<
@@ -19720,19 +19720,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 2;
   __pyx_v_is_alloa = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy1.data + __pyx_t_9 * __pyx_v_ploidy1.strides[0]) )));
 
-  /* "Int4D_poly.pyx":83
+  /* "Int4D_poly.pyx":85
  *     cdef int is_auto = ploidy1[1]
  *     cdef int is_alloa = ploidy1[2]
  *     cdef int is_allob = ploidy1[3]             # <<<<<<<<<<<<<<
  * 
- *     # compute the x step size and intermediate x values
+ *     # compute step size and intermediate values
 */
   __pyx_t_9 = 3;
   __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy1.data + __pyx_t_9 * __pyx_v_ploidy1.strides[0]) )));
 
-  /* "Int4D_poly.pyx":86
+  /* "Int4D_poly.pyx":88
  * 
- *     # compute the x step size and intermediate x values
+ *     # compute step size and intermediate values
  *     compute_dx(&xx[0], L, &dx[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dx[0], L, &dfactor[0])
  *     compute_xInt(&xx[0], L, &xInt[0])
@@ -19741,8 +19741,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_10 * __pyx_v_dx.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":87
- *     # compute the x step size and intermediate x values
+  /* "Int4D_poly.pyx":89
+ *     # compute step size and intermediate values
  *     compute_dx(&xx[0], L, &dx[0])
  *     compute_dfactor(&dx[0], L, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&xx[0], L, &xInt[0])
@@ -19752,7 +19752,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_10 * __pyx_v_dx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_9 * __pyx_v_dfactor.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":88
+  /* "Int4D_poly.pyx":90
  *     compute_dx(&xx[0], L, &dx[0])
  *     compute_dfactor(&dx[0], L, &dfactor[0])
  *     compute_xInt(&xx[0], L, &xInt[0])             # <<<<<<<<<<<<<<
@@ -19763,7 +19763,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_9 * __pyx_v_xx.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_10 * __pyx_v_xInt.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":90
+  /* "Int4D_poly.pyx":92
  *     compute_xInt(&xx[0], L, &xInt[0])
  *     # dynamic allocation of memory for tridiag
  *     tridiag_malloc(L)             # <<<<<<<<<<<<<<
@@ -19772,7 +19772,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_malloc(__pyx_v_L);
 
-  /* "Int4D_poly.pyx":93
+  /* "Int4D_poly.pyx":95
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -19782,7 +19782,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_diploid != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":95
+    /* "Int4D_poly.pyx":97
  *     if is_diploid:
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -19794,7 +19794,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":96
+      /* "Int4D_poly.pyx":98
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
  *             V[ii] = Vfunc(xx[ii], nu1)             # <<<<<<<<<<<<<<
@@ -19806,7 +19806,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_10 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":97
+    /* "Int4D_poly.pyx":99
  *         for ii in range(0, L):
  *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
@@ -19818,7 +19818,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ii = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":98
+      /* "Int4D_poly.pyx":100
  *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):
  *             VInt[ii] = Vfunc(xInt[ii], nu1)             # <<<<<<<<<<<<<<
@@ -19830,7 +19830,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_9 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_10 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":100
+    /* "Int4D_poly.pyx":102
  *             VInt[ii] = Vfunc(xInt[ii], nu1)
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):             # <<<<<<<<<<<<<<
@@ -19842,7 +19842,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":101
+      /* "Int4D_poly.pyx":103
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -19854,7 +19854,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":102
+        /* "Int4D_poly.pyx":104
  *         for jj in range(M):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -19866,7 +19866,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":103
+          /* "Int4D_poly.pyx":105
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -19876,7 +19876,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_10 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":104
+          /* "Int4D_poly.pyx":106
  *                 for ll in range(O):
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -19886,21 +19886,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_10 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":105
+          /* "Int4D_poly.pyx":107
  *                     y = yy[jj]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D(xx[0], y, z, a_, m12, m13, m14, s1[0], s1[1])
+ *                     Mfirst = Mfunc4D(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1])
 */
           __pyx_t_10 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_10 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":107
+          /* "Int4D_poly.pyx":109
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D(xx[0], y, z, a_, m12, m13, m14, s1[0], s1[1])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D(xx[L-1], y, z, a_, m12, m13, m14, s1[0], s1[1])
+ *                     Mfirst = Mfunc4D(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1])
  *                     for ii in range(0, L-1):
 */
           __pyx_t_10 = 0;
@@ -19908,23 +19908,23 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 1;
           __pyx_v_Mfirst = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_10 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":108
+          /* "Int4D_poly.pyx":110
  * 
- *                     Mfirst = Mfunc4D(xx[0], y, z, a_, m12, m13, m14, s1[0], s1[1])
- *                     Mlast = Mfunc4D(xx[L-1], y, z, a_, m12, m13, m14, s1[0], s1[1])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1])
+ *                     Mlast = Mfunc4D(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1])             # <<<<<<<<<<<<<<
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D(xInt[ii], y, z, a_, m12, m13, m14, s1[0], s1[1])
+ *                         MInt[ii] = Mfunc4D(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1])
 */
           __pyx_t_23 = (__pyx_v_L - 1);
           __pyx_t_9 = 0;
           __pyx_t_10 = 1;
           __pyx_v_Mlast = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":109
- *                     Mfirst = Mfunc4D(xx[0], y, z, a_, m12, m13, m14, s1[0], s1[1])
- *                     Mlast = Mfunc4D(xx[L-1], y, z, a_, m12, m13, m14, s1[0], s1[1])
+          /* "Int4D_poly.pyx":111
+ *                     Mfirst = Mfunc4D(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1])
+ *                     Mlast = Mfunc4D(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1])
  *                     for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *                         MInt[ii] = Mfunc4D(xInt[ii], y, z, a_, m12, m13, m14, s1[0], s1[1])
+ *                         MInt[ii] = Mfunc4D(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_L - 1);
@@ -19932,10 +19932,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ii = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":110
- *                     Mlast = Mfunc4D(xx[L-1], y, z, a_, m12, m13, m14, s1[0], s1[1])
+            /* "Int4D_poly.pyx":112
+ *                     Mlast = Mfunc4D(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1])
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D(xInt[ii], y, z, a_, m12, m13, m14, s1[0], s1[1])             # <<<<<<<<<<<<<<
+ *                         MInt[ii] = Mfunc4D(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
 */
@@ -19946,9 +19946,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_25 * __pyx_v_MInt.strides[0]) )) = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_10 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":111
+          /* "Int4D_poly.pyx":113
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D(xInt[ii], y, z, a_, m12, m13, m14, s1[0], s1[1])
+ *                         MInt[ii] = Mfunc4D(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -19959,8 +19959,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_23 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_10 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_25 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":112
- *                         MInt[ii] = Mfunc4D(xInt[ii], y, z, a_, m12, m13, m14, s1[0], s1[1])
+          /* "Int4D_poly.pyx":114
+ *                         MInt[ii] = Mfunc4D(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -19976,7 +19976,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_25 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_10 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_9 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_23 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_27 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_29 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":113
+          /* "Int4D_poly.pyx":115
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -20006,7 +20006,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L17_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":114
+            /* "Int4D_poly.pyx":116
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
@@ -20017,7 +20017,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_29 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":113
+            /* "Int4D_poly.pyx":115
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -20026,7 +20026,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":115
+          /* "Int4D_poly.pyx":117
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -20056,7 +20056,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L22_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":116
+            /* "Int4D_poly.pyx":118
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
@@ -20067,7 +20067,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = (__pyx_v_L - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_29 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":115
+            /* "Int4D_poly.pyx":117
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -20076,7 +20076,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":118
+          /* "Int4D_poly.pyx":120
  *                         b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20088,7 +20088,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":119
+            /* "Int4D_poly.pyx":121
  * 
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -20103,7 +20103,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_29 * __pyx_v_phi.strides[0]) ) + __pyx_t_28 * __pyx_v_phi.strides[1]) ) + __pyx_t_27 * __pyx_v_phi.strides[2]) ) + __pyx_t_26 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":120
+          /* "Int4D_poly.pyx":122
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
@@ -20117,7 +20117,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_26 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_27 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_28 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_23 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
 
-          /* "Int4D_poly.pyx":121
+          /* "Int4D_poly.pyx":123
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20129,7 +20129,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":122
+            /* "Int4D_poly.pyx":124
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):
  *                         phi[ii, jj, kk, ll] = temp[ii]             # <<<<<<<<<<<<<<
@@ -20147,7 +20147,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":93
+    /* "Int4D_poly.pyx":95
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -20157,7 +20157,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":124
+  /* "Int4D_poly.pyx":126
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -20167,7 +20167,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_auto != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":126
+    /* "Int4D_poly.pyx":128
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20179,7 +20179,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":127
+      /* "Int4D_poly.pyx":129
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
  *             V[ii] = Vfunc_tetra(xx[ii], nu1)             # <<<<<<<<<<<<<<
@@ -20191,7 +20191,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":128
+    /* "Int4D_poly.pyx":130
  *         for ii in range(0, L):
  *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
@@ -20203,7 +20203,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ii = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":129
+      /* "Int4D_poly.pyx":131
  *             V[ii] = Vfunc_tetra(xx[ii], nu1)
  *         for ii in range(0, L-1):
  *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)             # <<<<<<<<<<<<<<
@@ -20215,7 +20215,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_23 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":131
+    /* "Int4D_poly.pyx":133
  *             VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):             # <<<<<<<<<<<<<<
@@ -20227,7 +20227,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":132
+      /* "Int4D_poly.pyx":134
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -20239,7 +20239,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":133
+        /* "Int4D_poly.pyx":135
  *         for jj in range(M):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -20251,7 +20251,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":134
+          /* "Int4D_poly.pyx":136
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -20261,7 +20261,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":135
+          /* "Int4D_poly.pyx":137
  *                 for ll in range(O):
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -20271,21 +20271,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":136
+          /* "Int4D_poly.pyx":138
  *                     y = yy[jj]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_auto(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+ *                     Mfirst = Mfunc4D_auto(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
 */
           __pyx_t_23 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":138
+          /* "Int4D_poly.pyx":140
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_auto(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_auto(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+ *                     Mfirst = Mfunc4D_auto(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_auto(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
  *                     for ii in range(0, L-1):
 */
           __pyx_t_23 = 0;
@@ -20295,12 +20295,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 3;
           __pyx_v_Mfirst = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_29 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":139
+          /* "Int4D_poly.pyx":141
  * 
- *                     Mfirst = Mfunc4D_auto(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
- *                     Mlast = Mfunc4D_auto(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_auto(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
+ *                     Mlast = Mfunc4D_auto(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])             # <<<<<<<<<<<<<<
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+ *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
 */
           __pyx_t_29 = (__pyx_v_L - 1);
           __pyx_t_28 = 0;
@@ -20309,11 +20309,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 3;
           __pyx_v_Mlast = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":140
- *                     Mfirst = Mfunc4D_auto(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
- *                     Mlast = Mfunc4D_auto(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+          /* "Int4D_poly.pyx":142
+ *                     Mfirst = Mfunc4D_auto(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
+ *                     Mlast = Mfunc4D_auto(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
  *                     for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+ *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_L - 1);
@@ -20321,10 +20321,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ii = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":141
- *                     Mlast = Mfunc4D_auto(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+            /* "Int4D_poly.pyx":143
+ *                     Mlast = Mfunc4D_auto(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])             # <<<<<<<<<<<<<<
+ *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
 */
@@ -20337,9 +20337,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_23 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_29 * __pyx_v_s1.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":142
+          /* "Int4D_poly.pyx":144
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+ *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -20350,8 +20350,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_29 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":143
- *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3])
+          /* "Int4D_poly.pyx":145
+ *                         MInt[ii] = Mfunc4D_auto(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -20367,7 +20367,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_26 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":144
+          /* "Int4D_poly.pyx":146
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -20397,7 +20397,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L43_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":145
+            /* "Int4D_poly.pyx":147
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
@@ -20408,7 +20408,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_25 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":144
+            /* "Int4D_poly.pyx":146
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -20417,7 +20417,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":146
+          /* "Int4D_poly.pyx":148
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -20447,7 +20447,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":147
+            /* "Int4D_poly.pyx":149
  *                         b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
@@ -20458,7 +20458,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_L - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_25 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":146
+            /* "Int4D_poly.pyx":148
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -20467,7 +20467,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":149
+          /* "Int4D_poly.pyx":151
  *                         b[L-1] += -(-0.25/nu1 - Mlast)*2/dx[L-2]
  * 
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20479,7 +20479,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":150
+            /* "Int4D_poly.pyx":152
  * 
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -20494,7 +20494,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":151
+          /* "Int4D_poly.pyx":153
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
@@ -20508,7 +20508,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
 
-          /* "Int4D_poly.pyx":152
+          /* "Int4D_poly.pyx":154
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20520,7 +20520,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":153
+            /* "Int4D_poly.pyx":155
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):
  *                         phi[ii, jj, kk, ll] = temp[ii]             # <<<<<<<<<<<<<<
@@ -20538,7 +20538,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":124
+    /* "Int4D_poly.pyx":126
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -20548,7 +20548,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":155
+  /* "Int4D_poly.pyx":157
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -20558,7 +20558,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_alloa != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":157
+    /* "Int4D_poly.pyx":159
  *     elif is_alloa:
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20570,7 +20570,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":158
+      /* "Int4D_poly.pyx":160
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
  *             V[ii] = Vfunc(xx[ii], nu1)             # <<<<<<<<<<<<<<
@@ -20582,7 +20582,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":159
+    /* "Int4D_poly.pyx":161
  *         for ii in range(0, L):
  *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
@@ -20594,7 +20594,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ii = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":160
+      /* "Int4D_poly.pyx":162
  *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):
  *             VInt[ii] = Vfunc(xInt[ii], nu1)             # <<<<<<<<<<<<<<
@@ -20606,7 +20606,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_23 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_29 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":162
+    /* "Int4D_poly.pyx":164
  *             VInt[ii] = Vfunc(xInt[ii], nu1)
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):             # <<<<<<<<<<<<<<
@@ -20618,7 +20618,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":163
+      /* "Int4D_poly.pyx":165
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -20630,7 +20630,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":164
+        /* "Int4D_poly.pyx":166
  *         for jj in range(M):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -20642,7 +20642,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":165
+          /* "Int4D_poly.pyx":167
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -20652,7 +20652,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":166
+          /* "Int4D_poly.pyx":168
  *                 for ll in range(O):
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -20662,21 +20662,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":167
+          /* "Int4D_poly.pyx":169
  *                     y = yy[jj]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_allo_a(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mfirst = Mfunc4D_allo_a(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
 */
           __pyx_t_29 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":169
+          /* "Int4D_poly.pyx":171
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_allo_a(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_a(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mfirst = Mfunc4D_allo_a(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_a(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     for ii in range(0, L-1):
 */
           __pyx_t_29 = 0;
@@ -20690,12 +20690,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_25 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_33 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":170
+          /* "Int4D_poly.pyx":172
  * 
- *                     Mfirst = Mfunc4D_allo_a(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
- *                     Mlast = Mfunc4D_allo_a(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_allo_a(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mlast = Mfunc4D_allo_a(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
 */
           __pyx_t_33 = (__pyx_v_L - 1);
           __pyx_t_26 = 0;
@@ -20708,11 +20708,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_33 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_25 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_29 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":171
- *                     Mfirst = Mfunc4D_allo_a(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
- *                     Mlast = Mfunc4D_allo_a(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+          /* "Int4D_poly.pyx":173
+ *                     Mfirst = Mfunc4D_allo_a(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mlast = Mfunc4D_allo_a(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_L - 1);
@@ -20720,10 +20720,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ii = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":172
- *                     Mlast = Mfunc4D_allo_a(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+            /* "Int4D_poly.pyx":174
+ *                     Mlast = Mfunc4D_allo_a(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
+ *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
 */
@@ -20740,9 +20740,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_29 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_25 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_33 * __pyx_v_s1.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":173
+          /* "Int4D_poly.pyx":175
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -20753,8 +20753,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_28 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_33 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_26 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":174
- *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+          /* "Int4D_poly.pyx":176
+ *                         MInt[ii] = Mfunc4D_allo_a(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -20770,7 +20770,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_28 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_33 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_10 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_23 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":175
+          /* "Int4D_poly.pyx":177
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -20800,7 +20800,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L69_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":176
+            /* "Int4D_poly.pyx":178
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
@@ -20811,7 +20811,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_23 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":175
+            /* "Int4D_poly.pyx":177
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -20820,7 +20820,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":177
+          /* "Int4D_poly.pyx":179
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -20850,7 +20850,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L74_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":178
+            /* "Int4D_poly.pyx":180
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
@@ -20861,7 +20861,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = (__pyx_v_L - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_23 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":177
+            /* "Int4D_poly.pyx":179
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -20870,7 +20870,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":180
+          /* "Int4D_poly.pyx":182
  *                         b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20882,7 +20882,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":181
+            /* "Int4D_poly.pyx":183
  * 
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -20897,7 +20897,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_33 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_23 * __pyx_v_phi.strides[0]) ) + __pyx_t_9 * __pyx_v_phi.strides[1]) ) + __pyx_t_10 * __pyx_v_phi.strides[2]) ) + __pyx_t_25 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":182
+          /* "Int4D_poly.pyx":184
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
@@ -20911,7 +20911,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_25 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_9 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_33 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
 
-          /* "Int4D_poly.pyx":183
+          /* "Int4D_poly.pyx":185
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20923,7 +20923,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":184
+            /* "Int4D_poly.pyx":186
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):
  *                         phi[ii, jj, kk, ll] = temp[ii]             # <<<<<<<<<<<<<<
@@ -20941,7 +20941,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":155
+    /* "Int4D_poly.pyx":157
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -20951,7 +20951,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":186
+  /* "Int4D_poly.pyx":188
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -20961,7 +20961,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_allob != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":188
+    /* "Int4D_poly.pyx":190
  *     elif is_allob:
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -20973,7 +20973,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":189
+      /* "Int4D_poly.pyx":191
  *         # compute everything we can outside of the spatial loop
  *         for ii in range(0, L):
  *             V[ii] = Vfunc(xx[ii], nu1)             # <<<<<<<<<<<<<<
@@ -20985,7 +20985,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_33 * __pyx_v_xx.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":190
+    /* "Int4D_poly.pyx":192
  *         for ii in range(0, L):
  *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):             # <<<<<<<<<<<<<<
@@ -20997,7 +20997,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ii = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":191
+      /* "Int4D_poly.pyx":193
  *             V[ii] = Vfunc(xx[ii], nu1)
  *         for ii in range(0, L-1):
  *             VInt[ii] = Vfunc(xInt[ii], nu1)             # <<<<<<<<<<<<<<
@@ -21009,7 +21009,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_25 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_33 * __pyx_v_xInt.strides[0]) ))), __pyx_v_nu1);
     }
 
-    /* "Int4D_poly.pyx":193
+    /* "Int4D_poly.pyx":195
  *             VInt[ii] = Vfunc(xInt[ii], nu1)
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):             # <<<<<<<<<<<<<<
@@ -21021,7 +21021,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":194
+      /* "Int4D_poly.pyx":196
  *         # loop through y, z, and a dimensions
  *         for jj in range(M):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -21033,7 +21033,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":195
+        /* "Int4D_poly.pyx":197
  *         for jj in range(M):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -21045,7 +21045,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":196
+          /* "Int4D_poly.pyx":198
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -21055,7 +21055,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_33 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":197
+          /* "Int4D_poly.pyx":199
  *                 for ll in range(O):
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -21065,21 +21065,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_33 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":198
+          /* "Int4D_poly.pyx":200
  *                     y = yy[jj]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_allo_b(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mfirst = Mfunc4D_allo_b(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
 */
           __pyx_t_33 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_33 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":200
+          /* "Int4D_poly.pyx":202
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_allo_b(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_b(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mfirst = Mfunc4D_allo_b(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_b(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     for ii in range(0, L-1):
 */
           __pyx_t_33 = 0;
@@ -21093,12 +21093,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_33 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_25 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_29 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":201
+          /* "Int4D_poly.pyx":203
  * 
- *                     Mfirst = Mfunc4D_allo_b(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
- *                     Mlast = Mfunc4D_allo_b(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_allo_b(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mlast = Mfunc4D_allo_b(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
 */
           __pyx_t_29 = (__pyx_v_L - 1);
           __pyx_t_28 = 0;
@@ -21111,11 +21111,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_25 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_33 * __pyx_v_s1.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":202
- *                     Mfirst = Mfunc4D_allo_b(xx[0], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
- *                     Mlast = Mfunc4D_allo_b(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+          /* "Int4D_poly.pyx":204
+ *                     Mfirst = Mfunc4D_allo_b(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                     Mlast = Mfunc4D_allo_b(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     for ii in range(0, L-1):             # <<<<<<<<<<<<<<
- *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_L - 1);
@@ -21123,10 +21123,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ii = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":203
- *                     Mlast = Mfunc4D_allo_b(xx[L-1], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+            /* "Int4D_poly.pyx":205
+ *                     Mlast = Mfunc4D_allo_b(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
+ *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
 */
@@ -21143,9 +21143,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_xInt.data + __pyx_t_33 * __pyx_v_xInt.strides[0]) ))), __pyx_v_y, __pyx_v_z, __pyx_v_a_, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_25 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_10 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_9 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_23 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_26 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_27 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_28 * __pyx_v_s1.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s1.data + __pyx_t_29 * __pyx_v_s1.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":204
+          /* "Int4D_poly.pyx":206
  *                     for ii in range(0, L-1):
- *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+ *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -21156,8 +21156,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_29 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":205
- *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y, z, a_, m12, m13, m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+          /* "Int4D_poly.pyx":207
+ *                         MInt[ii] = Mfunc4D_allo_b(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -21173,7 +21173,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_26 * __pyx_v_dx.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_L, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":206
+          /* "Int4D_poly.pyx":208
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -21203,7 +21203,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L95_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":207
+            /* "Int4D_poly.pyx":209
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]             # <<<<<<<<<<<<<<
@@ -21214,7 +21214,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu1) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_25 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":206
+            /* "Int4D_poly.pyx":208
  *                     compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -21223,7 +21223,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":208
+          /* "Int4D_poly.pyx":210
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -21253,7 +21253,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L100_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":209
+            /* "Int4D_poly.pyx":211
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]             # <<<<<<<<<<<<<<
@@ -21264,7 +21264,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_L - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu1) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dx.data + __pyx_t_25 * __pyx_v_dx.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":208
+            /* "Int4D_poly.pyx":210
  *                     if y==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu1 - Mfirst)*2/dx[0]
  *                     if y==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -21273,7 +21273,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":211
+          /* "Int4D_poly.pyx":213
  *                         b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
  * 
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -21285,7 +21285,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":212
+            /* "Int4D_poly.pyx":214
  * 
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -21300,7 +21300,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":213
+          /* "Int4D_poly.pyx":215
  *                     for ii in range(0, L):
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)             # <<<<<<<<<<<<<<
@@ -21314,7 +21314,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_L);
 
-          /* "Int4D_poly.pyx":214
+          /* "Int4D_poly.pyx":216
  *                         r[ii] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):             # <<<<<<<<<<<<<<
@@ -21326,7 +21326,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ii = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":215
+            /* "Int4D_poly.pyx":217
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
  *                     for ii in range(0, L):
  *                         phi[ii, jj, kk, ll] = temp[ii]             # <<<<<<<<<<<<<<
@@ -21344,7 +21344,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":186
+    /* "Int4D_poly.pyx":188
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -21354,7 +21354,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   }
   __pyx_L3:;
 
-  /* "Int4D_poly.pyx":217
+  /* "Int4D_poly.pyx":219
  *                         phi[ii, jj, kk, ll] = temp[ii]
  * 
  *     tridiag_free()             # <<<<<<<<<<<<<<
@@ -21363,7 +21363,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_free();
 
-  /* "Int4D_poly.pyx":49
+  /* "Int4D_poly.pyx":51
  * # CYTHON 4D INTEGRATION FUNCTIONS - VARIABLE PARAMS
  * # =========================================================
  * cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -21398,7 +21398,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dx(__Pyx_memviewslice __pyx_v_phi, 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "Int4D_poly.pyx":219
+/* "Int4D_poly.pyx":221
  *     tridiag_free()
  * 
  * cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -21476,7 +21476,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("c_implicit_4Dy", 0);
 
-  /* "Int4D_poly.pyx":225
+  /* "Int4D_poly.pyx":227
  *     # define memory for non-array variables
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x direction             # <<<<<<<<<<<<<<
@@ -21485,7 +21485,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_L = (__pyx_v_xx.shape[0]);
 
-  /* "Int4D_poly.pyx":226
+  /* "Int4D_poly.pyx":228
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x direction
  *     cdef int M = yy.shape[0] # number of grid points in y direction             # <<<<<<<<<<<<<<
@@ -21494,7 +21494,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_M = (__pyx_v_yy.shape[0]);
 
-  /* "Int4D_poly.pyx":227
+  /* "Int4D_poly.pyx":229
  *     cdef int L = xx.shape[0] # number of grid points in x direction
  *     cdef int M = yy.shape[0] # number of grid points in y direction
  *     cdef int N = zz.shape[0] # number of grid points in z direction             # <<<<<<<<<<<<<<
@@ -21503,7 +21503,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_N = (__pyx_v_zz.shape[0]);
 
-  /* "Int4D_poly.pyx":228
+  /* "Int4D_poly.pyx":230
  *     cdef int M = yy.shape[0] # number of grid points in y direction
  *     cdef int N = zz.shape[0] # number of grid points in z direction
  *     cdef int O = aa.shape[0] # number of grid points in a direction             # <<<<<<<<<<<<<<
@@ -21512,7 +21512,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_O = (__pyx_v_aa.shape[0]);
 
-  /* "Int4D_poly.pyx":234
+  /* "Int4D_poly.pyx":236
  *     # Create memory views for everything we need to compute
  *     ### grid spacings and integration points
  *     cdef double[:] dy = np.empty(M-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21520,16 +21520,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] yInt = np.empty(M-1, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 234, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 234, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 234, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 234, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 234, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -21546,25 +21546,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 234, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 236, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 234, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 236, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 234, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 234, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dy = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":235
+  /* "Int4D_poly.pyx":237
  *     ### grid spacings and integration points
  *     cdef double[:] dy = np.empty(M-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21572,16 +21572,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] delj = np.empty(M-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -21598,25 +21598,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 235, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 237, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 235, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 237, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dfactor = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":236
+  /* "Int4D_poly.pyx":238
  *     cdef double[:] dy = np.empty(M-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(M, dtype=np.float64)
  *     cdef double[:] yInt = np.empty(M-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21624,16 +21624,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     ### population genetic functions
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -21650,25 +21650,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 236, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 236, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 238, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 236, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_yInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":237
+  /* "Int4D_poly.pyx":239
  *     cdef double[:] dfactor = np.empty(M, dtype=np.float64)
  *     cdef double[:] yInt = np.empty(M-1, dtype=np.float64)
  *     cdef double[:] delj = np.empty(M-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21676,16 +21676,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double Mfirst, Mlast
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -21702,25 +21702,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 237, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 239, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 237, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 239, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 239, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_delj = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":240
+  /* "Int4D_poly.pyx":242
  *     ### population genetic functions
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(M-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21728,16 +21728,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] VInt = np.empty(M-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -21754,25 +21754,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 242, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_MInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":241
+  /* "Int4D_poly.pyx":243
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(M-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21780,16 +21780,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     ### for the tridiagonal matrix solver
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -21806,25 +21806,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 241, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 241, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 243, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_V = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":242
+  /* "Int4D_poly.pyx":244
  *     cdef double[:] MInt = np.empty(M-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(M, dtype=np.float64)
  *     cdef double[:] VInt = np.empty(M-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21832,16 +21832,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] a = np.empty(M, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_M - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -21858,25 +21858,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 242, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 242, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 244, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_VInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":244
+  /* "Int4D_poly.pyx":246
  *     cdef double[:] VInt = np.empty(M-1, dtype=np.float64)
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21884,16 +21884,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] c = np.empty(M, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -21910,25 +21910,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 244, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 244, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 246, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 244, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_a = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":245
+  /* "Int4D_poly.pyx":247
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(M, dtype=np.float64)
  *     cdef double[:] b = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21936,16 +21936,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] r = np.empty(M, dtype=np.float64)
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -21962,25 +21962,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 245, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 247, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 245, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 247, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 245, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_b = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":246
+  /* "Int4D_poly.pyx":248
  *     cdef double[:] a = np.empty(M, dtype=np.float64)
  *     cdef double[:] b = np.empty(M, dtype=np.float64)
  *     cdef double[:] c = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -21988,16 +21988,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] temp = np.empty(M, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -22014,25 +22014,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 246, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 246, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 248, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_c = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":247
+  /* "Int4D_poly.pyx":249
  *     cdef double[:] b = np.empty(M, dtype=np.float64)
  *     cdef double[:] c = np.empty(M, dtype=np.float64)
  *     cdef double[:] r = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -22040,16 +22040,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     ### specify ploidy of the y direction
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -22066,25 +22066,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 247, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 247, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 249, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 249, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 249, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_r = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":248
+  /* "Int4D_poly.pyx":250
  *     cdef double[:] c = np.empty(M, dtype=np.float64)
  *     cdef double[:] r = np.empty(M, dtype=np.float64)
  *     cdef double[:] temp = np.empty(M, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -22092,16 +22092,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef int is_diploid = ploidy2[0]
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_M); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -22118,25 +22118,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 248, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 250, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_temp = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":250
+  /* "Int4D_poly.pyx":252
  *     cdef double[:] temp = np.empty(M, dtype=np.float64)
  *     ### specify ploidy of the y direction
  *     cdef int is_diploid = ploidy2[0]             # <<<<<<<<<<<<<<
@@ -22146,7 +22146,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy2.data + __pyx_t_9 * __pyx_v_ploidy2.strides[0]) )));
 
-  /* "Int4D_poly.pyx":251
+  /* "Int4D_poly.pyx":253
  *     ### specify ploidy of the y direction
  *     cdef int is_diploid = ploidy2[0]
  *     cdef int is_auto = ploidy2[1]             # <<<<<<<<<<<<<<
@@ -22156,7 +22156,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 1;
   __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy2.data + __pyx_t_9 * __pyx_v_ploidy2.strides[0]) )));
 
-  /* "Int4D_poly.pyx":252
+  /* "Int4D_poly.pyx":254
  *     cdef int is_diploid = ploidy2[0]
  *     cdef int is_auto = ploidy2[1]
  *     cdef int is_alloa = ploidy2[2]             # <<<<<<<<<<<<<<
@@ -22166,19 +22166,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 2;
   __pyx_v_is_alloa = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy2.data + __pyx_t_9 * __pyx_v_ploidy2.strides[0]) )));
 
-  /* "Int4D_poly.pyx":253
+  /* "Int4D_poly.pyx":255
  *     cdef int is_auto = ploidy2[1]
  *     cdef int is_alloa = ploidy2[2]
  *     cdef int is_allob = ploidy2[3]             # <<<<<<<<<<<<<<
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
 */
   __pyx_t_9 = 3;
   __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy2.data + __pyx_t_9 * __pyx_v_ploidy2.strides[0]) )));
 
-  /* "Int4D_poly.pyx":256
+  /* "Int4D_poly.pyx":258
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
  *     compute_dx(&yy[0], M, &dy[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dy[0], M, &dfactor[0])
  *     compute_xInt(&yy[0], M, &yInt[0])
@@ -22187,8 +22187,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_10 * __pyx_v_dy.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":257
- *     # compute the y step size and intermediate y values
+  /* "Int4D_poly.pyx":259
+ *     # compute step size and intermediate values
  *     compute_dx(&yy[0], M, &dy[0])
  *     compute_dfactor(&dy[0], M, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&yy[0], M, &yInt[0])
@@ -22198,7 +22198,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_10 * __pyx_v_dy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_9 * __pyx_v_dfactor.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":258
+  /* "Int4D_poly.pyx":260
  *     compute_dx(&yy[0], M, &dy[0])
  *     compute_dfactor(&dy[0], M, &dfactor[0])
  *     compute_xInt(&yy[0], M, &yInt[0])             # <<<<<<<<<<<<<<
@@ -22209,7 +22209,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_9 * __pyx_v_yy.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_10 * __pyx_v_yInt.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":260
+  /* "Int4D_poly.pyx":262
  *     compute_xInt(&yy[0], M, &yInt[0])
  *     # dynamic allocation of memory for tridiag
  *     tridiag_malloc(M)             # <<<<<<<<<<<<<<
@@ -22218,7 +22218,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_malloc(__pyx_v_M);
 
-  /* "Int4D_poly.pyx":263
+  /* "Int4D_poly.pyx":265
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -22228,7 +22228,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_diploid != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":265
+    /* "Int4D_poly.pyx":267
  *     if is_diploid:
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -22240,7 +22240,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":266
+      /* "Int4D_poly.pyx":268
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
  *             V[jj] = Vfunc(yy[jj], nu2)             # <<<<<<<<<<<<<<
@@ -22252,7 +22252,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_10 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":267
+    /* "Int4D_poly.pyx":269
  *         for jj in range(0, M):
  *             V[jj] = Vfunc(yy[jj], nu2)
  *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
@@ -22264,7 +22264,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_jj = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":268
+      /* "Int4D_poly.pyx":270
  *             V[jj] = Vfunc(yy[jj], nu2)
  *         for jj in range(0, M-1):
  *             VInt[jj] = Vfunc(yInt[jj], nu2)             # <<<<<<<<<<<<<<
@@ -22276,7 +22276,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_9 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_10 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":270
+    /* "Int4D_poly.pyx":272
  *             VInt[jj] = Vfunc(yInt[jj], nu2)
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -22288,7 +22288,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":271
+      /* "Int4D_poly.pyx":273
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -22300,7 +22300,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":272
+        /* "Int4D_poly.pyx":274
  *         for ii in range(L):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -22312,7 +22312,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":273
+          /* "Int4D_poly.pyx":275
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -22322,7 +22322,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_10 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":274
+          /* "Int4D_poly.pyx":276
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -22332,21 +22332,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_10 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":275
+          /* "Int4D_poly.pyx":277
  *                     x = xx[ii]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D(yy[0], x, z, a_, m21, m23, m24, s2[0], s2[1])
+ *                     Mfirst = Mfunc4D(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1])
 */
           __pyx_t_10 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_10 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":277
+          /* "Int4D_poly.pyx":279
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D(yy[0], x, z, a_, m21, m23, m24, s2[0], s2[1])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D(yy[M-1], x, z, a_, m21, m23, m24, s2[0], s2[1])
+ *                     Mfirst = Mfunc4D(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1])
  *                     for jj in range(0, M-1):
 */
           __pyx_t_10 = 0;
@@ -22354,23 +22354,23 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 1;
           __pyx_v_Mfirst = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_10 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":278
+          /* "Int4D_poly.pyx":280
  * 
- *                     Mfirst = Mfunc4D(yy[0], x, z, a_, m21, m23, m24, s2[0], s2[1])
- *                     Mlast = Mfunc4D(yy[M-1], x, z, a_, m21, m23, m24, s2[0], s2[1])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1])
+ *                     Mlast = Mfunc4D(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1])             # <<<<<<<<<<<<<<
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D(yInt[jj], x, z, a_, m21, m23, m24, s2[0], s2[1])
+ *                         MInt[jj] = Mfunc4D(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1])
 */
           __pyx_t_23 = (__pyx_v_M - 1);
           __pyx_t_9 = 0;
           __pyx_t_10 = 1;
           __pyx_v_Mlast = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":279
- *                     Mfirst = Mfunc4D(yy[0], x, z, a_, m21, m23, m24, s2[0], s2[1])
- *                     Mlast = Mfunc4D(yy[M-1], x, z, a_, m21, m23, m24, s2[0], s2[1])
+          /* "Int4D_poly.pyx":281
+ *                     Mfirst = Mfunc4D(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1])
+ *                     Mlast = Mfunc4D(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1])
  *                     for jj in range(0, M-1):             # <<<<<<<<<<<<<<
- *                         MInt[jj] = Mfunc4D(yInt[jj], x, z, a_, m21, m23, m24, s2[0], s2[1])
+ *                         MInt[jj] = Mfunc4D(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_M - 1);
@@ -22378,10 +22378,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_jj = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":280
- *                     Mlast = Mfunc4D(yy[M-1], x, z, a_, m21, m23, m24, s2[0], s2[1])
+            /* "Int4D_poly.pyx":282
+ *                     Mlast = Mfunc4D(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1])
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D(yInt[jj], x, z, a_, m21, m23, m24, s2[0], s2[1])             # <<<<<<<<<<<<<<
+ *                         MInt[jj] = Mfunc4D(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
 */
@@ -22392,9 +22392,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_25 * __pyx_v_MInt.strides[0]) )) = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_10 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":281
+          /* "Int4D_poly.pyx":283
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D(yInt[jj], x, z, a_, m21, m23, m24, s2[0], s2[1])
+ *                         MInt[jj] = Mfunc4D(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -22405,8 +22405,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_23 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_10 * __pyx_v_VInt.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_25 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":282
- *                         MInt[jj] = Mfunc4D(yInt[jj], x, z, a_, m21, m23, m24, s2[0], s2[1])
+          /* "Int4D_poly.pyx":284
+ *                         MInt[jj] = Mfunc4D(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -22422,7 +22422,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_25 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_10 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_9 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_23 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_27 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_29 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":283
+          /* "Int4D_poly.pyx":285
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -22452,7 +22452,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L17_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":284
+            /* "Int4D_poly.pyx":286
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
@@ -22463,7 +22463,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_29 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":283
+            /* "Int4D_poly.pyx":285
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -22472,7 +22472,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":285
+          /* "Int4D_poly.pyx":287
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -22502,7 +22502,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L22_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":286
+            /* "Int4D_poly.pyx":288
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]             # <<<<<<<<<<<<<<
@@ -22513,7 +22513,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = (__pyx_v_M - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_29 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":285
+            /* "Int4D_poly.pyx":287
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -22522,7 +22522,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":288
+          /* "Int4D_poly.pyx":290
  *                         b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
  * 
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -22534,7 +22534,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":289
+            /* "Int4D_poly.pyx":291
  * 
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -22549,7 +22549,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_29 * __pyx_v_phi.strides[0]) ) + __pyx_t_28 * __pyx_v_phi.strides[1]) ) + __pyx_t_27 * __pyx_v_phi.strides[2]) ) + __pyx_t_26 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":290
+          /* "Int4D_poly.pyx":292
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)             # <<<<<<<<<<<<<<
@@ -22563,7 +22563,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_26 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_27 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_28 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_23 * __pyx_v_temp.strides[0]) )))), __pyx_v_M);
 
-          /* "Int4D_poly.pyx":291
+          /* "Int4D_poly.pyx":293
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -22575,7 +22575,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":292
+            /* "Int4D_poly.pyx":294
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):
  *                         phi[ii, jj, kk, ll] = temp[jj]             # <<<<<<<<<<<<<<
@@ -22593,7 +22593,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":263
+    /* "Int4D_poly.pyx":265
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -22603,7 +22603,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":294
+  /* "Int4D_poly.pyx":296
  *                         phi[ii, jj, kk, ll] = temp[jj]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -22613,7 +22613,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_auto != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":296
+    /* "Int4D_poly.pyx":298
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -22625,7 +22625,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":297
+      /* "Int4D_poly.pyx":299
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
  *             V[jj] = Vfunc_tetra(yy[jj], nu2)             # <<<<<<<<<<<<<<
@@ -22637,7 +22637,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":298
+    /* "Int4D_poly.pyx":300
  *         for jj in range(0, M):
  *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
@@ -22649,7 +22649,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_jj = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":299
+      /* "Int4D_poly.pyx":301
  *             V[jj] = Vfunc_tetra(yy[jj], nu2)
  *         for jj in range(0, M-1):
  *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)             # <<<<<<<<<<<<<<
@@ -22661,7 +22661,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_23 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":301
+    /* "Int4D_poly.pyx":303
  *             VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -22673,7 +22673,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":302
+      /* "Int4D_poly.pyx":304
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -22685,7 +22685,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":303
+        /* "Int4D_poly.pyx":305
  *         for ii in range(L):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -22697,7 +22697,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":304
+          /* "Int4D_poly.pyx":306
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -22707,7 +22707,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":305
+          /* "Int4D_poly.pyx":307
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -22717,21 +22717,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":306
+          /* "Int4D_poly.pyx":308
  *                     x = xx[ii]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_auto(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+ *                     Mfirst = Mfunc4D_auto(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
 */
           __pyx_t_23 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":308
+          /* "Int4D_poly.pyx":310
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_auto(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_auto(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+ *                     Mfirst = Mfunc4D_auto(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_auto(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
  *                     for jj in range(0, M-1):
 */
           __pyx_t_23 = 0;
@@ -22741,12 +22741,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 3;
           __pyx_v_Mfirst = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_29 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":309
+          /* "Int4D_poly.pyx":311
  * 
- *                     Mfirst = Mfunc4D_auto(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
- *                     Mlast = Mfunc4D_auto(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_auto(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
+ *                     Mlast = Mfunc4D_auto(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])             # <<<<<<<<<<<<<<
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+ *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
 */
           __pyx_t_29 = (__pyx_v_M - 1);
           __pyx_t_28 = 0;
@@ -22755,11 +22755,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 3;
           __pyx_v_Mlast = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":310
- *                     Mfirst = Mfunc4D_auto(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
- *                     Mlast = Mfunc4D_auto(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+          /* "Int4D_poly.pyx":312
+ *                     Mfirst = Mfunc4D_auto(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
+ *                     Mlast = Mfunc4D_auto(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
  *                     for jj in range(0, M-1):             # <<<<<<<<<<<<<<
- *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+ *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_M - 1);
@@ -22767,10 +22767,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_jj = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":311
- *                     Mlast = Mfunc4D_auto(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+            /* "Int4D_poly.pyx":313
+ *                     Mlast = Mfunc4D_auto(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])             # <<<<<<<<<<<<<<
+ *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
 */
@@ -22783,9 +22783,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_23 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_29 * __pyx_v_s2.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":312
+          /* "Int4D_poly.pyx":314
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+ *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -22796,8 +22796,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_29 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":313
- *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3])
+          /* "Int4D_poly.pyx":315
+ *                         MInt[jj] = Mfunc4D_auto(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -22813,7 +22813,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_26 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":314
+          /* "Int4D_poly.pyx":316
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -22843,7 +22843,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L43_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":315
+            /* "Int4D_poly.pyx":317
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
@@ -22854,7 +22854,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_25 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":314
+            /* "Int4D_poly.pyx":316
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -22863,7 +22863,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":316
+          /* "Int4D_poly.pyx":318
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -22893,7 +22893,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":317
+            /* "Int4D_poly.pyx":319
  *                         b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[M-1] += -(-0.25/nu2 - Mlast)*2/dy[M-2]             # <<<<<<<<<<<<<<
@@ -22904,7 +22904,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_M - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_25 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":316
+            /* "Int4D_poly.pyx":318
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -22913,7 +22913,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":319
+          /* "Int4D_poly.pyx":321
  *                         b[M-1] += -(-0.25/nu2 - Mlast)*2/dy[M-2]
  * 
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -22925,7 +22925,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":320
+            /* "Int4D_poly.pyx":322
  * 
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -22940,7 +22940,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":321
+          /* "Int4D_poly.pyx":323
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)             # <<<<<<<<<<<<<<
@@ -22954,7 +22954,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_M);
 
-          /* "Int4D_poly.pyx":322
+          /* "Int4D_poly.pyx":324
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -22966,7 +22966,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":323
+            /* "Int4D_poly.pyx":325
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):
  *                         phi[ii, jj, kk, ll] = temp[jj]             # <<<<<<<<<<<<<<
@@ -22984,7 +22984,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":294
+    /* "Int4D_poly.pyx":296
  *                         phi[ii, jj, kk, ll] = temp[jj]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -22994,7 +22994,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":325
+  /* "Int4D_poly.pyx":327
  *                         phi[ii, jj, kk, ll] = temp[jj]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -23004,7 +23004,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_alloa != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":327
+    /* "Int4D_poly.pyx":329
  *     elif is_alloa:
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -23016,7 +23016,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":328
+      /* "Int4D_poly.pyx":330
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
  *             V[jj] = Vfunc(yy[jj], nu2)             # <<<<<<<<<<<<<<
@@ -23028,7 +23028,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":329
+    /* "Int4D_poly.pyx":331
  *         for jj in range(0, M):
  *             V[jj] = Vfunc(yy[jj], nu2)
  *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
@@ -23040,7 +23040,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_jj = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":330
+      /* "Int4D_poly.pyx":332
  *             V[jj] = Vfunc(yy[jj], nu2)
  *         for jj in range(0, M-1):
  *             VInt[jj] = Vfunc(yInt[jj], nu2)             # <<<<<<<<<<<<<<
@@ -23052,7 +23052,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_23 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_29 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":332
+    /* "Int4D_poly.pyx":334
  *             VInt[jj] = Vfunc(yInt[jj], nu2)
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -23064,7 +23064,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":333
+      /* "Int4D_poly.pyx":335
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -23076,7 +23076,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":334
+        /* "Int4D_poly.pyx":336
  *         for ii in range(L):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -23088,7 +23088,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":335
+          /* "Int4D_poly.pyx":337
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -23098,7 +23098,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":336
+          /* "Int4D_poly.pyx":338
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -23108,21 +23108,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":337
+          /* "Int4D_poly.pyx":339
  *                     x = xx[ii]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_allo_a(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mfirst = Mfunc4D_allo_a(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
 */
           __pyx_t_29 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":339
+          /* "Int4D_poly.pyx":341
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_allo_a(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_a(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mfirst = Mfunc4D_allo_a(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_a(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     for jj in range(0, M-1):
 */
           __pyx_t_29 = 0;
@@ -23136,12 +23136,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_25 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_33 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":340
+          /* "Int4D_poly.pyx":342
  * 
- *                     Mfirst = Mfunc4D_allo_a(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
- *                     Mlast = Mfunc4D_allo_a(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_allo_a(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mlast = Mfunc4D_allo_a(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
 */
           __pyx_t_33 = (__pyx_v_M - 1);
           __pyx_t_26 = 0;
@@ -23154,11 +23154,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_33 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_25 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_29 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":341
- *                     Mfirst = Mfunc4D_allo_a(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
- *                     Mlast = Mfunc4D_allo_a(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+          /* "Int4D_poly.pyx":343
+ *                     Mfirst = Mfunc4D_allo_a(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mlast = Mfunc4D_allo_a(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     for jj in range(0, M-1):             # <<<<<<<<<<<<<<
- *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_M - 1);
@@ -23166,10 +23166,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_jj = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":342
- *                     Mlast = Mfunc4D_allo_a(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+            /* "Int4D_poly.pyx":344
+ *                     Mlast = Mfunc4D_allo_a(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
+ *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
 */
@@ -23186,9 +23186,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_29 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_25 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_33 * __pyx_v_s2.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":343
+          /* "Int4D_poly.pyx":345
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -23199,8 +23199,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_28 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_33 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_26 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":344
- *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+          /* "Int4D_poly.pyx":346
+ *                         MInt[jj] = Mfunc4D_allo_a(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -23216,7 +23216,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_28 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_33 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_10 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_23 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":345
+          /* "Int4D_poly.pyx":347
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -23246,7 +23246,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L69_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":346
+            /* "Int4D_poly.pyx":348
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
@@ -23257,7 +23257,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_23 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":345
+            /* "Int4D_poly.pyx":347
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -23266,7 +23266,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":347
+          /* "Int4D_poly.pyx":349
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -23296,7 +23296,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L74_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":348
+            /* "Int4D_poly.pyx":350
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]             # <<<<<<<<<<<<<<
@@ -23307,7 +23307,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = (__pyx_v_M - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_23 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":347
+            /* "Int4D_poly.pyx":349
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -23316,7 +23316,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":350
+          /* "Int4D_poly.pyx":352
  *                         b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
  * 
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -23328,7 +23328,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":351
+            /* "Int4D_poly.pyx":353
  * 
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -23343,7 +23343,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_33 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_23 * __pyx_v_phi.strides[0]) ) + __pyx_t_9 * __pyx_v_phi.strides[1]) ) + __pyx_t_10 * __pyx_v_phi.strides[2]) ) + __pyx_t_25 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":352
+          /* "Int4D_poly.pyx":354
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)             # <<<<<<<<<<<<<<
@@ -23357,7 +23357,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_25 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_9 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_33 * __pyx_v_temp.strides[0]) )))), __pyx_v_M);
 
-          /* "Int4D_poly.pyx":353
+          /* "Int4D_poly.pyx":355
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -23369,7 +23369,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":354
+            /* "Int4D_poly.pyx":356
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):
  *                         phi[ii, jj, kk, ll] = temp[jj]             # <<<<<<<<<<<<<<
@@ -23387,7 +23387,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":325
+    /* "Int4D_poly.pyx":327
  *                         phi[ii, jj, kk, ll] = temp[jj]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -23397,7 +23397,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":356
+  /* "Int4D_poly.pyx":358
  *                         phi[ii, jj, kk, ll] = temp[jj]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -23407,7 +23407,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_allob != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":358
+    /* "Int4D_poly.pyx":360
  *     elif is_allob:
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -23419,7 +23419,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_jj = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":359
+      /* "Int4D_poly.pyx":361
  *         # compute everything we can outside of the spatial loop
  *         for jj in range(0, M):
  *             V[jj] = Vfunc(yy[jj], nu2)             # <<<<<<<<<<<<<<
@@ -23431,7 +23431,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_33 * __pyx_v_yy.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":360
+    /* "Int4D_poly.pyx":362
  *         for jj in range(0, M):
  *             V[jj] = Vfunc(yy[jj], nu2)
  *         for jj in range(0, M-1):             # <<<<<<<<<<<<<<
@@ -23443,7 +23443,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_jj = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":361
+      /* "Int4D_poly.pyx":363
  *             V[jj] = Vfunc(yy[jj], nu2)
  *         for jj in range(0, M-1):
  *             VInt[jj] = Vfunc(yInt[jj], nu2)             # <<<<<<<<<<<<<<
@@ -23455,7 +23455,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_25 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_33 * __pyx_v_yInt.strides[0]) ))), __pyx_v_nu2);
     }
 
-    /* "Int4D_poly.pyx":363
+    /* "Int4D_poly.pyx":365
  *             VInt[jj] = Vfunc(yInt[jj], nu2)
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -23467,7 +23467,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":364
+      /* "Int4D_poly.pyx":366
  *         # loop through x, z, and a dimensions
  *         for ii in range(L):
  *             for kk in range(N):             # <<<<<<<<<<<<<<
@@ -23479,7 +23479,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_kk = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":365
+        /* "Int4D_poly.pyx":367
  *         for ii in range(L):
  *             for kk in range(N):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -23491,7 +23491,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":366
+          /* "Int4D_poly.pyx":368
  *             for kk in range(N):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -23501,7 +23501,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_33 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":367
+          /* "Int4D_poly.pyx":369
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
@@ -23511,21 +23511,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_33 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":368
+          /* "Int4D_poly.pyx":370
  *                     x = xx[ii]
  *                     z = zz[kk]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_allo_b(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mfirst = Mfunc4D_allo_b(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
 */
           __pyx_t_33 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_33 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":370
+          /* "Int4D_poly.pyx":372
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_allo_b(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_b(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mfirst = Mfunc4D_allo_b(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_b(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     for jj in range(0, M-1):
 */
           __pyx_t_33 = 0;
@@ -23539,12 +23539,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_33 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_25 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_29 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":371
+          /* "Int4D_poly.pyx":373
  * 
- *                     Mfirst = Mfunc4D_allo_b(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
- *                     Mlast = Mfunc4D_allo_b(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_allo_b(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mlast = Mfunc4D_allo_b(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
 */
           __pyx_t_29 = (__pyx_v_M - 1);
           __pyx_t_28 = 0;
@@ -23557,11 +23557,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_25 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_33 * __pyx_v_s2.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":372
- *                     Mfirst = Mfunc4D_allo_b(yy[0], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
- *                     Mlast = Mfunc4D_allo_b(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+          /* "Int4D_poly.pyx":374
+ *                     Mfirst = Mfunc4D_allo_b(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                     Mlast = Mfunc4D_allo_b(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     for jj in range(0, M-1):             # <<<<<<<<<<<<<<
- *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_M - 1);
@@ -23569,10 +23569,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_jj = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":373
- *                     Mlast = Mfunc4D_allo_b(yy[M-1], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+            /* "Int4D_poly.pyx":375
+ *                     Mlast = Mfunc4D_allo_b(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
+ *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
 */
@@ -23589,9 +23589,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_yInt.data + __pyx_t_33 * __pyx_v_yInt.strides[0]) ))), __pyx_v_x, __pyx_v_z, __pyx_v_a_, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_25 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_10 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_9 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_23 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_26 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_27 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_28 * __pyx_v_s2.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s2.data + __pyx_t_29 * __pyx_v_s2.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":374
+          /* "Int4D_poly.pyx":376
  *                     for jj in range(0, M-1):
- *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+ *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -23602,8 +23602,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_29 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":375
- *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x, z, a_, m21, m23, m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+          /* "Int4D_poly.pyx":377
+ *                         MInt[jj] = Mfunc4D_allo_b(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
@@ -23619,7 +23619,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_26 * __pyx_v_dy.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_M, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":376
+          /* "Int4D_poly.pyx":378
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -23649,7 +23649,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L95_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":377
+            /* "Int4D_poly.pyx":379
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]             # <<<<<<<<<<<<<<
@@ -23660,7 +23660,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu2) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_25 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":376
+            /* "Int4D_poly.pyx":378
  *                     compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -23669,7 +23669,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":378
+          /* "Int4D_poly.pyx":380
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -23699,7 +23699,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L100_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":379
+            /* "Int4D_poly.pyx":381
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:
  *                         b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]             # <<<<<<<<<<<<<<
@@ -23710,7 +23710,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_M - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu2) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dy.data + __pyx_t_25 * __pyx_v_dy.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":378
+            /* "Int4D_poly.pyx":380
  *                     if x==0 and z==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu2 - Mfirst)*2/dy[0]
  *                     if x==1 and z==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -23719,7 +23719,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":381
+          /* "Int4D_poly.pyx":383
  *                         b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
  * 
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -23731,7 +23731,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":382
+            /* "Int4D_poly.pyx":384
  * 
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -23746,7 +23746,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":383
+          /* "Int4D_poly.pyx":385
  *                     for jj in range(0, M):
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)             # <<<<<<<<<<<<<<
@@ -23760,7 +23760,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_M);
 
-          /* "Int4D_poly.pyx":384
+          /* "Int4D_poly.pyx":386
  *                         r[jj] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):             # <<<<<<<<<<<<<<
@@ -23772,7 +23772,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_jj = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":385
+            /* "Int4D_poly.pyx":387
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
  *                     for jj in range(0, M):
  *                         phi[ii, jj, kk, ll] = temp[jj]             # <<<<<<<<<<<<<<
@@ -23790,7 +23790,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":356
+    /* "Int4D_poly.pyx":358
  *                         phi[ii, jj, kk, ll] = temp[jj]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -23800,7 +23800,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   }
   __pyx_L3:;
 
-  /* "Int4D_poly.pyx":386
+  /* "Int4D_poly.pyx":388
  *                     for jj in range(0, M):
  *                         phi[ii, jj, kk, ll] = temp[jj]
  *     tridiag_free()             # <<<<<<<<<<<<<<
@@ -23809,7 +23809,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_free();
 
-  /* "Int4D_poly.pyx":219
+  /* "Int4D_poly.pyx":221
  *     tridiag_free()
  * 
  * cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -23844,7 +23844,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dy(__Pyx_memviewslice __pyx_v_phi, 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "Int4D_poly.pyx":388
+/* "Int4D_poly.pyx":390
  *     tridiag_free()
  * 
  * cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -23922,7 +23922,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("c_implicit_4Dz", 0);
 
-  /* "Int4D_poly.pyx":394
+  /* "Int4D_poly.pyx":396
  *     # define memory for non-array variables
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x direction             # <<<<<<<<<<<<<<
@@ -23931,7 +23931,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_L = (__pyx_v_xx.shape[0]);
 
-  /* "Int4D_poly.pyx":395
+  /* "Int4D_poly.pyx":397
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x direction
  *     cdef int M = yy.shape[0] # number of grid points in y direction             # <<<<<<<<<<<<<<
@@ -23940,7 +23940,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_M = (__pyx_v_yy.shape[0]);
 
-  /* "Int4D_poly.pyx":396
+  /* "Int4D_poly.pyx":398
  *     cdef int L = xx.shape[0] # number of grid points in x direction
  *     cdef int M = yy.shape[0] # number of grid points in y direction
  *     cdef int N = zz.shape[0] # number of grid points in z direction             # <<<<<<<<<<<<<<
@@ -23949,7 +23949,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_N = (__pyx_v_zz.shape[0]);
 
-  /* "Int4D_poly.pyx":397
+  /* "Int4D_poly.pyx":399
  *     cdef int M = yy.shape[0] # number of grid points in y direction
  *     cdef int N = zz.shape[0] # number of grid points in z direction
  *     cdef int O = aa.shape[0] # number of grid points in a direction             # <<<<<<<<<<<<<<
@@ -23958,7 +23958,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_O = (__pyx_v_aa.shape[0]);
 
-  /* "Int4D_poly.pyx":403
+  /* "Int4D_poly.pyx":405
  *     # Create memory views for everything we need to compute
  *     ### grid spacings and integration points
  *     cdef double[:] dz = np.empty(N-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -23966,16 +23966,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] zInt = np.empty(N-1, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -23992,25 +23992,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 403, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 405, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 403, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 405, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 403, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 405, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dz = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":404
+  /* "Int4D_poly.pyx":406
  *     ### grid spacings and integration points
  *     cdef double[:] dz = np.empty(N-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24018,16 +24018,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] delj = np.empty(N-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 406, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 406, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 406, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 406, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 406, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -24044,25 +24044,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 404, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 406, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 404, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 406, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 404, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 406, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 404, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 406, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dfactor = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":405
+  /* "Int4D_poly.pyx":407
  *     cdef double[:] dz = np.empty(N-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(N, dtype=np.float64)
  *     cdef double[:] zInt = np.empty(N-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24070,16 +24070,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     ### population genetic functions
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -24096,25 +24096,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 405, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 407, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 405, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 407, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 405, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 405, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_zInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":406
+  /* "Int4D_poly.pyx":408
  *     cdef double[:] dfactor = np.empty(N, dtype=np.float64)
  *     cdef double[:] zInt = np.empty(N-1, dtype=np.float64)
  *     cdef double[:] delj = np.empty(N-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24122,16 +24122,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double Mfirst, Mlast
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -24148,25 +24148,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 406, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 408, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 406, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 406, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 408, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_delj = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":409
+  /* "Int4D_poly.pyx":411
  *     ### population genetic functions
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(N-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24174,16 +24174,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] VInt = np.empty(N-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 409, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 409, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 409, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 409, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 409, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -24200,25 +24200,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 409, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 411, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 409, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 411, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 409, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 411, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 409, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_MInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":410
+  /* "Int4D_poly.pyx":412
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(N-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24226,16 +24226,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     ### for the tridiagonal matrix solver
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -24252,25 +24252,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 410, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 412, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 410, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 412, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 412, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_V = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":411
+  /* "Int4D_poly.pyx":413
  *     cdef double[:] MInt = np.empty(N-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(N, dtype=np.float64)
  *     cdef double[:] VInt = np.empty(N-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24278,16 +24278,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] a = np.empty(N, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_N - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -24304,25 +24304,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 411, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 413, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 411, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 413, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 411, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_VInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":413
+  /* "Int4D_poly.pyx":415
  *     cdef double[:] VInt = np.empty(N-1, dtype=np.float64)
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24330,16 +24330,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] c = np.empty(N, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 415, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 415, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 415, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 415, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 415, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -24356,25 +24356,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 413, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 415, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 413, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 415, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 415, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_a = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":414
+  /* "Int4D_poly.pyx":416
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(N, dtype=np.float64)
  *     cdef double[:] b = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24382,16 +24382,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] r = np.empty(N, dtype=np.float64)
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -24408,25 +24408,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 414, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 416, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 414, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 416, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 416, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_b = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":415
+  /* "Int4D_poly.pyx":417
  *     cdef double[:] a = np.empty(N, dtype=np.float64)
  *     cdef double[:] b = np.empty(N, dtype=np.float64)
  *     cdef double[:] c = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -24434,16 +24434,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] temp = np.empty(N, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -24460,42 +24460,42 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 415, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 415, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 417, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 417, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 417, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_c = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":416
+  /* "Int4D_poly.pyx":418
  *     cdef double[:] b = np.empty(N, dtype=np.float64)
  *     cdef double[:] c = np.empty(N, dtype=np.float64)
  *     cdef double[:] r = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
  *     cdef double[:] temp = np.empty(N, dtype=np.float64)
- *     ### specify ploidy of the y direction
+ *     ### specify ploidy of the z direction
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -24512,42 +24512,42 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 416, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 418, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 416, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 418, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 418, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_r = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":417
+  /* "Int4D_poly.pyx":419
  *     cdef double[:] c = np.empty(N, dtype=np.float64)
  *     cdef double[:] r = np.empty(N, dtype=np.float64)
  *     cdef double[:] temp = np.empty(N, dtype=np.float64)             # <<<<<<<<<<<<<<
- *     ### specify ploidy of the y direction
+ *     ### specify ploidy of the z direction
  *     cdef int is_diploid = ploidy3[0]
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -24564,27 +24564,27 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 417, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 419, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 417, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 419, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 417, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 419, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 417, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_temp = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":419
+  /* "Int4D_poly.pyx":421
  *     cdef double[:] temp = np.empty(N, dtype=np.float64)
- *     ### specify ploidy of the y direction
+ *     ### specify ploidy of the z direction
  *     cdef int is_diploid = ploidy3[0]             # <<<<<<<<<<<<<<
  *     cdef int is_auto = ploidy3[1]
  *     cdef int is_alloa = ploidy3[2]
@@ -24592,8 +24592,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy3.data + __pyx_t_9 * __pyx_v_ploidy3.strides[0]) )));
 
-  /* "Int4D_poly.pyx":420
- *     ### specify ploidy of the y direction
+  /* "Int4D_poly.pyx":422
+ *     ### specify ploidy of the z direction
  *     cdef int is_diploid = ploidy3[0]
  *     cdef int is_auto = ploidy3[1]             # <<<<<<<<<<<<<<
  *     cdef int is_alloa = ploidy3[2]
@@ -24602,7 +24602,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 1;
   __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy3.data + __pyx_t_9 * __pyx_v_ploidy3.strides[0]) )));
 
-  /* "Int4D_poly.pyx":421
+  /* "Int4D_poly.pyx":423
  *     cdef int is_diploid = ploidy3[0]
  *     cdef int is_auto = ploidy3[1]
  *     cdef int is_alloa = ploidy3[2]             # <<<<<<<<<<<<<<
@@ -24612,19 +24612,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 2;
   __pyx_v_is_alloa = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy3.data + __pyx_t_9 * __pyx_v_ploidy3.strides[0]) )));
 
-  /* "Int4D_poly.pyx":422
+  /* "Int4D_poly.pyx":424
  *     cdef int is_auto = ploidy3[1]
  *     cdef int is_alloa = ploidy3[2]
  *     cdef int is_allob = ploidy3[3]             # <<<<<<<<<<<<<<
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
 */
   __pyx_t_9 = 3;
   __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy3.data + __pyx_t_9 * __pyx_v_ploidy3.strides[0]) )));
 
-  /* "Int4D_poly.pyx":425
+  /* "Int4D_poly.pyx":427
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
  *     compute_dx(&zz[0], N, &dz[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&dz[0], N, &dfactor[0])
  *     compute_xInt(&zz[0], N, &zInt[0])
@@ -24633,8 +24633,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_9 * __pyx_v_zz.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_10 * __pyx_v_dz.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":426
- *     # compute the y step size and intermediate y values
+  /* "Int4D_poly.pyx":428
+ *     # compute step size and intermediate values
  *     compute_dx(&zz[0], N, &dz[0])
  *     compute_dfactor(&dz[0], N, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&zz[0], N, &zInt[0])
@@ -24644,7 +24644,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_10 * __pyx_v_dz.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_9 * __pyx_v_dfactor.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":427
+  /* "Int4D_poly.pyx":429
  *     compute_dx(&zz[0], N, &dz[0])
  *     compute_dfactor(&dz[0], N, &dfactor[0])
  *     compute_xInt(&zz[0], N, &zInt[0])             # <<<<<<<<<<<<<<
@@ -24655,7 +24655,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_9 * __pyx_v_zz.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_10 * __pyx_v_zInt.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":429
+  /* "Int4D_poly.pyx":431
  *     compute_xInt(&zz[0], N, &zInt[0])
  *     # dynamic allocation of memory for tridiag
  *     tridiag_malloc(N)             # <<<<<<<<<<<<<<
@@ -24664,7 +24664,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_malloc(__pyx_v_N);
 
-  /* "Int4D_poly.pyx":432
+  /* "Int4D_poly.pyx":434
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -24674,7 +24674,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_diploid != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":434
+    /* "Int4D_poly.pyx":436
  *     if is_diploid:
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -24686,7 +24686,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_kk = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":435
+      /* "Int4D_poly.pyx":437
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):
  *             V[kk] = Vfunc(zz[kk], nu3)             # <<<<<<<<<<<<<<
@@ -24698,7 +24698,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_10 * __pyx_v_zz.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":436
+    /* "Int4D_poly.pyx":438
  *         for kk in range(0, N):
  *             V[kk] = Vfunc(zz[kk], nu3)
  *         for kk in range(0, N-1):             # <<<<<<<<<<<<<<
@@ -24710,7 +24710,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_kk = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":437
+      /* "Int4D_poly.pyx":439
  *             V[kk] = Vfunc(zz[kk], nu3)
  *         for kk in range(0, N-1):
  *             VInt[kk] = Vfunc(zInt[kk], nu3)             # <<<<<<<<<<<<<<
@@ -24722,7 +24722,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_9 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_10 * __pyx_v_zInt.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":439
+    /* "Int4D_poly.pyx":441
  *             VInt[kk] = Vfunc(zInt[kk], nu3)
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -24734,7 +24734,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":440
+      /* "Int4D_poly.pyx":442
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -24746,7 +24746,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":441
+        /* "Int4D_poly.pyx":443
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -24758,7 +24758,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":442
+          /* "Int4D_poly.pyx":444
  *             for jj in range(M):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -24768,7 +24768,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_10 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":443
+          /* "Int4D_poly.pyx":445
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -24778,45 +24778,45 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_10 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":444
+          /* "Int4D_poly.pyx":446
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     ### Note: the order of the params being passed here is different from
+ *                     Mfirst = Mfunc4D(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1])
 */
           __pyx_t_10 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_10 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":452
- *                     # dimensions of phi which are z and a.
+          /* "Int4D_poly.pyx":448
+ *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D(zz[0], a_, x, y, m34, m31, m32, s3[0], s3[1])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D(zz[N-1], a_, x, y, m34, m31, m32, s3[0], s3[1])
+ *                     Mfirst = Mfunc4D(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1])
  *                     for kk in range(0, N-1):
 */
           __pyx_t_10 = 0;
           __pyx_t_9 = 0;
           __pyx_t_23 = 1;
-          __pyx_v_Mfirst = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_10 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))));
+          __pyx_v_Mfirst = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_10 * __pyx_v_zz.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_a_, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":453
+          /* "Int4D_poly.pyx":449
  * 
- *                     Mfirst = Mfunc4D(zz[0], a_, x, y, m34, m31, m32, s3[0], s3[1])
- *                     Mlast = Mfunc4D(zz[N-1], a_, x, y, m34, m31, m32, s3[0], s3[1])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1])
+ *                     Mlast = Mfunc4D(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1])             # <<<<<<<<<<<<<<
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D(zInt[kk], a_, x, y, m34, m31, m32, s3[0], s3[1])
+ *                         MInt[kk] = Mfunc4D(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1])
 */
           __pyx_t_23 = (__pyx_v_N - 1);
           __pyx_t_9 = 0;
           __pyx_t_10 = 1;
-          __pyx_v_Mlast = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))));
+          __pyx_v_Mlast = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_a_, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":454
- *                     Mfirst = Mfunc4D(zz[0], a_, x, y, m34, m31, m32, s3[0], s3[1])
- *                     Mlast = Mfunc4D(zz[N-1], a_, x, y, m34, m31, m32, s3[0], s3[1])
+          /* "Int4D_poly.pyx":450
+ *                     Mfirst = Mfunc4D(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1])
+ *                     Mlast = Mfunc4D(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1])
  *                     for kk in range(0, N-1):             # <<<<<<<<<<<<<<
- *                         MInt[kk] = Mfunc4D(zInt[kk], a_, x, y, m34, m31, m32, s3[0], s3[1])
+ *                         MInt[kk] = Mfunc4D(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_N - 1);
@@ -24824,10 +24824,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_kk = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":455
- *                     Mlast = Mfunc4D(zz[N-1], a_, x, y, m34, m31, m32, s3[0], s3[1])
+            /* "Int4D_poly.pyx":451
+ *                     Mlast = Mfunc4D(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1])
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D(zInt[kk], a_, x, y, m34, m31, m32, s3[0], s3[1])             # <<<<<<<<<<<<<<
+ *                         MInt[kk] = Mfunc4D(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
 */
@@ -24835,12 +24835,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = 0;
             __pyx_t_23 = 1;
             __pyx_t_25 = __pyx_v_kk;
-            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_25 * __pyx_v_MInt.strides[0]) )) = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_10 * __pyx_v_zInt.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))));
+            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_25 * __pyx_v_MInt.strides[0]) )) = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_10 * __pyx_v_zInt.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_a_, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":456
+          /* "Int4D_poly.pyx":452
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D(zInt[kk], a_, x, y, m34, m31, m32, s3[0], s3[1])
+ *                         MInt[kk] = Mfunc4D(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -24851,8 +24851,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_23 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_10 * __pyx_v_VInt.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_25 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":457
- *                         MInt[kk] = Mfunc4D(zInt[kk], a_, x, y, m34, m31, m32, s3[0], s3[1])
+          /* "Int4D_poly.pyx":453
+ *                         MInt[kk] = Mfunc4D(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -24868,7 +24868,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_25 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_10 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_9 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_23 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_27 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_29 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":458
+          /* "Int4D_poly.pyx":454
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -24898,7 +24898,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L17_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":459
+            /* "Int4D_poly.pyx":455
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]             # <<<<<<<<<<<<<<
@@ -24909,7 +24909,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu3) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_29 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":458
+            /* "Int4D_poly.pyx":454
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -24918,7 +24918,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":460
+          /* "Int4D_poly.pyx":456
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -24948,7 +24948,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L22_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":461
+            /* "Int4D_poly.pyx":457
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:
  *                         b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]             # <<<<<<<<<<<<<<
@@ -24959,7 +24959,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = (__pyx_v_N - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu3) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_29 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":460
+            /* "Int4D_poly.pyx":456
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -24968,7 +24968,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":463
+          /* "Int4D_poly.pyx":459
  *                         b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]
  * 
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -24980,7 +24980,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":464
+            /* "Int4D_poly.pyx":460
  * 
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -24995,7 +24995,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_29 * __pyx_v_phi.strides[0]) ) + __pyx_t_28 * __pyx_v_phi.strides[1]) ) + __pyx_t_27 * __pyx_v_phi.strides[2]) ) + __pyx_t_26 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":465
+          /* "Int4D_poly.pyx":461
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)             # <<<<<<<<<<<<<<
@@ -25009,7 +25009,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_26 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_27 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_28 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_23 * __pyx_v_temp.strides[0]) )))), __pyx_v_N);
 
-          /* "Int4D_poly.pyx":466
+          /* "Int4D_poly.pyx":462
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25021,7 +25021,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":467
+            /* "Int4D_poly.pyx":463
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):
  *                         phi[ii, jj, kk, ll] = temp[kk]             # <<<<<<<<<<<<<<
@@ -25039,7 +25039,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":432
+    /* "Int4D_poly.pyx":434
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -25049,7 +25049,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":469
+  /* "Int4D_poly.pyx":465
  *                         phi[ii, jj, kk, ll] = temp[kk]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -25059,7 +25059,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_auto != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":471
+    /* "Int4D_poly.pyx":467
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25071,7 +25071,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_kk = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":472
+      /* "Int4D_poly.pyx":468
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):
  *             V[kk] = Vfunc_tetra(zz[kk], nu3)             # <<<<<<<<<<<<<<
@@ -25083,7 +25083,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":473
+    /* "Int4D_poly.pyx":469
  *         for kk in range(0, N):
  *             V[kk] = Vfunc_tetra(zz[kk], nu3)
  *         for kk in range(0, N-1):             # <<<<<<<<<<<<<<
@@ -25095,7 +25095,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_kk = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":474
+      /* "Int4D_poly.pyx":470
  *             V[kk] = Vfunc_tetra(zz[kk], nu3)
  *         for kk in range(0, N-1):
  *             VInt[kk] = Vfunc_tetra(zInt[kk], nu3)             # <<<<<<<<<<<<<<
@@ -25107,7 +25107,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_23 * __pyx_v_zInt.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":476
+    /* "Int4D_poly.pyx":472
  *             VInt[kk] = Vfunc_tetra(zInt[kk], nu3)
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -25119,7 +25119,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":477
+      /* "Int4D_poly.pyx":473
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -25131,7 +25131,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":478
+        /* "Int4D_poly.pyx":474
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -25143,7 +25143,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":479
+          /* "Int4D_poly.pyx":475
  *             for jj in range(M):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -25153,7 +25153,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":480
+          /* "Int4D_poly.pyx":476
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -25163,21 +25163,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":481
+          /* "Int4D_poly.pyx":477
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_auto(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+ *                     Mfirst = Mfunc4D_auto(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
 */
           __pyx_t_23 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":483
+          /* "Int4D_poly.pyx":479
  *                     a_ = aa[ll]
  * 
- *                     Mfirst = Mfunc4D_auto(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_auto(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+ *                     Mfirst = Mfunc4D_auto(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_auto(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
  *                     for kk in range(0, N-1):
 */
           __pyx_t_23 = 0;
@@ -25185,27 +25185,27 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_27 = 1;
           __pyx_t_28 = 2;
           __pyx_t_29 = 3;
-          __pyx_v_Mfirst = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
+          __pyx_v_Mfirst = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_a_, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":484
+          /* "Int4D_poly.pyx":480
  * 
- *                     Mfirst = Mfunc4D_auto(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
- *                     Mlast = Mfunc4D_auto(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_auto(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
+ *                     Mlast = Mfunc4D_auto(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])             # <<<<<<<<<<<<<<
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_auto(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+ *                         MInt[kk] = Mfunc4D_auto(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
 */
           __pyx_t_29 = (__pyx_v_N - 1);
           __pyx_t_28 = 0;
           __pyx_t_27 = 1;
           __pyx_t_26 = 2;
           __pyx_t_23 = 3;
-          __pyx_v_Mlast = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))));
+          __pyx_v_Mlast = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_a_, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":485
- *                     Mfirst = Mfunc4D_auto(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
- *                     Mlast = Mfunc4D_auto(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+          /* "Int4D_poly.pyx":481
+ *                     Mfirst = Mfunc4D_auto(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
+ *                     Mlast = Mfunc4D_auto(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
  *                     for kk in range(0, N-1):             # <<<<<<<<<<<<<<
- *                         MInt[kk] = Mfunc4D_auto(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+ *                         MInt[kk] = Mfunc4D_auto(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_N - 1);
@@ -25213,10 +25213,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_kk = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":486
- *                     Mlast = Mfunc4D_auto(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+            /* "Int4D_poly.pyx":482
+ *                     Mlast = Mfunc4D_auto(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_auto(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])             # <<<<<<<<<<<<<<
+ *                         MInt[kk] = Mfunc4D_auto(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
 */
@@ -25226,12 +25226,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = 2;
             __pyx_t_29 = 3;
             __pyx_t_9 = __pyx_v_kk;
-            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_23 * __pyx_v_zInt.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
+            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_23 * __pyx_v_zInt.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_a_, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":487
+          /* "Int4D_poly.pyx":483
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_auto(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+ *                         MInt[kk] = Mfunc4D_auto(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -25242,8 +25242,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_29 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":488
- *                         MInt[kk] = Mfunc4D_auto(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3])
+          /* "Int4D_poly.pyx":484
+ *                         MInt[kk] = Mfunc4D_auto(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -25259,7 +25259,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_26 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":489
+          /* "Int4D_poly.pyx":485
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -25289,7 +25289,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L43_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":490
+            /* "Int4D_poly.pyx":486
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu3 - Mfirst)*2/dz[0]             # <<<<<<<<<<<<<<
@@ -25300,7 +25300,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu3) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_25 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":489
+            /* "Int4D_poly.pyx":485
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -25309,7 +25309,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":491
+          /* "Int4D_poly.pyx":487
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -25339,7 +25339,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":492
+            /* "Int4D_poly.pyx":488
  *                         b[0] += (0.25/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:
  *                         b[N-1] += -(-0.25/nu3 - Mlast)*2/dz[N-2]             # <<<<<<<<<<<<<<
@@ -25350,7 +25350,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_N - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu3) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_25 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":491
+            /* "Int4D_poly.pyx":487
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -25359,7 +25359,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":494
+          /* "Int4D_poly.pyx":490
  *                         b[N-1] += -(-0.25/nu3 - Mlast)*2/dz[N-2]
  * 
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25371,7 +25371,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":495
+            /* "Int4D_poly.pyx":491
  * 
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -25386,7 +25386,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":496
+          /* "Int4D_poly.pyx":492
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)             # <<<<<<<<<<<<<<
@@ -25400,7 +25400,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_N);
 
-          /* "Int4D_poly.pyx":497
+          /* "Int4D_poly.pyx":493
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25412,7 +25412,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":498
+            /* "Int4D_poly.pyx":494
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):
  *                         phi[ii, jj, kk, ll] = temp[kk]             # <<<<<<<<<<<<<<
@@ -25430,7 +25430,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":469
+    /* "Int4D_poly.pyx":465
  *                         phi[ii, jj, kk, ll] = temp[kk]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -25440,7 +25440,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":500
+  /* "Int4D_poly.pyx":496
  *                         phi[ii, jj, kk, ll] = temp[kk]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -25450,7 +25450,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_alloa != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":502
+    /* "Int4D_poly.pyx":498
  *     elif is_alloa:
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25462,7 +25462,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_kk = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":503
+      /* "Int4D_poly.pyx":499
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):
  *             V[kk] = Vfunc(zz[kk], nu3)             # <<<<<<<<<<<<<<
@@ -25474,7 +25474,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":504
+    /* "Int4D_poly.pyx":500
  *         for kk in range(0, N):
  *             V[kk] = Vfunc(zz[kk], nu3)
  *         for kk in range(0, N-1):             # <<<<<<<<<<<<<<
@@ -25486,7 +25486,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_kk = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":505
+      /* "Int4D_poly.pyx":501
  *             V[kk] = Vfunc(zz[kk], nu3)
  *         for kk in range(0, N-1):
  *             VInt[kk] = Vfunc(zInt[kk], nu3)             # <<<<<<<<<<<<<<
@@ -25498,7 +25498,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_23 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_29 * __pyx_v_zInt.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":507
+    /* "Int4D_poly.pyx":503
  *             VInt[kk] = Vfunc(zInt[kk], nu3)
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -25510,7 +25510,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":508
+      /* "Int4D_poly.pyx":504
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -25522,7 +25522,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":509
+        /* "Int4D_poly.pyx":505
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -25534,7 +25534,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":510
+          /* "Int4D_poly.pyx":506
  *             for jj in range(M):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -25544,31 +25544,31 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":511
+          /* "Int4D_poly.pyx":507
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
  *                     a_ = aa[ll]
- * 
+ *                     ### Note: the order of migration params and grids being passed here is different
 */
           __pyx_t_29 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":512
+          /* "Int4D_poly.pyx":508
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
- * 
- *                     Mfirst = Mfunc4D_allo_a(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     ### Note: the order of migration params and grids being passed here is different
+ *                     # This is for consistency with the allo cases where the first two dimensions passed
 */
           __pyx_t_29 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":514
- *                     a_ = aa[ll]
- * 
- *                     Mfirst = Mfunc4D_allo_a(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+          /* "Int4D_poly.pyx":513
+ *                     # to Mfunc need to be the allo subgenomes and the subgenomes are always passed
+ *                     # to the integrator as z and a.
+ *                     Mfirst = Mfunc4D_allo_a(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     for kk in range(0, N-1):
 */
           __pyx_t_29 = 0;
@@ -25582,12 +25582,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_25 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_33 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":515
- * 
- *                     Mfirst = Mfunc4D_allo_a(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
- *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
+          /* "Int4D_poly.pyx":514
+ *                     # to the integrator as z and a.
+ *                     Mfirst = Mfunc4D_allo_a(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
 */
           __pyx_t_33 = (__pyx_v_N - 1);
           __pyx_t_26 = 0;
@@ -25600,11 +25600,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_33 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_25 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":516
- *                     Mfirst = Mfunc4D_allo_a(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
- *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+          /* "Int4D_poly.pyx":515
+ *                     Mfirst = Mfunc4D_allo_a(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     for kk in range(0, N-1):             # <<<<<<<<<<<<<<
- *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_N - 1);
@@ -25612,10 +25612,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_kk = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":517
- *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+            /* "Int4D_poly.pyx":516
+ *                     Mlast = Mfunc4D_allo_a(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
+ *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
 */
@@ -25632,9 +25632,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_29 * __pyx_v_zInt.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_25 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_33 * __pyx_v_s3.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":518
+          /* "Int4D_poly.pyx":517
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -25645,8 +25645,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_28 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_33 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_26 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":519
- *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+          /* "Int4D_poly.pyx":518
+ *                         MInt[kk] = Mfunc4D_allo_a(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -25662,7 +25662,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_28 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_33 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_10 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_23 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":520
+          /* "Int4D_poly.pyx":519
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -25692,7 +25692,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L69_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":521
+            /* "Int4D_poly.pyx":520
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]             # <<<<<<<<<<<<<<
@@ -25703,7 +25703,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu3) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_23 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":520
+            /* "Int4D_poly.pyx":519
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -25712,7 +25712,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":522
+          /* "Int4D_poly.pyx":521
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -25742,7 +25742,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L74_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":523
+            /* "Int4D_poly.pyx":522
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:
  *                         b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]             # <<<<<<<<<<<<<<
@@ -25753,7 +25753,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = (__pyx_v_N - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu3) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_23 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":522
+            /* "Int4D_poly.pyx":521
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -25762,7 +25762,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":525
+          /* "Int4D_poly.pyx":524
  *                         b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]
  * 
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25774,7 +25774,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":526
+            /* "Int4D_poly.pyx":525
  * 
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -25789,7 +25789,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_33 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_23 * __pyx_v_phi.strides[0]) ) + __pyx_t_9 * __pyx_v_phi.strides[1]) ) + __pyx_t_10 * __pyx_v_phi.strides[2]) ) + __pyx_t_25 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":527
+          /* "Int4D_poly.pyx":526
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)             # <<<<<<<<<<<<<<
@@ -25803,7 +25803,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_25 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_9 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_33 * __pyx_v_temp.strides[0]) )))), __pyx_v_N);
 
-          /* "Int4D_poly.pyx":528
+          /* "Int4D_poly.pyx":527
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25815,7 +25815,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":529
+            /* "Int4D_poly.pyx":528
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):
  *                         phi[ii, jj, kk, ll] = temp[kk]             # <<<<<<<<<<<<<<
@@ -25833,7 +25833,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":500
+    /* "Int4D_poly.pyx":496
  *                         phi[ii, jj, kk, ll] = temp[kk]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -25843,7 +25843,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":531
+  /* "Int4D_poly.pyx":530
  *                         phi[ii, jj, kk, ll] = temp[kk]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -25853,7 +25853,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_allob != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":533
+    /* "Int4D_poly.pyx":532
  *     elif is_allob:
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -25865,7 +25865,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_kk = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":534
+      /* "Int4D_poly.pyx":533
  *         # compute everything we can outside of the spatial loop
  *         for kk in range(0, N):
  *             V[kk] = Vfunc(zz[kk], nu3)             # <<<<<<<<<<<<<<
@@ -25877,7 +25877,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_33 * __pyx_v_zz.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":535
+    /* "Int4D_poly.pyx":534
  *         for kk in range(0, N):
  *             V[kk] = Vfunc(zz[kk], nu3)
  *         for kk in range(0, N-1):             # <<<<<<<<<<<<<<
@@ -25889,7 +25889,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_kk = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":536
+      /* "Int4D_poly.pyx":535
  *             V[kk] = Vfunc(zz[kk], nu3)
  *         for kk in range(0, N-1):
  *             VInt[kk] = Vfunc(zInt[kk], nu3)             # <<<<<<<<<<<<<<
@@ -25901,7 +25901,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_25 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_33 * __pyx_v_zInt.strides[0]) ))), __pyx_v_nu3);
     }
 
-    /* "Int4D_poly.pyx":538
+    /* "Int4D_poly.pyx":537
  *             VInt[kk] = Vfunc(zInt[kk], nu3)
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -25913,7 +25913,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":539
+      /* "Int4D_poly.pyx":538
  *         # loop through x, y, and a dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -25925,7 +25925,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":540
+        /* "Int4D_poly.pyx":539
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for ll in range(O):             # <<<<<<<<<<<<<<
@@ -25937,7 +25937,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_ll = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":541
+          /* "Int4D_poly.pyx":540
  *             for jj in range(M):
  *                 for ll in range(O):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -25947,31 +25947,31 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_33 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":542
+          /* "Int4D_poly.pyx":541
  *                 for ll in range(O):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
  *                     a_ = aa[ll]
- * 
+ *                     # see note above about the order of the params passed to Mfuncs here
 */
           __pyx_t_33 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_33 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":543
+          /* "Int4D_poly.pyx":542
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     a_ = aa[ll]             # <<<<<<<<<<<<<<
- * 
- *                     Mfirst = Mfunc4D_allo_b(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     # see note above about the order of the params passed to Mfuncs here
+ *                     Mfirst = Mfunc4D_allo_b(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
 */
           __pyx_t_33 = __pyx_v_ll;
           __pyx_v_a_ = (*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_33 * __pyx_v_aa.strides[0]) )));
 
-          /* "Int4D_poly.pyx":545
+          /* "Int4D_poly.pyx":544
  *                     a_ = aa[ll]
- * 
- *                     Mfirst = Mfunc4D_allo_b(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     # see note above about the order of the params passed to Mfuncs here
+ *                     Mfirst = Mfunc4D_allo_b(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     for kk in range(0, N-1):
 */
           __pyx_t_33 = 0;
@@ -25985,12 +25985,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_33 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_25 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":546
- * 
- *                     Mfirst = Mfunc4D_allo_b(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
- *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
+          /* "Int4D_poly.pyx":545
+ *                     # see note above about the order of the params passed to Mfuncs here
+ *                     Mfirst = Mfunc4D_allo_b(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
 */
           __pyx_t_29 = (__pyx_v_N - 1);
           __pyx_t_28 = 0;
@@ -26003,11 +26003,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_25 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_33 * __pyx_v_s3.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":547
- *                     Mfirst = Mfunc4D_allo_b(zz[0], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
- *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+          /* "Int4D_poly.pyx":546
+ *                     Mfirst = Mfunc4D_allo_b(zz[0], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     for kk in range(0, N-1):             # <<<<<<<<<<<<<<
- *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_N - 1);
@@ -26015,10 +26015,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_kk = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":548
- *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+            /* "Int4D_poly.pyx":547
+ *                     Mlast = Mfunc4D_allo_b(zz[N-1], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
+ *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
 */
@@ -26035,9 +26035,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_zInt.data + __pyx_t_33 * __pyx_v_zInt.strides[0]) ))), __pyx_v_a_, __pyx_v_x, __pyx_v_y, __pyx_v_m34, __pyx_v_m31, __pyx_v_m32, (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_25 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_10 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_9 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_23 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_26 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_27 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_28 * __pyx_v_s3.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s3.data + __pyx_t_29 * __pyx_v_s3.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":549
+          /* "Int4D_poly.pyx":548
  *                     for kk in range(0, N-1):
- *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+ *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -26048,8 +26048,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_29 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":550
- *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_, x, y, m34, m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+          /* "Int4D_poly.pyx":549
+ *                         MInt[kk] = Mfunc4D_allo_b(zInt[kk], a_,x,y, m34,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
@@ -26065,7 +26065,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_26 * __pyx_v_dz.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_N, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":551
+          /* "Int4D_poly.pyx":550
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -26095,7 +26095,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L95_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":552
+            /* "Int4D_poly.pyx":551
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]             # <<<<<<<<<<<<<<
@@ -26106,7 +26106,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu3) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_25 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":551
+            /* "Int4D_poly.pyx":550
  *                     compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -26115,7 +26115,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":553
+          /* "Int4D_poly.pyx":552
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -26145,7 +26145,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L100_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":554
+            /* "Int4D_poly.pyx":553
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:
  *                         b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]             # <<<<<<<<<<<<<<
@@ -26156,7 +26156,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_N - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu3) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_dz.data + __pyx_t_25 * __pyx_v_dz.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":553
+            /* "Int4D_poly.pyx":552
  *                     if x==0 and y==0 and a_==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu3 - Mfirst)*2/dz[0]
  *                     if x==1 and y==1 and a_==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -26165,7 +26165,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":556
+          /* "Int4D_poly.pyx":555
  *                         b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]
  * 
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -26177,7 +26177,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":557
+            /* "Int4D_poly.pyx":556
  * 
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -26192,7 +26192,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":558
+          /* "Int4D_poly.pyx":557
  *                     for kk in range(0, N):
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)             # <<<<<<<<<<<<<<
@@ -26206,7 +26206,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_N);
 
-          /* "Int4D_poly.pyx":559
+          /* "Int4D_poly.pyx":558
  *                         r[kk] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):             # <<<<<<<<<<<<<<
@@ -26218,7 +26218,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_kk = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":560
+            /* "Int4D_poly.pyx":559
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
  *                     for kk in range(0, N):
  *                         phi[ii, jj, kk, ll] = temp[kk]             # <<<<<<<<<<<<<<
@@ -26236,7 +26236,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":531
+    /* "Int4D_poly.pyx":530
  *                         phi[ii, jj, kk, ll] = temp[kk]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -26246,7 +26246,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   }
   __pyx_L3:;
 
-  /* "Int4D_poly.pyx":561
+  /* "Int4D_poly.pyx":560
  *                     for kk in range(0, N):
  *                         phi[ii, jj, kk, ll] = temp[kk]
  *     tridiag_free()             # <<<<<<<<<<<<<<
@@ -26255,7 +26255,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_free();
 
-  /* "Int4D_poly.pyx":388
+  /* "Int4D_poly.pyx":390
  *     tridiag_free()
  * 
  * cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -26290,7 +26290,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Dz(__Pyx_memviewslice __pyx_v_phi, 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "Int4D_poly.pyx":563
+/* "Int4D_poly.pyx":562
  *     tridiag_free()
  * 
  * cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -26368,7 +26368,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("c_implicit_4Da", 0);
 
-  /* "Int4D_poly.pyx":569
+  /* "Int4D_poly.pyx":568
  *     # define memory for non-array variables
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x direction             # <<<<<<<<<<<<<<
@@ -26377,7 +26377,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_L = (__pyx_v_xx.shape[0]);
 
-  /* "Int4D_poly.pyx":570
+  /* "Int4D_poly.pyx":569
  *     # Note: all of the arrays are preallocated for efficiency
  *     cdef int L = xx.shape[0] # number of grid points in x direction
  *     cdef int M = yy.shape[0] # number of grid points in y direction             # <<<<<<<<<<<<<<
@@ -26386,7 +26386,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_M = (__pyx_v_yy.shape[0]);
 
-  /* "Int4D_poly.pyx":571
+  /* "Int4D_poly.pyx":570
  *     cdef int L = xx.shape[0] # number of grid points in x direction
  *     cdef int M = yy.shape[0] # number of grid points in y direction
  *     cdef int N = zz.shape[0] # number of grid points in z direction             # <<<<<<<<<<<<<<
@@ -26395,7 +26395,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_N = (__pyx_v_zz.shape[0]);
 
-  /* "Int4D_poly.pyx":572
+  /* "Int4D_poly.pyx":571
  *     cdef int M = yy.shape[0] # number of grid points in y direction
  *     cdef int N = zz.shape[0] # number of grid points in z direction
  *     cdef int O = aa.shape[0] # number of grid points in a direction             # <<<<<<<<<<<<<<
@@ -26404,7 +26404,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
   __pyx_v_O = (__pyx_v_aa.shape[0]);
 
-  /* "Int4D_poly.pyx":578
+  /* "Int4D_poly.pyx":577
  *     # Create memory views for everything we need to compute
  *     ### grid spacings and integration points
  *     cdef double[:] da = np.empty(O-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26412,16 +26412,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] aInt = np.empty(O-1, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -26438,25 +26438,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 578, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 577, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 578, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 577, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 578, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 577, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_da = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":579
+  /* "Int4D_poly.pyx":578
  *     ### grid spacings and integration points
  *     cdef double[:] da = np.empty(O-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26464,16 +26464,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] delj = np.empty(O-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -26490,25 +26490,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 579, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 578, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 579, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 578, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 579, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 578, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dfactor = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":580
+  /* "Int4D_poly.pyx":579
  *     cdef double[:] da = np.empty(O-1, dtype=np.float64)
  *     cdef double[:] dfactor = np.empty(O, dtype=np.float64)
  *     cdef double[:] aInt = np.empty(O-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26516,16 +26516,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     ### population genetic functions
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -26542,25 +26542,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 580, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 579, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 580, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 579, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 580, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 579, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_aInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":581
+  /* "Int4D_poly.pyx":580
  *     cdef double[:] dfactor = np.empty(O, dtype=np.float64)
  *     cdef double[:] aInt = np.empty(O-1, dtype=np.float64)
  *     cdef double[:] delj = np.empty(O-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26568,16 +26568,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double Mfirst, Mlast
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -26594,25 +26594,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 581, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 581, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 580, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 581, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 580, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_delj = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":584
+  /* "Int4D_poly.pyx":583
  *     ### population genetic functions
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(O-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26620,16 +26620,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] VInt = np.empty(O-1, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -26646,25 +26646,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 584, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 584, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 583, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 584, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_MInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":585
+  /* "Int4D_poly.pyx":584
  *     cdef double Mfirst, Mlast
  *     cdef double[:] MInt = np.empty(O-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26672,16 +26672,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     ### for the tridiagonal matrix solver
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 584, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 584, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 584, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 584, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 584, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -26698,25 +26698,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 585, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 584, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 585, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 584, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 585, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 584, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 584, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_V = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":586
+  /* "Int4D_poly.pyx":585
  *     cdef double[:] MInt = np.empty(O-1, dtype=np.float64)
  *     cdef double[:] V = np.empty(O, dtype=np.float64)
  *     cdef double[:] VInt = np.empty(O-1, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26724,16 +26724,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] a = np.empty(O, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 586, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 586, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 586, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_long((__pyx_v_O - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 586, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 586, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -26750,25 +26750,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 586, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 585, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 586, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 585, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 586, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 585, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 586, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_VInt = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":588
+  /* "Int4D_poly.pyx":587
  *     cdef double[:] VInt = np.empty(O-1, dtype=np.float64)
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26776,16 +26776,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] c = np.empty(O, dtype=np.float64)
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 587, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 587, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 587, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 587, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 587, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -26802,25 +26802,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 588, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 587, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 588, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 587, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 588, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 587, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 587, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_a = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":589
+  /* "Int4D_poly.pyx":588
  *     ### for the tridiagonal matrix solver
  *     cdef double[:] a = np.empty(O, dtype=np.float64)
  *     cdef double[:] b = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26828,16 +26828,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] r = np.empty(O, dtype=np.float64)
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 589, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 589, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 589, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 589, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 589, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -26854,25 +26854,25 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 589, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 589, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 588, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 589, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 588, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 589, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 588, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_b = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":590
+  /* "Int4D_poly.pyx":589
  *     cdef double[:] a = np.empty(O, dtype=np.float64)
  *     cdef double[:] b = np.empty(O, dtype=np.float64)
  *     cdef double[:] c = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -26880,16 +26880,16 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
  *     cdef double[:] temp = np.empty(O, dtype=np.float64)
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -26906,42 +26906,42 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 590, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 589, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 590, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 589, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 590, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 589, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 590, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 589, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_c = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":591
+  /* "Int4D_poly.pyx":590
  *     cdef double[:] b = np.empty(O, dtype=np.float64)
  *     cdef double[:] c = np.empty(O, dtype=np.float64)
  *     cdef double[:] r = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
  *     cdef double[:] temp = np.empty(O, dtype=np.float64)
- *     ### specify ploidy of the y direction
+ *     ### specify ploidy of the a direction
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 591, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 591, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 591, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 591, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 591, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
@@ -26958,42 +26958,42 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_3};
-    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 591, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 591, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_2, __pyx_t_5, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 590, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 591, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 591, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 590, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_r = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":592
+  /* "Int4D_poly.pyx":591
  *     cdef double[:] c = np.empty(O, dtype=np.float64)
  *     cdef double[:] r = np.empty(O, dtype=np.float64)
  *     cdef double[:] temp = np.empty(O, dtype=np.float64)             # <<<<<<<<<<<<<<
- *     ### specify ploidy of the y direction
+ *     ### specify ploidy of the a direction
  *     cdef int is_diploid = ploidy4[0]
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_From_int(__pyx_v_O); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_float64); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_7 = 1;
@@ -27010,27 +27010,27 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_6, __pyx_t_5};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 592, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 591, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 592, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_4, __pyx_t_3, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 591, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_2, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 592, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 591, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 592, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_temp = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "Int4D_poly.pyx":594
+  /* "Int4D_poly.pyx":593
  *     cdef double[:] temp = np.empty(O, dtype=np.float64)
- *     ### specify ploidy of the y direction
+ *     ### specify ploidy of the a direction
  *     cdef int is_diploid = ploidy4[0]             # <<<<<<<<<<<<<<
  *     cdef int is_auto = ploidy4[1]
  *     cdef int is_alloa = ploidy4[2]
@@ -27038,8 +27038,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   __pyx_v_is_diploid = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy4.data + __pyx_t_9 * __pyx_v_ploidy4.strides[0]) )));
 
-  /* "Int4D_poly.pyx":595
- *     ### specify ploidy of the y direction
+  /* "Int4D_poly.pyx":594
+ *     ### specify ploidy of the a direction
  *     cdef int is_diploid = ploidy4[0]
  *     cdef int is_auto = ploidy4[1]             # <<<<<<<<<<<<<<
  *     cdef int is_alloa = ploidy4[2]
@@ -27048,7 +27048,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 1;
   __pyx_v_is_auto = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy4.data + __pyx_t_9 * __pyx_v_ploidy4.strides[0]) )));
 
-  /* "Int4D_poly.pyx":596
+  /* "Int4D_poly.pyx":595
  *     cdef int is_diploid = ploidy4[0]
  *     cdef int is_auto = ploidy4[1]
  *     cdef int is_alloa = ploidy4[2]             # <<<<<<<<<<<<<<
@@ -27058,19 +27058,19 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 2;
   __pyx_v_is_alloa = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy4.data + __pyx_t_9 * __pyx_v_ploidy4.strides[0]) )));
 
-  /* "Int4D_poly.pyx":597
+  /* "Int4D_poly.pyx":596
  *     cdef int is_auto = ploidy4[1]
  *     cdef int is_alloa = ploidy4[2]
  *     cdef int is_allob = ploidy4[3]             # <<<<<<<<<<<<<<
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
 */
   __pyx_t_9 = 3;
   __pyx_v_is_allob = (*((int *) ( /* dim=0 */ (__pyx_v_ploidy4.data + __pyx_t_9 * __pyx_v_ploidy4.strides[0]) )));
 
-  /* "Int4D_poly.pyx":600
+  /* "Int4D_poly.pyx":599
  * 
- *     # compute the y step size and intermediate y values
+ *     # compute step size and intermediate values
  *     compute_dx(&aa[0], O, &da[0])             # <<<<<<<<<<<<<<
  *     compute_dfactor(&da[0], O, &dfactor[0])
  *     compute_xInt(&aa[0], O, &aInt[0])
@@ -27079,8 +27079,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_dx((&(*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_9 * __pyx_v_aa.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_10 * __pyx_v_da.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":601
- *     # compute the y step size and intermediate y values
+  /* "Int4D_poly.pyx":600
+ *     # compute step size and intermediate values
  *     compute_dx(&aa[0], O, &da[0])
  *     compute_dfactor(&da[0], O, &dfactor[0])             # <<<<<<<<<<<<<<
  *     compute_xInt(&aa[0], O, &aInt[0])
@@ -27090,7 +27090,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_9 = 0;
   compute_dfactor((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_10 * __pyx_v_da.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_9 * __pyx_v_dfactor.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":602
+  /* "Int4D_poly.pyx":601
  *     compute_dx(&aa[0], O, &da[0])
  *     compute_dfactor(&da[0], O, &dfactor[0])
  *     compute_xInt(&aa[0], O, &aInt[0])             # <<<<<<<<<<<<<<
@@ -27101,7 +27101,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_10 = 0;
   compute_xInt((&(*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_9 * __pyx_v_aa.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_10 * __pyx_v_aInt.strides[0]) )))));
 
-  /* "Int4D_poly.pyx":604
+  /* "Int4D_poly.pyx":603
  *     compute_xInt(&aa[0], O, &aInt[0])
  *     # dynamic allocation of memory for tridiag
  *     tridiag_malloc(O)             # <<<<<<<<<<<<<<
@@ -27110,7 +27110,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_malloc(__pyx_v_O);
 
-  /* "Int4D_poly.pyx":607
+  /* "Int4D_poly.pyx":606
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -27120,7 +27120,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_diploid != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":609
+    /* "Int4D_poly.pyx":608
  *     if is_diploid:
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27132,7 +27132,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ll = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":610
+      /* "Int4D_poly.pyx":609
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):
  *             V[ll] = Vfunc(aa[ll], nu4)             # <<<<<<<<<<<<<<
@@ -27144,7 +27144,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_9 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_10 * __pyx_v_aa.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":611
+    /* "Int4D_poly.pyx":610
  *         for ll in range(0, O):
  *             V[ll] = Vfunc(aa[ll], nu4)
  *         for ll in range(0, O-1):             # <<<<<<<<<<<<<<
@@ -27156,7 +27156,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ll = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":612
+      /* "Int4D_poly.pyx":611
  *             V[ll] = Vfunc(aa[ll], nu4)
  *         for ll in range(0, O-1):
  *             VInt[ll] = Vfunc(aInt[ll], nu4)             # <<<<<<<<<<<<<<
@@ -27168,7 +27168,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_9 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_10 * __pyx_v_aInt.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":614
+    /* "Int4D_poly.pyx":613
  *             VInt[ll] = Vfunc(aInt[ll], nu4)
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -27180,7 +27180,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":615
+      /* "Int4D_poly.pyx":614
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -27192,7 +27192,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":616
+        /* "Int4D_poly.pyx":615
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for kk in range(N):             # <<<<<<<<<<<<<<
@@ -27204,7 +27204,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_kk = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":617
+          /* "Int4D_poly.pyx":616
  *             for jj in range(M):
  *                 for kk in range(N):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -27214,7 +27214,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_10 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":618
+          /* "Int4D_poly.pyx":617
  *                 for kk in range(N):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -27224,45 +27224,45 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_10 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_10 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":619
+          /* "Int4D_poly.pyx":618
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
  * 
- *                     ### Note: the order of the params being passed here is different from
+ *                     Mfirst = Mfunc4D(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1])
 */
           __pyx_t_10 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_10 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":627
- *                     # dimensions of phi which are z and a.
+          /* "Int4D_poly.pyx":620
+ *                     z = zz[kk]
  * 
- *                     Mfirst = Mfunc4D(aa[0], z, x, y, m43, m41, m42, s4[0], s4[1])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D(aa[O-1], z, x, y, m43, m41, m42, s4[0], s4[1])
+ *                     Mfirst = Mfunc4D(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1])
  *                     for ll in range(0, O-1):
 */
           __pyx_t_10 = 0;
           __pyx_t_9 = 0;
           __pyx_t_23 = 1;
-          __pyx_v_Mfirst = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_10 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))));
+          __pyx_v_Mfirst = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_10 * __pyx_v_aa.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_z, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":628
+          /* "Int4D_poly.pyx":621
  * 
- *                     Mfirst = Mfunc4D(aa[0], z, x, y, m43, m41, m42, s4[0], s4[1])
- *                     Mlast = Mfunc4D(aa[O-1], z, x, y, m43, m41, m42, s4[0], s4[1])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1])
+ *                     Mlast = Mfunc4D(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1])             # <<<<<<<<<<<<<<
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D(aInt[ll], z, x, y, m43, m41, m42, s4[0], s4[1])
+ *                         MInt[ll] = Mfunc4D(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1])
 */
           __pyx_t_23 = (__pyx_v_O - 1);
           __pyx_t_9 = 0;
           __pyx_t_10 = 1;
-          __pyx_v_Mlast = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))));
+          __pyx_v_Mlast = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_z, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":629
- *                     Mfirst = Mfunc4D(aa[0], z, x, y, m43, m41, m42, s4[0], s4[1])
- *                     Mlast = Mfunc4D(aa[O-1], z, x, y, m43, m41, m42, s4[0], s4[1])
+          /* "Int4D_poly.pyx":622
+ *                     Mfirst = Mfunc4D(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1])
+ *                     Mlast = Mfunc4D(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1])
  *                     for ll in range(0, O-1):             # <<<<<<<<<<<<<<
- *                         MInt[ll] = Mfunc4D(aInt[ll], z, x, y, m43, m41, m42, s4[0], s4[1])
+ *                         MInt[ll] = Mfunc4D(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_O - 1);
@@ -27270,10 +27270,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ll = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":630
- *                     Mlast = Mfunc4D(aa[O-1], z, x, y, m43, m41, m42, s4[0], s4[1])
+            /* "Int4D_poly.pyx":623
+ *                     Mlast = Mfunc4D(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1])
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D(aInt[ll], z, x, y, m43, m41, m42, s4[0], s4[1])             # <<<<<<<<<<<<<<
+ *                         MInt[ll] = Mfunc4D(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1])             # <<<<<<<<<<<<<<
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
 */
@@ -27281,12 +27281,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = 0;
             __pyx_t_23 = 1;
             __pyx_t_25 = __pyx_v_ll;
-            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_25 * __pyx_v_MInt.strides[0]) )) = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_10 * __pyx_v_aInt.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))));
+            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_25 * __pyx_v_MInt.strides[0]) )) = Mfunc4D((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_10 * __pyx_v_aInt.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_z, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":631
+          /* "Int4D_poly.pyx":624
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D(aInt[ll], z, x, y, m43, m41, m42, s4[0], s4[1])
+ *                         MInt[ll] = Mfunc4D(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -27297,8 +27297,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_23 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_10 * __pyx_v_VInt.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_25 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":632
- *                         MInt[ll] = Mfunc4D(aInt[ll], z, x, y, m43, m41, m42, s4[0], s4[1])
+          /* "Int4D_poly.pyx":625
+ *                         MInt[ll] = Mfunc4D(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -27314,7 +27314,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_25 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_10 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_9 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_23 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_27 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_29 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":633
+          /* "Int4D_poly.pyx":626
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -27344,7 +27344,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L17_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":634
+            /* "Int4D_poly.pyx":627
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]             # <<<<<<<<<<<<<<
@@ -27355,7 +27355,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu4) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_29 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":633
+            /* "Int4D_poly.pyx":626
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -27364,7 +27364,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":635
+          /* "Int4D_poly.pyx":628
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -27394,7 +27394,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L22_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":636
+            /* "Int4D_poly.pyx":629
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:
  *                         b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]             # <<<<<<<<<<<<<<
@@ -27405,7 +27405,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = (__pyx_v_O - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu4) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_29 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":635
+            /* "Int4D_poly.pyx":628
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -27414,7 +27414,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":638
+          /* "Int4D_poly.pyx":631
  *                         b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]
  * 
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27426,7 +27426,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":639
+            /* "Int4D_poly.pyx":632
  * 
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -27441,7 +27441,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_29 * __pyx_v_phi.strides[0]) ) + __pyx_t_28 * __pyx_v_phi.strides[1]) ) + __pyx_t_27 * __pyx_v_phi.strides[2]) ) + __pyx_t_26 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":640
+          /* "Int4D_poly.pyx":633
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)             # <<<<<<<<<<<<<<
@@ -27455,7 +27455,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_26 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_27 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_28 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_23 * __pyx_v_temp.strides[0]) )))), __pyx_v_O);
 
-          /* "Int4D_poly.pyx":641
+          /* "Int4D_poly.pyx":634
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27467,7 +27467,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":642
+            /* "Int4D_poly.pyx":635
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):
  *                         phi[ii, jj, kk, ll] = temp[ll]             # <<<<<<<<<<<<<<
@@ -27485,7 +27485,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":607
+    /* "Int4D_poly.pyx":606
  * 
  *     # branch on ploidy
  *     if is_diploid:             # <<<<<<<<<<<<<<
@@ -27495,7 +27495,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":644
+  /* "Int4D_poly.pyx":637
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -27505,7 +27505,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_auto != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":646
+    /* "Int4D_poly.pyx":639
  *     elif is_auto:
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27517,7 +27517,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ll = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":647
+      /* "Int4D_poly.pyx":640
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):
  *             V[ll] = Vfunc_tetra(aa[ll], nu4)             # <<<<<<<<<<<<<<
@@ -27529,7 +27529,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_26 * __pyx_v_V.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":648
+    /* "Int4D_poly.pyx":641
  *         for ll in range(0, O):
  *             V[ll] = Vfunc_tetra(aa[ll], nu4)
  *         for ll in range(0, O-1):             # <<<<<<<<<<<<<<
@@ -27541,7 +27541,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ll = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":649
+      /* "Int4D_poly.pyx":642
  *             V[ll] = Vfunc_tetra(aa[ll], nu4)
  *         for ll in range(0, O-1):
  *             VInt[ll] = Vfunc_tetra(aInt[ll], nu4)             # <<<<<<<<<<<<<<
@@ -27553,7 +27553,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_26 * __pyx_v_VInt.strides[0]) )) = Vfunc_tetra((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_23 * __pyx_v_aInt.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":651
+    /* "Int4D_poly.pyx":644
  *             VInt[ll] = Vfunc_tetra(aInt[ll], nu4)
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -27565,7 +27565,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":652
+      /* "Int4D_poly.pyx":645
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -27577,7 +27577,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":653
+        /* "Int4D_poly.pyx":646
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for kk in range(N):             # <<<<<<<<<<<<<<
@@ -27589,7 +27589,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_kk = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":654
+          /* "Int4D_poly.pyx":647
  *             for jj in range(M):
  *                 for kk in range(N):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -27599,7 +27599,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_23 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":655
+          /* "Int4D_poly.pyx":648
  *                 for kk in range(N):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
@@ -27609,21 +27609,21 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_23 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":656
+          /* "Int4D_poly.pyx":649
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
  * 
- *                     Mfirst = Mfunc4D_auto(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+ *                     Mfirst = Mfunc4D_auto(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
 */
           __pyx_t_23 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_23 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":658
+          /* "Int4D_poly.pyx":651
  *                     z = zz[kk]
  * 
- *                     Mfirst = Mfunc4D_auto(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_auto(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+ *                     Mfirst = Mfunc4D_auto(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_auto(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
  *                     for ll in range(0, O-1):
 */
           __pyx_t_23 = 0;
@@ -27631,27 +27631,27 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_27 = 1;
           __pyx_t_28 = 2;
           __pyx_t_29 = 3;
-          __pyx_v_Mfirst = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
+          __pyx_v_Mfirst = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_23 * __pyx_v_aa.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_z, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":659
+          /* "Int4D_poly.pyx":652
  * 
- *                     Mfirst = Mfunc4D_auto(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
- *                     Mlast = Mfunc4D_auto(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
+ *                     Mfirst = Mfunc4D_auto(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
+ *                     Mlast = Mfunc4D_auto(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_auto(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+ *                         MInt[ll] = Mfunc4D_auto(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
 */
           __pyx_t_29 = (__pyx_v_O - 1);
           __pyx_t_28 = 0;
           __pyx_t_27 = 1;
           __pyx_t_26 = 2;
           __pyx_t_23 = 3;
-          __pyx_v_Mlast = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))));
+          __pyx_v_Mlast = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_z, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":660
- *                     Mfirst = Mfunc4D_auto(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
- *                     Mlast = Mfunc4D_auto(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+          /* "Int4D_poly.pyx":653
+ *                     Mfirst = Mfunc4D_auto(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
+ *                     Mlast = Mfunc4D_auto(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
  *                     for ll in range(0, O-1):             # <<<<<<<<<<<<<<
- *                         MInt[ll] = Mfunc4D_auto(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+ *                         MInt[ll] = Mfunc4D_auto(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_O - 1);
@@ -27659,10 +27659,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ll = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":661
- *                     Mlast = Mfunc4D_auto(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+            /* "Int4D_poly.pyx":654
+ *                     Mlast = Mfunc4D_auto(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_auto(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
+ *                         MInt[ll] = Mfunc4D_auto(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])             # <<<<<<<<<<<<<<
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
 */
@@ -27672,12 +27672,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_28 = 2;
             __pyx_t_29 = 3;
             __pyx_t_9 = __pyx_v_ll;
-            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_23 * __pyx_v_aInt.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
+            *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_9 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_auto((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_23 * __pyx_v_aInt.strides[0]) ))), __pyx_v_x, __pyx_v_y, __pyx_v_z, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":662
+          /* "Int4D_poly.pyx":655
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_auto(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+ *                         MInt[ll] = Mfunc4D_auto(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -27688,8 +27688,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_29 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":663
- *                         MInt[ll] = Mfunc4D_auto(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3])
+          /* "Int4D_poly.pyx":656
+ *                         MInt[ll] = Mfunc4D_auto(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -27705,7 +27705,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_26 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":664
+          /* "Int4D_poly.pyx":657
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -27735,7 +27735,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L43_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":665
+            /* "Int4D_poly.pyx":658
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu4 - Mfirst)*2/da[0]             # <<<<<<<<<<<<<<
@@ -27746,7 +27746,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.25 / __pyx_v_nu4) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_25 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":664
+            /* "Int4D_poly.pyx":657
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -27755,7 +27755,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":666
+          /* "Int4D_poly.pyx":659
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -27785,7 +27785,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L48_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":667
+            /* "Int4D_poly.pyx":660
  *                         b[0] += (0.25/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:
  *                         b[O-1] += -(-0.25/nu4 - Mlast)*2/da[O-2]             # <<<<<<<<<<<<<<
@@ -27796,7 +27796,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_O - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.25 / __pyx_v_nu4) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_25 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":666
+            /* "Int4D_poly.pyx":659
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.25/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -27805,7 +27805,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":669
+          /* "Int4D_poly.pyx":662
  *                         b[O-1] += -(-0.25/nu4 - Mlast)*2/da[O-2]
  * 
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27817,7 +27817,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":670
+            /* "Int4D_poly.pyx":663
  * 
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -27832,7 +27832,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":671
+          /* "Int4D_poly.pyx":664
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)             # <<<<<<<<<<<<<<
@@ -27846,7 +27846,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_O);
 
-          /* "Int4D_poly.pyx":672
+          /* "Int4D_poly.pyx":665
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27858,7 +27858,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":673
+            /* "Int4D_poly.pyx":666
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):
  *                         phi[ii, jj, kk, ll] = temp[ll]             # <<<<<<<<<<<<<<
@@ -27876,7 +27876,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":644
+    /* "Int4D_poly.pyx":637
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     elif is_auto:             # <<<<<<<<<<<<<<
@@ -27886,7 +27886,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":675
+  /* "Int4D_poly.pyx":668
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -27896,7 +27896,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_alloa != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":677
+    /* "Int4D_poly.pyx":670
  *     elif is_alloa:
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -27908,7 +27908,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ll = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":678
+      /* "Int4D_poly.pyx":671
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):
  *             V[ll] = Vfunc(aa[ll], nu4)             # <<<<<<<<<<<<<<
@@ -27920,7 +27920,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":679
+    /* "Int4D_poly.pyx":672
  *         for ll in range(0, O):
  *             V[ll] = Vfunc(aa[ll], nu4)
  *         for ll in range(0, O-1):             # <<<<<<<<<<<<<<
@@ -27932,7 +27932,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ll = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":680
+      /* "Int4D_poly.pyx":673
  *             V[ll] = Vfunc(aa[ll], nu4)
  *         for ll in range(0, O-1):
  *             VInt[ll] = Vfunc(aInt[ll], nu4)             # <<<<<<<<<<<<<<
@@ -27944,7 +27944,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_23 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_29 * __pyx_v_aInt.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":682
+    /* "Int4D_poly.pyx":675
  *             VInt[ll] = Vfunc(aInt[ll], nu4)
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -27956,7 +27956,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":683
+      /* "Int4D_poly.pyx":676
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -27968,7 +27968,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":684
+        /* "Int4D_poly.pyx":677
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for kk in range(N):             # <<<<<<<<<<<<<<
@@ -27980,7 +27980,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_kk = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":685
+          /* "Int4D_poly.pyx":678
  *             for jj in range(M):
  *                 for kk in range(N):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -27990,31 +27990,31 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_29 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":686
+          /* "Int4D_poly.pyx":679
  *                 for kk in range(N):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
  *                     z = zz[kk]
- * 
+ *                     ### Note: the order of migration params and grids being passed here is different
 */
           __pyx_t_29 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_29 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":687
+          /* "Int4D_poly.pyx":680
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
- * 
- *                     Mfirst = Mfunc4D_allo_a(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     ### Note: the order of migration params and grids being passed here is different
+ *                     # This is for consistency with the allo cases where the first two dimensions passed
 */
           __pyx_t_29 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_29 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":689
- *                     z = zz[kk]
- * 
- *                     Mfirst = Mfunc4D_allo_a(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_a(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+          /* "Int4D_poly.pyx":685
+ *                     # to Mfunc need to be the allo subgenomes and the subgenomes are always passed
+ *                     # to the integrator as z and a.
+ *                     Mfirst = Mfunc4D_allo_a(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_a(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     for ll in range(0, O-1):
 */
           __pyx_t_29 = 0;
@@ -28028,12 +28028,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_25 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_33 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":690
- * 
- *                     Mfirst = Mfunc4D_allo_a(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
- *                     Mlast = Mfunc4D_allo_a(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
+          /* "Int4D_poly.pyx":686
+ *                     # to the integrator as z and a.
+ *                     Mfirst = Mfunc4D_allo_a(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     Mlast = Mfunc4D_allo_a(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
 */
           __pyx_t_33 = (__pyx_v_O - 1);
           __pyx_t_26 = 0;
@@ -28046,11 +28046,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_33 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_25 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":691
- *                     Mfirst = Mfunc4D_allo_a(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
- *                     Mlast = Mfunc4D_allo_a(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+          /* "Int4D_poly.pyx":687
+ *                     Mfirst = Mfunc4D_allo_a(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     Mlast = Mfunc4D_allo_a(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     for ll in range(0, O-1):             # <<<<<<<<<<<<<<
- *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_O - 1);
@@ -28058,10 +28058,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ll = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":692
- *                     Mlast = Mfunc4D_allo_a(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+            /* "Int4D_poly.pyx":688
+ *                     Mlast = Mfunc4D_allo_a(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
+ *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
 */
@@ -28078,9 +28078,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_a((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_29 * __pyx_v_aInt.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_25 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_33 * __pyx_v_s4.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":693
+          /* "Int4D_poly.pyx":689
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -28091,8 +28091,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_28 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_33 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_26 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":694
- *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+          /* "Int4D_poly.pyx":690
+ *                         MInt[ll] = Mfunc4D_allo_a(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -28108,7 +28108,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_23 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_28 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_33 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_10 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_23 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":695
+          /* "Int4D_poly.pyx":691
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -28138,7 +28138,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L69_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":696
+            /* "Int4D_poly.pyx":692
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]             # <<<<<<<<<<<<<<
@@ -28149,7 +28149,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu4) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_23 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":695
+            /* "Int4D_poly.pyx":691
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -28158,7 +28158,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":697
+          /* "Int4D_poly.pyx":693
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -28188,7 +28188,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L74_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":698
+            /* "Int4D_poly.pyx":694
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:
  *                         b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]             # <<<<<<<<<<<<<<
@@ -28199,7 +28199,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_9 = (__pyx_v_O - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu4) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_23 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":697
+            /* "Int4D_poly.pyx":693
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -28208,7 +28208,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":700
+          /* "Int4D_poly.pyx":696
  *                         b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]
  * 
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -28220,7 +28220,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":701
+            /* "Int4D_poly.pyx":697
  * 
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -28235,7 +28235,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_33 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_23 * __pyx_v_phi.strides[0]) ) + __pyx_t_9 * __pyx_v_phi.strides[1]) ) + __pyx_t_10 * __pyx_v_phi.strides[2]) ) + __pyx_t_25 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":702
+          /* "Int4D_poly.pyx":698
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)             # <<<<<<<<<<<<<<
@@ -28249,7 +28249,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_25 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_9 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_23 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_33 * __pyx_v_temp.strides[0]) )))), __pyx_v_O);
 
-          /* "Int4D_poly.pyx":703
+          /* "Int4D_poly.pyx":699
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -28261,7 +28261,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":704
+            /* "Int4D_poly.pyx":700
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):
  *                         phi[ii, jj, kk, ll] = temp[ll]             # <<<<<<<<<<<<<<
@@ -28279,7 +28279,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":675
+    /* "Int4D_poly.pyx":668
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     elif is_alloa:             # <<<<<<<<<<<<<<
@@ -28289,7 +28289,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     goto __pyx_L3;
   }
 
-  /* "Int4D_poly.pyx":706
+  /* "Int4D_poly.pyx":702
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -28299,7 +28299,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __pyx_t_11 = (__pyx_v_is_allob != 0);
   if (__pyx_t_11) {
 
-    /* "Int4D_poly.pyx":708
+    /* "Int4D_poly.pyx":704
  *     elif is_allob:
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -28311,7 +28311,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ll = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":709
+      /* "Int4D_poly.pyx":705
  *         # compute everything we can outside of the spatial loop
  *         for ll in range(0, O):
  *             V[ll] = Vfunc(aa[ll], nu4)             # <<<<<<<<<<<<<<
@@ -28323,7 +28323,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_25 * __pyx_v_V.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_33 * __pyx_v_aa.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":710
+    /* "Int4D_poly.pyx":706
  *         for ll in range(0, O):
  *             V[ll] = Vfunc(aa[ll], nu4)
  *         for ll in range(0, O-1):             # <<<<<<<<<<<<<<
@@ -28335,7 +28335,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_16; __pyx_t_12+=1) {
       __pyx_v_ll = __pyx_t_12;
 
-      /* "Int4D_poly.pyx":711
+      /* "Int4D_poly.pyx":707
  *             V[ll] = Vfunc(aa[ll], nu4)
  *         for ll in range(0, O-1):
  *             VInt[ll] = Vfunc(aInt[ll], nu4)             # <<<<<<<<<<<<<<
@@ -28347,7 +28347,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       *((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_25 * __pyx_v_VInt.strides[0]) )) = Vfunc((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_33 * __pyx_v_aInt.strides[0]) ))), __pyx_v_nu4);
     }
 
-    /* "Int4D_poly.pyx":713
+    /* "Int4D_poly.pyx":709
  *             VInt[ll] = Vfunc(aInt[ll], nu4)
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):             # <<<<<<<<<<<<<<
@@ -28359,7 +28359,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
       __pyx_v_ii = __pyx_t_14;
 
-      /* "Int4D_poly.pyx":714
+      /* "Int4D_poly.pyx":710
  *         # loop through x, y, and z dimensions
  *         for ii in range(L):
  *             for jj in range(M):             # <<<<<<<<<<<<<<
@@ -28371,7 +28371,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_jj = __pyx_t_19;
 
-        /* "Int4D_poly.pyx":715
+        /* "Int4D_poly.pyx":711
  *         for ii in range(L):
  *             for jj in range(M):
  *                 for kk in range(N):             # <<<<<<<<<<<<<<
@@ -28383,7 +28383,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
         for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_21; __pyx_t_22+=1) {
           __pyx_v_kk = __pyx_t_22;
 
-          /* "Int4D_poly.pyx":716
+          /* "Int4D_poly.pyx":712
  *             for jj in range(M):
  *                 for kk in range(N):
  *                     x = xx[ii]             # <<<<<<<<<<<<<<
@@ -28393,31 +28393,31 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = __pyx_v_ii;
           __pyx_v_x = (*((double *) ( /* dim=0 */ (__pyx_v_xx.data + __pyx_t_33 * __pyx_v_xx.strides[0]) )));
 
-          /* "Int4D_poly.pyx":717
+          /* "Int4D_poly.pyx":713
  *                 for kk in range(N):
  *                     x = xx[ii]
  *                     y = yy[jj]             # <<<<<<<<<<<<<<
  *                     z = zz[kk]
- * 
+ *                     # see note above about the order of the params passed to Mfuncs here
 */
           __pyx_t_33 = __pyx_v_jj;
           __pyx_v_y = (*((double *) ( /* dim=0 */ (__pyx_v_yy.data + __pyx_t_33 * __pyx_v_yy.strides[0]) )));
 
-          /* "Int4D_poly.pyx":718
+          /* "Int4D_poly.pyx":714
  *                     x = xx[ii]
  *                     y = yy[jj]
  *                     z = zz[kk]             # <<<<<<<<<<<<<<
- * 
- *                     Mfirst = Mfunc4D_allo_b(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     # see note above about the order of the params passed to Mfuncs here
+ *                     Mfirst = Mfunc4D_allo_b(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
 */
           __pyx_t_33 = __pyx_v_kk;
           __pyx_v_z = (*((double *) ( /* dim=0 */ (__pyx_v_zz.data + __pyx_t_33 * __pyx_v_zz.strides[0]) )));
 
-          /* "Int4D_poly.pyx":720
+          /* "Int4D_poly.pyx":716
  *                     z = zz[kk]
- * 
- *                     Mfirst = Mfunc4D_allo_b(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
- *                     Mlast = Mfunc4D_allo_b(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     # see note above about the order of the params passed to Mfuncs here
+ *                     Mfirst = Mfunc4D_allo_b(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
+ *                     Mlast = Mfunc4D_allo_b(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     for ll in range(0, O-1):
 */
           __pyx_t_33 = 0;
@@ -28431,12 +28431,12 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 7;
           __pyx_v_Mfirst = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_33 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_25 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":721
- * 
- *                     Mfirst = Mfunc4D_allo_b(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
- *                     Mlast = Mfunc4D_allo_b(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
+          /* "Int4D_poly.pyx":717
+ *                     # see note above about the order of the params passed to Mfuncs here
+ *                     Mfirst = Mfunc4D_allo_b(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     Mlast = Mfunc4D_allo_b(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
 */
           __pyx_t_29 = (__pyx_v_O - 1);
           __pyx_t_28 = 0;
@@ -28449,11 +28449,11 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_33 = 7;
           __pyx_v_Mlast = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_aa.data + __pyx_t_29 * __pyx_v_aa.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_25 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_33 * __pyx_v_s4.strides[0]) ))));
 
-          /* "Int4D_poly.pyx":722
- *                     Mfirst = Mfunc4D_allo_b(aa[0], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
- *                     Mlast = Mfunc4D_allo_b(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+          /* "Int4D_poly.pyx":718
+ *                     Mfirst = Mfunc4D_allo_b(aa[0], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                     Mlast = Mfunc4D_allo_b(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     for ll in range(0, O-1):             # <<<<<<<<<<<<<<
- *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
 */
           __pyx_t_15 = (__pyx_v_O - 1);
@@ -28461,10 +28461,10 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_16; __pyx_t_24+=1) {
             __pyx_v_ll = __pyx_t_24;
 
-            /* "Int4D_poly.pyx":723
- *                     Mlast = Mfunc4D_allo_b(aa[O-1], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+            /* "Int4D_poly.pyx":719
+ *                     Mlast = Mfunc4D_allo_b(aa[O-1], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
+ *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])             # <<<<<<<<<<<<<<
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
 */
@@ -28481,9 +28481,9 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_34 * __pyx_v_MInt.strides[0]) )) = Mfunc4D_allo_b((*((double *) ( /* dim=0 */ (__pyx_v_aInt.data + __pyx_t_33 * __pyx_v_aInt.strides[0]) ))), __pyx_v_z, __pyx_v_x, __pyx_v_y, __pyx_v_m43, __pyx_v_m41, __pyx_v_m42, (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_25 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_10 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_9 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_23 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_26 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_27 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_28 * __pyx_v_s4.strides[0]) ))), (*((double *) ( /* dim=0 */ (__pyx_v_s4.data + __pyx_t_29 * __pyx_v_s4.strides[0]) ))));
           }
 
-          /* "Int4D_poly.pyx":724
+          /* "Int4D_poly.pyx":720
  *                     for ll in range(0, O-1):
- *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+ *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)             # <<<<<<<<<<<<<<
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -28494,8 +28494,8 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_26 = 0;
           compute_delj((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_29 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_28 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_VInt.data + __pyx_t_27 * __pyx_v_VInt.strides[0]) )))), __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_26 * __pyx_v_delj.strides[0]) )))), __pyx_v_use_delj_trick);
 
-          /* "Int4D_poly.pyx":725
- *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z, x, y, m43, m41, m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
+          /* "Int4D_poly.pyx":721
+ *                         MInt[ll] = Mfunc4D_allo_b(aInt[ll], z,x,y, m43,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7])
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])             # <<<<<<<<<<<<<<
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
@@ -28511,7 +28511,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_25 = 0;
           compute_abc_nobc((&(*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_26 * __pyx_v_da.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_dfactor.data + __pyx_t_27 * __pyx_v_dfactor.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_delj.data + __pyx_t_28 * __pyx_v_delj.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_MInt.data + __pyx_t_29 * __pyx_v_MInt.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_V.data + __pyx_t_23 * __pyx_v_V.strides[0]) )))), __pyx_v_dt, __pyx_v_O, (&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_9 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_25 * __pyx_v_c.strides[0]) )))));
 
-          /* "Int4D_poly.pyx":726
+          /* "Int4D_poly.pyx":722
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -28541,7 +28541,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L95_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":727
+            /* "Int4D_poly.pyx":723
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]             # <<<<<<<<<<<<<<
@@ -28552,7 +28552,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = 0;
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += ((((0.5 / __pyx_v_nu4) - __pyx_v_Mfirst) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_25 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":726
+            /* "Int4D_poly.pyx":722
  *                     compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
  *                     compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:             # <<<<<<<<<<<<<<
@@ -28561,7 +28561,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":728
+          /* "Int4D_poly.pyx":724
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -28591,7 +28591,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_L100_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "Int4D_poly.pyx":729
+            /* "Int4D_poly.pyx":725
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:
  *                         b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]             # <<<<<<<<<<<<<<
@@ -28602,7 +28602,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             __pyx_t_10 = (__pyx_v_O - 1);
             *((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) )) += (((-((-0.5 / __pyx_v_nu4) - __pyx_v_Mlast)) * 2.0) / (*((double *) ( /* dim=0 */ (__pyx_v_da.data + __pyx_t_25 * __pyx_v_da.strides[0]) ))));
 
-            /* "Int4D_poly.pyx":728
+            /* "Int4D_poly.pyx":724
  *                     if x==0 and y==0 and z==0 and Mfirst <= 0:
  *                         b[0] += (0.5/nu4 - Mfirst)*2/da[0]
  *                     if x==1 and y==1 and z==1 and Mlast >= 0:             # <<<<<<<<<<<<<<
@@ -28611,7 +28611,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
           }
 
-          /* "Int4D_poly.pyx":731
+          /* "Int4D_poly.pyx":727
  *                         b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]
  * 
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -28623,7 +28623,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":732
+            /* "Int4D_poly.pyx":728
  * 
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt             # <<<<<<<<<<<<<<
@@ -28638,7 +28638,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
             *((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_29 * __pyx_v_r.strides[0]) )) = ((*((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_phi.data + __pyx_t_25 * __pyx_v_phi.strides[0]) ) + __pyx_t_10 * __pyx_v_phi.strides[1]) ) + __pyx_t_9 * __pyx_v_phi.strides[2]) ) + __pyx_t_23 * __pyx_v_phi.strides[3]) ))) / __pyx_v_dt);
           }
 
-          /* "Int4D_poly.pyx":733
+          /* "Int4D_poly.pyx":729
  *                     for ll in range(0, O):
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)             # <<<<<<<<<<<<<<
@@ -28652,7 +28652,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           __pyx_t_29 = 0;
           tridiag_premalloc((&(*((double *) ( /* dim=0 */ (__pyx_v_a.data + __pyx_t_23 * __pyx_v_a.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_9 * __pyx_v_b.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_c.data + __pyx_t_10 * __pyx_v_c.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_r.data + __pyx_t_25 * __pyx_v_r.strides[0]) )))), (&(*((double *) ( /* dim=0 */ (__pyx_v_temp.data + __pyx_t_29 * __pyx_v_temp.strides[0]) )))), __pyx_v_O);
 
-          /* "Int4D_poly.pyx":734
+          /* "Int4D_poly.pyx":730
  *                         r[ll] = phi[ii, jj, kk, ll]/dt
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):             # <<<<<<<<<<<<<<
@@ -28664,7 +28664,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
           for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
             __pyx_v_ll = __pyx_t_32;
 
-            /* "Int4D_poly.pyx":735
+            /* "Int4D_poly.pyx":731
  *                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
  *                     for ll in range(0, O):
  *                         phi[ii, jj, kk, ll] = temp[ll]             # <<<<<<<<<<<<<<
@@ -28682,7 +28682,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
       }
     }
 
-    /* "Int4D_poly.pyx":706
+    /* "Int4D_poly.pyx":702
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     elif is_allob:             # <<<<<<<<<<<<<<
@@ -28692,7 +28692,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   }
   __pyx_L3:;
 
-  /* "Int4D_poly.pyx":737
+  /* "Int4D_poly.pyx":733
  *                         phi[ii, jj, kk, ll] = temp[ll]
  * 
  *     tridiag_free()             # <<<<<<<<<<<<<<
@@ -28701,7 +28701,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
 */
   tridiag_free();
 
-  /* "Int4D_poly.pyx":563
+  /* "Int4D_poly.pyx":562
  *     tridiag_free()
  * 
  * cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,             # <<<<<<<<<<<<<<
@@ -28736,7 +28736,7 @@ static void __pyx_f_10Int4D_poly_c_implicit_4Da(__Pyx_memviewslice __pyx_v_phi, 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "Int4D_poly.pyx":743
+/* "Int4D_poly.pyx":739
  * ### ==========================================================================
  * 
  * def implicit_4Dx(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -28796,116 +28796,116 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_yy,&__pyx_mstate_global->__pyx_n_u_zz,&__pyx_mstate_global->__pyx_n_u_aa,&__pyx_mstate_global->__pyx_n_u_nu1,&__pyx_mstate_global->__pyx_n_u_m12,&__pyx_mstate_global->__pyx_n_u_m13,&__pyx_mstate_global->__pyx_n_u_m14,&__pyx_mstate_global->__pyx_n_u_s1,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy1,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 743, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 739, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case 13:
         values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 12:
         values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 11:
         values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 10:
         values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  9:
         values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 743, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 739, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Dx", 0) < 0) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Dx", 0) < 0) __PYX_ERR(0, 739, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 13; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Dx", 1, 13, 13, i); __PYX_ERR(0, 743, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Dx", 1, 13, 13, i); __PYX_ERR(0, 739, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 13)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 739, __pyx_L3_error)
       values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 743, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 739, __pyx_L3_error)
     }
     __pyx_v_phi = ((PyArrayObject *)values[0]);
     __pyx_v_xx = ((PyArrayObject *)values[1]);
     __pyx_v_yy = ((PyArrayObject *)values[2]);
     __pyx_v_zz = ((PyArrayObject *)values[3]);
     __pyx_v_aa = ((PyArrayObject *)values[4]);
-    __pyx_v_nu1 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 748, __pyx_L3_error)
-    __pyx_v_m12 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 749, __pyx_L3_error)
-    __pyx_v_m13 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 750, __pyx_L3_error)
-    __pyx_v_m14 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 751, __pyx_L3_error)
+    __pyx_v_nu1 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 744, __pyx_L3_error)
+    __pyx_v_m12 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 745, __pyx_L3_error)
+    __pyx_v_m13 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 746, __pyx_L3_error)
+    __pyx_v_m14 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 747, __pyx_L3_error)
     __pyx_v_s1 = ((PyArrayObject *)values[9]);
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 753, __pyx_L3_error)
-    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 754, __pyx_L3_error)
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 749, __pyx_L3_error)
+    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 750, __pyx_L3_error)
     __pyx_v_ploidy1 = ((PyArrayObject *)values[12]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("implicit_4Dx", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 743, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("implicit_4Dx", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 739, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -28916,13 +28916,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 743, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 744, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 745, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 746, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 747, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s1), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s1", 0))) __PYX_ERR(0, 752, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy1), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy1", 0))) __PYX_ERR(0, 755, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 739, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 740, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 741, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 742, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 743, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s1), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s1", 0))) __PYX_ERR(0, 748, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy1), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy1", 0))) __PYX_ERR(0, 751, __pyx_L1_error)
   __pyx_r = __pyx_pf_10Int4D_poly_implicit_4Dx(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_yy, __pyx_v_zz, __pyx_v_aa, __pyx_v_nu1, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, __pyx_v_s1, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy1);
 
   /* function exit code */
@@ -29000,55 +29000,55 @@ static PyObject *__pyx_pf_10Int4D_poly_implicit_4Dx(CYTHON_UNUSED PyObject *__py
   __pyx_pybuffernd_ploidy1.rcbuffer = &__pyx_pybuffer_ploidy1;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_phi.diminfo[1].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_phi.diminfo[1].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_phi.diminfo[2].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_phi.diminfo[2].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_phi.diminfo[3].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_phi.diminfo[3].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_xx.diminfo[0].strides = __pyx_pybuffernd_xx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xx.diminfo[0].shape = __pyx_pybuffernd_xx.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_yy.diminfo[0].strides = __pyx_pybuffernd_yy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yy.diminfo[0].shape = __pyx_pybuffernd_yy.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_zz.diminfo[0].strides = __pyx_pybuffernd_zz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_zz.diminfo[0].shape = __pyx_pybuffernd_zz.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_aa.diminfo[0].strides = __pyx_pybuffernd_aa.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_aa.diminfo[0].shape = __pyx_pybuffernd_aa.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s1.rcbuffer->pybuffer, (PyObject*)__pyx_v_s1, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s1.rcbuffer->pybuffer, (PyObject*)__pyx_v_s1, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_s1.diminfo[0].strides = __pyx_pybuffernd_s1.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_s1.diminfo[0].shape = __pyx_pybuffernd_s1.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy1.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy1, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy1.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy1, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 739, __pyx_L1_error)
   }
   __pyx_pybuffernd_ploidy1.diminfo[0].strides = __pyx_pybuffernd_ploidy1.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy1.diminfo[0].shape = __pyx_pybuffernd_ploidy1.rcbuffer->pybuffer.shape[0];
 
-  /* "Int4D_poly.pyx":780
+  /* "Int4D_poly.pyx":776
  *     """
  *     # Call the cdef function with memory views
  *     c_implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14, s1, dt, use_delj_trick, ploidy1)             # <<<<<<<<<<<<<<
  *     return phi
  * 
 */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __pyx_f_10Int4D_poly_c_implicit_4Dx(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu1, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 780, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __pyx_f_10Int4D_poly_c_implicit_4Dx(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu1, __pyx_v_m12, __pyx_v_m13, __pyx_v_m14, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 776, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
   __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
@@ -29064,7 +29064,7 @@ static PyObject *__pyx_pf_10Int4D_poly_implicit_4Dx(CYTHON_UNUSED PyObject *__py
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_7, 1);
   __pyx_t_7.memview = NULL; __pyx_t_7.data = NULL;
 
-  /* "Int4D_poly.pyx":781
+  /* "Int4D_poly.pyx":777
  *     # Call the cdef function with memory views
  *     c_implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14, s1, dt, use_delj_trick, ploidy1)
  *     return phi             # <<<<<<<<<<<<<<
@@ -29076,7 +29076,7 @@ static PyObject *__pyx_pf_10Int4D_poly_implicit_4Dx(CYTHON_UNUSED PyObject *__py
   __pyx_r = ((PyObject *)__pyx_v_phi);
   goto __pyx_L0;
 
-  /* "Int4D_poly.pyx":743
+  /* "Int4D_poly.pyx":739
  * ### ==========================================================================
  * 
  * def implicit_4Dx(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -29122,7 +29122,7 @@ static PyObject *__pyx_pf_10Int4D_poly_implicit_4Dx(CYTHON_UNUSED PyObject *__py
   return __pyx_r;
 }
 
-/* "Int4D_poly.pyx":783
+/* "Int4D_poly.pyx":779
  *     return phi
  * 
  * def implicit_4Dy(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -29182,116 +29182,116 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_yy,&__pyx_mstate_global->__pyx_n_u_zz,&__pyx_mstate_global->__pyx_n_u_aa,&__pyx_mstate_global->__pyx_n_u_nu2,&__pyx_mstate_global->__pyx_n_u_m21,&__pyx_mstate_global->__pyx_n_u_m23,&__pyx_mstate_global->__pyx_n_u_m24,&__pyx_mstate_global->__pyx_n_u_s2,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy2,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 783, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 779, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case 13:
         values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 12:
         values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 11:
         values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 10:
         values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  9:
         values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 783, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 779, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Dy", 0) < 0) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Dy", 0) < 0) __PYX_ERR(0, 779, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 13; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Dy", 1, 13, 13, i); __PYX_ERR(0, 783, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Dy", 1, 13, 13, i); __PYX_ERR(0, 779, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 13)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 779, __pyx_L3_error)
       values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 783, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 779, __pyx_L3_error)
     }
     __pyx_v_phi = ((PyArrayObject *)values[0]);
     __pyx_v_xx = ((PyArrayObject *)values[1]);
     __pyx_v_yy = ((PyArrayObject *)values[2]);
     __pyx_v_zz = ((PyArrayObject *)values[3]);
     __pyx_v_aa = ((PyArrayObject *)values[4]);
-    __pyx_v_nu2 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 788, __pyx_L3_error)
-    __pyx_v_m21 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m21 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L3_error)
-    __pyx_v_m23 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m23 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 790, __pyx_L3_error)
-    __pyx_v_m24 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m24 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 791, __pyx_L3_error)
+    __pyx_v_nu2 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 784, __pyx_L3_error)
+    __pyx_v_m21 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m21 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 785, __pyx_L3_error)
+    __pyx_v_m23 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m23 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 786, __pyx_L3_error)
+    __pyx_v_m24 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m24 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L3_error)
     __pyx_v_s2 = ((PyArrayObject *)values[9]);
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 793, __pyx_L3_error)
-    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 794, __pyx_L3_error)
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L3_error)
+    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 790, __pyx_L3_error)
     __pyx_v_ploidy2 = ((PyArrayObject *)values[12]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("implicit_4Dy", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 783, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("implicit_4Dy", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 779, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -29302,13 +29302,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 783, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 784, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 785, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 786, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 787, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s2), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s2", 0))) __PYX_ERR(0, 792, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy2), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy2", 0))) __PYX_ERR(0, 795, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 779, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 780, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 781, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 782, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 783, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s2), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s2", 0))) __PYX_ERR(0, 788, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy2), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy2", 0))) __PYX_ERR(0, 791, __pyx_L1_error)
   __pyx_r = __pyx_pf_10Int4D_poly_2implicit_4Dy(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_yy, __pyx_v_zz, __pyx_v_aa, __pyx_v_nu2, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, __pyx_v_s2, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy2);
 
   /* function exit code */
@@ -29386,55 +29386,55 @@ static PyObject *__pyx_pf_10Int4D_poly_2implicit_4Dy(CYTHON_UNUSED PyObject *__p
   __pyx_pybuffernd_ploidy2.rcbuffer = &__pyx_pybuffer_ploidy2;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_phi.diminfo[1].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_phi.diminfo[1].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_phi.diminfo[2].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_phi.diminfo[2].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_phi.diminfo[3].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_phi.diminfo[3].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_xx.diminfo[0].strides = __pyx_pybuffernd_xx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xx.diminfo[0].shape = __pyx_pybuffernd_xx.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_yy.diminfo[0].strides = __pyx_pybuffernd_yy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yy.diminfo[0].shape = __pyx_pybuffernd_yy.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_zz.diminfo[0].strides = __pyx_pybuffernd_zz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_zz.diminfo[0].shape = __pyx_pybuffernd_zz.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_aa.diminfo[0].strides = __pyx_pybuffernd_aa.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_aa.diminfo[0].shape = __pyx_pybuffernd_aa.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s2.rcbuffer->pybuffer, (PyObject*)__pyx_v_s2, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s2.rcbuffer->pybuffer, (PyObject*)__pyx_v_s2, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_s2.diminfo[0].strides = __pyx_pybuffernd_s2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_s2.diminfo[0].shape = __pyx_pybuffernd_s2.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy2.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy2, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 783, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy2.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy2, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 779, __pyx_L1_error)
   }
   __pyx_pybuffernd_ploidy2.diminfo[0].strides = __pyx_pybuffernd_ploidy2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy2.diminfo[0].shape = __pyx_pybuffernd_ploidy2.rcbuffer->pybuffer.shape[0];
 
-  /* "Int4D_poly.pyx":820
+  /* "Int4D_poly.pyx":816
  *     """
  *     # Call the cdef function with memory views
  *     c_implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24, s2, dt, use_delj_trick, ploidy2)             # <<<<<<<<<<<<<<
  *     return phi
  * 
 */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s2), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy2), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __pyx_f_10Int4D_poly_c_implicit_4Dy(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu2, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 820, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s2), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy2), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 816, __pyx_L1_error)
+  __pyx_f_10Int4D_poly_c_implicit_4Dy(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu2, __pyx_v_m21, __pyx_v_m23, __pyx_v_m24, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 816, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
   __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
@@ -29450,7 +29450,7 @@ static PyObject *__pyx_pf_10Int4D_poly_2implicit_4Dy(CYTHON_UNUSED PyObject *__p
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_7, 1);
   __pyx_t_7.memview = NULL; __pyx_t_7.data = NULL;
 
-  /* "Int4D_poly.pyx":821
+  /* "Int4D_poly.pyx":817
  *     # Call the cdef function with memory views
  *     c_implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24, s2, dt, use_delj_trick, ploidy2)
  *     return phi             # <<<<<<<<<<<<<<
@@ -29462,7 +29462,7 @@ static PyObject *__pyx_pf_10Int4D_poly_2implicit_4Dy(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_phi);
   goto __pyx_L0;
 
-  /* "Int4D_poly.pyx":783
+  /* "Int4D_poly.pyx":779
  *     return phi
  * 
  * def implicit_4Dy(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -29508,7 +29508,7 @@ static PyObject *__pyx_pf_10Int4D_poly_2implicit_4Dy(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "Int4D_poly.pyx":823
+/* "Int4D_poly.pyx":819
  *     return phi
  * 
  * def implicit_4Dz(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -29568,116 +29568,116 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_yy,&__pyx_mstate_global->__pyx_n_u_zz,&__pyx_mstate_global->__pyx_n_u_aa,&__pyx_mstate_global->__pyx_n_u_nu3,&__pyx_mstate_global->__pyx_n_u_m31,&__pyx_mstate_global->__pyx_n_u_m32,&__pyx_mstate_global->__pyx_n_u_m34,&__pyx_mstate_global->__pyx_n_u_s3,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy3,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 823, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 819, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case 13:
         values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 12:
         values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 11:
         values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 10:
         values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  9:
         values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 823, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 819, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Dz", 0) < 0) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Dz", 0) < 0) __PYX_ERR(0, 819, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 13; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Dz", 1, 13, 13, i); __PYX_ERR(0, 823, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Dz", 1, 13, 13, i); __PYX_ERR(0, 819, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 13)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 819, __pyx_L3_error)
       values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 823, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 819, __pyx_L3_error)
     }
     __pyx_v_phi = ((PyArrayObject *)values[0]);
     __pyx_v_xx = ((PyArrayObject *)values[1]);
     __pyx_v_yy = ((PyArrayObject *)values[2]);
     __pyx_v_zz = ((PyArrayObject *)values[3]);
     __pyx_v_aa = ((PyArrayObject *)values[4]);
-    __pyx_v_nu3 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 828, __pyx_L3_error)
-    __pyx_v_m31 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m31 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 829, __pyx_L3_error)
-    __pyx_v_m32 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m32 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 830, __pyx_L3_error)
-    __pyx_v_m34 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m34 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 831, __pyx_L3_error)
+    __pyx_v_nu3 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 824, __pyx_L3_error)
+    __pyx_v_m31 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m31 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 825, __pyx_L3_error)
+    __pyx_v_m32 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m32 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 826, __pyx_L3_error)
+    __pyx_v_m34 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m34 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 827, __pyx_L3_error)
     __pyx_v_s3 = ((PyArrayObject *)values[9]);
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 833, __pyx_L3_error)
-    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 834, __pyx_L3_error)
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 829, __pyx_L3_error)
+    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 830, __pyx_L3_error)
     __pyx_v_ploidy3 = ((PyArrayObject *)values[12]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("implicit_4Dz", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 823, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("implicit_4Dz", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 819, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -29688,13 +29688,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 823, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 824, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 825, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 826, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 827, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s3), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s3", 0))) __PYX_ERR(0, 832, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy3), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy3", 0))) __PYX_ERR(0, 835, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 819, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 820, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 821, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 822, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 823, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s3), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s3", 0))) __PYX_ERR(0, 828, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy3), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy3", 0))) __PYX_ERR(0, 831, __pyx_L1_error)
   __pyx_r = __pyx_pf_10Int4D_poly_4implicit_4Dz(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_yy, __pyx_v_zz, __pyx_v_aa, __pyx_v_nu3, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, __pyx_v_s3, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy3);
 
   /* function exit code */
@@ -29772,55 +29772,55 @@ static PyObject *__pyx_pf_10Int4D_poly_4implicit_4Dz(CYTHON_UNUSED PyObject *__p
   __pyx_pybuffernd_ploidy3.rcbuffer = &__pyx_pybuffer_ploidy3;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_phi.diminfo[1].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_phi.diminfo[1].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_phi.diminfo[2].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_phi.diminfo[2].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_phi.diminfo[3].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_phi.diminfo[3].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_xx.diminfo[0].strides = __pyx_pybuffernd_xx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xx.diminfo[0].shape = __pyx_pybuffernd_xx.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_yy.diminfo[0].strides = __pyx_pybuffernd_yy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yy.diminfo[0].shape = __pyx_pybuffernd_yy.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_zz.diminfo[0].strides = __pyx_pybuffernd_zz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_zz.diminfo[0].shape = __pyx_pybuffernd_zz.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_aa.diminfo[0].strides = __pyx_pybuffernd_aa.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_aa.diminfo[0].shape = __pyx_pybuffernd_aa.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s3.rcbuffer->pybuffer, (PyObject*)__pyx_v_s3, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s3.rcbuffer->pybuffer, (PyObject*)__pyx_v_s3, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_s3.diminfo[0].strides = __pyx_pybuffernd_s3.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_s3.diminfo[0].shape = __pyx_pybuffernd_s3.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy3.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy3, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 823, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy3.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy3, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 819, __pyx_L1_error)
   }
   __pyx_pybuffernd_ploidy3.diminfo[0].strides = __pyx_pybuffernd_ploidy3.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy3.diminfo[0].shape = __pyx_pybuffernd_ploidy3.rcbuffer->pybuffer.shape[0];
 
-  /* "Int4D_poly.pyx":860
+  /* "Int4D_poly.pyx":856
  *     """
  *     # Call the cdef function with memory views
  *     c_implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34, s3, dt, use_delj_trick, ploidy3)             # <<<<<<<<<<<<<<
  *     return phi
  * 
 */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s3), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy3), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-  __pyx_f_10Int4D_poly_c_implicit_4Dz(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu3, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 860, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s3), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy3), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 856, __pyx_L1_error)
+  __pyx_f_10Int4D_poly_c_implicit_4Dz(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu3, __pyx_v_m31, __pyx_v_m32, __pyx_v_m34, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 856, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
   __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
@@ -29836,7 +29836,7 @@ static PyObject *__pyx_pf_10Int4D_poly_4implicit_4Dz(CYTHON_UNUSED PyObject *__p
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_7, 1);
   __pyx_t_7.memview = NULL; __pyx_t_7.data = NULL;
 
-  /* "Int4D_poly.pyx":861
+  /* "Int4D_poly.pyx":857
  *     # Call the cdef function with memory views
  *     c_implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34, s3, dt, use_delj_trick, ploidy3)
  *     return phi             # <<<<<<<<<<<<<<
@@ -29848,7 +29848,7 @@ static PyObject *__pyx_pf_10Int4D_poly_4implicit_4Dz(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_phi);
   goto __pyx_L0;
 
-  /* "Int4D_poly.pyx":823
+  /* "Int4D_poly.pyx":819
  *     return phi
  * 
  * def implicit_4Dz(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -29894,7 +29894,7 @@ static PyObject *__pyx_pf_10Int4D_poly_4implicit_4Dz(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "Int4D_poly.pyx":863
+/* "Int4D_poly.pyx":859
  *     return phi
  * 
  * def implicit_4Da(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -29910,7 +29910,7 @@ PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_10Int4D_poly_6implicit_4Da, "\n    Implicit 4D integration function for a direction of 4D diffusion equation.\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx, yy, zz, aa: numpy arrays (float64)\n        discrete numerical grids for spatial dimensions\n    nu4: Population size for pop4\n    m41: Migration rate to pop4 from pop1\n    m42: Migration rate to pop4 from pop2\n    m43: Migration rate to pop4 from pop3\n    s4: vector of selection parameters for pop4\n    dt: Time step\n    use_delj_trick: Whether to use delj trick (0 or 1)\n    ploidy: Vector of ploidy Booleans (0 or 1)\n        [dip, auto, alloa, allob]\n\n    Returns:\n    --------\n    phi : modified phi after integration in a direction\n    ");
+PyDoc_STRVAR(__pyx_doc_10Int4D_poly_6implicit_4Da, "\n    Implicit 4D integration function for a direction of 4D diffusion equation.\n    \n    Parameters:\n    -----------\n    phi : numpy array (float64)\n        Population frequency array (modified in-place)\n    xx, yy, zz, aa: numpy arrays (float64)\n        discrete numerical grids for spatial dimensions\n    nu4: Population size for pop4\n    m41: Migration rate to pop4 from pop1\n    m42: Migration rate to pop4 from pop2\n    m43: Migration rate to pop4 from pop3\n    s4: vector of selection parameters for pop4\n    dt: Time step\n    use_delj_trick: Whether to use delj trick (0 or 1)\n    ploidy4: Vector of ploidy Booleans (0 or 1)\n        [dip, auto, alloa, allob]\n\n    Returns:\n    --------\n    phi : modified phi after integration in a direction\n    ");
 static PyMethodDef __pyx_mdef_10Int4D_poly_7implicit_4Da = {"implicit_4Da", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10Int4D_poly_7implicit_4Da, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_10Int4D_poly_6implicit_4Da};
 static PyObject *__pyx_pw_10Int4D_poly_7implicit_4Da(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
@@ -29954,116 +29954,116 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_phi,&__pyx_mstate_global->__pyx_n_u_xx,&__pyx_mstate_global->__pyx_n_u_yy,&__pyx_mstate_global->__pyx_n_u_zz,&__pyx_mstate_global->__pyx_n_u_aa,&__pyx_mstate_global->__pyx_n_u_nu4,&__pyx_mstate_global->__pyx_n_u_m41,&__pyx_mstate_global->__pyx_n_u_m42,&__pyx_mstate_global->__pyx_n_u_m43,&__pyx_mstate_global->__pyx_n_u_s4,&__pyx_mstate_global->__pyx_n_u_dt,&__pyx_mstate_global->__pyx_n_u_use_delj_trick,&__pyx_mstate_global->__pyx_n_u_ploidy4,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 863, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 859, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case 13:
         values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 12:
         values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 11:
         values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case 10:
         values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  9:
         values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 863, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 859, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Da", 0) < 0) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "implicit_4Da", 0) < 0) __PYX_ERR(0, 859, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 13; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Da", 1, 13, 13, i); __PYX_ERR(0, 863, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("implicit_4Da", 1, 13, 13, i); __PYX_ERR(0, 859, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 13)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[6] = __Pyx_ArgRef_FASTCALL(__pyx_args, 6);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[7] = __Pyx_ArgRef_FASTCALL(__pyx_args, 7);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[8] = __Pyx_ArgRef_FASTCALL(__pyx_args, 8);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[9] = __Pyx_ArgRef_FASTCALL(__pyx_args, 9);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[9])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[10] = __Pyx_ArgRef_FASTCALL(__pyx_args, 10);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[10])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[11] = __Pyx_ArgRef_FASTCALL(__pyx_args, 11);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[11])) __PYX_ERR(0, 859, __pyx_L3_error)
       values[12] = __Pyx_ArgRef_FASTCALL(__pyx_args, 12);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 863, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[12])) __PYX_ERR(0, 859, __pyx_L3_error)
     }
     __pyx_v_phi = ((PyArrayObject *)values[0]);
     __pyx_v_xx = ((PyArrayObject *)values[1]);
     __pyx_v_yy = ((PyArrayObject *)values[2]);
     __pyx_v_zz = ((PyArrayObject *)values[3]);
     __pyx_v_aa = ((PyArrayObject *)values[4]);
-    __pyx_v_nu4 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 868, __pyx_L3_error)
-    __pyx_v_m41 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m41 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 869, __pyx_L3_error)
-    __pyx_v_m42 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m42 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 870, __pyx_L3_error)
-    __pyx_v_m43 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m43 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 871, __pyx_L3_error)
+    __pyx_v_nu4 = __Pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_nu4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 864, __pyx_L3_error)
+    __pyx_v_m41 = __Pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_m41 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 865, __pyx_L3_error)
+    __pyx_v_m42 = __Pyx_PyFloat_AsDouble(values[7]); if (unlikely((__pyx_v_m42 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 866, __pyx_L3_error)
+    __pyx_v_m43 = __Pyx_PyFloat_AsDouble(values[8]); if (unlikely((__pyx_v_m43 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 867, __pyx_L3_error)
     __pyx_v_s4 = ((PyArrayObject *)values[9]);
-    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 873, __pyx_L3_error)
-    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 874, __pyx_L3_error)
+    __pyx_v_dt = __Pyx_PyFloat_AsDouble(values[10]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 869, __pyx_L3_error)
+    __pyx_v_use_delj_trick = __Pyx_PyLong_As_int(values[11]); if (unlikely((__pyx_v_use_delj_trick == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 870, __pyx_L3_error)
     __pyx_v_ploidy4 = ((PyArrayObject *)values[12]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("implicit_4Da", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 863, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("implicit_4Da", 1, 13, 13, __pyx_nargs); __PYX_ERR(0, 859, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -30074,13 +30074,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 863, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 864, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 865, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 866, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 867, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s4), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s4", 0))) __PYX_ERR(0, 872, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy4), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy4", 0))) __PYX_ERR(0, 875, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 859, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_xx), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "xx", 0))) __PYX_ERR(0, 860, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_yy), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "yy", 0))) __PYX_ERR(0, 861, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_zz), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "zz", 0))) __PYX_ERR(0, 862, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_aa), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "aa", 0))) __PYX_ERR(0, 863, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_s4), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "s4", 0))) __PYX_ERR(0, 868, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ploidy4), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "ploidy4", 0))) __PYX_ERR(0, 871, __pyx_L1_error)
   __pyx_r = __pyx_pf_10Int4D_poly_6implicit_4Da(__pyx_self, __pyx_v_phi, __pyx_v_xx, __pyx_v_yy, __pyx_v_zz, __pyx_v_aa, __pyx_v_nu4, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, __pyx_v_s4, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_v_ploidy4);
 
   /* function exit code */
@@ -30158,54 +30158,54 @@ static PyObject *__pyx_pf_10Int4D_poly_6implicit_4Da(CYTHON_UNUSED PyObject *__p
   __pyx_pybuffernd_ploidy4.rcbuffer = &__pyx_pybuffer_ploidy4;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_phi.rcbuffer->pybuffer, (PyObject*)__pyx_v_phi, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_phi.diminfo[1].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_phi.diminfo[1].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_phi.diminfo[2].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_phi.diminfo[2].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_phi.diminfo[3].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_phi.diminfo[3].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xx.rcbuffer->pybuffer, (PyObject*)__pyx_v_xx, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_xx.diminfo[0].strides = __pyx_pybuffernd_xx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xx.diminfo[0].shape = __pyx_pybuffernd_xx.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_yy.rcbuffer->pybuffer, (PyObject*)__pyx_v_yy, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_yy.diminfo[0].strides = __pyx_pybuffernd_yy.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_yy.diminfo[0].shape = __pyx_pybuffernd_yy.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_zz.rcbuffer->pybuffer, (PyObject*)__pyx_v_zz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_zz.diminfo[0].strides = __pyx_pybuffernd_zz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_zz.diminfo[0].shape = __pyx_pybuffernd_zz.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_aa.rcbuffer->pybuffer, (PyObject*)__pyx_v_aa, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_aa.diminfo[0].strides = __pyx_pybuffernd_aa.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_aa.diminfo[0].shape = __pyx_pybuffernd_aa.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s4.rcbuffer->pybuffer, (PyObject*)__pyx_v_s4, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_s4.rcbuffer->pybuffer, (PyObject*)__pyx_v_s4, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_s4.diminfo[0].strides = __pyx_pybuffernd_s4.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_s4.diminfo[0].shape = __pyx_pybuffernd_s4.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy4.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy4, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 863, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ploidy4.rcbuffer->pybuffer, (PyObject*)__pyx_v_ploidy4, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 859, __pyx_L1_error)
   }
   __pyx_pybuffernd_ploidy4.diminfo[0].strides = __pyx_pybuffernd_ploidy4.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ploidy4.diminfo[0].shape = __pyx_pybuffernd_ploidy4.rcbuffer->pybuffer.shape[0];
 
-  /* "Int4D_poly.pyx":900
+  /* "Int4D_poly.pyx":896
  *     """
  *     # Call the cdef function with memory views
  *     c_implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43, s4, dt, use_delj_trick, ploidy4)             # <<<<<<<<<<<<<<
  *     return phi
 */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s4), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy4), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-  __pyx_f_10Int4D_poly_c_implicit_4Da(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu4, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 900, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsdsdsds_double(((PyObject *)__pyx_v_phi), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_xx), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_yy), PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_zz), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_aa), PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(((PyObject *)__pyx_v_s4), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_v_ploidy4), PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 896, __pyx_L1_error)
+  __pyx_f_10Int4D_poly_c_implicit_4Da(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_v_nu4, __pyx_v_m41, __pyx_v_m42, __pyx_v_m43, __pyx_t_6, __pyx_v_dt, __pyx_v_use_delj_trick, __pyx_t_7); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 896, __pyx_L1_error)
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_1, 1);
   __pyx_t_1.memview = NULL; __pyx_t_1.data = NULL;
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
@@ -30221,7 +30221,7 @@ static PyObject *__pyx_pf_10Int4D_poly_6implicit_4Da(CYTHON_UNUSED PyObject *__p
   __PYX_XCLEAR_MEMVIEW(&__pyx_t_7, 1);
   __pyx_t_7.memview = NULL; __pyx_t_7.data = NULL;
 
-  /* "Int4D_poly.pyx":901
+  /* "Int4D_poly.pyx":897
  *     # Call the cdef function with memory views
  *     c_implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43, s4, dt, use_delj_trick, ploidy4)
  *     return phi             # <<<<<<<<<<<<<<
@@ -30231,7 +30231,7 @@ static PyObject *__pyx_pf_10Int4D_poly_6implicit_4Da(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_phi);
   goto __pyx_L0;
 
-  /* "Int4D_poly.pyx":863
+  /* "Int4D_poly.pyx":859
  *     return phi
  * 
  * def implicit_4Da(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
@@ -32367,52 +32367,52 @@ __Pyx_RefNannySetupContext("PyInit_Int4D_poly", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_np, __pyx_t_5) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int4D_poly.pyx":743
+  /* "Int4D_poly.pyx":739
  * ### ==========================================================================
  * 
  * def implicit_4Dx(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
  *                  np.ndarray[double, ndim=1] yy,
 */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_1implicit_4Dx, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Dx, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 743, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_1implicit_4Dx, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Dx, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 739, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Dx, __pyx_t_5) < 0) __PYX_ERR(0, 743, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Dx, __pyx_t_5) < 0) __PYX_ERR(0, 739, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int4D_poly.pyx":783
+  /* "Int4D_poly.pyx":779
  *     return phi
  * 
  * def implicit_4Dy(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
  *                  np.ndarray[double, ndim=1] yy,
 */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_3implicit_4Dy, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Dy, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 783, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_3implicit_4Dy, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Dy, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 779, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Dy, __pyx_t_5) < 0) __PYX_ERR(0, 783, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Dy, __pyx_t_5) < 0) __PYX_ERR(0, 779, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int4D_poly.pyx":823
+  /* "Int4D_poly.pyx":819
  *     return phi
  * 
  * def implicit_4Dz(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
  *                  np.ndarray[double, ndim=1] yy,
 */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_5implicit_4Dz, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Dz, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 823, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_5implicit_4Dz, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Dz, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 819, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Dz, __pyx_t_5) < 0) __PYX_ERR(0, 823, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Dz, __pyx_t_5) < 0) __PYX_ERR(0, 819, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "Int4D_poly.pyx":863
+  /* "Int4D_poly.pyx":859
  *     return phi
  * 
  * def implicit_4Da(np.ndarray[double, ndim=4] phi,             # <<<<<<<<<<<<<<
  *                  np.ndarray[double, ndim=1] xx,
  *                  np.ndarray[double, ndim=1] yy,
 */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_7implicit_4Da, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Da, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 863, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_10Int4D_poly_7implicit_4Da, 0, __pyx_mstate_global->__pyx_n_u_implicit_4Da, NULL, __pyx_mstate_global->__pyx_n_u_Int4D_poly, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 859, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Da, __pyx_t_5) < 0) __PYX_ERR(0, 863, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_implicit_4Da, __pyx_t_5) < 0) __PYX_ERR(0, 859, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
   /* "Int4D_poly.pyx":1
@@ -32657,7 +32657,7 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 97, __pyx_L1_error)
   __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_import); if (!__pyx_builtin___import__) __PYX_ERR(1, 101, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 139, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 154, __pyx_L1_error)
@@ -32763,22 +32763,22 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 743, 43};
+    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 739, 43};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_yy, __pyx_mstate->__pyx_n_u_zz, __pyx_mstate->__pyx_n_u_aa, __pyx_mstate->__pyx_n_u_nu1, __pyx_mstate->__pyx_n_u_m12, __pyx_mstate->__pyx_n_u_m13, __pyx_mstate->__pyx_n_u_m14, __pyx_mstate->__pyx_n_u_s1, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy1};
     __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int4D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_4Dx, __pyx_k_J_5_D_D_U_uD_DTTU_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 783, 43};
+    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 779, 43};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_yy, __pyx_mstate->__pyx_n_u_zz, __pyx_mstate->__pyx_n_u_aa, __pyx_mstate->__pyx_n_u_nu2, __pyx_mstate->__pyx_n_u_m21, __pyx_mstate->__pyx_n_u_m23, __pyx_mstate->__pyx_n_u_m24, __pyx_mstate->__pyx_n_u_s2, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy2};
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int4D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_4Dy, __pyx_k_J_5_D_D_U_uD_DTTU_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 823, 43};
+    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 819, 43};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_yy, __pyx_mstate->__pyx_n_u_zz, __pyx_mstate->__pyx_n_u_aa, __pyx_mstate->__pyx_n_u_nu3, __pyx_mstate->__pyx_n_u_m31, __pyx_mstate->__pyx_n_u_m32, __pyx_mstate->__pyx_n_u_m34, __pyx_mstate->__pyx_n_u_s3, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy3};
     __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int4D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_4Dz, __pyx_k_J_5_D_D_U_uD_DTTU_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 863, 43};
+    const __Pyx_PyCode_New_function_description descr = {13, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 859, 43};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_phi, __pyx_mstate->__pyx_n_u_xx, __pyx_mstate->__pyx_n_u_yy, __pyx_mstate->__pyx_n_u_zz, __pyx_mstate->__pyx_n_u_aa, __pyx_mstate->__pyx_n_u_nu4, __pyx_mstate->__pyx_n_u_m41, __pyx_mstate->__pyx_n_u_m42, __pyx_mstate->__pyx_n_u_m43, __pyx_mstate->__pyx_n_u_s4, __pyx_mstate->__pyx_n_u_dt, __pyx_mstate->__pyx_n_u_use_delj_trick, __pyx_mstate->__pyx_n_u_ploidy4};
     __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_Int4D_poly_pyx, __pyx_mstate->__pyx_n_u_implicit_4Da, __pyx_k_J_5_D_D_U_uD_DTTU_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }

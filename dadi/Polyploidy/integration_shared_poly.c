@@ -183,7 +183,7 @@ double Mfunc5D_allo_b(double x, double y, double z, double a, double b,
                       double g01, double g02, double g10, double g11, 
                       double g12, double g20, double g21, double g22){
     /*
-    * x is x_b; y is x_; z, a, and b are separate populations
+    * x is x_b; y is x_a; z, a, and b are separate populations
     */
     double xy = x*y;
     double yy = y*y;

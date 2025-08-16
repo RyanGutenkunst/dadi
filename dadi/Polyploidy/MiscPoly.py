@@ -2,7 +2,7 @@ import numpy
 
 def ensure_1arg_func_vectorized(vars_list):
     """
-    Version of dadi.Misc.ensure_1ar_func that returns a 
+    Version of dadi.Misc.ensure_1arg_func that returns a 
     single vectorized function that can handle multiple parameters at once.
     This is useful for the selection parameters in polyploidy models.
     
