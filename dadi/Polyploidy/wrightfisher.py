@@ -890,7 +890,6 @@ def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0
     
     return allele_freqs
 
-
 def dip_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
     """
     Wright-Fisher model of two populations. 
@@ -1244,7 +1243,7 @@ def dip_allo_WF(N, T, M12, M21, M13, M31, M23, M32,
         q_dip_next += m12*(q_freqs[1, :] - q_freqs[0, :]) + m13*(q_freqs[2, :] - q_freqs[0, :])
         q_allos_next[0, :] += m21*(q_freqs[0, :] - q_freqs[1, :]) + m23*(q_freqs[2, :] - q_freqs[1, :])
         q_allos_next[1, :] += m31*(q_freqs[0, :] - q_freqs[2, :]) + m32*(q_freqs[1, :] - q_freqs[2, :])
-        
+
         q_freqs[0, :] = rng.binomial(samples1, q_dip_next)/(samples1)
         q_freqs[1, :] = rng.binomial(samples2, q_allos_next[0, :])/(samples2)
         q_freqs[2, :] = rng.binomial(samples2, q_allos_next[1, :])/(samples2)

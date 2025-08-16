@@ -21,7 +21,7 @@ cdef extern from "integration_shared.h":
 # C FUNCTIONS FOR POLYPLOIDS
 # =========================================================
 cdef extern from "integration_shared_poly.h":
-    double Vfunc_auto(double x, double nu)
+    double Vfunc_tetra(double x, double nu)
     double Mfunc1D_auto(double x, double gam1, double gam2, double gam3, double gam4)
 
 # =========================================================
@@ -93,11 +93,11 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] sel_v
         Mlast = Mfunc1D_auto(xx[L-1], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
     
         for ii in range(0, L):
-            V[ii] = Vfunc_auto(xx[ii], nu)
+            V[ii] = Vfunc_tetra(xx[ii], nu)
     
         for ii in range(0, L-1):
             MInt[ii] = Mfunc1D_auto(xInt[ii], sel_vec[0], sel_vec[1], sel_vec[2], sel_vec[3])
-            VInt[ii] = Vfunc_auto(xInt[ii], nu)
+            VInt[ii] = Vfunc_tetra(xInt[ii], nu)
 
         compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
 

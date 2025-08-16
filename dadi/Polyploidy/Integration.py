@@ -1042,7 +1042,7 @@ def _Mfunc2D(x,y, mxy, gamma, h):
 def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
     return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
 # autotetraploid
-def _Vfunc_auto(x, nu):
+def _Vfunc_tetra(x, nu):
     return 1./nu * x*(1-x) / 2.
 def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
     poly = ((((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
@@ -1112,13 +1112,6 @@ def _Mfunc3D_allo_b( x,  y, z, mxy, mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g2
                   (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
 
-# extra functions for calculating Vprime for the new delta j
-def _Vfunc_prime(x, nu, beta=1):
-    return 1./nu * (1-2*x) * (beta+1.)**2/(4.*beta)
-
-def _Vfunc_auto_prime(x, nu, beta=1):
-    return 1./(2.*nu) * (1-2*x) * (beta+1.)**2/(4.*beta)
-
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
     r"""
@@ -1147,34 +1140,6 @@ def _compute_delj(dx, MInt, VInt, axis=0):
         wj = 2 *MInt*dx[tuple(upslice)]
         epsj = numpy.exp(wj/VInt[tuple(upslice)])
         delj = (-epsj*wj + epsj * VInt[tuple(upslice)] - VInt[tuple(upslice)])/(wj - epsj*wj)
-        # These where statements filter out edge case for delj
-        delj = numpy.where(numpy.isnan(delj), 0.5, delj)
-        delj = numpy.where(numpy.isinf(delj), 0.5, delj)
-    else:
-        delj = 0.5
-    return delj
-
-# this is a different version of the delj trick that I developed
-# it shows marginally better results, but requires additional computation
-# and is not enough of an improvement in the results
-# just leaving it here for reference
-def _compute_delj_new(dx, MInt, VInt, VIntprime, axis=0):
-    r"""
-    Chang and Cooper's \delta_j term. Typically we set this to 0.5.
-    """
-    # Chang and Cooper's fancy delta j trick...
-    if use_delj_trick:
-        # upslice will raise the dimensionality of dx and VInt to be appropriate
-        # for functioning with MInt.
-        upslice = [nuax for ii in range(MInt.ndim)]
-        upslice [axis] = slice(None)
-
-        wj = ((VIntprime[tuple(upslice)]-2*MInt)*dx[tuple(upslice)])/VInt[tuple(upslice)]
-        delj = numpy.where(
-            numpy.abs(wj) < 1e-10,
-            0.5,  # Pure diffusion limit
-            (1.0/wj) - 1.0/(numpy.exp(wj) - 1.0)
-        )
         # These where statements filter out edge case for delj
         delj = numpy.where(numpy.isnan(delj), 0.5, delj)
         delj = numpy.where(numpy.isinf(delj), 0.5, delj)
@@ -1211,8 +1176,8 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
     else:
         M = _Mfunc1D_auto(xx, s[0], s[1], s[2], s[3])
         MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3])
-        V = _Vfunc_auto(xx, nu)
-        VInt = _Vfunc_auto((xx[:-1] + xx[1:])/2, nu)
+        V = _Vfunc_tetra(xx, nu)
+        VInt = _Vfunc_tetra((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.25 
 
     delj = _compute_delj(dx, MInt, VInt)
@@ -1272,8 +1237,8 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5 
     elif ploidy1[1]:
-        Vx = _Vfunc_auto(xx, nu1)
-        VxInt = _Vfunc_auto((xx[:-1]+xx[1:])/2, nu1)
+        Vx = _Vfunc_tetra(xx, nu1)
+        VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_auto(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
         MxInt = _Mfunc2D_auto((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
         deljx = _compute_delj(dx, MxInt, VxInt)
@@ -1317,8 +1282,8 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 0.5 
     elif ploidy2[1]:
-        Vy = _Vfunc_auto(yy, nu2)
-        VyInt = _Vfunc_auto((yy[1:]+yy[:-1])/2, nu2)
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc2D_auto(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
         MyInt = _Mfunc2D_auto((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
@@ -1402,8 +1367,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5
     if ploidy1[1]:
-        Vx = _Vfunc_auto(xx, nu1)
-        VxInt = _Vfunc_auto((xx[:-1]+xx[1:])/2, nu1)
+        Vx = _Vfunc_tetra(xx, nu1)
+        VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc3D_auto(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
                       m12, m13, s1[0],s1[1],s1[2],s1[3])
         MxInt = _Mfunc3D_auto((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
@@ -1464,8 +1429,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 0.5
     if ploidy2[1]:
-        Vy = _Vfunc_auto(yy, nu2)
-        VyInt = _Vfunc_auto((yy[1:]+yy[:-1])/2, nu2)
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc3D_auto(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
                       m23, m21, s2[0],s2[1],s2[2],s2[3])
         MyInt = _Mfunc3D_auto((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
@@ -1519,8 +1484,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 0.5
     if ploidy3[1]:  
-        Vz = _Vfunc_auto(zz, nu3)
-        VzInt = _Vfunc_auto((zz[1:]+zz[:-1])/2, nu3)
+        Vz = _Vfunc_tetra(zz, nu3)
+        VzInt = _Vfunc_tetra((zz[1:]+zz[:-1])/2, nu3)
         Mz = _Mfunc3D_auto(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
                       m32, m31, s3[0],s3[1],s3[2],s3[3])
         MzInt = _Mfunc3D_auto((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],

@@ -21,7 +21,7 @@ cdef extern from "integration_shared.h":
 # C FUNCTIONS FOR POLYPLOIDS
 # =========================================================
 cdef extern from "integration_shared_poly.h":
-    double Vfunc_auto(double x, double nu)
+    double Vfunc_tetra(double x, double nu)
     double Mfunc2D_auto(double x, double y, double mxy, double gam1, double gam2, double gam3, double gam4)
     double Mfunc2D_allo_a(double x, double y, double mxy, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
     double Mfunc2D_allo_b(double x, double y, double mxy, double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22)
@@ -113,9 +113,9 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for ii in range(0, L):
-            V[ii] = Vfunc_auto(xx[ii], nu1)
+            V[ii] = Vfunc_tetra(xx[ii], nu1)
         for ii in range(0, L-1):
-            VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+            VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
         # loop through y values
         for jj in range(M):
             y = yy[jj]
@@ -266,9 +266,9 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for jj in range(0, M):
-            V[jj] = Vfunc_auto(yy[jj], nu2)
+            V[jj] = Vfunc_tetra(yy[jj], nu2)
         for jj in range(0, M-1):
-            VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+            VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
         # loop through x values
         for ii in range(L):
             x = xx[ii]

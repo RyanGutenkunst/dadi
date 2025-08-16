@@ -22,7 +22,7 @@ cdef extern from "integration_shared.h":
 # C FUNCTIONS FOR POLYPLOIDS
 # =========================================================
 cdef extern from "integration_shared_poly.h":
-    double Vfunc_auto(double x, double nu)
+    double Vfunc_tetra(double x, double nu)
     double Mfunc4D_auto(double x, double y, double z, double a, 
                         double mxy, double mxz, double mxa, 
                         double gam1, double gam2, double gam3, double gam4)
@@ -124,9 +124,9 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for ii in range(0, L):
-            V[ii] = Vfunc_auto(xx[ii], nu1)
+            V[ii] = Vfunc_tetra(xx[ii], nu1)
         for ii in range(0, L-1):
-            VInt[ii] = Vfunc_auto(xInt[ii], nu1)
+            VInt[ii] = Vfunc_tetra(xInt[ii], nu1)
         # loop through y, z, and a dimensions
         for jj in range(M):
             for kk in range(N):
@@ -294,9 +294,9 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for jj in range(0, M):
-            V[jj] = Vfunc_auto(yy[jj], nu2)
+            V[jj] = Vfunc_tetra(yy[jj], nu2)
         for jj in range(0, M-1):
-            VInt[jj] = Vfunc_auto(yInt[jj], nu2)
+            VInt[jj] = Vfunc_tetra(yInt[jj], nu2)
         # loop through x, z, and a dimensions
         for ii in range(L):
             for kk in range(N):
@@ -469,9 +469,9 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for kk in range(0, N):
-            V[kk] = Vfunc_auto(zz[kk], nu3)
+            V[kk] = Vfunc_tetra(zz[kk], nu3)
         for kk in range(0, N-1):
-            VInt[kk] = Vfunc_auto(zInt[kk], nu3)
+            VInt[kk] = Vfunc_tetra(zInt[kk], nu3)
         # loop through x, y, and a dimensions
         for ii in range(L):
             for jj in range(M):
@@ -644,9 +644,9 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     elif is_auto:
         # compute everything we can outside of the spatial loop
         for ll in range(0, O):
-            V[ll] = Vfunc_auto(aa[ll], nu4)
+            V[ll] = Vfunc_tetra(aa[ll], nu4)
         for ll in range(0, O-1):
-            VInt[ll] = Vfunc_auto(aInt[ll], nu4)
+            VInt[ll] = Vfunc_tetra(aInt[ll], nu4)
         # loop through x, y, and z dimensions
         for ii in range(L):
             for jj in range(M):
