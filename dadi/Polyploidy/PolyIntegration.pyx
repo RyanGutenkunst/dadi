@@ -142,7 +142,7 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
         if Mlast >= 0:
             b[L-1] += -(-0.5/nu - Mlast)*2/dx[L-2]
 
-    if is_auto:
+    elif is_auto:
         Mfirst = Mfunc1D_auto(xx[0], s[0], s[1], s[2], s[3])
         Mlast = Mfunc1D_auto(xx[L-1], s[0], s[1], s[2], s[3])
     
@@ -162,7 +162,7 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
         if Mlast >= 0:
             b[L-1] += -(-0.25/nu - Mlast)*2/dx[L-2]
 
-    if is_autohex:
+    elif is_autohex:
         Mfirst = Mfunc1D_autohex(xx[0], s[0], s[1], s[2], s[3], s[4], s[5])
         Mlast = Mfunc1D_autohex(xx[L-1], s[0], s[1], s[2], s[3], s[4], s[5])
     
@@ -645,6 +645,7 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     ### specify ploidy of the x direction
     cdef int is_diploid = ploidy1[0]
     cdef int is_auto = ploidy1[1]
+    cdef int is_autohex = ploidy1[4]
     # note: we don't support alloa and allob as being the first dimension of the phi array in 3D
 
     # compute step size and intermediate values
@@ -712,7 +713,36 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
                 for ii in range(0, L):
                     phi[ii, jj, kk] = temp[ii]
-    
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for ii in range(0, L):
+            V[ii] = Vfunc_hex(xx[ii], nu1)
+        for ii in range(0, L-1):
+            VInt[ii] = Vfunc_hex(xInt[ii], nu1)
+        # loop through y and z dimensions
+        for jj in range(M):
+            for kk in range(N):
+                y = yy[jj]
+                z = zz[kk]
+
+                Mfirst = Mfunc3D_autohex(xx[0], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                Mlast = Mfunc3D_autohex(xx[L-1], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                for ii in range(0, L-1):
+                    MInt[ii] = Mfunc3D_autohex(xInt[ii], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if y==0 and z==0 and Mfirst <= 0:
+                    b[0] += (1/(6*nu1) - Mfirst)*2/dx[0] 
+                if y==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-1/(6*nu1) - Mlast)*2/dx[L-2]
+
+                for ii in range(0, L):
+                    r[ii] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for ii in range(0, L):
+                    phi[ii, jj, kk] = temp[ii]
+               
     tridiag_free()
             
 cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
@@ -749,6 +779,7 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef int is_auto = ploidy2[1]
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
+    cdef int is_autohex = ploidy2[4]
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -875,6 +906,36 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
                 for jj in range(0, M):
                     phi[ii, jj, kk] = temp[jj]
+    
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for jj in range(0, M):
+            V[jj] = Vfunc_hex(yy[jj], nu2)
+        for jj in range(0, M-1):
+            VInt[jj] = Vfunc_hex(yInt[jj], nu2)
+        # loop through x and z values
+        for ii in range(L):
+            for kk in range(N):
+                x = xx[ii]
+                z = zz[kk]
+                
+                Mfirst = Mfunc3D_autohex(yy[0], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                Mlast = Mfunc3D_autohex(yy[M-1], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                for jj in range(0, M-1):
+                    MInt[jj] = Mfunc3D_autohex(yInt[jj], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
+                if x==0 and z==0 and Mfirst <= 0:
+                    b[0] += (1/(6*nu2) - Mfirst)*2/dy[0] 
+                if x==1 and z==1 and Mlast >= 0:
+                    b[M-1] += -(-1/(6*nu2) - Mlast)*2/dy[M-2]
+
+                for jj in range(0, M):
+                    r[jj] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+                for jj in range(0, M):
+                    phi[ii, jj, kk] = temp[jj]
+
     tridiag_free()
 
 cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
@@ -911,6 +972,7 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
     cdef int is_auto = ploidy3[1]
     cdef int is_alloa = ploidy3[2]
     cdef int is_allob = ploidy3[3]
+    cdef int is_autohex = ploidy3[4]
 
     # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
@@ -1037,6 +1099,36 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                 tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
                 for kk in range(0, N):
                     phi[ii, jj, kk] = temp[kk]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc_hex(zz[kk], nu3)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc_hex(zInt[kk], nu3)
+        # loop through x and y dimensions
+        for ii in range(L):
+            for jj in range(M):
+                x = xx[ii]
+                y = yy[jj]
+                
+                Mfirst = Mfunc3D_autohex(zz[0], x,y, m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                Mlast = Mfunc3D_autohex(zz[N-1], x,y, m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                for kk in range(0, N-1):
+                    MInt[kk] = Mfunc3D_autohex(zInt[kk], x,y, m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
+                if x==0 and y==0 and Mfirst <= 0:
+                    b[0] += (1/(6*nu3) - Mfirst)*2/dz[0] 
+                if x==1 and y==1 and Mlast >= 0:
+                    b[N-1] += -(-1/(6*nu3) - Mlast)*2/dz[N-2]
+
+                for kk in range(0, N):
+                    r[kk] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+                for kk in range(0, N):
+                    phi[ii, jj, kk] = temp[kk]
+
     tridiag_free()
 
 ### ==========================================================================
@@ -1168,6 +1260,7 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef int is_auto = ploidy1[1]
     cdef int is_alloa = ploidy1[2]
     cdef int is_allob = ploidy1[3]
+    cdef int is_autohex = ploidy1[4]
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -1300,6 +1393,37 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
                     for ii in range(0, L):
                         phi[ii, jj, kk, ll] = temp[ii]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for ii in range(0, L):
+            V[ii] = Vfunc_hex(xx[ii], nu1)
+        for ii in range(0, L-1):
+            VInt[ii] = Vfunc_hex(xInt[ii], nu1)
+        # loop through y, z, and a dimensions
+        for jj in range(M):
+            for kk in range(N):
+                for ll in range(O):
+                    y = yy[jj]
+                    z = zz[kk]
+                    a_ = aa[ll]
+
+                    Mfirst = Mfunc4D_autohex(xx[0], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                    Mlast = Mfunc4D_autohex(xx[L-1], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                    for ii in range(0, L-1):
+                        MInt[ii] = Mfunc4D_autohex(xInt[ii], y,z,a_, m12,m13,m14, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                    compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                    if y==0 and z==0 and a_==0 and Mfirst <= 0:
+                        b[0] += (1/(6*nu1) - Mfirst)*2/dx[0] 
+                    if y==1 and z==1 and a_==1 and Mlast >= 0:
+                        b[L-1] += -(-1/(6*nu1) - Mlast)*2/dx[L-2]
+
+                    for ii in range(0, L):
+                        r[ii] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                    for ii in range(0, L):
+                        phi[ii, jj, kk, ll] = temp[ii]
     
     tridiag_free()
             
@@ -1338,6 +1462,7 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef int is_auto = ploidy2[1]
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
+    cdef int is_autohex = ploidy2[4]
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -1470,6 +1595,38 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
                     for jj in range(0, M):
                         phi[ii, jj, kk, ll] = temp[jj]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for jj in range(0, M):
+            V[jj] = Vfunc_hex(yy[jj], nu2)
+        for jj in range(0, M-1):
+            VInt[jj] = Vfunc_hex(yInt[jj], nu2)
+        # loop through x, z, and a dimensions
+        for ii in range(L):
+            for kk in range(N):
+                for ll in range(O):
+                    x = xx[ii]
+                    z = zz[kk]
+                    a_ = aa[ll]
+
+                    Mfirst = Mfunc4D_autohex(yy[0], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                    Mlast = Mfunc4D_autohex(yy[M-1], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                    for jj in range(0, M-1):
+                        MInt[jj] = Mfunc4D_autohex(yInt[jj], x,z,a_, m21,m23,m24, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                    compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
+                    if x==0 and z==0 and a_==0 and Mfirst <= 0:
+                        b[0] += (1/(6*nu2) - Mfirst)*2/dy[0] 
+                    if x==1 and z==1 and a_==1 and Mlast >= 0:
+                        b[M-1] += -(-1/(6*nu2) - Mlast)*2/dy[M-2]
+
+                    for jj in range(0, M):
+                        r[jj] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+                    for jj in range(0, M):
+                        phi[ii, jj, kk, ll] = temp[jj]
+
     tridiag_free()
 
 cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
@@ -1507,6 +1664,7 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef int is_auto = ploidy3[1]
     cdef int is_alloa = ploidy3[2]
     cdef int is_allob = ploidy3[3]
+    cdef int is_autohex = ploidy3[4]
 
     # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
@@ -1642,6 +1800,38 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
                     for kk in range(0, N):
                         phi[ii, jj, kk, ll] = temp[kk]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc_hex(zz[kk], nu3)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc_hex(zInt[kk], nu3)
+        # loop through x, y, and a dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for ll in range(O):
+                    x = xx[ii]
+                    y = yy[jj]
+                    a_ = aa[ll]
+                
+                    Mfirst = Mfunc4D_autohex(zz[0], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                    Mlast = Mfunc4D_autohex(zz[N-1], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                    for kk in range(0, N-1):
+                        MInt[kk] = Mfunc4D_autohex(zInt[kk], x,y,a_, m31,m32,m34, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                    compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
+                    if x==0 and y==0 and a_==0 and Mfirst <= 0:
+                        b[0] += (1/(6*nu3) - Mfirst)*2/dz[0] 
+                    if x==1 and y==1 and a_==1 and Mlast >= 0:
+                        b[N-1] += -(-1/(6*nu3) - Mlast)*2/dz[N-2]
+
+                    for kk in range(0, N):
+                        r[kk] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+                    for kk in range(0, N):
+                        phi[ii, jj, kk, ll] = temp[kk]
+
     tridiag_free()
 
 cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
@@ -1679,6 +1869,7 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
     cdef int is_auto = ploidy4[1]
     cdef int is_alloa = ploidy4[2]
     cdef int is_allob = ploidy4[3]
+    cdef int is_autohex = ploidy4[4]
 
     # compute step size and intermediate values
     compute_dx(&aa[0], O, &da[0])
@@ -1814,6 +2005,37 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
                     for ll in range(0, O):
                         phi[ii, jj, kk, ll] = temp[ll]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for ll in range(0, O):
+            V[ll] = Vfunc_hex(aa[ll], nu4)
+        for ll in range(0, O-1):
+            VInt[ll] = Vfunc_hex(aInt[ll], nu4)
+        # loop through x, y, and z dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for kk in range(N):
+                    x = xx[ii]
+                    y = yy[jj]
+                    z = zz[kk]
+            
+                    Mfirst = Mfunc4D_autohex(aa[0], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5])
+                    Mlast = Mfunc4D_autohex(aa[O-1], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5])
+                    for ll in range(0, O-1):
+                        MInt[ll] = Mfunc4D_autohex(aInt[ll], x,y,z, m41,m42,m43, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5])
+                    compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
+                    if x==0 and y==0 and z==0 and Mfirst <= 0:
+                        b[0] += (1/(6*nu4) - Mfirst)*2/da[0] 
+                    if x==1 and y==1 and z==1 and Mlast >= 0:
+                        b[O-1] += -(-1/(6*nu4) - Mlast)*2/da[O-2]
+
+                    for ll in range(0, O):
+                        r[ll] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
+                    for ll in range(0, O):
+                        phi[ii, jj, kk, ll] = temp[ll]
         
     tridiag_free()
 
@@ -1857,6 +2079,7 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
     cdef int is_auto = ploidy1[1]
     cdef int is_alloa = ploidy1[2]
     cdef int is_allob = ploidy1[3]
+    cdef int is_autohex = ploidy1[4]
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -1997,6 +2220,39 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
                         for ii in range(0, L):
                             phi[ii, jj, kk, ll, mm] = temp[ii]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for ii in range(0, L):
+            V[ii] = Vfunc_hex(xx[ii], nu1)
+        for ii in range(0, L-1):
+            VInt[ii] = Vfunc_hex(xInt[ii], nu1)
+        # loop through y, z, a, and b dimensions
+        for jj in range(M):
+            for kk in range(N):
+                for ll in range(O):
+                    for mm in range(P):        
+                        y = yy[jj]
+                        z = zz[kk]
+                        a_ = aa[ll]
+                        b_ = bb[mm]
+
+                        Mfirst = Mfunc5D_autohex(xx[0], y,z,a_,b_, m12,m13,m14,m15, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                        Mlast = Mfunc5D_autohex(xx[L-1], y,z,a_,b_, m12,m13,m14,m15, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+                        for ii in range(0, L-1):
+                            MInt[ii] = Mfunc5D_autohex(xInt[ii], y,z,a_,b_, m12,m13,m14,m15, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5]) 
+                        compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                        if y==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
+                            b[0] += (1/(6*nu1) - Mfirst)*2/dx[0] 
+                        if y==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
+                            b[L-1] += -(-1/(6*nu1) - Mlast)*2/dx[L-2]
+
+                        for ii in range(0, L):
+                            r[ii] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                        for ii in range(0, L):
+                            phi[ii, jj, kk, ll, mm] = temp[ii]
     
     tridiag_free()
             
@@ -2036,6 +2292,7 @@ cdef void c_implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
     cdef int is_auto = ploidy2[1]
     cdef int is_alloa = ploidy2[2]
     cdef int is_allob = ploidy2[3]
+    cdef int is_autohex = ploidy2[4]
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -2176,6 +2433,40 @@ cdef void c_implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
                         for jj in range(0, M):
                             phi[ii, jj, kk, ll, mm] = temp[jj]
+
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for jj in range(0, M):
+            V[jj] = Vfunc_hex(yy[jj], nu2)
+        for jj in range(0, M-1):
+            VInt[jj] = Vfunc_hex(yInt[jj], nu2)
+        # loop through x, z, a, and b dimensions
+        for ii in range(L):
+            for kk in range(N):
+                for ll in range(O):
+                    for mm in range(P):
+                        x = xx[ii]
+                        z = zz[kk]
+                        a_ = aa[ll]
+                        b_ = bb[mm]
+
+                        Mfirst = Mfunc5D_autohex(yy[0], x,z,a_,b_, m21,m23,m24,m25, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                        Mlast = Mfunc5D_autohex(yy[M-1], x,z,a_,b_, m21,m23,m24,m25, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                        for jj in range(0, M-1):
+                            MInt[jj] = Mfunc5D_autohex(yInt[jj], x,z,a_,b_, m21,m23,m24,m25, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+                        compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
+                        if x==0 and z==0 and a_==0 and b_==0 and Mfirst <= 0:
+                            b[0] += (1/(6*nu2) - Mfirst)*2/dy[0] 
+                        if x==1 and z==1 and a_==1 and b_==1 and Mlast >= 0:
+                            b[M-1] += -(-1/(6*nu2) - Mlast)*2/dy[M-2]
+
+                        for jj in range(0, M):
+                            r[jj] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+                        for jj in range(0, M):
+                            phi[ii, jj, kk, ll, mm] = temp[jj]
+
     tridiag_free()
 
 cdef void c_implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
@@ -2212,6 +2503,7 @@ cdef void c_implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
     ### specify ploidy of the z direction
     cdef int is_diploid = ploidy3[0]
     cdef int is_auto = ploidy3[1]
+    cdef int is_autohex = ploidy3[4]
     # note: we don't support alloa and allob as being the third (middle) dimension of the phi array in 5D
 
     # compute step size and intermediate values
@@ -2288,6 +2580,39 @@ cdef void c_implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         for kk in range(0, N):
                             phi[ii, jj, kk, ll, mm] = temp[kk]
 
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc_hex(zz[kk], nu3)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc_hex(zInt[kk], nu3)
+        # loop through x, y, a, and b dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for ll in range(O):
+                    for mm in range(P):
+                        x = xx[ii]
+                        y = yy[jj]
+                        a_ = aa[ll]
+                        b_ = bb[mm] 
+                
+                        Mfirst = Mfunc5D_autohex(zz[0], x,y,a_,b_, m31,m32,m34,m35, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                        Mlast = Mfunc5D_autohex(zz[N-1], x,y,a_,b_, m31,m32,m34,m35, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                        for kk in range(0, N-1):
+                            MInt[kk] = Mfunc5D_autohex(zInt[kk], x,y,a_,b_, m31,m32,m34,m35, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+                        compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
+                        if x==0 and y==0 and a_==0 and b_==0 and Mfirst <= 0:
+                            b[0] += (1/(6*nu3) - Mfirst)*2/dz[0]
+                        if x==1 and y==1 and a_==1 and b_==1 and Mlast >= 0:
+                            b[N-1] += -(-1/(6*nu3) - Mlast)*2/dz[N-2]
+
+                        for kk in range(0, N):
+                            r[kk] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+                        for kk in range(0, N):
+                            phi[ii, jj, kk, ll, mm] = temp[kk]
+
     tridiag_free()
 
 cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
@@ -2326,6 +2651,7 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
     cdef int is_auto = ploidy4[1]
     cdef int is_alloa = ploidy4[2]
     cdef int is_allob = ploidy4[3]
+    cdef int is_autohex = ploidy4[4]
 
     # compute step size and intermediate values
     compute_dx(&aa[0], O, &da[0])
@@ -2470,6 +2796,39 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         for ll in range(0, O):
                             phi[ii, jj, kk, ll, mm] = temp[ll]
         
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for ll in range(0, O):
+            V[ll] = Vfunc_hex(aa[ll], nu4)
+        for ll in range(0, O-1):
+            VInt[ll] = Vfunc_hex(aInt[ll], nu4)
+        # loop through x, y, z, and b dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for kk in range(N):
+                    for mm in range(P):
+                        x = xx[ii]
+                        y = yy[jj]
+                        z = zz[kk]
+                        b_ = bb[mm]
+            
+                        Mfirst = Mfunc5D_autohex(aa[0], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5])
+                        Mlast = Mfunc5D_autohex(aa[O-1], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5])
+                        for ll in range(0, O-1):
+                            MInt[ll] = Mfunc5D_autohex(aInt[ll], x,y,z,b_, m41,m42,m43,m45, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5])
+                        compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
+                        if x==0 and y==0 and z==0 and b_==0 and Mfirst <= 0:
+                            b[0] += (1/(6*nu4) - Mfirst)*2/da[0]
+                        if x==1 and y==1 and z==1 and b_==1 and Mlast >= 0:
+                            b[O-1] += -(-1/(6*nu4) - Mlast)*2/da[O-2]
+
+                        for ll in range(0, O):
+                            r[ll] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
+                        for ll in range(0, O):
+                            phi[ii, jj, kk, ll, mm] = temp[ll]
+
     tridiag_free()
 
 cdef void c_implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
@@ -2508,6 +2867,7 @@ cdef void c_implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
     cdef int is_auto = ploidy5[1]
     cdef int is_alloa = ploidy5[2]
     cdef int is_allob = ploidy5[3]
+    cdef int is_autohex = ploidy5[4]
 
     # compute step size and intermediate values
     compute_dx(&bb[0], P, &db[0])
@@ -2649,6 +3009,40 @@ cdef void c_implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         for mm in range(0, P):
                             phi[ii, jj, kk, ll, mm] = temp[mm]
         
+    elif is_autohex:
+        # compute everything we can outside of the spatial loop
+        for mm in range(0, P):
+            V[mm] = Vfunc_hex(bb[mm], nu5)
+        for mm in range(0, P-1):
+            VInt[mm] = Vfunc_hex(bInt[mm], nu5)
+        # loop through x, y, z, and a dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for kk in range(N):
+                    for ll in range(O):
+                        x = xx[ii]
+                        y = yy[jj]
+                        z = zz[kk]
+                        a_ = aa[ll]
+            
+                        Mfirst = Mfunc5D_autohex(bb[0], x,y,z,a_, m51,m52,m53,m54, s5[0],s5[1],s5[2],s5[3],s5[4],s5[5])
+                        Mlast = Mfunc5D_autohex(bb[P-1], x,y,z,a_, m51,m52,m53,m54, s5[0],s5[1],s5[2],s5[3],s5[4],s5[5])
+                        for mm in range(0, P-1):
+                            MInt[mm] = Mfunc5D_autohex(bInt[mm], x,y,z,a_, m51,m52,m53,m54, s5[0],s5[1],s5[2],s5[3],s5[4],s5[5])
+                        compute_delj(&db[0], &MInt[0], &VInt[0], P, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&db[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, P, &a[0], &b[0], &c[0])
+                        if x==0 and y==0 and z==0 and a_==0 and Mfirst <= 0:
+                            b[0] += (1/(6*nu5) - Mfirst)*2/db[0]
+                        if x==1 and y==1 and z==1 and a_==1 and Mlast >= 0:
+                            b[P-1] += -(-1/(6*nu5) - Mlast)*2/db[P-2]
+
+                        for mm in range(0, P):
+                            r[mm] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], P)
+                        for mm in range(0, P):
+                            phi[ii, jj, kk, ll, mm] = temp[mm]
+        
+
     tridiag_free()
 
 ### ==========================================================================

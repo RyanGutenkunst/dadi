@@ -263,7 +263,8 @@ def _compute_dt_autohex(dx, nu, ms, g1, g2, g3, g4, g5, g6):
 ### INJECT MUTATIONS FUNCTIONS FOR ALL PLOIDIES + DIMENSIONS
 ### ==========================================================================
 # these are slightly restructured from Ryan's versions to be more compatible with 
-# the ploidy arguments which specify which injection function to use
+# the ploidy arguments which specify which injection term to use; the correction is theta0/k_ij
+# where k_ij is the ploidy of subgenome j in population i
 def _inject_mutations_1D(phi, dt, xx, theta0, ploidy):
     """
     Inject novel mutations for a timestep for diploids.
@@ -303,20 +304,26 @@ def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2,
     Inject novel mutations for a timestep.
     """
     if not frozen1:
-        if not ploidy1[1]: # this reads as if not autotetraploid
+        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
             phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
-        else:
+        elif not ploidy1[4]: # if not hexaploid
             phi[1,0,0] += dt/xx[1] * theta0/4 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+        elif ploidy1[4]:
+            phi[1,0,0] += dt/xx[1] * theta0/6 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
     if not frozen2:
-        if not ploidy2[1]:
+        if not ploidy2[1] and not ploidy2[4] and not ploidy2[5]:
             phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
-        else:
+        elif not ploidy2[4]:
             phi[0,1,0] += dt/yy[1] * theta0/4 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+        elif ploidy2[4]:
+            phi[0,1,0] += dt/yy[1] * theta0/6 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
     if not frozen3:
-        if not ploidy3[1]:
+        if not ploidy3[1] and not ploidy3[4] and not ploidy3[5]:
             phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
-        else:
+        elif not ploidy3[4]:
             phi[0,0,1] += dt/zz[1] * theta0/4 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+        elif ploidy3[4]:
+            phi[0,0,1] += dt/zz[1] * theta0/6 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
     return phi
 
 def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0, 
@@ -327,30 +334,38 @@ def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0,
     """
     # Population 1
     # Normalization based on the multi-dimensional trapezoid rule is 
-    # implemented                      ************** here ***************
+    # implemented                                     ************** here ***************
     if not frozen1:
-        if not ploidy1[1]: # this reads as if not autotetraploid
+        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
             phi[1,0,0,0] += dt/xx[1] * theta0/2 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
-        else:
+        elif not ploidy1[4]: # if not hexaploid
             phi[1,0,0,0] += dt/xx[1] * theta0/4 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
+        elif ploidy1[4]:
+            phi[1,0,0,0] += dt/xx[1] * theta0/6 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
     # Population 2
     if not frozen2:
-        if not ploidy2[1]:
+        if not ploidy2[1] and not ploidy2[4] and not ploidy2[5]:
             phi[0,1,0,0] += dt/yy[1] * theta0/2 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
-        else:
+        elif not ploidy2[4]:
             phi[0,1,0,0] += dt/yy[1] * theta0/4 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
+        elif ploidy2[4]:
+            phi[0,1,0,0] += dt/yy[1] * theta0/6 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
     # Population 3
     if not frozen3:
-        if not ploidy3[1]:
+        if not ploidy3[1] and not ploidy3[4] and not ploidy3[5]:
             phi[0,0,1,0] += dt/zz[1] * theta0/2 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
-        else:
+        elif not ploidy3[4]:
             phi[0,0,1,0] += dt/zz[1] * theta0/4 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
+        elif ploidy3[4]:
+            phi[0,0,1,0] += dt/zz[1] * theta0/6 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
     # Population 4
     if not frozen4:
-        if not ploidy4[1]:
+        if not ploidy4[1] and not ploidy4[4] and not ploidy4[5]:
             phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
-        else:
+        elif not ploidy4[4]:
             phi[0,0,0,1] += dt/aa[1] * theta0/4 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
+        elif not ploidy4[4]:
+            phi[0,0,0,1] += dt/aa[1] * theta0/6 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
     return phi
     
 def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0, 
@@ -361,36 +376,46 @@ def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0,
     """
     # Population 1
     # Normalization based on the multi-dimensional trapezoid rule is 
-    # implemented                      ************** here ***************
+    # implemented                                         ************** here ***************
     if not frozen1:
-        if not ploidy1[1]: # this reads as if not autotetraploid
+        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
             phi[1,0,0,0,0] += dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
-        else:
+        elif not ploidy1[4]: # if not hexaploid
             phi[1,0,0,0,0] += dt/xx[1] * theta0/4 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
+        elif ploidy1[4]: 
+            phi[1,0,0,0,0] += dt/xx[1] * theta0/6 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
     # Population 2
     if not frozen2:
-        if not ploidy2[1]:
+        if not ploidy2[1] and not ploidy2[4] and not ploidy2[5]:
             phi[0,1,0,0,0] += dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
-        else:
+        elif not ploidy2[4]:
             phi[0,1,0,0,0] += dt/yy[1] * theta0/4 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
+        elif ploidy2[4]:
+            phi[0,1,0,0,0] += dt/yy[1] * theta0/6 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
     # Population 3
     if not frozen3:
-        if not ploidy3[1]:
+        if not ploidy3[1] and not ploidy3[4] and not ploidy3[5]:
             phi[0,0,1,0,0] += dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
-        else:
+        elif not ploidy3[4]:
             phi[0,0,1,0,0] += dt/zz[1] * theta0/4 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
+        elif ploidy3[4]:
+            phi[0,0,1,0,0] += dt/zz[1] * theta0/6 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
     # Population 4
     if not frozen4:
-        if not ploidy4[1]:
+        if not ploidy4[1] and not ploidy4[4] and not ploidy4[5]:
             phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
-        else:
+        elif not ploidy4[4]:
             phi[0,0,0,1,0] += dt/aa[1] * theta0/4 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+        elif ploidy4[4]:
+            phi[0,0,0,1,0] += dt/aa[1] * theta0/6 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
     # Population 5
     if not frozen5:
-        if not ploidy5[1]:
+        if not ploidy5[1] and not ploidy5[4] and not ploidy5[5]:
             phi[0,0,0,0,1] += dt/bb[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
-        else:
+        elif not ploidy5[4]:    
             phi[0,0,0,0,1] += dt/bb[1] * theta0/4 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+        elif ploidy5[4]:    
+            phi[0,0,0,0,1] += dt/bb[1] * theta0/6 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
     return phi
 
 ### ==========================================================================
@@ -612,9 +637,8 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
                          'backwards.' % (T, initial_t))
     
     # vector of ploidy coefficients 
-    # *only* for the 1 pop case is ploidy a vector of length 2
-    # e.g. [0, 1] specifies the current population as autotetraploid
-    # this is more convenient than calling if ploidyflag == PloidyType.xxx
+    # e.g. [0, 1, 0, 0, ..., 0] specifies the current population as autotetraploid
+    # this is more convenient than calling if ploidyflag == PloidyType.xxx all the time
     ploidy = numpy.zeros(10, dtype=numpy.intc)
     ploidy[ploidyflag] = 1
     # unpack the selection parameters from dict to list
@@ -890,9 +914,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                          'To model allotetraploids in a 3D model, only the last two populations can be specified as an allotetraploid subgenome.')
 
     # create ploidy vectors with C integers
-    ploidy1 = numpy.zeros(4, numpy.intc)
-    ploidy2 = numpy.zeros(4, numpy.intc)
-    ploidy3 = numpy.zeros(4, numpy.intc)
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy3 = numpy.zeros(10, numpy.intc)
     ploidy1[ploidyflag1] = 1
     ploidy2[ploidyflag2] = 1
     ploidy3[ploidyflag3] = 1
@@ -1064,10 +1088,10 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     aa = zz = yy = xx
 
     # create ploidy vectors with C integers
-    ploidy1 = numpy.zeros(4, numpy.intc)
-    ploidy2 = numpy.zeros(4, numpy.intc)
-    ploidy3 = numpy.zeros(4, numpy.intc)
-    ploidy4 = numpy.zeros(4, numpy.intc)
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy3 = numpy.zeros(10, numpy.intc)
+    ploidy4 = numpy.zeros(10, numpy.intc)
     ploidy1[ploidyflag1] = 1
     ploidy2[ploidyflag2] = 1
     ploidy3[ploidyflag3] = 1
@@ -1256,11 +1280,11 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     bb = aa = zz = yy = xx
 
     # create ploidy vectors with C integers
-    ploidy1 = numpy.zeros(4, numpy.intc)
-    ploidy2 = numpy.zeros(4, numpy.intc)
-    ploidy3 = numpy.zeros(4, numpy.intc)
-    ploidy4 = numpy.zeros(4, numpy.intc)
-    ploidy5 = numpy.zeros(4, numpy.intc)
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy3 = numpy.zeros(10, numpy.intc)
+    ploidy4 = numpy.zeros(10, numpy.intc)
+    ploidy5 = numpy.zeros(10, numpy.intc)
     ploidy1[ploidyflag1] = 1
     ploidy2[ploidyflag2] = 1
     ploidy3[ploidyflag3] = 1
@@ -1547,19 +1571,19 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
     dx = numpy.diff(xx)
     dfactor = _compute_dfactor(dx)
 
-    if ploidy[0]:
+    if ploidy[0]: # if diploid
         M = _Mfunc1D(xx, s[0], s[1])
         MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, s[0], s[1])
         V = _Vfunc(xx, nu)
         VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.5 # term for BCs, = (1-2x)/k eval. at x=0/x=1 for a k-ploid 
-    elif ploidy[1]:
+    elif ploidy[1]: # if autotetraploid
         M = _Mfunc1D_auto(xx, s[0], s[1], s[2], s[3])
         MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3])
         V = _Vfunc_tetra(xx, nu)
         VInt = _Vfunc_tetra((xx[:-1] + xx[1:])/2, nu)
         bc_factor = 0.25 
-    elif ploidy[4]:
+    elif ploidy[4]: # if autohexaploid
         M = _Mfunc1D_autohex(xx, s[0], s[1], s[2], s[3], s[4], s[5])
         MInt = _Mfunc1D_autohex((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3], s[4], s[5])
         V = _Vfunc_hex(xx, nu)
@@ -1615,35 +1639,35 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     dx = numpy.diff(xx)
     dfact_x = _compute_dfactor(dx)
 
-    if ploidy1[0]:
+    if ploidy1[0]: # if diploid
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D(xx[:,nuax], yy[nuax,:], m12, s1[0], s1[1])
         MxInt = _Mfunc2D((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0], s1[1])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5 
-    elif ploidy1[1]:
+    elif ploidy1[1]: # if autotetraploid
         Vx = _Vfunc_tetra(xx, nu1)
         VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_auto(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
         MxInt = _Mfunc2D_auto((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.25 
-    elif ploidy1[2]:
+    elif ploidy1[2]: # if allotetraploid subgenome a
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_allo_a(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         MxInt = _Mfunc2D_allo_a((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5 
-    elif ploidy1[3]:
+    elif ploidy1[3]: # if allotetraploid subgenome b
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_allo_b(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         MxInt = _Mfunc2D_allo_b((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5 
-    elif ploidy1[4]:
+    elif ploidy1[4]: # if autohexaploid
         Vx = _Vfunc_hex(xx, nu1)
         VxInt = _Vfunc_hex((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_autohex(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
@@ -1757,6 +1781,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     dx = numpy.diff(xx)
     dfact_x = _compute_dfactor(dx)
 
+    # note: we don't support alloa and allob as being the first dimension of the phi array in 3D
+
     if ploidy1[0]:
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
@@ -1766,7 +1792,7 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           zz[nuax,nuax,:], m12, m13, s1[0], s1[1])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.5
-    if ploidy1[1]:
+    elif ploidy1[1]:
         Vx = _Vfunc_tetra(xx, nu1)
         VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc3D_auto(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
@@ -1775,24 +1801,15 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.25 
-    if ploidy1[2]:
-        Vx = _Vfunc(xx, nu1)
-        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
-        Mx = _Mfunc3D_allo_a(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
-                      m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-        MxInt = _Mfunc3D_allo_a((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
-                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+    elif ploidy1[4]:
+        Vx = _Vfunc_hex(xx, nu1)
+        VxInt = _Vfunc_hex((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_autohex(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        MxInt = _Mfunc3D_autohex((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
         deljx = _compute_delj(dx, MxInt, VxInt)
-        bc_factorx = 0.5 
-    if ploidy1[3]:
-        Vx = _Vfunc(xx, nu1)
-        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
-        Mx = _Mfunc3D_allo_b(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
-                      m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-        MxInt = _Mfunc3D_allo_b((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
-                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
-        deljx = _compute_delj(dx, MxInt, VxInt)
-        bc_factorx = 0.5 
+        bc_factorx = 1/6
 
 
     ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
@@ -1818,26 +1835,26 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     if ploidy2[0]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
+                      m21, m23, s2[0], s2[1])
+        MyInt = _Mfunc3D((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, s2[0], s2[1])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    elif ploidy2[1]:
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_auto(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
+                      m21, m23, s2[0],s2[1],s2[2],s2[3])
+        MyInt = _Mfunc3D_auto((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, s2[0],s2[1],s2[2],s2[3])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25
+    elif ploidy2[2]:
         # note that the order of the params passed to _Mfunc3D for y and z is different from 
         # Ryan's original code. This is for consistency with the allo cases where
         # the first two dimensions passed to _Mfunc need to be the allo subgenomes 
         # and the subgenomes are always passed to the integrator as y and z.
-        My = _Mfunc3D(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
-                      m23, m21, s2[0], s2[1])
-        MyInt = _Mfunc3D((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
-                          xx[:,nuax, nuax], m23, m21, s2[0], s2[1])
-        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
-        bc_factory = 0.5
-    if ploidy2[1]:
-        Vy = _Vfunc_tetra(yy, nu2)
-        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
-        My = _Mfunc3D_auto(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
-                      m23, m21, s2[0],s2[1],s2[2],s2[3])
-        MyInt = _Mfunc3D_auto((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
-                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3])
-        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
-        bc_factory = 0.25
-    if ploidy2[2]:
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc3D_allo_a(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
@@ -1846,7 +1863,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 0.5
-    if ploidy2[3]:
+    elif ploidy2[3]:
+        # see note above about the order of the params passed to _Mfuncs here
         Vy = _Vfunc(yy, nu2)
         VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
         My = _Mfunc3D_allo_b(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
@@ -1855,6 +1873,15 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 0.5
+    elif ploidy2[4]:
+        Vy = _Vfunc_hex(yy, nu2)
+        VyInt = _Vfunc_hex((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_autohex(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
+                      m21, m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        MyInt = _Mfunc3D_autohex((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 1/6
   
     ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
     ay[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*deljy     
@@ -1877,22 +1904,23 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     if ploidy3[0]:  
         Vz = _Vfunc(zz, nu3)
         VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
-        Mz = _Mfunc3D(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
-                      m32, m31, s3[0], s3[1])
-        MzInt = _Mfunc3D((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
-                          xx[:,nuax, nuax], m32, m31, s3[0], s3[1])
+        Mz = _Mfunc3D(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
+                      m31, m32, s3[0], s3[1])
+        MzInt = _Mfunc3D((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, s3[0], s3[1])
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 0.5
-    if ploidy3[1]:  
+    elif ploidy3[1]:  
         Vz = _Vfunc_tetra(zz, nu3)
         VzInt = _Vfunc_tetra((zz[1:]+zz[:-1])/2, nu3)
-        Mz = _Mfunc3D_auto(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
-                      m32, m31, s3[0],s3[1],s3[2],s3[3])
-        MzInt = _Mfunc3D_auto((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
-                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3])
+        Mz = _Mfunc3D_auto(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
+                      m31, m32, s3[0],s3[1],s3[2],s3[3])
+        MzInt = _Mfunc3D_auto((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, s3[0],s3[1],s3[2],s3[3])
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 0.25
-    if ploidy3[2]:  
+    elif ploidy3[2]:  
+        # see note above about the order of the params passed to _Mfuncs here
         Vz = _Vfunc(zz, nu3)
         VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
         Mz = _Mfunc3D_allo_a(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
@@ -1901,7 +1929,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 0.5
-    if ploidy3[3]:  
+    elif ploidy3[3]:  
+        # see note above about the order of the params passed to _Mfuncs here
         Vz = _Vfunc(zz, nu3)
         VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
         Mz = _Mfunc3D_allo_b(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
@@ -1910,6 +1939,15 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 0.5
+    elif ploidy3[4]:  
+        Vz = _Vfunc_hex(zz, nu3)
+        VzInt = _Vfunc_hex((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_autohex(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
+                      m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+        MzInt = _Mfunc3D_autohex((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 1/6
 
     az, bz, cz = [numpy.zeros(phi.shape) for ii in range(3)]
     az[:,:, 1:] += dfact_z[ 1:]*(-MzInt*deljz     - Vz[nuax,nuax,:-1]/(2*dz))

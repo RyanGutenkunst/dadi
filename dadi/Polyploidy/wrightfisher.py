@@ -72,16 +72,7 @@ def summarize_phi(phi, xx, model_name="No name specified"):
 def dip_selection(q, s, h):
     """
     Evaluates new value of q after one generation of selection for diploids.
-
-    q: allele frequency before selection
-    s: selection coefficient
-    h: dominance coefficient for heterozygotes
-
-    Returns:
-        q_post_sel: allele frequency post selection
     """
-    #delta_q = s * 2*(h + (1-2*h)*q) * q*(1-q)
-    #return delta_q
     #the RHS expression was computed symbolically in Matlab
     q_post_sel = (q**2*(2*s + 1) - 
                  q*(2*h*s + 1)*(q - 1))/((q - 1)**2 + 
@@ -172,15 +163,6 @@ def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = Fals
 def auto_selection(q, s1, s2, s3, s4):
     """
     Evaluates new value of q after one generation of selection for autotetraploids.
-
-    q: allele frequency before selection
-    s1: selective effect for G1 individual
-    s2: selective effect for G2 individual
-    s3: selective effect for G3 individual
-    s4: selective effect for G4 individual
-
-    Returns:
-        q_post_sel: allele frequency post selection
     """
     # the RHS expression was computed symbolically in Matlab
     q_post_sel = (q*(2*s1 - 6*q*s1 + 6*q*s2 + 6*q**2*s1 - 12*q**2*s2 - 2*q**3*s1
@@ -758,7 +740,76 @@ def allo_gametic_WF(N, T, gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, 
 
     return allele_freqs
 
-### 2D models
+def autohex_selection(q, s1, s2, s3, s4, s5, s6):
+    """
+    Evaluates new values of q after one generation of selection
+    for autohexaploids.
+    """
+    q_post_sel = ( q**6*(2*s6 + 1) - q*(2*s1 + 1)*(q - 1)**5 
+                  - (5*q**5*(6*q - 6)*(2*s5 + 1))/6 + 5*q**2*(2*s2 + 1)*(q - 1)**4 
+                  - 10*q**3*(2*s3 + 1)*(q - 1)**3 + 10*q**4*(2*s4 + 1)*(q - 1)**2 ) / (
+                      (q - 1)**6 + q**6*(2*s6 + 1) - 6*q*(2*s1 + 1)*(q - 1)**5 - 
+                      q**5*(6*q - 6)*(2*s5 + 1) + 15*q**2*(2*s2 + 1)*(q - 1)**4 - 
+                      20*q**3*(2*s3 + 1)*(q - 1)**3 + 15*q**4*(2*s4 + 1)*(q - 1)**2)
+ 
+    return q_post_sel
+
+def autohex_allelic_WF(N, T, init_q, s, nu = 1, replicates = 1):
+    """
+    Simple Wright-Fisher model of genetic drift in autohexaploids based on allele frequency sampling. 
+
+    N: population size (number of individuals)
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
+    s: vector of gammas for autohexaploids (gamma1, ..., gamma6)
+    nu: population size relative to ancestral population size
+        nu can be a constant or a function of diffusion-scaled time
+    replicates: number of times to run the simulation
+
+    Returns: 
+        allele_freqs: array of allele frequencies, either just final 
+            or if track_all = True, then over time
+    """
+
+    if np.less(N, 0) or np.less(T, 0):
+        raise(ValueError("The population size or time is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_q, 0)) or np.any(np.greater(init_q, 1)):
+        raise(ValueError("At least one initial q_value is less than zero"
+                         " or greater than one."))
+    
+    if len(init_q) != replicates:
+        raise ValueError("Length of init_q must equal number of replicates.")
+    
+    nu_f = ensure_1arg_func(nu)
+    
+    # calculate s values from gammas because we will need it for our generation based simulation
+    s1, s2, s3, s4, s5, s6 = s[0]/(2*N), s[1]/(2*N), s[2]/(2*N), s[3]/(2*N), s[4]/(2*N), s[5]/(2*N)
+
+    # create matrix to store allele frequencies
+    allele_freqs = init_q
+
+    s1_vec = np.full(replicates, s1)
+    s2_vec = np.full(replicates, s2)
+    s3_vec = np.full(replicates, s3)
+    s4_vec = np.full(replicates, s4)
+    s5_vec = np.full(replicates, s5)
+    s6_vec = np.full(replicates, s6)    
+
+    rng = np.random.default_rng()
+    total_gens = int(2*N*T)
+    for t in range(total_gens):
+        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
+        samples = int(6*N*nu)
+    
+        q_post_sel = autohex_selection(allele_freqs, s1_vec, s2_vec, s3_vec, s4_vec, s5_vec, s6_vec)
+        allele_freqs = rng.binomial(samples, q_post_sel)/(samples)
+    
+    return allele_freqs
+
+
+### 2 Pop models
 
 def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
     """
@@ -1136,7 +1187,7 @@ def auto_auto_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 
     
     return allele_freqs
 
-### 3D model
+### 3 Pop models
 def dip_allo_WF(N, T, M12, M21, M13, M31, M23, M32,
                     sel1, sel2, sel3, 
                     init_q1, init_q2, init_q3,
