@@ -1,5 +1,5 @@
 import numpy as np
-cimport numpy as np
+#cimport numpy as np
 
 # =========================================================
 # SHARED AND DIPLOID C FUNCTIONS
@@ -86,13 +86,28 @@ cdef extern from "tridiag.h":
 # =========================================================
 # CYTHON 1D INTEGRATION FUNCTION 
 # =========================================================
-cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s, 
+def implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s, 
                         double dt, int use_delj_trick, int[:] ploidy):
-
-    # Here, sel_vec = [param1, param2, param3, param4] b/c we only consider diploids and autotetraploids
-
-    ### Note: most of the arrays used here are preallocated once in Python for efficiency
-
+    """
+    Implicit 1D integration function for 1D diffusion equation.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx: numpy array (float64)
+        discrete numerical grid for spatial dimension
+    nu: Population size
+    s: vector of selection parameters
+    dt: Time step
+    use_delj_trick: Whether to use delj optimization (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+    
+    Returns:
+    --------
+    phi: Modified phi array
+    """
     cdef int L = xx.shape[0] # number of grid points
     cdef int ii # loop index
     
@@ -189,13 +204,36 @@ cdef void c_implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
     # solve the tridiagonal matrix
     tridiag(&a[0], &b[0], &c[0], &r[0], &phi[0], L)
 
+    return np.asarray(phi)
+
 # =========================================================
 # CYTHON 2D INTEGRATION FUNCTIONS - TEMPORAL PARAMS
 # =========================================================
-cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy, 
+def implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu1, double m12, double[:] s1, 
                         double dt, int use_delj_trick, int[:] ploidy1):
+    """
+    Implicit 2D integration function for x direction of 2D diffusion equation.
     
+    Parameters:
+    -----------
+    phi: numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu1: Population size for pop1
+    m12: Migration rate to pop1 from pop2
+    s1: vector of selection parameters for pop1
+    dt: Time step
+    use_delj_trick: Whether to use delj optimization (0 or 1)
+    ploidy1: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x dim
@@ -372,11 +410,34 @@ cdef void c_implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
                 phi[ii, jj] = temp[ii]
     
     tridiag_free()
+
+    return np.asarray(phi)
             
-cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy, 
+def implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu2, double m21, double[:] s2, 
                         double dt, int use_delj_trick, int[:] ploidy2):
+    """
+    Implicit 2D integration function for y direction of 2D diffusion equation.
     
+    Parameters:
+    -----------
+    phi: numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu2: Population size for pop2
+    m21: Migration rate to pop2 from pop1
+    s2: vector of selection parameters for pop2
+    dt: Time step
+    use_delj_trick: Whether to use delj optimization (0 or 1)
+    ploidy2: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi: modified phi after integration in y direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -553,11 +614,33 @@ cdef void c_implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
                 phi[ii, jj] = temp[jj]
     tridiag_free()
 
+    return np.asarray(phi)
+
 # =========================================================
 # CYTHON 2D INTEGRATION FUNCTIONS - CONSTANT PARAMS    
 # =========================================================
-cdef void c_implicit_precalc_2Dx(double[:,:] phi, double[:,:] ax, double[:,:] bx,
+def implicit_precalc_2Dx(double[:,:] phi, double[:,:] ax, double[:,:] bx,
                                  double[:,:] cx, double dt):
+    """
+    Implicit 2D integration function for x direction of 2D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ax : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    bx : numpy array (float64)
+    cx : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    
     cdef int ii, jj
     cdef int L = phi.shape[0]
     cdef int M = phi.shape[1]
@@ -583,8 +666,30 @@ cdef void c_implicit_precalc_2Dx(double[:,:] phi, double[:,:] ax, double[:,:] bx
 
     tridiag_free()
 
-cdef void c_implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
+    return np.asarray(phi)
+
+def implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
                                  double[:,:] cy, double dt):
+    """
+    Implicit 2D integration function for y direction of 2D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+    
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ay : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    by : numpy array (float64)
+    cy : numpy array (float64)
+    dt : float
+        Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in y direction
+    """
+
     cdef int ii, jj
     cdef int L = phi.shape[0]
     cdef int M = phi.shape[1]
@@ -610,13 +715,37 @@ cdef void c_implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by
 
     tridiag_free()
 
+    return np.asarray(phi)
+
 # =========================================================
 # CYTHON 3D INTEGRATION FUNCTIONS - TEMPORAL PARAMS
 # =========================================================
-cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
+def implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu1, double m12, double m13, double[:] s1, 
                         double dt, int use_delj_trick, int[:] ploidy1):
+    """
+    Implicit 3D integration function for x direction of 3D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu1: Population size for pop1
+    m12: Migration rate to pop1 from pop2
+    m13: Migration rate to pop1 from pop3
+    s1: vector of selection parameters for pop1
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy1: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x dim
@@ -744,11 +873,34 @@ cdef void c_implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
                     phi[ii, jj, kk] = temp[ii]
                
     tridiag_free()
+
+    return np.asarray(phi)
             
-cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
+def implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu2, double m21, double m23, double[:] s2, 
                         double dt, int use_delj_trick, int[:] ploidy2):
+    """
+    Implicit 3D integration function for y direction of 3D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu2: Population size for pop2
+    m21: Migration rate to pop2 from pop1
+    m23: Migration rate to pop2 from pop3
+    s2: vector of selection parameters for pop2
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy2: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -938,10 +1090,34 @@ cdef void c_implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
 
     tridiag_free()
 
-cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
+    return np.asarray(phi)
+
+def implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu3, double m31, double m32, double[:] s3, 
                         double dt, int use_delj_trick, int[:] ploidy3):
+    """
+    Implicit 3D integration function for z direction of 3D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu3: Population size for pop3
+    m31: Migration rate to pop3 from pop1
+    m32: Migration rate to pop3 from pop2
+    s3: vector of selection parameters for pop3
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy3: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -1131,12 +1307,33 @@ cdef void c_implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:
 
     tridiag_free()
 
+    return np.asarray(phi)
+
 ### ==========================================================================
 ### CYTHON 3D INTEGRATION FUNCTIONS - CONSTANT PARAMS
 ### ==========================================================================
 
-cdef void c_implicit_precalc_3Dx(double[:,:,:] phi, double[:,:,:] ax, double[:,:,:] bx,
+def implicit_precalc_3Dx(double[:,:,:] phi, double[:,:,:] ax, double[:,:,:] bx,
                                  double[:,:,:] cx, double dt):
+    """
+    Implicit 3D integration function for x direction of 3D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ax : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    bx : numpy array (float64)
+    cx : numpy array (float64)
+    dt : Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+    
     cdef int ii, jj, kk
     cdef int L = phi.shape[0]
     cdef int M = phi.shape[1]
@@ -1164,8 +1361,29 @@ cdef void c_implicit_precalc_3Dx(double[:,:,:] phi, double[:,:,:] ax, double[:,:
 
     tridiag_free()
 
-cdef void c_implicit_precalc_3Dy(double[:,:,:] phi, double[:,:,:] ay, double[:,:,:] by,
+    return np.asarray(phi)
+
+def implicit_precalc_3Dy(double[:,:,:] phi, double[:,:,:] ay, double[:,:,:] by,
                                  double[:,:,:] cy, double dt):
+    """
+    Implicit 3D integration function for y direction of 3D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    ay : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    by : numpy array (float64)
+    cy : numpy array (float64)
+    dt : Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in y direction
+    """
+    
     cdef int ii, jj, kk
     cdef int L = phi.shape[0]
     cdef int M = phi.shape[1]
@@ -1193,8 +1411,29 @@ cdef void c_implicit_precalc_3Dy(double[:,:,:] phi, double[:,:,:] ay, double[:,:
 
     tridiag_free()
 
-cdef void c_implicit_precalc_3Dz(double[:,:,:] phi, double[:,:,:] az, double[:,:,:] bz,
+    return np.asarray(phi)
+
+def implicit_precalc_3Dz(double[:,:,:] phi, double[:,:,:] az, double[:,:,:] bz,
                                  double[:,:,:] cz, double dt):
+    """
+    Implicit 3D integration function for z direction of 3D diffusion equation.
+    Uses arrays pre-computed in Python for a, b, c.
+
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    az : numpy array (float64)
+        a, b, c, arrays are for tridiagonal matrix solver
+    bz : numpy array (float64)
+    cz : numpy array (float64)
+    dt : Time step
+
+    Returns:
+    --------
+    phi : modified phi after integration in z direction
+    """
+    
     cdef int ii, jj, kk
     cdef int L = phi.shape[0]
     cdef int M = phi.shape[1]
@@ -1222,13 +1461,38 @@ cdef void c_implicit_precalc_3Dz(double[:,:,:] phi, double[:,:,:] az, double[:,:
 
     tridiag_free()
 
+    return np.asarray(phi)
+
 # =========================================================
 # CYTHON 4D INTEGRATION FUNCTIONS
 # =========================================================
-cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
+def implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu1, double m12, double m13, double m14, double[:] s1, 
                         double dt, int use_delj_trick, int[:] ploidy1):
+    """
+    Implicit 4D integration function for x direction of 4D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu1: Population size for pop1
+    m12: Migration rate to pop1 from pop2
+    m13: Migration rate to pop1 from pop3
+    m14: Migration rate to pop1 from pop4
+    s1: vector of selection parameters for pop1
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x dim
@@ -1426,11 +1690,36 @@ cdef void c_implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
                         phi[ii, jj, kk, ll] = temp[ii]
     
     tridiag_free()
+
+    return np.asarray(phi)
             
-cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
+def implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu2, double m21, double m23, double m24, double[:] s2, 
                         double dt, int use_delj_trick, int[:] ploidy2):
+    """
+    Implicit 4D integration function for y direction of 4D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu2: Population size for pop2
+    m21: Migration rate to pop2 from pop1
+    m23: Migration rate to pop2 from pop3
+    m24: Migration rate to pop2 from pop4
+    s2: vector of selection parameters for pop2
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy2: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in y direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -1629,10 +1918,35 @@ cdef void c_implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
 
     tridiag_free()
 
-cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
+    return np.asarray(phi)
+
+def implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu3, double m31, double m32, double m34, double[:] s3, 
                         double dt, int use_delj_trick, int[:] ploidy3):
+    """
+    Implicit 4D integration function for z direction of 4D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu3: Population size for pop3
+    m31: Migration rate to pop3 from pop1
+    m32: Migration rate to pop3 from pop2
+    m34: Migration rate to pop3 from pop4
+    s3: vector of selection parameters for pop3
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy3: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in z direction
+    """
+
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -1834,10 +2148,34 @@ cdef void c_implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
 
     tridiag_free()
 
-cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
+    return np.asarray(phi)
+
+def implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu4, double m41, double m42, double m43, double[:] s4, 
                         double dt, int use_delj_trick, int[:] ploidy4):
+    """
+    Implicit 4D integration function for a direction of 4D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu4: Population size for pop4
+    m41: Migration rate to pop4 from pop1
+    m42: Migration rate to pop4 from pop2
+    m43: Migration rate to pop4 from pop3
+    s4: vector of selection parameters for pop4
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy4: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in a direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -2039,13 +2377,38 @@ cdef void c_implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double
         
     tridiag_free()
 
+    return np.asarray(phi)
+
 # =========================================================
 # CYTHON 5D INTEGRATION FUNCTIONS
 # =========================================================
-cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
+def implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu1, double m12, double m13, double m14, double m15, double[:] s1, 
                         double dt, int use_delj_trick, int[:] ploidy1):
+    """
+    Implicit 5D integration function for x direction of 5D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa, bb: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu1: Population size for pop1
+    m12: Migration rate to pop1 from pop2
+    m13: Migration rate to pop1 from pop3
+    m14: Migration rate to pop1 from pop4
+    m15: Migration rate to pop1 from pop5
+    s1: vector of selection parameters for pop1
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in x direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x dim
@@ -2255,11 +2618,36 @@ cdef void c_implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                             phi[ii, jj, kk, ll, mm] = temp[ii]
     
     tridiag_free()
+
+    return np.asarray(phi)
             
-cdef void c_implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
+def implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu2, double m21, double m23, double m24, double m25, double[:] s2, 
                         double dt, int use_delj_trick, int[:] ploidy2):
+    """
+    Implicit 5D integration function for y direction of 5D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa, bb: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu2: Population size for pop2
+    m21: Migration rate to pop2 from pop1
+    m23: Migration rate to pop2 from pop3
+    m24: Migration rate to pop2 from pop4
+    m25: Migration rate to pop2 from pop5   
+    s2: vector of selection parameters for pop2
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy2: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in y direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -2469,10 +2857,33 @@ cdef void c_implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
 
     tridiag_free()
 
-cdef void c_implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
+def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu3, double m31, double m32, double m34, double m35, double[:] s3, 
                         double dt, int use_delj_trick, int[:] ploidy3):
+    """
+    Implicit 5D integration function for z direction of 5D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa, bb: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu3: Population size for pop3
+    m31: Migration rate to pop3 from pop1
+    m32: Migration rate to pop3 from pop2
+    m34: Migration rate to pop3 from pop4
+    m35: Migration rate to pop3 from pop5
+    s3: vector of selection parameters for pop3
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy3: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in z direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -2615,10 +3026,35 @@ cdef void c_implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
 
     tridiag_free()
 
-cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
+    return np.asarray(phi)
+
+def implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu4, double m41, double m42, double m43, double m45, double[:] s4, 
                         double dt, int use_delj_trick, int[:] ploidy4):
+    """
+    Implicit 5D integration function for a direction of 5D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa, bb: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu4: Population size for pop4
+    m41: Migration rate to pop4 from pop1
+    m42: Migration rate to pop4 from pop2
+    m43: Migration rate to pop4 from pop3
+    m45: Migration rate to pop4 from pop5
+    s4: vector of selection parameters for pop4
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy4: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in a direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -2831,10 +3267,35 @@ cdef void c_implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
 
     tridiag_free()
 
-cdef void c_implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
+    return np.asarray(phi)
+
+def implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu5, double m51, double m52, double m53, double m54, double[:] s5, 
                         double dt, int use_delj_trick, int[:] ploidy5):
+    """
+    Implicit 5D integration function for b direction of 5D diffusion equation.
     
+    Parameters:
+    -----------
+    phi : numpy array (float64)
+        Population frequency array (modified in-place)
+    xx, yy, zz, aa, bb: numpy arrays (float64)
+        discrete numerical grids for spatial dimensions
+    nu5: Population size for pop5
+    m51: Migration rate to pop5 from pop1
+    m52: Migration rate to pop5 from pop2
+    m53: Migration rate to pop5 from pop3
+    m54: Migration rate to pop5 from pop4
+    s5: vector of selection parameters for pop5
+    dt: Time step
+    use_delj_trick: Whether to use delj trick (0 or 1)
+    ploidy5: Vector of ploidy Booleans (0 or 1)
+        [dip, auto, alloa, allob]
+
+    Returns:
+    --------
+    phi : modified phi after integration in a direction
+    """
     # define memory for non-array variables
     # Note: all of the arrays are preallocated for efficiency
     cdef int L = xx.shape[0] # number of grid points in x direction
@@ -3042,730 +3503,6 @@ cdef void c_implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, doub
                         for mm in range(0, P):
                             phi[ii, jj, kk, ll, mm] = temp[mm]
         
-
     tridiag_free()
 
-### ==========================================================================
-### MAKE THE INTEGRATION FUNCTIONS CALLABLE FROM PYTHON
-### ==========================================================================  
-def implicit_1Dx(np.ndarray[double, ndim=1] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 double nu, 
-                 np.ndarray[double, ndim=1] s, 
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy):
-    """
-    Implicit 1D integration function for 1D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx: numpy array (float64)
-        discrete numerical grid for spatial dimension
-    nu: Population size
-    s: vector of selection parameters
-    dt: Time step
-    use_delj_trick: Whether to use delj optimization (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-    
-    Returns:
-    --------
-    numpy array: Modified phi array
-    """
-    # Call the cdef function with memory views
-    c_implicit_1Dx(phi, xx, nu, s, dt, use_delj_trick, ploidy)
-    return phi                    
-    
-def implicit_2Dx(np.ndarray[double, ndim=2] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 double nu1, 
-                 double m12,
-                 np.ndarray[double, ndim=1] s1, 
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy1):
-    """
-    Implicit 2D integration function for x direction of 2D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi: numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu1: Population size for pop1
-    m12: Migration rate to pop1 from pop2
-    s1: vector of selection parameters for pop1
-    dt: Time step
-    use_delj_trick: Whether to use delj optimization (0 or 1)
-    ploidy1: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_2Dx(phi, xx, yy, nu1, m12, s1, dt, use_delj_trick, ploidy1)
-    return phi         
-
-def implicit_2Dy(np.ndarray[double, ndim=2] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 double nu2, 
-                 double m21,
-                 np.ndarray[double, ndim=1] s2, 
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy2):
-    """
-    Implicit 2D integration function for y direction of 2D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi: numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu2: Population size for pop2
-    m21: Migration rate to pop2 from pop1
-    s2: vector of selection parameters for pop2
-    dt: Time step
-    use_delj_trick: Whether to use delj optimization (0 or 1)
-    ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi: modified phi after integration in y direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_2Dy(phi, xx, yy, nu2, m21, s2, dt, use_delj_trick, ploidy2)
-    return phi                            
-
-def implicit_precalc_2Dx(np.ndarray[double, ndim=2] phi, 
-                         np.ndarray[double, ndim=2] ax, 
-                         np.ndarray[double, ndim=2] bx, 
-                         np.ndarray[double, ndim=2] cx, 
-                         double dt):
-    """
-    Implicit 2D integration function for x direction of 2D diffusion equation.
-    Uses arrays pre-computed in Python for a, b, c.
-
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    ax : numpy array (float64)
-        a, b, c, arrays are for tridiagonal matrix solver
-    bx : numpy array (float64)
-    cx : numpy array (float64)
-    dt : float
-        Time step
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_precalc_2Dx(phi, ax, bx, cx, dt)
-    return phi
-
-def implicit_precalc_2Dy(np.ndarray[double, ndim=2] phi, 
-                         np.ndarray[double, ndim=2] ay, 
-                         np.ndarray[double, ndim=2] by, 
-                         np.ndarray[double, ndim=2] cy, 
-                         double dt):
-    """
-    Implicit 2D integration function for y direction of 2D diffusion equation.
-    Uses arrays pre-computed in Python for a, b, c.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    ay : numpy array (float64)
-        a, b, c, arrays are for tridiagonal matrix solver
-    by : numpy array (float64)
-    cy : numpy array (float64)
-    dt : float
-        Time step
-
-    Returns:
-    --------
-    phi : modified phi after integration in y direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_precalc_2Dy(phi, ay, by, cy, dt)
-    return phi
- 
-def implicit_3Dx(np.ndarray[double, ndim=3] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 double nu1, 
-                 double m12, 
-                 double m13, 
-                 np.ndarray[double, ndim=1] s1,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy1):
-    """
-    Implicit 3D integration function for x direction of 3D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu1: Population size for pop1
-    m12: Migration rate to pop1 from pop2
-    m13: Migration rate to pop1 from pop3
-    s1: vector of selection parameters for pop1
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy1: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, s1, dt, use_delj_trick, ploidy1)
-    return phi
-
-def implicit_3Dy(np.ndarray[double, ndim=3] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 double nu2, 
-                 double m21, 
-                 double m23, 
-                 np.ndarray[double, ndim=1] s2,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy2):
-    """
-    Implicit 3D integration function for y direction of 3D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu2: Population size for pop2
-    m21: Migration rate to pop2 from pop1
-    m23: Migration rate to pop2 from pop3
-    s2: vector of selection parameters for pop2
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, s2, dt, use_delj_trick, ploidy2)
-    return phi
-
-def implicit_3Dz(np.ndarray[double, ndim=3] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 double nu3, 
-                 double m31, 
-                 double m32, 
-                 np.ndarray[double, ndim=1] s3,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy3):
-    """
-    Implicit 3D integration function for z direction of 3D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu3: Population size for pop3
-    m31: Migration rate to pop3 from pop1
-    m32: Migration rate to pop3 from pop2
-    s3: vector of selection parameters for pop3
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy3: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, s3, dt, use_delj_trick, ploidy3)
-    return phi
-
-def implicit_precalc_3Dx(np.ndarray[double, ndim=3] phi, 
-                         np.ndarray[double, ndim=3] ax, 
-                         np.ndarray[double, ndim=3] bx, 
-                         np.ndarray[double, ndim=3] cx, 
-                         double dt):
-    """
-    Implicit 3D integration function for x direction of 3D diffusion equation.
-    Uses arrays pre-computed in Python for a, b, c.
-
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    ax : numpy array (float64)
-        a, b, c, arrays are for tridiagonal matrix solver
-    bx : numpy array (float64)
-    cx : numpy array (float64)
-    dt : Time step
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_precalc_3Dx(phi, ax, bx, cx, dt)
-    return phi
-
-def implicit_precalc_3Dy(np.ndarray[double, ndim=3] phi, 
-                         np.ndarray[double, ndim=3] ay, 
-                         np.ndarray[double, ndim=3] by, 
-                         np.ndarray[double, ndim=3] cy, 
-                         double dt):
-    """
-    Implicit 3D integration function for y direction of 3D diffusion equation.
-    Uses arrays pre-computed in Python for a, b, c.
-
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    ay : numpy array (float64)
-        a, b, c, arrays are for tridiagonal matrix solver
-    by : numpy array (float64)
-    cy : numpy array (float64)
-    dt : Time step
-
-    Returns:
-    --------
-    phi : modified phi after integration in y direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_precalc_3Dy(phi, ay, by, cy, dt)
-    return phi
-
-def implicit_precalc_3Dz(np.ndarray[double, ndim=3] phi, 
-                         np.ndarray[double, ndim=3] az, 
-                         np.ndarray[double, ndim=3] bz, 
-                         np.ndarray[double, ndim=3] cz, 
-                         double dt):
-    """
-    Implicit 3D integration function for z direction of 3D diffusion equation.
-    Uses arrays pre-computed in Python for a, b, c.
-
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    az : numpy array (float64)
-        a, b, c, arrays are for tridiagonal matrix solver
-    bz : numpy array (float64)
-    cz : numpy array (float64)
-    dt : Time step
-
-    Returns:
-    --------
-    phi : modified phi after integration in z direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_precalc_3Dz(phi, az, bz, cz, dt)
-    return phi
-
-def implicit_4Dx(np.ndarray[double, ndim=4] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 double nu1, 
-                 double m12, 
-                 double m13, 
-                 double m14,
-                 np.ndarray[double, ndim=1] s1,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy1):
-    """
-    Implicit 4D integration function for x direction of 4D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu1: Population size for pop1
-    m12: Migration rate to pop1 from pop2
-    m13: Migration rate to pop1 from pop3
-    m14: Migration rate to pop1 from pop4
-    s1: vector of selection parameters for pop1
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14, s1, dt, use_delj_trick, ploidy1)
-    return phi
-
-def implicit_4Dy(np.ndarray[double, ndim=4] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 double nu2, 
-                 double m21, 
-                 double m23, 
-                 double m24,
-                 np.ndarray[double, ndim=1] s2,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy2):
-    """
-    Implicit 4D integration function for y direction of 4D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu2: Population size for pop2
-    m21: Migration rate to pop2 from pop1
-    m23: Migration rate to pop2 from pop3
-    m24: Migration rate to pop2 from pop4
-    s2: vector of selection parameters for pop2
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in y direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24, s2, dt, use_delj_trick, ploidy2)
-    return phi
-
-def implicit_4Dz(np.ndarray[double, ndim=4] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 double nu3, 
-                 double m31, 
-                 double m32, 
-                 double m34,
-                 np.ndarray[double, ndim=1] s3,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy3):
-    """
-    Implicit 4D integration function for z direction of 4D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu3: Population size for pop3
-    m31: Migration rate to pop3 from pop1
-    m32: Migration rate to pop3 from pop2
-    m34: Migration rate to pop3 from pop4
-    s3: vector of selection parameters for pop3
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy3: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in z direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34, s3, dt, use_delj_trick, ploidy3)
-    return phi
-
-def implicit_4Da(np.ndarray[double, ndim=4] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 double nu4, 
-                 double m41, 
-                 double m42, 
-                 double m43,
-                 np.ndarray[double, ndim=1] s4,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy4):
-    """
-    Implicit 4D integration function for a direction of 4D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu4: Population size for pop4
-    m41: Migration rate to pop4 from pop1
-    m42: Migration rate to pop4 from pop2
-    m43: Migration rate to pop4 from pop3
-    s4: vector of selection parameters for pop4
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy4: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in a direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43, s4, dt, use_delj_trick, ploidy4)
-    return phi
-
-def implicit_5Dx(np.ndarray[double, ndim=5] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 np.ndarray[double, ndim=1] bb,
-                 double nu1, 
-                 double m12, 
-                 double m13, 
-                 double m14,
-                 double m15,
-                 np.ndarray[double, ndim=1] s1,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy1):
-    """
-    Implicit 5D integration function for x direction of 5D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa, bb: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu1: Population size for pop1
-    m12: Migration rate to pop1 from pop2
-    m13: Migration rate to pop1 from pop3
-    m14: Migration rate to pop1 from pop4
-    m15: Migration rate to pop1 from pop5
-    s1: vector of selection parameters for pop1
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in x direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15, s1, dt, use_delj_trick, ploidy1)
-    return phi
-
-def implicit_5Dy(np.ndarray[double, ndim=5] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 np.ndarray[double, ndim=1] bb,
-                 double nu2, 
-                 double m21, 
-                 double m23, 
-                 double m24,
-                 double m25,
-                 np.ndarray[double, ndim=1] s2,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy2):
-    """
-    Implicit 5D integration function for y direction of 5D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa, bb: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu2: Population size for pop2
-    m21: Migration rate to pop2 from pop1
-    m23: Migration rate to pop2 from pop3
-    m24: Migration rate to pop2 from pop4
-    m25: Migration rate to pop2 from pop5   
-    s2: vector of selection parameters for pop2
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in y direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_5Dy(phi, xx, yy, zz, aa, bb, nu2, m21, m23, m24, m25, s2, dt, use_delj_trick, ploidy2)
-    return phi
-
-def implicit_5Dz(np.ndarray[double, ndim=5] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 np.ndarray[double, ndim=1] bb,
-                 double nu3, 
-                 double m31, 
-                 double m32, 
-                 double m34,
-                 double m35,
-                 np.ndarray[double, ndim=1] s3,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy3):
-    """
-    Implicit 5D integration function for z direction of 5D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa, bb: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu3: Population size for pop3
-    m31: Migration rate to pop3 from pop1
-    m32: Migration rate to pop3 from pop2
-    m34: Migration rate to pop3 from pop4
-    m35: Migration rate to pop3 from pop5
-    s3: vector of selection parameters for pop3
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy3: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in z direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_5Dz(phi, xx, yy, zz, aa, bb, nu3, m31, m32, m34, m35, s3, dt, use_delj_trick, ploidy3)
-    return phi
-
-def implicit_5Da(np.ndarray[double, ndim=5] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 np.ndarray[double, ndim=1] bb,
-                 double nu4, 
-                 double m41, 
-                 double m42, 
-                 double m43,
-                 double m45,
-                 np.ndarray[double, ndim=1] s4,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy4):
-    """
-    Implicit 5D integration function for a direction of 5D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa, bb: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu4: Population size for pop4
-    m41: Migration rate to pop4 from pop1
-    m42: Migration rate to pop4 from pop2
-    m43: Migration rate to pop4 from pop3
-    m45: Migration rate to pop4 from pop5
-    s4: vector of selection parameters for pop4
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy4: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in a direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_5Da(phi, xx, yy, zz, aa, bb, nu4, m41, m42, m43, m45, s4, dt, use_delj_trick, ploidy4)
-    return phi
-
-def implicit_5Db(np.ndarray[double, ndim=5] phi, 
-                 np.ndarray[double, ndim=1] xx, 
-                 np.ndarray[double, ndim=1] yy, 
-                 np.ndarray[double, ndim=1] zz, 
-                 np.ndarray[double, ndim=1] aa,
-                 np.ndarray[double, ndim=1] bb,
-                 double nu5, 
-                 double m51, 
-                 double m52, 
-                 double m53,
-                 double m54,
-                 np.ndarray[double, ndim=1] s5,
-                 double dt, 
-                 int use_delj_trick,  
-                 np.ndarray[int, ndim=1] ploidy5):
-    """
-    Implicit 5D integration function for b direction of 5D diffusion equation.
-    
-    Parameters:
-    -----------
-    phi : numpy array (float64)
-        Population frequency array (modified in-place)
-    xx, yy, zz, aa, bb: numpy arrays (float64)
-        discrete numerical grids for spatial dimensions
-    nu5: Population size for pop5
-    m51: Migration rate to pop5 from pop1
-    m52: Migration rate to pop5 from pop2
-    m53: Migration rate to pop5 from pop3
-    m54: Migration rate to pop5 from pop4
-    s5: vector of selection parameters for pop5
-    dt: Time step
-    use_delj_trick: Whether to use delj trick (0 or 1)
-    ploidy5: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
-
-    Returns:
-    --------
-    phi : modified phi after integration in a direction
-    """
-    # Call the cdef function with memory views
-    c_implicit_5Db(phi, xx, yy, zz, aa, bb, nu5, m51, m52, m53, m54, s5, dt, use_delj_trick, ploidy5)
-    return phi
+    return np.asarray(phi)

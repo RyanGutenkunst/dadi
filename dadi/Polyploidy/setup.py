@@ -1,10 +1,5 @@
 from setuptools import setup, Extension
 from Cython.Build import cythonize
-import numpy
-import os
-
-# Get numpy include directory - allows override via environment variable
-numpy_include = os.environ.get('NUMPY_INCLUDE', numpy.get_include())
 
 extensions = [
     Extension(
@@ -16,7 +11,6 @@ extensions = [
             "../tridiag.c"                  # Parent directory
         ],
         include_dirs=[
-            numpy_include,               # NumPy headers (flexible path)
             ".",                        # Current directory (Polyploids/)
             "..",                       # Parent directory (dadi/)
         ],
