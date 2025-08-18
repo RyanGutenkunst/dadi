@@ -1515,6 +1515,110 @@ def _Mfunc3D_autohex(x, y, z, mxy, mxz, g1, g2, g3, g4, g5, g6):
                (30*g1 - 30*g2 + 10*g3)) * x +
                (-10*g1 + 5*g2)) * x + g1
     return mxy * (y-x) + mxz * (z-x) + x * (1 - x) * 2 * poly
+# 4+2 hexaploids
+def _Mfunc2D_hex_tetra(x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_4, y is x_2 where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+    # z is a separate population
+    xy = x*y # qa*qb
+    xx = x*x # qa^2
+    xxx = xx*x # qa^3
+    yy = y*y # qb^2
+    xyy = xy*y # qa*qb^2
+    xxy = xx*y # qa^2*qb
+    xxxy = xxx*y # qa^3*qb
+    xxyy = xxy*y # qa^2*qb^2
+    xxxyy = xxxy*y # qa^3*qb^2
+    poly = g10 + (-6*g10 + 3*g20) * x + \
+                  (-2*g01 - 2*g10 + 2*g11) * y + \
+                  (9*g10 -9*g20 + 3*g30) * xx + \
+                  (-4*g10 + 6*g20 - 4*g30 + g40) * xxx + \
+                  (2*g01 - g02 + g10 - 2*g11 + g12) * yy + \
+                  (-6*g01 + 3*g02 - 6*g10 + 12*g11 - 6*g12 + 3*g20 - 6*g21 + 3*g22) * xyy + \
+                  (-6*g01 - 18*g10 + 18*g11 + 18*g20 -18*g21 -6*g30 +6*g31) * xxy + \
+                  (2*g01 + 8*g10 - 8*g11 - 12*g20 + 12*g21 + 8*g30 - 8*g31 - 2*g40 + 2*g41) * xxxy + \
+                  (6*g01 - 3*g02 + 9*g10 - 18*g11 + 9*g12 - 9*g20 + 18*g21 - 9*g22 + 3*g30 - 6*g31 + 3*g32) * xxyy + \
+                  (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xxxyy + \
+                  (6*g01 + 12*g10 - 12*g11 - 6*g20 + 6*g21) * xy
+    # note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
+    return exy * (y-x) / 2 + x * (1 - x) * 2 * poly
+
+def _Mfunc2D_hex_dip( x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_2, y is x_4 
+    # where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+
+    xy = x*y # qa*qb
+    yy = y*y # qa^2
+    yyy = yy*y # qa^3
+    yyyy = yyy*y # qa^4
+    xyy = xy*y # qa^2*qb
+    xyyy = xyy*y # qa^3*qb
+    xyyyy = xyyy*y # qa^4*qb
+    poly = g01 + (-4.*g01 - 4.*g10 + 4.*g11) * y + \
+                  (-2.*g01 + g02) * x + \
+                  (6.*g01 + 12.*g10 - 12.*g11 -6.*g20 + 6.*g21) * yy + \
+                  (-4.*g01 -12.*g10 + 12.*g11 + 12.*g20 - 12.*g21 - 4.*g30 + 4.*g31) * yyy + \
+                  (g01 + 4.*g10 - 4.*g11 - 6.*g20 + 6.*g21 + 4.*g30 - 4.*g31 - g40 + g41) * yyyy + \
+                  (-12.*g01 + 6.*g02 - 12.*g10 + 24.*g11 - 12.*g12 + 6.*g20 - 12.*g21 + 6.*g22) * xyy + \
+                  (8.*g01 - 4.*g02 + 12.*g10 - 24.*g11 + 12.*g12 - 12.*g20 + 24.*g21 - 12.*g22 + 4.*g30 - 8.*g31 + 4.*g32) * xyyy + \
+                  (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xyyyy + \
+                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12) * xy
+    return exy * (y-x) + x * (1. - x) * 2. * poly       
+
+def _Mfunc3D_hex_tetra(x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_4, y is x_2 where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+    # z is a separate population
+    xy = x*y # qa*qb
+    xx = x*x # qa^2
+    xxx = xx*x # qa^3
+    yy = y*y # qb^2
+    xyy = xy*y # qa*qb^2
+    xxy = xx*y # qa^2*qb
+    xxxy = xxx*y # qa^3*qb
+    xxyy = xxy*y # qa^2*qb^2
+    xxxyy = xxxy*y # qa^3*qb^2
+    poly = g10 + (-6*g10 + 3*g20) * x + \
+                  (-2*g01 - 2*g10 + 2*g11) * y + \
+                  (9*g10 -9*g20 + 3*g30) * xx + \
+                  (-4*g10 + 6*g20 - 4*g30 + g40) * xxx + \
+                  (2*g01 - g02 + g10 - 2*g11 + g12) * yy + \
+                  (-6*g01 + 3*g02 - 6*g10 + 12*g11 - 6*g12 + 3*g20 - 6*g21 + 3*g22) * xyy + \
+                  (-6*g01 - 18*g10 + 18*g11 + 18*g20 -18*g21 -6*g30 +6*g31) * xxy + \
+                  (2*g01 + 8*g10 - 8*g11 - 12*g20 + 12*g21 + 8*g30 - 8*g31 - 2*g40 + 2*g41) * xxxy + \
+                  (6*g01 - 3*g02 + 9*g10 - 18*g11 + 9*g12 - 9*g20 + 18*g21 - 9*g22 + 3*g30 - 6*g31 + 3*g32) * xxyy + \
+                  (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xxxyy + \
+                  (6*g01 + 12*g10 - 12*g11 - 6*g20 + 6*g21) * xy
+    # note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
+    return exy * (y-x) / 2 + mxz * (z-x) + x * (1 - x) * 2 * poly
+
+def _Mfunc3D_hex_dip( x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_2, y is x_4 
+    # where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+
+    xy = x*y # qa*qb
+    yy = y*y # qa^2
+    yyy = yy*y # qa^3
+    yyyy = yyy*y # qa^4
+    xyy = xy*y # qa^2*qb
+    xyyy = xyy*y # qa^3*qb
+    xyyyy = xyyy*y # qa^4*qb
+    poly = g01 + (-4.*g01 - 4.*g10 + 4.*g11) * y + \
+                  (-2.*g01 + g02) * x + \
+                  (6.*g01 + 12.*g10 - 12.*g11 -6.*g20 + 6.*g21) * yy + \
+                  (-4.*g01 -12.*g10 + 12.*g11 + 12.*g20 - 12.*g21 - 4.*g30 + 4.*g31) * yyy + \
+                  (g01 + 4.*g10 - 4.*g11 - 6.*g20 + 6.*g21 + 4.*g30 - 4.*g31 - g40 + g41) * yyyy + \
+                  (-12.*g01 + 6.*g02 - 12.*g10 + 24.*g11 - 12.*g12 + 6.*g20 - 12.*g21 + 6.*g22) * xyy + \
+                  (8.*g01 - 4.*g02 + 12.*g10 - 24.*g11 + 12.*g12 - 12.*g20 + 24.*g21 - 12.*g22 + 4.*g30 - 8.*g31 + 4.*g32) * xyyy + \
+                  (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xyyyy + \
+                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12) * xy
+    return exy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly  
 
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):

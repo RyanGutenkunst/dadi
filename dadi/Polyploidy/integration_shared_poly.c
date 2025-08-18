@@ -290,7 +290,7 @@ double Mfunc2D_hex_tetra(double x, double y, double exy, double g01, double g02,
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xxxyy +
                   (6.*g01 + 12.*g10 - 12.*g11 - 6.*g20 + 6.*g21) * xy;
     // note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
-    return exy * (x-y) / 2. + x * (1. - x) * 2. * poly;
+    return exy * (y-x) / 2. + x * (1. - x) * 2. * poly;
 }   
 
 double Mfunc2D_hex_dip(double x, double y, double exy, double g01, double g02, 
@@ -317,8 +317,8 @@ double Mfunc2D_hex_dip(double x, double y, double exy, double g01, double g02,
                   (-12.*g01 + 6.*g02 - 12.*g10 + 24.*g11 - 12.*g12 + 6.*g20 - 12.*g21 + 6.*g22) * xyy + 
                   (8.*g01 - 4.*g02 + 12.*g10 - 24.*g11 + 12.*g12 - 12.*g20 + 24.*g21 - 12.*g22 + 4.*g30 - 8.*g31 + 4.*g32) * xyyy + 
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xyyyy + 
-                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12);
-    return exy * (x-y) + x * (1. - x) * 2. * poly;
+                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12) * xy;
+    return exy * (y-x) + x * (1. - x) * 2. * poly;
 }         
 
 double Mfunc3D_hex_tetra(double x, double y, double z, double exy, double mxz, double g01, double g02, 
@@ -351,7 +351,7 @@ double Mfunc3D_hex_tetra(double x, double y, double z, double exy, double mxz, d
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xxxyy +
                   (6.*g01 + 12.*g10 - 12.*g11 - 6.*g20 + 6.*g21) * xy;
     // note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
-    return exy * (x-y) / 2. + mxz * (z-x) + x * (1. - x) * 2. * poly;
+    return exy * (y-x) / 2. + mxz * (z-x) + x * (1. - x) * 2. * poly;
 }   
 
 double Mfunc3D_hex_dip(double x, double y, double z, double exy, double mxz, double g01, double g02, 
@@ -378,8 +378,8 @@ double Mfunc3D_hex_dip(double x, double y, double z, double exy, double mxz, dou
                   (-12.*g01 + 6.*g02 - 12.*g10 + 24.*g11 - 12.*g12 + 6.*g20 - 12.*g21 + 6.*g22) * xyy + 
                   (8.*g01 - 4.*g02 + 12.*g10 - 24.*g11 + 12.*g12 - 12.*g20 + 24.*g21 - 12.*g22 + 4.*g30 - 8.*g31 + 4.*g32) * xyyy + 
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xyyyy + 
-                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12);
-    return exy * (x-y) + mxz * (z-x) + x * (1. - x) * 2. * poly;
+                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12) * xy;
+    return exy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly;
 }         
 
 double Mfunc4D_hex_tetra(double x, double y, double z, double a, double exy, double mxz, double mxa, 
@@ -412,7 +412,7 @@ double Mfunc4D_hex_tetra(double x, double y, double z, double a, double exy, dou
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xxxyy +
                   (6.*g01 + 12.*g10 - 12.*g11 - 6.*g20 + 6.*g21) * xy;
     // note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
-    return exy * (x-y) / 2. + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
+    return exy * (y-x) / 2. + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
 }
 
 double Mfunc4D_hex_dip(double x, double y, double z, double a, double exy, double mxz, double mxa,
@@ -439,8 +439,8 @@ double Mfunc4D_hex_dip(double x, double y, double z, double a, double exy, doubl
                   (-12.*g01 + 6.*g02 - 12.*g10 + 24.*g11 - 12.*g12 + 6.*g20 - 12.*g21 + 6.*g22) * xyy + 
                   (8.*g01 - 4.*g02 + 12.*g10 - 24.*g11 + 12.*g12 - 12.*g20 + 24.*g21 - 12.*g22 + 4.*g30 - 8.*g31 + 4.*g32) * xyyy + 
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xyyyy + 
-                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12);
-    return exy * (x-y) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
+                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12) * xy;
+    return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + x * (1. - x) * 2. * poly;
 }         
 
 double Mfunc5D_hex_tetra(double x, double y, double z, double a, double b, double exy, double mxz, double mxa, double mxb,
@@ -473,7 +473,7 @@ double Mfunc5D_hex_tetra(double x, double y, double z, double a, double b, doubl
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xxxyy +
                   (6.*g01 + 12.*g10 - 12.*g11 - 6.*g20 + 6.*g21) * xy;
     // note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
-    return exy * (x-y) / 2. + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
+    return exy * (y-x) / 2. + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
 }
 
 double Mfunc5D_hex_dip(double x, double y, double z, double a, double b, double exy, double mxz, double mxa, double mxb,
@@ -500,6 +500,6 @@ double Mfunc5D_hex_dip(double x, double y, double z, double a, double b, double 
                   (-12.*g01 + 6.*g02 - 12.*g10 + 24.*g11 - 12.*g12 + 6.*g20 - 12.*g21 + 6.*g22) * xyy + 
                   (8.*g01 - 4.*g02 + 12.*g10 - 24.*g11 + 12.*g12 - 12.*g20 + 24.*g21 - 12.*g22 + 4.*g30 - 8.*g31 + 4.*g32) * xyyy + 
                   (-2.*g01 + g02 - 4.*g10 + 8.*g11 - 4.*g12 + 6.*g20 - 12.*g21 + 6.*g22 - 4.*g30 + 8.*g31 - 4.*g32 + g40 - 2.*g41 + g42) * xyyyy + 
-                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12);
-    return exy * (x-y) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
+                  (8.*g01 - 4.*g02 + 4.*g10 - 8.*g11 + 4.*g12) * xy;
+    return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + mxb * (b-x) + x * (1. - x) * 2. * poly;
 }  
