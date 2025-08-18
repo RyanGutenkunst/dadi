@@ -12,7 +12,7 @@ plugins:
   - search
   - mkdocs-autoapi:
       # autoapi_dir: dadi
-      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py]
+      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py, dadi/*.c, dadi/*.h, dadi/*.pyx, dadi/cuda/*]
       autoapi_file_patterns:
         - "dadi/*.py"
         - "dadi/*/*.py"
