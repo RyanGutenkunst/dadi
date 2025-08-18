@@ -808,47 +808,51 @@ def autohex_allelic_WF(N, T, init_q, s, nu = 1, replicates = 1):
     
     return allele_freqs
 
-def hex_tetra_selection(q4, q2, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
-    xy = q4*q2 # q4*q2
-    xx = q4*q4 # q4^2
-    xxx = xx*q4 # q4^3
-    yy = q2*q2 # q2^2
-    xyy = xy*q2 # q4*q2^2
-    xxy = xx*q2 # q4^2*q2
-    xxxy = xxx*q2 # q4^3*q2
-    xxyy = xxy*q2 # q4^2*q2^2
-    xxxyy = xxxy*q2 # q4^3*q2^2
-    poly = s10 + (-6*s10 + 3*s20) * q4 + \
-                  (-2*s01 - 2*s10 + 2*s11) * q2 + \
-                  (9*s10 -9*s20 + 3*s30) * xx + \
-                  (-4*s10 + 6*s20 - 4*s30 + s40) * xxx + \
-                  (2*s01 - s02 + s10 - 2*s11 + s12) * yy + \
-                  (-6*s01 + 3*s02 - 6*s10 + 12*s11 - 6*s12 + 3*s20 - 6*s21 + 3*s22) * xyy + \
-                  (-6*s01 - 18*s10 + 18*s11 + 18*s20 -18*s21 -6*s30 +6*s31) * xxy + \
-                  (2*s01 + 8*s10 - 8*s11 - 12*s20 + 12*s21 + 8*s30 - 8*s31 - 2*s40 + 2*s41) * xxxy + \
-                  (6*s01 - 3*s02 + 9*s10 - 18*s11 + 9*s12 - 9*s20 + 18*s21 - 9*s22 + 3*s30 - 6*s31 + 3*s32) * xxyy + \
-                  (-2*s01 + s02 - 4*s10 + 8*s11 - 4*s12 + 6*s20 - 12*s21 + 6*s22 - 4*s30 + 8*s31 - 4*s32 + s40 - 2*s41 + s42) * xxxyy + \
-                  (6*s01 + 12*s10 - 12*s11 - 6*s20 + 6*s21) * xy
-    return q4 * (1 - q4) * 2 * poly
+def hex_tetra_selection(qa, qb, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
+    """
+    Evaluates new values of q for the tetraploid subgenome 
+    after one generation of selection for alloautohexaploids.
+    qa and qb refer to the tetraploid and diploid subgenome, respectively.
+    """
+    q4_post_sel = (qa**4*qb**2*(2*s42 + 1) + qa**4*(2*s40 + 1)*(qb - 1)**2 
+                  - qa*qb**2*(2*s12 + 1)*(qa - 1)**3 - 3*qa**3*qb**2*(2*s32 + 1)*(qa - 1) 
+                  - qa*(2*s10 + 1)*(qa - 1)**3*(qb - 1)**2 - 3*qa**3*(2*s30 + 1)*(qa - 1)*(qb - 1)**2 
+                  + 3*qa**2*qb**2*(2*s22 + 1)*(qa - 1)**2 - 2*qa**4*qb*(2*s41 + 1)*(qb - 1) 
+                  + 3*qa**2*(2*s20 + 1)*(qa - 1)**2*(qb - 1)**2 
+                  + 2*qa*qb*(2*s11 + 1)*(qa - 1)**3*(qb - 1) 
+                  + 6*qa**3*qb*(2*s31 + 1)*(qa - 1)*(qb - 1) 
+                  - 6*qa**2*qb*(2*s21 + 1)*(qa - 1)**2*(qb - 1))/(
+                      (qa - 1)**4*(qb - 1)**2 + qa**4*qb**2*(2*s42 + 1) 
+                      + qb**2*(2*s02 + 1)*(qa - 1)**4 + qa**4*(2*s40 + 1)*(qb - 1)**2 
+                      - 4*qa*qb**2*(2*s12 + 1)*(qa - 1)**3 - 4*qa**3*qb**2*(2*s32 + 1)*(qa - 1) 
+                      - 2*qb*(2*s01 + 1)*(qa - 1)**4*(qb - 1) - 4*qa*(2*s10 + 1)*(qa - 1)**3*(qb - 1)**2 
+                      - 4*qa**3*(2*s30 + 1)*(qa - 1)*(qb - 1)**2 + 6*qa**2*qb**2*(2*s22 + 1)*(qa - 1)**2 
+                      - 2*qa**4*qb*(2*s41 + 1)*(qb - 1) + 6*qa**2*(2*s20 + 1)*(qa - 1)**2*(qb - 1)**2 
+                      + 8*qa*qb*(2*s11 + 1)*(qa - 1)**3*(qb - 1) + 8*qa**3*qb*(2*s31 + 1)*(qa - 1)*(qb - 1) 
+                      - 12*qa**2*qb*(2*s21 + 1)*(qa - 1)**2*(qb - 1))
+    
+    return q4_post_sel
 
-def hex_dip_selection(q4, q2, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
-    xy = q2*q4 # q4*q2
-    yy = q4*q4# q4^2
-    yyy = yy*q4 # q4^3
-    yyyy = yyy*q4 # q4^4
-    xyy = xy*q4 # q4^2*q2
-    xyyy = xyy*q4 # q4^3*q2
-    xyyyy = xyyy*q4 # q4^4*q2
-    poly = s01 + (-4*s01 - 4*s10 + 4*s11) * q4 + \
-                  (-2*s01 + s02) * q2 + \
-                  (6*s01 + 12*s10 - 12*s11 -6*s20 + 6*s21) * yy + \
-                  (-4*s01 -12*s10 + 12*s11 + 12*s20 - 12*s21 - 4*s30 + 4*s31) * yyy + \
-                  (s01 + 4*s10 - 4*s11 - 6*s20 + 6*s21 + 4*s30 - 4*s31 - s40 + s41) * yyyy + \
-                  (-12*s01 + 6*s02 - 12*s10 + 24*s11 - 12*s12 + 6*s20 - 12*s21 + 6*s22) * xyy + \
-                  (8*s01 - 4*s02 + 12*s10 - 24*s11 + 12*s12 - 12*s20 + 24*s21 - 12*s22 + 4*s30 - 8*s31 + 4*s32) * xyyy + \
-                  (-2*s01 + s02 - 4*s10 + 8*s11 - 4*s12 + 6*s20 - 12*s21 + 6*s22 - 4*s30 + 8*s31 - 4*s32 + s40 - 2*s41 + s42) * xyyyy + \
-                  (8*s01 - 4*s02 + 4*s10 - 8*s11 + 4*s12) * xy
-    return q2 * (1 - q2) * 2 * poly  
+def hex_dip_selection(qa, qb, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
+    """
+    Evaluates new values of q for the diploid subgenome 
+    after one generation of selection for alloautohexaploids.
+    qa and qb refer to the tetraploid and diploid subgenome, respectively.
+    """
+    q2_post_sel = (qa**4*qb**2*(2*s42 + 1) + qb**2*(2*s02 + 1)*(qa - 1)**4 
+                   - 4*qa*qb**2*(2*s12 + 1)*(qa - 1)**3 - 4*qa**3*qb**2*(2*s32 + 1)*(qa - 1) 
+                   - qb*(2*s01 + 1)*(qa - 1)**4*(qb - 1) + 6*qa**2*qb**2*(2*s22 + 1)*(qa - 1)**2 
+                   - qa**4*qb*(2*s41 + 1)*(qb - 1) + 4*qa*qb*(2*s11 + 1)*(qa - 1)**3*(qb - 1) 
+                   + 4*qa**3*qb*(2*s31 + 1)*(qa - 1)*(qb - 1) - 6*qa**2*qb*(2*s21 + 1)*(qa - 1)**2*(qb - 1))/(
+                       (qa - 1)**4*(qb - 1)**2 + qa**4*qb**2*(2*s42 + 1) + qb**2*(2*s02 + 1)*(qa - 1)**4 
+                       + qa**4*(2*s40 + 1)*(qb - 1)**2 - 4*qa*qb**2*(2*s12 + 1)*(qa - 1)**3 
+                       - 4*qa**3*qb**2*(2*s32 + 1)*(qa - 1) - 2*qb*(2*s01 + 1)*(qa - 1)**4*(qb - 1)
+                       - 4*qa*(2*s10 + 1)*(qa - 1)**3*(qb - 1)**2 - 4*qa**3*(2*s30 + 1)*(qa - 1)*(qb - 1)**2 
+                       + 6*qa**2*qb**2*(2*s22 + 1)*(qa - 1)**2 - 2*qa**4*qb*(2*s41 + 1)*(qb - 1) 
+                       + 6*qa**2*(2*s20 + 1)*(qa - 1)**2*(qb - 1)**2 + 8*qa*qb*(2*s11 + 1)*(qa - 1)**3*(qb - 1) 
+                       + 8*qa**3*qb*(2*s31 + 1)*(qa - 1)*(qb - 1) - 12*qa**2*qb*(2*s21 + 1)*(qa - 1)**2*(qb - 1))
+ 
+    return q2_post_sel
 
 def hex_4_2_WF(N, T, E, init_q4, init_q2, s, nu=1, replicates=1):
     """
@@ -941,8 +945,8 @@ def hex_4_2_WF(N, T, E, init_q4, init_q2, s, nu=1, replicates=1):
         q4_next += e*(allele_freqs[1, :] - allele_freqs[0, :])/2 # the /2 corrects for the difference in ploidy between subgenomes
         q2_next += e*(allele_freqs[0, :] - allele_freqs[1, :])
 
-        allele_freqs[0, :] = rng.binomial(samples_4, q4_next[0, :])/(samples_4)
-        allele_freqs[1, :] = rng.binomial(samples_2, q2_next[1, :])/(samples_2)
+        allele_freqs[0, :] = rng.binomial(samples_4, q4_next)/(samples_4)
+        allele_freqs[1, :] = rng.binomial(samples_2, q2_next)/(samples_2)
         
     return allele_freqs
 
