@@ -593,6 +593,56 @@ class PloidyType(IntEnum):
                                  '1. 1 key: gamma \n' 
                                  '2. 6 keys: gamma, h1, h2, h3, h4, h5 \n'
                                  '3. 6 keys: gamma1, gamma2, gamma3, gamma4, gamma5, gamma6.')
+        
+        elif self == PloidyType.HEX_tetra or self == PloidyType.HEX_dip:
+            keys_dominance = ['h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'h22',
+                               'h30', 'h31', 'h32', 'h40', 'h41', 'h42']
+            keys_gammas = ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 'gamma20', 'gamma21', 'gamma22',
+                           'gamma30', 'gamma31', 'gamma32', 'gamma40', 'gamma41', 'gamma42']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma / 6 # gamma01
+                sel_params[1] = base_gamma / 3 # gamma02
+                sel_params[2] = base_gamma / 6 # gamma10
+                sel_params[3] = base_gamma / 3 # gamma11
+                sel_params[4] = base_gamma / 2 # gamma12
+                sel_params[5] = base_gamma / 3 # gamma20
+                sel_params[6] = base_gamma / 2 # gamma21
+                sel_params[7] = 2 * base_gamma / 3 # gamma22
+                sel_params[8] = base_gamma / 2 # gamma30
+                sel_params[9] = 2 * base_gamma / 3 # gamma31
+                sel_params[10] = 5 * base_gamma / 6 # gamma32
+                sel_params[11] = 2 * base_gamma / 3 # gamma40
+                sel_params[12] = 5 * base_gamma / 6 # gamma41
+                sel_params[13] = base_gamma # gamma42
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 14:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = base_gamma * sel_dict['h01'] # gamma01
+                sel_params[1] = base_gamma * sel_dict['h02'] # gamma02
+                sel_params[2] = base_gamma * sel_dict['h10'] # gamma10
+                sel_params[3] = base_gamma * sel_dict['h11'] # gamma11
+                sel_params[4] = base_gamma * sel_dict['h12'] # gamma12
+                sel_params[5] = base_gamma * sel_dict['h20'] # gamma20
+                sel_params[6] = base_gamma * sel_dict['h21'] # gamma21
+                sel_params[7] = base_gamma * sel_dict['h22'] # gamma22
+                sel_params[8] = base_gamma * sel_dict['h30'] # gamma30
+                sel_params[9] = base_gamma * sel_dict['h31'] # gamma31
+                sel_params[10] = base_gamma * sel_dict['h32'] # gamma32
+                sel_params[11] = base_gamma * sel_dict['h40'] # gamma40
+                sel_params[12] = base_gamma * sel_dict['h41'] # gamma41
+                sel_params[13] = base_gamma * sel_dict['h42'] # gamma42
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 14:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For a HEX (4+2) ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 14 keys: gamma, h01, h02, h10, h11, h12, h20, h21, h22, h30, h31, h32, h40, h41, h42 \n' 
+                                 '3. 14 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22, \n ' \
+                                 '            gamma30, gamma31, gamma32, gamma40, gamma41, gamma42.')
+        
         return sel_params
 
 ### ==========================================================================
@@ -751,9 +801,15 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
     # check that at least one of the populations is an allo subgenome,
     # but the pair has not been specified as allo subgenomes of different types
     if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
-        raise ValueError('Either population 2 and 3 is specified as an allotetraploid subgenome. \n' 
+        raise ValueError('Either population 1 and 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
+
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
+        raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(10, numpy.intc)
@@ -787,17 +843,16 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
     m21_f = Misc.ensure_1arg_func(m21)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):
         if m12_f(T/2) != m21_f(T/2):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) != nu2_f(T/2):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but do not have the same population size. \n'
-                             'Allotetraploid subgenomes must have the same population size. \n')
+            raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size. \n')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
-
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
     # TODO: CUDA integration
     ### Ryan will need to implement this? 
@@ -913,6 +968,16 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         raise ValueError('Population 1 is an allotetraploid subgenome. \n'  
                          'To model allotetraploids in a 3D model, only the last two populations can be specified as an allotetraploid subgenome.')
 
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag2, ploidyflag3} & hex_4_2_types) and ({ploidyflag2, ploidyflag3} != hex_4_2_types):
+        raise ValueError('Either population 2 and 3 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+
+    if ploidyflag1 in hex_4_2_types:
+        raise ValueError('Population 1 is a HEX (4+2) subgenome. \n'  
+                         'To model hexaploids in a 3D model, only the last two populations can be specified as a HEX (4+2) subgenome.')
+
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(10, numpy.intc)
     ploidy2 = numpy.zeros(10, numpy.intc)
@@ -949,16 +1014,16 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     sel1_f, sel2_f, sel3_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2), MiscPoly.ensure_1arg_func_vectorized(sel3)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types):
+    if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types) or (ploidyflag2 in hex_4_2_types) or (ploidyflag3 in hex_4_2_types):
         if m23_f(T/2) != m32_f(T/2):
-            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+            raise ValueError('Population 2 or 3 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu2_f(T/2) != nu3_f(T/2):
-            raise ValueError('Population 2 or 3 is an allotetraploid subgenome, but do not have the same population size. \n'
-                             'Allotetraploid subgenomes must have the same population size.')
+            raise ValueError('Population 2 or 3 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel2_f(T/2) != sel3_f(T/2)):
-            raise ValueError('Population 2 or 3 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+            raise ValueError('Population 2 or 3 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
 
     # TODO: CUDA integration
@@ -1075,7 +1140,6 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     # to do so, we have to enforce that the first two populations form a pair of subgenomes AND 
     # that the last two populations form a pair of subgenomes
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
-    
     if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
         raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
@@ -1085,6 +1149,17 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
         raise ValueError('Either population 3 or 4 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
+        raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    if ({ploidyflag3, ploidyflag4} & hex_4_2_types) and ({ploidyflag3, ploidyflag4} != hex_4_2_types):
+        raise ValueError('Either population 3 and 4 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    
     aa = zz = yy = xx
 
     # create ploidy vectors with C integers
@@ -1114,27 +1189,27 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     sel1_f, sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2)
     sel3_f, sel4_f = MiscPoly.ensure_1arg_func_vectorized(sel3), MiscPoly.ensure_1arg_func_vectorized(sel4)
 
-    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):  
         if m12_f(T/2) != m21_f(T/2):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) != nu2_f(T/2):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but do not have the same population size. \n'
-                             'Allotetraploid subgenomes must have the same population size.')
+            raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
             raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
 
-    if (ploidyflag3 in allo_types) or (ploidyflag4 in allo_types):
+    if (ploidyflag3 in allo_types) or (ploidyflag4 in allo_types) or (ploidyflag3 in hex_4_2_types) or (ploidyflag4 in hex_4_2_types):
         if m34_f(T/2) != m43_f(T/2):
-            raise ValueError('Population 3 or 4 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+            raise ValueError('Population 3 or 4 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu3_f(T/2) != nu4_f(T/2):
-            raise ValueError('Population 3 or 4 is an allotetraploid subgenome, but do not have the same population size. \n'
-                             'Allotetraploid subgenomes must have the same population size.')
+            raise ValueError('Population 3 or 4 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel3_f(T/2) != sel4_f(T/2)):
-            raise ValueError('Population 3 or 4 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+            raise ValueError('Population 3 or 4 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
 
     # TODO: CUDA integration
@@ -1261,7 +1336,6 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     # that the last two populations form a pair of subgenomes
     # this also means that the middle population cannot be allotetraploid
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
-    
     if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
         raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
@@ -1276,7 +1350,21 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         raise ValueError('Population 3 is an allotetraploid subgenome. \n'  
                          'To model allotetraploids in a 5D model, only the first two or last two populations can be specified as allotetraploid.')
 
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
+        raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
     
+    if ({ploidyflag4, ploidyflag5} & hex_4_2_types) and ({ploidyflag4, ploidyflag5} != hex_4_2_types):
+        raise ValueError('Either population 4 and 5 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    
+    if ploidyflag3 in hex_4_2_types:
+        raise ValueError('Population 3 is a HEX (4+2) subgenome. \n'  
+                         'To model hexaploids in a 5D model, only the first two or last two populations can be specified as a HEX (4+2) subgenome.')
+
     bb = aa = zz = yy = xx
 
     # create ploidy vectors with C integers
@@ -1312,27 +1400,27 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     sel3_f, sel4_f = MiscPoly.ensure_1arg_func_vectorized(sel3), MiscPoly.ensure_1arg_func_vectorized(sel4)
     sel5_f = MiscPoly.ensure_1arg_func_vectorized(sel5)
 
-    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types):
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):
         if m12_f(T/2) != m21_f(T/2):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) != nu2_f(T/2):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome, but do not have the same population size. \n'
-                             'Allotetraploid subgenomes must have the same population size.')
+            raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
-    if (ploidyflag4 in allo_types) or (ploidyflag5 in allo_types):
+    if (ploidyflag4 in allo_types) or (ploidyflag5 in allo_types) or (ploidyflag4 in hex_4_2_types) or (ploidyflag5 in hex_4_2_types):
         if m45_f(T/2) != m54_f(T/2):
-            raise ValueError('Population 4 or 5 is an allotetraploid subgenome. Both subgenomes must have the same migration rate. \n' 
+            raise ValueError('Population 4 or 5 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu4_f(T/2) != nu5_f(T/2):
-            raise ValueError('Population 4 or 5 is an allotetraploid subgenome, but do not have the same population size. \n'
-                             'Allotetraploid subgenomes must have the same population size.')
+            raise ValueError('Population 4 or 5 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel4_f(T/2) != sel5_f(T/2)):
-            raise ValueError('Population 4 or 5 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+            raise ValueError('Population 4 or 5 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
 
     # TODO: CUDA integration
@@ -1778,6 +1866,21 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         MxInt = _Mfunc2D_autohex((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 1/6
+    elif ploidy1[5]: # if hexaploid, tetraploid subgenome
+        Vx = _Vfunc_tetra(xx, nu1)
+        VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_hex_tetra(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        MxInt = _Mfunc2D_hex_tetra((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.25
+    elif ploidy2[6]: # if hexaploid, diploid subgenome
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_hex_dip(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        MxInt = _Mfunc2D_hex_dip((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5
+        
     # The nuax's here broadcast the our various arrays to have the proper shape
     # to fit into ax,bx,cx
     ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
@@ -1830,6 +1933,21 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         MyInt = _Mfunc2D_autohex((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 1/6
+    elif ploidy2[5]:
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_hex_tetra(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc2D_hex_tetra((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25 
+    elif ploidy2[6]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_hex_dip(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc2D_hex_dip((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5 
+       
     # The nuax's here broadcast the our various arrays to have the proper shape
     # to fit into ax,bx,cx
     ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
@@ -1885,7 +2003,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     dx = numpy.diff(xx)
     dfact_x = _compute_dfactor(dx)
 
-    # note: we don't support alloa and allob as being the first dimension of the phi array in 3D
+    # note: we don't support alloa, allob, hex_tetra, or hex_dip as
+    #       being the first dimension of the phi array in 3D
 
     if ploidy1[0]:
         Vx = _Vfunc(xx, nu1)
@@ -1986,6 +2105,26 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                          zz[nuax,nuax,:], m21, m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 1/6
+    elif ploidy2[5]:
+        # see note above about the order of the params passed to _Mfuncs here
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_hex_tetra(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc3D_hex_tetra((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25
+    elif ploidy2[6]:
+        # see note above about the order of the params passed to _Mfuncs here
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_hex_dip(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc3D_hex_dip((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
   
     ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
     ay[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*deljy     
@@ -2052,6 +2191,26 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                         yy[nuax,:,nuax], m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 1/6
+    elif ploidy3[5]:  
+        # see note above about the order of the params passed to _Mfuncs here
+        Vz = _Vfunc_tetra(zz, nu3)
+        VzInt = _Vfunc_tetra((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_hex_tetra(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        MzInt = _Mfunc3D_hex_tetra((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.25
+    elif ploidy3[6]:  
+        # see note above about the order of the params passed to _Mfuncs here
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_hex_dip(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        MzInt = _Mfunc3D_hex_dip((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
 
     az, bz, cz = [numpy.zeros(phi.shape) for ii in range(3)]
     az[:,:, 1:] += dfact_z[ 1:]*(-MzInt*deljz     - Vz[nuax,nuax,:-1]/(2*dz))
