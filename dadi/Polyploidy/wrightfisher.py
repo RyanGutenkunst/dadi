@@ -808,6 +808,144 @@ def autohex_allelic_WF(N, T, init_q, s, nu = 1, replicates = 1):
     
     return allele_freqs
 
+def hex_tetra_selection(q4, q2, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
+    xy = q4*q2 # q4*q2
+    xx = q4*q4 # q4^2
+    xxx = xx*q4 # q4^3
+    yy = q2*q2 # q2^2
+    xyy = xy*q2 # q4*q2^2
+    xxy = xx*q2 # q4^2*q2
+    xxxy = xxx*q2 # q4^3*q2
+    xxyy = xxy*q2 # q4^2*q2^2
+    xxxyy = xxxy*q2 # q4^3*q2^2
+    poly = s10 + (-6*s10 + 3*s20) * q4 + \
+                  (-2*s01 - 2*s10 + 2*s11) * q2 + \
+                  (9*s10 -9*s20 + 3*s30) * xx + \
+                  (-4*s10 + 6*s20 - 4*s30 + s40) * xxx + \
+                  (2*s01 - s02 + s10 - 2*s11 + s12) * yy + \
+                  (-6*s01 + 3*s02 - 6*s10 + 12*s11 - 6*s12 + 3*s20 - 6*s21 + 3*s22) * xyy + \
+                  (-6*s01 - 18*s10 + 18*s11 + 18*s20 -18*s21 -6*s30 +6*s31) * xxy + \
+                  (2*s01 + 8*s10 - 8*s11 - 12*s20 + 12*s21 + 8*s30 - 8*s31 - 2*s40 + 2*s41) * xxxy + \
+                  (6*s01 - 3*s02 + 9*s10 - 18*s11 + 9*s12 - 9*s20 + 18*s21 - 9*s22 + 3*s30 - 6*s31 + 3*s32) * xxyy + \
+                  (-2*s01 + s02 - 4*s10 + 8*s11 - 4*s12 + 6*s20 - 12*s21 + 6*s22 - 4*s30 + 8*s31 - 4*s32 + s40 - 2*s41 + s42) * xxxyy + \
+                  (6*s01 + 12*s10 - 12*s11 - 6*s20 + 6*s21) * xy
+    return q4 * (1 - q4) * 2 * poly
+
+def hex_dip_selection(q4, q2, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
+    xy = q2*q4 # q4*q2
+    yy = q4*q4# q4^2
+    yyy = yy*q4 # q4^3
+    yyyy = yyy*q4 # q4^4
+    xyy = xy*q4 # q4^2*q2
+    xyyy = xyy*q4 # q4^3*q2
+    xyyyy = xyyy*q4 # q4^4*q2
+    poly = s01 + (-4*s01 - 4*s10 + 4*s11) * q4 + \
+                  (-2*s01 + s02) * q2 + \
+                  (6*s01 + 12*s10 - 12*s11 -6*s20 + 6*s21) * yy + \
+                  (-4*s01 -12*s10 + 12*s11 + 12*s20 - 12*s21 - 4*s30 + 4*s31) * yyy + \
+                  (s01 + 4*s10 - 4*s11 - 6*s20 + 6*s21 + 4*s30 - 4*s31 - s40 + s41) * yyyy + \
+                  (-12*s01 + 6*s02 - 12*s10 + 24*s11 - 12*s12 + 6*s20 - 12*s21 + 6*s22) * xyy + \
+                  (8*s01 - 4*s02 + 12*s10 - 24*s11 + 12*s12 - 12*s20 + 24*s21 - 12*s22 + 4*s30 - 8*s31 + 4*s32) * xyyy + \
+                  (-2*s01 + s02 - 4*s10 + 8*s11 - 4*s12 + 6*s20 - 12*s21 + 6*s22 - 4*s30 + 8*s31 - 4*s32 + s40 - 2*s41 + s42) * xyyyy + \
+                  (8*s01 - 4*s02 + 4*s10 - 8*s11 + 4*s12) * xy
+    return q2 * (1 - q2) * 2 * poly  
+
+def hex_4_2_WF(N, T, E, init_q4, init_q2, s, nu=1, replicates=1):
+    """
+    Simple Wright-Fisher model of genetic drift in allotetraploids based on allelic sampling.
+
+    N: population size (number of individuals)
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    s: vector of gammas for alloautohexaploids (gamma01, ..., gamma42)
+    E: population scaled probability that meiosis results in the exchange 
+        of genetic material between subgenomes from Blischak et al. (2023) Genetics
+        E = 2Ne
+    init_q4: vector of initial allele frequencies for selected allele in tetraploid subgenome; must have size = replicates
+    init_q2: vector of initial allele frequencies for selected allele in diploid subgenome; must have size = replicates
+    nu: population size relative to ancestral population size
+        nu can be a constant or a function of diffusion-scaled time
+    replicates: number of times to run the simulation
+    
+    Returns: 
+        allele_freqs: matrix of allele frequencies over generations
+            each row corresponds to a single simulation
+            each column corresponds to a single point in time
+    """
+
+    if np.less(N, 0) or np.less(T, 0):
+        raise(ValueError("The population size or time is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_q4, 0)) or np.any(np.greater(init_q4, 1)):
+        raise(ValueError("At least one initial q_value for subgenome a"
+                         " is less than zero or greater than one."))
+    
+    if np.any(np.less(init_q2, 0)) or np.any(np.greater(init_q2, 1)):
+        raise(ValueError("At least one initial q_value for subgenome b"
+                         " is less than zero or greater than one."))
+    
+    if len(init_q4) != replicates:
+        raise ValueError("Length of init_qa must equal number of replicates.")
+    
+    if len(init_q2) != replicates:
+        raise ValueError("Length of init_qb must equal number of replicates.")
+
+    nu_f = ensure_1arg_func(nu)
+
+    # calculate sij from gammaij because we will need it for our generation based simulation
+    s01, s02, s10, s11, s12 = s[0]/(2*N), s[1]/(2*N), s[2]/(2*N), s[3]/(2*N), s[4]/(2*N)
+    s20, s21, s22, s30, s31, s32 = s[5]/(2*N), s[6]/(2*N), s[7]/(2*N), s[8]/(2*N), s[9]/(2*N), s[10]/(2*N)
+    s40, s41, s42 = s[11]/(2*N), s[12]/(2*N), s[13]/(2*N)
+
+    # same for e
+    e = E/(2*N)
+
+    # create matrix to store allele frequencies
+    # first dimension delineates across subgenomes with tetraploid subgenome first
+    # second = separate runs
+    allele_freqs = np.empty((2, replicates))
+    
+    allele_freqs[0, :] = init_q4
+    allele_freqs[1, :] = init_q2
+
+    s01_vec = np.full(replicates, s01)
+    s02_vec = np.full(replicates, s02)
+    s10_vec = np.full(replicates, s10)
+    s11_vec = np.full(replicates, s11)
+    s12_vec = np.full(replicates, s12)
+    s20_vec = np.full(replicates, s20)
+    s21_vec = np.full(replicates, s21)
+    s22_vec = np.full(replicates, s22)
+    s30_vec = np.full(replicates, s30)
+    s31_vec = np.full(replicates, s31)
+    s32_vec = np.full(replicates, s32)
+    s40_vec = np.full(replicates, s40)
+    s41_vec = np.full(replicates, s41)
+    s42_vec = np.full(replicates, s42)
+
+    rng = np.random.default_rng()
+
+    total_gens = int(2*N*T)
+    for t in range(total_gens):
+        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
+        samples_4 = int(4*N*nu)
+        samples_2 = int(2*N*nu)
+        
+        q4_next = hex_tetra_selection(allele_freqs[0, :], allele_freqs[1, :], s01_vec, s02_vec, 
+                                        s10_vec, s11_vec, s12_vec, s20_vec, s21_vec, s22_vec,
+                                        s30_vec, s31_vec, s32_vec, s40_vec, s41_vec, s42_vec)
+        q2_next = hex_dip_selection(allele_freqs[0, :], allele_freqs[1, :], s01_vec, s02_vec, 
+                                        s10_vec, s11_vec, s12_vec, s20_vec, s21_vec, s22_vec,
+                                        s30_vec, s31_vec, s32_vec, s40_vec, s41_vec, s42_vec)
+            
+        q4_next += e*(allele_freqs[1, :] - allele_freqs[0, :])/2 # the /2 corrects for the difference in ploidy between subgenomes
+        q2_next += e*(allele_freqs[0, :] - allele_freqs[1, :])
+
+        allele_freqs[0, :] = rng.binomial(samples_4, q4_next[0, :])/(samples_4)
+        allele_freqs[1, :] = rng.binomial(samples_2, q2_next[1, :])/(samples_2)
+        
+    return allele_freqs
+
 
 ### 2 Pop models
 
