@@ -559,6 +559,18 @@ class PloidyType(IntEnum):
         }
         return param_map[self]
     
+    def _multiply_params(self, param1, param2):
+        """Multiply two parameters that can each be either functions or constants.
+           This allows us to support arbitrary combinations of functions of time and constants for selection."""
+        p1_is_func = callable(param1)
+        p2_is_func = callable(param2)
+    
+        if p1_is_func or p2_is_func:
+            return lambda t: (param1(t) if p1_is_func else param1) * \
+                             (param2(t) if p2_is_func else param2)
+        else:
+            return param1 * param2
+    
     def pack_sel_params(self, sel_dict, max_params=26):
         """Pack selection parameters into standardized array.
         
@@ -601,15 +613,15 @@ class PloidyType(IntEnum):
             keys_gammas = ['gamma1', 'gamma2', 'gamma3', 'gamma4']
             if 'gamma' in sel_dict and len(sel_dict) == 1:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma / 4     
-                sel_params[1] = base_gamma / 2     
-                sel_params[2] = 3 * base_gamma / 4 
+                sel_params[0] = self._multiply_params(base_gamma, 1/4)   
+                sel_params[1] = self._multiply_params(base_gamma, 1/2)   
+                sel_params[2] = self._multiply_params(base_gamma, 3/4)
                 sel_params[3] = base_gamma
             elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 4:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma * sel_dict['h1']     
-                sel_params[1] = base_gamma * sel_dict['h2']     
-                sel_params[2] = base_gamma * sel_dict['h3'] 
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h1'])
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h2']) 
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h3'])
                 sel_params[3] = base_gamma    
             elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 4:
                 param_names = self.param_names()
@@ -627,23 +639,23 @@ class PloidyType(IntEnum):
             keys_gammas = ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 'gamma20', 'gamma21', 'gamma22']
             if 'gamma' in sel_dict and len(sel_dict) == 1:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma / 4     
-                sel_params[1] = base_gamma / 2     
-                sel_params[2] = base_gamma / 4 
-                sel_params[3] = base_gamma / 2     
-                sel_params[4] = 3 * base_gamma / 4     
-                sel_params[5] = base_gamma / 2 
-                sel_params[6] = 3 * base_gamma / 4
+                sel_params[0] = self._multiply_params(base_gamma, 1/4)   
+                sel_params[1] = self._multiply_params(base_gamma, 1/2)   
+                sel_params[2] = self._multiply_params(base_gamma, 1/4)
+                sel_params[3] = self._multiply_params(base_gamma, 1/2)   
+                sel_params[4] = self._multiply_params(base_gamma, 3/4)   
+                sel_params[5] = self._multiply_params(base_gamma, 1/2)
+                sel_params[6] = self._multiply_params(base_gamma, 3/4)
                 sel_params[7] = base_gamma
             elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 8:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma * sel_dict['h01']     
-                sel_params[1] = base_gamma * sel_dict['h02']     
-                sel_params[2] = base_gamma * sel_dict['h10'] 
-                sel_params[3] = base_gamma * sel_dict['h11'] 
-                sel_params[4] = base_gamma * sel_dict['h12'] 
-                sel_params[5] = base_gamma * sel_dict['h20'] 
-                sel_params[6] = base_gamma * sel_dict['h21'] 
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h01'])    
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h02'])    
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h10']) 
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h11']) 
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h12']) 
+                sel_params[5] = self._multiply_params(base_gamma, sel_dict['h20']) 
+                sel_params[6] = self._multiply_params(base_gamma, sel_dict['h21'])
                 sel_params[7] = base_gamma 
             elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 8:
                 param_names = self.param_names()
@@ -661,19 +673,19 @@ class PloidyType(IntEnum):
             keys_gammas = ['gamma1', 'gamma2', 'gamma3', 'gamma4', 'gamma5', 'gamma6']
             if 'gamma' in sel_dict and len(sel_dict) == 1:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma / 6    
-                sel_params[1] = base_gamma / 3     
-                sel_params[2] = base_gamma / 2 
-                sel_params[3] = 2 * base_gamma / 3
-                sel_params[4] = 5 * base_gamma / 6     
+                sel_params[0] = self._multiply_params(base_gamma, 1/6)   
+                sel_params[1] = self._multiply_params(base_gamma, 1/3)   
+                sel_params[2] = self._multiply_params(base_gamma, 1/2)
+                sel_params[3] = self._multiply_params(base_gamma, 2/3)   
+                sel_params[4] = self._multiply_params(base_gamma, 5/6)   
                 sel_params[5] = base_gamma
             elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 6:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma * sel_dict['h1']     
-                sel_params[1] = base_gamma * sel_dict['h2']     
-                sel_params[2] = base_gamma * sel_dict['h3'] 
-                sel_params[3] = base_gamma * sel_dict['h4'] 
-                sel_params[4] = base_gamma * sel_dict['h5'] 
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h1'])    
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h2'])    
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h3']) 
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h4']) 
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h5'])
                 sel_params[5] = base_gamma
             elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 6:
                 param_names = self.param_names()
@@ -688,41 +700,41 @@ class PloidyType(IntEnum):
         
         elif self == PloidyType.HEX_tetra or self == PloidyType.HEX_dip:
             keys_dominance = ['h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'h22',
-                               'h30', 'h31', 'h32', 'h40', 'h41', 'h42']
+                               'h30', 'h31', 'h32', 'h40', 'h41', 'gamma']
             keys_gammas = ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 'gamma20', 'gamma21', 'gamma22',
                            'gamma30', 'gamma31', 'gamma32', 'gamma40', 'gamma41', 'gamma42']
             if 'gamma' in sel_dict and len(sel_dict) == 1:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma / 6 # gamma01
-                sel_params[1] = base_gamma / 3 # gamma02
-                sel_params[2] = base_gamma / 6 # gamma10
-                sel_params[3] = base_gamma / 3 # gamma11
-                sel_params[4] = base_gamma / 2 # gamma12
-                sel_params[5] = base_gamma / 3 # gamma20
-                sel_params[6] = base_gamma / 2 # gamma21
-                sel_params[7] = 2 * base_gamma / 3 # gamma22
-                sel_params[8] = base_gamma / 2 # gamma30
-                sel_params[9] = 2 * base_gamma / 3 # gamma31
-                sel_params[10] = 5 * base_gamma / 6 # gamma32
-                sel_params[11] = 2 * base_gamma / 3 # gamma40
-                sel_params[12] = 5 * base_gamma / 6 # gamma41
+                sel_params[0] = self._multiply_params(base_gamma, 1/6) # gamma01
+                sel_params[1] = self._multiply_params(base_gamma, 1/3) # gamma02
+                sel_params[2] = self._multiply_params(base_gamma, 1/6) # gamma10
+                sel_params[3] = self._multiply_params(base_gamma, 1/3) # gamma11
+                sel_params[4] = self._multiply_params(base_gamma, 1/2) # gamma12
+                sel_params[5] = self._multiply_params(base_gamma, 1/3) # gamma20
+                sel_params[6] = self._multiply_params(base_gamma, 1/2) # gamma21
+                sel_params[7] = self._multiply_params(base_gamma, 2/3) # gamma22
+                sel_params[8] = self._multiply_params(base_gamma, 1/2) # gamma30
+                sel_params[9] = self._multiply_params(base_gamma, 2/3) # gamma31
+                sel_params[10] = self._multiply_params(base_gamma, 5/6) # gamma32
+                sel_params[11] = self._multiply_params(base_gamma, 2/3) # gamma40
+                sel_params[12] = self._multiply_params(base_gamma, 5/6) # gamma41
                 sel_params[13] = base_gamma # gamma42
             elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 14:
                 base_gamma = sel_dict['gamma']
-                sel_params[0] = base_gamma * sel_dict['h01'] # gamma01
-                sel_params[1] = base_gamma * sel_dict['h02'] # gamma02
-                sel_params[2] = base_gamma * sel_dict['h10'] # gamma10
-                sel_params[3] = base_gamma * sel_dict['h11'] # gamma11
-                sel_params[4] = base_gamma * sel_dict['h12'] # gamma12
-                sel_params[5] = base_gamma * sel_dict['h20'] # gamma20
-                sel_params[6] = base_gamma * sel_dict['h21'] # gamma21
-                sel_params[7] = base_gamma * sel_dict['h22'] # gamma22
-                sel_params[8] = base_gamma * sel_dict['h30'] # gamma30
-                sel_params[9] = base_gamma * sel_dict['h31'] # gamma31
-                sel_params[10] = base_gamma * sel_dict['h32'] # gamma32
-                sel_params[11] = base_gamma * sel_dict['h40'] # gamma40
-                sel_params[12] = base_gamma * sel_dict['h41'] # gamma41
-                sel_params[13] = base_gamma * sel_dict['h42'] # gamma42
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h01']) # gamma01
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h02']) # gamma02
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h10']) # gamma10
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h11']) # gamma11
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h12']) # gamma12
+                sel_params[5] = self._multiply_params(base_gamma, sel_dict['h20']) # gamma20
+                sel_params[6] = self._multiply_params(base_gamma, sel_dict['h21']) # gamma21
+                sel_params[7] = self._multiply_params(base_gamma, sel_dict['h22']) # gamma22
+                sel_params[8] = self._multiply_params(base_gamma, sel_dict['h30']) # gamma30
+                sel_params[9] = self._multiply_params(base_gamma, sel_dict['h31']) # gamma31
+                sel_params[10] = self._multiply_params(base_gamma, sel_dict['h32']) # gamma32
+                sel_params[11] = self._multiply_params(base_gamma, sel_dict['h40']) # gamma40
+                sel_params[12] = self._multiply_params(base_gamma, sel_dict['h41']) # gamma41
+                sel_params[13] = base_gamma # gamma42
             elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 14:
                 param_names = self.param_names()
                 for i, param_name in enumerate(param_names):
@@ -1700,7 +1712,6 @@ def _Mfunc2D_hex_tetra(x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g
     # x is x_4, y is x_2 where x_4 is the allele frequency in the tetraploid subgenome
     # and x_2 is the allele frequency in the diploid subgenome
     # in the matlab code, we denote x_4 as qa and x_2 as qb
-    # z is a separate population
     xy = x*y # qa*qb
     xx = x*x # qa^2
     xxx = xx*x # qa^3
@@ -1781,7 +1792,7 @@ def _Mfunc3D_hex_dip( x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22,
     # where x_4 is the allele frequency in the tetraploid subgenome
     # and x_2 is the allele frequency in the diploid subgenome
     # in the matlab code, we denote x_4 as qa and x_2 as qb
-
+    # z is a separate population
     xy = x*y # qa*qb
     yy = y*y # qa^2
     yyy = yy*y # qa^3
