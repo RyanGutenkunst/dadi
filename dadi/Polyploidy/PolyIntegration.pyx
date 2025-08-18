@@ -2857,6 +2857,8 @@ def implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
 
     tridiag_free()
 
+    return np.asarray(phi)
+
 def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu3, double m31, double m32, double m34, double m35, double[:] s3, 
                         double dt, int use_delj_trick, int[:] ploidy3):
