@@ -36,9 +36,10 @@ def _compute_dt(dx, nu, ms, sel, ploidy):
     Acts as a wrapper and calls _compute_dt_* for the corresponding ploidy type.
 
     sel: vector of selection parameters from unpacking the sel_dict
-    ploidy: vector of length 4 of of ploidy coefficients
-            e.g. [0, 1, 0, 0] specifies the current population as autotetraploid
-            e.g. [0, 0, 0, 1] specifies the current population as allotetraploid subgenome b
+    ploidy: vector of length 10 of of ploidy coefficients
+            e.g. [0, 1, 0, 0, ...] specifies the current population as autotetraploid
+            e.g. [0, 0, 0, 1, ...] specifies the current population as allotetraploid subgenome b
+            See PloidyType class for more details.
     """
     if ploidy[0]:
         return _compute_dt_dip(dx, nu, ms, sel[0], sel[1])
@@ -50,6 +51,10 @@ def _compute_dt(dx, nu, ms, sel, ploidy):
         return _compute_dt_allo_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
     elif ploidy[4]:
         return _compute_dt_autohex(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5])
+    elif ploidy[5]:
+        return _compute_dt_hex_tetra(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], sel[13])
+    elif ploidy[6]:
+        return _compute_dt_hex_dip(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], sel[13])
 
 def _compute_dt_dip(dx, nu, ms, gamma, h):
     """
@@ -257,6 +262,93 @@ def _compute_dt_autohex(dx, nu, ms, g1, g2, g3, g4, g5, g6):
                          'gamma1=%f, gamma2=%f, gamma3=%f,'
                          'gamma4=%f, gamma5=%f, gamma6=%f' 
                          % (nu, str(ms), g1, g2, g3, g4, g5, g6))
+    return dt
+
+def _compute_dt_hex_tetra(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autohexaploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_tetra it 
+    # seems to be near x_4 = 0.25, 0.5, 0.75 and x_2 = 0, 1 
+    # the nice thing is that x_2 = 0, 1 are much simpler than the full M function
+
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g10 + (-6*g10 + 3*g20)*0.25
+                                                  + (9*g10 - 9*g20 + 3*g30)*.25**2
+                                                  + (-4*g10 + 6*g20 - 4*g30 + g40)*.25**3), # x_4 = 0.25, x_2 = 0
+                      0.5*(1-0.5)*numpy.abs(g10 + (-6*g10 + 3*g20)*0.5 
+                                                + (9*g10 - 9*g20 + 3*g30)*.5**2 
+                                                + (-4*g10 + 6*g20 - 4*g30 + g40)*.5**3), # x_4 = 0.5, x_2 = 0
+                      0.75*(1-0.75)*numpy.abs(g10 + (-6*g10 + 3*g20)*0.75 
+                                                  + (9*g10 - 9*g20 + 3*g30)*.75**2 
+                                                  + (-4*g10 + 6*g20 - 4*g30 + g40)*.75**3), # x_4 = 0.75, x_2 = 0
+                      0.25*(1-0.25)*numpy.abs(g12 - g02 + (3*g02 -6*g12 + 3*g22)*0.25 
+                                                        + (-3*g02 + 9*g12 - 9*g22 + 3*g32)*.25**2 
+                                                        + (g02 - 4*g12 + 6*g22 - 4*g32 + g42)*.25**3), # x_4 = 0.25, x_2 = 1
+                      0.5*(1-0.5)*numpy.abs(g12 - g02 + (3*g02 -6*g12 + 3*g22)*0.5 
+                                                        + (-3*g02 + 9*g12 - 9*g22 + 3*g32)*.5**2 
+                                                        + (g02 - 4*g12 + 6*g22 - 4*g32 + g42)*.5**3), # x_4 = 0.5, x_2 = 1
+                      0.75*(1-0.75)*numpy.abs(g12 - g02 + (3*g02 -6*g12 + 3*g22)*0.75 
+                                                        + (-3*g02 + 9*g12 - 9*g22 + 3*g32)*.75**2 
+                                                        + (g02 - 4*g12 + 6*g22 - 4*g32 + g42)*.75**3))) # x_4 = 0.75, x_2 = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f, gamma30=%f, gamma31=%f, gamma32=%f,'
+                         'gamma40=%f, gamma41=%f, gamma42=%f'
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42))
+    return dt
+ 
+def _compute_dt_hex_dip(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autohexaploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_dip it 
+    # seems to be near x_2 = 0.25, 0.5, 0.75 and x_4 = 0, 1 
+    # the nice thing is that x_4 = 0, 1 are much simpler than the full M function
+
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g01 + (-2*g01 + g02)*0.25), # x_4 = 0, x_2 = 0.25
+                      0.5*(1-0.5)*numpy.abs(g01 + (-2*g01 + g02)*0.5), # x_4 = 0, x_2 = 0.5
+                      0.75*(1-0.75)*numpy.abs(g01 + (-2*g01 + g02)*0.75), # x_4 = 0, x_2 = 0.75
+                      0.25*(1-0.25)*numpy.abs(-g40 + g41 + (g40 -2*g41 + g42)*0.25), # x_4 = 1, x_2 = 0.25
+                      0.5*(1-0.5)*numpy.abs(-g40 + g41 + (g40 -2*g41 + g42)*0.5), # x_4 = 1, x_2 = 0.5
+                      0.75*(1-0.75)*numpy.abs(-g40 + g41 + (g40 -2*g41 + g42)*0.75))) # x_4 = 1, x_2 = 0.75
+ 
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f, gamma30=%f, gamma31=%f, gamma32=%f,'
+                         'gamma40=%f, gamma41=%f, gamma42=%f'
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42))
     return dt
 
 ### ==========================================================================
