@@ -82,3 +82,61 @@ double Mfunc5D_hex_tetra(double x, double y, double z, double a, double b, doubl
 double Mfunc5D_hex_dip(double x, double y, double z, double a, double b, double exy, double mxz, double mxa, double mxb, 
                    double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22,
                    double g30, double g31, double g32, double g40, double g41, double g42);
+
+// 2+2+2 hexaploids
+double Mfunc3D_hex_a(double x, double y, double z, double exy, double exz, 
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+double Mfunc3D_hex_b(double x, double y, double z, double exy, double exz, 
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+double Mfunc3D_hex_c(double x, double y, double z, double exy, double exz, 
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+
+double Mfunc4D_hex_a(double x, double y, double z, double a, double exy, double exz, double mxa,
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+double Mfunc4D_hex_b(double x, double y, double z, double a, double exy, double exz, double mxa,
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,                    
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+double Mfunc4D_hex_c(double x, double y, double z, double a, double exy, double exz, double mxa,
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+                    
+double Mfunc5D_hex_a(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,                    
+                    double g220, double g221, double g222);
+double Mfunc5D_hex_b(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,
+                    double g001, double g002, double g010, double g011, double g012, 
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,
+                    double g220, double g221, double g222);
+double Mfunc5D_hex_c(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,
+                    double g001, double g002, double g010, double g011, double g012,                     
+                    double g020, double g021, double g022, double g100, double g101, double g102,
+                    double g110, double g111, double g112, double g120, double g121, double g122,
+                    double g200, double g201, double g202, double g210, double g211, double g212,                    
+                    double g220, double g221, double g222);
