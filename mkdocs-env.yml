@@ -2,14 +2,14 @@ name: readthedocs
 channels:
   - conda-forge
 dependencies:
-  - numpy
+  - numpy<2
   - scipy
   - matplotlib
   - nlopt
   - demes
   - mkdocstrings
   - mkdocstrings-python
-  - cython
+  - pip
   - pip:
       - mkdocs-autoapi
-      - .
+      - -e .

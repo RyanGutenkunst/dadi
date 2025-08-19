@@ -12,16 +12,16 @@ plugins:
   - search
   - mkdocs-autoapi:
       # autoapi_dir: dadi
-      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py, dadi/*.c, dadi/*.h, dadi/*.pyx, dadi/cuda/*]
+      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py, dadi/*.c, dadi/*.h, dadi/*.pyx, dadi/cuda/*, build/*]
       autoapi_file_patterns:
         - "dadi/*.py"
         - "dadi/*/*.py"
       autoapi_add_nav_entry: API
-  - mkdocstrings
-      # default_handler: python
-      # handlers:
-      #   python:
-      #     paths: [src]
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
 nav:
 - Home: 'index.md'
 - User Guide:
