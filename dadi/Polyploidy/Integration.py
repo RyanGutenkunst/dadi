@@ -1164,7 +1164,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         raise ValueError('Either population 1, 2, or 3 is specified as a HEX (2+2+2) subgenome. \n'
                          'But the other two are not or are specified in an incorrect order. \n'
                          'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
-                         'Specficially, the first must be HEXa, the second must be HEXb, and the third must be HEXc.')
+                         'Specficially, pop 1 must be HEXa, pop 2 must be HEXb, and pop 3 must be HEXc.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(10, numpy.intc)
@@ -1213,6 +1213,16 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         if numpy.any(sel2_f(T/2) != sel3_f(T/2)):
             raise ValueError('Population 2 or 3 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
+    if (ploidyflag1 in hex_2_2_2_types) and (ploidyflag2 in hex_2_2_2_types) and (ploidyflag3 in hex_2_2_2_types):
+        if m12_f(T/2) != m21_f(T/2) or m13_f(T/2) != m31_f(T/2) or m23_f(T/2) != m32_f(T/2):
+            raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All pairs of subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) !=  nu2_f(T/2) or nu1_f(T/2) != nu3_f(T/2) or nu2_f(T/2) != nu3_f(T/2):
+            raise ValueError('Population 1, 2, or 3 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)) or numpy.any(sel1_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel3_f(T/2)):
+            raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
     # TODO: CUDA integration
     # if cuda_enabled:
@@ -1348,6 +1358,17 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                          'But the other is not or both are specified as tetra or dip subgenomes. \n'
                          'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
     
+    hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
+    if ({ploidyflag2, ploidyflag3, ploidyflag4} & hex_2_2_2_types) and (ploidyflag2 != PloidyType.HEXa or ploidyflag3 != PloidyType.HEXb or ploidyflag4 != PloidyType.HEXc):    
+        raise ValueError('Either population 2, 3, or 4 is specified as a HEX (2+2+2) subgenome. \n'
+                         'But the other two are not or are specified in an incorrect order. \n'
+                         'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
+                         'Specficially, for a 4D model, pop 2 must be HEXa, pop 3 must be HEXb, and pop 4 must be HEXc.')
+    
+    if ploidyflag1 in hex_2_2_2_types:
+        raise ValueError('Population 1 is a HEX (2+2+2) subgenome. \n'  
+                         'To model hexaploids in a 4D model, only the last three populations can be specified as a HEX (2+2+2) subgenome.')
+
     aa = zz = yy = xx
 
     # create ploidy vectors with C integers
@@ -1398,6 +1419,17 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                              'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel3_f(T/2) != sel4_f(T/2)):
             raise ValueError('Population 3 or 4 is a polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag2 in hex_2_2_2_types) and (ploidyflag3 in hex_2_2_2_types) and (ploidyflag4 in hex_2_2_2_types):
+        if m23_f(T/2) != m32_f(T/2) or m24_f(T/2) != m42_f(T/2) or m34_f(T/2) != m43_f(T/2):
+            raise ValueError('Population 2, 3, or 4 is a polyploid subgenome. All pairs of subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu2_f(T/2) !=  nu3_f(T/2) or nu2_f(T/2) != nu4_f(T/2) or nu3_f(T/2) != nu4_f(T/2):
+            raise ValueError('Population 2, 3, or 4 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
+        if numpy.any(sel2_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel4_f(T/2)):
+            raise ValueError('Population 2, 3, or 4 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
 
     # TODO: CUDA integration
@@ -1553,6 +1585,17 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         raise ValueError('Population 3 is a HEX (4+2) subgenome. \n'  
                          'To model hexaploids in a 5D model, only the first two or last two populations can be specified as a HEX (4+2) subgenome.')
 
+    hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
+    if ({ploidyflag3, ploidyflag4, ploidyflag5} & hex_2_2_2_types) and (ploidyflag3 != PloidyType.HEXa or ploidyflag4 != PloidyType.HEXb or ploidyflag5 != PloidyType.HEXc):    
+        raise ValueError('Either population 3, 4, or 5 is specified as a HEX (2+2+2) subgenome. \n'
+                         'But the other two are not or are specified in an incorrect order. \n'
+                         'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
+                         'Specficially, for a 5D model, pop 3 must be HEXa, pop 4 must be HEXb, and pop 5 must be HEXc.')
+    
+    if ploidyflag1 in hex_2_2_2_types or ploidyflag2 in hex_2_2_2_types:
+        raise ValueError('Population 1 or 2 is a HEX (2+2+2) subgenome. \n'  
+                         'To model hexaploids in a 5D model, only the last three populations can be specified as a HEX (2+2+2) subgenome.')
+
     bb = aa = zz = yy = xx
 
     # create ploidy vectors with C integers
@@ -1609,6 +1652,17 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                              'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel4_f(T/2) != sel5_f(T/2)):
             raise ValueError('Population 4 or 5 is a polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag3 in hex_2_2_2_types) and (ploidyflag4 in hex_2_2_2_types) and (ploidyflag5 in hex_2_2_2_types):
+        if m34_f(T/2) != m43_f(T/2) or m35_f(T/2) != m53_f(T/2) or m45_f(T/2) != m54_f(T/2):
+            raise ValueError('Population 3, 4, or 5 is a polyploid subgenome. All pairs of subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu3_f(T/2) !=  nu4_f(T/2) or nu3_f(T/2) != nu5_f(T/2) or nu4_f(T/2) != nu5_f(T/2):
+            raise ValueError('Population 3, 4, or 5 is a polyploid subgenome, but do not have the same population size. \n'
+                             'Polyploid subgenomes must have the same population size.')
+        if numpy.any(sel3_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel5_f(T/2)) or numpy.any(sel4_f(T/2) != sel5_f(T/2)):
+            raise ValueError('Population 3, 4, or 5 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
 
     # TODO: CUDA integration
@@ -1686,7 +1740,6 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
     return phi
 
-
 # ============================================================================
 # PYTHON FUNCTIONS AND CONST_PARAMS INTEGRATION
 # ============================================================================
@@ -1731,7 +1784,6 @@ def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22
                   (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
                   (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
     return mxy * (y-x) + x * (1. - x) * 2. * poly
-
 def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
     # x is x_b, y is x_a
     xy = x*y
@@ -1743,7 +1795,6 @@ def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22
                   (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
                   (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
     return mxy * (y-x) + x * (1. - x) * 2. * poly
-
 def _Mfunc3D_allo_a( x,  y, z,  mxy,  mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
     # x is x_a, y is x_b, z is a separate population
     xy = x*y
@@ -1755,7 +1806,6 @@ def _Mfunc3D_allo_a( x,  y, z,  mxy,  mxz,  g01,  g02,  g10,  g11,  g12,  g20,  
                   (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
                   (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
     return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
-
 def _Mfunc3D_allo_b( x,  y, z, mxy, mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
     # x is x_b, y is x_a, z is a separate population
     xy = x*y
@@ -1818,7 +1868,6 @@ def _Mfunc2D_hex_tetra(x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g
                   (6*g01 + 12*g10 - 12*g11 - 6*g20 + 6*g21) * xy
     # note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
     return exy * (y-x) / 2 + x * (1 - x) * 2 * poly
-
 def _Mfunc2D_hex_dip( x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
     # x is x_2, y is x_4 
     # where x_4 is the allele frequency in the tetraploid subgenome
@@ -1842,7 +1891,6 @@ def _Mfunc2D_hex_dip( x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g3
                   (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xyyyy + \
                   (8*g01 - 4*g02 + 4*g10 - 8*g11 + 4*g12) * xy
     return exy * (y-x) + x * (1 - x) * 2 * poly       
-
 def _Mfunc3D_hex_tetra(x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
     # x is x_4, y is x_2 where x_4 is the allele frequency in the tetraploid subgenome
     # and x_2 is the allele frequency in the diploid subgenome
@@ -1870,7 +1918,6 @@ def _Mfunc3D_hex_tetra(x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22
                   (6*g01 + 12*g10 - 12*g11 - 6*g20 + 6*g21) * xy
     # note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
     return exy * (y-x) / 2 + mxz * (z-x) + x * (1 - x) * 2 * poly
-
 def _Mfunc3D_hex_dip( x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
     # x is x_2, y is x_4 
     # where x_4 is the allele frequency in the tetraploid subgenome
@@ -1933,7 +1980,6 @@ def _Mfunc3D_hex_a(x, y, z, exy, exz, g001, g002, g010, g011, g012,
                   (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120 - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + \
                   (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
     return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly
-
 def _Mfunc3D_hex_b(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
                    g020, g021, g022, g100, g101, g102, g110, g111, g112, 
                    g120, g121, g122, g200, g201, g202, g210, g211, g212,
@@ -1971,7 +2017,6 @@ def _Mfunc3D_hex_b(x, y, z, exy, exz, g001, g002, g010, g011, g012,
                   (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120  - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + \
                   (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
     return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly;    
-        
 def _Mfunc3D_hex_c(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
                    g020, g021, g022, g100, g101, g102, g110, g111, g112, 
                    g120, g121, g122, g200, g201, g202, g210, g211, g212,

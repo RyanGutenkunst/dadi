@@ -14,7 +14,7 @@ extensions = [
             ".",                        # Current directory (Polyploids/)
             "..",                       # Parent directory (dadi/)
         ],
-        extra_compile_args=["-O3", "-ffast-math"],
+        extra_compile_args=["-O3"],
         language="c"
     )
 ]
