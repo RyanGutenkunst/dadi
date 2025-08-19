@@ -1,5 +1,4 @@
 import numpy as np
-#cimport numpy as np
 
 # =========================================================
 # SHARED AND DIPLOID C FUNCTIONS
@@ -101,6 +100,45 @@ cdef extern from "integration_shared_poly.h":
     double Mfunc5D_hex_dip(double x, double y, double z, double a, double b, double exy, double mxz, double mxa, double mxb, 
                            double g01, double g02, double g10, double g11, double g12, double g20, double g21, double g22,
                            double g30, double g31, double g32, double g40, double g41, double g42)
+
+    double Mfunc3D_hex_a(double x, double y, double z, double exy, double exz, 
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    double Mfunc3D_hex_b(double x, double y, double z, double exy, double exz, 
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    double Mfunc3D_hex_c(double x, double y, double z, double exy, double exz, 
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    
+    double Mfunc4D_hex_a(double x, double y, double z, double a, double exy, double exz, double mxa,
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    double Mfunc4D_hex_b(double x, double y, double z, double a, double exy, double exz, double mxa,
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    double Mfunc4D_hex_c(double x, double y, double z, double a, double exy, double exz, double mxa,
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    
+    double Mfunc5D_hex_a(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    double Mfunc5D_hex_b(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
+    double Mfunc5D_hex_c(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,  
+                         double g001, double g002, double g010, double g011, double g012, double g020, double g021, double g022,
+                         double g100, double g101, double g102, double g110, double g111, double g112, double g120, double g121, double g122,
+                         double g200, double g201, double g202, double g210, double g211, double g212, double g220, double g221, double g222)
     
 # =========================================================
 # C TRIDIAGONAL MATRIX SOLVER
@@ -130,7 +168,8 @@ def implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
     dt: Time step
     use_delj_trick: Whether to use delj optimization (0 or 1)
     ploidy: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
     
     Returns:
     --------
@@ -255,7 +294,8 @@ def implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
     dt: Time step
     use_delj_trick: Whether to use delj optimization (0 or 1)
     ploidy1: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -515,7 +555,8 @@ def implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
     dt: Time step
     use_delj_trick: Whether to use delj optimization (0 or 1)
     ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -880,7 +921,8 @@ def implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy1: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -916,7 +958,10 @@ def implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
     cdef int is_diploid = ploidy1[0]
     cdef int is_auto = ploidy1[1]
     cdef int is_autohex = ploidy1[4]
+    cdef int is_hex_a = ploidy1[7]
     # note: we don't support alloa, allob, hex_tetra, or hex_dip as being the first dimension of a 3D model
+    # we also only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order, 
+    # hence no hex_b or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -1012,6 +1057,38 @@ def implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                 tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
                 for ii in range(0, L):
                     phi[ii, jj, kk] = temp[ii]
+
+    elif is_hex_a:
+        # compute everything we can outside of the spatial loop
+        for ii in range(0, L):
+            V[ii] = Vfunc(xx[ii], nu1)
+        for ii in range(0, L-1):
+            VInt[ii] = Vfunc(xInt[ii], nu1)
+        # loop through y and z dimensions
+        for jj in range(M):
+            for kk in range(N):
+                y = yy[jj]
+                z = zz[kk]
+
+                Mfirst = Mfunc3D_hex_a(xx[0], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],
+                                       s1[12],s1[13],s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+                Mlast = Mfunc3D_hex_a(xx[L-1], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],
+                                       s1[12],s1[13],s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+                for ii in range(0, L-1):
+                    MInt[ii] = Mfunc3D_hex_a(xInt[ii], y,z, m12,m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],
+                                             s1[12],s1[13],s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+                compute_delj(&dx[0], &MInt[0], &VInt[0], L, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dx[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, L, &a[0], &b[0], &c[0])
+                if y==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu1 - Mfirst)*2/dx[0] 
+                if y==1 and z==1 and Mlast >= 0:
+                    b[L-1] += -(-0.5/nu1 - Mlast)*2/dx[L-2]
+
+                for ii in range(0, L):
+                    r[ii] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], L)
+                for ii in range(0, L):
+                    phi[ii, jj, kk] = temp[ii]
                
     tridiag_free()
 
@@ -1036,7 +1113,8 @@ def implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -1075,6 +1153,7 @@ def implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
     cdef int is_autohex = ploidy2[4]
     cdef int is_hex_tetra = ploidy2[5]
     cdef int is_hex_dip = ploidy2[6]
+    cdef int is_hex_b = ploidy2[8]
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -1289,6 +1368,38 @@ def implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                 for jj in range(0, M):
                     phi[ii, jj, kk] = temp[jj]
 
+    elif is_hex_b:
+        # compute everything we can outside of the spatial loop
+        for jj in range(0, M):
+            V[jj] = Vfunc(yy[jj], nu2)
+        for jj in range(0, M-1):
+            VInt[jj] = Vfunc(yInt[jj], nu2)
+        # loop through x and z dimensions
+        for ii in range(L):
+            for kk in range(N):
+                x = xx[ii]
+                z = zz[kk]
+                
+                Mfirst = Mfunc3D_hex_b(yy[0], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
+                                       s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+                Mlast = Mfunc3D_hex_b(yy[M-1], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
+                                       s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25]) 
+                for jj in range(0, M-1):
+                    MInt[jj] = Mfunc3D_hex_b(yInt[jj], x,z, m21,m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
+                                             s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+                compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
+                if x==0 and z==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
+                if x==1 and z==1 and Mlast >= 0:
+                    b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
+
+                for jj in range(0, M):
+                    r[jj] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+                for jj in range(0, M):
+                    phi[ii, jj, kk] = temp[jj]
+
     tridiag_free()
 
     return np.asarray(phi)
@@ -1312,7 +1423,8 @@ def implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy3: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -1352,6 +1464,7 @@ def implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
     cdef int is_autohex = ploidy3[4]
     cdef int is_hex_tetra = ploidy3[5]
     cdef int is_hex_dip = ploidy3[6]
+    cdef int is_hex_c = ploidy3[9]
 
     # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
@@ -1747,7 +1860,8 @@ def implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -1788,6 +1902,9 @@ def implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     cdef int is_autohex = ploidy1[4]
     cdef int is_hex_tetra = ploidy1[5] 
     cdef int is_hex_dip = ploidy1[6]
+
+    # we also only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_a, hex_b, or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -2038,7 +2155,8 @@ def implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -2079,6 +2197,10 @@ def implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     cdef int is_autohex = ploidy2[4]
     cdef int is_hex_tetra = ploidy2[5]
     cdef int is_hex_dip = ploidy2[6]
+    cdef int is_hex_a = ploidy2[7]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops,
+    # hence no hex_b or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -2305,6 +2427,42 @@ def implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
                     for jj in range(0, M):
                         phi[ii, jj, kk, ll] = temp[jj]
 
+    elif is_hex_a:
+        # compute everything we can outside of the spatial loop
+        for jj in range(0, M):
+            V[jj] = Vfunc(yy[jj], nu2)
+        for jj in range(0, M-1):
+            VInt[jj] = Vfunc(yInt[jj], nu2)
+        # loop through x, z, and a dimensions
+        for ii in range(L):
+            for kk in range(N):
+                for ll in range(O):
+                    x = xx[ii]
+                    z = zz[kk]
+                    a_ = aa[ll]
+                    # Note the order of migration params and grids being passed here is different
+                    # This is to support a 2+2+2 hexaploid which must be passed as the last three pops/dimensions of phi
+                    # and the Mfuncs are written so that the subgenome dimensions and migration/exchange params are first
+                    Mfirst = Mfunc4D_hex_a(yy[0], z,a_,x, m23,m24,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
+                                           s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+                    Mlast = Mfunc4D_hex_a(yy[M-1], z,a_,x, m23,m24,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
+                                           s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25]) 
+                    for jj in range(0, M-1):
+                        MInt[jj] = Mfunc4D_hex_a(yInt[jj], z,a_,x, m23,m24,m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
+                                                 s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+                    compute_delj(&dy[0], &MInt[0], &VInt[0], M, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&dy[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, M, &a[0], &b[0], &c[0])
+                    if x==0 and z==0 and a_==0 and Mfirst <= 0:
+                        b[0] += (0.5/nu2 - Mfirst)*2/dy[0] 
+                    if x==1 and z==1 and a_==1 and Mlast >= 0:
+                        b[M-1] += -(-0.5/nu2 - Mlast)*2/dy[M-2]
+
+                    for jj in range(0, M):
+                        r[jj] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
+                    for jj in range(0, M):
+                        phi[ii, jj, kk, ll] = temp[jj]
+
     tridiag_free()
 
     return np.asarray(phi)
@@ -2329,7 +2487,8 @@ def implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy3: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -2370,6 +2529,10 @@ def implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     cdef int is_autohex = ploidy3[4]
     cdef int is_hex_tetra = ploidy3[5]
     cdef int is_hex_dip = ploidy3[6]
+    cdef int is_hex_b = ploidy3[8]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops,
+    # hence no hex_a or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
@@ -2599,6 +2762,42 @@ def implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
                     for kk in range(0, N):
                         phi[ii, jj, kk, ll] = temp[kk]
 
+    elif is_hex_b:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc(zz[kk], nu3)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc(zInt[kk], nu3)
+        # loop through x, y, and a dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for ll in range(O):
+                    x = xx[ii]
+                    y = yy[jj]
+                    a_ = aa[ll]
+                    # Note the order of migration params and grids being passed here is different
+                    # This is to support a 2+2+2 hexaploid which must be passed as the last three pops/dimensions of phi
+                    # and the Mfuncs are written so that the subgenome dimensions and migration/exchange params are first
+                    Mfirst = Mfunc4D_hex_b(zz[0], y,a_,x, m32,m34,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],
+                                           s3[12],s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                    Mlast = Mfunc4D_hex_b(zz[N-1], y,a_,x, m32,m34,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],
+                                           s3[12],s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])  
+                    for kk in range(0, N-1):
+                        MInt[kk] = Mfunc4D_hex_b(zInt[kk], y,a_,x, m32,m34,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],
+                                                 s3[12],s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                    compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
+                    if x==0 and y==0 and a_==0 and Mfirst <= 0:
+                        b[0] += (0.5/nu3 - Mfirst)*2/dz[0] 
+                    if x==1 and y==1 and a_==1 and Mlast >= 0:
+                        b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]
+
+                    for kk in range(0, N):
+                        r[kk] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+                    for kk in range(0, N):
+                        phi[ii, jj, kk, ll] = temp[kk]
+
     tridiag_free()
 
     return np.asarray(phi)
@@ -2623,7 +2822,8 @@ def implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy4: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -2663,6 +2863,10 @@ def implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
     cdef int is_autohex = ploidy4[4]
     cdef int is_hex_tetra = ploidy4[5]    
     cdef int is_hex_dip = ploidy4[6]
+    cdef int is_hex_c = ploidy4[9]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_a or hex_b models here
 
     # compute step size and intermediate values
     compute_dx(&aa[0], O, &da[0])
@@ -2891,6 +3095,42 @@ def implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
                     tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
                     for ll in range(0, O):
                         phi[ii, jj, kk, ll] = temp[ll]
+
+    elif is_hex_c:
+        # compute everything we can outside of the spatial loop
+        for ll in range(0, O):
+            V[ll] = Vfunc(aa[ll], nu4)
+        for ll in range(0, O-1):
+            VInt[ll] = Vfunc(aInt[ll], nu4)
+        # loop through x, y, and z dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for kk in range(N):
+                    x = xx[ii]
+                    y = yy[jj]
+                    z = zz[kk]
+                    # Note the order of migration params and grids being passed here is different
+                    # This is to support a 2+2+2 hexaploid which must be passed as the last three pops/dimensions of phi
+                    # and the Mfuncs are written so that the subgenome dimensions and migration/exchange params are first
+                    Mfirst = Mfunc4D_hex_c(aa[0], y,z,x, m42,m43,m41, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7],s4[8],s4[9],s4[10],s4[11],
+                                           s4[12],s4[13],s4[14],s4[15],s4[16],s4[17],s4[18],s4[19],s4[20],s4[21],s4[22],s4[23],s4[24],s4[25])
+                    Mlast = Mfunc4D_hex_c(aa[O-1], y,z,x, m42,m43,m41, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7],s4[8],s4[9],s4[10],s4[11],
+                                           s4[12],s4[13],s4[14],s4[15],s4[16],s4[17],s4[18],s4[19],s4[20],s4[21],s4[22],s4[23],s4[24],s4[25])
+                    for ll in range(0, O-1):
+                        MInt[ll] = Mfunc4D_hex_c(aInt[ll], y,z,x, m42,m43,m41, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7],s4[8],s4[9],s4[10],s4[11],
+                                           s4[12],s4[13],s4[14],s4[15],s4[16],s4[17],s4[18],s4[19],s4[20],s4[21],s4[22],s4[23],s4[24],s4[25])
+                    compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
+                    compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
+                    if x==0 and y==0 and z==0 and Mfirst <= 0:
+                        b[0] += (0.5/nu4 - Mfirst)*2/da[0] 
+                    if x==1 and y==1 and z==1 and Mlast >= 0:
+                        b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]
+
+                    for ll in range(0, O):
+                        r[ll] = phi[ii, jj, kk, ll]/dt
+                    tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
+                    for ll in range(0, O):
+                        phi[ii, jj, kk, ll] = temp[ll]
         
     tridiag_free()
 
@@ -2920,7 +3160,8 @@ def implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -2962,6 +3203,9 @@ def implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     cdef int is_autohex = ploidy1[4]
     cdef int is_hex_tetra = ploidy1[5]
     cdef int is_hex_dip = ploidy1[6]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_a, hex_b, or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&xx[0], L, &dx[0])
@@ -3227,7 +3471,8 @@ def implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy2: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -3268,6 +3513,9 @@ def implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     cdef int is_autohex = ploidy2[4]
     cdef int is_hex_tetra = ploidy2[5]
     cdef int is_hex_dip = ploidy2[6]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_a, hex_b, or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&yy[0], M, &dy[0])
@@ -3533,7 +3781,8 @@ def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy3: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -3570,8 +3819,12 @@ def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     cdef int is_diploid = ploidy3[0]
     cdef int is_auto = ploidy3[1]
     cdef int is_autohex = ploidy3[4]
+    cdef int is_hex_a = ploidy3[7]
     # note: we don't support alloa, allob, hex_tetra, or hex_dip as being 
     # the third (middle) dimension of the phi array in a 5D model
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_b or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&zz[0], N, &dz[0])
@@ -3680,6 +3933,44 @@ def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
                         for kk in range(0, N):
                             phi[ii, jj, kk, ll, mm] = temp[kk]
 
+    elif is_hex_a:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc(zz[kk], nu3)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc(zInt[kk], nu3)
+        # loop through x, y, a, and b dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for ll in range(O):
+                    for mm in range(P):
+                        x = xx[ii]
+                        y = yy[jj]
+                        a_ = aa[ll]
+                        b_ = bb[mm] 
+                        # Note the order of migration params and grids being passed here is different
+                        # This is to support a 2+2+2 hexaploid which must be passed as the last three pops/dimensions of phi
+                        # and the Mfuncs are written so that the subgenome dimensions and migration/exchange params are first
+                        Mfirst = Mfunc5D_hex_a(zz[0], a_,b_,x,y, m34,m35,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],
+                                               s3[11],s3[12],s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                        Mlast = Mfunc5D_hex_a(zz[N-1], a_,b_,x,y, m34,m35,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],
+                                               s3[11],s3[12],s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25]) 
+                        for kk in range(0, N-1):
+                            MInt[kk] = Mfunc5D_hex_a(zInt[kk], a_,b_,x,y, m34,m35,m31,m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],
+                                               s3[11],s3[12],s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                        compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
+                        if x==0 and y==0 and a_==0 and b_==0 and Mfirst <= 0:
+                            b[0] += (0.5/nu3 - Mfirst)*2/dz[0] 
+                        if x==1 and y==1 and a_==1 and b_==1 and Mlast >= 0:
+                            b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]
+
+                        for kk in range(0, N):
+                            r[kk] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+                        for kk in range(0, N):
+                            phi[ii, jj, kk, ll, mm] = temp[kk]
+
     tridiag_free()
 
     return np.asarray(phi)
@@ -3705,7 +3996,8 @@ def implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy4: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -3746,6 +4038,10 @@ def implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     cdef int is_autohex = ploidy4[4]
     cdef int is_hex_tetra = ploidy4[5]    
     cdef int is_hex_dip = ploidy4[6]
+    cdef int is_hex_b = ploidy4[8]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_a or hex_c models here
 
     # compute step size and intermediate values
     compute_dx(&aa[0], O, &da[0])
@@ -3981,7 +4277,45 @@ def implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
                         if x==0 and y==0 and z==0 and b_==0 and Mfirst <= 0:
                             b[0] += (0.5/nu4 - Mfirst)*2/da[0] 
                         if x==1 and y==1 and z==1 and b_==1 and Mlast >= 0:
-                            b[O-1] += -(-0.55/nu4 - Mlast)*2/da[O-2]
+                            b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]
+
+                        for ll in range(0, O):
+                            r[ll] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], O)
+                        for ll in range(0, O):
+                            phi[ii, jj, kk, ll, mm] = temp[ll]
+
+    elif is_hex_b:
+        # compute everything we can outside of the spatial loop
+        for ll in range(0, O):
+            V[ll] = Vfunc(aa[ll], nu4)
+        for ll in range(0, O-1):
+            VInt[ll] = Vfunc(aInt[ll], nu4)
+        # loop through x, y, z, and b dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for kk in range(N):
+                    for mm in range(P):
+                        x = xx[ii]
+                        y = yy[jj]
+                        z = zz[kk]
+                        b_ = bb[mm]
+                        # Note the order of migration params and grids being passed here is different
+                        # This is to support a 2+2+2 hexaploid which must be passed as the last three pops/dimensions of phi
+                        # and the Mfuncs are written so that the subgenome dimensions and migration/exchange params are first
+                        Mfirst = Mfunc5D_hex_b(aa[0], z,b_,x,y, m43,m45,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7],s4[8],s4[9],s4[10],
+                                               s4[11],s4[12],s4[13],s4[14],s4[15],s4[16],s4[17],s4[18],s4[19],s4[20],s4[21],s4[22],s4[23],s4[24],s4[25])
+                        Mlast = Mfunc5D_hex_b(aa[O-1], z,b_,x,y, m43,m45,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7],s4[8],s4[9],s4[10],
+                                               s4[11],s4[12],s4[13],s4[14],s4[15],s4[16],s4[17],s4[18],s4[19],s4[20],s4[21],s4[22],s4[23],s4[24],s4[25]) 
+                        for ll in range(0, O-1):
+                            MInt[ll] = Mfunc5D_hex_b(aInt[ll], z,b_,x,y, m43,m45,m41,m42, s4[0],s4[1],s4[2],s4[3],s4[4],s4[5],s4[6],s4[7],s4[8],s4[9],s4[10],
+                                               s4[11],s4[12],s4[13],s4[14],s4[15],s4[16],s4[17],s4[18],s4[19],s4[20],s4[21],s4[22],s4[23],s4[24],s4[25])
+                        compute_delj(&da[0], &MInt[0], &VInt[0], O, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&da[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, O, &a[0], &b[0], &c[0])
+                        if x==0 and y==0 and z==0 and b_==0 and Mfirst <= 0:
+                            b[0] += (0.5/nu4 - Mfirst)*2/da[0] 
+                        if x==1 and y==1 and z==1 and b_==1 and Mlast >= 0:
+                            b[O-1] += -(-0.5/nu4 - Mlast)*2/da[O-2]
 
                         for ll in range(0, O):
                             r[ll] = phi[ii, jj, kk, ll, mm]/dt
@@ -4014,7 +4348,8 @@ def implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     dt: Time step
     use_delj_trick: Whether to use delj trick (0 or 1)
     ploidy5: Vector of ploidy Booleans (0 or 1)
-        [dip, auto, alloa, allob]
+        [dip, auto, alloa, allob, autohex, 
+        hex_tetra, hex_dip, hexa, hexb, hexc]
 
     Returns:
     --------
@@ -4055,6 +4390,10 @@ def implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
     cdef int is_autohex = ploidy5[4]
     cdef int is_hex_tetra = ploidy5[5]
     cdef int is_hex_dip = ploidy5[6]
+    cdef int is_hex_c = ploidy5[9]
+
+    # we only support the a, b, c subgenomes of a 2+2+2 hexaploid being specified in that exact order as the last three pops, 
+    # hence no hex_a or hex_b models here
 
     # compute step size and intermediate values
     compute_dx(&bb[0], P, &db[0])
@@ -4297,7 +4636,45 @@ def implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
                         tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], P)
                         for mm in range(0, P):
                             phi[ii, jj, kk, ll, mm] = temp[mm]
-        
+
+    elif is_hex_c:
+        # compute everything we can outside of the spatial loop
+        for mm in range(0, P):
+            V[mm] = Vfunc(bb[mm], nu5)
+        for mm in range(0, P-1):
+            VInt[mm] = Vfunc(bInt[mm], nu5)
+        # loop through x, y, z, and a dimensions
+        for ii in range(L):
+            for jj in range(M):
+                for kk in range(N):
+                    for ll in range(O):
+                        x = xx[ii]
+                        y = yy[jj]
+                        z = zz[kk]
+                        a_ = aa[ll]
+                        # Note the order of migration params and grids being passed here is different
+                        # This is to support a 2+2+2 hexaploid which must be passed as the last three pops/dimensions of phi
+                        # and the Mfuncs are written so that the subgenome dimensions and migration/exchange params are first
+                        Mfirst = Mfunc5D_hex_c(bb[0], z,a_,x,y, m53,m54,m51,m52, s5[0],s5[1],s5[2],s5[3],s5[4],s5[5],s5[6],s5[7],s5[8],s5[9],s5[10],
+                                               s5[11],s5[12],s5[13],s5[14],s5[15],s5[16],s5[17],s5[18],s5[19],s5[20],s5[21],s5[22],s5[23],s5[24],s5[25])
+                        Mlast = Mfunc5D_hex_c(bb[P-1], z,a_,x,y, m53,m54,m51,m52, s5[0],s5[1],s5[2],s5[3],s5[4],s5[5],s5[6],s5[7],s5[8],s5[9],s5[10],
+                                               s5[11],s5[12],s5[13],s5[14],s5[15],s5[16],s5[17],s5[18],s5[19],s5[20],s5[21],s5[22],s5[23],s5[24],s5[25]) 
+                        for mm in range(0, P-1):
+                            MInt[mm] = Mfunc5D_hex_c(bInt[mm], z,a_,x,y, m53,m54,m51,m52, s5[0],s5[1],s5[2],s5[3],s5[4],s5[5],s5[6],s5[7],s5[8],s5[9],s5[10],
+                                               s5[11],s5[12],s5[13],s5[14],s5[15],s5[16],s5[17],s5[18],s5[19],s5[20],s5[21],s5[22],s5[23],s5[24],s5[25])
+                        compute_delj(&db[0], &MInt[0], &VInt[0], P, &delj[0], use_delj_trick)
+                        compute_abc_nobc(&db[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, P, &a[0], &b[0], &c[0])
+                        if x==0 and y==0 and z==0 and a_==0 and Mfirst <= 0:
+                            b[0] += (0.5/nu5 - Mfirst)*2/db[0] 
+                        if x==1 and y==1 and z==1 and a_==1 and Mlast >= 0:
+                            b[P-1] += -(-0.5/nu5 - Mlast)*2/db[P-2]
+
+                        for mm in range(0, P):
+                            r[mm] = phi[ii, jj, kk, ll, mm]/dt
+                        tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], P)
+                        for mm in range(0, P):
+                            phi[ii, jj, kk, ll, mm] = temp[mm]
+
     tridiag_free()
 
     return np.asarray(phi)

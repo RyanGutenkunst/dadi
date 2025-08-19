@@ -747,6 +747,83 @@ class PloidyType(IntEnum):
                                  '3. 14 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22, \n ' \
                                  '            gamma30, gamma31, gamma32, gamma40, gamma41, gamma42.')
         
+        elif self == PloidyType.HEXa or self == PloidyType.HEXb or self == PloidyType.HEXc:
+            keys_dominance = ['h001', 'h002', 'h010', 'h011', 'h012', 'h020', 'h021', 'h022', 'h100', 'h101', 'h102',
+                               'h110', 'h111', 'h112', 'h120', 'h121', 'h122', 'h200', 'h201', 'h202', 'h210', 'h211',
+                               'h212', 'h220', 'h221', 'gamma']
+            keys_gammas = ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 'gamma020', 'gamma021', 'gamma022',
+                           'gamma100', 'gamma101', 'gamma102', 'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                           'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212', 'gamma220', 'gamma221', 'gamma222']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, 1/6) # gamma001
+                sel_params[1] = self._multiply_params(base_gamma, 1/3) # gamma002
+                sel_params[2] = self._multiply_params(base_gamma, 1/6) # gamma010
+                sel_params[3] = self._multiply_params(base_gamma, 1/3) # gamma011
+                sel_params[4] = self._multiply_params(base_gamma, 1/2) # gamma012
+                sel_params[5] = self._multiply_params(base_gamma, 1/3) # gamma020
+                sel_params[6] = self._multiply_params(base_gamma, 1/2) # gamma021
+                sel_params[7] = self._multiply_params(base_gamma, 2/3) # gamma022
+                sel_params[8] = self._multiply_params(base_gamma, 1/6) # gamma100
+                sel_params[9] = self._multiply_params(base_gamma, 1/3) # gamma101
+                sel_params[10] = self._multiply_params(base_gamma, 1/2) # gamma102
+                sel_params[11] = self._multiply_params(base_gamma, 1/3) # gamma110
+                sel_params[12] = self._multiply_params(base_gamma, 1/2) # gamma111
+                sel_params[13] = self._multiply_params(base_gamma, 2/3) # gamma112
+                sel_params[14] = self._multiply_params(base_gamma, 1/2) # gamma120
+                sel_params[15] = self._multiply_params(base_gamma, 2/3) # gamma121
+                sel_params[16] = self._multiply_params(base_gamma, 5/6) # gamma122
+                sel_params[17] = self._multiply_params(base_gamma, 1/3) # gamma200
+                sel_params[18] = self._multiply_params(base_gamma, 1/2) # gamma201
+                sel_params[19] = self._multiply_params(base_gamma, 2/3) # gamma202
+                sel_params[20] = self._multiply_params(base_gamma, 1/2) # gamma210
+                sel_params[21] = self._multiply_params(base_gamma, 2/3) # gamma211
+                sel_params[22] = self._multiply_params(base_gamma, 5/6) # gamma212
+                sel_params[23] = self._multiply_params(base_gamma, 2/3) # gamma220
+                sel_params[24] = self._multiply_params(base_gamma, 5/6) # gamma221
+                sel_params[25] = base_gamma # gamma222
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 26:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h001']) # gamma001
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h002']) # gamma002
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h010']) # gamma010
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h011']) # gamma011
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h012']) # gamma012
+                sel_params[5] = self._multiply_params(base_gamma, sel_dict['h020']) # gamma020
+                sel_params[6] = self._multiply_params(base_gamma, sel_dict['h021']) # gamma021
+                sel_params[7] = self._multiply_params(base_gamma, sel_dict['h022']) # gamma022
+                sel_params[8] = self._multiply_params(base_gamma, sel_dict['h100']) # gamma100
+                sel_params[9] = self._multiply_params(base_gamma, sel_dict['h101']) # gamma101
+                sel_params[10] = self._multiply_params(base_gamma, sel_dict['h102']) # gamma102
+                sel_params[11] = self._multiply_params(base_gamma, sel_dict['h110']) # gamma110
+                sel_params[12] = self._multiply_params(base_gamma, sel_dict['h111']) # gamma111
+                sel_params[13] = self._multiply_params(base_gamma, sel_dict['h112']) # gamma112
+                sel_params[14] = self._multiply_params(base_gamma, sel_dict['h120']) # gamma120
+                sel_params[15] = self._multiply_params(base_gamma, sel_dict['h121']) # gamma121
+                sel_params[16] = self._multiply_params(base_gamma, sel_dict['h122']) # gamma122
+                sel_params[17] = self._multiply_params(base_gamma, sel_dict['h200']) # gamma200
+                sel_params[18] = self._multiply_params(base_gamma, sel_dict['h201']) # gamma201
+                sel_params[19] = self._multiply_params(base_gamma, sel_dict['h202']) # gamma202
+                sel_params[20] = self._multiply_params(base_gamma, sel_dict['h210']) # gamma210
+                sel_params[21] = self._multiply_params(base_gamma, sel_dict['h211']) # gamma211
+                sel_params[22] = self._multiply_params(base_gamma, sel_dict['h212']) # gamma212
+                sel_params[23] = self._multiply_params(base_gamma, sel_dict['h220']) # gamma220
+                sel_params[24] = self._multiply_params(base_gamma, sel_dict['h221']) # gamma221
+                sel_params[25] = base_gamma # gamma222
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 26:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For a HEX (2+2+2) ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n'    
+                                 '1. 1 key: gamma \n' 
+                                 '2. 26 keys: gamma, h001, h002, h010, h011, h012, h020, h021, h022, \n '
+                                 '            h100, h101, h102, h110, h111, h112, h120, h121, h122, \n ' 
+                                 '            h200, h201, h202, h210, h211, h212, h220, h221. \n'
+                                 '3. 26 keys: gamma001, gamma002, gamma010, gamma011, gamma012, gamma020, gamma021, gamma022, \n ' 
+                                 '            gamma100, gamma101, gamma102, gamma110, gamma111, gamma112, gamma120, gamma121, gamma122, \n ' 
+                                 '            gamma200, gamma201, gamma202, gamma210, gamma211, gamma212, gamma220, gamma221, gamma222.')
         return sel_params
 
 ### ==========================================================================
@@ -1081,6 +1158,13 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if ploidyflag1 in hex_4_2_types:
         raise ValueError('Population 1 is a HEX (4+2) subgenome. \n'  
                          'To model hexaploids in a 3D model, only the last two populations can be specified as a HEX (4+2) subgenome.')
+
+    hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
+    if ({ploidyflag1, ploidyflag2, ploidyflag3} & hex_2_2_2_types) and (ploidyflag1 != PloidyType.HEXa or ploidyflag2 != PloidyType.HEXb or ploidyflag3 != PloidyType.HEXc):    
+        raise ValueError('Either population 1, 2, or 3 is specified as a HEX (2+2+2) subgenome. \n'
+                         'But the other two are not or are specified in an incorrect order. \n'
+                         'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
+                         'Specficially, the first must be HEXa, the second must be HEXb, and the third must be HEXc.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(10, numpy.intc)
@@ -1811,6 +1895,121 @@ def _Mfunc3D_hex_dip( x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22,
                   (8*g01 - 4*g02 + 4*g10 - 8*g11 + 4*g12) * xy
     return exy * (y-x) + mxz * (z-x) + x * (1 - x) * 2 * poly  
 
+# 2+2+2 hexaploids
+def _Mfunc3D_hex_a(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
+                   g020, g021, g022, g100, g101, g102, g110, g111, g112,
+                   g120, g121, g122, g200, g201, g202, g210, g211, g212,
+                   g220, g221, g222):
+    # x is x_a, y is x_b, z is x_c
+    yy = y*y; # qb^2
+    zz = z*z; # qc^2
+    xyy = x*yy; # qa*qb^2
+    xzz = x*zz; # qa*qc^2
+    yzz = y*zz; # qb*qc^2
+    yyz = yy*z; # qb^2*qc
+    yyzz = yy*zz; # qb^2*qc^2
+    xy = x*y; # qa*qb
+    xz = x*z; # qa*qc
+    yz = y*z; # qb*qc
+    xyz = xy*z; # qa*qb*qc
+    xyzz = xyz*z; # qa*qb*qc^2
+    xyyz = xyy*z; # qa*qb^2*qc
+    xyyzz = xyyz*z; # qa*qb^2*qc^2
+    poly = g100 + (- 2.*g100 + g200) * x + \
+                  (-2.*g010 - 2.*g100 + 2.*g110) * y + \
+                  (-2.*g001 - 2.*g100 + 2.*g101) * z + \
+                  (2.*g010 - g020 + g100 - 2.*g110 + g120) * yy + \
+                  (2.*g001 - g002 + g100 - 2.*g101 + g102) * zz + \
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + \
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz + \
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101 - 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz + \
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yyz + \
+                  (2.*g001 - g002 + 2.*g010 - 4.*g011 + 2.*g012  - g020 + 2.*g021 - g022 + g100 - 2.*g101  + g102 - 2.*g110 + 4.*g111 - 2.*g112 + g120 - 2.*g121 + g122) * yyzz + \
+                  (2.*g010 + 4.*g100 - 4.*g110 - 2.*g200 + 2.*g210) * xy + \
+                  (2.*g001 + 4.*g100 - 4.*g101 - 2.*g200 + 2.*g201) * xz + \
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + \
+                  (-4.*g001 - 4.*g010 + 4.*g011 - 8.*g100 + 8.*g101 + 8.*g110 - 8.*g111 + 4.*g200 - 4.*g201 - 4.*g210 + 4.*g211) * xyz + \
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyzz + \
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120 - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly
+
+def _Mfunc3D_hex_b(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
+                   g020, g021, g022, g100, g101, g102, g110, g111, g112, 
+                   g120, g121, g122, g200, g201, g202, g210, g211, g212,
+                   g220, g221, g222):
+    # x is x_b, y is x_a, z is x_c
+    yy = y*y; # qa^2
+    zz = z*z; # qc^2
+    xyy = x*yy; # qa^2*qb
+    yzz = y*zz; # qa*qc^2
+    yyz = yy*z; # qa^2*qc
+    xzz = x*zz; # qb*qc^2
+    yyzz = yy*zz; # qa^2*qc^2
+    xy = x*y; # qa*qb
+    yz = y*z; # qa*qc
+    xz = x*z; # qb*qc
+    xyz = xy*z; # qa*qb*qc
+    xyzz = xyz*z; # qa*qb*qc^2
+    xyyz = xyy*z; # qa^2*qb*qc
+    xyyzz = xyyz*z; # qa^2*qb*qc^2
+    poly = g010 + (-2.*g010 - 2.*g100 + 2.*g110 ) * y + \
+                  (-2.*g010 + g020) * x + \
+                  (-2.*g001 - 2.*g010 + 2.*g011) * z + \
+                  (g010 + 2.*g100 - 2.*g110 - g200 + g210) * yy + \
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012) * zz + \
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + \
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101- 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz + \
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xzz + \
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012 + 2.*g100 - 4.*g101 + 2.*g102 - 2.*g110 + 4.*g111 - 2.*g112 - g200 + 2.*g201 - g202 + g210 - 2.*g211 + g212) * yyzz + \
+                  (4.*g010 - 2.*g020 + 2.*g100 - 4.*g110 + 2.*g120) * xy + \
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + \
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021) * xz + \
+                  (-4.*g001 - 8.*g010 + 8.*g011 + 4.*g020 - 4.*g021 - 4.*g100 + 4.*g101 + 8.*g110 - 8.*g111 - 4.*g120 + 4.*g121) * xyz + \
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110+ 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyzz + \
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120  - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly;    
+        
+def _Mfunc3D_hex_c(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
+                   g020, g021, g022, g100, g101, g102, g110, g111, g112, 
+                   g120, g121, g122, g200, g201, g202, g210, g211, g212,
+                   g220, g221, g222):
+    # x is x_c, y is x_a, z is x_b
+    yy = y*y # qa^2
+    zz = z*z # qb^2
+    yzz = y*zz # qa*qb^2
+    yyz = yy*z # qa^2*qb
+    xyy = x*yy # qa^2*qc
+    xzz = x*zz # qb^2*qc
+    yyzz = yy*zz # qa^2*qb^2
+    yz = y*z # qa*qb
+    xy = x*y # qa*qc
+    xz = x*z # qb*qc
+    xyz = xy*z # qa*qb*qc
+    xyzz = xyz*z # qa*qb^2*qc
+    xyyz = xyy*z # qa^2*qb*qc
+    xyyzz = xyyz*z # qa^2*qb^2*qc
+    poly = g001 + (-2.*g001 - 2.*g100 + 2.*g101) * y + \
+                  (-2.*g001 - 2.*g010 + 2.*g011) * z + \
+                  (-2.*g001 + g002) * x + \
+                  (g001 + 2.*g100 - 2.*g101 - g200 + g201) * yy + \
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021) * zz + \
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yzz + \
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yyz + \
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xyy + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xzz + \
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021 + 2.*g100 - 2.*g101 - 4.*g110 + 4.*g111 + 2.*g120 - 2.*g121 - g200 + g201 + 2.*g210 - 2.*g211 - g220 + g221) * yyzz + \
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + \
+                  (4.*g001 - 2.*g002 + 2.*g100 - 4.*g101 + 2.*g102) * xy + \
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 ) * xz + \
+                  (-8.*g001 + 4.*g002 - 4.*g010 + 8.*g011 - 4.*g012 - 4.*g100 + 8.*g101 - 4.*g102 + 4.*g110 - 8.*g111 + 4.*g112) * xyz + \
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110 + 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyzz + \
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly           
+
 # Python versions of grid spacing and del_j
 def _compute_dfactor(dx):
     r"""
@@ -2109,6 +2308,8 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     # note: we don't support alloa, allob, hex_tetra, or hex_dip as
     #       being the first dimension of the phi array in 3D
 
+    # also, we only support 2+2+2 hexaploids as being specified in the a, b, c order only
+
     if ploidy1[0]:
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
@@ -2136,7 +2337,18 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 1/6
-
+    elif ploidy1[7]: # if 2+2+2 hexaploid, subgenome a
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_hex_a(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], m12, m13,
+                            s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13],
+                            s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+        MxInt = _Mfunc3D_hex_a((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, 
+                          s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13],
+                          s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5
 
     ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
     ax[ 1:] += dfact_x[ 1:,nuax,nuax]*(-MxInt*deljx    
@@ -2228,6 +2440,18 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                           xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
         deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
         bc_factory = 0.5
+    elif ploidy2[8]: # if 2+2+2 hexaploid, subgenome b
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_hex_b(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:], m21, m23, 
+                      s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13],
+                      s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+        MyInt = _Mfunc3D_hex_b((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, 
+                         s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13],                         
+                         s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
   
     ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
     ay[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*deljy     
@@ -2312,6 +2536,18 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                       m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
         MzInt = _Mfunc3D_hex_dip((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
                           xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    elif ploidy3[9]: # if 2+2+2 hexaploid, subgenome c
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_hex_c(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax], m31, m32, 
+                      s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13],
+                      s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+        MzInt = _Mfunc3D_hex_c((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, 
+                        s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13],
+                        s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s2[22],s2[23],s2[24],s2[25])
         deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
         bc_factorz = 0.5
 
