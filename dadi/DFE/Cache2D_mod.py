@@ -246,13 +246,15 @@ class Cache2D:
         Integrate spectra over a bivariate prob. dist. for negative gammas plus
         a point mass of positive selection.
 
-        params: Parameters for sel_dist and positive selection.
+        params: Parameters for sel_dist and positive selection.\n
                 It is assumed that the last four parameters are:
                 Proportion positive selection in pop1, postive gamma for pop1,
-                 prop. positive in pop2, and positive gamma for pop2.
+                prop. positive in pop2, and positive gamma for pop2.
                 Earlier arguments are assumed to be for the continuous bivariate
                 distribution.
+
         ns: Ignored
+
         biv_seldist: Bivariate probability distribution for negative selection,
                      taking in arguments (xx, yy, params)
         theta: Population-scaled mutation rate

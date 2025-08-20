@@ -11,12 +11,20 @@ extra_javascript:
 plugins:
   - search
   - mkdocs-autoapi:
-      # autoapi_dir: dadi
-      autoapi_ignore: [LICSENSE, __init__.py, dadi/.*, dadi/*/.*, dadi/__init__.py, dadi/*/__init__.py, dadi/*.c, dadi/*.h, dadi/*.pyx, dadi/cuda/*, build/*]
+      autoapi_ignore: 
+        - "**/__init__.py"
+        - "**/*.c"
+        - "**/*.h"
+        - "**/*.pyx"
+        - "dadi/cuda/*"
+        - "build/*"
+        - "**/*._*"
       autoapi_file_patterns:
-        - "dadi/*.py"
-        - "dadi/*/*.py"
+        - "dadi/**/*.py"  # Simplified pattern to include all Python files recursively
       autoapi_add_nav_entry: API
+      autoapi_keep_files: true  # Added to retain intermediate files for debugging
+      autoapi_options:
+        - show-inheritance  # Added to display class inheritance in the documentation
   - mkdocstrings:
       default_handler: python
       handlers:
