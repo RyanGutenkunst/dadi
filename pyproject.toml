@@ -33,4 +33,4 @@ dependencies = [
 
 [project.urls]
 Documentation = "https://dadi.readthedocs.io/en/latest/"
-Source = "https://bitbucket.org/gutenkunstlab/dadi"
+Source = "https://github.com/RyanGutenkunst/dadi"
