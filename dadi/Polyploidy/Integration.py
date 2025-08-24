@@ -65,7 +65,6 @@ def _compute_dt(dx, nu, ms, sel, ploidy):
         return _compute_dt_hex_c(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], 
                                  sel[13], sel[14], sel[15], sel[16], sel[17], sel[18], sel[19], sel[20], sel[21], sel[22], sel[23], sel[24], sel[25])
 
-
 def _compute_dt_dip(dx, nu, ms, gamma, h):
     """
     Compute the appropriate timestep given the current demographic params
@@ -728,7 +727,8 @@ class PloidyType(IntEnum):
         }
         return param_map[self]
     
-    def _multiply_params(self, param1, param2):
+    @staticmethod
+    def _multiply_params(param1, param2):
         """Multiply two parameters that can each be either functions or constants.
            This allows us to support arbitrary combinations of functions of time and constants for selection."""
         p1_is_func = callable(param1)

@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from dadi.Misc import ensure_1arg_func 
 
-# Shared functions
+### ================
+### Shared functions
+### ================
 def LB_dominance_model(k, delta, dosage):
     """
     Computes dominance coefficient using a parameterized CDF 
@@ -67,8 +69,9 @@ def summarize_phi(phi, xx, model_name="No name specified"):
     plt.ylim(0, 1.1*max(phi))
     plt.show()
 
-# Diploid model
-
+### =============
+### Diploid model
+### =============
 def dip_selection(q, s, h):
     """
     Evaluates new value of q after one generation of selection for diploids.
@@ -159,7 +162,9 @@ def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = Fals
 
     return allele_freqs
 
-# Autotetraploid model based on allele sampling
+### ====================
+### Autotetraploid model 
+### ====================
 def auto_selection(q, s1, s2, s3, s4):
     """
     Evaluates new value of q after one generation of selection for autotetraploids.
@@ -254,147 +259,9 @@ def auto_allelic_WF(N, T, init_q, gamma1, gamma2, gamma3, gamma4, nu = 1, replic
     
     return allele_freqs
 
-# Autotetraploid model based on gametic sampling
-def auto_gamete_recursions(gamete_freqs, fitness):
-    """
-    gamete_freqs = (g0, g1, g2)
-
-    Creates gamete pool for the next generation by deterministically 
-    forming and selecting genotypes and a subsequent gamete pool.
-
-    g0: frequency of g0 gamete
-    g1: frequency of g1 gamete
-    g2: frequency of g2 gamete
-    fitness: numpy array of fitnesses for G0, G1, G2, G3, G4 individuals
-
-    Returns:
-        gamete_plus_1: gamete frequencies for the sampling function
-    """
-
-    # unpack vectors of gamete frequencies
-    g0, g1, g2 = gamete_freqs
-    # compute genotype frequencies
-    genotype_freqs = np.array([g0**2, 2*g0*g1, 2*g0*g2 + g1**2, 2*g1*g2, g2**2])
-    # compute average fitness
-    average_fitness = np.dot(fitness, genotype_freqs)
-    # create a compatible size matrix of fitness values
-    fitness_vector = np.array([[fitness[0]], [fitness[1]], [fitness[2]], [fitness[3]], [fitness[4]]])
-    fitness_matrix = np.repeat(fitness_vector, g0.size, axis = 1)
-    # calculate normalized frequencies of genotypes post selection
-    post_sel_genotypes = (fitness_matrix * genotype_freqs)/average_fitness
-    # create frequencies of gametes post selection
-    g0_plus_1 = post_sel_genotypes[0, :] + post_sel_genotypes[1, :]/2 + post_sel_genotypes[2, :]/6
-    g1_plus_1 = post_sel_genotypes[1, :]/2 + 2*post_sel_genotypes[2, :]/3 + post_sel_genotypes[3, :]/2
-    g2_plus_1 = post_sel_genotypes[2, :]/6 + post_sel_genotypes[3, :]/2 + post_sel_genotypes[4, :]
-
-    gamete_plus_1 = np.array([g0_plus_1, g1_plus_1, g2_plus_1])
-    
-    return gamete_plus_1
-
-def auto_gametic_WF(N, T, init_q, gamma1, gamma2, gamma3, gamma4, nu = 1, replicates = 1, plot = False, track_all = False):
-    """
-    Simple Wright-Fisher model of genetic drift in autotetraploids based on gamete frequency sampling.
-
-    N: population size (number of individuals)
-    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
-    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
-    gamma1: population-scaled selection coefficient for G1 individuals
-        (<0 is purifying, >0 is positive)
-        gamma1 = 2*N*s1 where a G1 individual has fitness 1 + 2*s1
-    gamma2: population-scaled selection coefficient for G2 individuals
-    gamma3: population-scaled selection coefficient for G3 individuals
-    gamma4: population-scaled selection coefficient for G4 individuals
-        This is the closest to "gamma" for diploids
-    nu: population size relative to ancestral population size
-        nu can be a constant or a function of diffusion-scaled time
-    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
-    replicates: number of times to run the simulation
-    plot: Boolean input to either show a plot of individual trajectories or not
-    track_all: Boolean input to either track and return all trajectories or not
-        This usage and plot are not recommended for analysis, but are reasonable usages for debuggging
-        They are very memory intensive options and also slow down the code up to 50%
-
-    Returns:
-        allele_freqs: array of allele frequencies, either just final 
-            or if track_all = True, then over time 
-    """
-    if np.less(N, 0) or np.less(T, 0):
-        raise(ValueError("The population size or time is less than zero." 
-                         " Has the model been misspecified?"))
-    
-    if np.any(np.less(init_q, 0)) or np.any(np.greater(init_q, 1)):
-        raise(ValueError("At least one initial q_value is less than zero"
-                         " or greater than one."))
-    
-    if len(init_q) != replicates:
-        raise ValueError("Length of init_q must equal number of replicates.")
-    
-    nu_f = ensure_1arg_func(nu)
-
-    # if we want to plot, we need to track all of the trajectories
-    if plot:
-        track_all = True
-    
-    # calculate s from gamma because we will need it for our generation based simulation
-    s1, s2, s3, s4 = gamma1/(2*N), gamma2/(2*N), gamma3/(2*N), gamma4/(2*N)
-
-    fitness = np.array([1, 1+2*s1, 1+2*s2, 1+2*s3, 1+2*s4])
-
-    if track_all:
-        # create tensor to store gamete frequencies
-        # first dimension delineates across gamete types (g0, g1, g2)
-        # second = separate runs
-        # third = time
-        gamete_freqs = np.empty((3, replicates, int(2*N*T+1)))
-        gamete_freqs[0, :, 0] = (1-init_q)**2
-        gamete_freqs[1, :, 0] = 2*init_q*(1-init_q)
-        gamete_freqs[2, :, 0] = init_q**2
-    else:
-        # create matrix to store gamete frequencies
-        # first dimension delineates across gamete types (g0, g1, g2)
-        # second = separate runs
-        gamete_freqs = np.empty((3, replicates))
-        gamete_freqs[0, :] = (1-init_q)**2
-        gamete_freqs[1, :] = 2*init_q*(1-init_q)
-        gamete_freqs[2, :] = init_q**2
-
-    rng = np.random.default_rng()
-    total_gens = int(2*N*T)
-    for t in range(0, total_gens):
-        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
-        samples = int(2*N*nu)
-        if track_all:
-            gametes_post_sel = auto_gamete_recursions(gamete_freqs[:, :, t], fitness)
-            # Note the transposes below. This could be addressed by fixing the shape of the gamete_freqs, 
-            # but is a relatively trivial calculation especially for vectors
-            gamete_freqs[:, :, t+1] = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
-        else:
-            gametes_post_sel = auto_gamete_recursions(gamete_freqs, fitness)
-            # Note the transposes below. This could be addressed by fixing the shape of the gamete_freqs, 
-            # but is a relatively trivial calculation especially for vectors
-            gamete_freqs = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
-
-    if track_all:
-        allele_freqs = .5*gamete_freqs[1, :, :] + gamete_freqs[2, :, :]
-    else:
-        allele_freqs = .5*gamete_freqs[1, :] + gamete_freqs[2, :]
-
-    if plot:
-        plt.plot(allele_freqs.T, color='gray', alpha=0.025)
-        plt.plot(np.mean(allele_freqs, axis=0), color='black', lw=2)
-        plt.xlabel('Generation')
-        plt.ylabel('Mutant Allele Frequency')
-        plt.title('Autotetraploid Allelic Drift Simulation')
-        plt.ylim(-.1, 1.1)
-        plt.show()
-           
-    return allele_freqs
-
-# Allotetraploid model based on allelic sampling
-
-# Note: only the allelic model for allos has the exchange parameter from Blischak et al. incorporated
-# The implementation for the gamete based model is unclear to me
-
+### ====================
+### Allotetraploid model 
+### ====================
 def allo_selection(qa, qb, s01, s02, s10, s11, s12, s20, s21, s22):
     """
     Evaluates new values of qa and qb after one generation of selection
@@ -582,164 +449,9 @@ def allo_allelic_WF(N, T, E, gamma01, gamma02, gamma10, gamma11, gamma12, gamma2
         
     return allele_freqs
 
-
-# Allotetraploid model based on gametic sampling
-def allo_gamete_recursions(gamete_freqs, fitness):
-    """
-    gamete_freqs = (g00, g01, g10, g11)
-
-    Creates gamete pool for the next generation by deterministically 
-    forming genotypes and a subsequent gamete pool.
-
-    g00: frequency of g00 gamete
-    g01: frequency of g01 gamete
-    g10: frequency of g10 gamete
-    g11: frequency of g11 gamete
-    fitness: numpy array of fitnesses for G00, G01, G02, G10, G11, G12, G20, G21, G22 individuals
-
-    Returns: 
-        gamete_plus_1: gamete frequencies post selection and meiosis
-    """
-
-    # unpack vectors of gamete frequencies
-    g00, g01, g10, g11 = gamete_freqs
-    # compute genotype frequencies
-    genotype_freqs = np.array([g00**2, 2*g00*g01, g01**2, 2*g00*g10, 2*(g00*g11 + g01*g10), 2*g01*g11, g10**2, 2*g10*g11, g11**2])
-    # compute average fitness
-    average_fitness = np.dot(fitness, genotype_freqs)
-    # create a compatible size matrix of fitness values for element wise operations below
-    fitness_matrix = np.repeat(fitness[:, np.newaxis], g00.size, axis = 1)
-    # calculate normalized frequencies of genotypes post selection
-    post_sel_genotypes = (fitness_matrix * genotype_freqs) / average_fitness
-    psGs = post_sel_genotypes
-    # create frequencies of gametes post selection
-    g00_plus_1 = psGs[0] + psGs[1]/2 + psGs[3]/2 + psGs[4]/4
-    g01_plus_1 = psGs[1]/2 + psGs[2] + psGs[4]/4 + psGs[5]/2
-    g10_plus_1 = psGs[3]/2 + psGs[4]/4 + psGs[6] + psGs[7]/2
-    g11_plus_1 = psGs[4]/4 + psGs[5]/2 + psGs[7]/2 + psGs[8]
-
-    gamete_plus_1 = np.array([g00_plus_1, g01_plus_1, g10_plus_1, g11_plus_1])
-
-    return gamete_plus_1
-
-def allo_gametic_WF(N, T, gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22, 
-                    init_qa, init_qb, nu = 1, replicates = 1, plot = False, track_all = False):
-    """
-    Simple Wright-Fisher model of genetic drift in allotetraploids based on gametic sampling. 
-
-    N: population size (number of individuals)
-    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
-    gammaij: population-scaled selection coefficient (<0 is purifying, >0 is positive)
-        gamma = 2Nsij
-        gammaij corresponds to the scaled s for an individual of type G_ij
-    init_qa: vector of initial allele frequencies for selected allele in a subgenome; must have size = replicates
-    init_qb: vector of initial allele frequencies for selected allele in b subgenome; must have size = replicates
-    nu: population size relative to ancestral population size
-        nu can be a constant or a function of diffusion-scaled time
-    replicates: number of times to run the simulation
-    plot: Boolean input to either show a plot of individual trajectories or not
-    track_all: Boolean input to either track and return all trajectories or not
-        This usage and plot are not recommended for analysis, but are reasonable usages for debuggging
-        They are very memory intensive options and also slow down the code up to 50%
-
-    Returns:
-        allele_frequencies: array of allele frequencies over time
-    """
-
-    if np.less(N, 0) or np.less(T, 0):
-        raise(ValueError("The population size or time is less than zero." 
-                         " Has the model been misspecified?"))
-    
-    if np.any(np.less(init_qa, 0)) or np.any(np.greater(init_qa, 1)):
-        raise(ValueError("At least one initial q_value for subgenome a"
-                         " is less than zero or greater than one."))
-    
-    if np.any(np.less(init_qb, 0)) or np.any(np.greater(init_qb, 1)):
-        raise(ValueError("At least one initial q_value for subgenome b"
-                         " is less than zero or greater than one."))
-    
-    if len(init_qa) != replicates:
-        raise ValueError("Length of init_qa must equal number of replicates.")
-    
-    if len(init_qb) != replicates:
-        raise ValueError("Length of init_qb must equal number of replicates.")
-    
-    nu_f = ensure_1arg_func(nu)
-
-    # if we want to plot, we need to track all of the trajectories
-    if plot:
-        track_all = True
-
-    # calculate s from gamma because we will need it for our generation based simulation
-    s01, s02, s10, s11 = gamma01/(2*N), gamma02/(2*N), gamma10/(2*N), gamma11/(2*N)
-    s12, s20, s21, s22 = gamma12/(2*N), gamma20/(2*N), gamma21/(2*N), gamma22/(2*N)
-
-    fitness = np.array([1, 1+2*s01, 1+2*s02, 1+2*s10, 1+2*s11, 1+2*s12, 1+2*s20, 1+2*s21, 1+2*s22])
-
-    if track_all:
-        # create tensor to store gamete frequencies
-        # first dimension delineates across gamete types (g00, g01, g10, g11)
-        # second = separate runs
-        # third = time
-        gamete_freqs = np.empty((4, replicates, int(2*N*T+1)))
-        gamete_freqs[0, :, 0] = (1-init_qa)*(1-init_qb)
-        gamete_freqs[1, :, 0] = (1-init_qa)*init_qb
-        gamete_freqs[2, :, 0] = init_qa*(1-init_qb)
-        gamete_freqs[3, :, 0] = init_qa*init_qb
-    else:
-        # create matrix to store gamete frequencies
-        # first dimension delineates across gamete types (g00, g01, g10, g11)
-        # second = separate runs
-        gamete_freqs = np.empty((4, replicates))
-        gamete_freqs[0, :] = (1-init_qa)*(1-init_qb)
-        gamete_freqs[1, :] = (1-init_qa)*init_qb
-        gamete_freqs[2, :] = init_qa*(1-init_qb)
-        gamete_freqs[3, :] = init_qa*init_qb
-
-    rng = np.random.default_rng()
-    total_gens = int(2*N*T)
-    for t in range(total_gens):
-        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
-        samples = int(2*N*nu)
-
-        if track_all:
-            gametes_post_sel = allo_gamete_recursions(gamete_freqs[:, :, t], fitness)
-            # Note the transposes below. This could be addressed by changing the shape of the gamete_freqs, 
-            # but is a relatively trivial calculation especially for vectors
-            gamete_freqs[:, :, t+1] = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
-        else:
-            gametes_post_sel = allo_gamete_recursions(gamete_freqs[:, :], fitness)
-            gamete_freqs[:, :] = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
-
-    if track_all:    
-        q_freq_a = gamete_freqs[2, :, :] + gamete_freqs[3, :, :]
-        q_freq_b = gamete_freqs[1, :, :] + gamete_freqs[3, :, :]
-    else:
-        q_freq_a = gamete_freqs[2, :] + gamete_freqs[3, :]
-        q_freq_b = gamete_freqs[1, :] + gamete_freqs[3, :]
-    
-    overall_q_freq = (q_freq_a + q_freq_b) / 2
-    allele_freqs = np.array([q_freq_a, q_freq_b])
-
-    if plot: 
-        fig, axs = plt.subplots(3, 1, sharex = 'col', sharey = 'row')
-        # axs[0] = Subgenome A, axs[1] = Subgenome B, axs[2] = Overall
-        for i in range(replicates):
-            axs[0].plot(q_freq_a[i, :], color="gray", alpha=0.025)
-            axs[1].plot(q_freq_b[i, :], color="gray", alpha=0.025)
-            axs[2].plot(overall_q_freq[i, :], color="gray", alpha=0.025)
-        axs[0].set_ylabel("Subgenome A")
-        axs[0].set_ylim(-.1, 1.1)
-        axs[1].set_ylabel("Subgenome B")
-        axs[1].set_ylim(-.1, 1.1)
-        axs[2].set_ylabel("Overall")
-        axs[2].set_ylim(-.1, 1.1)
-        fig.supxlabel('Time (in generations)')
-        fig.suptitle('Allele Frequencies Over Time')
-        plt.show()
-
-    return allele_freqs
-
+### ===================
+### Autohexaploid model
+### ===================
 def autohex_selection(q, s1, s2, s3, s4, s5, s6):
     """
     Evaluates new values of q after one generation of selection
@@ -808,6 +520,9 @@ def autohex_allelic_WF(N, T, init_q, s, nu = 1, replicates = 1):
     
     return allele_freqs
 
+### =======================
+### Alloautohexaploid model
+### =======================
 def hex_tetra_selection(qa, qb, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, s32, s40, s41, s42):
     """
     Evaluates new values of q for the tetraploid subgenome 
@@ -856,7 +571,7 @@ def hex_dip_selection(qa, qb, s01, s02, s10, s11, s12, s20, s21, s22, s30, s31, 
 
 def hex_4_2_WF(N, T, E, init_q4, init_q2, s, nu=1, replicates=1):
     """
-    Simple Wright-Fisher model of genetic drift in allotetraploids based on allelic sampling.
+    Simple Wright-Fisher model of genetic drift in alloautohexaploids based on allelic sampling.
 
     N: population size (number of individuals)
     T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
@@ -950,9 +665,240 @@ def hex_4_2_WF(N, T, E, init_q4, init_q2, s, nu=1, replicates=1):
         
     return allele_freqs
 
+### =======================
+### Alloallohexaploid model
+### =======================
+def hex_a_selection(qa, qb, qc, s001, s002, s010, s011, s012, s020, s021, s022, 
+                    s100, s101, s102, s110, s111, s112, s120, s121, s122, 
+                    s200, s201, s202, s210, s211, s212, s220, s221, s222):
+    """
+    Evaluates new values of qa after one generation of selection for alloallohexaploids.
+    """
 
-### 2 Pop models
+    qa_post_sel = (qa**2*qb**2*qc**2*(2*s222 + 1) + qa**2*qc**2*(2*s202 + 1)*(qb - 1)**2
+                    + qa**2*qb**2*(2*s220 + 1)*(qc - 1)**2 + qa**2*(2*s200 + 1)*(qb - 1)**2*(qc - 1)**2
+                    - qa*(2*s100 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1)**2 - qa*qb**2*qc**2*(2*s122 + 1)*(qa - 1)
+                    - 2*qa**2*qb*qc**2*(2*s212 + 1)*(qb - 1) - 2*qa**2*qb**2*qc*(2*s221 + 1)*(qc - 1)
+                    - qa*qc**2*(2*s102 + 1)*(qa - 1)*(qb - 1)**2 - qa*qb**2*(2*s120 + 1)*(qa - 1)*(qc - 1)**2
+                    - 2*qa**2*qb*(2*s210 + 1)*(qb - 1)*(qc - 1)**2 - 2*qa**2*qc*(2*s201 + 1)*(qb - 1)**2*(qc - 1)
+                    + 2*qa*qb*(2*s110 + 1)*(qa - 1)*(qb - 1)*(qc - 1)**2 + 2*qa*qc*(2*s101 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1)
+                    + 2*qa*qb*qc**2*(2*s112 + 1)*(qa - 1)*(qb - 1) + 2*qa*qb**2*qc*(2*s121 + 1)*(qa - 1)*(qc - 1)
+                    + 4*qa**2*qb*qc*(2*s211 + 1)*(qb - 1)*(qc - 1) - 4*qa*qb*qc*(2*s111 + 1)*(qa - 1)*(qb - 1)*(qc - 1))/(
+                    (qa - 1)**2*(qb - 1)**2*(qc - 1)**2 + qa**2*qb**2*qc**2*(2*s222 + 1) + qb**2*qc**2*(2*s022 + 1)*(qa - 1)**2 
+                    + qa**2*qc**2*(2*s202 + 1)*(qb - 1)**2 + qa**2*qb**2*(2*s220 + 1)*(qc - 1)**2 + qc**2*(2*s002 + 1)*(qa - 1)**2*(qb - 1)**2 
+                    + qb**2*(2*s020 + 1)*(qa - 1)**2*(qc - 1)**2 + qa**2*(2*s200 + 1)*(qb - 1)**2*(qc - 1)**2
+                    - 2*qa*(2*s100 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1)**2 - 2*qb*(2*s010 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1)**2 
+                    - 2*qc*(2*s001 + 1)*(qa - 1)**2*(qb - 1)**2*(qc - 1) - 2*qa*qb**2*qc**2*(2*s122 + 1)*(qa - 1) 
+                    - 2*qa**2*qb*qc**2*(2*s212 + 1)*(qb - 1) - 2*qa**2*qb**2*qc*(2*s221 + 1)*(qc - 1) 
+                    - 2*qa*qc**2*(2*s102 + 1)*(qa - 1)*(qb - 1)**2 - 2*qa*qb**2*(2*s120 + 1)*(qa - 1)*(qc - 1)**2 
+                    - 2*qb*qc**2*(2*s012 + 1)*(qa - 1)**2*(qb - 1) - 2*qa**2*qb*(2*s210 + 1)*(qb - 1)*(qc - 1)**2 
+                    - 2*qb**2*qc*(2*s021 + 1)*(qa - 1)**2*(qc - 1) - 2*qa**2*qc*(2*s201 + 1)*(qb - 1)**2*(qc - 1) 
+                    + 4*qa*qb*(2*s110 + 1)*(qa - 1)*(qb - 1)*(qc - 1)**2 + 4*qa*qc*(2*s101 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1) 
+                    + 4*qb*qc*(2*s011 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1) + 4*qa*qb*qc**2*(2*s112 + 1)*(qa - 1)*(qb - 1) 
+                    + 4*qa*qb**2*qc*(2*s121 + 1)*(qa - 1)*(qc - 1) + 4*qa**2*qb*qc*(2*s211 + 1)*(qb - 1)*(qc - 1) 
+                    - 8*qa*qb*qc*(2*s111 + 1)*(qa - 1)*(qb - 1)*(qc - 1))
+ 
+    return qa_post_sel
 
+def hex_b_selection(qa, qb, qc, s001, s002, s010, s011, s012, s020, s021, s022, 
+                    s100, s101, s102, s110, s111, s112, s120, s121, s122, 
+                    s200, s201, s202, s210, s211, s212, s220, s221, s222):
+    """
+    Evaluates new values of qa after one generation of selection for alloallohexaploids.
+    """
+
+    qb_post_sel = (qa**2*qb**2*qc**2*(2*s222 + 1) + qb**2*qc**2*(2*s022 + 1)*(qa - 1)**2 
+                   + qa**2*qb**2*(2*s220 + 1)*(qc - 1)**2 + qb**2*(2*s020 + 1)*(qa - 1)**2*(qc - 1)**2 
+                   - qb*(2*s010 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1)**2 - 2*qa*qb**2*qc**2*(2*s122 + 1)*(qa - 1) 
+                   - qa**2*qb*qc**2*(2*s212 + 1)*(qb - 1) - 2*qa**2*qb**2*qc*(2*s221 + 1)*(qc - 1) 
+                   - 2*qa*qb**2*(2*s120 + 1)*(qa - 1)*(qc - 1)**2 - qb*qc**2*(2*s012 + 1)*(qa - 1)**2*(qb - 1) 
+                   - qa**2*qb*(2*s210 + 1)*(qb - 1)*(qc - 1)**2 - 2*qb**2*qc*(2*s021 + 1)*(qa - 1)**2*(qc - 1) 
+                   + 2*qa*qb*(2*s110 + 1)*(qa - 1)*(qb - 1)*(qc - 1)**2 + 2*qb*qc*(2*s011 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1) 
+                   + 2*qa*qb*qc**2*(2*s112 + 1)*(qa - 1)*(qb - 1) + 4*qa*qb**2*qc*(2*s121 + 1)*(qa - 1)*(qc - 1) 
+                   + 2*qa**2*qb*qc*(2*s211 + 1)*(qb - 1)*(qc - 1) - 4*qa*qb*qc*(2*s111 + 1)*(qa - 1)*(qb - 1)*(qc - 1))/(
+                       (qa - 1)**2*(qb - 1)**2*(qc - 1)**2 + qa**2*qb**2*qc**2*(2*s222 + 1) + qb**2*qc**2*(2*s022 + 1)*(qa - 1)**2 
+                       + qa**2*qc**2*(2*s202 + 1)*(qb - 1)**2 + qa**2*qb**2*(2*s220 + 1)*(qc - 1)**2 + qc**2*(2*s002 + 1)*(qa - 1)**2*(qb - 1)**2 
+                       + qb**2*(2*s020 + 1)*(qa - 1)**2*(qc - 1)**2 + qa**2*(2*s200 + 1)*(qb - 1)**2*(qc - 1)**2 
+                       - 2*qa*(2*s100 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1)**2 - 2*qb*(2*s010 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1)**2 
+                       - 2*qc*(2*s001 + 1)*(qa - 1)**2*(qb - 1)**2*(qc - 1) - 2*qa*qb**2*qc**2*(2*s122 + 1)*(qa - 1) 
+                       - 2*qa**2*qb*qc**2*(2*s212 + 1)*(qb - 1) - 2*qa**2*qb**2*qc*(2*s221 + 1)*(qc - 1) 
+                       - 2*qa*qc**2*(2*s102 + 1)*(qa - 1)*(qb - 1)**2 - 2*qa*qb**2*(2*s120 + 1)*(qa - 1)*(qc - 1)**2 
+                       - 2*qb*qc**2*(2*s012 + 1)*(qa - 1)**2*(qb - 1) - 2*qa**2*qb*(2*s210 + 1)*(qb - 1)*(qc - 1)**2 
+                       - 2*qb**2*qc*(2*s021 + 1)*(qa - 1)**2*(qc - 1) - 2*qa**2*qc*(2*s201 + 1)*(qb - 1)**2*(qc - 1) 
+                       + 4*qa*qb*(2*s110 + 1)*(qa - 1)*(qb - 1)*(qc - 1)**2 + 4*qa*qc*(2*s101 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1) 
+                       + 4*qb*qc*(2*s011 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1) + 4*qa*qb*qc**2*(2*s112 + 1)*(qa - 1)*(qb - 1) 
+                       + 4*qa*qb**2*qc*(2*s121 + 1)*(qa - 1)*(qc - 1) + 4*qa**2*qb*qc*(2*s211 + 1)*(qb - 1)*(qc - 1) 
+                       - 8*qa*qb*qc*(2*s111 + 1)*(qa - 1)*(qb - 1)*(qc - 1))
+ 
+ 
+    return qb_post_sel
+
+def hex_c_selection(qa, qb, qc, s001, s002, s010, s011, s012, s020, s021, s022, 
+                    s100, s101, s102, s110, s111, s112, s120, s121, s122, 
+                    s200, s201, s202, s210, s211, s212, s220, s221, s222):
+    """
+    Evaluates new values of qa after one generation of selection for alloallohexaploids.
+    """
+
+    qc_post_sel = (qa**2*qb**2*qc**2*(2*s222 + 1) + qb**2*qc**2*(2*s022 + 1)*(qa - 1)**2 
+                   + qa**2*qc**2*(2*s202 + 1)*(qb - 1)**2 + qc**2*(2*s002 + 1)*(qa - 1)**2*(qb - 1)**2 
+                   - qc*(2*s001 + 1)*(qa - 1)**2*(qb - 1)**2*(qc - 1) - 2*qa*qb**2*qc**2*(2*s122 + 1)*(qa - 1)
+                   - 2*qa**2*qb*qc**2*(2*s212 + 1)*(qb - 1) - qa**2*qb**2*qc*(2*s221 + 1)*(qc - 1) 
+                   - 2*qa*qc**2*(2*s102 + 1)*(qa - 1)*(qb - 1)**2 - 2*qb*qc**2*(2*s012 + 1)*(qa - 1)**2*(qb - 1) 
+                   - qb**2*qc*(2*s021 + 1)*(qa - 1)**2*(qc - 1) - qa**2*qc*(2*s201 + 1)*(qb - 1)**2*(qc - 1) 
+                   + 2*qa*qc*(2*s101 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1) + 2*qb*qc*(2*s011 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1) 
+                   + 4*qa*qb*qc**2*(2*s112 + 1)*(qa - 1)*(qb - 1) + 2*qa*qb**2*qc*(2*s121 + 1)*(qa - 1)*(qc - 1) 
+                   + 2*qa**2*qb*qc*(2*s211 + 1)*(qb - 1)*(qc - 1) - 4*qa*qb*qc*(2*s111 + 1)*(qa - 1)*(qb - 1)*(qc - 1))/(
+                       (qa - 1)**2*(qb - 1)**2*(qc - 1)**2 + qa**2*qb**2*qc**2*(2*s222 + 1) + qb**2*qc**2*(2*s022 + 1)*(qa - 1)**2 
+                       + qa**2*qc**2*(2*s202 + 1)*(qb - 1)**2 + qa**2*qb**2*(2*s220 + 1)*(qc - 1)**2 
+                       + qc**2*(2*s002 + 1)*(qa - 1)**2*(qb - 1)**2 + qb**2*(2*s020 + 1)*(qa - 1)**2*(qc - 1)**2 
+                       + qa**2*(2*s200 + 1)*(qb - 1)**2*(qc - 1)**2 - 2*qa*(2*s100 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1)**2 
+                       - 2*qb*(2*s010 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1)**2 - 2*qc*(2*s001 + 1)*(qa - 1)**2*(qb - 1)**2*(qc - 1) 
+                       - 2*qa*qb**2*qc**2*(2*s122 + 1)*(qa - 1) - 2*qa**2*qb*qc**2*(2*s212 + 1)*(qb - 1) 
+                       - 2*qa**2*qb**2*qc*(2*s221 + 1)*(qc - 1) - 2*qa*qc**2*(2*s102 + 1)*(qa - 1)*(qb - 1)**2 
+                       - 2*qa*qb**2*(2*s120 + 1)*(qa - 1)*(qc - 1)**2 - 2*qb*qc**2*(2*s012 + 1)*(qa - 1)**2*(qb - 1) 
+                       - 2*qa**2*qb*(2*s210 + 1)*(qb - 1)*(qc - 1)**2 - 2*qb**2*qc*(2*s021 + 1)*(qa - 1)**2*(qc - 1) 
+                       - 2*qa**2*qc*(2*s201 + 1)*(qb - 1)**2*(qc - 1) + 4*qa*qb*(2*s110 + 1)*(qa - 1)*(qb - 1)*(qc - 1)**2 
+                       + 4*qa*qc*(2*s101 + 1)*(qa - 1)*(qb - 1)**2*(qc - 1) + 4*qb*qc*(2*s011 + 1)*(qa - 1)**2*(qb - 1)*(qc - 1) 
+                       + 4*qa*qb*qc**2*(2*s112 + 1)*(qa - 1)*(qb - 1) + 4*qa*qb**2*qc*(2*s121 + 1)*(qa - 1)*(qc - 1) 
+                       + 4*qa**2*qb*qc*(2*s211 + 1)*(qb - 1)*(qc - 1) - 8*qa*qb*qc*(2*s111 + 1)*(qa - 1)*(qb - 1)*(qc - 1))
+ 
+ 
+ 
+    return qc_post_sel
+
+def hex_2_2_2_WF(N, T, Eab, Eac, Ebc, init_qa, init_qb, init_qc, s, nu=1, replicates=1):
+    """
+    Simple Wright-Fisher model of genetic drift in allotetraploids based on allelic sampling.
+
+    N: population size (number of individuals)
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    s: vector of gammas for alloallohexaploids (gamma001, ..., gamma222)
+    E_ij: population scaled probability that meiosis results in the exchange 
+        of genetic material between subgenomes i and j 
+        see Blischak et al. (2023) Genetics
+        E_ij = 2Ne_ij
+    init_qi: vector of initial allele frequencies for selected allele in ith subgenome; must have size = replicates
+    nu: population size relative to ancestral population size
+        nu can be a constant or a function of diffusion-scaled time
+    replicates: number of times to run the simulation
+    
+    Returns: 
+        allele_freqs: matrix of allele frequencies over generations
+            each row corresponds to a single simulation
+            each column corresponds to a single point in time
+    """
+
+    if np.less(N, 0) or np.less(T, 0):
+        raise(ValueError("The population size or time is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_qa, 0)) or np.any(np.greater(init_qa, 1)):
+        raise(ValueError("At least one initial q_value for subgenome a"
+                         " is less than zero or greater than one."))
+    
+    if np.any(np.less(init_qb, 0)) or np.any(np.greater(init_qb, 1)):
+        raise(ValueError("At least one initial q_value for subgenome b"
+                         " is less than zero or greater than one."))
+    
+    if np.any(np.less(init_qc, 0)) or np.any(np.greater(init_qc, 1)):
+        raise(ValueError("At least one initial q_value for subgenome b"
+                         " is less than zero or greater than one."))
+    
+    if len(init_qa) != replicates:
+        raise ValueError("Length of init_qa must equal number of replicates.")
+    
+    if len(init_qb) != replicates:
+        raise ValueError("Length of init_qb must equal number of replicates.")
+    
+    if len(init_qc) != replicates:
+        raise ValueError("Length of init_qb must equal number of replicates.")
+
+    nu_f = ensure_1arg_func(nu)
+
+    # calculate sij from gammaij because we will need it for our generation based simulation
+    s001, s002, s010, s011, s012 = s[0]/(2*N), s[1]/(2*N), s[2]/(2*N), s[3]/(2*N), s[4]/(2*N)
+    s020, s021, s022, s100, s101, s102 = s[5]/(2*N), s[6]/(2*N), s[7]/(2*N), s[8]/(2*N), s[9]/(2*N), s[10]/(2*N)
+    s110, s111, s112, s120, s121, s122 = s[11]/(2*N), s[12]/(2*N), s[13]/(2*N), s[14]/(2*N), s[15]/(2*N), s[16]/(2*N)
+    s200, s201, s202, s210, s211, s212 = s[17]/(2*N), s[18]/(2*N), s[19]/(2*N), s[20]/(2*N), s[21]/(2*N), s[22]/(2*N)
+    s220, s221, s222 = s[23]/(2*N), s[24]/(2*N), s[25]/(2*N)
+    
+    # same for e
+    eab = Eab/(2*N)
+    eac = Eac/(2*N)
+    ebc = Ebc/(2*N)
+
+    # create matrix to store allele frequencies
+    # first dimension delineates across subgenomes in order a, b, c
+    # second = separate runs
+    allele_freqs = np.empty((3, replicates))
+    
+    allele_freqs[0, :] = init_qa
+    allele_freqs[1, :] = init_qb
+    allele_freqs[2, :] = init_qc
+
+    s001_v = np.full(replicates, s001)
+    s002_v = np.full(replicates, s002)
+    s010_v = np.full(replicates, s010)
+    s011_v = np.full(replicates, s011)
+    s012_v = np.full(replicates, s012)
+    s020_v = np.full(replicates, s020)
+    s021_v = np.full(replicates, s021)
+    s022_v = np.full(replicates, s022)
+    s100_v = np.full(replicates, s100)
+    s101_v = np.full(replicates, s101)
+    s102_v = np.full(replicates, s102)
+    s110_v = np.full(replicates, s110)
+    s111_v = np.full(replicates, s111)
+    s112_v = np.full(replicates, s112)
+    s120_v = np.full(replicates, s120)
+    s121_v = np.full(replicates, s121)
+    s122_v = np.full(replicates, s122)
+    s200_v = np.full(replicates, s200)
+    s201_v = np.full(replicates, s201)
+    s202_v = np.full(replicates, s202)
+    s210_v = np.full(replicates, s210)
+    s211_v = np.full(replicates, s211)
+    s212_v = np.full(replicates, s212)
+    s220_v = np.full(replicates, s220)
+    s221_v = np.full(replicates, s221)
+    s222_v = np.full(replicates, s222)
+
+    rng = np.random.default_rng()
+
+    total_gens = int(2*N*T)
+    for t in range(total_gens):
+        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
+        samples = int(2*N*nu)
+        
+        qa_next = hex_a_selection(allele_freqs[0, :], allele_freqs[1, :], allele_freqs[2, :], 
+                                  s001_v, s002_v, s010_v, s011_v, s012_v, s020_v, s021_v, s022_v, 
+                                  s100_v, s101_v, s102_v, s110_v, s111_v, s112_v, s120_v, s121_v, s122_v, 
+                                  s200_v, s201_v, s202_v, s210_v, s211_v, s212_v, s220_v, s221_v, s222_v)
+        
+        qb_next = hex_b_selection(allele_freqs[0, :], allele_freqs[1, :], allele_freqs[2, :], 
+                                  s001_v, s002_v, s010_v, s011_v, s012_v, s020_v, s021_v, s022_v, 
+                                  s100_v, s101_v, s102_v, s110_v, s111_v, s112_v, s120_v, s121_v, s122_v, 
+                                  s200_v, s201_v, s202_v, s210_v, s211_v, s212_v, s220_v, s221_v, s222_v)
+        
+        qc_next = hex_c_selection(allele_freqs[0, :], allele_freqs[1, :], allele_freqs[2, :], 
+                                  s001_v, s002_v, s010_v, s011_v, s012_v, s020_v, s021_v, s022_v, 
+                                  s100_v, s101_v, s102_v, s110_v, s111_v, s112_v, s120_v, s121_v, s122_v, 
+                                  s200_v, s201_v, s202_v, s210_v, s211_v, s212_v, s220_v, s221_v, s222_v)
+            
+        qa_next += eab*(allele_freqs[1, :] - allele_freqs[0, :]) + eac*(allele_freqs[2, :] - allele_freqs[0, :])
+        qb_next += eab*(allele_freqs[0, :] - allele_freqs[1, :]) + ebc*(allele_freqs[2, :] - allele_freqs[1, :])
+        qc_next += eac*(allele_freqs[0, :] - allele_freqs[2, :]) + ebc*(allele_freqs[1, :] - allele_freqs[2, :])
+
+        allele_freqs[0, :] = rng.binomial(samples, qa_next)/(samples)
+        allele_freqs[1, :] = rng.binomial(samples, qb_next)/(samples)
+        allele_freqs[2, :] = rng.binomial(samples, qc_next)/(samples)
+        
+    return allele_freqs
+
+### 2 Pop models 
+### Note: here, population refers not to the dimension of phi, but to the number of populations
+### e.g. dip_allo_WF is a 3D phi, but two populations (because the allotetraploid subgenomes are separate)
 def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
     """
     Wright-Fisher model of two populations. 
@@ -1329,7 +1275,6 @@ def auto_auto_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 
     
     return allele_freqs
 
-### 3 Pop models
 def dip_allo_WF(N, T, M12, M21, M13, M31, M23, M32,
                     sel1, sel2, sel3, 
                     init_q1, init_q2, init_q3,
@@ -1443,3 +1388,304 @@ def dip_allo_WF(N, T, M12, M21, M13, M31, M23, M32,
 
     return q_freqs
 
+
+### ============================================================================
+### Old gametic sampling code for tetraploids to compare to allelic models above
+### ============================================================================
+
+### ============================
+### Autotetraploid gametic model
+### ============================
+def auto_gamete_recursions(gamete_freqs, fitness):
+    """
+    gamete_freqs = (g0, g1, g2)
+
+    Creates gamete pool for the next generation by deterministically 
+    forming and selecting genotypes and a subsequent gamete pool.
+
+    g0: frequency of g0 gamete
+    g1: frequency of g1 gamete
+    g2: frequency of g2 gamete
+    fitness: numpy array of fitnesses for G0, G1, G2, G3, G4 individuals
+
+    Returns:
+        gamete_plus_1: gamete frequencies for the sampling function
+    """
+
+    # unpack vectors of gamete frequencies
+    g0, g1, g2 = gamete_freqs
+    # compute genotype frequencies
+    genotype_freqs = np.array([g0**2, 2*g0*g1, 2*g0*g2 + g1**2, 2*g1*g2, g2**2])
+    # compute average fitness
+    average_fitness = np.dot(fitness, genotype_freqs)
+    # create a compatible size matrix of fitness values
+    fitness_vector = np.array([[fitness[0]], [fitness[1]], [fitness[2]], [fitness[3]], [fitness[4]]])
+    fitness_matrix = np.repeat(fitness_vector, g0.size, axis = 1)
+    # calculate normalized frequencies of genotypes post selection
+    post_sel_genotypes = (fitness_matrix * genotype_freqs)/average_fitness
+    # create frequencies of gametes post selection
+    g0_plus_1 = post_sel_genotypes[0, :] + post_sel_genotypes[1, :]/2 + post_sel_genotypes[2, :]/6
+    g1_plus_1 = post_sel_genotypes[1, :]/2 + 2*post_sel_genotypes[2, :]/3 + post_sel_genotypes[3, :]/2
+    g2_plus_1 = post_sel_genotypes[2, :]/6 + post_sel_genotypes[3, :]/2 + post_sel_genotypes[4, :]
+
+    gamete_plus_1 = np.array([g0_plus_1, g1_plus_1, g2_plus_1])
+    
+    return gamete_plus_1
+
+def auto_gametic_WF(N, T, init_q, gamma1, gamma2, gamma3, gamma4, nu = 1, replicates = 1, plot = False, track_all = False):
+    """
+    Simple Wright-Fisher model of genetic drift in autotetraploids based on gamete frequency sampling.
+
+    N: population size (number of individuals)
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
+    gamma1: population-scaled selection coefficient for G1 individuals
+        (<0 is purifying, >0 is positive)
+        gamma1 = 2*N*s1 where a G1 individual has fitness 1 + 2*s1
+    gamma2: population-scaled selection coefficient for G2 individuals
+    gamma3: population-scaled selection coefficient for G3 individuals
+    gamma4: population-scaled selection coefficient for G4 individuals
+        This is the closest to "gamma" for diploids
+    nu: population size relative to ancestral population size
+        nu can be a constant or a function of diffusion-scaled time
+    init_q: vector of initial allele frequencies for selected allele; must have size = replicates
+    replicates: number of times to run the simulation
+    plot: Boolean input to either show a plot of individual trajectories or not
+    track_all: Boolean input to either track and return all trajectories or not
+        This usage and plot are not recommended for analysis, but are reasonable usages for debuggging
+        They are very memory intensive options and also slow down the code up to 50%
+
+    Returns:
+        allele_freqs: array of allele frequencies, either just final 
+            or if track_all = True, then over time 
+    """
+    if np.less(N, 0) or np.less(T, 0):
+        raise(ValueError("The population size or time is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_q, 0)) or np.any(np.greater(init_q, 1)):
+        raise(ValueError("At least one initial q_value is less than zero"
+                         " or greater than one."))
+    
+    if len(init_q) != replicates:
+        raise ValueError("Length of init_q must equal number of replicates.")
+    
+    nu_f = ensure_1arg_func(nu)
+
+    # if we want to plot, we need to track all of the trajectories
+    if plot:
+        track_all = True
+    
+    # calculate s from gamma because we will need it for our generation based simulation
+    s1, s2, s3, s4 = gamma1/(2*N), gamma2/(2*N), gamma3/(2*N), gamma4/(2*N)
+
+    fitness = np.array([1, 1+2*s1, 1+2*s2, 1+2*s3, 1+2*s4])
+
+    if track_all:
+        # create tensor to store gamete frequencies
+        # first dimension delineates across gamete types (g0, g1, g2)
+        # second = separate runs
+        # third = time
+        gamete_freqs = np.empty((3, replicates, int(2*N*T+1)))
+        gamete_freqs[0, :, 0] = (1-init_q)**2
+        gamete_freqs[1, :, 0] = 2*init_q*(1-init_q)
+        gamete_freqs[2, :, 0] = init_q**2
+    else:
+        # create matrix to store gamete frequencies
+        # first dimension delineates across gamete types (g0, g1, g2)
+        # second = separate runs
+        gamete_freqs = np.empty((3, replicates))
+        gamete_freqs[0, :] = (1-init_q)**2
+        gamete_freqs[1, :] = 2*init_q*(1-init_q)
+        gamete_freqs[2, :] = init_q**2
+
+    rng = np.random.default_rng()
+    total_gens = int(2*N*T)
+    for t in range(0, total_gens):
+        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
+        samples = int(2*N*nu)
+        if track_all:
+            gametes_post_sel = auto_gamete_recursions(gamete_freqs[:, :, t], fitness)
+            # Note the transposes below. This could be addressed by fixing the shape of the gamete_freqs, 
+            # but is a relatively trivial calculation especially for vectors
+            gamete_freqs[:, :, t+1] = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
+        else:
+            gametes_post_sel = auto_gamete_recursions(gamete_freqs, fitness)
+            # Note the transposes below. This could be addressed by fixing the shape of the gamete_freqs, 
+            # but is a relatively trivial calculation especially for vectors
+            gamete_freqs = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
+
+    if track_all:
+        allele_freqs = .5*gamete_freqs[1, :, :] + gamete_freqs[2, :, :]
+    else:
+        allele_freqs = .5*gamete_freqs[1, :] + gamete_freqs[2, :]
+
+    if plot:
+        plt.plot(allele_freqs.T, color='gray', alpha=0.025)
+        plt.plot(np.mean(allele_freqs, axis=0), color='black', lw=2)
+        plt.xlabel('Generation')
+        plt.ylabel('Mutant Allele Frequency')
+        plt.title('Autotetraploid Allelic Drift Simulation')
+        plt.ylim(-.1, 1.1)
+        plt.show()
+           
+    return allele_freqs
+
+### ============================
+### Allotetraploid gametic model
+### ============================
+def allo_gamete_recursions(gamete_freqs, fitness):
+    """
+    gamete_freqs = (g00, g01, g10, g11)
+
+    Creates gamete pool for the next generation by deterministically 
+    forming genotypes and a subsequent gamete pool.
+
+    g00: frequency of g00 gamete
+    g01: frequency of g01 gamete
+    g10: frequency of g10 gamete
+    g11: frequency of g11 gamete
+    fitness: numpy array of fitnesses for G00, G01, G02, G10, G11, G12, G20, G21, G22 individuals
+
+    Returns: 
+        gamete_plus_1: gamete frequencies post selection and meiosis
+    """
+
+    # unpack vectors of gamete frequencies
+    g00, g01, g10, g11 = gamete_freqs
+    # compute genotype frequencies
+    genotype_freqs = np.array([g00**2, 2*g00*g01, g01**2, 2*g00*g10, 2*(g00*g11 + g01*g10), 2*g01*g11, g10**2, 2*g10*g11, g11**2])
+    # compute average fitness
+    average_fitness = np.dot(fitness, genotype_freqs)
+    # create a compatible size matrix of fitness values for element wise operations below
+    fitness_matrix = np.repeat(fitness[:, np.newaxis], g00.size, axis = 1)
+    # calculate normalized frequencies of genotypes post selection
+    post_sel_genotypes = (fitness_matrix * genotype_freqs) / average_fitness
+    psGs = post_sel_genotypes
+    # create frequencies of gametes post selection
+    g00_plus_1 = psGs[0] + psGs[1]/2 + psGs[3]/2 + psGs[4]/4
+    g01_plus_1 = psGs[1]/2 + psGs[2] + psGs[4]/4 + psGs[5]/2
+    g10_plus_1 = psGs[3]/2 + psGs[4]/4 + psGs[6] + psGs[7]/2
+    g11_plus_1 = psGs[4]/4 + psGs[5]/2 + psGs[7]/2 + psGs[8]
+
+    gamete_plus_1 = np.array([g00_plus_1, g01_plus_1, g10_plus_1, g11_plus_1])
+
+    return gamete_plus_1
+
+def allo_gametic_WF(N, T, gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22, 
+                    init_qa, init_qb, nu = 1, replicates = 1, plot = False, track_all = False):
+    """
+    Simple Wright-Fisher model of genetic drift in allotetraploids based on gametic sampling. 
+
+    N: population size (number of individuals)
+    T: "diffusion" time to run the forward sampling process (in terms of 2*N generations)
+    gammaij: population-scaled selection coefficient (<0 is purifying, >0 is positive)
+        gamma = 2Nsij
+        gammaij corresponds to the scaled s for an individual of type G_ij
+    init_qa: vector of initial allele frequencies for selected allele in a subgenome; must have size = replicates
+    init_qb: vector of initial allele frequencies for selected allele in b subgenome; must have size = replicates
+    nu: population size relative to ancestral population size
+        nu can be a constant or a function of diffusion-scaled time
+    replicates: number of times to run the simulation
+    plot: Boolean input to either show a plot of individual trajectories or not
+    track_all: Boolean input to either track and return all trajectories or not
+        This usage and plot are not recommended for analysis, but are reasonable usages for debuggging
+        They are very memory intensive options and also slow down the code up to 50%
+
+    Returns:
+        allele_frequencies: array of allele frequencies over time
+    """
+
+    if np.less(N, 0) or np.less(T, 0):
+        raise(ValueError("The population size or time is less than zero." 
+                         " Has the model been misspecified?"))
+    
+    if np.any(np.less(init_qa, 0)) or np.any(np.greater(init_qa, 1)):
+        raise(ValueError("At least one initial q_value for subgenome a"
+                         " is less than zero or greater than one."))
+    
+    if np.any(np.less(init_qb, 0)) or np.any(np.greater(init_qb, 1)):
+        raise(ValueError("At least one initial q_value for subgenome b"
+                         " is less than zero or greater than one."))
+    
+    if len(init_qa) != replicates:
+        raise ValueError("Length of init_qa must equal number of replicates.")
+    
+    if len(init_qb) != replicates:
+        raise ValueError("Length of init_qb must equal number of replicates.")
+    
+    nu_f = ensure_1arg_func(nu)
+
+    # if we want to plot, we need to track all of the trajectories
+    if plot:
+        track_all = True
+
+    # calculate s from gamma because we will need it for our generation based simulation
+    s01, s02, s10, s11 = gamma01/(2*N), gamma02/(2*N), gamma10/(2*N), gamma11/(2*N)
+    s12, s20, s21, s22 = gamma12/(2*N), gamma20/(2*N), gamma21/(2*N), gamma22/(2*N)
+
+    fitness = np.array([1, 1+2*s01, 1+2*s02, 1+2*s10, 1+2*s11, 1+2*s12, 1+2*s20, 1+2*s21, 1+2*s22])
+
+    if track_all:
+        # create tensor to store gamete frequencies
+        # first dimension delineates across gamete types (g00, g01, g10, g11)
+        # second = separate runs
+        # third = time
+        gamete_freqs = np.empty((4, replicates, int(2*N*T+1)))
+        gamete_freqs[0, :, 0] = (1-init_qa)*(1-init_qb)
+        gamete_freqs[1, :, 0] = (1-init_qa)*init_qb
+        gamete_freqs[2, :, 0] = init_qa*(1-init_qb)
+        gamete_freqs[3, :, 0] = init_qa*init_qb
+    else:
+        # create matrix to store gamete frequencies
+        # first dimension delineates across gamete types (g00, g01, g10, g11)
+        # second = separate runs
+        gamete_freqs = np.empty((4, replicates))
+        gamete_freqs[0, :] = (1-init_qa)*(1-init_qb)
+        gamete_freqs[1, :] = (1-init_qa)*init_qb
+        gamete_freqs[2, :] = init_qa*(1-init_qb)
+        gamete_freqs[3, :] = init_qa*init_qb
+
+    rng = np.random.default_rng()
+    total_gens = int(2*N*T)
+    for t in range(total_gens):
+        nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
+        samples = int(2*N*nu)
+
+        if track_all:
+            gametes_post_sel = allo_gamete_recursions(gamete_freqs[:, :, t], fitness)
+            # Note the transposes below. This could be addressed by changing the shape of the gamete_freqs, 
+            # but is a relatively trivial calculation especially for vectors
+            gamete_freqs[:, :, t+1] = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
+        else:
+            gametes_post_sel = allo_gamete_recursions(gamete_freqs[:, :], fitness)
+            gamete_freqs[:, :] = rng.multinomial(samples, gametes_post_sel.T).T/(samples)
+
+    if track_all:    
+        q_freq_a = gamete_freqs[2, :, :] + gamete_freqs[3, :, :]
+        q_freq_b = gamete_freqs[1, :, :] + gamete_freqs[3, :, :]
+    else:
+        q_freq_a = gamete_freqs[2, :] + gamete_freqs[3, :]
+        q_freq_b = gamete_freqs[1, :] + gamete_freqs[3, :]
+    
+    overall_q_freq = (q_freq_a + q_freq_b) / 2
+    allele_freqs = np.array([q_freq_a, q_freq_b])
+
+    if plot: 
+        fig, axs = plt.subplots(3, 1, sharex = 'col', sharey = 'row')
+        # axs[0] = Subgenome A, axs[1] = Subgenome B, axs[2] = Overall
+        for i in range(replicates):
+            axs[0].plot(q_freq_a[i, :], color="gray", alpha=0.025)
+            axs[1].plot(q_freq_b[i, :], color="gray", alpha=0.025)
+            axs[2].plot(overall_q_freq[i, :], color="gray", alpha=0.025)
+        axs[0].set_ylabel("Subgenome A")
+        axs[0].set_ylim(-.1, 1.1)
+        axs[1].set_ylabel("Subgenome B")
+        axs[1].set_ylim(-.1, 1.1)
+        axs[2].set_ylabel("Overall")
+        axs[2].set_ylim(-.1, 1.1)
+        fig.supxlabel('Time (in generations)')
+        fig.suptitle('Allele Frequencies Over Time')
+        plt.show()
+
+    return allele_freqs

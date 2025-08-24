@@ -1679,6 +1679,38 @@ def implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                 for kk in range(0, N):
                     phi[ii, jj, kk] = temp[kk]
 
+    elif is_hex_c:
+        # compute everything we can outside of the spatial loop
+        for kk in range(0, N):
+            V[kk] = Vfunc(zz[kk], nu3)
+        for kk in range(0, N-1):
+            VInt[kk] = Vfunc(zInt[kk], nu3)
+        # loop through x and y dimensions
+        for ii in range(L):
+            for jj in range(M):
+                x = xx[ii]
+                y = yy[jj]
+                # see note above about the order of the params passed to Mfuncs here
+                Mfirst = Mfunc3D_hex_c(zz[0], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],
+                                       s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                Mlast = Mfunc3D_hex_c(zz[N-1], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],
+                                      s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                for kk in range(0, N-1):
+                    MInt[kk] = Mfunc3D_hex_c(zInt[kk], y,x, m32,m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],
+                                             s3[13],s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+                compute_delj(&dz[0], &MInt[0], &VInt[0], N, &delj[0], use_delj_trick)
+                compute_abc_nobc(&dz[0], &dfactor[0], &delj[0], &MInt[0], &V[0], dt, N, &a[0], &b[0], &c[0])
+                if x==0 and y==0 and Mfirst <= 0:
+                    b[0] += (0.5/nu3 - Mfirst)*2/dz[0] 
+                if x==1 and y==1 and Mlast >= 0:
+                    b[N-1] += -(-0.5/nu3 - Mlast)*2/dz[N-2]
+
+                for kk in range(0, N):
+                    r[kk] = phi[ii, jj, kk]/dt
+                tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], N)
+                for kk in range(0, N):
+                    phi[ii, jj, kk] = temp[kk]
+
     tridiag_free()
 
     return np.asarray(phi)
