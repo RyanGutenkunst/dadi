@@ -44,7 +44,7 @@ def two_epoch(params, ns, pts):
         fs (Spectrum): The resulting frequency spectrum.
 
     Raises:
-        ValueError: If `params` does not contain exactly two elements.
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu,T = params
 
@@ -75,7 +75,7 @@ def growth(params, ns, pts):
         fs (Spectrum): The resulting frequency spectrum.
 
     Raises:
-        ValueError: If `params` does not contain exactly two elements.
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu,T = params
 
@@ -110,7 +110,7 @@ def bottlegrowth_1d(params, ns, pts):
         fs (Spectrum): The resulting frequency spectrum.
 
     Raises:
-        ValueError: If `params` does not contain exactly three elements.
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,T = params
 
@@ -146,7 +146,7 @@ def three_epoch(params, ns, pts):
         fs (Spectrum): The resulting frequency spectrum.
 
     Raises:
-        ValueError: If `params` does not contain exactly four elements.
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,TB,TF = params
 
@@ -183,7 +183,7 @@ def three_epoch_inbreeding(params, ns, pts):
         fs (Spectrum): The resulting frequency spectrum.
 
     Raises:
-        ValueError: If `params` does not contain exactly five elements.
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,TB,TF,F = params
 
