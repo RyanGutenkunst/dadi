@@ -1,4 +1,6 @@
 site_name: dadi
+theme:
+  name: material 
 repo_url: https://github.com/RyanGutenkunst/dadi
 edit_uri: ""
 docs_dir: 'doc'
@@ -12,13 +14,13 @@ plugins:
   - search
   - mkdocs-autoapi:
       autoapi_ignore: 
-        - "**/__init__.py"
-        - "**/*.c"
-        - "**/*.h"
-        - "**/*.pyx"
+      #   - "**/__init__.py"
+      #   - "**/*.c"
+      #   - "**/*.h"
+      #   - "**/*.pyx"
         - "dadi/cuda/*"
-        - "build/*"
-        - "**/*._*"
+      #   - "build/*"
+      #   - "**/*._*"
       autoapi_file_patterns:
         - "dadi/**/*.py"  # Simplified pattern to include all Python files recursively
       autoapi_add_nav_entry: API
@@ -63,5 +65,5 @@ nav:
         - 'Basic Workflow 1D DFE' : 'examples/basic_workflow/basic_workflow_1d_dfe.md'
         - 'Basic Workflow 2D DFE' : 'examples/basic_workflow/basic_workflow_2d_dfe.md'
         - 'Low-Pass Example' : 'examples/LowPass/low-pass.md'
-# - API: autoapi/
+# - API: dadi/
 # - API: 'api/dadi/index.html'

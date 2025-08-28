@@ -8,41 +8,43 @@ from dadi.Spectrum_mod import Spectrum
 from dadi.PortikModels.portik_models_3d import *
 
 def out_of_africa(params, ns, pts):
-    '''
+    """
     Gutenkunst et al. 2009 Out-of-Africa model.
-    
-    params = (nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs, mAfB, mAfEu, mAfAs, mEuAs, TAf, TB, TEuAs)
-    ns = (n1,n2,n3)
 
-    Instantanous size change followed by exponential growth with no population
-    split.
+    Parameters:
+        params (tuple): Model parameters:
+            
+            - nuAf (float): Ratio of population 1 size after instantaneous change to ancient population size.
+            
+            - nuB (float): Ratio of bottleneck population size to ancient population after split from nuAf.
+            
+            - nuEu0 (float): Ratio of population 2 size to ancient population size after split from nuB.
+            
+            - nuEu (float): Ratio of population 2 size to ancient population size after time TEuAs.
+            
+            - nuAs0 (float): Ratio of population 3 size to ancient population size after split from nuB.
+            
+            - nuAs (float): Ratio of population 3 size to ancient population size after time TEuAs.
+            
+            - mAfB (float): Migration rate between population 1 and bottleneck population.
+            
+            - mAfEu (float): Migration rate between population 1 and population 2.
+            
+            - mAfAs (float): Migration rate between population 1 and population 3.
+            
+            - mEuAs (float): Migration rate between population 2 and population 3.
+            
+            - TAf (float): Time in the past at which instantaneous change happened for population 1 (in units of 2*Na generations).
+            
+            - TB (float): Time in the past at which instantaneous change happened for bottleneck population (in units of 2*Na generations).
+            
+            - TEuAs (float): Time in the past at which instantaneous change happened for population 2 and population 3 (in units of 2*Na generations).
+        ns (tuple): Sample sizes of resulting Spectrum (n1, n2, n3).
+        pts (int): Number of grid points to use in integration.
 
-    nuAf: Ratio of population 1 size after instantanous change to ancient
-          population size
-    nuB: Ratio of bottleneck population size to ancient populatiuon after
-         split from nuAf
-    nuEu0: Ratio of population 2 size to ancient population size after
-           split from nuB
-    nuEu: Ratio of population 2 size to ancient population size after
-          time TEuAs
-    nuAs0: Ratio of population 3 size to ancient population size after
-           split from nuB
-    nuAs: Ratio of population 3 size to ancient population size after
-          time TEuAs
-    mAfB: Migration rate between population 1 and bottleneck population
-    mAfEu: Migration rate between population 1 and population 2
-    mAfAs: Migration rate between population 1 and population 3
-    mEuAs: Migration rate between population 2 and population 3
-    TAf: Time in the past at which instantaneous change happened for
-         population 1 (in units of 2*Na generations) 
-    TB: Time in the past at which instantaneous change happened for
-         bottleneck population (in units of 2*Na generations) 
-    TEuAs: Time in the past at which instantaneous change happened for
-           population 2 and population 3 (in units of 2*Na generations) 
-
-    n1,n2,n3: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
-    '''
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    """
     nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs, \
         mAfB, mAfEu, mAfAs, mEuAs, \
         TAf, TB, TEuAs = params

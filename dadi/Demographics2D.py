@@ -32,6 +32,7 @@ def bottlegrowth_2d(params, ns, pts):
 
     Parameters:
         params (tuple): (nuB, nuF, T)
+
             - nuB: Ratio of population size after instantaneous change to ancient population size.
             
             - nuF: Ratio of contemporary to ancient population size.
@@ -58,6 +59,7 @@ def bottlegrowth_split(params, ns, pts):
 
     Parameters:
         params (tuple): (nuB, nuF, T, Ts)
+
             - nuB: Ratio of population size after instantaneous change to ancient population size.
             
             - nuF: Ratio of contemporary to ancient population size.
@@ -85,6 +87,7 @@ def bottlegrowth_split_mig(params, ns, pts):
 
     Parameters:
         params (tuple): (nuB, nuF, m, T, Ts)
+
             - nuB: Ratio of population size after instantaneous change to ancient population size.
             
             - nuF: Ratio of contemporary to ancient population size.
@@ -133,6 +136,7 @@ def split_mig(params, ns, pts):
 
     Parameters:
         params (tuple): (nu1, nu2, T, m)
+
             - nu1: Size of population 1 after split.
             
             - nu2: Size of population 2 after split.
@@ -189,6 +193,7 @@ def split_asym_mig(params, ns, pts):
 
     Parameters:
         params (tuple): (nu1, nu2, T, m12, m21)
+
             - nu1: Size of population 1 after split.
             
             - nu2: Size of population 2 after split.
@@ -226,6 +231,7 @@ def split_delay_mig(params, ns, pts):
 
     Parameters:
         params (tuple): (nu1, nu2, Tpre, Tmig, m12, m21)
+
             - nu1: Size of population 1 after split.
             
             - nu2: Size of population 2 after split.
@@ -265,6 +271,7 @@ def IM(params, ns, pts):
 
     Parameters:
         params (tuple): (s, nu1, nu2, T, m12, m21)
+
             - s: Size of pop 1 after split. (Pop 2 has size 1-s.)
             
             - nu1: Final size of pop 1.
@@ -332,6 +339,7 @@ def IM_pre(params, ns, pts):
 
     Parameters:
         params (tuple): (nuPre, TPre, s, nu1, nu2, T, m12, m21)
+        
             - nuPre: Size after first size change.
             
             - TPre: Time before split of first size change.
