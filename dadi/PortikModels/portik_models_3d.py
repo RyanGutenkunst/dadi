@@ -89,7 +89,7 @@ def split_symmig_all(params, ns, pts):
         pts (int): Number of grid points for numerical integration.
 
     Returns:
-        dadi.Spectrum_mod.Spectrum: The resulting frequency spectrum.
+        fs (Spectrum): The resulting frequency spectrum.
     """
     # 10 parameters
     nu1, nuA, nu2, nu3, mA, m1, m2, m3, T1, T2 = params
