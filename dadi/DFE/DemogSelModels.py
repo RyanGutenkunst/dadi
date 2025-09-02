@@ -8,12 +8,16 @@ def equil(params, ns, pts):
     """
     Equilibrium demography, plus selection.
 
-    params: [gamma]
-    ns: Sample sizes
-    pts: Grid point settings for integration
+    Args:
+        params (list): [gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    Note that DFE methods internally apply make_extrap_func,
-    so there is no need to make it extrapolate again.
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    Note:
+        DFE methods internally apply make_extrap_func, so there is no need to make it extrapolate again.
     """
     gamma = params[0]
 
@@ -27,16 +31,22 @@ def two_epoch_sel(params, ns, pts):
     """
     Instantaneous population size change, plus selection.
 
-    params: [nu,T,gamma]
-    ns: Sample sizes
-    pts: Grid point settings for integration
+    Args:
+        params (list): [nu, T, gamma]
+           
+            - nu (float): Final population size
+            
+            - T (float): Time of size change
+            
+            - gamma (float): Scaled selection coefficient
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    Note that DFE methods internally apply make_extrap_func,
-    So there is no need to make it extrapolate again.
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
 
-    nu: Final population size
-    T: Time of size change
-    gamma: Scaled selection coefficient
+    Note:
+        DFE methods internally apply make_extrap_func, so there is no need to make it extrapolate again.
     """
     nu, T, gamma = params
     xx = Numerics.default_grid(pts)
@@ -49,29 +59,30 @@ two_epoch_sel.__param_names__ = ['nu', 'T', 'gamma']
 
 def IM_pre_sel(params, ns, pts):
     """
-    Isolation-with-migration model with exponential pop growth, a size change
-    prior to split, and selection.
+    Isolation-with-migration model with exponential population growth, 
+    a size change prior to split, and selection.
 
-    params: [nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma1,gamma2]
-    ns: Sample sizes
-    pts: Grid point settings for integration
+    Args:
+        params (list): [nuPre, TPre, s, nu1, nu2, T, m12, m21, gamma1, gamma2]
+            - nuPre (float): Size after first size change
+            - TPre (float): Time before split of first size change
+            - s (float): Fraction of nuPre that goes to pop1 (Pop 2 has size nuPre*(1-s))
+            - nu1 (float): Final size of pop 1
+            - nu2 (float): Final size of pop 2
+            - T (float): Time in the past of split (in units of 2*Na generations)
+            - m12 (float): Migration from pop 2 to pop 1 (2*Na*m12)
+            - m21 (float): Migration from pop 1 to pop 2
+            - gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+            - gamma2 (float): Scaled selection coefficient in pop 2
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    Note that DFE methods internally apply make_extrap_func,
-    So there is no need to make it extrapolate again.
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
 
-    Note also: Selection in contemporary population 1 is assumed to equil
-               that in the ancestral population.
-
-    nuPre: Size after first size change
-    TPre: Time before split of first size change.
-    s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
-    nu1: Final size of pop 1.
-    nu2: Final size of pop 2.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
+    Note:
+        - DFE methods internally apply make_extrap_func, so there is no need to make it extrapolate again.
+        - Selection in contemporary population 1 is assumed to equal that in the ancestral population.
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
 
@@ -98,7 +109,16 @@ def IM_pre_sel_single_gamma(params, ns, pts):
     """
     IM_pre_sel model with selection assumed to be equal in all populations.
 
-    See IM_pre_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nuPre, TPre, s, nu1, nu2, T, m12, m21, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        [IM_pre_sel][dadi.DFE.DemogSelModels.IM_pre_sel] for argument definitions, but only a single gamma in params.
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma = params
     return IM_pre_sel((nuPre,TPre,s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
@@ -107,26 +127,29 @@ IM_pre_sel_single_gamma.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', '
 
 def IM_sel(params, ns, pts):
     """
-    Isolation-with-migration model with exponential pop growth and selection.
+    Isolation-with-migration model with exponential population growth and selection.
 
-    params: [s,nu1,nu2,T,m12,m21,gamma1,gamma2]
-    ns: Sample sizes
-    pts: Grid point settings for integration
+    Args:
+        params (list): [s, nu1, nu2, T, m12, m21, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    Note that this function is defined using a decorator with make_extrap_func.
-    So there is no need to make it extrapolate again.
+    params:
+        s (float): Fraction of the ancestral population size (Na) that goes to pop1 (Pop 2 has size Na*(1-s))
+        nu1 (float): Final size of pop 1
+        nu2 (float): Final size of pop 2
+        T (float): Time in the past of split (in units of 2*Na generations)
+        m12 (float): Migration from pop 2 to pop 1 (2*Na*m12)
+        m21 (float): Migration from pop 1 to pop 2
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
 
-    Note also: Selection in contemporary population 1 is assumed to equal
-               that in the ancestral population.
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
 
-    s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
-    nu1: Final size of pop 1.
-    nu2: Final size of pop 2.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
+    Note:
+        - This function is defined using a decorator with make_extrap_func, so there is no need to make it extrapolate again.
+        - Selection in contemporary population 1 is assumed to equal that in the ancestral population.
     """
     s,nu1,nu2,T,m12,m21,gamma1,gamma2 = params
     return IM_pre_sel((1,0,s,nu1,nu2,T,m12,m21,gamma1,gamma2), ns, pts)
@@ -137,7 +160,16 @@ def IM_sel_single_gamma(params, ns, pts):
     """
     IM_sel model with selection assumed to be equal in all populations.
 
-    See IM_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [s, nu1, nu2, T, m12, m21, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        IM_sel for argument definitions, but only a single gamma in params.
     """
     s,nu1,nu2,T,m12,m21,gamma = params
     return IM_sel((s,nu1,nu2,T,m12,m21,gamma,gamma), ns, pts)
@@ -147,23 +179,26 @@ IM_sel_single_gamma.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21', 'ga
 def split_mig_sel(params, ns, pts):
     """
     Instantaneous split into two populations of specified size, with symmetric migration.
-    params = [nu1,nu2,T,m]
 
-    ns: Sample sizes
-    pts: Grid point settings for integration
+    Args:
+        params (list): [nu1, nu2, T, m, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    Note that DFE methods internally apply make_extrap_func,
-    So there is no need to make it extrapolate again.
+    params:
+        nu1 (float): Size of population 1 after split
+        nu2 (float): Size of population 2 after split
+        T (float): Time in the past of split (in units of 2*Na generations)
+        m (float): Migration rate between populations (2*Na*m)
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
 
-    Note also: Selection in contemporary population 1 is assumed to equal
-               that in the ancestral population.
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m: Migration rate between populations (2*Na*m)
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
+    Note:
+        - DFE methods internally apply make_extrap_func, so there is no need to make it extrapolate again.
+        - Selection in contemporary population 1 is assumed to equal that in the ancestral population.
     """
     nu1,nu2,T,m,gamma1,gamma2 = params
 
@@ -184,7 +219,16 @@ def split_mig_sel_single_gamma(params, ns, pts):
     """
     split_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_mig_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nu1, nu2, T, m, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        split_mig_sel for argument definitions, but only a single gamma in params.
     """
     nu1,nu2,T,m,gamma = params
     return split_mig_sel([nu1,nu2,T,m,gamma,gamma], ns, pts)
@@ -194,24 +238,27 @@ split_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'T', 'm', 'gamma']
 def split_asym_mig_sel(params, ns, pts):
     """
     Instantaneous split into two populations of specified size, with asymmetric migration.
-    params = [nu1,nu2,T,m]
 
-    ns: Sample sizes
-    pts: Grid point settings for integration
+    Args:
+        params (list): [nu1, nu2, T, m12, m21, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    Note that DFE methods internally apply make_extrap_func,
-    So there is no need to make it extrapolate again.
+    params:
+        nu1 (float): Size of population 1 after split
+        nu2 (float): Size of population 2 after split
+        T (float): Time in the past of split (in units of 2*Na generations)
+        m12 (float): Migration rate from population 2 to population 1 (2*Na*m12)
+        m21 (float): Migration rate from population 1 to population 2 (2*Na*m21)
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
 
-    Note also: Selection in contemporary population 1 is assumed to equal
-               that in the ancestral population.
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations)
-    m12: Migration rate from population 2 to population 1 (2*Na*m12)
-    m21: Migration rate from population 1 to population 2 (2*Na*m21)
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
+    Note:
+        - DFE methods internally apply make_extrap_func, so there is no need to make it extrapolate again.
+        - Selection in contemporary population 1 is assumed to equal that in the ancestral population.
     """
     nu1,nu2,T,m12,m21,gamma1,gamma2 = params
 
@@ -232,7 +279,16 @@ def split_asym_mig_sel_single_gamma(params, ns, pts):
     """
     split_asym_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_asym_mig_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nu1, nu2, T, m12, m21, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        split_asym_mig_sel for argument definitions, but only a single gamma in params.
     """
     nu1,nu2,T,m12,m21,gamma = params
     return split_asym_mig_sel([nu1,nu2,T,m12,m21,gamma,gamma], ns, pts)
@@ -241,21 +297,25 @@ split_asym_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm2
 
 def split_delay_mig_sel(params, ns, pts):
     """
-    params = (nu1,nu2,Tpre,Tmig,m12,m21)
-    ns = (n1,n2)
+    Split into two populations of specified size, with migration after some time has passed post split.
 
-    Split into two populations of specifed size, with migration after some time has passed post split.
+    Args:
+        params (list): [nu1, nu2, Tpre, Tmig, m12, m21, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
-    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2 (2*Na*m21)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
+    params:
+        nu1 (float): Size of population 1 after split
+        nu2 (float): Size of population 2 after split
+        Tpre (float): Time in the past after split but before migration (in units of 2*Na generations)
+        Tmig (float): Time in the past after migration starts (in units of 2*Na generations)
+        m12 (float): Migration from pop 2 to pop 1 (2*Na*m12)
+        m21 (float): Migration from pop 1 to pop 2 (2*Na*m21)
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nu1,nu2,Tpre,Tmig,m12,m21,gamma1,gamma2 = params
 
@@ -276,7 +336,16 @@ def split_delay_mig_sel_single_gamma(params, ns, pts):
     """
     split_delay_mig_sel model with selection assumed to be equal in all populations.
 
-    See split_delay_mig_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nu1, nu2, Tpre, Tmig, m12, m21, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        split_delay_mig_sel for argument definitions, but only a single gamma in params.
     """
     nu1,nu2,Tpre,Tmig,m12,m21,gamma = params
     return split_delay_mig_sel([nu1,nu2,Tpre,Tmig,m12,m21,gamma,gamma], ns, pts)
@@ -284,17 +353,22 @@ split_delay_mig_sel_single_gamma.__param_names__ = ['nu1', 'nu2', 'Tpre', 'Tmig'
 
 def three_epoch_sel(params, ns, pts):
     """
-    params = (nuB,nuF,TB,TF,gamma)
-    ns = (n1,)
+    Three epoch model with selection.
 
-    nuB: Ratio of bottleneck population size to ancient pop size
-    nuF: Ratio of contemporary to ancient pop size
-    TB: Length of bottleneck (in units of 2*Na generations) 
-    TF: Time since bottleneck recovery (in units of 2*Na generations) 
-    gamma: Scaled selection coefficient
+    Args:
+        params (list): [nuB, nuF, TB, TF, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    params:
+        nuB (float): Ratio of bottleneck population size to ancient pop size
+        nuF (float): Ratio of contemporary to ancient pop size
+        TB (float): Length of bottleneck (in units of 2*Na generations)
+        TF (float): Time since bottleneck recovery (in units of 2*Na generations)
+        gamma (float): Scaled selection coefficient
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nuB,nuF,TB,TF,gamma = params
 
@@ -311,21 +385,22 @@ three_epoch_sel.__param_names__ = ['nuB', 'nuF', 'TB', 'TF', 'gamma']
 
 def bottlegrowth_2d_sel(params, ns, pts):
     """
-    params = (nuB,nuF,T,gamma1,gamma2)
-    ns = (n1,n2)
+    Instantaneous size change followed by exponential growth with no population split.
 
-    Instantanous size change followed by exponential growth with no population
-    split.
+    Args:
+        params (list): [nuB, nuF, T, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contempoary to ancient population size
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+    params:
+        nuB (float): Ratio of population size after instantaneous change to ancient population size
+        nuF (float): Ratio of contemporary to ancient population size
+        T (float): Time in the past at which instantaneous change happened and growth began (in units of 2*Na generations)
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nuB,nuF,T,gamma1,gamma2 = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma1,gamma2), ns, pts)
@@ -335,7 +410,16 @@ def bottlegrowth_2d_sel_single_gamma(params, ns, pts):
     """
     bottlegrowth_2d_sel model with selection assumed to be equal in all populations.
 
-    See bottlegrowth_2d_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nuB, nuF, T, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        bottlegrowth_2d_sel for argument definitions, but only a single gamma in params.
     """
     nuB,nuF,T,gamma = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,0,gamma,gamma), ns, pts)
@@ -343,21 +427,23 @@ bottlegrowth_2d_sel_single_gamma.__param_names__ = ['nuB', 'nuF', 'T', 'gamma']
 
 def bottlegrowth_split_sel(params, ns, pts):
     """
-    params = (nuB,nuF,T,Ts,gamma1,gamma2)
-    ns = (n1,n2)
+    Instantaneous size change followed by exponential growth then split.
 
-    Instantanous size change followed by exponential growth then split.
+    Args:
+        params (list): [nuB, nuF, T, Ts, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contempoary to ancient population size
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    Ts: Time in the past at which the two populations split.
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+    params:
+        nuB (float): Ratio of population size after instantaneous change to ancient population size
+        nuF (float): Ratio of contemporary to ancient population size
+        T (float): Time in the past at which instantaneous change happened and growth began (in units of 2*Na generations)
+        Ts (float): Time in the past at which the two populations split
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nuB,nuF,T,Ts,gamma1,gamma2 = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma1,gamma2), ns, pts)
@@ -367,7 +453,16 @@ def bottlegrowth_split_sel_single_gamma(params, ns, pts):
     """
     bottlegrowth_split_sel model with selection assumed to be equal in all populations.
 
-    See bottlegrowth_split_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nuB, nuF, T, Ts, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        bottlegrowth_split_sel for argument definitions, but only a single gamma in params.
     """
     nuB,nuF,T,Ts,gamma = params
     return bottlegrowth_split_mig_sel((nuB,nuF,0,T,Ts,gamma,gamma), ns, pts)
@@ -375,23 +470,24 @@ bottlegrowth_split_sel_single_gamma.__param_names__ = ['nuB', 'nuF', 'T', 'Ts', 
 
 def bottlegrowth_split_mig_sel(params, ns, pts):
     """
-    params = (nuB,nuF,m,T,Ts,gamma1,gamma2)
-    ns = (n1,n2)
+    Instantaneous size change followed by exponential growth then split with migration.
 
-    Instantanous size change followed by exponential growth then split with
-    migration.
+    Args:
+        params (list): [nuB, nuF, m, T, Ts, gamma1, gamma2]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contempoary to ancient population size
-    m: Migration rate between the two populations (2*Na*m).
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    Ts: Time in the past at which the two populations split.
-    gamma1: Scaled selection coefficient in pop 1 *and* ancestral pop.
-    gamma2: Scaled selection coefficient in pop 2
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+    params:
+        nuB (float): Ratio of population size after instantaneous change to ancient population size
+        nuF (float): Ratio of contemporary to ancient population size
+        m (float): Migration rate between the two populations (2*Na*m)
+        T (float): Time in the past at which instantaneous change happened and growth began (in units of 2*Na generations)
+        Ts (float): Time in the past at which the two populations split
+        gamma1 (float): Scaled selection coefficient in pop 1 and ancestral pop
+        gamma2 (float): Scaled selection coefficient in pop 2
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nuB,nuF,m,T,Ts,gamma1,gamma2 = params
 
@@ -423,7 +519,16 @@ def bottlegrowth_split_mig_sel_single_gamma(params, ns, pts):
     """
     bottlegrowth_split_mig_sel model with selection assumed to be equal in all populations.
 
-    See bottlegrowth_split_mig_sel for argument definitions, but only a single gamma in params.
+    Args:
+        params (list): [nuB, nuF, m, T, Ts, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
+
+    See Also:
+        bottlegrowth_split_mig_sel for argument definitions, but only a single gamma in params.
     """
     nuB,nuF,m,T,Ts,gamma = params
     return bottlegrowth_split_mig_sel((nuB,nuF,m,T,Ts,gamma,gamma), ns, pts)
@@ -433,15 +538,18 @@ def growth_sel(params, ns, pts):
     """
     Exponential growth beginning some time ago.
 
-    params = (nu,T,gamma)
-    ns = (n1,)
+    Args:
+        params (list): [nu, T, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    nu: Ratio of contemporary to ancient population size
-    T: Time in the past at which growth began (in units of 2*Na 
-       generations) 
-    gamma: Scaled selection coefficient
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    params:
+        nu (float): Ratio of contemporary to ancient population size
+        T (float): Time in the past at which growth began (in units of 2*Na generations)
+        gamma (float): Scaled selection coefficient
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nu,T,gamma = params
 
@@ -457,19 +565,21 @@ growth_sel.__param_names__ = ['nu', 'T', 'gamma']
 
 def bottlegrowth_1d_sel(params, ns, pts):
     """
-    Instantanous size change followed by exponential growth.
+    Instantaneous size change followed by exponential growth.
 
-    params = (nuB,nuF,T,gamma)
-    ns = (n1,)
+    Args:
+        params (list): [nuB, nuF, T, gamma]
+        ns (list): Sample sizes
+        pts (int): Grid point settings for integration
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contemporary to ancient population size
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    gamma: Scaled selection coefficient
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    params:
+        nuB (float): Ratio of population size after instantaneous change to ancient population size
+        nuF (float): Ratio of contemporary to ancient population size
+        T (float): Time in the past at which instantaneous change happened and growth began (in units of 2*Na generations)
+        gamma (float): Scaled selection coefficient
+
+    Returns:
+        fs (Spectrum): Resulting frequency spectrum
     """
     nuB,nuF,T,gamma = params
 

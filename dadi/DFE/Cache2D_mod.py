@@ -15,26 +15,45 @@ class Cache2D:
                  additional_gammas=[], cpus=None, gpus=0, verbose=False,
                  split_jobs=1, this_job_id=0):
         """
-        params: Optimized demographic parameters
-        ns: Sample sizes for cached spectra
-        demo_sel_func: DaDi demographic function with selection. 
-                       gamma1, gamma2 must be the last arguments.
-        pts: Grid point settings for demo_sel_func
-        gamma_bounds: Range of gammas to integrate over
-        gamma_points: Number of gamma grid points over which to integrate
-        additional_gammas: Sequence of additional gamma values to store results
-                           for. Useful for point masses of explicit neutrality
-                           or positive selection.
-        cpus: Number of CPU jobs to launch. If None (the default), then
-              all CPUs available will be used.
-        gpus: Number of GPU jobs to launch.
-        verbose: If True, print messages to track progress of cache generation.
-        split_jobs: To split cache generation across multiple computing jobs,
-                    set split_jobs > 1 and this_job_id.
-        this_job_id: Defines which entry in split_jobs this run will create.
-                     (Indexed from 0.)
-        For example, to split Cache2D generation over 3 independent jobs, set
-            split_jobs=3 and create jobs with this_job_id=0,1,2.
+        Initialize the Cache2D object.
+
+        Args:
+            params (list): Optimized demographic parameters.
+
+            ns (list): Sample sizes for cached spectra.
+
+            demo_sel_func (function): DaDi demographic function with selection.
+                gamma1, gamma2 must be the last arguments.
+
+            pts (list): Grid point settings for demo_sel_func.
+
+            gamma_bounds (tuple, optional): Range of gammas to integrate over.
+                Defaults to (1e-4, 2000.).
+
+            gamma_pts (int, optional): Number of gamma grid points over which
+                to integrate. Defaults to 100.
+
+            additional_gammas (list, optional): Sequence of additional gamma
+                values to store results for. Useful for point masses of explicit
+                neutrality or positive selection. Defaults to [].
+
+            cpus (int, optional): Number of CPU jobs to launch. If None, all
+                available CPUs will be used. Defaults to None.
+
+            gpus (int, optional): Number of GPU jobs to launch. Defaults to 0.
+
+            verbose (bool, optional): If True, print messages to track progress
+                of cache generation. Defaults to False.
+
+            split_jobs (int, optional): To split cache generation across
+                multiple computing jobs, set split_jobs > 1. Defaults to 1.
+
+            this_job_id (int, optional): Defines which entry in split_jobs this
+                run will create (indexed from 0). Defaults to 0.
+
+        Example:
+            To split Cache2D generation over 3 independent jobs, set
+            split_jobs=3 and create jobs with this_job_id=0, 1, 2.
             Then use Cache2D.merge to combine the outputs.
         """
         # Store details regarding how this cache was generated. May be useful
@@ -72,6 +91,18 @@ class Cache2D:
             self.spectra = np.array(self.spectra)
         
     def _single_process(self, verbose, split_jobs, this_job_id, demo_sel_func):
+        """
+        Run cache generation using a single process.
+
+        Args:
+            verbose (bool): If True, print progress messages.
+
+            split_jobs (int): Number of jobs to split the cache generation.
+
+            this_job_id (int): ID of the current job.
+
+            demo_sel_func (function): DaDi demographic function with selection.
+        """
         func_ex = Numerics.make_extrap_func(demo_sel_func)
 
         this_eval = 0
@@ -84,6 +115,22 @@ class Cache2D:
                 this_eval += 1
                         
     def _multiple_processes(self, cpus, gpus, verbose, split_jobs, this_job_id, demo_sel_func):
+        """
+        Run cache generation using multiple processes.
+
+        Args:
+            cpus (int): Number of CPU jobs to launch.
+
+            gpus (int): Number of GPU jobs to launch.
+
+            verbose (bool): If True, print progress messages.
+
+            split_jobs (int): Number of jobs to split the cache generation.
+
+            this_job_id (int): ID of the current job.
+
+            demo_sel_func (function): DaDi demographic function with selection.
+        """
         from multiprocessing import Manager, Process
 
         with Manager() as manager:
@@ -121,8 +168,24 @@ class Cache2D:
                     
     def _worker_sfs(self, in_queue, outlist, demo_sel_func, params, ns, pts, verbose, usegpu):
         """
-        Worker function -- used to generate SFSes for
-        pairs of gammas.
+        Worker function to generate SFSes for pairs of gammas.
+
+        Args:
+            in_queue (Queue): Input queue for tasks.
+
+            outlist (list): List to store results.
+
+            demo_sel_func (function): DaDi demographic function with selection.
+
+            params (list): Parameters for the demographic function.
+
+            ns (list): Sample sizes for cached spectra.
+
+            pts (list): Grid point settings for demo_sel_func.
+
+            verbose (bool): If True, print progress messages.
+
+            usegpu (bool): If True, use GPU for computation.
         """
         demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
         dadi.cuda_enabled(usegpu)
@@ -146,19 +209,25 @@ class Cache2D:
     def integrate(self, params, ns, sel_dist, theta, pts,
                   exterior_int=True):
         """
-        Integrate spectra over a bivariate prob. dist. for negative gammas.
+        Integrate spectra over a bivariate probability distribution for negative gammas.
 
-        params: Parameters for sel_dist
-        ns: Ignored
-        sel_dist: Bivariate probability distribution,
-                  taking in arguments (xx, yy, params)
-        theta: Population-scaled mutation rate
-        pts: Ignored
-        exterior_int: If False, do not integrate outside sampled domain.
+        Args:
+            params (list): Parameters for sel_dist.
 
-        Note also that the ns and pts arguments are ignored. They are only
-        present for compatibility with other dadi functions that apply to
-        demographic models.
+            ns (list): Ignored.
+
+            sel_dist (function): Bivariate probability distribution, taking
+                arguments (xx, yy, params).
+
+            theta (float): Population-scaled mutation rate.
+
+            pts (list): Ignored.
+
+            exterior_int (bool, optional): If False, do not integrate outside
+                the sampled domain. Defaults to True.
+
+        Returns:
+            fs (Spectrum): Integrated spectrum.
         """
         # Restrict our gammas and spectra to negative gammas.
         Nneg = len(self.neg_gammas)
@@ -246,22 +315,6 @@ class Cache2D:
         Integrate spectra over a bivariate prob. dist. for negative gammas plus
         a point mass of positive selection.
 
-        params: Parameters for sel_dist and positive selection.\n
-                It is assumed that the last four parameters are:
-                Proportion positive selection in pop1, postive gamma for pop1,
-                prop. positive in pop2, and positive gamma for pop2.
-                Earlier arguments are assumed to be for the continuous bivariate
-                distribution.
-
-        ns: Ignored
-
-        biv_seldist: Bivariate probability distribution for negative selection,
-                     taking in arguments (xx, yy, params)
-        theta: Population-scaled mutation rate
-        rho: Correlation coefficient used to connect negative and positive
-             components of DFE.
-        pts: Ignored
-
         Note that no normalization is performed, so alleles not covered by the
         specified range of gammas are assumed not to be seen in the data.
 
@@ -279,9 +332,12 @@ class Cache2D:
 
         We do use a similar procedure to the triallelic paper to end up
         with something like:
-        p++ = p1*p2 + rho*(sqrt(p1*p2) - p1*p2)
-        p+- = (1-rho) * p1*(1-p2)
-        p-- = (1-p1)*(1-p2) + rho*(1-sqrt(p1*p2) - (1-p1)*(1-p2))
+        
+        - p++ = p1 * p2 + rho * (sqrt(p1 * p2) - p1 * p2)
+        
+        - p+- = (1 - rho) * p1 * (1 - p2)
+        
+        - p-- = (1 - p1) * (1 - p2) + rho * (1 - sqrt(p1 * p2) - (1 - p1) * (1 - p2))
 
         The logic here is that in the rho=1 limit, we set the proportion
         positively selected to be the geometric mean of p1 and p2, the
@@ -292,6 +348,33 @@ class Cache2D:
         This requires the integration method to explicitly know about rho,
         so it's not completely general to all joint DFEs. rho is thus
         included as a parameter in the argument list.
+
+        Args:
+            params (list): Parameters for sel_dist and positive selection.
+                The last four parameters are:
+                
+                - Proportion positive selection in pop1.
+                
+                - Positive gamma for pop1.
+                
+                - Proportion positive in pop2.
+                
+                - Positive gamma for pop2.
+
+            ns (list): Ignored.
+
+            biv_seldist (function): Bivariate probability distribution for
+                negative selection, taking arguments (xx, yy, params).
+
+            theta (float): Population-scaled mutation rate.
+
+            rho (float, optional): Correlation coefficient used to connect
+                negative and positive components of DFE. Defaults to 0.
+
+            pts (list, optional): Ignored.
+
+        Returns:
+            fs (Spectrum): Integrated spectrum.
         """
         biv_params = params[:-4]
         ppos1, gammapos1, ppos2, gammapos2 = params[-4:]
@@ -346,21 +429,32 @@ class Cache2D:
 
     def integrate_symmetric_point_pos(self, params, ns, biv_seldist, theta, pts=None):
         """
-        Convenience method for integrating spectra over a bivariate prob. dist.
-        for negative gammas plus a symmetric point mass of positive selection.
+        Integrate spectra over a bivariate probability distribution for negative gammas
+        plus a symmetric point mass of positive selection.
 
-        params: Parameters for sel_dist and positive selection.
-                It is assumed that the last two parameters are:
-                Proportion positive selection, postive gamma
+        Args:
+            params (list): Parameters for sel_dist and positive selection.
+                The last two parameters are:
+                
+                - Proportion positive selection.
+                
+                - Positive gamma.
+                
                 Earlier arguments are assumed to be for the continuous bivariate
-                distribution.
-                *It is assumed that the last of those earlier arguments is
-                 the correlation coefficient rho.*
-        ns: Ignored
-        biv_seldist: Bivariate probability distribution for negative selection,
-                     taking in arguments (xx, yy, params)
-        theta: Population-scaled mutation rate
-        pts: Ignored
+                distribution. The last of those earlier arguments is the
+                correlation coefficient rho.
+
+            ns (list): Ignored.
+
+            biv_seldist (function): Bivariate probability distribution for
+                negative selection, taking arguments (xx, yy, params).
+
+            theta (float): Population-scaled mutation rate.
+
+            pts (list, optional): Ignored.
+
+        Returns:
+            fs (Spectrum): Integrated spectrum.
         """
         seldist_params = params[:-2]
         rho = seldist_params[-1]
@@ -376,9 +470,14 @@ class Cache2D:
         """
         Merge caches generated with split_jobs.
 
-        caches: Cache2D objects to merge
+        Args:
+            caches (list): List of Cache2D objects to merge.
 
-        Note: Will fail if caches conflict or do not merge into a complete cache.
+        Returns:
+            cache (Cache2D): Merged Cache2D object.
+
+        Raises:
+            ValueError: If caches conflict or do not merge into a complete cache.
         """
         import copy
         # Copy our first cache to start the output
@@ -408,26 +507,37 @@ from dadi import Numerics, PhiManip, Integration
 from dadi.Spectrum_mod import Spectrum
 
 def mixture(params, ns, s1, s2, sel_dist1, sel_dist2, theta, pts,
-                  exterior_int=True):
+            exterior_int=True):
     """
-    Weighted summation of 1d and 2d distributions that share parameters.
-    The 1d distribution is equivalent to assuming selection coefficients are
-    perfectly correlated.
+    Compute a weighted summation of 1D and 2D distributions that share parameters.
 
-    params: Parameters for potential optimization.
-            It is assumed that last parameter is the weight for the 2d dist.
-            The second-to-last parameter is assumed to be the correlation
-                coefficient for the 2d distribution.
-            The remaining parameters as assumed to be shared between the
-                1d and 2d distributions.
-    ns: Ignored
-    s1: Cache1D object for 1d distribution
-    s2: Cache2D object for 2d distribution
-    sel_dist1: Univariate probability distribution for s1
-    sel_dist2: Bivariate probability distribution for s2
-    theta: Population-scaled mutation rate
-    pts: Ignored
-    exterior_int: If False, do not integrate outside sampled domain.
+    The 1D distribution assumes selection coefficients are perfectly correlated.
+
+    Args:
+        params (list): Parameters for optimization. The last parameter is the 
+            weight for the 2D distribution. The second-to-last parameter is the 
+            correlation coefficient for the 2D distribution. The remaining 
+            parameters are shared between the 1D and 2D distributions.
+
+        ns (list): Ignored. Will be retrieved from original caching.
+
+        s1 (Cache1D): Cache object for the 1D distribution.
+
+        s2 (Cache2D): Cache object for the 2D distribution.
+
+        sel_dist1 (function): Univariate probability distribution for `s1`.
+
+        sel_dist2 (function): Bivariate probability distribution for `s2`.
+
+        theta (float): Population-scaled mutation rate.
+
+        pts (list): Ignored. Will be retrieved from original caching.
+
+        exterior_int (bool, optional): If False, do not integrate outside the 
+            sampled domain. Defaults to True.
+
+    Returns:
+        fs (Spectrum): Weighted summation of the 1D and 2D distributions.
     """
     fs1 = s1.integrate(params[:-2], None, sel_dist1, theta, None, exterior_int)
     fs2 = s2.integrate(params[:-1], None, sel_dist2, theta, None, exterior_int)
@@ -438,59 +548,78 @@ def mixture(params, ns, s1, s2, sel_dist1, sel_dist2, theta, pts,
 def mixture_symmetric_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
                                 theta, pts=None):
     """
-    Weighted summation of 1d and 2d distributions with positive selection.
-    The 1d distribution is equivalent to assuming selection coefficients are
-    perfectly correlated.
+    Compute a weighted summation of 1D and 2D distributions with positive selection.
 
-    params: Parameters for potential optimization.
-            The last parameter is the weight for the 2d dist.
-            The second-to-last parameter is positive gammma for the point mass.
-            The third-to-last parameter is the proportion of positive selection.
-            The fourth-to-last parameter is the correlation coefficient for the
-                2d distribution.
-            The remaining parameters as must be shared between the 1d and 2d
-                distributions.
-    ns: Ignored
-    s1: Cache1D object for 1d distribution
-    s2: Cache2D object for 2d distribution
-    sel_dist1: Univariate probability distribution for s1
-    sel_dist2: Bivariate probability distribution for s2
-    theta: Population-scaled mutation rate
-    pts: Ignored
+    The 1D distribution assumes selection coefficients are perfectly correlated.
+
+    Args:
+        params (list): Parameters for optimization. The last parameter is the 
+            weight for the 2D distribution. The second-to-last parameter is the 
+            positive gamma for the point mass. The third-to-last parameter is 
+            the proportion of positive selection. The fourth-to-last parameter 
+            is the correlation coefficient for the 2D distribution. The remaining 
+            parameters are shared between the 1D and 2D distributions.
+
+        ns (list): Ignored. Will be retrieved from original caching.
+
+        s1 (Cache1D): Cache object for the 1D distribution.
+
+        s2 (Cache2D): Cache object for the 2D distribution.
+
+        sel_dist1 (function): Univariate probability distribution for `s1`.
+
+        sel_dist2 (function): Bivariate probability distribution for `s2`.
+
+        theta (float): Population-scaled mutation rate.
+
+        pts (list, optional): Ignored. Will be retrieved from original caching.
+
+    Returns:
+        fs (Spectrum): Weighted summation of the 1D and 2D distributions with positive selection.
     """
     pdf_params = params[:-4]
     rho, ppos, gamma_pos, p2d = params[-4:]
 
     params1 = list(pdf_params) + [ppos, gamma_pos]
     fs1 = s1.integrate_point_pos(params1, None, sel_dist1, theta, Npos=1, pts=None)
-    params2 = list(pdf_params) + [rho, ppos, gamma_pos]
+    params2 = list(pdf_params) + [rho, ppos, gamma_pos, ppos, gamma_pos]
     fs2 = s2.integrate_symmetric_point_pos(params2, None, sel_dist2, theta, None)
     return (1-p2d)*fs1 + p2d*fs2
 
 def mixture_point_pos(params, ns, s1, s2, sel_dist1, sel_dist2,
                       theta, pts=None):
     """
-    Weighted summation of 1d and 2d distributions with positive selection.
-    The 1d distribution is equivalent to assuming selection coefficients are
-    perfectly correlated.
+    Compute a weighted summation of 1D and 2D distributions with positive selection.
 
-    params: Parameters for potential optimization.
-            The last parameter is the weight for the 2d dist.
-            The second-to-last parameter is positive gammma for the point mass in population 2.
-            The third-to-last parameter is the proportion of positive selection in population 2.
-            The fourth-to-last parameter is positive gamma for the point mass in population 1.
-            The fifth-to-last parameter is the proportion of positive selection in population 1.
-            The sixth-to-last parameter is the correlation coefficient for the
-                2d distribution.
-            The remaining parameters as must be shared between the 1d and 2d
-                distributions.
-    ns: Ignored
-    s1: Cache1D object for 1d distribution
-    s2: Cache2D object for 2d distribution
-    sel_dist1: Univariate probability distribution for s1
-    sel_dist2: Bivariate probability distribution for s2
-    theta: Population-scaled mutation rate
-    pts: Ignored
+    The 1D distribution assumes selection coefficients are perfectly correlated.
+
+    Args:
+        params (list): Parameters for optimization. The last parameter is the 
+            weight for the 2D distribution. The second-to-last parameter is the 
+            positive gamma for the point mass in population 2. The third-to-last 
+            parameter is the proportion of positive selection in population 2. 
+            The fourth-to-last parameter is the positive gamma for the point 
+            mass in population 1. The fifth-to-last parameter is the proportion 
+            of positive selection in population 1. The sixth-to-last parameter 
+            is the correlation coefficient for the 2D distribution. The remaining 
+            parameters are shared between the 1D and 2D distributions.
+
+        ns (list): Ignored. Will be retrieved from original caching.
+
+        s1 (Cache1D): Cache object for the 1D distribution.
+
+        s2 (Cache2D): Cache object for the 2D distribution.
+
+        sel_dist1 (function): Univariate probability distribution for `s1`.
+
+        sel_dist2 (function): Bivariate probability distribution for `s2`.
+
+        theta (float): Population-scaled mutation rate.
+
+        pts (list, optional): Ignored. Will be retrieved from original caching.
+
+    Returns:
+        fs (Spectrum): Weighted summation of the 1D and 2D distributions with positive selection.
     """
     pdf_params = params[:-6]
     rho, ppos1, gamma_pos1, ppos2, gamma_pos2, p2d = params[-6:]
