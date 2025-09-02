@@ -174,7 +174,7 @@ def split_mig_mscore(params):
         params (tuple): (nu1, nu2, T, m)
 
     Returns:
-        str: ms core command string.
+        output (str): ms core command string.
     """
     nu1,nu2,T,m = params
 
@@ -316,7 +316,7 @@ def IM_mscore(params):
         params (tuple): (s, nu1, nu2, T, m12, m21)
 
     Returns:
-        str: ms core command string.
+        output (str): ms core command string.
     """
     s,nu1,nu2,T,m12,m21 = params
 
@@ -391,7 +391,7 @@ def IM_pre_mscore(params):
         params (tuple): (nuPre, TPre, s, nu1, nu2, T, m12, m21)
 
     Returns:
-        str: ms core command string.
+        output (str): ms core command string.
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21 = params
     
