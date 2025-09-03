@@ -1,5 +1,5 @@
 """
-Miscellaneous functions for plotting DFEs
+Miscellaneous functions for plotting DFEs.
 """
 import numpy as np
 try:
@@ -11,23 +11,38 @@ def plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=None,
                  xlabel='$\gamma_1$', ylabel='$\gamma_2$', cmap='gray_r',
                  colorbar=True, vmin=0, clip_on=True):
     """
-    Plot bivariate DFE (for negative gammas).
+    Plot a bivariate DFE (for negative gammas).
 
-    gammax, gammay: Grids of gamma values to plot with. Note that non-negative
-                    values are discarded.
-    sel_dist: Bivariate probability distribution,
-              taking in arguments (xx, yy, params)
-    params: Parameters for sel_dist
-    logweight: If True, plotted values are weighted by x and y, so that the
-               total probability within each cell is plotted, rather than the
-               probability density. This is typically easier to interpret.
-    ax: Matplotlib axes to plot into. If None, plt.gca() is used.
-    xlabel, ylabel: Labels for x and y axes.
-    cmap: Colormap to plot with. For useful advice regarding colormaps, see
-          http://matplotlib.org/users/colormaps.html .
-    colorbar: If True, include a colorbar alongside the plot.
-    vmin: Values below this will be colored white.
-    clip_on: If False, plot will extend outside of axes.
+    Parameters:
+        gammax (array-like): Grids of gamma values to plot with. 
+            Non-negative values are discarded.
+        gammay (array-like): Grids of gamma values to plot with. 
+            Non-negative values are discarded.
+        sel_dist (callable): Bivariate probability distribution, taking 
+            arguments (xx, yy, params).
+        params (array-like): Parameters for sel_dist.
+        logweight (bool, optional): If True, plotted values are weighted by x 
+            and y, so that the total probability within each cell is plotted 
+            rather than the probability density. Defaults to True.
+        ax (matplotlib.axes.Axes, optional): Matplotlib axes to plot into. 
+            If None, plt.gca() is used. Defaults to None.
+        xlabel (str, optional): Labels for x and y axes. Defaults to 
+            '$\gamma_1$'.
+        ylabel (str, optional): Labels for x and y axes. Defaults to 
+            '$\gamma_2$'.
+        cmap (str, optional): Colormap to plot with. Defaults to 'gray_r'.
+        colorbar (bool, optional): If True, include a colorbar alongside the 
+            plot. Defaults to True.
+        vmin (float, optional): Values below this will be colored white. 
+            Defaults to 0.
+        clip_on (bool, optional): If False, plot will extend outside of axes. 
+            Defaults to True.
+
+    Returns:
+        ax (matplotlib.axes.Axes): The axes with the plot.
+    
+    Note:
+        See https://matplotlib.org/2.0.2/users/colormaps.html for colormap tips.
     """
     # Discard non-negative values of gamma.
     gammax = gammax[gammax < 0]
@@ -74,35 +89,53 @@ def plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params, rho=0,
                            ylabel='$\gamma_2$', cmap='gray_r', fignum=None,
                            colorbar=True, vmin=0):
     """
-    Plot bivariate DFE (for negative gammas) with positive point mass.
+    Plot a bivariate DFE (for negative gammas) with a positive point mass.
 
-    Returns figure for plot.
-
-    Note: You might need to adjust subplot parameters using fig.subplots_adjust
-          after plotting to see all labels, etc.
-
-    gammax, gammay: Grids of gamma values to plot with. Note that non-negative
-                    values are discarded.
-    sel_dist: Bivariate probability distribution,
-              taking in arguments (xx, yy, params)
-    params: Parameters for sel_dist and positive selection.
-            It is assumed that the last four parameters are:
-            Proportion positive selection in pop1, postive gamma for pop1,
-             prop. positive in pop2, and positive gamma for pop2.
-            Earlier arguments are assumed to be for the continuous bivariate
+    Parameters:
+        gammax (array-like): Grids of gamma values to plot with. 
+            Non-negative values are discarded.
+        gammay (array-like): Grids of gamma values to plot with. 
+            Non-negative values are discarded.
+        sel_dist (callable): Bivariate probability distribution, taking 
+            arguments (xx, yy, params).
+        params (array-like): Parameters for sel_dist and positive selection. 
+            The last four parameters are assumed to be:
+            
+            - Proportion positive selection in pop1.
+            
+            - Positive gamma for pop1.
+            
+            - Proportion positive in pop2.
+            
+            - Positive gamma for pop2.
+            
+            Earlier arguments are assumed to be for the continuous bivariate 
             distribution.
-    rho: Correlation coefficient used to connect negative and positive
-         components of DFE.
-    logweight: If True, plotted values are weighted by x and y, so that the
-               total probability within each cell is plotted, rather than the
-               probability density. This is typically easier to interpret.
-    xlabel, ylabel: Labels for x and y axes.
-    cmap: Colormap to plot with. For useful advice regarding colormaps, see
-          http://matplotlib.org/users/colormaps.html .
-    fignum: Figure number to use. If None or figure does not exist, a new
-            one will be created.
-    colorbar: If True, plot scale bar for probability
-    vmin: Values below this will be colored white.
+        rho (float, optional): Correlation coefficient used to connect 
+            negative and positive components of DFE. Defaults to 0.
+        logweight (bool, optional): If True, plotted values are weighted by x 
+            and y, so that the total probability within each cell is plotted 
+            rather than the probability density. Defaults to True.
+        xlabel (str, optional): Labels for x and y axes. Defaults to 
+            '$\gamma_1$'.
+        ylabel (str, optional): Labels for x and y axes. Defaults to 
+            '$\gamma_2$'.
+        cmap (str, optional): Colormap to plot with. Defaults to 'gray_r'.
+        fignum (int, optional): Figure number to use. If None or the figure 
+            does not exist, a new one will be created. Defaults to None.
+        colorbar (bool, optional): If True, plot a scale bar for probability. 
+            Defaults to True.
+        vmin (float, optional): Values below this will be colored white. 
+            Defaults to 0.
+
+    Returns:
+        matplotlib.figure.Figure: The figure for the plot.
+
+    Notes:
+        - You might need to adjust subplot parameters using 
+        `fig.subplots_adjust` after plotting to see all labels, etc.
+
+        - See https://matplotlib.org/2.0.2/users/colormaps.html for colormap tips.
     """
     biv_params = params[:-4]
     ppos1, gammapos1, ppos2, gammapos2 = params[-4:]
