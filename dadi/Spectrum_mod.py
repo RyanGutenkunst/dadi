@@ -286,28 +286,35 @@ class Spectrum(numpy.ma.masked_array):
         """
         Write frequency spectrum to file.
 
-        fname: File name to write to.  If string ends in .gz, file will be saved
-               with gzip compression.
-        precision: precision with which to write out entries of the SFS. (They
-                   are formated via %.<p>g, where <p> is the precision.)
-        comment lines: list of strings to be used as comment lines in the header
-                       of the output file.
-        foldmaskinfo: If False, folding and mask and population label
-                      information will not be saved. This conforms to the file
-                      format for dadi versions prior to 1.3.0.
+        Args:
+            fname (str): File name to write to.  If string ends in .gz, file will be saved
+                with gzip compression.
+            precision (int, optional): precision with which to write out entries of the SFS. (They
+                    are formated via `%.<p>g`, where `<p>` is the precision.)
+            comment_lines (list[str], optional): list of strings to be used as comment lines in the header
+                        of the output file.
+            foldmaskinfo (bool, optional): If False, folding and mask and population label
+                        information will not be saved. This conforms to the file
+                        format for dadi versions prior to 1.3.0.
 
         The file format is:
-            # Any number of comment lines beginning with a '#'
-            A single line containing N integers giving the dimensions of the fs
+            
+            - # Any number of comment lines beginning with a '#'
+            
+            - A single line containing N integers giving the dimensions of the fs
               array. So this line would be '5 5 3' for an SFS that was 5x5x3.
               (That would be 4x4x2 *samples*.)
-            On the *same line*, the string 'folded' or 'unfolded' denoting the
+            
+            - On the *same line*, the string 'folded' or 'unfolded' denoting the
               folding status of the array
-            On the *same line*, optional strings each containing the population
+            
+            - On the *same line*, optional strings each containing the population
               labels in quotes separated by spaces, e.g. "pop 1" "pop 2"
-            A single line giving the array elements. The order of elements is 
+            
+            - A single line giving the array elements. The order of elements is 
               e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
-            A single line giving the elements of the mask in the same order as
+            
+            - A single line giving the elements of the mask in the same order as
               the data line. '1' indicates masked, '0' indicates unmasked.
         """
         # Open the file object.
@@ -359,7 +366,11 @@ class Spectrum(numpy.ma.masked_array):
         """
         Project to smaller sample size.
 
-        ns: Sample sizes for new spectrum.
+        Args:
+            ns (int): Sample sizes for new spectrum.
+
+        Returns:
+            fs (Spectrum): Spectrum object with sample sizes ns.
         """
         if len(ns) != self.Npop:
             raise ValueError('Requested sample sizes not of same dimension '
@@ -437,10 +448,11 @@ class Spectrum(numpy.ma.masked_array):
         """
         Reduced dimensionality spectrum summing over some populations.
 
-        over: sequence of axes to sum over. For example (0,2) will sum over
-              populations 0 and 2.
-        mask_corners: If True, the typical corners of the resulting fs will be
-                      masked
+        Args:
+            over (list of int): sequence of axes to sum over. For example (0,2) will sum over
+                populations 0 and 2.
+            mask_corners (bool, optional): If True, the typical corners of the resulting fs will be
+                        masked
         """
         original_folded = self.folded
         # If we started with an folded Spectrum, we need to unfold before
@@ -603,10 +615,12 @@ class Spectrum(numpy.ma.masked_array):
         """
         Get Spectrum with populations in new order
 
-        Returns new Spectrum with same number of populations, but in a different order
-
-        neworder: Integer list defining new order of populations, indexing the orginal
-                  populations from 1. Must contain all integers from 1 to number of pops.
+        Args:
+            neworder (list[int]): Integer list defining new order of populations, indexing the orginal
+                    populations from 1. Must contain all integers from 1 to number of pops.
+        
+        Returns:
+            fs (Spectrum): New Spectrum with same number of populations, but in a different order
         """
         if sorted(neworder) != [_+1 for _ in range(self.ndim)]:
             raise(ValueError("neworder argument misspecified"))
@@ -728,7 +742,8 @@ class Spectrum(numpy.ma.masked_array):
         """
         Generate a Poisson-sampled fs from the current one.
 
-        Note: Entries where the current fs is masked will be masked in the
+        Note:
+            Entries where the current fs is masked will be masked in the
               output sampled fs.
         """
         import scipy.stats
@@ -935,22 +950,31 @@ class Spectrum(numpy.ma.masked_array):
     def from_sfscode_file(fid, sites='all', average=True, mask_corners=True, 
                           return_header=False, pop_ids=None):
         """
-        Read frequency spectrum from file of sfs_code output.
+        Read a frequency spectrum from an sfs_code output file.
 
-        fid: string with file name to read from or an open file object.
-        sites: If sites=='all', return the fs of all sites. If sites == 'syn',
-               use only synonymous mutations. If sites == 'nonsyn', use
-               only non-synonymous mutations.
-        average: If True, the returned fs is the average over the runs in the 
-                 file. If False, the returned fs is the sum.
-        mask_corners: If True, mask the 'absent in all samples' and 'fixed in
-                      all samples' entries.
-        return_header: If true, the return value is (fs, (command,seeds), where
-                       command and seeds are strings containing the ms
-                       commandline and the seeds used.
-        pop_ids: Optional list of strings containing the population labels.
-                 If pop_ids is None, labels will be "pop0", "pop1", ...
+        This function parses the output of sfs_code and returns a frequency spectrum
+        based on the specified filtering and formatting options.
+
+        Args:
+            fid (str or file object): Path to the file or an open file object containing sfs_code output.
+            sites (str): Site type to include in the spectrum. Options are:
+
+                - 'all': Include all sites.
+
+                - 'syn': Include only synonymous mutations.
+
+                - 'nonsyn': Include only non-synonymous mutations.
+
+            average (bool): If True, return the average spectrum across runs; if False, return the sum.
+            mask_corners (bool): If True, mask entries corresponding to alleles absent or fixed in all samples.
+            return_header (bool): If True, return a tuple (fs, (command, seeds)), where `command` and `seeds`
+                are strings containing the ms command line and seed values used.
+            pop_ids (list of str, optional): Population labels. If None, defaults to ["pop0", "pop1", ...].
+
+        Returns:
+            fs (Spectrum): The frequency spectrum, optionally with metadata if `return_header` is True.
         """
+
         newfile = False
         # Try to read from fid. If we can't, assume it's something that we can
         # use to open a file.
@@ -1169,8 +1193,9 @@ class Spectrum(numpy.ma.masked_array):
         """
         Zeng et al.'s E statistic.
 
-        From Zeng et al. "Statistical Tests for Detecting Positive Selection by
-        Utilizing High-Frequency Variants" (2006) Genetics
+        Citation:
+            Zeng et al. "Statistical Tests for Detecting Positive Selection by
+            Utilizing High-Frequency Variants" (2006) Genetics
         """
         num = self.theta_L() - self.Watterson_theta()
 
@@ -1194,12 +1219,12 @@ class Spectrum(numpy.ma.masked_array):
         return num/numpy.sqrt(var)
     
     def pi(self):
-        r"""
+        """
         Estimated expected number of pairwise differences between two
         chromosomes in the population.
     
-        Note that this estimate includes a factor of sample_size/(sample_size-1)
-        to make E(\hat{pi}) = theta.
+        Note that this estimate includes a factor of sample_size / (sample_size - 1)
+        to make E( π̂ ) = θ.
         """
         if self.ndim != 1:
             raise ValueError("Only defined for a one-dimensional SFS.")
@@ -1360,8 +1385,8 @@ class Spectrum(numpy.ma.masked_array):
     def _from_phi_2D_direct_inbreeding(nx, ny, xx, yy, phi, Fx, Fy, mask_corners=True,
                                        ploidyx=2,ploidyy=2,het_ascertained=None):
         """
-        Compute sample Spectrum from population frequency distribution phi plus
-        inbreeding.
+        Compute sample Spectrum from population frequency distribution phi
+        plus inbreeding.
         
         See from_phi_inbreeding for explanation of arguments.
         """
@@ -2043,41 +2068,44 @@ class Spectrum(numpy.ma.masked_array):
                             pop_ids=None, admix_props=None,
                             het_ascertained=None, force_direct=True):
         """
-        Compute sample Spectrum from population frequency distribution phi
-        plus inbreeding.
-        
-        phi: P-dimensional population frequency distribution.
-        ns: Sequence of P sample sizes for each population.
-        xxs: Sequence of P one-dimesional grids on which phi is defined.
-        Fs: Sequence of P inbreeding coefficients for each population.
-        ploidys: Sequence of P ploidy levels for each population.
-        mask_corners: If True, resulting FS is masked in 'absent' and 'fixed'
-                      entries.
-        pop_ids: Optional list of strings containing the population labels.
-                 If pop_ids is None, labels will be "pop0", "pop1", ...
-        admix_props: Admixture proportions for sampled individuals. For example,
-                     if there are two populations, and individuals from the
-                     first pop are admixed with fraction f from the second
-                     population, then admix_props=((1-f,f),(0,1)). For three
-                     populations, the no-admixture setting is
-                     admix_props=((1,0,0),(0,1,0),(0,0,1)). 
-                     (Note that this option also forces direct integration,
-                     which may be less accurate than the semi-analytic
-                     method.)
-        het_ascertained: If 'xx', then FS is calculated assuming that SNPs have
-                         been ascertained by being heterozygous in one
-                         individual from population 1. (This individual is
-                         *not* in the current sample.) If 'yy' or 'zz', it
-                         assumed that the ascertainment individual came from
-                         population 2 or 3, respectively.
-                         (Note that this option also forces direct integration,
-                         which may be less accurate than the semi-analytic
-                         method. This could be fixed if there is interest. Note
-                         also that this option cannot be used simultaneously
-                         with admix_props.)
-        force_direct: Forces integration to use older direct integration method,
-                      rather than using analytic integration of sampling 
-                      formula.
+        Compute a sample Spectrum from a population frequency distribution (phi) with inbreeding.
+
+        This function calculates the frequency spectrum while accounting for inbreeding
+        coefficients and ploidy levels for each population.
+
+        Args:
+            phi (array-like): P-dimensional population frequency distribution.
+            ns (list[int]): Sequence of P sample sizes for each population.
+            xxs (list[array-like]): Sequence of P one-dimensional grids on which phi is defined.
+            Fs (list[float]): Sequence of P inbreeding coefficients for each population.
+            ploidys (list[int]): Sequence of P ploidy levels for each population.
+            mask_corners (bool, optional): If True, resulting FS is masked in 'absent' and 'fixed' entries.
+            pop_ids (list[str], optional): Optional list of strings containing the population labels.
+                If None, labels will be "pop0", "pop1", etc.
+            admix_props (list[tuple], optional): Admixture proportions for sampled individuals.
+                For example, if there are two populations and individuals from the first
+                population are admixed with fraction f from the second population, then
+                admix_props=((1-f, f), (0, 1)). For three populations, the no-admixture
+                setting is admix_props=((1, 0, 0), (0, 1, 0), (0, 0, 1)).
+                Note: This option forces direct integration, which may be less accurate
+                than the semi-analytic method.
+            het_ascertained (str, optional): If 'xx', the FS is calculated assuming that SNPs have
+                been ascertained by being heterozygous in one individual from population 1.
+                This individual is not in the current sample. If 'yy' or 'zz', it is assumed
+                that the ascertainment individual came from population 2 or 3, respectively.
+                Note: This option forces direct integration, which may be less accurate
+                than the semi-analytic method. This option cannot be used simultaneously
+                with admix_props.
+            force_direct (bool, optional): Forces integration to use the older direct integration
+                method, rather than using analytic integration of the sampling formula.
+
+        Returns:
+            fs (Spectrum): The resulting frequency spectrum.
+
+        Raises:
+            ValueError: If the dimensionality of phi and lengths of ns, xxs, ploidys, and Fs
+                do not all agree, or if invalid values are provided for het_ascertained.
+            NotImplementedError: If admix_props and het_ascertained are used simultaneously.
         """
         if np.all(np.asarray(Fs) == 0):
             return Spectrum.from_phi(phi, ns, xxs, mask_corners=mask_corners, 
