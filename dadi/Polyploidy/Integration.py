@@ -2498,6 +2498,10 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
             phi = PolyInt.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
         current_t += this_dt
 
+        if current_t >= T-2*dt:
+            print(phi)
+            print(f"t = {current_t}")
+
     return phi
 
 def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3, 

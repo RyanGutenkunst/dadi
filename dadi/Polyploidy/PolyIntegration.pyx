@@ -848,7 +848,7 @@ def implicit_precalc_2Dx(double[:,:] phi, double[:,:] ax, double[:,:] bx,
 
     tridiag_free()
 
-    return np.asarray(phi)
+    return np.asarray(phi, dtype = np.float64)
 
 def implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
                                  double[:,:] cy, double dt):
@@ -893,11 +893,10 @@ def implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
             r[jj] = phi[ii, jj]/dt
         tridiag_premalloc(&a[0], &b[0], &c[0], &r[0], &temp[0], M)
         for jj in range(0, M):
-            phi[ii, jj] = temp[jj]
-
+            phi[ii, jj] = temp[jj] 
     tridiag_free()
 
-    return np.asarray(phi)
+    return np.asarray(phi, dtype=np.float64)
 
 # =========================================================
 # CYTHON 3D INTEGRATION FUNCTIONS - TEMPORAL PARAMS
