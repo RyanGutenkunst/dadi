@@ -35,11 +35,7 @@ def autotet_formation(params, ns, pts, theta0=1):
     phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_auto, 
                            ploidyflag2=autoflag, theta0=theta0)
     
-    print(f"phi: {phi}")
-    
-    fs = Spectrum.from_phi(phi, ns, (xx,xx))
-
-    print(f"fs: {fs}")  
+    fs = Spectrum.from_phi(phi, ns, (xx,xx)) 
 
     return fs
 

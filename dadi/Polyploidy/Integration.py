@@ -1087,7 +1087,7 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
         _inject_mutations_1D(phi, this_dt, xx, theta0, ploidy)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
-        phi = PolyInt.implicit_1Dx(phi, xx, nu, sel, this_dt, 
+        PolyInt.implicit_1Dx(phi, xx, nu, sel, this_dt, 
                                  use_delj_trick, ploidy)
         current_t = next_t
     Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
@@ -1245,10 +1245,10 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                              nomut1, nomut2, ploidy1, ploidy2)
         if not frozen1:
-            phi = PolyInt.implicit_2Dx(phi, xx, yy, nu1, m12, sel1,
+            PolyInt.implicit_2Dx(phi, xx, yy, nu1, m12, sel1,
                                      this_dt, use_delj_trick, ploidy1)
         if not frozen2:
-            phi = PolyInt.implicit_2Dy(phi, xx, yy, nu2, m21, sel2,
+            PolyInt.implicit_2Dy(phi, xx, yy, nu2, m21, sel2,
                                      this_dt, use_delj_trick, ploidy2)
 
         current_t = next_t
@@ -1440,13 +1440,13 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                              frozen1, frozen2, frozen3,
                              ploidy1, ploidy2, ploidy3)
         if not frozen1:
-            phi = PolyInt.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
+            PolyInt.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
                                      sel1, this_dt, use_delj_trick, ploidy1)
         if not frozen2:
-            phi = PolyInt.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
+            PolyInt.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
                                      sel2, this_dt, use_delj_trick, ploidy2)
         if not frozen3:
-            phi = PolyInt.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+            PolyInt.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
                                      sel3, this_dt, use_delj_trick, ploidy3)
 
         current_t = next_t
@@ -1651,16 +1651,16 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                              frozen1, frozen2, frozen3, frozen4,
                              ploidy1, ploidy2, ploidy3, ploidy4)
         if not frozen1:
-            phi = PolyInt.implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14,
+            PolyInt.implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14,
                                      sel1, this_dt, use_delj_trick, ploidy1)
         if not frozen2:
-            phi = PolyInt.implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24,
+            PolyInt.implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24,
                                      sel2, this_dt, use_delj_trick, ploidy2)
         if not frozen3:
-            phi = PolyInt.implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34,
+            PolyInt.implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34,
                                      sel3, this_dt, use_delj_trick, ploidy3)
         if not frozen4:
-            phi = PolyInt.implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43,
+            PolyInt.implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43,
                                      sel4, this_dt, use_delj_trick, ploidy4)
 
         current_t = next_t
@@ -1890,19 +1890,19 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                              frozen1, frozen2, frozen3, frozen4, frozen5,
                              ploidy1, ploidy2, ploidy3, ploidy4, ploidy5)
         if not frozen1:
-            phi = PolyInt.implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15,
+            PolyInt.implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15,
                                      sel1, this_dt, use_delj_trick, ploidy1)
         if not frozen2:
-            phi = PolyInt.implicit_5Dy(phi, xx, yy, zz, aa, bb, nu2, m21, m23, m24, m25,
+            PolyInt.implicit_5Dy(phi, xx, yy, zz, aa, bb, nu2, m21, m23, m24, m25,
                                      sel2, this_dt, use_delj_trick, ploidy2)
         if not frozen3:
-            phi = PolyInt.implicit_5Dz(phi, xx, yy, zz, aa, bb, nu3, m31, m32, m34, m35,
+            PolyInt.implicit_5Dz(phi, xx, yy, zz, aa, bb, nu3, m31, m32, m34, m35,
                                      sel3, this_dt, use_delj_trick, ploidy3)
         if not frozen4:
-            phi = PolyInt.implicit_5Da(phi, xx, yy, zz, aa, bb, nu4, m41, m42, m43, m45,
+            PolyInt.implicit_5Da(phi, xx, yy, zz, aa, bb, nu4, m41, m42, m43, m45,
                                      sel4, this_dt, use_delj_trick, ploidy4)
         if not frozen5:
-            phi = PolyInt.implicit_5Db(phi, xx, yy, zz, aa, bb, nu5, m51, m52, m53, m54,
+            PolyInt.implicit_5Db(phi, xx, yy, zz, aa, bb, nu5, m51, m52, m53, m54,
                                      sel5, this_dt, use_delj_trick, ploidy5)
 
         current_t = next_t
@@ -2493,14 +2493,11 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
                             nomut1, nomut2, ploidy1, ploidy2)
         if not frozen1:
-            phi = PolyInt.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
+            PolyInt.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:
-            phi = PolyInt.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
+            PolyInt.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
         current_t += this_dt
-
-        if current_t >= T-2*dt:
-            print(phi)
-            print(f"t = {current_t}")
+        print(current_t)
 
     return phi
 
@@ -2800,10 +2797,10 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
                              frozen1, frozen2, frozen3, 
                              ploidy1, ploidy2, ploidy3)
         if not frozen1:
-            phi = PolyInt.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
+            PolyInt.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:
-            phi = PolyInt.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
+            PolyInt.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
         if not frozen3:
-            phi = PolyInt.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
+            PolyInt.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
         current_t += this_dt
     return phi

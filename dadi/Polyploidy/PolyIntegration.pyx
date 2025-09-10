@@ -271,8 +271,6 @@ def implicit_1Dx(double[:] phi, double[:] xx, double nu, double[:] s,
     # solve the tridiagonal matrix
     tridiag(&a[0], &b[0], &c[0], &r[0], &phi[0], L)
 
-    return np.asarray(phi)
-
 # =========================================================
 # CYTHON 2D INTEGRATION FUNCTIONS - TEMPORAL PARAMS
 # =========================================================
@@ -534,8 +532,6 @@ def implicit_2Dx(double[:,:] phi, double[:] xx, double[:] yy,
                 phi[ii, jj] = temp[ii]
     
     tridiag_free()
-
-    return np.asarray(phi)
             
 def implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy, 
                         double nu2, double m21, double[:] s2, 
@@ -796,8 +792,6 @@ def implicit_2Dy(double[:,:] phi, double[:] xx, double[:] yy,
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 # =========================================================
 # CYTHON 2D INTEGRATION FUNCTIONS - CONSTANT PARAMS    
 # =========================================================
@@ -848,8 +842,6 @@ def implicit_precalc_2Dx(double[:,:] phi, double[:,:] ax, double[:,:] bx,
 
     tridiag_free()
 
-    return np.asarray(phi, dtype = np.float64)
-
 def implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
                                  double[:,:] cy, double dt):
     """
@@ -895,8 +887,6 @@ def implicit_precalc_2Dy(double[:,:] phi, double[:,:] ay, double[:,:] by,
         for jj in range(0, M):
             phi[ii, jj] = temp[jj] 
     tridiag_free()
-
-    return np.asarray(phi, dtype=np.float64)
 
 # =========================================================
 # CYTHON 3D INTEGRATION FUNCTIONS - TEMPORAL PARAMS
@@ -1090,8 +1080,6 @@ def implicit_3Dx(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                     phi[ii, jj, kk] = temp[ii]
                
     tridiag_free()
-
-    return np.asarray(phi)
             
 def implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu2, double m21, double m23, double[:] s2, 
@@ -1400,8 +1388,6 @@ def implicit_3Dy(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                     phi[ii, jj, kk] = temp[jj]
 
     tridiag_free()
-
-    return np.asarray(phi)
 
 def implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
                         double nu3, double m31, double m32, double[:] s3, 
@@ -1712,8 +1698,6 @@ def implicit_3Dz(double[:,:,:] phi, double[:] xx, double[:] yy, double[:] zz,
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 ### ==========================================================================
 ### CYTHON 3D INTEGRATION FUNCTIONS - CONSTANT PARAMS
 ### ==========================================================================
@@ -1766,8 +1750,6 @@ def implicit_precalc_3Dx(double[:,:,:] phi, double[:,:,:] ax, double[:,:,:] bx,
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 def implicit_precalc_3Dy(double[:,:,:] phi, double[:,:,:] ay, double[:,:,:] by,
                                  double[:,:,:] cy, double dt):
     """
@@ -1816,8 +1798,6 @@ def implicit_precalc_3Dy(double[:,:,:] phi, double[:,:,:] ay, double[:,:,:] by,
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 def implicit_precalc_3Dz(double[:,:,:] phi, double[:,:,:] az, double[:,:,:] bz,
                                  double[:,:,:] cz, double dt):
     """
@@ -1865,8 +1845,6 @@ def implicit_precalc_3Dz(double[:,:,:] phi, double[:,:,:] az, double[:,:,:] bz,
                 phi[ii, jj, kk] = temp[kk]
 
     tridiag_free()
-
-    return np.asarray(phi)
 
 # =========================================================
 # CYTHON 4D INTEGRATION FUNCTIONS
@@ -2163,8 +2141,6 @@ def implicit_4Dx(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
                         phi[ii, jj, kk, ll] = temp[ii]
     
     tridiag_free()
-
-    return np.asarray(phi)
             
 def implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu2, double m21, double m23, double m24, double[:] s2, 
@@ -2495,8 +2471,6 @@ def implicit_4Dy(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
                         phi[ii, jj, kk, ll] = temp[jj]
 
     tridiag_free()
-
-    return np.asarray(phi)
 
 def implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu3, double m31, double m32, double m34, double[:] s3, 
@@ -2831,8 +2805,6 @@ def implicit_4Dz(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 def implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa,
                         double nu4, double m41, double m42, double m43, double[:] s4, 
                         double dt, int use_delj_trick, int[:] ploidy4):
@@ -3165,8 +3137,6 @@ def implicit_4Da(double[:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, 
         
     tridiag_free()
 
-    return np.asarray(phi)
-
 # =========================================================
 # CYTHON 5D INTEGRATION FUNCTIONS
 # =========================================================
@@ -3478,8 +3448,6 @@ def implicit_5Dx(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
                             phi[ii, jj, kk, ll, mm] = temp[ii]
     
     tridiag_free()
-
-    return np.asarray(phi)
             
 def implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu2, double m21, double m23, double m24, double m25, double[:] s2, 
@@ -3789,8 +3757,6 @@ def implicit_5Dy(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu3, double m31, double m32, double m34, double m35, double[:] s3, 
                         double dt, int use_delj_trick, int[:] ploidy3):
@@ -4003,8 +3969,6 @@ def implicit_5Dz(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
                             phi[ii, jj, kk, ll, mm] = temp[kk]
 
     tridiag_free()
-
-    return np.asarray(phi)
 
 def implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu4, double m41, double m42, double m43, double m45, double[:] s4, 
@@ -4356,8 +4320,6 @@ def implicit_5Da(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
 
     tridiag_free()
 
-    return np.asarray(phi)
-
 def implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz, double[:] aa, double[:] bb,
                         double nu5, double m51, double m52, double m53, double m54, double[:] s5, 
                         double dt, int use_delj_trick, int[:] ploidy5):
@@ -4707,6 +4669,4 @@ def implicit_5Db(double[:,:,:,:,:] phi, double[:] xx, double[:] yy, double[:] zz
                             phi[ii, jj, kk, ll, mm] = temp[mm]
 
     tridiag_free()
-
-    return np.asarray(phi)
 
