@@ -522,160 +522,72 @@ def _compute_dt_hex_c(dx, nu, ms, g001, g002, g010, g011, g012, g020, g021, g022
 ### ==========================================================================
 ### INJECT MUTATIONS FUNCTIONS FOR ALL PLOIDIES + DIMENSIONS
 ### ==========================================================================
-# these are slightly restructured from Ryan's versions to be more compatible with 
-# the ploidy arguments which specify which injection term to use; the correction is theta0/k_ij
-# where k_ij is the ploidy of subgenome j in population i
-def _inject_mutations_1D(phi, dt, xx, theta0, ploidy):
+def _inject_mutations_1D(phi, dt, xx, theta0):
     """
-    Inject novel mutations for a timestep for diploids.
+    Inject novel mutations for a timestep.
     """
-    if ploidy[0]: # if diploid
-        phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
-    elif ploidy[1]: # if autotetraploid
-        phi[1] += dt/xx[1] * theta0/4 * 2/(xx[2] - xx[0])
-    elif ploidy[4]: # if autohexaploid
-        phi[1] += dt/xx[1] * theta0/6 * 2/(xx[2] - xx[0])
+    phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
+    
     return phi
 
 def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
-                         nomut1, nomut2, ploidy1, ploidy2):
+                         nomut1, nomut2):
     """
     Inject novel mutations for a timestep.
     """
     if not frozen1 and not nomut1:
-        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
-            phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
-        elif not ploidy1[4]: # if not hexaploid
-            phi[1,0] += dt/xx[1] * theta0/4 * 4/((xx[2] - xx[0]) * yy[1])
-        elif ploidy1[4]:
-            phi[1,0] += dt/xx[1] * theta0/6 * 4/((xx[2] - xx[0]) * yy[1])
+        phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
     if not frozen2 and not nomut2:
-        if not ploidy2[1] and not ploidy2[4]: 
-            phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
-        elif not ploidy2[4]:
-            phi[0,1] += dt/yy[1] * theta0/4 * 4/((yy[2] - yy[0]) * xx[1])
-        elif ploidy2[4]:
-            phi[0,1] += dt/yy[1] * theta0/6 * 4/((yy[2] - yy[0]) * xx[1])
+        phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+    
     return phi
 
 def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2,
-                         frozen3, ploidy1, ploidy2, ploidy3):
+                         frozen3):
     """
     Inject novel mutations for a timestep.
     """
     if not frozen1:
-        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
-            phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
-        elif not ploidy1[4]: # if not hexaploid
-            phi[1,0,0] += dt/xx[1] * theta0/4 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
-        elif ploidy1[4]:
-            phi[1,0,0] += dt/xx[1] * theta0/6 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+        phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
     if not frozen2:
-        if not ploidy2[1] and not ploidy2[4] and not ploidy2[5]:
-            phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
-        elif not ploidy2[4]:
-            phi[0,1,0] += dt/yy[1] * theta0/4 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
-        elif ploidy2[4]:
-            phi[0,1,0] += dt/yy[1] * theta0/6 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+        phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
     if not frozen3:
-        if not ploidy3[1] and not ploidy3[4] and not ploidy3[5]:
-            phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
-        elif not ploidy3[4]:
-            phi[0,0,1] += dt/zz[1] * theta0/4 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
-        elif ploidy3[4]:
-            phi[0,0,1] += dt/zz[1] * theta0/6 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+        phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+        
     return phi
 
 def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0, 
-                         frozen1, frozen2, frozen3, frozen4,
-                         ploidy1, ploidy2, ploidy3, ploidy4):
+                         frozen1, frozen2, frozen3, frozen4):
     """
     Inject novel mutations for a timestep.
     """
-    # Population 1
-    # Normalization based on the multi-dimensional trapezoid rule is 
-    # implemented                                     ************** here ***************
     if not frozen1:
-        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
-            phi[1,0,0,0] += dt/xx[1] * theta0/2 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
-        elif not ploidy1[4]: # if not hexaploid
-            phi[1,0,0,0] += dt/xx[1] * theta0/4 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
-        elif ploidy1[4]:
-            phi[1,0,0,0] += dt/xx[1] * theta0/6 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
-    # Population 2
+        phi[1,0,0,0] += dt/xx[1] * theta0/2 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
     if not frozen2:
-        if not ploidy2[1] and not ploidy2[4] and not ploidy2[5]:
-            phi[0,1,0,0] += dt/yy[1] * theta0/2 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
-        elif not ploidy2[4]:
-            phi[0,1,0,0] += dt/yy[1] * theta0/4 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
-        elif ploidy2[4]:
-            phi[0,1,0,0] += dt/yy[1] * theta0/6 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
-    # Population 3
+        phi[0,1,0,0] += dt/yy[1] * theta0/2 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
     if not frozen3:
-        if not ploidy3[1] and not ploidy3[4] and not ploidy3[5]:
-            phi[0,0,1,0] += dt/zz[1] * theta0/2 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
-        elif not ploidy3[4]:
-            phi[0,0,1,0] += dt/zz[1] * theta0/4 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
-        elif ploidy3[4]:
-            phi[0,0,1,0] += dt/zz[1] * theta0/6 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
-    # Population 4
+        phi[0,0,1,0] += dt/zz[1] * theta0/2 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
     if not frozen4:
-        if not ploidy4[1] and not ploidy4[4] and not ploidy4[5]:
-            phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
-        elif not ploidy4[4]:
-            phi[0,0,0,1] += dt/aa[1] * theta0/4 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
-        elif not ploidy4[4]:
-            phi[0,0,0,1] += dt/aa[1] * theta0/6 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
+        phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
+    
     return phi
     
 def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0, 
-                         frozen1, frozen2, frozen3, frozen4, frozen5,
-                         ploidy1, ploidy2, ploidy3, ploidy4, ploidy5):
+                         frozen1, frozen2, frozen3, frozen4, frozen5):
     """
     Inject novel mutations for a timestep.
     """
-    # Population 1
-    # Normalization based on the multi-dimensional trapezoid rule is 
-    # implemented                                         ************** here ***************
     if not frozen1:
-        if not ploidy1[1] and not ploidy1[4] and not ploidy1[5]: # this reads as if not tetraploid and not hexaploid
-            phi[1,0,0,0,0] += dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
-        elif not ploidy1[4]: # if not hexaploid
-            phi[1,0,0,0,0] += dt/xx[1] * theta0/4 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
-        elif ploidy1[4]: 
-            phi[1,0,0,0,0] += dt/xx[1] * theta0/6 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
-    # Population 2
+        phi[1,0,0,0,0] += dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
     if not frozen2:
-        if not ploidy2[1] and not ploidy2[4] and not ploidy2[5]:
-            phi[0,1,0,0,0] += dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
-        elif not ploidy2[4]:
-            phi[0,1,0,0,0] += dt/yy[1] * theta0/4 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
-        elif ploidy2[4]:
-            phi[0,1,0,0,0] += dt/yy[1] * theta0/6 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
-    # Population 3
+        phi[0,1,0,0,0] += dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
     if not frozen3:
-        if not ploidy3[1] and not ploidy3[4] and not ploidy3[5]:
-            phi[0,0,1,0,0] += dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
-        elif not ploidy3[4]:
-            phi[0,0,1,0,0] += dt/zz[1] * theta0/4 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
-        elif ploidy3[4]:
-            phi[0,0,1,0,0] += dt/zz[1] * theta0/6 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
-    # Population 4
+        phi[0,0,1,0,0] += dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
     if not frozen4:
-        if not ploidy4[1] and not ploidy4[4] and not ploidy4[5]:
-            phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
-        elif not ploidy4[4]:
-            phi[0,0,0,1,0] += dt/aa[1] * theta0/4 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
-        elif ploidy4[4]:
-            phi[0,0,0,1,0] += dt/aa[1] * theta0/6 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
-    # Population 5
+        phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
     if not frozen5:
-        if not ploidy5[1] and not ploidy5[4] and not ploidy5[5]:
-            phi[0,0,0,0,1] += dt/bb[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
-        elif not ploidy5[4]:    
-            phi[0,0,0,0,1] += dt/bb[1] * theta0/4 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
-        elif ploidy5[4]:    
-            phi[0,0,0,0,1] += dt/bb[1] * theta0/6 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+        phi[0,0,0,0,1] += dt/bb[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+    
     return phi
 
 ### ==========================================================================
@@ -1084,7 +996,7 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
             raise ValueError('A population size is 0. Has the model been '
                              'mis-specified?')
         
-        _inject_mutations_1D(phi, this_dt, xx, theta0, ploidy)
+        _inject_mutations_1D(phi, this_dt, xx, theta0)
         # Do each step in C, since it will be faster to compute the a,b,c
         # matrices there.
         PolyInt.implicit_1Dx(phi, xx, nu, sel, this_dt, 
@@ -1243,7 +1155,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
                              'mis-specified?')
 
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
-                             nomut1, nomut2, ploidy1, ploidy2)
+                             nomut1, nomut2)
         if not frozen1:
             PolyInt.implicit_2Dx(phi, xx, yy, nu1, m12, sel1,
                                      this_dt, use_delj_trick, ploidy1)
@@ -1437,8 +1349,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                              'mis-specified?')
 
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3,
-                             ploidy1, ploidy2, ploidy3)
+                             frozen1, frozen2, frozen3)
         if not frozen1:
             PolyInt.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
                                      sel1, this_dt, use_delj_trick, ploidy1)
@@ -1648,8 +1559,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                              'mis-specified?')
 
         _inject_mutations_4D(phi, this_dt, xx, yy, zz, aa, theta0,
-                             frozen1, frozen2, frozen3, frozen4,
-                             ploidy1, ploidy2, ploidy3, ploidy4)
+                             frozen1, frozen2, frozen3, frozen4)
         if not frozen1:
             PolyInt.implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14,
                                      sel1, this_dt, use_delj_trick, ploidy1)
@@ -1887,8 +1797,7 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                              'mis-specified?')
 
         _inject_mutations_5D(phi, this_dt, xx, yy, zz, aa, bb, theta0,
-                             frozen1, frozen2, frozen3, frozen4, frozen5,
-                             ploidy1, ploidy2, ploidy3, ploidy4, ploidy5)
+                             frozen1, frozen2, frozen3, frozen4, frozen5)
         if not frozen1:
             PolyInt.implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15,
                                      sel1, this_dt, use_delj_trick, ploidy1)
@@ -2320,7 +2229,7 @@ def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1,
     while current_t < T:    
         this_dt = min(dt, T - current_t)
 
-        _inject_mutations_1D(phi, dt, xx, theta0, ploidy)
+        _inject_mutations_1D(phi, dt, xx, theta0)
         r = phi/this_dt
         phi = tridiag.tridiag(a, b+1/this_dt, c, r)
         current_t += this_dt
@@ -2491,13 +2400,12 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     while current_t < T:
         this_dt = min(dt, T - current_t)
         _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
-                            nomut1, nomut2, ploidy1, ploidy2)
+                            nomut1, nomut2)
         if not frozen1:
             PolyInt.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:
             PolyInt.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
         current_t += this_dt
-        print(current_t)
 
     return phi
 
@@ -2794,8 +2702,7 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
     while current_t < T:    
         this_dt = min(dt, T - current_t)
         _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
-                             frozen1, frozen2, frozen3, 
-                             ploidy1, ploidy2, ploidy3)
+                             frozen1, frozen2, frozen3)
         if not frozen1:
             PolyInt.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
         if not frozen2:
