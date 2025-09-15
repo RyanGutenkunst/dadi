@@ -48,29 +48,33 @@ class Spectrum(numpy.ma.masked_array):
     specific entries in the spectrum. Most often, these are the absent and fixed
     categories.
 
-    The constructor has the format.
-
-    Args:
+    The constructor has the format:
         fs = dadi.Spectrum(data, mask, mask_corners, data_folded, check_folding,
                            pop_ids, extrap_x)
-        
+
         data: The frequency spectrum data
+
         mask: An optional array of the same size as data. 'True' entires in
               this array are masked in the Spectrum. These represent missing
               data categories. (For example, you may not trust your singleton
               SNP calling.)
+
         mask_corners: If True (default), the 'observed in none' and 'observed 
                       in all' entries of the FS will be masked. Typically these
                       entries are unobservable, and dadi cannot reliably
                       calculate them, so you will almost always want
-                      mask_corners=True.g
+                      mask_corners=True.
+
         data_folded: If True, it is assumed that the input data is folded. An
                      error will be raised if the input data and mask are not
                      consistent with a folded Spectrum.
+
         check_folding: If True and data_folded=True, the data and mask will be
                        checked to ensure they are consistent with a folded
                        Spectrum. If they are not, a warning will be printed.
+
         pop_ids: Optional list of strings containing the population labels.
+
         extrap_x: Optional floating point value specifying x value to use
                   for extrapolation.
     """

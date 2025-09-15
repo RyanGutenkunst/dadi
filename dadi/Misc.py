@@ -686,40 +686,41 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     it must be the only file in the archive, and the two files cannot be zipped
     together. Both files must be present for the function to work.
     
-    vcf_filename : Name of VCF file to work with. The function currently works
-                   for biallelic SNPs only, so if REF or ALT is anything other
-                   than a single base pair (A, C, T, or G), the allele will be
-                   skipped. Additionally, genotype information must be present
-                   in the FORMAT field GT, and genotype info must be known for
-                   every sample, else the SNP will be skipped. If the ancestral
-                   allele is known it should be specified in INFO field 'AA'.
-                   Otherwise, it will be set to '-'.
-    
-    popinfo_filename : Name of file containing the population assignments for
-                       each sample in the VCF. If a sample in the VCF file does
-                       not have a corresponding entry in this file, it will be
-                       skipped. See _get_popinfo for information on how this
-                       file must be formatted.
-    
-    subsample : Dictionary with population names used in the popinfo_filename
-                as keys and the desired sample size (in number of individuals)
-                for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
-                two populations.
-    
-    filter : If set to True, alleles will be skipped if they have not passed
-             all filters (i.e. either 'PASS' or '.' must be present in FILTER
-             column.
-    
-    flanking_info : Flanking information for the reference and/or ancestral
-                    allele can be provided as field(s) in the INFO column. To
-                    add this information to the dict, flanking_info should
-                    specify the names of the fields that contain this info as a
-                    list (e.g. ['RFL', 'AFL'].) If context info is given for
-                    only one allele, set the other item in the list to None,
-                    (e.g. ['RFL', None]). Information can be provided as a 3
-                    base-pair sequence or 2 base-pair sequence, where the first
-                    base-pair is the one immediately preceding the SNP, and the
-                    last base-pair is the one immediately following the Snumpy.
+    Args:
+        vcf_filename (str): Name of VCF file to work with. The function currently works
+                    for biallelic SNPs only, so if REF or ALT is anything other
+                    than a single base pair (A, C, T, or G), the allele will be
+                    skipped. Additionally, genotype information must be present
+                    in the FORMAT field GT, and genotype info must be known for
+                    every sample, else the SNP will be skipped. If the ancestral
+                    allele is known it should be specified in INFO field 'AA'.
+                    Otherwise, it will be set to '-'.
+        
+        popinfo_filename (str): Name of file containing the population assignments for
+                        each sample in the VCF. If a sample in the VCF file does
+                        not have a corresponding entry in this file, it will be
+                        skipped. See _get_popinfo for information on how this
+                        file must be formatted.
+        
+        subsample (dict, optional): Dictionary with population names used in the popinfo_filename
+                    as keys and the desired sample size (in number of individuals)
+                    for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
+                    two populations.
+        
+        filter (bool, optional): If set to True, alleles will be skipped if they have not passed
+                all filters (i.e. either 'PASS' or '.' must be present in FILTER
+                column.
+        
+        flanking_info (str): Flanking information for the reference and/or ancestral
+                        allele can be provided as field(s) in the INFO column. To
+                        add this information to the dict, flanking_info should
+                        specify the names of the fields that contain this info as a
+                        list (e.g. ['RFL', 'AFL'].) If context info is given for
+                        only one allele, set the other item in the list to None,
+                        (e.g. ['RFL', None]). Information can be provided as a 3
+                        base-pair sequence or 2 base-pair sequence, where the first
+                        base-pair is the one immediately preceding the SNP, and the
+                        last base-pair is the one immediately following the Snumpy.
     """
     do_subsampling = False
     if subsample is not None:
