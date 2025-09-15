@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <math.h>
 
 /*
 * AUTOTETRAPLOIDS POP GEN FUNCTIONS
