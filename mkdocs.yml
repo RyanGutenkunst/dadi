@@ -1,4 +1,6 @@
 site_name: dadi
+theme:
+  name: material 
 repo_url: https://github.com/RyanGutenkunst/dadi
 edit_uri: ""
 docs_dir: 'doc'
@@ -8,6 +10,35 @@ markdown_extensions:
   - fenced_code
 extra_javascript:
   - 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML'
+plugins:
+  - search
+  - mkdocs-autoapi:
+      autoapi_ignore: 
+      #   - "**/__init__.py"
+      #   - "**/*.c"
+      #   - "**/*.h"
+      #   - "**/*.pyx"
+        - "dadi/cuda/*"
+      #   - "build/*"
+      #   - "**/*._*"
+      autoapi_file_patterns:
+        - "dadi/**/*.py"  # Simplified pattern to include all Python files recursively
+      autoapi_add_nav_entry: API
+      autoapi_keep_files: true  # Added to retain intermediate files for debugging
+      autoapi_options:
+        - show-inheritance  # Added to display class inheritance in the documentation
+        - skip-imported-members  # Added to exclude imported functions from the documentation
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_toc_entry: false
+            show_source: true
+            show_signature_annotations: true
+            separate_signature_from_description: true
+            merge_init_into_class: true
 nav:
 - Home: 'index.md'
 - User Guide:
@@ -41,4 +72,5 @@ nav:
         - 'Basic Workflow 1D DFE' : 'examples/basic_workflow/basic_workflow_1d_dfe.md'
         - 'Basic Workflow 2D DFE' : 'examples/basic_workflow/basic_workflow_2d_dfe.md'
         - 'Low-Pass Example' : 'examples/LowPass/low-pass.md'
-- API: 'api/dadi/index.html'
+# - API: dadi/
+# - API: 'api/dadi/index.html'

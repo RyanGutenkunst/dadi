@@ -1,5 +1,5 @@
 """
-Two population demographic models.
+Two-population demographic models.
 """
 import numpy
 
@@ -9,9 +9,14 @@ from dadi.PortikModels.portik_models_2d import *
 
 def snm_2d(notused, ns, pts):
     """
-    ns = (n1,n2)
+    Standard neutral model where populations never diverge.
 
-    Standard neutral model, populations never diverge.
+    Parameters:
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
     """
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
@@ -23,19 +28,25 @@ snm = snm_2d
 
 def bottlegrowth_2d(params, ns, pts):
     """
-    params = (nuB,nuF,T)
-    ns = (n1,n2)
+    Instantaneous size change followed by exponential growth with no population split.
 
-    Instantanous size change followed by exponential growth with no population
-    split.
+    Parameters:
+        params (tuple): (nuB, nuF, T)
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contempoary to ancient population size
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - nuB: Ratio of population size after instantaneous change to ancient population size.
+            
+            - nuF: Ratio of contemporary to ancient population size.
+            
+            - T: Time in the past at which instantaneous change happened and growth began 
+               (in units of 2*Na generations).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,T = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,0), ns, pts)
@@ -44,19 +55,27 @@ bottlegrowth = bottlegrowth_2d
 
 def bottlegrowth_split(params, ns, pts):
     """
-    params = (nuB,nuF,T,Ts)
-    ns = (n1,n2)
+    Instantaneous size change followed by exponential growth then split.
 
-    Instantanous size change followed by exponential growth then split.
+    Parameters:
+        params (tuple): (nuB, nuF, T, Ts)
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contempoary to ancient population size
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    Ts: Time in the past at which the two populations split.
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - nuB: Ratio of population size after instantaneous change to ancient population size.
+            
+            - nuF: Ratio of contemporary to ancient population size.
+            
+            - T: Time in the past at which instantaneous change happened and growth began 
+               (in units of 2*Na generations).
+            
+            - Ts: Time in the past at which the two populations split.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,T,Ts = params
     return bottlegrowth_split_mig((nuB,nuF,0,T,Ts), ns, pts)
@@ -64,21 +83,29 @@ bottlegrowth_split.__param_names__ = ['nuB', 'nuF', 'T', 'Ts']
 
 def bottlegrowth_split_mig(params, ns, pts):
     """
-    params = (nuB,nuF,m,T,Ts)
-    ns = (n1,n2)
+    Instantaneous size change followed by exponential growth then split with migration.
 
-    Instantanous size change followed by exponential growth then split with
-    migration.
+    Parameters:
+        params (tuple): (nuB, nuF, m, T, Ts)
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contempoary to ancient population size
-    m: Migration rate between the two populations (2*Na*m).
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    Ts: Time in the past at which the two populations split.
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - nuB: Ratio of population size after instantaneous change to ancient population size.
+            
+            - nuF: Ratio of contemporary to ancient population size.
+            
+            - m: Migration rate between the two populations (2*Na*m).
+            
+            - T: Time in the past at which instantaneous change happened and growth began 
+               (in units of 2*Na generations).
+            
+            - Ts: Time in the past at which the two populations split.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,m,T,Ts = params
 
@@ -105,17 +132,26 @@ bottlegrowth_split_mig.__param_names__ = ['nuB', 'nuF', 'm', 'T', 'Ts']
 
 def split_mig(params, ns, pts):
     """
-    params = (nu1,nu2,T,m)
-    ns = (n1,n2)
+    Split into two populations of specified size, with migration.
 
-    Split into two populations of specifed size, with migration.
+    Parameters:
+        params (tuple): (nu1, nu2, T, m)
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m: Migration rate between populations (2*Na*m)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - m: Migration rate between populations (2*Na*m).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1,nu2,T,m = params
 
@@ -133,6 +169,12 @@ split_mig.__param_names__ = ['nu1', 'nu2', 'T', 'm']
 def split_mig_mscore(params):
     """
     ms core command for split_mig.
+
+    Parameters:
+        params (tuple): (nu1, nu2, T, m)
+
+    Returns:
+        output (str): ms core command string.
     """
     nu1,nu2,T,m = params
 
@@ -147,18 +189,28 @@ split_mig_mscore.__param_names__ = ['nu1', 'nu2', 'T', 'm']
 
 def split_asym_mig(params, ns, pts):
     """
-    params = (nu1,nu2,T,m12,m21)
-    ns = (n1,n2)
+    Split into two populations of specified size, with asymmetric migration.
 
-    Split into two populations of specifed size, with asymetric migration .
+    Parameters:
+        params (tuple): (nu1, nu2, T, m12, m21)
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2 (2*Na*m21)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - m12: Migration from pop 2 to pop 1 (2*Na*m12).
+            
+            - m21: Migration from pop 1 to pop 2 (2*Na*m21).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1,nu2,T,m12,m21 = params
 
@@ -175,19 +227,30 @@ split_asym_mig.__param_names__ = ['nu1', 'nu2', 'T', 'm12', 'm21']
 
 def split_delay_mig(params, ns, pts):
     """
-    params = (nu1,nu2,Tpre,Tmig,m12,m21)
-    ns = (n1,n2)
+    Split into two populations of specified size, with migration after some time has passed post split.
 
-    Split into two populations of specifed size, with migration after some time has passed post split.
+    Parameters:
+        params (tuple): (nu1, nu2, Tpre, Tmig, m12, m21)
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    Tpre: Time in the past after split but before migration (in units of 2*Na generations) 
-    Tmig: Time in the past after migration starts (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2 (2*Na*m21)
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - Tpre: Time in the past after split but before migration (in units of 2*Na generations).
+            
+            - Tmig: Time in the past after migration starts (in units of 2*Na generations).
+            
+            - m12: Migration from pop 2 to pop 1 (2*Na*m12).
+            
+            - m21: Migration from pop 1 to pop 2 (2*Na*m21).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1,nu2,Tpre,Tmig,m12,m21 = params
 
@@ -204,19 +267,30 @@ split_delay_mig.__param_names__ = ['nu1', 'nu2', 'Tpre', 'Tmig', 'm12', 'm21']
 
 def IM(params, ns, pts):
     """
-    ns = (n1,n2)
-    params = (s,nu1,nu2,T,m12,m21)
+    Isolation-with-migration model with exponential population growth.
 
-    Isolation-with-migration model with exponential pop growth.
+    Parameters:
+        params (tuple): (s, nu1, nu2, T, m12, m21)
 
-    s: Size of pop 1 after split. (Pop 2 has size 1-s.)
-    nu1: Final size of pop 1.
-    nu2: Final size of pop 2.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+            - s: Size of pop 1 after split. (Pop 2 has size 1-s.)
+            
+            - nu1: Final size of pop 1.
+            
+            - nu2: Final size of pop 2.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - m12: Migration from pop 2 to pop 1 (2*Na*m12).
+            
+            - m21: Migration from pop 1 to pop 2.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     s,nu1,nu2,T,m12,m21 = params
 
@@ -237,6 +311,12 @@ IM.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21']
 def IM_mscore(params):
     """
     ms core command for IM.
+
+    Parameters:
+        params (tuple): (s, nu1, nu2, T, m12, m21)
+
+    Returns:
+        output (str): ms core command string.
     """
     s,nu1,nu2,T,m12,m21 = params
 
@@ -255,22 +335,34 @@ IM_mscore.__param_names__ = ['s', 'nu1', 'nu2', 'T', 'm12', 'm21']
 
 def IM_pre(params, ns, pts):
     """
-    params = (nuPre,TPre,s,nu1,nu2,T,m12,m21)
-    ns = (n1,n2)
+    Isolation-with-migration model with exponential population growth and a size change prior to split.
 
-    Isolation-with-migration model with exponential pop growth and a size change
-    prior to split.
+    Parameters:
+        params (tuple): (nuPre, TPre, s, nu1, nu2, T, m12, m21)
+        
+            - nuPre: Size after first size change.
+            
+            - TPre: Time before split of first size change.
+            
+            - s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
+            
+            - nu1: Final size of pop 1.
+            
+            - nu2: Final size of pop 2.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - m12: Migration from pop 2 to pop 1 (2*Na*m12).
+            
+            - m21: Migration from pop 1 to pop 2.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
 
-    nuPre: Size after first size change
-    TPre: Time before split of first size change.
-    s: Fraction of nuPre that goes to pop1. (Pop 2 has size nuPre*(1-s).)
-    nu1: Final size of pop 1.
-    nu2: Final size of pop 2.
-    T: Time in the past of split (in units of 2*Na generations) 
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
-    n1,n2: Sample sizes of resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21 = params
 
@@ -294,6 +386,12 @@ IM_pre.__param_names__ = ['nuPre', 'TPre', 's', 'nu1', 'nu2', 'T', 'm12', 'm21']
 def IM_pre_mscore(params):
     """
     ms core command for IM_pre.
+
+    Parameters:
+        params (tuple): (nuPre, TPre, s, nu1, nu2, T, m12, m21)
+
+    Returns:
+        output (str): ms core command string.
     """
     nuPre,TPre,s,nu1,nu2,T,m12,m21 = params
     
