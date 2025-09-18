@@ -33,8 +33,10 @@ def grid_dx_2d(x,dx):
 def int2(DXX,U):
     """
     Integrate the density function over the domain
-    DXX - two dimensional grid
-    U - density function
+
+    Args:
+        DXX (array-like): two dimensional grid
+        U (): density function
     """
     return np.sum(DXX*U)
 
@@ -55,11 +57,13 @@ def transition1(x, dx, U01, sig1, sig2):
     Implicit transition matrix for the ADI components of the discretization of the diffusion
     Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
     Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
-    x - grid
-    dx - grid spacing
-    U01 - domain markers
-    sig1/2 - population scaled selection coefficients
-    nu - relative population size
+    
+    Args:
+        x (array-like): grid
+        dx (array-like): grid spacing
+        U01 (array-like): domain markers
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
     """
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
@@ -128,11 +132,13 @@ def transition2(x, dx, U01, sig1, sig2):
     Implicit transition matrix for the ADI components of the discretization of the diffusion
     Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
     Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
-    x - grid
-    dx - grid spacing
-    U01 - domain markers
-    sig1/2 - population scaled selection coefficients
-    nu - relative population size
+
+    Args:
+        x (array-like): grid
+        dx (array-like): grid spacing
+        U01 (array-like): domain markers
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
     """
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
@@ -199,9 +205,11 @@ def transition12(x, dx, U01):
     """
     Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x*y*phi)
     As with the ADI components, final transition matrix is given by I + dt/nu*P
-    x - grid
-    dx - grid spacing
-    U01 - domain markers
+
+    Args:
+        x (array-like): grid.
+        dx (array-like): grid spacing.
+        U01 (array-like): domain markers.
     """        
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
@@ -241,11 +249,10 @@ def transition12(x, dx, U01):
 def transition1D(x, dx, sig):
     """
     transition matrix for one dimensional integration
-    x - grid
-    dx - grid spacing
-    dt - timestep for integration
-    sig - selection coefficient
-    nu - relative population size
+    Args:
+        x (array-like): grid.
+        dx (array-like): grid spacing.
+        sig (float): population scaled selection coefficient.
     """
     # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
     #      be automatically used instead of this version, if the user has compiled it.
@@ -287,10 +294,13 @@ def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
     Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
     We then check the fraction of density that is lost to z=1.
     If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1*x/(x+y) + sig2*y/(x+y)
-    x - one dimensional grid of domain
-    dt - time step of integration
-    nu - relative population size
-    sig1,sig2 - selection coefficients
+
+    Args:
+        x (array-like): grid.
+        dt (float): time step for integration.
+        nu (float): population size scaling factor.
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
     """
     dx = grid_dx(x)
     P = np.zeros((len(x),len(x)))
@@ -369,10 +379,14 @@ def move_density_to_bdry(x,phi,P):
 def advance_adi(U,U01,P1,P2,x,ii):
     """
     Integrate the ADI components forward in time, alternating which direction occurs first
-    U - density function
-    U01 - stores which points are in the domain
-    P1,P2 - transition matrices
-    ii - count of integration step
+    
+    Args:
+        U (array-like): density function
+        U01 (array-like): stores which points are in the domain
+        P1 (array): transition matrix
+        P2 (array): transition matrix
+        x (array-like): grid
+        ii (int): count of integration step
     """
     if np.mod(ii,2) == 0:
         for jj in range(len(x)):
@@ -393,8 +407,15 @@ def advance_adi(U,U01,P1,P2,x,ii):
 def advance_cov(U,C,x,dx):
     """
     Explicit integration of the covariance term, using scipy's sparse matrix for C
-    U - density function
-    C - transition matrix
+
+    Args:
+        U (array-like): density function
+        C (array-like): transition matrix
+        x (array-like): grid
+        dx (array-like): grid spacing
+    
+    Returns:
+        U (array-like): updated density function
     """
     U = ( C * U.reshape(len(x)**2)).reshape(len(x),len(x))
     return U
@@ -402,8 +423,10 @@ def advance_cov(U,C,x,dx):
 def advance1D(u,P):
     """
     tridiag breakdown for integration along the diagonal boundary
-    u - density along that diagonal
-    P - transition matrix
+
+    Args:
+        u (): density along that diagonal
+        P (array): transition matrix
     """
     a = np.concatenate((np.array([0]),np.diag(P,-1)))
     b = np.diag(P)
@@ -414,7 +437,11 @@ def advance1D(u,P):
 def advance_line(x,phi,P):
     """
     Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
-    P - one dimensional transition matrix for the diagonal boundary
+
+    Args:
+        x (array-like): grid
+        phi (array-like): density function
+        P (array): one dimensional transition matrix for the diagonal boundary
     """
     u = np.diag(np.fliplr(phi))
     u = advance1D(u,P)
@@ -494,7 +521,9 @@ def misidentification(F, p):
     
 def fold(spectrum):
     """
-    Note: this is now handled in the TriSpectrum class
+    Note: 
+        This is now handled in the TriSpectrum class
+
     Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
     """
     spectrum = TriSpectrum(spectrum)
@@ -520,8 +549,8 @@ def univariate_lognormal_pdf(x,sigma,mu):
 
 def bivariate_lognormal_pdf(xx, params):
     """
-    mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
-    We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution
+    mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated.
+    We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution.
     """
     mu1, mu2, sigma1, sigma2, rho = params
     norm = 1./(2 * np.pi * (sigma1*sigma2) * np.sqrt(1-rho**2) * np.outer(xx,xx) )
@@ -555,9 +584,11 @@ def optimal_sfs_scaling(model,data):
     
 def fold_ancestral(F):
     """
-    Note: this is now handled by the TriSpectrum class
-    Don't know ancestral state, so track minor frequencies
-    Store spectrum of two minor allele frequencies
+    Note: 
+        This is now handled by the TriSpectrum class.
+
+    Don't know ancestral state, so track minor frequencies.
+    Store spectrum of two minor allele frequencies.
     """
     F_new = 0*F
     F_new = TriSpectrum(F_new)
@@ -596,9 +627,11 @@ projection_cache = {}
 def cached_projection(proj_to,proj_from,hits):
     """
     Coefficients for projection from a larger size to smaller
-    proj_to: Number of samples to project down to
-    proj_from: Number of samples to project from
-    hits: Number of derived alleles projecting from - tuple of (n1,n3)
+
+    Args:
+        proj_to (int): Number of samples to project down to
+        proj_from (int): Number of samples to project from
+        hits (int): Number of derived alleles projecting from - tuple of (n1,n3)
     """
     key = (proj_to, proj_from, hits)
     try:

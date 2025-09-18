@@ -15,7 +15,8 @@ def multinomln(N):
     """
     Get the log of the multinomial coefficient for an array N.
     
-    N: array of integers.
+    Args:
+        N (array-like): array of integers.
     """
     if tuple(N) not in _multinomln_cache:
         N_sum = numpy.sum(N)
@@ -38,11 +39,12 @@ def cached_part(x,n,minval=0,maxval=2):
     min and max equal to 0 and 2 (or ploidy level), respectively.
 
     This version uses a cache to speed up repeated evaluations.
-    
-    x: integer summand.
-    n: number of partition entries.
-    minval: minimum value allowed for partition entries.
-    maxval: maximum value allowed for partition entries.
+
+    Args:
+        x (int): integer summand.
+        n (int): number of partition entries.
+        minval (int): minimum value allowed for partition entries.
+        maxval (int): maximum value allowed for partition entries.
     """
     if (x,n,minval,maxval) not in _part_cache:
         _part_cache[x,n,minval,maxval] = list(part(x,n,minval,maxval))
@@ -52,11 +54,12 @@ def part(x, n, minval=0, maxval=2):
     """
     Returns the integer partition summing to x with n entries and
     min and max equal to 0 and 2 (or ploidy level), respectively.
-    
-    x: integer summand.
-    n: number of partition entries.
-    minval: minimum value allowed for partition entries.
-    maxval: maximum value allowed for partition entries.
+
+    Args:
+        x (int): integer summand.
+        n (int): number of partition entries.
+        minval (int): minimum value allowed for partition entries.
+        maxval (int): maximum value allowed for partition entries.
     """
     if not n * minval <= x <= n * maxval:
         return
@@ -73,10 +76,11 @@ def cached_part_precalc(x,n,minval=0,maxval=2):
     Partition counts and multinomial coefficients, for fast
     convolution calculation
     
-    x: integer summand.
-    n: number of partition entries.
-    minval: minimum value allowed for partition entries.
-    maxval: maximum value allowed for partition entries.
+    Args:
+        x (int): integer summand.
+        n (int): number of partition entries.
+        minval (int): minimum value allowed for partition entries.
+        maxval (int): maximum value allowed for partition entries.
     """
     if (x,n,minval,maxval) not in _part_precalc_cache:
         partitions = cached_part(x,n,minval,maxval)
@@ -118,9 +122,10 @@ def apply_anc_state_misid(fs, p_misid):
     """
     Model ancestral state misidentification in a frequency spectrum.
 
-    fs: Input frequency spectrum.
-    p_misid: Fraction of sites assumed to suffer from ancestral
-             state misidentification.
+    Args:
+        fs (Spectrum): Input frequency spectrum.
+        p_misid (float): Fraction of sites assumed to suffer from ancestral
+                state misidentification.
     """
     return (1-p_misid)*fs + p_misid*reverse_array(fs)
 
@@ -128,13 +133,15 @@ def make_anc_state_misid_func(func):
     """
     Generate a version of func accounting for ancestral state misidentification.
 
-    func: The function to which misidentification should be incorporated. It
-          is assumed that the first argument of the function is a params
-          vector, to which the misidentification parameter will be added.
+    Args:
+        func (func): The function to which misidentification should be incorporated. It
+            is assumed that the first argument of the function is a params
+            vector, to which the misidentification parameter will be added.
 
-    Returns a new function which takes in a params vector that is one entry
-    longer than the original function. The fraction misidentification will
-    be the last entry in the new params vector.
+    Returns:
+        misid_func (func): A new function which takes in a params vector that is one entry
+            longer than the original function. The fraction misidentification will
+            be the last entry in the new params vector.
     """
     def misid_func(*args, **kwargs):
         all_params = args[0]
@@ -229,13 +236,15 @@ def end_point_first_derivs(xx):
     """
     Coefficients for a 5-point one-sided approximation of the first derivative.
 
-    xx: grid on which the data to be differentiated lives
+    Args:
+        xx (array-like): grid on which the data to be differentiated lives
 
-    Returns ret, a 2x5 array. ret[0] is the coefficients for an approximation
-    of the derivative at xx[0]. It is used by deriv = numpy.dot(ret[0],
-    yy[:5]). ret[1] is the coefficients for the derivative at xx[-1]. It can be
-    used by deriv = dot(ret[1][::-1], yy[-5:]). (Note that we need to reverse
-    the coefficient array here.
+    Returns:
+        ret (array-like): A 2x5 array. ret[0] is the coefficients for an approximation
+            of the derivative at xx[0]. It is used by deriv = numpy.dot(ret[0],
+            yy[:5]). ret[1] is the coefficients for the derivative at xx[-1]. It can be
+            used by deriv = dot(ret[1][::-1], yy[-5:]). (Note that we need to reverse
+            the coefficient array here.
     """
     output = numpy.zeros((2,5))
 
@@ -326,25 +335,29 @@ def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
     """
     Generate a version of func that extrapolates to infinitely many gridpoints.
 
-    func: A function that returns a single scalar or array and whose last
-        non-keyword argument is 'pts': the number of default_grid points to use
-        in calculation.  
-    extrap_x_l: An explict list of x values to use for extrapolation. If not 
-        provided, the extrapolation routine will look for '.extrap_x'
-        attributes on the results of func. The method Spectrum.from_phi will
-        add an extrap_x attribute to resulting Spectra, equal to the x-value
-        of the first non-zero grid point. An explicit list is useful if you
-        want to override this behavior for testing.
-    fail_mag:  Simon Gravel noted that there can be numerical instabilities in
-        extrapolation when working with large spectra that have very small
-        entires (of order 1e-24). To avoid these instabilities, we ignore the 
-        extrapolation values (and use the input result with the smallest x) 
-        if the extrapolation is more than fail_mag orders of magnitude away
-        from the smallest x input result.
+    Args:
+        func (func): A function that returns a single scalar or array and whose last
+            non-keyword argument is 'pts': the number of default_grid points to use
+            in calculation.  
+        extrap_x_l (list[int]): An explict list of x values to use for extrapolation. If not 
+            provided, the extrapolation routine will look for '.extrap_x'
+            attributes on the results of func. The method Spectrum.from_phi will
+            add an extrap_x attribute to resulting Spectra, equal to the x-value
+            of the first non-zero grid point. An explicit list is useful if you
+            want to override this behavior for testing.
+        extrap_log (bool): If True, extrapolate the log of the results. This is
+            useful if the results span many orders of magnitude.
+        fail_mag (float):  Simon Gravel noted that there can be numerical instabilities in
+            extrapolation when working with large spectra that have very small
+            entires (of order 1e-24). To avoid these instabilities, we ignore the 
+            extrapolation values (and use the input result with the smallest x) 
+            if the extrapolation is more than fail_mag orders of magnitude away
+            from the smallest x input result.
 
-    Returns a new function whose last argument is a list of numbers of grid
-    points and that returns a result extrapolated to infinitely many grid
-    points.
+    Returns:
+        extrap_func (func): A new function whose last argument is a list of numbers of grid
+            points and that returns a result extrapolated to infinitely many grid
+            points.
     """
     x_l_from_results = (extrap_x_l is None)
 
@@ -469,19 +482,21 @@ def make_extrap_log_func(func, extrap_x_l=None):
     so this will fail if any returned values are < 0. It does seem to be better
     behaved for SFS calculation.
 
-    func: A function whose last argument is the number of Numerics.default_grid 
-          points to use in calculation and that returns a single scalar or 
-          array.
-    extrap_x_l: An explict list of x values to use for extrapolation. If not 
-         provided, the extrapolation routine will look for '.extrap_x'
-         attributes on the results of func. The method Spectrum.from_phi will
-         add an extrap_x attribute to resulting Spectra, equal to the x-value
-         of the first non-zero grid point. An explicit list is useful if you
-         want to override this behavior for testing.
+    Args:
+        func (func): A function whose last argument is the number of Numerics.default_grid 
+            points to use in calculation and that returns a single scalar or 
+            array.
+        extrap_x_l (list[int]): An explict list of x values to use for extrapolation. If not 
+            provided, the extrapolation routine will look for '.extrap_x'
+            attributes on the results of func. The method Spectrum.from_phi will
+            add an extrap_x attribute to resulting Spectra, equal to the x-value
+            of the first non-zero grid point. An explicit list is useful if you
+            want to override this behavior for testing.
 
-    Returns a new function whose last argument is a list of numbers of grid
-    points and that returns a result extrapolated to infinitely many grid
-    points.
+    Returns:
+        make_extrap_func (func): a new function whose last argument is a list of numbers of grid
+            points and that returns a result extrapolated to infinitely many grid
+            points.
     """
     return make_extrap_func(func, extrap_x_l=extrap_x_l, extrap_log=True)
 
@@ -530,18 +545,21 @@ def array_from_file(fid, return_comments=False):
     """
     Read array from file.
 
-    fid: string with file name to read from or an open file object.
-    return_comments: If True, the return value is (fs, comments), where
-                     comments is a list of strings containing the comments
-                     from the file (without #'s).
+    Args:
+        fid (str): string with file name to read from or an open file object.
+        return_comments (bool): If True, the return value is (fs, comments), where
+                        comments is a list of strings containing the comments
+                        from the file (without #'s).
 
     The file format is:
-        # Any number of comment lines beginning with a '#'
+        Any number of comment lines beginning with a '#'
+
         A single line containing N integers giving the dimensions of the fs
-          array. So this line would be '5 5 3' for an SFS that was 5x5x3.
-          (That would be 4x4x2 *samples*.)
+            array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+            (That would be 4x4x2 *samples*.)
+
         A single line giving the array elements. The order of elements is 
-          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+            e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
     """
     newfile = False
     # Try to read from fid. If we can't, assume it's something that we can
@@ -573,24 +591,27 @@ def array_from_file(fid, return_comments=False):
     else:
         return data,comments
 
-def array_to_file(data, fid, precision=16, comment_lines = []):
+def array_to_file(data, fid, precision=16, comment_lines=[]):
     """
     Write array to file.
 
-    data: array to write
-    fid: string with file name to write to or an open file object.
-    precision: precision with which to write out entries of the SFS. (They 
-               are formated via %.<p>g, where <p> is the precision.)
-    comment lines: list of strings to be used as comment lines in the header
-                   of the output file.
+    Args:
+        data (array-like): array to write
+        fid (str): string with file name to write to or an open file object.
+        precision (int): precision with which to write out entries of the SFS. (They 
+                are formated via %.<p>g, where <p> is the precision.)
+        comment_lines (list[str]): list of strings to be used as comment lines in the header
+                    of the output file.
 
     The file format is:
-        # Any number of comment lines beginning with a '#'
+        Any number of comment lines beginning with a '#'
+
         A single line containing N integers giving the dimensions of the fs
-          array. So this line would be '5 5 3' for an SFS that was 5x5x3.
-          (That would be 4x4x2 *samples*.)
+            array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+            (That would be 4x4x2 *samples*.)
+
         A single line giving the array elements. The order of elements is 
-          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+            e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
     """
     # Open the file object.
     newfile = False

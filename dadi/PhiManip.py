@@ -1,6 +1,6 @@
 """
-Manipulating population frequency spectra phi. e.g. population splittings and
-admixture
+Module for manipulating population frequency spectra phi, such as population 
+splittings and admixture.
 """
 import numpy
 from numpy import newaxis as nuax
@@ -11,23 +11,25 @@ from dadi import Demes
 
 def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1, deme_ids=None):
     """
-    One-dimensional phi for a constant-sized population with genic selection.
+    Compute a one-dimensional phi for a constant-sized population with genic selection.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    nu: size of this population, relative to the reference population size Nref.
-    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
-            event rate per generation for the simulated locus and Nref is the 
-            reference population size.
-    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
-           selective advantage.
-    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
-       aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
-       genic selection.
-    theta: deprecated in favor of distinct nu and theta0 arguments, for 
-           consistency with Integration functions.
-    deme_ids: sequence of strings representing the names of demes
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        nu (float): Size of this population, relative to the reference population size Nref.
+        theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the reference 
+            population size.
+        gamma (float): Scaled selection coefficient, equal to 2*Nref * s, where s is the
+            selective advantage.
+        h (float): Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+            aA has fitness 1+2sh, and AA has fitness 1+2s. h = 0.5 corresponds to genic selection.
+        theta (float, optional): Deprecated in favor of distinct nu and theta0 arguments, for 
+            consistency with Integration functions.
+        beta (float): Scaling factor for selection.
+        deme_ids (list, optional): Sequence of strings representing the names of demes.
 
-    Returns a new phi array.
+    Returns:
+        phi (array): A new phi array.
     """
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
 
@@ -107,19 +109,22 @@ def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1, deme_ids=
 
 def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
     """
-    One-dimensional phi for a constant-sized population with genic selection.
+    Compute a one-dimensional phi for a constant-sized population with genic selection.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    nu: size of this population, relative to the reference population size Nref.
-    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
-            event rate per generation for the simulated locus and Nref is the 
-            reference population size.
-    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
-           selective advantage.
-    theta: deprecated in favor of distinct nu and theta0 arguments, for 
-           consistency with Integration functions.
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        nu (float): Size of this population, relative to the reference population size Nref.
+        theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the reference 
+            population size.
+        gamma (float): Scaled selection coefficient, equal to 2*Nref * s, where s is the
+            selective advantage.
+        theta (float, optional): Deprecated in favor of distinct nu and theta0 arguments, for 
+            consistency with Integration functions.
+        beta (float): Scaling factor for selection.
 
-    Returns a new phi array.
+    Returns:
+        phi (array): A new phi array.
     """
 
     if theta is not None:
@@ -160,17 +165,20 @@ def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
 
 def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
     """
-    Standard neutral one-dimensional probability density.
+    Compute the standard neutral one-dimensional probability density.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    nu: size of this population, relative to the reference population size Nref.
-    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
-            event rate per generation for the simulated locus and Nref is the 
-            reference population size.
-    theta: deprecated in favor of distinct nu and theta0 arguments, for 
-           consistency with Integration functions.
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        nu (float): Size of this population, relative to the reference population size Nref.
+        theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the reference 
+            population size.
+        theta (float, optional): Deprecated in favor of distinct nu and theta0 arguments, for 
+            consistency with Integration functions.
+        beta (float): Scaling factor for selection.
 
-    Returns a new phi array.
+    Returns:
+        phi (array): A new phi array.
     """
 
     if theta is not None:
@@ -188,7 +196,13 @@ def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
 
 def check_xx(xx):
     """
-    Check whether xx is monotonically increasing from 0 to 1. 
+    Check whether the input xx is monotonically increasing from 0 to 1.
+
+    Args:
+        xx (array): One-dimensional grid of frequencies.
+
+    Raises:
+        ValueError: If xx does not start at 0, end at 1, or is not monotonically increasing.
     """
     if not xx[0] == 0 and xx[1] == 1:
         raise ValueError('Input xx argument does not run from 0 to 1.'
@@ -201,11 +215,13 @@ def phi_1D_to_2D(xx, phi_1D, deme_ids=None):
     """
     Implement a one-to-two population split.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    phi1D: initial probability density
-    deme_ids: sequence of strings representing the names of demes after split
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        phi_1D (array): Initial probability density.
+        deme_ids (list, optional): Sequence of strings representing the names of demes after split.
 
-    Returns a new two-dimensional phi array.
+    Returns:
+        phi_2D (array): A new two-dimensional phi array.
     """
     check_xx(xx)
     
@@ -221,11 +237,13 @@ def phi_2D_to_3D_split_2(xx, phi_2D, deme_ids=None):
     """
     Split population 2 into populations 2 and 3.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    phi2D: initial probability density
-    deme_ids: sequence of strings representing the names of demes after split
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        phi_2D (array): Initial probability density.
+        deme_ids (list, optional): Sequence of strings representing the names of demes after split.
 
-    Returns a new three-dimensional phi array.
+    Returns:
+        phi_2D_to_3D_admix (array): A new three-dimensional phi array.
     """
     check_xx(xx)
 
@@ -235,11 +253,13 @@ def phi_2D_to_3D_split_1(xx, phi_2D, deme_ids=None):
     """
     Split population 1 into populations 1 and 3.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    phi2D: initial probability density
-    deme_ids: sequence of strings representing the names of demes after split
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        phi_2D (array): Initial probability density.
+        deme_ids (list, optional): Sequence of strings representing the names of demes after split.
 
-    Returns a new three-dimensional phi array.
+    Returns:
+        phi_2D_to_3D_admix (array): A new three-dimensional phi array.
     """
     check_xx(xx)
 
@@ -355,12 +375,17 @@ def phi_2D_to_3D_admix(phi, f1, xx,yy,zz, deme_ids=None):
 
     Returns a 3D sfs of shape (len(xx),len(yy),len(zz))
 
-    phi:   phi corresponding to original 2 populations
-    f1:     Fraction of population 3 derived from population 1. (A fraction 1-f1
-             will be derived from population 2.)
-    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
-    zz:    Frequency mapping that will be used along population 3 axis.
-    deme_ids: sequence of strings representing the names of demes after split
+    Args:
+        phi (array): Phi corresponding to original 2 populations.
+        f1 (float): Fraction of population 3 derived from population 1. A fraction 1-f1
+            will be derived from population 2.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Frequency mapping that will be used along population 3 axis.
+        deme_ids (list, optional): Sequence of strings representing the names of demes after split.
+
+    Returns:
+        phi_3D (array): A new three-dimensional phi array.
     """
     Demes.cache.append(Demes.Split(proportions=[f1, 1-f1], deme_ids=deme_ids))
 
@@ -390,13 +415,19 @@ def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa, deme_ids=None):
 
     Returns a 4D sfs of shape (len(xx),len(yy),len(zz),len(aa))
 
-    phi:   phi corresponding to original 3 populations
-    f1:    Fraction of population 4 derived from population 1.
-    f2:    Fraction of population 4 derived from population 2.
-           (A fraction 1-f1-f2 will be derived from population 3.)
-    xx,yy,zz: Mapping of points in phi to frequencies in populations 1, 2, and 3.
-    aa:    Frequency mapping that will be used along population 4 axis.
-    deme_ids: sequence of strings representing the names of demes after split
+    Args:
+        phi (array): Phi corresponding to original 3 populations.
+        f1 (float): Fraction of population 4 derived from population 1.
+        f2 (float): Fraction of population 4 derived from population 2.
+            A fraction 1-f1-f2 will be derived from population 3.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Frequency mapping that will be used along population 4 axis.
+        deme_ids (list, optional): Sequence of strings representing the names of demes after split.
+
+    Returns:
+        phi_4D (array): A new four-dimensional phi array.
     """
     Demes.cache.append(Demes.Split(proportions=[f1, f2, 1-f1-f2], deme_ids=deme_ids))
 
@@ -425,14 +456,21 @@ def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb, deme_ids=None):
 
     Returns a 5D sfs of shape (len(xx),len(yy),len(zz),len(aa),len(bb))
 
-    phi:   phi corresponding to original 3 populations
-    f1:    Fraction of population 4 derived from population 1.
-    f2:    Fraction of population 4 derived from population 2.
-    f3:    Fraction of population 4 derived from population 3.
-           (A fraction 1-f1-f2-f3 will be derived from population 4.)
-    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1, 2, 3, 4.
-    bb:    Frequency mapping that will be used along population bb axis.
-    deme_ids: sequence of strings representing the names of demes after split
+    Args:
+        phi (array): Phi corresponding to original 4 populations.
+        f1 (float): Fraction of population 5 derived from population 1.
+        f2 (float): Fraction of population 5 derived from population 2.
+        f3 (float): Fraction of population 5 derived from population 3.
+            A fraction 1-f1-f2-f3 will be derived from population 4.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+        bb (array): Frequency mapping that will be used along population 5 axis.
+        deme_ids (list, optional): Sequence of strings representing the names of demes after split.
+
+    Returns:
+        phi_5D (array): A new five-dimensional phi array.
     """
     Demes.cache.append(Demes.Split(proportions=[f1, f2, f3, 1-f1-f2-f3], deme_ids=deme_ids))
 
@@ -462,10 +500,15 @@ def phi_2D_admix_1_into_2(phi, f, xx,yy):
 
     Alters phi in place and returns the new version.
 
-    phi:   phi corresponding to original 2 populations
-    f:     Fraction of updated population 2 to be derived from population 1. 
-             (A fraction 1-f will be derived from the original population 2.)
-    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    Args:
+        phi (array): Phi corresponding to original 2 populations.
+        f (float): Fraction of updated population 2 to be derived from population 1. 
+            A fraction 1-f will be derived from the original population 2.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     # This is just like the the split_admix situation, but we're splitting into
     # a population with zz=yy. We could do this by creating a xx by yy by yy
@@ -498,10 +541,15 @@ def phi_2D_admix_2_into_1(phi, f, xx,yy):
 
     Alters phi in place and returns the new version.
 
-    phi:   phi corresponding to original 2 populations
-    f:     Fraction of updated population 1 to be derived from population 2. 
-             (A fraction 1-f will be derived from the original population 1.)
-    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    Args:
+        phi (array): Phi corresponding to original 2 populations.
+        f (float): Fraction of updated population 1 to be derived from population 2. 
+            A fraction 1-f will be derived from the original population 1.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     # Note that it's 1-f here since f now denotes the fraction coming from
     # population 2.
@@ -526,11 +574,17 @@ def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 3 populations.
-    f1:       Fraction of updated population 3 to be derived from population 1. 
-    f2:       Fraction of updated population 3 to be derived from population 2. 
-              A fraction (1-f1-f2) will be derived from the original pop 3.
-    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    Args:
+        phi (array): Phi corresponding to original 3 populations.
+        f1 (float): Fraction of updated population 3 to be derived from population 1. 
+        f2 (float): Fraction of updated population 3 to be derived from population 2. 
+            A fraction (1-f1-f2) will be derived from the original pop 3.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[1,2], dest=3, proportions=[f1,f2]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -557,11 +611,17 @@ def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 3 populations.
-    f1:       Fraction of updated population 2 to be derived from population 1. 
-    f3:       Fraction of updated population 2 to be derived from population 3. 
-              A fraction (1-f1-f3) will be derived from the original pop 2.
-    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    Args:
+        phi (array): Phi corresponding to original 3 populations.
+        f1 (float): Fraction of updated population 2 to be derived from population 1. 
+        f3 (float): Fraction of updated population 2 to be derived from population 3. 
+            A fraction (1-f1-f3) will be derived from the original pop 2.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[1,3], dest=2, proportions=[f1,f3]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -588,11 +648,17 @@ def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 3 populations.
-    f2:       Fraction of updated population 1 to be derived from population 2. 
-    f3:       Fraction of updated population 1 to be derived from population 3. 
-              A fraction (1-f2-f3) will be derived from the original pop 1.
-    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    Args:
+        phi (array): Phi corresponding to original 3 populations.
+        f2 (float): Fraction of updated population 1 to be derived from population 2. 
+        f3 (float): Fraction of updated population 1 to be derived from population 3. 
+            A fraction (1-f2-f3) will be derived from the original pop 1.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[2,3], dest=1, proportions=[f2,f3]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -619,12 +685,19 @@ def phi_4D_admix_into_1(phi, f2,f3,f4, xx,yy,zz,aa):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 4 populations.
-    f2:       Fraction of updated population 1 to be derived from population 2. 
-    f3:       Fraction of updated population 1 to be derived from population 3. 
-    f4:       Fraction of updated population 1 to be derived from population 4. 
-              A fraction (1-f2-f3-f4) will be derived from the original pop 1.
-    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3, and 4.
+    Args:
+        phi (array): Phi corresponding to original 4 populations.
+        f2 (float): Fraction of updated population 1 to be derived from population 2. 
+        f3 (float): Fraction of updated population 1 to be derived from population 3. 
+        f4 (float): Fraction of updated population 1 to be derived from population 4. 
+            A fraction (1-f2-f3-f4) will be derived from the original pop 1.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[2,3,4], dest=1, proportions=[f2,f3,f4]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -652,12 +725,19 @@ def phi_4D_admix_into_4(phi, f1,f2,f3, xx,yy,zz,aa):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 4 populations.
-    f1:       Fraction of updated population 4 to be derived from population 1. 
-    f2:       Fraction of updated population 4 to be derived from population 2. 
-    f3:       Fraction of updated population 4 to be derived from population 3. 
-              A fraction (1-f1-f2-f3) will be derived from the original pop 4.
-    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    Args:
+        phi (array): Phi corresponding to original 4 populations.
+        f1 (float): Fraction of updated population 4 to be derived from population 1. 
+        f2 (float): Fraction of updated population 4 to be derived from population 2. 
+        f3 (float): Fraction of updated population 4 to be derived from population 3. 
+            A fraction (1-f1-f2-f3) will be derived from the original pop 4.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[1,2,3], dest=1, proportions=[f1, f2, f3]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -683,12 +763,19 @@ def phi_4D_admix_into_3(phi, f1,f2,f4, xx,yy,zz,aa):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 4 populations.
-    f1:       Fraction of updated population 3 to be derived from population 1. 
-    f2:       Fraction of updated population 3 to be derived from population 2. 
-    f4:       Fraction of updated population 3 to be derived from population 4. 
-              A fraction (1-f1-f2-f4) will be derived from the original pop 3.
-    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    Args:
+        phi (array): Phi corresponding to original 4 populations.
+        f1 (float): Fraction of updated population 3 to be derived from population 1. 
+        f2 (float): Fraction of updated population 3 to be derived from population 2. 
+        f4 (float): Fraction of updated population 3 to be derived from population 4. 
+            A fraction (1-f1-f2-f4) will be derived from the original pop 3.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[1,2,4], dest=3, proportions=[f1, f2, f4]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -714,12 +801,19 @@ def phi_4D_admix_into_2(phi, f1,f3,f4, xx,yy,zz,aa):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 4 populations.
-    f1:       Fraction of updated population 2 to be derived from population 1. 
-    f3:       Fraction of updated population 2 to be derived from population 3. 
-    f4:       Fraction of updated population 2 to be derived from population 4. 
-              A fraction (1-f1-f3-f4) will be derived from the original pop 2.
-    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    Args:
+        phi (array): Phi corresponding to original 4 populations.
+        f1 (float): Fraction of updated population 2 to be derived from population 1. 
+        f3 (float): Fraction of updated population 2 to be derived from population 3. 
+        f4 (float): Fraction of updated population 2 to be derived from population 4. 
+            A fraction (1-f1-f3-f4) will be derived from the original pop 2.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     Demes.cache.append(Demes.Pulse(sources=[1,3,4], dest=2, proportions=[f1, f3, f4]))
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
@@ -745,13 +839,21 @@ def phi_5D_admix_into_1(phi, f2,f3,f4,f5, xx,yy,zz,aa,bb):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 5 populations.
-    f2:       Fraction of updated population 1 to be derived from population 2. 
-    f3:       Fraction of updated population 1 to be derived from population 3. 
-    f4:       Fraction of updated population 1 to be derived from population 4. 
-    f5:       Fraction of updated population 1 to be derived from population 5. 
-              A fraction (1-f2-f3-f4-f5) will be derived from the original pop 1.
-    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    Args:
+        phi (array): Phi corresponding to original 5 populations.
+        f2 (float): Fraction of updated population 1 to be derived from population 2. 
+        f3 (float): Fraction of updated population 1 to be derived from population 3. 
+        f4 (float): Fraction of updated population 1 to be derived from population 4. 
+        f5 (float): Fraction of updated population 1 to be derived from population 5. 
+            A fraction (1-f2-f3-f4-f5) will be derived from the original pop 1.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+        bb (array): Mapping of points in phi to frequencies in population 5.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _five_pop_admixture_intermediates(phi, 1-f2-f3-f4-f5,f2,f3,f4, xx,yy,zz,aa,bb, xx)
@@ -777,13 +879,21 @@ def phi_5D_admix_into_2(phi, f1,f3,f4,f5, xx,yy,zz,aa,bb):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 5 populations.
-    f1:       Fraction of updated population 2 to be derived from population 1. 
-    f3:       Fraction of updated population 2 to be derived from population 3. 
-    f4:       Fraction of updated population 2 to be derived from population 4. 
-    f5:       Fraction of updated population 2 to be derived from population 5. 
-              A fraction (1-f1-f3-f4-f5) will be derived from the original pop 2.
-    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    Args:
+        phi (array): Phi corresponding to original 5 populations.
+        f1 (float): Fraction of updated population 2 to be derived from population 1. 
+        f3 (float): Fraction of updated population 2 to be derived from population 3. 
+        f4 (float): Fraction of updated population 2 to be derived from population 4. 
+        f5 (float): Fraction of updated population 2 to be derived from population 5. 
+            A fraction (1-f1-f3-f4-f5) will be derived from the original pop 2.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+        bb (array): Mapping of points in phi to frequencies in population 5.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _five_pop_admixture_intermediates(phi, f1, 1-f1-f3-f4-f5,f3,f4, xx,yy,zz,aa,bb, xx)
@@ -809,13 +919,21 @@ def phi_5D_admix_into_3(phi, f1,f2,f4,f5, xx,yy,zz,aa,bb):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 5 populations.
-    f1:       Fraction of updated population 3 to be derived from population 1. 
-    f2:       Fraction of updated population 3 to be derived from population 2. 
-    f4:       Fraction of updated population 3 to be derived from population 4. 
-    f5:       Fraction of updated population 3 to be derived from population 5. 
-              A fraction (1-f1-f2-f4-f5) will be derived from the original pop 3.
-    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    Args:
+        phi (array): Phi corresponding to original 5 populations.
+        f1 (float): Fraction of updated population 3 to be derived from population 1. 
+        f2 (float): Fraction of updated population 3 to be derived from population 2. 
+        f4 (float): Fraction of updated population 3 to be derived from population 4. 
+        f5 (float): Fraction of updated population 3 to be derived from population 5. 
+            A fraction (1-f1-f2-f4-f5) will be derived from the original pop 3.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+        bb (array): Mapping of points in phi to frequencies in population 5.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _five_pop_admixture_intermediates(phi, f1, f2, 1-f1-f2-f4-f5,f4, xx,yy,zz,aa,bb, xx)
@@ -841,13 +959,21 @@ def phi_5D_admix_into_4(phi, f1,f2,f3,f5, xx,yy,zz,aa,bb):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 5 populations.
-    f1:       Fraction of updated population 4 to be derived from population 1. 
-    f2:       Fraction of updated population 4 to be derived from population 2. 
-    f3:       Fraction of updated population 4 to be derived from population 3. 
-    f5:       Fraction of updated population 4 to be derived from population 5. 
-              A fraction (1-f1-f2-f3-f5) will be derived from the original pop 4.
-    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    Args:
+        phi (array): Phi corresponding to original 5 populations.
+        f1 (float): Fraction of updated population 4 to be derived from population 1. 
+        f2 (float): Fraction of updated population 4 to be derived from population 2. 
+        f3 (float): Fraction of updated population 4 to be derived from population 3. 
+        f5 (float): Fraction of updated population 4 to be derived from population 5. 
+            A fraction (1-f1-f2-f3-f5) will be derived from the original pop 4.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+        bb (array): Mapping of points in phi to frequencies in population 5.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _five_pop_admixture_intermediates(phi, f1, f2, f3, 1-f1-f2-f3-f5, xx,yy,zz,aa,bb, xx)
@@ -873,13 +999,21 @@ def phi_5D_admix_into_5(phi, f1,f2,f3,f4, xx,yy,zz,aa,bb):
 
     Alters phi in place and returns the new version.
 
-    phi:      phi corresponding to original 5 populations.
-    f1:       Fraction of updated population 5 to be derived from population 1. 
-    f2:       Fraction of updated population 5 to be derived from population 2. 
-    f3:       Fraction of updated population 5 to be derived from population 3. 
-    f4:       Fraction of updated population 5 to be derived from population 3. 
-              A fraction (1-f1-f2-f3-f4) will be derived from the original pop 5.
-    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    Args:
+        phi (array): Phi corresponding to original 5 populations.
+        f1 (float): Fraction of updated population 5 to be derived from population 1. 
+        f2 (float): Fraction of updated population 5 to be derived from population 2. 
+        f3 (float): Fraction of updated population 5 to be derived from population 3. 
+        f4 (float): Fraction of updated population 5 to be derived from population 3. 
+            A fraction (1-f1-f2-f3-f4) will be derived from the original pop 5.
+        xx (array): Mapping of points in phi to frequencies in population 1.
+        yy (array): Mapping of points in phi to frequencies in population 2.
+        zz (array): Mapping of points in phi to frequencies in population 3.
+        aa (array): Mapping of points in phi to frequencies in population 4.
+        bb (array): Mapping of points in phi to frequencies in population 5.
+
+    Returns:
+        phi (array): The updated phi array.
     """
     lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
             = _five_pop_admixture_intermediates(phi, f1, f2, f3, f4, xx,yy,zz,aa,bb, xx)
@@ -905,9 +1039,13 @@ def remove_pop(phi, xx, popnum):
 
     Returns new phi with one fewer population.
 
-    phi: phi corresponding to original populations
-    xx: Mapping of points in phi to frequencies in population to be removed
-    popnum: Population number to remove, numbering from 1.
+    Args:
+        phi (array): Phi corresponding to original populations.
+        xx (array): Mapping of points in phi to frequencies in population to be removed.
+        popnum (int): Population number to remove, numbering from 1.
+
+    Returns:
+        phi (array): The updated phi array with one fewer population.
     """
     Demes.cache.append(Demes.Remove(removed=popnum))
     return Numerics.trapz(phi, xx, axis=popnum-1)
@@ -918,9 +1056,13 @@ def filter_pops(phi, xx, tokeep):
 
     Returns new phi with len(tokeep) populations.
 
-    phi: phi corresponding to original populations
-    xx: Mapping of points in phi to frequencies in population to be removed
-    tokeep: List of population numbers to keep, numbering from 1.
+    Args:
+        phi (array): Phi corresponding to original populations.
+        xx (array): Mapping of points in phi to frequencies in population to be removed.
+        tokeep (list): List of population numbers to keep, numbering from 1.
+
+    Returns:
+        phi (array): The updated phi array with only the specified populations.
     """
     toremove = list(range(1, phi.ndim+1))
     for pop_ii in tokeep:
@@ -931,20 +1073,24 @@ def filter_pops(phi, xx, tokeep):
 
 def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
     """
-    One-dimensional phi for a constant-sized population with genic selection.
+    Compute a one-dimensional phi for a constant-sized population with genic selection.
 
-    xx: one-dimensional grid of frequencies upon which phi is defined
-    nu: size of this population, relative to the reference population size Nref.
-    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
-            event rate per generation for the simulated locus and Nref is the 
-            reference population size.
-    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
-           selective advantage.
-    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
-       aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
-       1+2s. h = 0.5 corresonds to genic selection.
+    Args:
+        xx (array): One-dimensional grid of frequencies upon which phi is defined.
+        nu (float): Size of this population, relative to the reference population size Nref.
+        theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the reference 
+            population size.
+        gamma (float): Scaled selection coefficient, equal to 2*Nref * s, where s is the
+            selective advantage.
+        h (float): Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+            aA has fitness 1+2sh, and AA has fitness 1+2s. Male carriers have fitness 1+2s.
+            h = 0.5 corresponds to genic selection.
+        beta (float): Scaling factor for selection.
+        alpha (float): Additional scaling factor for selection.
 
-    Returns a new phi array.
+    Returns:
+        phi (array): A new phi array.
     """
     Kv = (2.*beta+4.)*(beta+1.)/(9.*beta)
     Km1 = 4./3. * gamma*(0.5+h)
@@ -979,12 +1125,17 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
 
 def reorder_pops(phi, neworder):
     """
-    Get phi with populations in new order
+    Get phi with populations in new order.
 
-    Returns new phi with same number of populations, but in a different order
+    Returns new phi with same number of populations, but in a different order.
 
-    neworder: Integer list defining new order of populations, indexing the orginal
-              populations from 1. Must contain all integers from 1 to number of pops.
+    Args:
+        phi (array): Phi corresponding to original populations.
+        neworder (list): Integer list defining new order of populations, indexing the original
+            populations from 1. Must contain all integers from 1 to number of pops.
+
+    Returns:
+        phi (array): The updated phi array with populations in the new order.
     """
     Demes.cache.append(Demes.Reorder(neworder=neworder))
     if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:

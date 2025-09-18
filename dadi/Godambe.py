@@ -15,16 +15,13 @@ def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
 
     Args:
         func (func): Model function
-
-        f0: Evaluation of func at p0
-
+        f0 (array-like): Evaluation of func at p0
         p0 (list[float]): Parameters for func
-
+        ii (int): Index of matrix row
+        jj (int): Index of matrix column
         eps (list[float]): List of absolute step sizes to use for each parameter when taking
             finite differences.
-
         args (list or tuple): Additional arguments to func
-
         one_sided (list[bool]): Optionally, pass in a sequence of length p0 that determines
                 whether a one-sided derivative will be used for each parameter.
     """
@@ -100,14 +97,11 @@ def get_hess(func, p0, eps, args=()):
     
     Args:
         func (func): Model function
-
         p0 (list[float]): Parameter values to take derivative around
-
         eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
             Note that if eps*param is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
-
         args (list or tuple): Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
@@ -140,14 +134,11 @@ def get_grad(func, p0, eps, args=()):
 
     Args:
         func (func): Model function
-        
         p0 (list[float]): Parameters for func
-        
         eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
             Note that if eps*param is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
-        
         args (list or tuple): Additional arguments to func
     """
     # Calculate step sizes for finite-differences.
@@ -201,24 +192,16 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
 
     Args:
         func_ex (func): Model function
-        
         grid_pts (list[float]): Number of grid points to evaluate the model function
-        
         all_boot (list[Spectrum]): List of bootstrap frequency spectra
-        
         p0 (list[float]): Best-fit parameters for func_ex.
-        
         data (Spectrum): Original data frequency spectrum
-        
-        eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
+        eps (float): Fractional stepsize to use when taking finite-difference derivatives
             Note that if eps*param is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
-        
         log (bool): If True, calculate derivatives in terms of log-parameters
-        
         just_hess (bool): If True, only evaluate and return the Hessian matrix
-        
         boot_theta_adjusts (list[float])): Factors by which to adjust theta for each bootstrap
                             sample, relative to full data theta.
     """
@@ -280,31 +263,24 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
 
     Args:
         func_ex (func): Model function
-        
+        grid_pts (list[int]): Grid points at which to evaluate func_ex
         all_boot (list[Spectrum]): List of bootstrap frequency spectra
-        
         p0 (list[flaot]): Best-fit parameters for func_ex
-        
         data (Spectrum): Original data frequency spectrum
-        
-        eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives.
-            Note that if eps*param is < 1e-6, then the step size for that parameter
-            will simply be eps, to avoid numerical issues with small parameter
-            perturbations.
-        
         log (bool): If True, assume log-normal distribution of parameters. Returned values
             are then the standard deviations of the *logs* of the parameter values,
             which can be interpreted as relative parameter uncertainties.
-        
         multinom (bool): If True, assume model is defined without an explicit parameter for
                 theta. Because uncertainty in theta must be accounted for to get
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True. In that case, the
                 final entry of the returned uncertainties will correspond to
                 theta.
-        
+        eps (float): Fractional stepsize to use when taking finite-difference derivatives.
+            Note that if eps*param is < 1e-6, then the step size for that parameter
+            will simply be eps, to avoid numerical issues with small parameter
+            perturbations.
         return_GIM (bool): If true, also return the full GIM.
-        
         boot_theta_adjusts (list[float]): Optionally, a sequence of *relative* values of theta
                             (compared to original data) to assume for bootstrap
                             data sets. Only valid when multinom=False.
@@ -334,28 +310,23 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, 
 
     Args:
         func_ex (func): Model function
-        
-        all_boot (list[Spectrum]): List of bootstrap frequency spectra
-        
+        grid_pts (list[int]): List of grid points to evaluate func_ex
         p0 (list[float]): Best-fit parameters for func_ex
-        
-        data (list[Spectrum]): Original data frequency spectrum
-        
-        eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives.
-            Note that if eps*param is < 1e-6, then the step size for that parameter
-            will simply be eps, to avoid numerical issues with small parameter
-            perturbations.
-        
+        data (Spectrum): Original data frequency spectrum
         log (bool): If True, assume log-normal distribution of parameters. Returned values
             are then the standard deviations of the *logs* of the parameter values,
             which can be interpreted as relative parameter uncertainties.
-        
         multinom (bool): If True, assume model is defined without an explicit parameter for
                 theta. Because uncertainty in theta must be accounted for to get
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True. In that case, the
                 final entry of the returned uncertainties will correspond to
                 theta.
+        eps (float): Fractional stepsize to use when taking finite-difference derivatives.
+            Note that if eps*param is < 1e-6, then the step size for that parameter
+            will simply be eps, to avoid numerical issues with small parameter
+            perturbations.
+        return_FIM (bool): If true, also return the full FIM.
     """
     if multinom:
         func_multi = func_ex
@@ -377,31 +348,23 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
     Args:
         func_ex (func): Model function for complex model
-        
         grid_pts (list[float]): Grid points at which to evaluate func_ex
-        
         all_boot (list[Spectrum]): List of bootstrap frequency spectra
-        
         p0 (list[float]): Best-fit parameters for the simple model, with nested parameter
             explicity defined.  Although equal to values for simple model, should
             be in a list form that can be taken in by the complex model you'd like
             to evaluate.
-        
         data (Spectrum): Original data frequency spectrum
-        
         nested_indices (list[float]): List of positions of nested parameters in complex model
                         parameter list
-        
         multinom (bool): If True, assume model is defined without an explicit parameter for
                 theta. Because uncertainty in theta must be accounted for to get
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True.
-        
-        eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
+        eps (float): Fractional stepsize to use when taking finite-difference derivatives
             Note that if eps*param is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
-        
         boot_theta_adjusts (list[float]): Optionally, a sequence of *relative* values of theta
                             (compared to original data) to assume for bootstrap
                             data sets. Only valid when multinom=False.
@@ -438,9 +401,8 @@ def sum_chi2_ppf(x, weights=(0,1)):
     distributions.
 
     Args:
-        x: Value(s) at which to evaluate ppf
-        
-        weights: Weights of chi^2 distributions, beginning with zero d.o.f.
+        x (array-like): Value(s) at which to evaluate ppf
+        weights (array-like): Weights of chi^2 distributions, beginning with zero d.o.f.
                 For example, weights=(0,1) is the normal chi^2 distribution with 1
                 d.o.f. For single parameters on the boundary, the correct
                 distribution for the LRT is 0.5*chi^2_0 + 0.5*chi^2_1, which would
@@ -479,35 +441,28 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
     Args:
         func_ex (func): Model function for complex model
-        
+        grid_pts (list[int]): Grid points to evaluate model function
         all_boot (list[Spectrum]): List of bootstrap frequency spectra
-        
         p0 (list[float]): Best-fit parameters for the simple model, with nested parameter
             explicity defined.  Although equal to values for simple model, should
             be in a list form that can be taken in by the complex model you'd like
             to evaluate.
-        
         data (list[Spectrum]): Original data frequency spectrum
-        
         nested_indices (list[int]): List of positions of nested parameters in complex model
                         parameter list.
-        
         full_params (list[float]): Parameter values for parameters found only in complex model,
                     Can either be array with just values found only in the compelx
                     model, or entire list of parameters from complex model.
-        
         multinom (bool): If True, assume model is defined without an explicit parameter for
                 theta. Because uncertainty in theta must be accounted for to get
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True. In that case, the
                 final entry of the returned uncertainties will correspond to
                 theta.
-        
-        eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
+        eps (float): Fractional stepsize to use when taking finite-difference derivatives
             Note that if eps*param is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
-        
         adj_and_org (bool): If False, return only adjusted Wald statistic. If True, also
                     return unadjusted statistic as second return value.
     """
@@ -558,31 +513,23 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
     Args:
         func_ex (func): Model function for complex model
-        
         grid_pts (list[float]): Grid points to evaluate model function
-        
         all_boot (list[Spectrum]): List of bootstrap frequency spectra
-        
         p0 (list[float]): Best-fit parameters for the simple model, with nested parameter
             explicity defined.  Although equal to values for simple model, should
             be in a list form that can be taken in by the complex model you'd like
             to evaluate.
-        
         data (Spectrum): Original data frequency spectrum
-        
         nested_indices (list[int]): List of positions of nested parameters in complex model
                         parameter list
-        
-        eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
-            will simply be eps, to avoid numerical issues with small parameter
-            perturbations.
-        
         multinom (bool): If True, assume model is defined without an explicit parameter for
                 theta. Because uncertainty in theta must be accounted for to get
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True.
-        
+        eps (float): Fractional stepsize to use when taking finite-difference derivatives
+            Note that if eps*param is < 1e-6, then the step size for that parameter
+            will simply be eps, to avoid numerical issues with small parameter
+            perturbations.
         adj_and_org (bool): If False, return only adjusted score statistic. If True, also
                     return unadjusted statistic as second return value.
     """

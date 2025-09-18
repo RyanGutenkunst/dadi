@@ -18,7 +18,6 @@ def compute_cov_dist(data_dict, pop_ids):
 
     Args:
         data_dict (dict): A dictionary containing data entries.
-
         pop_ids (list): A list of population identifiers for which depth of coverage distribution is computed.
 
     Returns:
@@ -50,7 +49,6 @@ def part_inbreeding_probability(parts, Fx):
 
     Parameters:
         parts (list of lists): List of genotype partitions.
-
         Fx (float): Inbreeding coefficient.
 
     Returns:
@@ -79,14 +77,11 @@ def partitions_and_probabilities(n_sequenced, partition_type, Fx=0, allele_frequ
     
     Args:
         n_sequenced (int): The number of sequenced haplotypes.
-
         partition_type (str): Type of partition to generate ("allele_frequency" or "genotype").
-
         allele_frequency (int): The total number of alleles (required only for "allele_frequency" partition_type).
     
     Returns:
         partitions (list): A list of all possible allele count partitions.
-
         partition_probabilities (numpy.ndarray): An array containing the probability of each partition.
     """
     with warnings.catch_warnings():
@@ -144,7 +139,6 @@ def split_list_by_lengths(input_list, lengths_list):
 
     Args:
         input_list (list): The list to be split.
-
         lengths_list (list): A list of integers representing the lengths of the sublists.
     
     Returns:
@@ -173,7 +167,6 @@ def flatten_nested_list(nested_list, operation):
     
     Args:
         nested_list (list of lists): The nested list to be flattened.
-
         operation (str): The operation to apply between elements ('+' for concatenation or '*' for multiplication).
     
     Returns:
@@ -199,16 +192,12 @@ def simulate_reads(coverage_distribution, flattened_partition, pop_n_sequenced, 
     
     Args:
         coverage_distribution (list): Depth of coverage distribution for each population.
-
         flattened_partition (list): Flattened genotype partition.
-
         pop_n_sequenced (list): Number of sequenced haplotypes for each population.
-
         number_simulations (int): Number of simulations to perform.
     
     Returns:
         n_ref (numpy.ndarray): Arrays of reference allele counts for each simulated individual.
-
         n_alt (numpy.ndarray): Arrays of alternative allele counts for each simulated individual.
     """
     flattened_partition = numpy.array(flattened_partition)
@@ -248,7 +237,6 @@ def subsample_genotypes_1D(genotype_calls, n_subsampling):
     
     Args:
         genotype_calls (numpy.ndarray): Genotype array with 99 assumed to represent missing data.
-
         n_subsampling (int): Number of haplotypes in the final subsample.
     
     Returns:
@@ -289,13 +277,9 @@ def simulate_GATK_multisample_calling(coverage_distribution, allele_frequency, n
     
     Args:
         coverage_distribution (list): Depth of coverage distribution for each population.
-
         allele_frequency (list): True allele frequency in sequenced samples for each population.
-
         n_sequenced (list): Number of sequenced haplotypes for each population.
-
         n_subsampling (list): Number of haplotypes after subsampling to account for missing data for each population.
-
         number_simulations (int): Number of loci to simulate for.
     
     Returns:
@@ -371,7 +355,6 @@ def probability_of_no_call_1D_GATK_multisample(coverage_distribution, n_sequence
     
     Args:
         coverage_distribution (numpy.ndarray): Depth of coverage distribution.
-
         n_sequenced (int): Number of sequenced haplotypes.
     
     Returns:
@@ -435,9 +418,7 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
     
     Args:
         coverage_distribution (numpy.ndarray): Depth of coverage distribution.
-
         n_sequenced (int): Number of sequenced haplotypes.
-
         n_subsampling (int): Number of haplotypes to subsample.
     
     Returns:
@@ -467,13 +448,13 @@ def projection_inbreeding(partition, k):
     Calculate the distribution of inbreeding coefficients for a given partition.
     
     Args:
-    - partition (iterable): A collection of indices representing the individuals in the partition.
-    - k (int): The total number of individuals considered in each combination.
+        partition (iterable): A collection of indices representing the individuals in the partition.
+        k (int): The total number of individuals considered in each combination.
     
     Returns:
-    - numpy.ndarray: An array representing the distribution of inbreeding coefficients. Each index in the array corresponds 
-      to the total number of shared alleles in a combination, and the values represent the corresponding frequencies normalized 
-      by the total number of combinations.
+        result (numpy.ndarray): An array representing the distribution of inbreeding coefficients. Each index in the array corresponds 
+            to the total number of shared alleles in a combination, and the values represent the corresponding frequencies normalized 
+            by the total number of combinations.
     ```
     """
     result = numpy.zeros_like(range(k+1))
@@ -494,12 +475,10 @@ def projection_matrix(n_sequenced, n_subsampling, F):
     
     Args:
         n_sequenced (int): Number of haplotypes sequenced.
-
         n_subsampling (int): Number of haplotypes to project down to.
     
     Returns:
         projection_matrix (numpy.ndarray): Projection matrix.
-    
     """
     # Create an empty matrix to store the projection
     projection_matrix = numpy.empty((n_sequenced + 1, n_subsampling + 1))
@@ -525,8 +504,8 @@ def calling_error_matrix(coverage_distribution, n_subsampling, Fx=0):
         
         Args:
             coverage_distribution (numpy.ndarray): Depth of coverage distribution.
-
             n_subsampling (int): Number of haplotypes to subsample.
+            Fx (float): Inbreeding coefficient.
         
         Returns:
             trans_matrix (numpy.ndarray): Calling error matrix.
@@ -576,18 +555,13 @@ def low_cov_precalc_GATK_multisample_GATK_multisample(nsub, nseq, cov_dist, sim_
 
     Args:
         nsub (list[int]): Final sample size (in haplotypes)
-
         nseq (list[int]): Sequenced sample size (in haplotypes)
-
         cov_dist (dict): Depth of coverage distribution (list of one array per population)
-
         sim_threshold (float): This method uses the probability an allele is not called
                     to switch between analytic and simulation-based methods.
                     Setting this threshold to 0 will always use simulations,
                     while setting it to 1 will always use analytics.
-
         Fx (float): Inbreeding coefficient.
-
         nsim (int): For simulations, number of simulations per allele frequency combination
     """
     
@@ -623,22 +597,15 @@ def make_low_pass_func_GATK_multisample(func, cov_dist, pop_ids, nseq, nsub, sim
     Generate a version of func accounting for low-pass distortion based on the GATK multi-sample algorithm.
 
     Args:
-        demo_model (func): Specified demographic model in dadi.
-
-        data_dict (dict): A data dictionary comprising information extracted from a VCF file.
-
+        func (func): Specified demographic model in dadi.
+        cov_dist (dict): A data dictionary comprising information extracted from a VCF file.
         pop_ids (list[str]): Population names to be analyzed.
-
         nseq (list[int]): Sequenced sample size (in haplotypes).
-
         nsub (list[int]): Final sample size (in haplotypes)
-
         sim_threshold (float): This method switches between analytic and simulation-based methods. 
             Setting this threshold to 0 will always use simulations, while setting it to 1 will always use analytics. 
             Values in between indicate that simulations will be employed for thresholds below that value.
-
         Fx (float): Inbreeding coefficient.
-
         nsim (int): Number of simulations to use per potential allele frequency combination
     """
     # # Compute depth of coverage distribution

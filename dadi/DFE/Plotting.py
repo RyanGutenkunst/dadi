@@ -129,7 +129,7 @@ def plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params, rho=0,
             Defaults to 0.
 
     Returns:
-        matplotlib.figure.Figure: The figure for the plot.
+        fig (matplotlib.figure.Figure): The figure for the plot.
 
     Notes:
         - You might need to adjust subplot parameters using 
