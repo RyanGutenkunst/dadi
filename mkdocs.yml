@@ -27,11 +27,18 @@ plugins:
       autoapi_keep_files: true  # Added to retain intermediate files for debugging
       autoapi_options:
         - show-inheritance  # Added to display class inheritance in the documentation
+        - skip-imported-members  # Added to exclude imported functions from the documentation
   - mkdocstrings:
       default_handler: python
       handlers:
         python:
           paths: [src]
+          options:
+            show_root_toc_entry: false
+            show_source: true
+            show_signature_annotations: true
+            separate_signature_from_description: true
+            merge_init_into_class: true
 nav:
 - Home: 'index.md'
 - User Guide:
