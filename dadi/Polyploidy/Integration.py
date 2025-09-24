@@ -1,5 +1,4 @@
 import dadi.Misc as Misc
-import dadi.Polyploidy.MiscPoly as MiscPoly
 import dadi.Demes as Demes
 import numpy
 from numpy import newaxis as nuax
@@ -26,6 +25,46 @@ use_old_timestep = False
 #: Factor for told timestep method.
 old_timescale_factor = 0.1
 
+### Utility function modified from dadi.Misc for handling the selection parameter lists
+import numpy
+
+def ensure_1arg_func_vectorized(vars_list):
+    """
+    Version of dadi.Misc.ensure_1arg_func that returns a 
+    single vectorized function that can handle multiple parameters at once.
+    This is useful for the selection parameters in polyploidy models.
+    
+    vars_list: List of variables to be passed to the function.
+    
+    Returns:
+        A function that takes t and returns a numpy array of results
+    """
+    processed_funcs = []
+    
+    for var in vars_list:
+        if numpy.isscalar(var):
+            var_f_tmp = lambda t, v=var: v
+        else:
+            var_f_tmp = var
+        
+        var_f = lambda t, f=var_f_tmp: numpy.float64(f(t))
+        
+        if not callable(var_f):
+            raise ValueError('Argument is not a constant or a function.')
+        try:
+            var_f(0.0)
+        except TypeError:
+            raise ValueError('Argument is not a constant or a one-argument function.')
+        
+        processed_funcs.append(var_f)
+    
+    # Return a single function that evaluates all at once
+    def vectorized_func(t):
+        return numpy.array([f(t) for f in processed_funcs])
+    
+    return vectorized_func
+
+
 ### ==========================================================================
 ### COMPUTE DT FUNCTIONS
 ### ==========================================================================
@@ -33,7 +72,7 @@ def _compute_dt(dx, nu, ms, sel, ploidy):
     """
     Compute the timestep along a single dimension of phi. 
 
-    Acts as a wrapper and calls _compute_dt_* for the corresponding ploidy type.
+    Acts as a wrapper to call _compute_dt_* for the corresponding ploidy type.
 
     sel: vector of selection parameters from unpacking the sel_dict
     ploidy: vector of ploidy coefficients (length 10)
@@ -645,10 +684,12 @@ class PloidyType(IntEnum):
            This allows us to support arbitrary combinations of functions of time and constants for selection."""
         p1_is_func = callable(param1)
         p2_is_func = callable(param2)
-    
+        
+        # if at least one of the parameters is a function, then we need to return a function
         if p1_is_func or p2_is_func:
             return lambda t: (param1(t) if p1_is_func else param1) * \
                              (param2(t) if p2_is_func else param2)
+        # otherwise, we can just multiply the two parameters which are constants
         else:
             return param1 * param2
     
@@ -963,8 +1004,8 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
     # for convenience, we'll keep the sel_f as a vector of functions
     # this avoids explicitly writing all of the selection parameters for all of the ploidy types
     # and avoids some branching which might slow things down
-    # the trade off is that sel_f always has 26 elements, even for a diploid with only 2 selection params
-    sel_f = MiscPoly.ensure_1arg_func_vectorized(sel)
+    # the computaitonal trade off is that sel_f always has 26 elements, even for a diploid with only 2 selection params
+    sel_f = ensure_1arg_func_vectorized(sel)
     nu_f = Misc.ensure_1arg_func(nu)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
@@ -1056,9 +1097,7 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
     if (frozen1 or frozen2) and (m12 != 0 or m21 != 0):
         raise ValueError('Population cannot be frozen and have non-zero '
                          'migration to or from it.')
-    if cuda_enabled:
-        raise ValueError('CUDA integration is not currently supported for polyploid models.')
-
+    
     allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
     # check that at least one of the populations is an allo subgenome,
     # but the pair has not been specified as allo subgenomes of different types
@@ -1067,11 +1106,21 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
 
+    if cuda_enabled and (ploidyflag1 in allo_types or ploidyflag2 in allo_types):
+        if ploidyflag1 != PloidyType.ALLOa or ploidyflag2 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
     hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
     if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
         raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
                          'But the other is not or both are specified as tetra or dip subgenomes. \n'
                          'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+
+    if cuda_enabled and (ploidyflag1 in hex_4_2_types or ploidyflag2 in hex_4_2_types):
+        if ploidyflag1 != PloidyType.HEX_tetra or ploidyflag2 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
 
     # create ploidy vectors with C integers
     ploidy1 = numpy.zeros(10, numpy.intc)
@@ -1097,8 +1146,8 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
 
     yy = xx
 
-    sel1_f = MiscPoly.ensure_1arg_func_vectorized(sel1)
-    sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel2)
+    sel1_f = ensure_1arg_func_vectorized(sel1)
+    sel2_f = ensure_1arg_func_vectorized(sel2)
     nu1_f = Misc.ensure_1arg_func(nu1)
     nu2_f = Misc.ensure_1arg_func(nu2)
     m12_f = Misc.ensure_1arg_func(m12)
@@ -1115,16 +1164,13 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
                              'Polyploid subgenomes must have the same population size. \n')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
             raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
-
-    # TODO: CUDA integration
-    ### Ryan will need to implement this? 
-    ### it is something I could take a look at... 
-    # if cuda_enabled:
-    #     import dadi.cuda
-    #     phi = dadi.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
-    #             nu1_f, nu2_f, m12_f, m21_f, gamma1_f, gamma2_f, h1_f, h2_f, theta0_f, 
-    #             frozen1, frozen2, nomut1, nomut2, deme_ids)
-    #     return phi
+ 
+    if cuda_enabled:
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, m12_f, m21_f, sel1_f, sel2_f, theta0_f, 
+                frozen1, frozen2, nomut1, nomut2, deme_ids, ploidy1, ploidy2)
+        return phi
 
     current_t = initial_t
     nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
@@ -1230,6 +1276,11 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         raise ValueError('Population 1 is an allotetraploid subgenome. \n'  
                          'To model allotetraploids in a 3D model, only the last two populations can be specified as an allotetraploid subgenome.')
 
+    if cuda_enabled and (ploidyflag2 in allo_types or ploidyflag3 in allo_types):
+        if ploidyflag2 != PloidyType.ALLOa or ploidyflag3 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
     hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
     if ({ploidyflag2, ploidyflag3} & hex_4_2_types) and ({ploidyflag2, ploidyflag3} != hex_4_2_types):
         raise ValueError('Either population 2 and 3 is specified as a HEX (4+2) subgenome. \n'
@@ -1239,6 +1290,11 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     if ploidyflag1 in hex_4_2_types:
         raise ValueError('Population 1 is a HEX (4+2) subgenome. \n'  
                          'To model hexaploids in a 3D model, only the last two populations can be specified as a HEX (4+2) subgenome.')
+
+    if cuda_enabled and (ploidyflag2 in hex_4_2_types or ploidyflag3 in hex_4_2_types):
+        if ploidyflag2 != PloidyType.HEX_tetra or ploidyflag3 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
 
     hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
     if ({ploidyflag1, ploidyflag2, ploidyflag3} & hex_2_2_2_types) and (ploidyflag1 != PloidyType.HEXa or ploidyflag2 != PloidyType.HEXb or ploidyflag3 != PloidyType.HEXc):    
@@ -1280,7 +1336,7 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
     m12_f, m13_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13)
     m21_f, m23_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23)
     m31_f, m32_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32)
-    sel1_f, sel2_f, sel3_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2), MiscPoly.ensure_1arg_func_vectorized(sel3)
+    sel1_f, sel2_f, sel3_f = ensure_1arg_func_vectorized(sel1), ensure_1arg_func_vectorized(sel2), ensure_1arg_func_vectorized(sel3)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
     if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types) or (ploidyflag2 in hex_4_2_types) or (ploidyflag3 in hex_4_2_types):
@@ -1305,14 +1361,14 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)) or numpy.any(sel1_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel3_f(T/2)):
             raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
-    # TODO: CUDA integration
-    # if cuda_enabled:
-    #     import dadi.cuda
-    #     phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
-    #             nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
-    #             gamma1_f, gamma2_f, gamma3_f, h1_f, h2_f, h3_f, 
-    #             theta0_f, frozen1, frozen2, frozen3, deme_ids)
-    #     return phi
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
+                sel1_f, sel2_f, sel3_f, 
+                theta0_f, frozen1, frozen2, frozen3, deme_ids,
+                ploidy1, ploidy2, ploidy3)
+        return phi
 
     current_t = initial_t
     nu1,nu2,nu3 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t)
@@ -1422,22 +1478,39 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
         raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag1 in allo_types or ploidyflag2 in allo_types):
+        if ploidyflag1 != PloidyType.ALLOa or ploidyflag2 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
     
     if ({ploidyflag3, ploidyflag4} & allo_types) and ({ploidyflag3, ploidyflag4} != allo_types):
         raise ValueError('Either population 3 or 4 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
-    
+    if cuda_enabled and (ploidyflag3 in allo_types or ploidyflag4 in allo_types):
+        if ploidyflag3 != PloidyType.ALLOa or ploidyflag4 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
     hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
     if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
         raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
                          'But the other is not or both are specified as tetra or dip subgenomes. \n'
                          'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag1 in hex_4_2_types or ploidyflag2 in hex_4_2_types):
+        if ploidyflag1 != PloidyType.HEX_tetra or ploidyflag2 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
     if ({ploidyflag3, ploidyflag4} & hex_4_2_types) and ({ploidyflag3, ploidyflag4} != hex_4_2_types):
         raise ValueError('Either population 3 and 4 is specified as a HEX (4+2) subgenome. \n'
                          'But the other is not or both are specified as tetra or dip subgenomes. \n'
                          'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
-    
+    if cuda_enabled and (ploidyflag3 in hex_4_2_types or ploidyflag4 in hex_4_2_types):
+        if ploidyflag3 != PloidyType.HEX_tetra or ploidyflag4 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
     hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
     if ({ploidyflag2, ploidyflag3, ploidyflag4} & hex_2_2_2_types) and (ploidyflag2 != PloidyType.HEXa or ploidyflag3 != PloidyType.HEXb or ploidyflag4 != PloidyType.HEXc):    
         raise ValueError('Either population 2, 3, or 4 is specified as a HEX (2+2+2) subgenome. \n'
@@ -1475,8 +1548,8 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
     m41_f, m42_f, m43_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    sel1_f, sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2)
-    sel3_f, sel4_f = MiscPoly.ensure_1arg_func_vectorized(sel3), MiscPoly.ensure_1arg_func_vectorized(sel4)
+    sel1_f, sel2_f = ensure_1arg_func_vectorized(sel1), ensure_1arg_func_vectorized(sel2)
+    sel3_f, sel4_f = ensure_1arg_func_vectorized(sel3), ensure_1arg_func_vectorized(sel4)
 
     if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):  
         if m12_f(T/2) != m21_f(T/2):
@@ -1512,14 +1585,14 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
             raise ValueError('Population 2, 3, or 4 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
 
-    # TODO: CUDA integration
-    # if cuda_enabled:
-    #     import dadi.cuda
-    #     phi = dadi.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
-    #             nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
-    #             m41_f, m42_f, m43_f, gamma1_f, gamma2_f, gamma3_f, gamma4_f, h1_f, h2_f, h3_f, h4_f,
-    #             theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids)
-    #     return phi
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
+                m41_f, m42_f, m43_f, sel1_f, sel2_f, sel3_f, sel4_f, 
+                theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids,
+                ploidy1, ploidy2, ploidy3, ploidy4)
+        return phi
 
     current_t = initial_t
     nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
@@ -1639,12 +1712,20 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
-    
+    if cuda_enabled and (ploidyflag1 in allo_types or ploidyflag2 in allo_types):
+        if ploidyflag1 != PloidyType.ALLOa or ploidyflag2 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
     if ({ploidyflag4, ploidyflag5} & allo_types) and ({ploidyflag4, ploidyflag5} != allo_types):
         raise ValueError('Either population 4 or 5 is specified as an allotetraploid subgenome. \n' 
                          'But the other is not or both are specified as a or b subgenomes. \n'
                          'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
-    
+    if cuda_enabled and (ploidyflag4 in allo_types or ploidyflag5 in allo_types):
+        if ploidyflag4 != PloidyType.ALLOa or ploidyflag5 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
     if ploidyflag3 in allo_types:
         raise ValueError('Population 3 is an allotetraploid subgenome. \n'  
                          'To model allotetraploids in a 5D model, only the first two or last two populations can be specified as allotetraploid.')
@@ -1654,12 +1735,20 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
                          'But the other is not or both are specified as tetra or dip subgenomes. \n'
                          'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
-    
+    if cuda_enabled and (ploidyflag1 in hex_4_2_types or ploidyflag2 in hex_4_2_types):
+        if ploidyflag1 != PloidyType.HEX_tetra or ploidyflag2 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
     if ({ploidyflag4, ploidyflag5} & hex_4_2_types) and ({ploidyflag4, ploidyflag5} != hex_4_2_types):
         raise ValueError('Either population 4 and 5 is specified as a HEX (4+2) subgenome. \n'
                          'But the other is not or both are specified as tetra or dip subgenomes. \n'
                          'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
-    
+    if cuda_enabled and (ploidyflag4 in hex_4_2_types or ploidyflag5 in hex_4_2_types):
+        if ploidyflag4 != PloidyType.HEX_tetra or ploidyflag5 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
     if ploidyflag3 in hex_4_2_types:
         raise ValueError('Population 3 is a HEX (4+2) subgenome. \n'  
                          'To model hexaploids in a 5D model, only the first two or last two populations can be specified as a HEX (4+2) subgenome.')
@@ -1706,9 +1795,9 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
     m51_f, m52_f, m53_f, m54_f = Misc.ensure_1arg_func(m51), Misc.ensure_1arg_func(m52), Misc.ensure_1arg_func(m53), Misc.ensure_1arg_func(m54)
     theta0_f = Misc.ensure_1arg_func(theta0)
 
-    sel1_f, sel2_f = MiscPoly.ensure_1arg_func_vectorized(sel1), MiscPoly.ensure_1arg_func_vectorized(sel2)
-    sel3_f, sel4_f = MiscPoly.ensure_1arg_func_vectorized(sel3), MiscPoly.ensure_1arg_func_vectorized(sel4)
-    sel5_f = MiscPoly.ensure_1arg_func_vectorized(sel5)
+    sel1_f, sel2_f = ensure_1arg_func_vectorized(sel1), ensure_1arg_func_vectorized(sel2)
+    sel3_f, sel4_f = ensure_1arg_func_vectorized(sel3), ensure_1arg_func_vectorized(sel4)
+    sel5_f = ensure_1arg_func_vectorized(sel5)
 
     if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):
         if m12_f(T/2) != m21_f(T/2):
@@ -1743,17 +1832,17 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
         if numpy.any(sel3_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel5_f(T/2)) or numpy.any(sel4_f(T/2) != sel5_f(T/2)):
             raise ValueError('Population 3, 4, or 5 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
-
-    # TODO: CUDA integration
-    # if cuda_enabled:
-    #     import dadi.cuda
-    #     phi = dadi.cuda.Integration._five_pops_temporal_params(phi, xx, T, initial_t, 
-    #         nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
-    #         m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
-    #         m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
-    #         gamma1_f, gamma2_f, gamma3_f, gamma4_f, gamma5_f,
-    #         h1_f, h2_f, h3_f, h4_f, h5_f, theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5, deme_ids)
-    #     return phi
+    
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._five_pops_temporal_params(phi, xx, T, initial_t, 
+            nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
+            m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
+            m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
+            sel1_f, sel2_f, sel3_f, sel4_f, sel5_f,
+            theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5, deme_ids,
+            ploidy1, ploidy2, ploidy3, ploidy4, ploidy5)
+        return phi
 
     current_t = initial_t
     nu1, nu2, nu3, nu4, nu5 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t), nu5_f(current_t)

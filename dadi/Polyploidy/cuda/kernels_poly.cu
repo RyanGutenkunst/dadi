@@ -279,6 +279,7 @@ __global__ void include_bc_auto(double*dx, double nu1, double gam1, double gam2,
 * Note that this is really only a problem for the b subgenome code in 3+ dimensions.
 * 
 * To help a bit with readability, I use e to denote HEs (within one population) and m to denote migration (between two populations)
+* This helps to clarify which two dimensions are the pair of subgenomes in each case.
 */
 
 __device__ double _Mfunc2D_allo_a(double x, double y, double exy, double g01, double g02, 
@@ -342,7 +343,7 @@ __global__ void Mfunc3D_allo_a(double *x, double *y, double *z, double exy, doub
 *   b1, a2, b2, a1 (one transposition; y dim)
 *   a2, b2, a1, b1 (two transpositions; z dim)
 *   b2, a1, b1, a2 (three tranpositions; a dim)
-* So, our funcs. will work for both allotet. pops. automatically
+* So, our funcs. will work for both allotetraploid populations automatically
 
 * Similarly for 5 dimensions (where the first and second or fourth and fifth dimensions are a pair of a and b subgenomes).
 */
@@ -1029,7 +1030,7 @@ __global__ void Mfunc5D_hex_dip(double *x, double *y, double *z, double *a, doub
     int ll = ((blockIdx.x*blockDim.x + threadIdx.x) / P) % O;
     int mm = (blockIdx.x*blockDim.x + threadIdx.x) % P;
     if(ii < L){
-        output[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P + mm] = _Mfunc5D_hex_tetra(x[ii], y[jj], z[kk], a[ll], b[mm], mxy, mxz, mxa, exb, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42);
+        output[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P + mm] = _Mfunc5D_hex_dip(x[ii], y[jj], z[kk], a[ll], b[mm], mxy, mxz, mxa, exb, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42);
     }
 }
 
@@ -1045,6 +1046,654 @@ __global__ void include_bc_hex_dip(double*dx, double nu1, double g01, double g02
     }
     // -1,-1 entry
     Mlast = _Mfunc2D_hex_dip(1, 1, 0, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42);
+    if(Mlast >= 0){
+        b[L*M-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
+    }
+}
+
+
+/*
+TODO: Fix the include_bc_hex_i functions because they need to call the 3D functions, so I think that the array indexing is incorrect on them. 
+*/
+
+/*
+* mean functions and BC terms for ALLOALLOHEXAPLOIDS (2+2+2 hexaploids) - A subgenome
+*
+* For this first set of functions, we treat x as subgenome a, y as subgenome b, and z as subgenome c.
+* Similar to the CPU code, we will require that the subgenomes are passed in the exact order a, b, c.
+*/
+
+__device__ double _Mfunc3D_hex_a(double x, double y, double z, double exy, double exz, 
+                                 double g001, double g002, double g010, double g011, double g012, 
+                                 double g020, double g021, double g022, double g100, double g101, double g102,
+                                 double g110, double g111, double g112, double g120, double g121, double g122,
+                                 double g200, double g201, double g202, double g210, double g211, double g212,
+                                 double g220, double g221, double g222){
+    /*
+    * x is x_a, y is x_b, z is x_c
+    */
+    double yy = y*y; // qb^2
+    double zz = z*z; // qc^2
+    double xyy = x*yy; // qa*qb^2
+    double xzz = x*zz; // qa*qc^2
+    double yzz = y*zz; // qb*qc^2
+    double yyz = yy*z; // qb^2*qc
+    double yyzz = yy*zz; // qb^2*qc^2
+    double xy = x*y; // qa*qb
+    double xz = x*z; // qa*qc
+    double yz = y*z; // qb*qc
+    double xyz = xy*z; // qa*qb*qc
+    double xyzz = xyz*z; // qa*qb*qc^2
+    double xyyz = xyy*z; // qa*qb^2*qc
+    double xyyzz = xyyz*z; // qa*qb^2*qc^2
+    double poly = g100 + (- 2.*g100 + g200) * x + 
+                  (-2.*g010 - 2.*g100 + 2.*g110) * y + 
+                  (-2.*g001 - 2.*g100 + 2.*g101) * z +
+                  (2.*g010 - g020 + g100 - 2.*g110 + g120) * yy +
+                  (2.*g001 - g002 + g100 - 2.*g101 + g102) * zz + 
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + 
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz +
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101 - 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz +
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yyz +
+                  (2.*g001 - g002 + 2.*g010 - 4.*g011 + 2.*g012  - g020 + 2.*g021 - g022 + g100 - 2.*g101  + g102 - 2.*g110 + 4.*g111 - 2.*g112 + g120 - 2.*g121 + g122) * yyzz +
+                  (2.*g010 + 4.*g100 - 4.*g110 - 2.*g200 + 2.*g210) * xy +
+                  (2.*g001 + 4.*g100 - 4.*g101 - 2.*g200 + 2.*g201) * xz + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz +
+                  (-4.*g001 - 4.*g010 + 4.*g011 - 8.*g100 + 8.*g101 + 8.*g110 - 8.*g111 + 4.*g200 - 4.*g201 - 4.*g210 + 4.*g211) * xyz +
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyzz +
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120 - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz;
+    return exy * (y-x) + exz * (z-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc3D_hex_a(double *x, double *y, double *z, double exy, double exz,
+                              double g001, double g002, double g010, double g011, double g012, 
+                              double g020, double g021, double g022, double g100, double g101, double g102,
+                              double g110, double g111, double g112, double g120, double g121, double g122,
+                              double g200, double g201, double g202, double g210, double g211, double g212,
+                              double g220, double g221, double g222, int L, int M, int N, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / N) % M;
+    int kk = (blockIdx.x*blockDim.x + threadIdx.x) % N;
+    if(ii < L){
+        output[ii*(M*N) + jj*N + kk] = _Mfunc3D_hex_a(x[ii], y[jj], z[kk], exy, exz, 
+                                                        g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                        g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                        g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+__device__ double _Mfunc4D_hex_a(double x, double y, double z, double a, double exy, double exz, double mxa, 
+                                    double g001, double g002, double g010, double g011, double g012, 
+                                    double g020, double g021, double g022, double g100, double g101, double g102,
+                                    double g110, double g111, double g112, double g120, double g121, double g122,
+                                    double g200, double g201, double g202, double g210, double g211, double g212,
+                                    double g220, double g221, double g222){
+    /*
+    * x is x_a, y is x_b, z is x_c
+    * a is a separate population
+    */
+    double yy = y*y; // qb^2
+    double zz = z*z; // qc^2
+    double xyy = x*yy; // qa*qb^2
+    double xzz = x*zz; // qa*qc^2
+    double yzz = y*zz; // qb*qc^2
+    double yyz = yy*z; // qb^2*qc
+    double yyzz = yy*zz; // qb^2*qc^2
+    double xy = x*y; // qa*qb
+    double xz = x*z; // qa*qc
+    double yz = y*z; // qb*qc
+    double xyz = xy*z; // qa*qb*qc
+    double xyzz = xyz*z; // qa*qb*qc^2
+    double xyyz = xyy*z; // qa*qb^2*qc
+    double xyyzz = xyyz*z; // qa*qb^2*qc^2
+    double poly = g100 + (- 2.*g100 + g200) * x + 
+                  (-2.*g010 - 2.*g100 + 2.*g110) * y + 
+                  (-2.*g001 - 2.*g100 + 2.*g101) * z +
+                  (2.*g010 - g020 + g100 - 2.*g110 + g120) * yy +
+                  (2.*g001 - g002 + g100 - 2.*g101 + g102) * zz + 
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + 
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz +
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101 - 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz +
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yyz +
+                  (2.*g001 - g002 + 2.*g010 - 4.*g011 + 2.*g012  - g020 + 2.*g021 - g022 + g100 - 2.*g101  + g102 - 2.*g110 + 4.*g111 - 2.*g112 + g120 - 2.*g121 + g122) * yyzz +
+                  (2.*g010 + 4.*g100 - 4.*g110 - 2.*g200 + 2.*g210) * xy +
+                  (2.*g001 + 4.*g100 - 4.*g101 - 2.*g200 + 2.*g201) * xz + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz +
+                  (-4.*g001 - 4.*g010 + 4.*g011 - 8.*g100 + 8.*g101 + 8.*g110 - 8.*g111 + 4.*g200 - 4.*g201 - 4.*g210 + 4.*g211) * xyz +
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyzz +
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120 - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz;
+    return exy * (y-x) + exz * (z-x) + mxa * (a-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc4D_hex_a(double *x, double *y, double *z, double *a, double exy, double exz, double mxa, 
+                                double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, int N, int O, double *output){   
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / O) % N;
+    int ll = (blockIdx.x*blockDim.x + threadIdx.x) % O;
+    if(ii < L){
+        output[ii*M*N*O + jj*N*O + kk*O + ll] = _Mfunc4D_hex_a(x[ii], y[jj], z[kk], a[ll], exy, exz, mxa, 
+                                                                 g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                                 g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                                 g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+__device__ double _Mfunc5D_hex_a(double x, double y, double z, double a, double b, double exy, double exz, double mxa, double mxb,
+                                    double g001, double g002, double g010, double g011, double g012, 
+                                    double g020, double g021, double g022, double g100, double g101, double g102,
+                                    double g110, double g111, double g112, double g120, double g121, double g122,
+                                    double g200, double g201, double g202, double g210, double g211, double g212,
+                                    double g220, double g221, double g222){
+    /*
+    * x is x_a, y is x_b, z is x_c
+    * a and b are separate populations
+    */
+    double yy = y*y; // qb^2
+    double zz = z*z; // qc^2
+    double xyy = x*yy; // qa*qb^2
+    double xzz = x*zz; // qa*qc^2
+    double yzz = y*zz; // qb*qc^2
+    double yyz = yy*z; // qb^2*qc
+    double yyzz = yy*zz; // qb^2*qc^2
+    double xy = x*y; // qa*qb
+    double xz = x*z; // qa*qc
+    double yz = y*z; // qb*qc
+    double xyz = xy*z; // qa*qb*qc
+    double xyzz = xyz*z; // qa*qb*qc^2
+    double xyyz = xyy*z; // qa*qb^2*qc
+    double xyyzz = xyyz*z; // qa*qb^2*qc^2
+    double poly = g100 + (- 2.*g100 + g200) * x + 
+                  (-2.*g010 - 2.*g100 + 2.*g110) * y + 
+                  (-2.*g001 - 2.*g100 + 2.*g101) * z +
+                  (2.*g010 - g020 + g100 - 2.*g110 + g120) * yy +
+                  (2.*g001 - g002 + g100 - 2.*g101 + g102) * zz + 
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + 
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz +
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101 - 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz +
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yyz +
+                  (2.*g001 - g002 + 2.*g010 - 4.*g011 + 2.*g012  - g020 + 2.*g021 - g022 + g100 - 2.*g101  + g102 - 2.*g110 + 4.*g111 - 2.*g112 + g120 - 2.*g121 + g122) * yyzz +
+                  (2.*g010 + 4.*g100 - 4.*g110 - 2.*g200 + 2.*g210) * xy +
+                  (2.*g001 + 4.*g100 - 4.*g101 - 2.*g200 + 2.*g201) * xz + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz +
+                  (-4.*g001 - 4.*g010 + 4.*g011 - 8.*g100 + 8.*g101 + 8.*g110 - 8.*g111 + 4.*g200 - 4.*g201 - 4.*g210 + 4.*g211) * xyz +
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyzz +
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120 - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz;
+    return exy * (y-x) + exz * (z-x) + mxa * (a-x) + mxb * (b-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc5D_hex_a(double *x, double *y, double *z, double *a, double *b, double exy, double exz, double mxa, double mxb, 
+                                double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, int N, int O, int P, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O*P);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O*P)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / (O*P)) % N;
+    int ll = ((blockIdx.x*blockDim.x + threadIdx.x) / P) % O;
+    int mm = (blockIdx.x*blockDim.x + threadIdx.x) % P;
+    if(ii < L){
+        output[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P + mm] = _Mfunc5D_hex_a(x[ii], y[jj], z[kk], a[ll], b[mm], exy, exz, mxa, mxb, 
+                                                                                g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                                                g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                                                g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+// This function works for all dimensions, because migration terms
+// don't matter at the 0,0,0 and 1,1,1 corners of the regime.
+__global__ void include_bc_hex_a(double*dx, double nu1, double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, double *b){
+    double Mfirst, Mlast;
+    // 0,0 entry
+    Mfirst = _Mfunc3D_hex_a(0, 0, 0, 0, 0, g001, g002, g010, g011, g012, g020, g021, g022, g100, g101, g102, 
+                            g110, g111, g112, g120, g121, g122, g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    if(Mfirst <= 0){
+        b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
+    }
+    // -1,-1 entry
+    Mlast = _Mfunc3D_hex_a(1, 1, 1, 0, 0, g001, g002, g010, g011, g012, g020, g021, g022, g100, g101, g102, 
+                            g110, g111, g112, g120, g121, g122, g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    if(Mlast >= 0){
+        b[L*M-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
+    }
+}
+
+/*
+* mean functions and BC terms for ALLOALLOHEXAPLOIDS (2+2+2 hexaploids) - B subgenome
+*
+* For this first set of functions, we treat x as subgenome b, y as subgenome c, and the last dimension as subgenome a.
+* Similar to the CPU code, we will require that the subgenomes are passed in the exact order a, b, c.
+*/
+
+__device__ double _Mfunc3D_hex_b(double x, double y, double z, double exy, double exz, 
+                                 double g001, double g002, double g010, double g011, double g012, 
+                                 double g020, double g021, double g022, double g100, double g101, double g102,
+                                 double g110, double g111, double g112, double g120, double g121, double g122,
+                                 double g200, double g201, double g202, double g210, double g211, double g212,
+                                 double g220, double g221, double g222){
+    /*
+    * x is x_b, y is x_c, z is x_a
+    */
+    double yy = y*y; // qc^2
+    double zz = z*z; // qa^2
+    double xyy = x*yy; // qc^2*qb
+    double yzz = y*zz; // qc*qa^2
+    double yyz = yy*z; // qc^2*qa
+    double xzz = x*zz; // qb*qa^2
+    double yyzz = yy*zz; // qa^2*qc^2
+    double xy = x*y; // qc*qb
+    double yz = y*z; // qa*qc
+    double xz = x*z; // qb*qa
+    double xyz = xy*z; // qa*qb*qc
+    double xyzz = xyz*z; // qc*qb*qa^2
+    double xyyz = xyy*z; // qc^2*qb*qa
+    double xyyzz = xyyz*z; // qa^2*qb*qc^2
+    double poly = g010 + (-2.*g010 - 2.*g100 + 2.*g110 ) * z + 
+                  (-2.*g010 + g020) * x + 
+                  (-2.*g001 - 2.*g010 + 2.*g011) * y + 
+                  (g010 + 2.*g100 - 2.*g110 - g200 + g210) * zz + 
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012) * yy + 
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xzz + 
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101- 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yyz + 
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yzz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xyy + 
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012 + 2.*g100 - 4.*g101 + 2.*g102 - 2.*g110 + 4.*g111 - 2.*g112 - g200 + 2.*g201 - g202 + g210 - 2.*g211 + g212) * yyzz + 
+                  (4.*g010 - 2.*g020 + 2.*g100 - 4.*g110 + 2.*g120) * xz + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + 
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021) * xy + 
+                  (-4.*g001 - 8.*g010 + 8.*g011 + 4.*g020 - 4.*g021 - 4.*g100 + 4.*g101 + 8.*g110 - 8.*g111 - 4.*g120 + 4.*g121) * xyz + 
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110+ 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyyz + 
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120  - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyzz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz;
+    return exy * (y-x) + exz * (z-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc3D_hex_b(double *x, double *y, double *z, double exy, double exz,
+                              double g001, double g002, double g010, double g011, double g012, 
+                              double g020, double g021, double g022, double g100, double g101, double g102,
+                              double g110, double g111, double g112, double g120, double g121, double g122,
+                              double g200, double g201, double g202, double g210, double g211, double g212,
+                              double g220, double g221, double g222, int L, int M, int N, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / N) % M;
+    int kk = (blockIdx.x*blockDim.x + threadIdx.x) % N;
+    if(ii < L){
+        output[ii*(M*N) + jj*N + kk] = _Mfunc3D_hex_b(x[ii], y[jj], z[kk], exy, exz, 
+                                                        g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                        g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                        g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+__device__ double _Mfunc4D_hex_b(double x, double y, double z, double a, double exy, double mxz, double exa, 
+                                    double g001, double g002, double g010, double g011, double g012, 
+                                    double g020, double g021, double g022, double g100, double g101, double g102,
+                                    double g110, double g111, double g112, double g120, double g121, double g122,
+                                    double g200, double g201, double g202, double g210, double g211, double g212,
+                                    double g220, double g221, double g222){
+    /*
+    * x is x_b, y is x_c, a is x_a
+    * z is a separate population
+    */
+    double yy = y*y; // qc^2
+    double aa = a*a; // qa^2
+    double xyy = x*yy; // qc^2*qb
+    double yaa = y*aa; // qc*qa^2
+    double yya = yy*a; // qc^2*qa
+    double xaa = x*aa; // qb*qa^2
+    double yyaa = yy*aa; // qa^2*qc^2
+    double xy = x*y; // qc*qb
+    double ya = y*a; // qa*qc
+    double xa = x*a; // qb*qa
+    double xya = xy*a; // qa*qb*qc
+    double xyaa = xya*a; // qc*qb*qa^2
+    double xyya = xyy*a; // qc^2*qb*qa
+    double xyyaa = xyya*a; // qa^2*qb*qc^2
+    double poly = g010 + (-2.*g010 - 2.*g100 + 2.*g110 ) * a + 
+                  (-2.*g010 + g020) * x + 
+                  (-2.*g001 - 2.*g010 + 2.*g011) * y + 
+                  (g010 + 2.*g100 - 2.*g110 - g200 + g210) * aa + 
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012) * yy + 
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xaa + 
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101- 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yya + 
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yaa + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xyy + 
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012 + 2.*g100 - 4.*g101 + 2.*g102 - 2.*g110 + 4.*g111 - 2.*g112 - g200 + 2.*g201 - g202 + g210 - 2.*g211 + g212) * yyaa + 
+                  (4.*g010 - 2.*g020 + 2.*g100 - 4.*g110 + 2.*g120) * xa + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * ya + 
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021) * xy + 
+                  (-4.*g001 - 8.*g010 + 8.*g011 + 4.*g020 - 4.*g021 - 4.*g100 + 4.*g101 + 8.*g110 - 8.*g111 - 4.*g120 + 4.*g121) * xya + 
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110+ 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyya + 
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120  - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyaa + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyaa;
+    return exy * (y-x) + mxz * (z-x) + exa * (a-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc4D_hex_b(double *x, double *y, double *z, double *a, double exy, double mxz, double exa, 
+                                double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, int N, int O, double *output){   
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / O) % N;
+    int ll = (blockIdx.x*blockDim.x + threadIdx.x) % O;
+    if(ii < L){
+        output[ii*M*N*O + jj*N*O + kk*O + ll] = _Mfunc4D_hex_b(x[ii], y[jj], z[kk], a[ll], exy, mxz, exa, 
+                                                                 g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                                 g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                                 g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+__device__ double _Mfunc5D_hex_b(double x, double y, double z, double a, double b, double exy, double mxz, double mxa, double exb,
+                                    double g001, double g002, double g010, double g011, double g012, 
+                                    double g020, double g021, double g022, double g100, double g101, double g102,
+                                    double g110, double g111, double g112, double g120, double g121, double g122,
+                                    double g200, double g201, double g202, double g210, double g211, double g212,
+                                    double g220, double g221, double g222){
+    /*
+    * x is x_b, y is x_c, b is x_a
+    * z and a are separate populations
+    */
+    double yy = y*y; // qc^2
+    double bb = b*b; // qa^2
+    double xyy = x*yy; // qc^2*qb
+    double ybb = y*bb; // qc*qa^2
+    double yyb = yy*b; // qc^2*qa
+    double xbb = x*bb; // qb*qa^2
+    double yybb = yy*bb; // qa^2*qc^2
+    double xy = x*y; // qc*qb
+    double yb = y*b; // qa*qc
+    double xb = x*b; // qb*qa
+    double xyb = xy*b; // qa*qb*qc
+    double xybb = xyb*b; // qc*qb*qa^2
+    double xyyb = xyy*b; // qc^2*qb*qa
+    double xyybb = xyyb*b; // qa^2*qb*qc^2
+    double poly = g010 + (-2.*g010 - 2.*g100 + 2.*g110 ) * b + 
+                  (-2.*g010 + g020) * x + 
+                  (-2.*g001 - 2.*g010 + 2.*g011) * y + 
+                  (g010 + 2.*g100 - 2.*g110 - g200 + g210) * bb + 
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012) * yy + 
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xbb + 
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101- 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yyb + 
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * ybb + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xyy + 
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012 + 2.*g100 - 4.*g101 + 2.*g102 - 2.*g110 + 4.*g111 - 2.*g112 - g200 + 2.*g201 - g202 + g210 - 2.*g211 + g212) * yybb + 
+                  (4.*g010 - 2.*g020 + 2.*g100 - 4.*g110 + 2.*g120) * xb + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yb + 
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021) * xy + 
+                  (-4.*g001 - 8.*g010 + 8.*g011 + 4.*g020 - 4.*g021 - 4.*g100 + 4.*g101 + 8.*g110 - 8.*g111 - 4.*g120 + 4.*g121) * xyb + 
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110+ 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyyb + 
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120  - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xybb + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyybb;
+    return exy * (y-x) + mxz * (z-x) + mxa * (a-x) + exb * (b-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc5D_hex_b(double *x, double *y, double *z, double *a, double *b, double exy, double mxz, double mxa, double exb, 
+                                double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, int N, int O, int P, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O*P);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O*P)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / (O*P)) % N;
+    int ll = ((blockIdx.x*blockDim.x + threadIdx.x) / P) % O;
+    int mm = (blockIdx.x*blockDim.x + threadIdx.x) % P;
+    if(ii < L){
+        output[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P + mm] = _Mfunc5D_hex_b(x[ii], y[jj], z[kk], a[ll], b[mm], exy, mxz, mxa, exb, 
+                                                                                g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                                                g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                                                g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+// This function works for all dimensions, because migration terms
+// don't matter at the 0,0,0 and 1,1,1 corners of the regime.
+__global__ void include_bc_hex_b(double*dx, double nu1, double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, double *b){
+    double Mfirst, Mlast;
+    // 0,0 entry
+    Mfirst = _Mfunc3D_hex_b(0, 0, 0, 0, 0, g001, g002, g010, g011, g012, g020, g021, g022, g100, g101, g102, 
+                            g110, g111, g112, g120, g121, g122, g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    if(Mfirst <= 0){
+        b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
+    }
+    // -1,-1 entry
+    Mlast = _Mfunc3D_hex_b(1, 1, 1, 0, 0, g001, g002, g010, g011, g012, g020, g021, g022, g100, g101, g102, 
+                            g110, g111, g112, g120, g121, g122, g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    if(Mlast >= 0){
+        b[L*M-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
+    }
+}
+
+
+/*
+* mean functions and BC terms for ALLOALLOHEXAPLOIDS (2+2+2 hexaploids) - C subgenome
+*
+* For this first set of functions, we treat x as subgenome c, the last dimension as subgenome a, and the second to last dimension as subgenome b.
+* Similar to the CPU code, we will require that the subgenomes are passed in the exact order a, b, c.
+*/
+
+__device__ double _Mfunc3D_hex_c(double x, double y, double z, double exy, double exz, 
+                                 double g001, double g002, double g010, double g011, double g012, 
+                                 double g020, double g021, double g022, double g100, double g101, double g102,
+                                 double g110, double g111, double g112, double g120, double g121, double g122,
+                                 double g200, double g201, double g202, double g210, double g211, double g212,
+                                 double g220, double g221, double g222){
+    /*
+    * x is x_c, y is x_a, z is x_b
+    */
+    double yy = y*y; // qa^2
+    double zz = z*z; // qb^2
+    double yzz = y*zz; // qa*qb^2
+    double yyz = yy*z; // qa^2*qb
+    double xyy = x*yy; // qa^2*qc
+    double xzz = x*zz; // qb^2*qc
+    double yyzz = yy*zz; // qa^2*qb^2
+    double yz = y*z; // qa*qb
+    double xy = x*y; // qa*qc
+    double xz = x*z; // qb*qc
+    double xyz = xy*z; // qa*qb*qc
+    double xyzz = xyz*z; // qa*qb^2*qc
+    double xyyz = xyy*z; // qa^2*qb*qc
+    double xyyzz = xyyz*z; // qa^2*qb^2*qc
+    double poly = g001 + (-2.*g001 - 2.*g100 + 2.*g101) * y + 
+                  (-2.*g001 - 2.*g010 + 2.*g011) * z + 
+                  (-2.*g001 + g002) * x + 
+                  (g001 + 2.*g100 - 2.*g101 - g200 + g201) * yy + 
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021) * zz + 
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yzz + 
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yyz + 
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xyy + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xzz + 
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021 + 2.*g100 - 2.*g101 - 4.*g110 + 4.*g111 + 2.*g120 - 2.*g121 - g200 + g201 + 2.*g210 - 2.*g211 - g220 + g221) * yyzz + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + 
+                  (4.*g001 - 2.*g002 + 2.*g100 - 4.*g101 + 2.*g102) * xy + 
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 ) * xz + 
+                  (-8.*g001 + 4.*g002 - 4.*g010 + 8.*g011 - 4.*g012 - 4.*g100 + 8.*g101 - 4.*g102 + 4.*g110 - 8.*g111 + 4.*g112) * xyz + 
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110 + 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyzz + 
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyyz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz;
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly;
+}
+
+__global__ void Mfunc3D_hex_c(double *x, double *y, double *z, double exy, double exz,
+                              double g001, double g002, double g010, double g011, double g012, 
+                              double g020, double g021, double g022, double g100, double g101, double g102,
+                              double g110, double g111, double g112, double g120, double g121, double g122,
+                              double g200, double g201, double g202, double g210, double g211, double g212,
+                              double g220, double g221, double g222, int L, int M, int N, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / N) % M;
+    int kk = (blockIdx.x*blockDim.x + threadIdx.x) % N;
+    if(ii < L){
+        output[ii*(M*N) + jj*N + kk] = _Mfunc3D_hex_c(x[ii], y[jj], z[kk], exy, exz, 
+                                                        g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                        g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                        g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+__device__ double _Mfunc4D_hex_c(double x, double y, double z, double a, double mxy, double exz, double exa, 
+                                    double g001, double g002, double g010, double g011, double g012, 
+                                    double g020, double g021, double g022, double g100, double g101, double g102,
+                                    double g110, double g111, double g112, double g120, double g121, double g122,
+                                    double g200, double g201, double g202, double g210, double g211, double g212,
+                                    double g220, double g221, double g222){
+    /*
+    * x is x_c, z is x_a, a is x_b
+    * y is a separate population
+    */
+    double zz = z*z; // qa^2
+    double aa = a*a; // qb^2
+    double zaa = z*aa; // qa*qb^2
+    double zza = zz*a; // qa^2*qb
+    double xzz = x*zz; // qa^2*qc
+    double xaa = x*aa; // qb^2*qc
+    double zzaa = zz*aa; // qa^2*qb^2
+    double za = z*a; // qa*qb
+    double xz = x*z; // qa*qc
+    double xa = x*a; // qb*qc
+    double xza = xz*a; // qa*qb*qc
+    double xzaa = xza*a; // qa*qb^2*qc
+    double xzza = xzz*a; // qa^2*qb*qc
+    double xzzaa = xzza*a; // qa^2*qb^2*qc
+    double poly = g001 + (-2.*g001 - 2.*g100 + 2.*g101) * z + 
+                  (-2.*g001 - 2.*g010 + 2.*g011) * a + 
+                  (-2.*g001 + g002) * x + 
+                  (g001 + 2.*g100 - 2.*g101 - g200 + g201) * zz + 
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021) * aa + 
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * zaa + 
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * zza + 
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xaa + 
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021 + 2.*g100 - 2.*g101 - 4.*g110 + 4.*g111 + 2.*g120 - 2.*g121 - g200 + g201 + 2.*g210 - 2.*g211 - g220 + g221) * zzaa + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * za + 
+                  (4.*g001 - 2.*g002 + 2.*g100 - 4.*g101 + 2.*g102) * xz + 
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 ) * xa + 
+                  (-8.*g001 + 4.*g002 - 4.*g010 + 8.*g011 - 4.*g012 - 4.*g100 + 8.*g101 - 4.*g102 + 4.*g110 - 8.*g111 + 4.*g112) * xza + 
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110 + 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xzaa + 
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xzza + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xzzaa;
+    return mxy * (y-x) + exz * (z-x) + exa * (a-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc4D_hex_c(double *x, double *y, double *z, double *a, double mxy, double exz, double exa, 
+                                double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, int N, int O, double *output){   
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / O) % N;
+    int ll = (blockIdx.x*blockDim.x + threadIdx.x) % O;
+    if(ii < L){
+        output[ii*M*N*O + jj*N*O + kk*O + ll] = _Mfunc4D_hex_c(x[ii], y[jj], z[kk], a[ll], mxy, exz, exa, 
+                                                                 g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                                 g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                                 g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+__device__ double _Mfunc5D_hex_c(double x, double y, double z, double a, double b, double mxy, double mxz, double exa, double exb,
+                                    double g001, double g002, double g010, double g011, double g012, 
+                                    double g020, double g021, double g022, double g100, double g101, double g102,
+                                    double g110, double g111, double g112, double g120, double g121, double g122,
+                                    double g200, double g201, double g202, double g210, double g211, double g212,
+                                    double g220, double g221, double g222){
+    /*
+    * x is x_c, a is x_a, b is x_b
+    * y and z are separate populations
+    */
+    double zz = z*z; // qa^2
+    double bb = b*b; // qb^2
+    double zbb = z*bb; // qa*qb^2
+    double zzb = zz*b; // qa^2*qb
+    double xzz = x*zz; // qa^2*qc
+    double xbb = x*bb; // qb^2*qc
+    double zzbb = zz*bb; // qa^2*qb^2
+    double zb = z*b; // qa*qb
+    double xz = x*z; // qa*qc
+    double xb = x*b; // qb*qc
+    double xzb = xz*a; // qa*qb*qc
+    double xzbb = xzb*b; // qa*qb^2*qc
+    double xzzb = xzz*b; // qa^2*qb*qc
+    double xzzbb = xzzb*b; // qa^2*qb^2*qc
+    double poly = g001 + (-2.*g001 - 2.*g100 + 2.*g101) * z + 
+                  (-2.*g001 - 2.*g010 + 2.*g011) * b + 
+                  (-2.*g001 + g002) * x + 
+                  (g001 + 2.*g100 - 2.*g101 - g200 + g201) * zz + 
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021) * bb + 
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * zbb + 
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * zzb + 
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xbb + 
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021 + 2.*g100 - 2.*g101 - 4.*g110 + 4.*g111 + 2.*g120 - 2.*g121 - g200 + g201 + 2.*g210 - 2.*g211 - g220 + g221) * zzbb + 
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * zb + 
+                  (4.*g001 - 2.*g002 + 2.*g100 - 4.*g101 + 2.*g102) * xz + 
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 ) * xb + 
+                  (-8.*g001 + 4.*g002 - 4.*g010 + 8.*g011 - 4.*g012 - 4.*g100 + 8.*g101 - 4.*g102 + 4.*g110 - 8.*g111 + 4.*g112) * xzb + 
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110 + 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xzbb + 
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xzzb + 
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xzzbb;
+    return mxy * (y-x) + mxz * (z-x) + exa * (a-x) + exb * (b-x) + 2. * x * (1. - x) * poly;
+}
+
+__global__ void Mfunc5D_hex_c(double *x, double *y, double *z, double *a, double *b, double mxy, double mxz, double exa, double exb, 
+                                double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, int N, int O, int P, double *output){
+    int ii = (blockIdx.x*blockDim.x + threadIdx.x) / (M*N*O*P);
+    int jj = ((blockIdx.x*blockDim.x + threadIdx.x) / (N*O*P)) % M;
+    int kk = ((blockIdx.x*blockDim.x + threadIdx.x) / (O*P)) % N;
+    int ll = ((blockIdx.x*blockDim.x + threadIdx.x) / P) % O;
+    int mm = (blockIdx.x*blockDim.x + threadIdx.x) % P;
+    if(ii < L){
+        output[ii*M*N*O*P + jj*N*O*P + kk*O*P + ll*P + mm] = _Mfunc5D_hex_c(x[ii], y[jj], z[kk], a[ll], b[mm], mxy, mxz, exa, exb, 
+                                                                                g001, g002, g010, g011, g012, g020, g021, g022, 
+                                                                                g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                                                                                g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    }
+}
+
+// This function works for all dimensions, because migration terms
+// don't matter at the 0,0,0 and 1,1,1 corners of the regime.
+__global__ void include_bc_hex_c(double*dx, double nu1, double g001, double g002, double g010, double g011, double g012, 
+                                double g020, double g021, double g022, double g100, double g101, double g102,
+                                double g110, double g111, double g112, double g120, double g121, double g122,
+                                double g200, double g201, double g202, double g210, double g211, double g212,
+                                double g220, double g221, double g222, int L, int M, double *b){
+    double Mfirst, Mlast;
+    // 0,0 entry
+    Mfirst = _Mfunc3D_hex_c(0, 0, 0, 0, 0, g001, g002, g010, g011, g012, g020, g021, g022, g100, g101, g102, 
+                            g110, g111, g112, g120, g121, g122, g200, g201, g202, g210, g211, g212, g220, g221, g222);
+    if(Mfirst <= 0){
+        b[0] += (0.5/nu1 - Mfirst)*2./dx[0];
+    }
+    // -1,-1 entry
+    Mlast = _Mfunc3D_hex_c(1, 1, 1, 0, 0, g001, g002, g010, g011, g012, g020, g021, g022, g100, g101, g102, 
+                            g110, g111, g112, g120, g121, g122, g200, g201, g202, g210, g211, g212, g220, g221, g222);
     if(Mlast >= 0){
         b[L*M-1] += -(-0.5/nu1 - Mlast)*2./dx[L-2];
     }
