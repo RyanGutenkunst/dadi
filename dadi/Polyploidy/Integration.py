@@ -4,7 +4,7 @@ import numpy
 from numpy import newaxis as nuax
 import scipy.integrate
 import dadi.tridiag_cython as tridiag
-from . import PolyIntegration as PolyInt
+import dadi.Polyploidy.PolyIntegration as PolyInt
 from enum import IntEnum
 
 ### ==========================================================================
@@ -26,8 +26,6 @@ use_old_timestep = False
 old_timescale_factor = 0.1
 
 ### Utility function modified from dadi.Misc for handling the selection parameter lists
-import numpy
-
 def ensure_1arg_func_vectorized(vars_list):
     """
     Version of dadi.Misc.ensure_1arg_func that returns a 
