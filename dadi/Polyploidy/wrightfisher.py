@@ -898,7 +898,7 @@ def hex_2_2_2_WF(N, T, Eab, Eac, Ebc, init_qa, init_qb, init_qc, s, nu=1, replic
 
 ### 2 Pop models 
 ### Note: here, population refers not to the dimension of phi, but to the number of populations
-### e.g. dip_allo_WF is a 3D phi, but two populations (because the allotetraploid subgenomes are separate)
+### e.g. dip_allo_WF is a 3D phi, but two populations (because the two allotetraploid subgenomes constitute one population)
 def auto_dip_migration_WF(N, T, init_q1, init_q2, sel1, sel2, M_12 = 0, M_21 = 0, nu1 = 1, nu2 = 1, replicates = 1, plot = False, track_all = False):
     """
     Wright-Fisher model of two populations. 

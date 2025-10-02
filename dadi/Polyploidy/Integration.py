@@ -1360,8 +1360,8 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
             raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
     if cuda_enabled:
-        import dadi.cuda
-        phi = dadi.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
                 nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
                 sel1_f, sel2_f, sel3_f, 
                 theta0_f, frozen1, frozen2, frozen3, deme_ids,
@@ -1584,8 +1584,8 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
 
 
     if cuda_enabled:
-        import dadi.cuda
-        phi = dadi.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
                 nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
                 m41_f, m42_f, m43_f, sel1_f, sel2_f, sel3_f, sel4_f, 
                 theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids,
@@ -1832,8 +1832,8 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
 
     
     if cuda_enabled:
-        import dadi.cuda
-        phi = dadi.cuda.Integration._five_pops_temporal_params(phi, xx, T, initial_t, 
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._five_pops_temporal_params(phi, xx, T, initial_t, 
             nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
             m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
             m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
