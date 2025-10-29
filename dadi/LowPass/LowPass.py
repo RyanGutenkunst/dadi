@@ -444,30 +444,73 @@ def probability_enough_individuals_covered(coverage_distribution, n_sequenced, n
 import numpy
 from itertools import combinations
 
-def projection_inbreeding(partition, k):
+def projection_inbreeding(partition, k, ploidy=2):
     """
-    Calculate the distribution of inbreeding coefficients for a given partition.
+    Compute the distribution of allele frequencies from a given genotype partition after subsampling.
+
+    Mathematically, compute probability mass function for sum of k//2 samples drawn without replacement from partition.
     
-    Args:
-    - partition (iterable): A collection of indices representing the individuals in the partition.
-    - k (int): The total number of individuals considered in each combination.
-    
-    Returns:
-    - numpy.ndarray: An array representing the distribution of inbreeding coefficients. Each index in the array corresponds 
-      to the total number of shared alleles in a combination, and the values represent the corresponding frequencies normalized 
-      by the total number of combinations.
-    ```
+    Returns array large enough to contain all possible sums, that at least holds up to k.
     """
-    result = numpy.zeros_like(range(k+1))
+    target_size = k // ploidy
+    
+    # Extract the unique values and their frequencies
+    frequencies = np.bincount(partition)
+    values = np.arange(len(frequencies))
+    n = len(partition)
+    
+    # Maximum possible sum: select target_size copies of largest value
+    max_sum = target_size * max(values)
+    
+    pmf = numpy.zeros(max(max_sum, k) + 1)
+    
+    # Total number of ways to choose target_size items from n items
+    total_ways = comb(n, target_size, exact=True)
+    
+    def enumerate_compositions(idx, remaining, current_sum, current_ways):
+        """
+        Recursively enumerate all valid compositions.
+        
+        Parameters:
+        -----------
+        idx : int
+            Current index in values array (which unique value we're deciding on)
+        remaining : int
+            How many more items we still need to select to reach target_size
+        current_sum : int
+            Sum of all items selected so far in this composition
+        current_ways : int
+            Number of ways to achieve the current partial composition
+            (product of binomial coefficients C(frequencies[i], counts[i]))
+        """
+        # Base case: we've decided how many of each unique value to select
+        if idx == len(values):
+            # Check if this is a valid complete composition
+            if remaining == 0:
+                # Add this composition's probability to the PMF
+                # Probability = (# ways to get this composition) / (# total selections)
+                pmf[current_sum] += current_ways / total_ways
+            return
+        
+        # Recursive case: decide how many of values[idx] to select
+        # Can select 0 to min(remaining, frequencies[idx])
+        for count in range(min(remaining, frequencies[idx]) + 1):
+            # Ways to select 'count' items of this value from 'frequencies[idx]' available
+            new_ways = current_ways * comb(frequencies[idx], count, exact=True)
+            
+            # Recurse to next unique value
+            enumerate_compositions(
+                idx + 1,                              # Next unique value
+                remaining - count,                     # Items still needed
+                current_sum + count * values[idx],    # Accumulated sum
+                new_ways                               # Accumulated ways
+            )
+    
+    # Start recursion: no decisions made yet
+    enumerate_compositions(0, target_size, 0, 1)
+    
+    return pmf
 
-    # Generate all possible combinations of partition indices
-    partitions = list(combinations(partition, k//2))
-
-    for p in partitions:
-        # Calculate the sum for each partition and update the result array
-        result[sum(p)] += 1
-
-    return result/sum(result)
 
 
 def projection_matrix(n_sequenced, n_subsampling, F):
