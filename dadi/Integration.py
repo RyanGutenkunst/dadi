@@ -1106,7 +1106,7 @@ def _inject_mutations_1D_X(phi, dt, xx, theta0, beta, alpha):
 def one_pop_X(phi, xx, T, nu=1, gamma=0, h=0.5, beta=1, alpha=1, theta0=1.0, 
               initial_t=0, frozen=False):
     """
-    Integrate a 1-dimensional phi foward.
+    Integrate a 1-dimensional phi foward for the X chromosome.
 
     phi: Initial 1-dimensional phi
     xx: Grid upon (0,1) overwhich phi is defined.
@@ -1119,7 +1119,7 @@ def one_pop_X(phi, xx, T, nu=1, gamma=0, h=0.5, beta=1, alpha=1, theta0=1.0,
        fitness 1+2s. Male carriers have fitness 1+2s.
     theta0: Propotional to ancestral size. Typically constant.
     beta: Breeding ratio, beta=Nf/Nm.
-    alpha: Male to female mutation rate ratio, beta = mu_m / mu_f.
+    alpha: Male to female mutation rate ratio, alpha = mu_m / mu_f.
 
     T: Time at which to halt integration
     initial_t: Time at which to start integration. (Note that this only matters
