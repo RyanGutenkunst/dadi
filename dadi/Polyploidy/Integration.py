@@ -952,27 +952,25 @@ class PloidyType(IntEnum):
 def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPLOID, theta0=1.0, initial_t=0, 
             frozen=False, deme_ids=None):
     """
-    Integrate a 1-dimensional phi foward.
+    Integrate a 1-dimensional phi with polyploids foward.
 
-    phi: Initial 1-dimensional phi
-    xx: Grid upon (0,1) overwhich phi is defined.
-
-    nu, gamma, and theta0 may be functions of time.
-    nu: Population size
-    theta0: Propotional to ancestral size. Typically constant.
-
-    T: Time at which to halt integration
-    initial_t: Time at which to start integration. (Note that this only matters
-               if one of the demographic parameters is a function of time.)
-
-    sel_dict: dictionary of selection parameters for given ploidy type
-    ploidyflag: Specifies ploidy type of population and handles selection params.
-        See PloidyType class for details. 
-
-    frozen: If True, population is 'frozen' so that it does not change.
-            In the one_pop case, this is equivalent to not running the
-            integration at all.
-    deme_ids: sequence of strings representing the names of demes
+    Args:
+        phi (array-like): Initial 1-dimensional phi
+        xx (array-like): Grid upon (0,1) overwhich phi is defined.
+            nu, gamma, and theta0 may be functions of time.
+        T (float): Time at which to halt integration
+        nu (float): Population size
+        sel_dict (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag (PloidyType): Specifies the ploidy type of the population and handles selection params.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        beta (float): Breeding ratio, beta=Nf/Nm.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen (bool): If True, population is 'frozen' so that it does not change.
+                In the one_pop case, this is equivalent to not running the
+                integration at all.
+        deme_ids (list[str]): sequence of strings representing the names of demes
     """
     phi = phi.copy()
 
@@ -1048,40 +1046,48 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
             ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, theta0=1, initial_t=0, frozen1=False,
              frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False, deme_ids=None):
     """
-    Integrate a 2-dimensional phi foward.
-
-    phi: Initial 2-dimensional phi
-    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
-        that this grid is used in all dimensions.
-
-    nu's, gamma's, m's, h's, and theta0 may be functions of time.
-    nu1,nu2: Population sizes
-    m12,m21: Migration rates. Note that m12 is the rate *into 1 from 2*.
-    theta0: Propotional to ancestral size. Typically constant.
-
-    sel_dict1,2: dictionary of selection parameters for corresponding ploidy type of that population
-    ploidyflag1,2: Specifies ploidy type of population and handles selection params.
-        See PloidyType class for details.  
+    Integrate a 2-dimensional phi with polyploids foward.
     
-    T: Time at which to halt integration
-    initial_t: Time at which to start integration. (Note that this only matters
-               if one of the demographic parameters is a function of time.)
+    Note:
+        - nu's, gamma's, h's, m's, and theta0 may be functions of time.
 
-    frozen1,frozen2: If True, the corresponding population is "frozen" in time
-                     (no new mutations and no drift), so the resulting spectrum
-                     will correspond to an ancient DNA sample from that
-                     population.
-
-    nomut1,nomut2: If True, no new mutations will be introduced into the
-                   given population.
-
-    enable_cuda_cached: If True, enable CUDA integration with slower constant
-                       parameter method. Likely useful only for benchmarking.
-    deme_ids: sequence of strings representing the names of demes
-
-    Note: Generalizing to different grids in different phi directions is
+        - Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
+
+    Args:
+        phi (array-like): Initial 2-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        m12 (float): Migration rates. Note that m12 is the rate *into 1 from 2*.
+        m21 (float): Migration rates. Note that m12 is the rate *into 1 from 2*.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        nomut1 (bool): If True, no new mutations will be introduced into the
+                    given population.
+        nomut2 (bool): If True, no new mutations will be introduced into the
+                    given population.
+        enable_cuda_cached (bool): If True, enable CUDA integration with slower constant
+                        parameter method. Likely useful only for benchmarking.
+        deme_ids (list[str]): sequence of strings representing the names of demes
     """
     phi = phi.copy()
 
@@ -1218,33 +1224,62 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                theta0=1, initial_t=0, frozen1=False, frozen2=False,
                frozen3=False, enable_cuda_cached=False, deme_ids=None):
     """
-    Integrate a 3-dimensional phi foward.
+    Integrate a 3-dimensional phi with polyploids foward.
 
-    phi: Initial 3-dimensional phi
-    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
-        that this grid is used in all dimensions.
+    Note:
+        - nu's, gamma's, h's, m's, and theta0 may be functions of time.
 
-    nu's, gamma's, m's, and theta0 may be functions of time.
-    nu1,nu2,nu3: Population sizes
-    m12,m13,m21,m23,m31,m32: Migration rates. Note that m12 is the rate 
-                             *into 1 from 2*.
-    theta0: Propotional to ancestral size. Typically constant.
-
-    sel_dict1,2,3: dictionary of selection parameters for corresponding ploidy type of that population
-    ploidyflag1,2,3: Specifies ploidy type of population and handles selection params.
-        See PloidyType class for details. 
-
-    T: Time at which to halt integration
-    initial_t: Time at which to start integration. (Note that this only matters
-               if one of the demographic parameters is a function of time.)
-
-    enable_cuda_cached: If True, enable CUDA integration with slower constant
-                       parameter method. Likely useful only for benchmarking.
-    deme_ids: sequence of strings representing the names of demes
-
-    Note: Generalizing to different grids in different phi directions is
+        - Generalizing to different grids in different phi directions is
           straightforward. The tricky part will be later doing the extrapolation
           correctly.
+
+    Args:
+        phi (array-like): Initial 3-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        nu3 (float): Population sizes
+        m12 (float): Migration rates. Note that m12 is the rate 
+             *into 1 from 2*.
+        m13 (float): Migration rates. Note that m13 is the rate 
+             *into 1 from 3*.
+        m21 (float): Migration rates. Note that m21 is the rate 
+             *into 2 from 1*.
+        m23 (float): Migration rates. Note that m23 is the rate 
+             *into 2 from 3*.
+             m31 (float): Migration rates. Note that m31 is the rate 
+             *into 3 from 1*.
+        m32 (float): Migration rates. Note that m32 is the rate 
+             *into 3 from 2*.
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict3 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag3 (PloidyType): Specifies the ploidy type of the population.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen3 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        enable_cuda_cached (bool): If True, enable CUDA integration with slower constant
+                        parameter method. Likely useful only for benchmarking.
+        deme_ids (list[str]): sequence of strings representing the names of demes
     """
     phi = phi.copy()
 
@@ -1426,33 +1461,80 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
               theta0=1, initial_t=0, 
               frozen1=False, frozen2=False, frozen3=False, frozen4=False, deme_ids=None):
     """
-    Integrate a 4-dimensional phi foward.
+    Integrate a 4-dimensional phi with polyploids foward.
 
-    phi: Initial 4-dimensional phi
-    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
-        that this grid is used in all dimensions.
+    Note:
+        - nu's, gamma's, m's, and theta0 may be functions of time.
 
-    nu's, gamma's, m's, and theta0 may be functions of time.
-    nu1,nu2,nu3,nu4: Population sizes
-    m12,m13,m21,m23,m31,m32, ...: Migration rates. Note that m12 is the rate 
-                             *into 1 from 2*.
-    theta0: Proportional to ancestral size. Typically constant.
+        - Generalizing to different grids in different phi directions is
+            straightforward. The tricky part will be later doing the extrapolation
+            correctly.
 
-    sel_dict1,2,3,4: dictionary of selection parameters for corresponding ploidy type of that population
-    ploidyflag1,2,3,4: Specifies ploidy type of population and handles selection params.
-        See PloidyType class for details. 
-
-    T: Time at which to halt integration
-    initial_t: Time at which to start integration. (Note that this only matters
-               if one of the demographic parameters is a function of time.)
-
-    enable_cuda_const: If True, enable CUDA integration with slower constant
-                       parameter method. Likely useful only for benchmarking.
-    deme_ids: sequence of strings representing the names of demes
-
-    Note: Generalizing to different grids in different phi directions is
-          straightforward. The tricky part will be later doing the extrapolation
-          correctly.
+    Args:
+        phi (array-like): Initial 4-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        nu3 (float): Population sizes
+        nu4 (float): Population sizes
+        m12 (float): Migration rates. Note that m12 is the rate 
+             *into 1 from 2*.
+        m13 (float): Migration rates. Note that m13 is the rate 
+             *into 1 from 3*.
+        m14 (float): Migration rates. Note that m14 is the rate
+             *into 1 from 4*.
+        m21 (float): Migration rates. Note that m21 is the rate 
+             *into 2 from 1*.
+        m23 (float): Migration rates. Note that m23 is the rate 
+             *into 2 from 3*.
+        m24 (float): Migration rates. Note that m24 is the rate
+             *into 2 from 4*.
+        m31 (float): Migration rates. Note that m31 is the rate 
+             *into 3 from 1*.
+        m32 (float): Migration rates. Note that m32 is the rate 
+             *into 3 from 2*.
+        m34 (float): Migration rates. Note that m34 is the rate
+             *into 3 from 4*.
+        m41 (float): Migration rates. Note that m41 is the rate
+             *into 4 from 1*.
+        m42 (float): Migration rates. Note that m42 is the rate
+             *into 4 from 2*.
+        m43 (float): Migration rates. Note that m43 is the rate
+             *into 4 from 3*.
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict3 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict4 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag3 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag4 (PloidyType): Specifies the ploidy type of the population.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen3 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen4 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        deme_ids (list[str]): sequence of strings representing the names of demes
     """
     if T - initial_t == 0:
         return phi
@@ -1659,33 +1741,104 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
               theta0=1, initial_t=0, 
               frozen1=False, frozen2=False, frozen3=False, frozen4=False, frozen5=False, deme_ids=None):
     """
-    Integrate a 5-dimensional phi foward.
+    Integrate a 5-dimensional phi with polyploids foward.
 
-    phi: Initial 5-dimensional phi
-    xx: 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
-        that this grid is used in all dimensions.
+    Note:
+        - nu's, gamma's, m's, and theta0 may be functions of time.
 
-    nu's, gamma's, m's, and theta0 may be functions of time.
-    nu1,nu2,nu3,nu4,nu5: Population sizes
-    m12,m13,m21,m23,m31,m32, ...: Migration rates. Note that m12 is the rate 
-                             *into 1 from 2*.
-    theta0: Proportional to ancestral size. Typically constant.
+        - Generalizing to different grids in different phi directions is
+            straightforward. The tricky part will be later doing the extrapolation
+            correctly.
 
-    sel_dict1,2,3,4,5: dictionary of selection parameters for corresponding ploidy type of that population
-    ploidyflag1,2,3,4,5: Specifies ploidy type of population and handles selection params.
-        See PloidyType class for details. 
-
-    T: Time at which to halt integration
-    initial_t: Time at which to start integration. (Note that this only matters
-               if one of the demographic parameters is a function of time.)
-
-    enable_cuda_const: If True, enable CUDA integration with slower constant
-                       parameter method. Likely useful only for benchmarking.
-    deme_ids: sequence of strings representing the names of demes
-
-    Note: Generalizing to different grids in different phi directions is
-          straightforward. The tricky part will be later doing the extrapolation
-          correctly.
+    Args:
+        phi (array-like): Initial 5-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        nu3 (float): Population sizes
+        nu4 (float): Population sizes
+        nu5 (float): Population sizes
+        m12 (float): Migration rates. Note that m12 is the rate 
+             *into 1 from 2*.
+        m13 (float): Migration rates. Note that m13 is the rate 
+             *into 1 from 3*.
+        m14 (float): Migration rates. Note that m14 is the rate
+             *into 1 from 4*.
+        m15 (float): Migration rates. Note that m15 is the rate
+             *into 1 from 5*.
+        m21 (float): Migration rates. Note that m21 is the rate 
+             *into 2 from 1*.
+        m23 (float): Migration rates. Note that m23 is the rate 
+             *into 2 from 3*.
+        m24 (float): Migration rates. Note that m24 is the rate
+             *into 2 from 4*.
+        m25 (float): Migration rates. Note that m25 is the rate
+             *into 2 from 5*.
+        m31 (float): Migration rates. Note that m31 is the rate 
+             *into 3 from 1*.
+        m32 (float): Migration rates. Note that m32 is the rate 
+             *into 3 from 2*.
+        m34 (float): Migration rates. Note that m34 is the rate
+             *into 3 from 4*.
+        m35 (float): Migration rates. Note that m35 is the rate
+             *into 3 from 5*.
+        m41 (float): Migration rates. Note that m41 is the rate
+             *into 4 from 1*.
+        m42 (float): Migration rates. Note that m42 is the rate
+             *into 4 from 2*.
+        m43 (float): Migration rates. Note that m43 is the rate
+             *into 4 from 3*.
+        m45 (float): Migration rates. Note that m45 is the rate
+             *into 4 from 5*.
+        m51 (float): Migration rates. Note that m51 is the rate
+             *into 5 from 1*.
+        m52 (float): Migration rates. Note that m52 is the rate
+             *into 5 from 2*.
+        m53 (float): Migration rates. Note that m53 is the rate
+             *into 5 from 3*.
+        m54 (float): Migration rates. Note that m54 is the rate
+             *into 5 from 4*.
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict3 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict4 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict5 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag3 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag4 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag5 (PloidyType): Specifies the ploidy type of the population.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen3 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen4 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen5 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        deme_ids (list[str])): sequence of strings representing the names of demes
     """
     if T - initial_t == 0:
         return phi

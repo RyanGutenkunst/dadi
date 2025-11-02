@@ -38,7 +38,7 @@ def autotet_formation_mig(params, ns, pts, theta0=1):
         an autotetraploid population (in units of 2*Na generations)
     nu_auto: Relative population size of the post-WGD autotetraploids
     n1, n2: sample sizes of the resulting spectrum (number of chromosomes)
-    m: (population scaled) migration rate (=2*Na*m)
+    m: (population scaled) symmetricmigration rate (=2*Na*m)
     pts: Number of grid points to use in the numerical integration
     """
     T_WGD, nu_auto, m = params
