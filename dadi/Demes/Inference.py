@@ -433,39 +433,44 @@ def optimize(
     inference options that specify which parameters to fit, and bounds or constraints
     on those parameters.
 
-    :param deme_graph: A YAML file in ``demes`` format.
-    :param inference_options: See (url) for how to set this up.
-    :param data: The SFS to fit, which must have pop_ids specified. Can either be a Spectrum
-        object or the file path to the stored frequency spectrum. The populations
-        in the SFS need to be present (with matching IDs) in the deme graph.
-    :param pts: List of grid points to extrapolate.
-    :param maxiter: The maximum number of iterations to run optimization. Defaults
-        to 1000. Note: maxiter does not seem to work with the Powell method! This
-        appears to be a bug within scipy.optimize.
-    :param perturb: The perturbation amount of the initial parameters. Defaults to
-        zero, in which case we do not perturb the initial parameters in the input
-        demes YAML. If perturb is greater than zero, the initial parameters in the input
-        YAML are randomly perturbed by up to `perturb`-fold.
-    :param verbose: The frequency to print updates to `output_stream` if greater than 1.
-    :param uL: The mutuation rate scaled by number of callable sites, so that theta
-        is the compound parameter 4*Ne*uL. If given, we optimize with `multinom=False`,
-        and theta is determined by taking Ne as the ancestral or root population size,
-        which can be fit. Defaults to None. If uL is not given, we use `multinom=True`
-        and we likely do not want to fit the ancestral population size.
-    :param log: If True, optimize over log of the parameters.
-    :param method: The optimization method. Available methods are "fmin", "powell",
-        and "lbfgsb".
-    :param fit_ancestral_misid: If True, we fit the probability that the ancestral
-        state of a given SNP is misidenitified, resulting in ancestral/derived
-        labels being flipped. Note: this is only allowed with *unfolded* spectra.
-        Defaults to False.
-    :param misid_guess: Defaults to 0.01.
-    :output_stream: Defaults to standard output. Can be given an open file stream
-        instead or other output stream.
-    :param output: If given, the filename for the output best-fit model YAML.
-    :param overwrite: If True, overwrites any existing file with the same output
-        name.
-    :return: List of parameter names, optimal parameters, and LL
+    Args:
+        deme_graph (demes.DemeGraph): A YAML file in ``demes`` format.
+        inference_options (str): File with inference options See (url) for how to set this up.
+        data (Spectrum): The SFS to fit, which must have pop_ids specified. Can either be a Spectrum
+            object or the file path to the stored frequency spectrum. The populations
+            in the SFS need to be present (with matching IDs) in the deme graph.
+        pts (list[int]): List of grid points to extrapolate.
+        maxiter (int, optional): The maximum number of iterations to run optimization. Defaults
+            to 1000. Note: maxiter does not seem to work with the Powell method! This
+            appears to be a bug within scipy.optimize.
+        perturb (float, optional): The perturbation amount of the initial parameters. Defaults to
+            zero, in which case we do not perturb the initial parameters in the input
+            demes YAML. If perturb is greater than zero, the initial parameters in the input
+            YAML are randomly perturbed by up to `perturb`-fold.
+        verbose (int, optional): The frequency to print updates to `output_stream` if greater than 1.
+        uL (float, optional): The mutuation rate scaled by number of callable sites, so that theta
+            is the compound parameter 4*Ne*uL. If given, we optimize with `multinom=False`,
+            and theta is determined by taking Ne as the ancestral or root population size,
+            which can be fit. Defaults to None. If uL is not given, we use `multinom=True`
+            and we likely do not want to fit the ancestral population size.
+        log (bool, optional): If True, optimize over log of the parameters.
+        method (str, optional): The optimization method. Available methods are "fmin", "powell",
+            and "lbfgsb".
+        fit_ancestral_misid (bool, optional): If True, we fit the probability that the ancestral
+            state of a given SNP is misidenitified, resulting in ancestral/derived
+            labels being flipped. Note: this is only allowed with *unfolded* spectra.
+            Defaults to False.
+        misid_guess (float, optional): Defaults to 0.01.
+        output_stream (str or output stream): Defaults to standard output. Can be given an open file stream
+            instead or other output stream.
+        output (str, optional): If given, the filename for the output best-fit model YAML.
+        overwrite (bool, optional): If True, overwrites any existing file with the same output
+            name.
+    
+    Returns:
+        param_names (list[str]): List of parameter names
+        xopt (list[float]): The optimal parameters
+        fopt (float): The optimal log-likelihood
     """
     # constraints. Other arguments should be kw args in the function.
 

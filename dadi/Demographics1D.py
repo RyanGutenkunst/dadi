@@ -10,10 +10,13 @@ def snm_1d(notused, ns, pts):
     """
     Standard neutral model.
 
-    ns = (n1,)
+    Parameters:
+        notused (None): Placeholder parameter, not used in the function.
+        ns (tuple[int]): Number of samples in resulting Spectrum (n1,).
+        pts (int): Number of grid points to use in integration.
 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
     """
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
@@ -27,14 +30,21 @@ def two_epoch(params, ns, pts):
     """
     Instantaneous size change some time ago.
 
-    params = (nu,T)
-    ns = (n1,)
+    Parameters:
+        params (tuple[float, float]): (nu, T) where:
+            
+            - nu (float): Ratio of contemporary to ancient population size.
+            
+            - T (float): Time in the past at which size change happened 
+              (in units of 2*Na generations).
+        ns (tuple[int]): Number of samples in resulting Spectrum (n1,).
+        pts (int): Number of grid points to use in integration.
 
-    nu: Ratio of contemporary to ancient population size
-    T: Time in the past at which size change happened (in units of 2*Na 
-       generations) 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu,T = params
 
@@ -51,14 +61,21 @@ def growth(params, ns, pts):
     """
     Exponential growth beginning some time ago.
 
-    params = (nu,T)
-    ns = (n1,)
+    Parameters:
+        params (tuple[float, float]): (nu, T) where:
+            
+            - nu (float): Ratio of contemporary to ancient population size.
+            
+            - T (float): Time in the past at which growth began
+              (in units of 2*Na generations).
+        ns (tuple[int]): Number of samples in resulting Spectrum (n1,).
+        pts (int): Number of grid points to use in integration.
 
-    nu: Ratio of contemporary to ancient population size
-    T: Time in the past at which growth began (in units of 2*Na 
-       generations) 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu,T = params
 
@@ -74,18 +91,26 @@ growth.__param_names__ = ['nu', 'T']
 
 def bottlegrowth_1d(params, ns, pts):
     """
-    Instantanous size change followed by exponential growth.
+    Instantaneous size change followed by exponential growth.
 
-    params = (nuB,nuF,T)
-    ns = (n1,)
+    Parameters:
+        params (tuple[float, float, float]): (nuB, nuF, T) where:
+            
+            - nuB (float): Ratio of population size after instantaneous change 
+              to ancient population size.
+            
+            - nuF (float): Ratio of contemporary to ancient population size.
+            
+            - T (float): Time in the past at which instantaneous change happened 
+              and growth began (in units of 2*Na generations).
+        ns (tuple[int]): Number of samples in resulting Spectrum (n1,).
+        pts (int): Number of grid points to use in integration.
 
-    nuB: Ratio of population size after instantanous change to ancient
-         population size
-    nuF: Ratio of contemporary to ancient population size
-    T: Time in the past at which instantaneous change happened and growth began
-       (in units of 2*Na generations) 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,T = params
 
@@ -102,16 +127,26 @@ bottlegrowth = bottlegrowth_1d
 
 def three_epoch(params, ns, pts):
     """
-    params = (nuB,nuF,TB,TF)
-    ns = (n1,)
+    Three-epoch demographic model.
 
-    nuB: Ratio of bottleneck population size to ancient pop size
-    nuF: Ratio of contemporary to ancient pop size
-    TB: Length of bottleneck (in units of 2*Na generations) 
-    TF: Time since bottleneck recovery (in units of 2*Na generations) 
+    Parameters:
+        params (tuple[float, float, float, float]): (nuB, nuF, TB, TF) where:
+            
+            - nuB (float): Ratio of bottleneck population size to ancient pop size.
+            
+            - nuF (float): Ratio of contemporary to ancient pop size.
+            
+            - TB (float): Length of bottleneck (in units of 2*Na generations).
+            
+            - TF (float): Time since bottleneck recovery (in units of 2*Na generations).
+        ns (tuple[int]): Number of samples in resulting Spectrum (n1,).
+        pts (int): Number of grid points to use in integration.
 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,TB,TF = params
 
@@ -127,17 +162,28 @@ three_epoch.__param_names__ = ['nuB', 'nuF', 'TB', 'TF']
 
 def three_epoch_inbreeding(params, ns, pts):
     """
-    params = (nuB,nuF,TB,TF,F)
-    ns = (n1,)
+    Three-epoch demographic model with inbreeding.
 
-    nuB: Ratio of bottleneck population size to ancient pop size
-    nuF: Ratio of contemporary to ancient pop size
-    TB: Length of bottleneck (in units of 2*Na generations) 
-    TF: Time since bottleneck recovery (in units of 2*Na generations) 
-    F: Inbreeding coefficent
+    Parameters:
+        params (tuple[float, float, float, float, float]): (nuB, nuF, TB, TF, F) where:
+            
+            - nuB (float): Ratio of bottleneck population size to ancient pop size.
+            
+            - nuF (float): Ratio of contemporary to ancient pop size.
+            
+            - TB (float): Length of bottleneck (in units of 2*Na generations).
+            
+            - TF (float): Time since bottleneck recovery (in units of 2*Na generations).
+            
+            - F (float): Inbreeding coefficient.
+        ns (tuple[int]): Number of samples in resulting Spectrum (n1,).
+        pts (int): Number of grid points to use in integration.
 
-    n1: Number of samples in resulting Spectrum
-    pts: Number of grid points to use in integration.
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nuB,nuF,TB,TF,F = params
 

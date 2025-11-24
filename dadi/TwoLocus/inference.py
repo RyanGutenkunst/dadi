@@ -215,61 +215,65 @@ def optimize_log_lbfgsb(p0, data_list, model_func, pts, dts, rhos=[0],
     Because this works in log(params), it cannot explore values of params < 0.
     It should also perform better when parameters range over scales.
 
-    p0: Initial parameters.
-    data: Spectrum with data.
-    model_function: Function to evaluate model spectrum. Should take arguments
-                    (params, (n1,n2...), pts)
-    lower_bound: Lower bound on parameter values. If not None, must be of same
-                 length as p0. A parameter can be declared unbound by assigning
-                 a bound of None.
-    upper_bound: Upper bound on parameter values. If not None, must be of same
-                 length as p0. A parameter can be declared unbound by assigning
-                 a bound of None.
-    verbose: If > 0, print optimization status every <verbose> steps.
-    output_file: Stream verbose output into this filename. If None, stream to
-                 standard out.
-    flush_delay: Standard output will be flushed once every <flush_delay>
-                 minutes. This is useful to avoid overloading I/O on clusters.
-    epsilon: Step-size to use for finite-difference derivatives.
-    pgtol: Convergence criterion for optimization. For more info, 
-          see help(scipy.optimize.fmin_l_bfgs_b)
-    multinom: If True, do a multinomial fit where model is optimially scaled to
-              data at each step. If False, assume theta is a parameter and do
-              no scaling.
-    maxiter: Maximum algorithm iterations to run.
-    full_output: If True, return full outputs as in described in 
-                 help(scipy.optimize.fmin_bfgs)
-    func_args: Additional arguments to model_func. It is assumed that 
-               model_func's first argument is an array of parameters to
-               optimize, that its second argument is an array of sample sizes
-               for the sfs, and that its last argument is the list of grid
-               points to use in evaluation.
-    func_kwargs: Additional keyword arguments to model_func.
-    fixed_params: If not None, should be a list used to fix model parameters at
-                  particular values. For example, if the model parameters
-                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
-                  will hold nu1=0.5 and m=2. The optimizer will only change 
-                  T and m. Note that the bounds lists must include all
-                  parameters. Optimization will fail if the fixed values
-                  lie outside their bounds. A full-length p0 should be passed
-                  in; values corresponding to fixed parameters are ignored.
-    (See help(dadi.Inference.optimize_log for examples of func_args and 
-     fixed_params usage.)
-    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
-              too large. (This appears to be a flaw in the scipy
-              implementation.) To overcome this, pass ll_scale > 1, which will
-              simply reduce the magnitude of the log-likelihood. Once in a
-              region of reasonable likelihood, you'll probably want to
-              re-optimize with ll_scale=1.
+    Args:
+        p0 (list[float]): Initial parameters.
+        data_list (Spectrum): Spectrum with data.
+        model_func (function): Function to evaluate model spectrum. Should take arguments
+                        (params, (n1,n2...), pts)
+        lower_bound (list[float]): Lower bound on parameter values. If not None, must be of same
+                    length as p0. A parameter can be declared unbound by assigning
+                    a bound of None.
+        upper_bound (list[float]): Upper bound on parameter values. If not None, must be of same
+                    length as p0. A parameter can be declared unbound by assigning
+                    a bound of None.
+        verbose (int): If > 0, print optimization status every <verbose> steps.
+        output_file (str): Stream verbose output into this filename. If None, stream to
+                    standard out.
+        flush_delay (float): Standard output will be flushed once every <flush_delay>
+                    minutes. This is useful to avoid overloading I/O on clusters.
+        epsilon (float): Step-size to use for finite-difference derivatives.
+        pgtol (float): Convergence criterion for optimization. For more info, 
+            see help(scipy.optimize.fmin_l_bfgs_b)
+        multinom (bool): If True, do a multinomial fit where model is optimially scaled to
+                data at each step. If False, assume theta is a parameter and do
+                no scaling.
+        maxiter (int): Maximum algorithm iterations to run.
+        full_output (bool): If True, return full outputs as in described in 
+                    help(scipy.optimize.fmin_bfgs)
+        func_args (list): Additional arguments to model_func. It is assumed that 
+                model_func's first argument is an array of parameters to
+                optimize, that its second argument is an array of sample sizes
+                for the sfs, and that its last argument is the list of grid
+                points to use in evaluation.
+        func_kwargs (list): Additional keyword arguments to model_func.
+        fixed_params (list[float]): If not None, should be a list used to fix model parameters at
+                    particular values. For example, if the model parameters
+                    are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                    will hold nu1=0.5 and m=2. The optimizer will only change 
+                    T and m. Note that the bounds lists must include all
+                    parameters. Optimization will fail if the fixed values
+                    lie outside their bounds. A full-length p0 should be passed
+                    in; values corresponding to fixed parameters are ignored.
+                    (See help(dadi.Inference.optimize_log for examples of func_args and 
+                    fixed_params usage.)
+        ll_scale (float): The bfgs algorithm may fail if your initial log-likelihood is
+                too large. (This appears to be a flaw in the scipy
+                implementation.) To overcome this, pass ll_scale > 1, which will
+                simply reduce the magnitude of the log-likelihood. Once in a
+                region of reasonable likelihood, you'll probably want to
+                re-optimize with ll_scale=1.
 
-    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
-    Nocedal. The algorithm is described in:
-      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
-        Constrained Optimization, (1995), SIAM Journal on Scientific and
-        Statistical Computing , 16, 5, pp. 1190-1208.
-      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
-        FORTRAN routines for large scale bound constrained optimization (1997),
-        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    Citation:
+        The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+        Nocedal. The algorithm is described in:
+        
+        - R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+            Constrained Optimization, (1995), SIAM Journal on Scientific and
+            Statistical Computing , 16, 5, pp. 1190-1208.
+        
+        - C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+            FORTRAN routines for large scale bound constrained optimization (1997),
+            ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
     
     """
     if output_file:
