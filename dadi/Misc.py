@@ -785,6 +785,10 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     else:
         vcf_file = open(vcf_filename)
 
+    # Set a seed if requested, to make subsampled SFS replicable
+    if seed is not None:
+        numpy.random.seed(seed)
+
     data_dict = {}
     ploidy = {}
     if extract_ploidy:
@@ -891,21 +895,33 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             dpindex = cols[8].split(':').index('DP')
         except ValueError:
             dpindex = None
-
         try:
             covindex = cols[8].split(':').index('AD')
         except:
             covindex = None
 
-
-        # === New Feature Addition ===
         if calc_coverage:
             coverage_dict = {}
-            
-            try:
-                covindex = cols[8].split(':').index('AD')
-            except:
-                covindex = None
+            snp_dict['coverage'] = coverage_dict
+            # Extract coverage info if requested
+            for pop, sample in zip(poplist, cols[9:]):
+                if pop is None:
+                    continue
+                if pop not in coverage_dict:
+                    coverage_dict[pop] = []
+
+                # If DP=0, just record that
+                try:
+                    if sample.split(':')[dpindex] == '0':
+                        coverage_dict[pop].append(0)
+                        continue
+                except: 
+                    pass
+
+                # Else extract coverage from AD field
+                coverage = sample.split(':')[covindex].split(',')
+                coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
+                coverage_dict[pop].append(coverage_count)
 
         if extract_ploidy and ploidy != {}:
             for pop in ploidy:
@@ -927,27 +943,12 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 
                 if pop not in subsample_dict:
                     subsample_dict[pop] = []
-                    if calc_coverage:
-                        coverage_dict[pop] = ()
                 
                 # Check that there is an allele
                 # . is an old format for a missing allele
                 # DP = 0 is the new method for checking a missing allele
                 if '.' not in gt and not (dp == '0' or dp == '.'):
                     subsample_dict[pop].append(gt)
-
-                if calc_coverage:
-                    if covindex is not None:
-                        coverages = coverage_dict[pop]
-                        coverage = sample.split(':')[covindex].split(',')
-                        coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
-                        coverage_dict[pop] = coverages + (coverage_count, )
-            
-            # Set a seed if requested, to make subsampled SFS replicable
-            if seed == None:
-                pass
-            else:
-                numpy.random.seed(seed)
 
             # key-value pairs here are population names
             # and a list of genotypes to subsample from
@@ -966,18 +967,6 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     refcalls += gt[::2].count('0')
                     altcalls += gt[::2].count('1')
                     calls_dict[pop] = (refcalls, altcalls)
-            else:
-                # Only runs if we didn't break out of this loop
-                snp_dict['calls'] = calls_dict
-                
-                # === New Feature Addition ===
-                if calc_coverage:
-                    if covindex is not None:
-                        snp_dict['coverage'] = coverage_dict
-                    else:
-                        snp_dict['coverage'] = '-'
-                
-                data_dict[snp_id] = snp_dict
 ######################## Continue here, if no subsampling, do we need to worry about >2 alleles?
         else:
             for pop, sample in zip(poplist, cols[9:]):
@@ -986,53 +975,26 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
 
                 if pop not in calls_dict:
                     calls_dict[pop] = (0,0)
-                    if calc_coverage:
-                        coverage_dict[pop] = ()
 
                 # Skip if DP=0 or DP=.
                 try:
                     if sample.split(':')[covindex] == '0,0' or sample.split(':')[dpindex] == '0':
-                        coverages = coverage_dict[pop]
-                        coverage_dict[pop] = coverages + (0, )
                         continue
                 except: 
                     pass
 
                 # Genotype in VCF format 0|1|1|0:...
                 gt = sample.split(':')[gtindex]
-                #g1, g2 = gt[0], gt[2]
-                #if g1 == '.' or g2 == '.':
-                #    continue
-                    #full_info = False
-                    #break
                 
                 refcalls, altcalls = calls_dict[pop]
-                #refcalls += int(g1 == '0') + int(g2 == '0')
-                #altcalls += int(g1 == '1') + int(g2 == '1')
                 
                 # Assume biallelic variants
                 refcalls += gt[::2].count('0')
                 altcalls += gt[::2].count('1')
                 calls_dict[pop] = (refcalls, altcalls)
                 
-                # === New Feature Addition ===
-                if calc_coverage:
-                    coverages = coverage_dict[pop]
-                    
-                    coverage = sample.split(':')[covindex].split(',')
-                    coverage_count = sum(int(cov) for cov in coverage if cov.isdigit())
-                    coverage_dict[pop] = coverages + (coverage_count, )
-            
-            snp_dict['calls'] = calls_dict
-            
-            # === New Feature Addition ===
-            if calc_coverage:
-                if covindex is not None:
-                    snp_dict['coverage'] = coverage_dict
-                else:
-                    snp_dict['coverage'] = '-'
-                
-            data_dict[snp_id] = snp_dict
+        snp_dict['calls'] = calls_dict
+        data_dict[snp_id] = snp_dict
     
     vcf_file.close()
     if extract_ploidy:
