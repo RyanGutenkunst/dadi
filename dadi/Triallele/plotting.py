@@ -47,13 +47,18 @@ def _fold(spectrum):
 def plot_single_trispectrum(sfs, folded=False, cmap=_new_cmap, vmin=None, vmax=None, colorbar=False, fraction=.046):
     """
     Plots a single triallelic spectrum (sfs)
-    ~~~~8/13: to check - does it need to be given an unfolded spectrum? what if we want
-    ~~~~ to plot a folded spectrum...
-    folded: True if we want to fold the spectrum before plotting, False if to remain unfolded
-    cmap: Define the colormap to use. Default is same colormap as used in figures from Ragsdale et al (2016)
-    vmin: lower limit of colormap and smallest value to be plotted
-    vmax: upper limit of colormap
-    colorbar: True to show colorbar for Count
+    
+    Note:
+        ~~~~8/13: to check - does it need to be given an unfolded spectrum? what if we want to plot a folded spectrum...
+
+    Args:
+        sfs (Spectrum): the triallelic spectrum to plot
+        folded (bool): True if we want to fold the spectrum before plotting, False if to remain unfolded
+        cmap (): Define the colormap to use. Default is same colormap as used in figures from Ragsdale et al (2016)
+        vmin (float): lower limit of colormap and smallest value to be plotted
+        vmax (float): upper limit of colormap
+        colorbar (bool): True to show colorbar for Count
+        fraction (float): fraction of the axis to use for colorbar
     """
     ax = plt.gca()
     if vmin is None:
@@ -92,12 +97,20 @@ def plot_single_trispectrum(sfs, folded=False, cmap=_new_cmap, vmin=None, vmax=N
 def plot_trispectrum_comp(sfs1, sfs2, folded=False, cmap=_new_cmap, vmin=None, vmax=None, resid_range=None, colorbar=False, title1="sfs1", title2="sfs2", title3="Residual", fraction=.046):
     """
     Plots the two spectra and the residual ( (sfs1-sfs2)/sqrt(sfs1) )
-    folded: True if we want to fold the spectrum before plotting, False if to remain unfolded
-    cmap: Define the colormap to use. Default is same colormap as used in figures from Ragsdale et al (2016)
-    vmin: lower limit of colormap and smallest value to be plotted for frequency spectra
-    vmax: upper limit of colormap for frequency spectra
-    resid_range: residual colormap ranges from -resid_range to +resid_range
-    colorbar: True to show colorbars for Count and Residual
+
+    Args:
+        sfs1 (Spectrum): the first triallelic spectrum to plot
+        sfs2 (Spectrum): the second triallelic spectrum to plot
+        folded (bool): True if we want to fold the spectrum before plotting, False if to remain unfolded
+        cmap (): Define the colormap to use. Default is same colormap as used in figures from Ragsdale et al (2016)
+        vmin (float): lower limit of colormap and smallest value to be plotted for frequency spectra
+        vmax (float): upper limit of colormap for frequency spectra
+        resid_range (float): residual colormap ranges from -resid_range to +resid_range
+        colorbar (bool): True to show colorbars for Count and Residual
+        title1 (str): title for first spectrum
+        title2 (str): title for second spectrum
+        title3 (str): title for residuals
+        fraction (float): fraction of the axis to use for colorbars
     """
     fig = plt.figure(np.random.randint(1000))
 

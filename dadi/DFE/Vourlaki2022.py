@@ -4,7 +4,7 @@ try:
 except AttributeError:
     pass
 import dadi
-from dadi.DFE import *
+from dadi.DFE import PDFs, Cache1D, Cache2D, DemogSelModels
 
 def Vourlaki_mixture(params, ns, s1, s2, theta, pts):
     """

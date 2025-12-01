@@ -5,10 +5,14 @@ import mpl_toolkits.mplot3d as mplot3d
 # adapted from dadi's Plotting methods
 def plot_3d(fs, vmin=None, vmax=None, max_sum=None, max_index=None, show=True, colorbar=False):
     """
-    vmin - minimum value to plot
-    vmax - maximum value to plot
-    max_sum - slice spectrum on diagonal plane, plotting points closer to the origin than the plane
-    max_index - only show entries this distance from one of the axes planes
+    Args:
+        fs (TLSpectrum): the TLSpectrum to plot
+        vmin (float, optional): minimum value to plot
+        vmax (float, optional): maximum value to plot
+        max_sum (int, optional): slice spectrum on diagonal plane, plotting points closer to the origin than the plane
+        max_index (int, optional): only show entries this distance from one of the axes planes
+        show (bool, optional): True to show the plot
+        colorbar (bool, optional): True to show colorbar
     """
     fig = plt.figure()
     plt.clf()
@@ -125,9 +129,14 @@ def plot_3d(fs, vmin=None, vmax=None, max_sum=None, max_index=None, show=True, c
 def plot_3d_comp(model,data, resid_range=1, max_sum=None, max_index=None, show=True):
     """
     plots (model - data)/data
-    resid_range - range of residuals (+/-)
-    max_sum - slice spectrum on diagonal plane, plotting points closer to the origin than the plane
-    max_index - only show entries this distance from one of the axes planes
+
+    Args:
+        model (TLSpectrum): the model TLSpectrum
+        data (TLSpectrum): the data TLSpectrum
+        resid_range (float, optional): range of residuals (+/-)
+        max_sum (int, optional): slice spectrum on diagonal plane, plotting points closer to the origin than the plane
+        max_index (int, optional): only show entries this distance from one of the axes planes
+        show (bool, optional): True to show the plot
     """
     model *= np.sum(data)/np.sum(model)
     resids = (model-data)/np.sqrt(data)

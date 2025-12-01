@@ -8,8 +8,9 @@ def slice(g, t):
     Slice a Demes graph at a given time, return the top portion with times shifted
     to the slice time.
 
-    :param g: The input resolved Demes graph.
-    :param t: The time in the past at which to slice the graph.
+    Args:
+        g (demes.DemeGraph): The input resolved Demes graph.
+        t (float): The time in the past at which to slice the graph.
     """
     if t < 0:
         raise ValueError("Slice time must be positive")
@@ -89,16 +90,14 @@ def _shift_deme_time(d, t):
 
 def swipe(g, t):
     """
-    ..note::
-        Don't really like this function name... any suggestions?
-
     Returns a new demes graph with demography about the given time removed.
     Demes that existed before that time are removed, and demes that overlap
     with that time are given a constant size equal to their size at that time
     extending into the past.
 
-    :param g: The input demes graph object.
-    :param t: The time at which to erase preceding demographic events.
+    Args:
+        g (demes.DemeGraph): The input demes graph object.
+        t (float): The time at which to erase preceding demographic events.
     """
     if t <= 0:
         raise ValueError("Slice time must be positive")

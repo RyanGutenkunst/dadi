@@ -44,30 +44,32 @@ def SFS(
     format. This function automatically parses the demographic description
     and returns a SFS for the specified populations and sample sizes.
 
-    :param g: A ``demes`` DemeGraph from which to compute the SFS.
-    :type g: :class:`demes.DemeGraph`
-    :param sampled_demes: A list of deme IDs to take samples from. We can repeat
-        demes, as long as the sampling of repeated deme IDs occurs at distinct
-        times.
-    :type sampled_demes: list of strings
-    :param sample_sizes: A list of the same length as ``sampled_demes``,
-        giving the sample sizes for each sampled deme.
-    :type sample_sizes: list of ints
-    :param sample_times: If None, assumes all sampling occurs at the end of the
-        existence of the sampled deme. If there are
-        ancient samples, ``sample_times`` must be a list of same length as
-        ``sampled_demes``, giving the sampling times for each sampled
-        deme. Sampling times are given in time units of the original deme graph,
-        so might not necessarily be generations (e.g. if ``g.time_units`` is years)
-    :type sample_times: list of floats, optional
-    :param Ne: reference population size. If none is given, we use the initial
-        size of the root deme.
-    :type Ne: float, optional
-    :return: A ``dadi`` site frequency spectrum, with dimension equal to the
-        length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
-        in each dimension, indexing the allele frequency in each deme from 0
-        to n[i], where i is the deme index.
-    :rtype: :class:`dadi.Spectrum`
+    Args:
+        g (demes.DemeGraph): A ``demes`` DemeGraph from which to compute the SFS.
+        sampled_demes (list[str]): A list of deme IDs to take samples from. We can repeat
+            demes, as long as the sampling of repeated deme IDs occurs at distinct
+            times.
+        sample_sizes (linst[int]): A list of the same length as ``sampled_demes``,
+            giving the sample sizes for each sampled deme.
+        pts (list[int]): List of grid points.
+        sample_times (list[float], optional): If None, assumes all sampling occurs at the end of the
+            existence of the sampled deme. If there are
+            ancient samples, ``sample_times`` must be a list of same length as
+            ``sampled_demes``, giving the sampling times for each sampled
+            deme. Sampling times are given in time units of the original deme graph,
+            so might not necessarily be generations (e.g. if ``g.time_units`` is years)
+        Ne (float, optional): reference population size. If none is given, we use the initial
+            size of the root deme.
+        theta (float, optional): Population-scaled mutation rate, `4*Ne*mu*L`
+        gamma (float, optional): If None, all demes are neutral.
+        h (float, optional): If None, all demes are additive. If a float, all demes have the same dominance coefficient.
+        debug (bool, optional): If True, returns additional information for debugging.
+    
+    Returns:
+        fs (Spectrum): A ``dadi`` site frequency spectrum, with dimension equal to the
+            length of ``sampled_demes``, and shape equal to ``sample_sizes`` plus one
+            in each dimension, indexing the allele frequency in each deme from 0
+            to n[i], where i is the deme index.
     """
     _check_demes_imported()
     if len(sampled_demes) != len(sample_sizes):
