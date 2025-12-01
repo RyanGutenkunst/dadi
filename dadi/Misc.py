@@ -956,6 +956,8 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 # Skip if DP=0 or DP=.
                 try:
                     if sample.split(':')[covindex] == '0,0' or sample.split(':')[dpindex] == '0':
+                        coverages = coverage_dict[pop]
+                        coverage_dict[pop] = coverages + (0, )
                         continue
                 except: 
                     pass
