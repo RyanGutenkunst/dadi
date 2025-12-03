@@ -958,7 +958,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                     calls_dict[pop] = (0, 0)
                 if len(genotypes) < subsample[pop]:
                     # Not enough calls for this SNP
-                    break
+                    continue
                 # Choose which individuals to use
                 idx = numpy.random.choice([i for i in range(0,len(genotypes))], subsample[pop], replace=False)
                 for ii in idx:
