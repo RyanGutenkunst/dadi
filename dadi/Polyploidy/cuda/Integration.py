@@ -141,10 +141,7 @@ def _two_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, m12_f, m21_f,
         theta0 = theta0_f(next_t)
         demes_hist.append([next_t, [nu1,nu2], [m12,m21]])
 
-        # TODO: edit this to use the inject_mut function in this file? Or maybe this is fine... 
-        #       ask Ryan about this... but I think I just need to add an __init__ file for the Polyploidy/cuda directory
-        val10, val01 = dadi.cuda.Integration._inject_mutations_2D_valcalc(this_dt, xx, yy, theta0, frozen1, frozen2,
-                                                                          nomut1, nomut2)
+        val10, val01 = _inject_mutations_2D_valcalc(this_dt, xx, yy, theta0, frozen1, frozen2, nomut1, nomut2)
         kernels_poly._inject_mutations_2D_vals(phi_gpu, L, np.float64(val01), np.float64(val10), 
                                           block=(1, 1, 1))
 
@@ -1154,6 +1151,7 @@ def _four_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
                                 grid=_grid(M-1), block=_block())
                 kernels_poly._Mfunc4D_hex_a(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, m23, m24, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],
                                             s2[12],s2[13],s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25],
+                                            np.int32(M-1), N, O, L, MInt_gpu,
                                             grid=_grid((M-1)*L*N*O), block=_block())
 
                 b_gpu.fill(1./this_dt)
@@ -1749,11 +1747,11 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
                     b_gpu, block=(1,1,1))
                 kernels_poly._cx0(c_gpu, M, L*N*O*P, grid=_grid(L*N*O*P), block=_block())
             elif ploidy2[6]: # if 4+2 hexaploid - diploid subgenome
-                kernels_poly._Vfunc_hex(xx_gpu, nu2, M, V_gpu, 
+                kernels_poly._Vfunc(xx_gpu, nu2, M, V_gpu, 
                                 grid=_grid(M), block=_block())
-                kernels_poly._Vfunc_hex(xInt_gpu, nu2, np.int32(M-1), VInt_gpu, 
+                kernels_poly._Vfunc(xInt_gpu, nu2, np.int32(M-1), VInt_gpu, 
                                 grid=_grid(M-1), block=_block())
-                kernels_poly._Mfunc5D_autohex(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m23, m24, m25, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13],
+                kernels_poly._Mfunc5D_hex_dip(xInt_gpu, xx_gpu, xx_gpu, xx_gpu, xx_gpu, m23, m24, m25, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13],
                                 np.int32(M-1), N, O, P, L, MInt_gpu,
                                 grid=_grid((M-1)*L*N*O*P), block=_block())
 
@@ -1766,7 +1764,7 @@ def _five_pops_temporal_params(phi, xx, T, initial_t, nu1_f, nu2_f, nu3_f, nu4_f
                     MInt_gpu, V_gpu, this_dt, M, L*N*O*P,
                     b_gpu, c_gpu,
                     grid=_grid((M-1)*L*N*O*P), block=_block())
-                kernels_poly._include_bc_autohex(dx_gpu, nu2, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13], 
+                kernels_poly._include_bc_hex_dip(dx_gpu, nu2, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13], 
                                                  M, L*N*O*P, b_gpu, block=(1,1,1))
                 kernels_poly._cx0(c_gpu, M, L*N*O*P, grid=_grid(L*N*O*P), block=_block())
             # similar to the above, we don't support any subgenome 

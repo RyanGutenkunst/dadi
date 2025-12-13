@@ -699,7 +699,7 @@ class PloidyType(IntEnum):
         and packs them into an array of length max_params. 
         
         If the dictionary contains a single key 'gamma', then the array will
-        contain the appropriate selection parameters assuming additive dominance.
+        contain the appropriate selection parameters assuming "additive" dominance.
 
         If the dictionary contains a single 'gamma' and a dominance coefficient 
         'h', 'h_i', 'h_ij', etc., for each possible genotype of that ploidy type, then
@@ -1640,7 +1640,7 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
             raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
                              'Polyploid subgenomes must have the same population size.')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
-            raise ValueError('Population 1 or 2 is an allotetraploid subgenome. Both populations must have the same selection parameters.')
+            raise ValueError('Population 1 or 2 is polyploid subgenome. Both populations must have the same selection parameters.')
 
     if (ploidyflag3 in allo_types) or (ploidyflag4 in allo_types) or (ploidyflag3 in hex_4_2_types) or (ploidyflag4 in hex_4_2_types):
         if m34_f(T/2) != m43_f(T/2):
