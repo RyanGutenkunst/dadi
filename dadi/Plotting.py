@@ -370,7 +370,7 @@ def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
         if masked_s.pop_ids is None:
             s_pop_ids = ns_pop_ids
 
-        if s_pop_ids == ns_pop_ids (list[str]):
+        if s_pop_ids == ns_pop_ids:
            resid_pop_ids = s_pop_ids
         else:
             resid_pop_ids = None
@@ -475,7 +475,7 @@ def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
         if masked_model.pop_ids is None:
             model_pop_ids = data_pop_ids
 
-        if model_pop_ids == data_pop_ids (list[str]):
+        if model_pop_ids == data_pop_ids:
            resid_pop_ids = model_pop_ids
         else:
             resid_pop_ids = None
