@@ -3,7 +3,7 @@ Modeling polyploid populations.
 """
 
 from . import Integration, wrightfisher
-from . import Demographics1D, Demographics2D    
+from . import allo_demographics, auto_demographics
 from dadi.Polyploidy.Integration import PloidyType
 
 def cuda_enabled(toggle=None):
