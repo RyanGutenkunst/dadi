@@ -15,7 +15,7 @@ def LB_dominance_model(k, delta, dosage):
     delta: shape paramter specifying steepness of the distribution 
     dosage: gene dosage for the dominance coefficient; typically equals # mutants / ploidy
 
-    Note: Look at model from Booker and Schrider 2024/Huber et al. 2018 too
+    Note: Look at model from Booker and Schrider 2025/Huber et al. 2018 too
 
     Returns:
         dom_coeff: a dominance coefficient
@@ -156,7 +156,7 @@ def dip_allelic_WF(N, T, gamma, init_q, nu=1, h=0.5, replicates = 1, plot = Fals
         plt.plot(np.mean(allele_freqs, axis=0), color='black', lw=2)
         plt.xlabel('Generation')
         plt.ylabel('Mutant Allele Frequency')
-        plt.title('Autotetraploid Allelic Drift Simulation')
+        plt.title('Diploid Allelic Drift Simulation')
         plt.ylim(-.1, 1.1)
         plt.show()
 
@@ -405,10 +405,6 @@ def allo_allelic_WF(N, T, E, gamma01, gamma02, gamma10, gamma11, gamma12, gamma2
     for t in range(total_gens):
         nu = nu_f(t/(2*N)) # this rescales from generations back to diffusion time
         samples = int(2*N*nu)
-        ### Note 
-        # I am not sure if doing the allelic exchange before or after selection matters, but I will test both
-        # It sees to have no effect, but ask Ryan and Justin about this still
-        ###
         if track_all:
             q_next = allo_selection(allele_freqs[0, :, t], allele_freqs[1, :, t], s01_vec, s02_vec, 
                                         s10_vec, s11_vec, s12_vec, s20_vec, s21_vec, s22_vec)

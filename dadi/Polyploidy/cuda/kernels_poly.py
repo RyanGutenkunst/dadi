@@ -2,7 +2,6 @@ import os
 from pycuda.compiler import SourceModule
 import dadi
 
-# TODO: Check if this is the correct file path
 sourcefile = os.path.join(dadi.__path__[0], "Polyploidy/cuda/kernels_poly.cu")
 mod = SourceModule(open(sourcefile).read())
 

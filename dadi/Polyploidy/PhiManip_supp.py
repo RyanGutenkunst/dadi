@@ -9,7 +9,7 @@ import dadi.Demes as Demes
 # 1. in the case where there is no selection, we should instead scale the equilibrium 
 # phi from phi_1D in phi_manip.py by 2 for autotetraploids and by 3 for autohexaploids
 # 2. in the case where there is genic selection, we should instead scale both the gammas 
-# and the equilibrium phy by factors of 2 and 3 for autotetraploids and autohexaploids, respectively
+# and the equilibrium phy by factors of 2 for autotetraploids and by 3 for autohexaploids, respectively
 def phi_1D_autotet(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=0, deme_ids=None):
     """
     Compute a one-dimensional phi for a constant-sized autotetraploid population 

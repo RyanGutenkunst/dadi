@@ -151,7 +151,7 @@ def _compute_dt_auto(dx, nu, ms, gam1, gam2, gam3, gam4):
     # For h != 0.5, the maximum of M_func is not easy analytically. It is close
     # to the 0.5 or 0.25 value, though, so we use those as an approximation.
 
-    ### I looked at this in Desmos for the equivalent function for autos and 
+    ### I looked at this for the equivalent function for autos and 
     ### the maximum value seems to sometimes be close to the 0.75 value 
     ### especially for recessive alleles, so I added that below
 
@@ -687,7 +687,7 @@ class PloidyType(IntEnum):
         if p1_is_func or p2_is_func:
             return lambda t: (param1(t) if p1_is_func else param1) * \
                              (param2(t) if p2_is_func else param2)
-        # otherwise, we can just multiply the two parameters which are constants
+        # otherwise, we can just multiply the two constant parameters
         else:
             return param1 * param2
     
@@ -2538,7 +2538,7 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
         MxInt = _Mfunc2D_hex_tetra((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
         deljx = _compute_delj(dx, MxInt, VxInt)
         bc_factorx = 0.25
-    elif ploidy2[6]: # if hexaploid, diploid subgenome
+    elif ploidy1[6]: # if hexaploid, diploid subgenome
         Vx = _Vfunc(xx, nu1)
         VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
         Mx = _Mfunc2D_hex_dip(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
@@ -2629,7 +2629,7 @@ def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m1
     dt = min(_compute_dt(dx,nu1,[m12],s1,ploidy1),
              _compute_dt(dy,nu2,[m21],s2,ploidy2))
     current_t = initial_t
-    # TODO: CUDA integration
+    
     if cuda_enabled:
         import dadi.cuda
         phi = dadi.cuda.Integration._two_pops_const_params(phi, xx,
@@ -2930,7 +2930,7 @@ def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3,
              _compute_dt(dy,nu2,[m21,m23],s2,ploidy2),
              _compute_dt(dz,nu3,[m31,m32],s3,ploidy3))
     current_t = initial_t
-    # TODO: CUDA integration
+    
     if cuda_enabled:
         import dadi.cuda
         phi = dadi.cuda.Integration._three_pops_const_params(phi, xx,

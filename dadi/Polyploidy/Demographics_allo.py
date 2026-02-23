@@ -1,13 +1,139 @@
-"""
-Four dimensional demographic models (with polyploids!).
-"""
-
-import numpy
 from dadi import Numerics, PhiManip
 from dadi.Spectrum_mod import Spectrum
 from . import Integration as PolyInt
+import numpy
 
-def allotetraploid_bottleneck_asym_mig(params, ns, pts):
+
+### Single allotetraploid population models
+
+def two_epoch(params, ns, pts):
+    """
+    Two epoch model of allotetraploid formation where the 
+    diploid progenitors diverge for 1 diffusion unit and then the
+    allotetraploid population splits and maintains a size of nu.
+    
+    Parameters:
+        params (tuple): (T_WGD, nu, H)
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nu: Ratio of contemporary autotetraploid to ancient diploid population size 
+               (ratio of *census* sizes).
+
+            - H: homoeologous exchange rate (in terms of 2*Na*eta)
+        ns (tuple): Sample sizes (n1,).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting (collapsed) frequency spectrum.
+    """
+    T_WGD, nu, H = params
+    new_ns = (numpy.int32(ns[0]/2), numpy.int32(ns[0]/2))
+    alloaflag = PolyInt.PloidyType.ALLOa
+    allobflag = PolyInt.PloidyType.ALLOb
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    # integrate for T=1 to model diploid divergence
+    phi = PolyInt.two_pops(phi, xx, 1)
+    # then, integrate for T_WGD with allotetraploids
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nu, nu2=nu, m12=H, m21=H,
+                           ploidyflag1=alloaflag, ploidyflag2=allobflag)
+    fs = Spectrum.from_phi(phi, new_ns, (xx,xx))
+    return fs
+two_epoch.__param_names__ = ['T_WGD', 'nu', 'H']
+
+
+def bottlegrowth(params, ns, pts):
+    """
+    Bottlegrowth model of allotetraploid formation where the 
+    allotetraploid population starts with size nuWGD and 
+    grows exponentially to a size of nuF
+    
+    Parameters:
+        params (tuple): (T_WGD, nuWGD, nuF, H)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               allotetraploid population (in units of 2*Na generations).
+
+            - nuWGD: Ratio of allotetraploid population immediately after WGD
+                to ancient diploid population size (ratio of *census* sizes).
+
+            - nuF: Ratio of contemporary allotetraploid population
+                to ancient diploid population size (ratio of *census* sizes).
+
+            - H: homoeologous exchange rate (in terms of 2*Na*eta)
+        ns (tuple): Sample sizes (n1,).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    """
+    T_WGD, nuWGD, nuF, H = params
+    nu_f = lambda t: nuWGD*numpy.exp(numpy.log(nuF/nuWGD) * t/T_WGD)
+    alloaflag = PolyInt.PloidyType.ALLOa
+    allobflag = PolyInt.PloidyType.ALLOb
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    # T=1 divergence period between diploids
+    phi = PolyInt.two_pops(phi, xx, 1)
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu=nu_f, m12=H, m21=H,
+                           ploidyflag1=alloaflag, ploidyflag2=allobflag)
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs.combine_two_pops([0,1])
+
+
+def three_epoch(params, ns, pts):
+    """
+    Three epoch model of allotetraploid formation where the 
+    allotetraploid population splits, maintains a size of nuWGD for T_WGD, 
+    and then changes size again to nuF for a period of TF.
+    This is similar to having a bottleneck for some period and then recover after the bottleneck.
+    
+    Parameters:
+        params (tuple): (T_WGD, TF, nuWGD, nuF, H)
+
+            - T_WGD: Time length between the WGD event and second size change, creating the  
+               allotetraploid population (in units of 2*Na generations).
+
+            - TF: Time in the past at which the second epoch begins.
+
+            - nuWGD: Ratio of initial allotetraploid population (during first epoch)
+                 to ancient diploid population size (ratio of *census* sizes).
+
+            - nuF: Ratio of contemporary allotetraploid population (during second epoch)
+                 to ancient diploid population size (ratio of *census* sizes).
+
+            - H: homoeologous exchange rate (in terms of 2*Na*eta)
+        ns (tuple): Sample sizes (n1,).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    """
+    T_WGD, TF, nuWGD, nuF, H  = params
+    alloaflag = PolyInt.PloidyType.ALLOa
+    allobflag = PolyInt.PloidyType.ALLOb
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    # T=1 divergence period between diploids
+    phi = PolyInt.two_pops(phi, xx, 1)
+    # second epoch
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nuWGD, nu2=nuWGD, m12=H, m21=H,
+                           ploidyflag1=alloaflag, ploidyflag2=allobflag)
+    # third epoch
+    phi = PolyInt.two_pops(phi, xx, TF, nu1=nuF, nu2=nuF, m12=H, m21=H,
+                           ploidyflag1=alloaflag, ploidyflag2=allobflag)
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs.combine_two_pops([0,1])
+three_epoch.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF', 'H']
+
+
+
+### Single allotetraploid population models with the diploid progenitors
+def bottleneck_asym_mig_w_dips(params, ns, pts):
     """
     Three population (4D) model of allotetraploid formation where 
     the diploid progenitors diverge and then a WGD event occurs 
@@ -64,9 +190,9 @@ def allotetraploid_bottleneck_asym_mig(params, ns, pts):
     
     fs = Spectrum.from_phi(phi, ns, (xx,xx,xx,xx))
     return fs
-allotetraploid_bottleneck_asym_mig.__param_names__ = ['T_div', 'T_WGD', 'nu_allo', 'H', 'm31', 'm42']
+bottleneck_asym_mig_w_dips.__param_names__ = ['T_div', 'T_WGD', 'nu_allo', 'H', 'm31', 'm42']
 
-def allotetraploid_bottleneck_mig(params, ns, pts):
+def bottleneck_mig_w_dips(params, ns, pts):
     """
     Three population (4D) model of allotetraploid formation where 
     the diploid progenitors diverge and then a WGD event occurs 
@@ -99,10 +225,10 @@ def allotetraploid_bottleneck_mig(params, ns, pts):
         ValueError: If `params` does not contain the expected number of elements.
     """
     T_div, T_WGD, nu_allo, H, m = params
-    return allotetraploid_bottleneck_asym_mig((T_div, T_WGD, nu_allo, H, m, m), ns, pts)
-allotetraploid_bottleneck_mig.__param_names__ = ['T_div', 'T_WGD', 'nu_allo', 'H', 'm']
+    return bottleneck_asym_mig_w_dips((T_div, T_WGD, nu_allo, H, m, m), ns, pts)
+bottleneck_mig_w_dips.__param_names__ = ['T_div', 'T_WGD', 'nu_allo', 'H', 'm']
 
-def allotetraploid_bottleneck(params, ns, pts):
+def bottleneck_w_dips(params, ns, pts):
     """
     Three population (4D) model of allotetraploid formation where 
     the diploid progenitors diverge and then a WGD event occurs 
@@ -132,10 +258,10 @@ def allotetraploid_bottleneck(params, ns, pts):
         ValueError: If `params` does not contain the expected number of elements.
     """
     T_div, T_WGD, nu_allo, H = params
-    return allotetraploid_bottleneck_asym_mig((T_div, T_WGD, nu_allo, H, 0, 0), ns, pts)
-allotetraploid_bottleneck.__param_names__ = ['T_div', 'T_WGD', 'nu_allo', 'H']
+    return bottleneck_asym_mig_w_dips((T_div, T_WGD, nu_allo, H, 0, 0), ns, pts)
+bottleneck_w_dips.__param_names__ = ['T_div', 'T_WGD', 'nu_allo', 'H']
 
-def allotetraploid_bottleneck_noHE(params, ns, pts):
+def bottleneck_noHE_w_dips(params, ns, pts):
     """
     Three population (4D) model of allotetraploid formation where 
     the diploid progenitors diverge and then a WGD event occurs 
@@ -162,6 +288,5 @@ def allotetraploid_bottleneck_noHE(params, ns, pts):
         ValueError: If `params` does not contain the expected number of elements.
     """
     T_div, T_WGD, nu_allo = params
-    return allotetraploid_bottleneck_asym_mig((T_div, T_WGD, nu_allo, 0, 0, 0), ns, pts)
-allotetraploid_bottleneck.__param_names__ = ['T_div', 'T_WGD', 'nu_allo']
-
+    return bottleneck_asym_mig_w_dips((T_div, T_WGD, nu_allo, 0, 0, 0), ns, pts)
+bottleneck_w_dips.__param_names__ = ['T_div', 'T_WGD', 'nu_allo']

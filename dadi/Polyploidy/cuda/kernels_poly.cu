@@ -1053,10 +1053,6 @@ __global__ void include_bc_hex_dip(double*dx, double nu1, double g01, double g02
 
 
 /*
-TODO: Fix the include_bc_hex_i functions because they need to call the 3D functions, so I think that the array indexing is incorrect on them. 
-*/
-
-/*
 * mean functions and BC terms for ALLOALLOHEXAPLOIDS (2+2+2 hexaploids) - A subgenome
 *
 * For this first set of functions, we treat x as subgenome a, y as subgenome b, and z as subgenome c.
