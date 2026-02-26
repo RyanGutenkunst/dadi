@@ -21,14 +21,13 @@ def two_epoch(params, ns, pts):
                (ratio of *census* sizes).
 
             - H: homoeologous exchange rate (in terms of 2*Na*eta)
-        ns (tuple): Sample sizes (n1,).
+        ns (tuple): Sample sizes (n1,n2).
         pts (int): Number of grid points to use in integration.
 
     Returns:
         fs (Spectrum): The resulting (collapsed) frequency spectrum.
     """
     T_WGD, nu, H = params
-    new_ns = (numpy.int32(ns[0]/2), numpy.int32(ns[0]/2))
     alloaflag = PolyInt.PloidyType.ALLOa
     allobflag = PolyInt.PloidyType.ALLOb
     xx = Numerics.default_grid(pts)
@@ -39,7 +38,7 @@ def two_epoch(params, ns, pts):
     # then, integrate for T_WGD with allotetraploids
     phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nu, nu2=nu, m12=H, m21=H,
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
-    fs = Spectrum.from_phi(phi, new_ns, (xx,xx))
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 two_epoch.__param_names__ = ['T_WGD', 'nu', 'H']
 
@@ -63,7 +62,7 @@ def bottlegrowth(params, ns, pts):
                 to ancient diploid population size (ratio of *census* sizes).
 
             - H: homoeologous exchange rate (in terms of 2*Na*eta)
-        ns (tuple): Sample sizes (n1,).
+        ns (tuple): Sample sizes (n1,n2).
         pts (int): Number of grid points to use in integration.
 
     Returns:
@@ -81,7 +80,7 @@ def bottlegrowth(params, ns, pts):
     phi = PolyInt.two_pops(phi, xx, T_WGD, nu=nu_f, m12=H, m21=H,
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
-    return fs.combine_two_pops([0,1])
+    return fs
 
 
 def three_epoch(params, ns, pts):
@@ -106,7 +105,7 @@ def three_epoch(params, ns, pts):
                  to ancient diploid population size (ratio of *census* sizes).
 
             - H: homoeologous exchange rate (in terms of 2*Na*eta)
-        ns (tuple): Sample sizes (n1,).
+        ns (tuple): Sample sizes (n1,n2).
         pts (int): Number of grid points to use in integration.
 
     Returns:
@@ -127,7 +126,7 @@ def three_epoch(params, ns, pts):
     phi = PolyInt.two_pops(phi, xx, TF, nu1=nuF, nu2=nuF, m12=H, m21=H,
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
-    return fs.combine_two_pops([0,1])
+    return fs
 three_epoch.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF', 'H']
 
 
