@@ -37,7 +37,6 @@ plugins:
             show_root_toc_entry: false
             show_source: true
             show_signature_annotations: true
-            separate_signature_from_description: true
             merge_init_into_class: true
 nav:
 - Home: 'index.md'
