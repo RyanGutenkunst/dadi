@@ -1,6 +1,12 @@
 name: Python Package using Conda
 
-on: [push, pull_request]
+on: 
+  push:
+    branches-ignore:
+      readthedocs_test
+  pull_request:
+    branches-ignore:
+      readthedocs_test
 
 jobs:
   build-linux:
