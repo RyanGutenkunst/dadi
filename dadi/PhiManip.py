@@ -975,7 +975,7 @@ def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
     if xx[-1] == 1:
         # I used Mathematica to check that this was the proper limit.
         phi[-1] = 1./int0
-    return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)
+    return phi * nu*theta0 * 1./Kv * 2 * (2+alpha)/(3*(1+alpha))
 
 def reorder_pops(phi, neworder):
     """

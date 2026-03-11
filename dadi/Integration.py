@@ -1099,7 +1099,7 @@ def _inject_mutations_1D_X(phi, dt, xx, theta0, beta, alpha):
     """
     Inject novel mutations for a timestep.
     """
-    factor = 2./(1.+2.*beta)*(1./(alpha+1.) + beta) 
+    factor = 2 * (2+alpha)/(3*(1+alpha))
     phi[1] += dt/xx[1] * theta0/2. * factor * 2./(xx[2] - xx[0])
     return phi
 
