@@ -42,6 +42,30 @@ def two_epoch(params, ns, pts):
     return fs
 two_epoch.__param_names__ = ['T_WGD', 'nu', 'H']
 
+def two_epoch_noHE(params, ns, pts):
+    """
+    Two epoch model of allotetraploid formation where the 
+    diploid progenitors diverge for 1 diffusion unit and then the
+    allotetraploid population splits and maintains a size of nu.
+    
+    Parameters:
+        params (tuple): (T_WGD, nu)
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nu: Ratio of contemporary autotetraploid to ancient diploid population size 
+               (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1,n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting (collapsed) frequency spectrum.
+    """
+    T_WGD, nu = params
+    fs = two_epoch_noHE((T_WGD, nu, 0), ns, pts)
+    return fs
+two_epoch_noHE.__param_names__ = ['T_WGD', 'nu']
+
 
 def bottlegrowth(params, ns, pts):
     """
@@ -81,7 +105,35 @@ def bottlegrowth(params, ns, pts):
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
+bottlegrowth.__param_names__ = ["T_WGD", "nuWGD", "nuF", "H"]
 
+def bottlegrowth_noHE(params, ns, pts):
+    """
+    Bottlegrowth model of allotetraploid formation where the 
+    allotetraploid population starts with size nuWGD and 
+    grows exponentially to a size of nuF
+    
+    Parameters:
+        params (tuple): (T_WGD, nuWGD, nuF)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               allotetraploid population (in units of 2*Na generations).
+
+            - nuWGD: Ratio of allotetraploid population immediately after WGD
+                to ancient diploid population size (ratio of *census* sizes).
+
+            - nuF: Ratio of contemporary allotetraploid population
+                to ancient diploid population size (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1,n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    """
+    T_WGD, nuWGD, nuF = params
+    fs = bottlegrowth((T_WGD, nuWGD, nuF, 0), ns, pts)
+    return fs
+bottlegrowth_noHE.__param_names__ = ["T_WGD", "nuWGD", "nuF"]
 
 def three_epoch(params, ns, pts):
     """
@@ -129,6 +181,37 @@ def three_epoch(params, ns, pts):
     return fs
 three_epoch.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF', 'H']
 
+
+def three_epoch_noHE(params, ns, pts):
+    """
+    Three epoch model of allotetraploid formation where the 
+    allotetraploid population splits, maintains a size of nuWGD for T_WGD, 
+    and then changes size again to nuF for a period of TF.
+    This is similar to having a bottleneck for some period and then recover after the bottleneck.
+    
+    Parameters:
+        params (tuple): (T_WGD, TF, nuWGD, nuF)
+
+            - T_WGD: Time length between the WGD event and second size change, creating the  
+               allotetraploid population (in units of 2*Na generations).
+
+            - TF: Time in the past at which the second epoch begins.
+
+            - nuWGD: Ratio of initial allotetraploid population (during first epoch)
+                 to ancient diploid population size (ratio of *census* sizes).
+
+            - nuF: Ratio of contemporary allotetraploid population (during second epoch)
+                 to ancient diploid population size (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1,n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    """
+    T_WGD, TF, nuWGD, nuF = params
+    fs = three_epoch((T_WGD, TF, nuWGD, nuF, 0), ns, pts)
+    return fs
+three_epoch_noHE.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF']
 
 
 ### Single allotetraploid population models with the diploid progenitors
