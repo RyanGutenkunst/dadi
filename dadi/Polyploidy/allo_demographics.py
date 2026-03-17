@@ -62,7 +62,7 @@ def two_epoch_noHE(params, ns, pts):
         fs (Spectrum): The resulting (collapsed) frequency spectrum.
     """
     T_WGD, nu = params
-    fs = two_epoch_noHE((T_WGD, nu, 0), ns, pts)
+    fs = two_epoch((T_WGD, nu, 0), ns, pts)
     return fs
 two_epoch_noHE.__param_names__ = ['T_WGD', 'nu']
 
