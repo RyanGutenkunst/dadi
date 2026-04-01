@@ -2,7 +2,7 @@
 Modeling polyploid populations.
 """
 
-from . import Integration, wrightfisher
+from . import Integration, wrightfisher, PhiManip_supp
 from . import allo_demographics, auto_demographics
 from dadi.Polyploidy.Integration import PloidyType
 

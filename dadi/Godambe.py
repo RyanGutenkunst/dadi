@@ -548,3 +548,43 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return score_adj, score_org
     return score_adj
 
+def effective_dimension(func_ex, grid_pts, all_boot, p0, data, log=False,
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
+    """
+    Computes the effective number of parameters for calculating CLAIC and CLBIC
+
+    func_ex: Model function
+    grid_pts: Grid points at which to evaluate func_ex
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    """
+    if multinom:
+        if boot_theta_adjusts:
+            raise ValueError('boot_thetas option can only be used with '
+                             'multinom=False')
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+    GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log,
+                                boot_theta_adjusts=boot_theta_adjusts)
+    
+    effective_dim = numpy.trace(numpy.matmul(H, numpy.linalg.inv(GIM)))
+    return effective_dim
+    

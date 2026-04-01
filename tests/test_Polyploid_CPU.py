@@ -2,6 +2,8 @@ import numpy as np
 import dadi
 import dadi.Polyploidy.Integration as PolyInt
 
+# set of tests comparing polyploidy integration to rescaled original dadi integrations
+
 def test_2D_integration_diploids():
     """
     Integration test for diploids by comparison to original dadi code.
