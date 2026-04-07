@@ -992,7 +992,8 @@ def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPL
     ploidy[ploidyflag] = 1
     # unpack the selection parameters from dict to list
     sel = ploidyflag.pack_sel_params(sel_dict)
-    vars_to_check = [nu,sel,theta0]
+    # since sel is a list, we need to unpack it using *
+    vars_to_check = [nu,*sel,theta0]
     if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
         Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
         return _one_pop_const_params(phi, xx, T, sel, ploidy, nu, theta0, initial_t)
