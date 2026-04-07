@@ -588,3 +588,71 @@ def effective_dimension(func_ex, grid_pts, all_boot, p0, data, log=False,
     effective_dim = numpy.trace(numpy.matmul(H, numpy.linalg.inv(GIM)))
     return effective_dim
     
+def CLAIC(log_likelihood, func_ex, grid_pts, all_boot, p0, data, log=False,
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
+    """
+    Computes the CLAIC for a model function.
+        CLAIC = -2 * log_likelihood + 2 * effective_dim as defined in
+        Varin and Vidoni (2005), Biometrika
+        and Varin et al. (2011), Statistica Sinica
+
+    log_likelihood: The log-likelihood of the best fit model
+    func_ex: Model function
+    grid_pts: Grid points at which to evaluate func_ex
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    """
+    effective_dim = effective_dimension(func_ex, grid_pts, all_boot, p0, data, log,
+                                        multinom, eps, boot_theta_adjusts)
+    
+    return -2*log_likelihood + 2*effective_dim
+
+def CLBIC(log_likelihood, func_ex, grid_pts, all_boot, p0, data, log=False,
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
+    """
+    Computes the CLBIC for a model function.
+        CLBIC = -2 * log_likelihood + log(n) * effective_dim as defined in
+        Gao and Song (2010), J. Am. Stat. Assoc.
+        and Varin et al. (2011), Statistica Sinica
+        (here n is the number of polymorphic sites in the SFS)
+
+    log_likelihood: The log-likelihood of the best fit model
+    func_ex: Model function
+    grid_pts: Grid points at which to evaluate func_ex
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is < 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    """
+    effective_dim = effective_dimension(func_ex, grid_pts, all_boot, p0, data, log,
+                                        multinom, eps, boot_theta_adjusts)
+    # data.sum() is the number of polymorphic sites in the SFS
+    return -2*log_likelihood + numpy.log(data.sum())*effective_dim

@@ -76,9 +76,9 @@ def test_3d_const_params_alloallohexaploid():
     theta0, initial_t, T = [10.2, 0.1, 0.1+0.1]
     frozen1, frozen2, frozen3 = False, False, False
 
-    HEX_a = PolyInt.PloidyType.HEX_a
-    HEX_b = PolyInt.PloidyType.HEX_b
-    HEX_c = PolyInt.PloidyType.HEX_c
+    HEX_a = PolyInt.PloidyType.HEXa
+    HEX_b = PolyInt.PloidyType.HEXb
+    HEX_c = PolyInt.PloidyType.HEXc
 
     xx = np.linspace(0,1,pts)
     np.random.seed(213)
