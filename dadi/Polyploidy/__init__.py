@@ -4,6 +4,7 @@ Modeling polyploid populations.
 
 from . import Integration, wrightfisher, PhiManip_supp
 from . import allo_demographics, auto_demographics
+from . import auto_demographics_sel, allo_demographics_sel
 from dadi.Polyploidy.Integration import PloidyType
 
 def cuda_enabled(toggle=None):
