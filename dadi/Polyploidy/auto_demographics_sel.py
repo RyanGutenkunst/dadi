@@ -8,22 +8,12 @@ import numpy
 ### Single autotetraploid population models 
 ### starting from the autotetraploid equilibrium phi
 
-def snm(notused, ns, pts, theta0=1):
-    """
-    ns = (n1,)
-
-    Standard neutral model for a single autotetraploid population.
-    """
-    xx = Numerics.default_grid(pts)
-    phi = PhiManip_supp.phi_1D_autotet(xx, theta0=theta0)
-    fs = Spectrum.from_phi(phi, ns, (xx,))
-    return fs
-snm.__param_names__ = []
+# add models here
 
 ### Single autotetraploid population models
 ### starting from the diploid equilibrium phi
 
-def two_epoch(params, ns, pts):
+def two_epoch_sel(params, ns, pts):
     """
     Two epoch model of autotetraploid formation where the 
     autotetraploid population splits and maintains a size of nu.
@@ -36,22 +26,24 @@ def two_epoch(params, ns, pts):
 
             - nu: Ratio of contemporary autotetraploid to ancient diploid population size 
                (ratio of *census* sizes).
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
         ns (tuple): Sample sizes (n1,).
         pts (int): Number of grid points to use in integration.
 
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, nu = params
+    T_WGD, nu, gamma = params
     autoflag = PolyInt.PloidyType.AUTO
     xx = Numerics.default_grid(pts)
-    phi = PhiManip.phi_1D(xx)
-    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu, ploidyflag=autoflag)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu, ploidyflag=autoflag, sel_dict={"gamma": gamma})
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
-two_epoch.__param_names__ = ['T_WGD', 'nu']
+two_epoch_sel.__param_names__ = ['T_WGD', 'nu', 'gamma']
 
-def bottlegrowth(params, ns, pts):
+def bottlegrowth_sel(params, ns, pts):
     """
     Bottlegrowth model of autotetraploid formation where the 
     autotetraploid population starts with size nuWGD and 
@@ -68,24 +60,27 @@ def bottlegrowth(params, ns, pts):
 
             - nuF: Ratio of contemporary autotetraploid population
                 to ancient diploid population size (ratio of *census* sizes).
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
         ns (tuple): Sample sizes (n1,).
         pts (int): Number of grid points to use in integration.
 
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, nuWGD, nuF = params
+    T_WGD, nuWGD, nuF, gamma = params
     nu_f = lambda t: nuWGD*numpy.exp(numpy.log(nuF/nuWGD) * t/T_WGD)
     autoflag = PolyInt.PloidyType.AUTO
     xx = Numerics.default_grid(pts)
-    phi = PhiManip.phi_1D(xx)
-    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu_f, ploidyflag=autoflag)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu_f,
+                          sel_dict={"gamma": gamma}, ploidyflag=autoflag)
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
-bottlegrowth.__param_names__ = ['T_WGD', 'nuWGD', 'nuF']
+bottlegrowth_sel.__param_names__ = ['T_WGD', 'nuWGD', 'nuF', 'gamma']
 
 
-def three_epoch(params, ns, pts):
+def three_epoch_sel(params, ns, pts):
     """
     Three epoch model of autotetraploid formation where the 
     autotetraploid population splits, maintains a size of nuWGD for T_WGD, 
@@ -105,25 +100,29 @@ def three_epoch(params, ns, pts):
 
             - nuF: Ratio of contemporary autotetraploid population (during second epoch)
                  to ancient diploid population size (ratio of *census* sizes).
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
         ns (tuple): Sample sizes (n1,).
         pts (int): Number of grid points to use in integration.
 
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, TF, nuWGD, nuF  = params
+    T_WGD, TF, nuWGD, nuF, gamma  = params
     autoflag = PolyInt.PloidyType.AUTO
     xx = Numerics.default_grid(pts)
-    phi = PhiManip.phi_1D(xx)
-    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nuWGD, ploidyflag=autoflag)
-    phi = PolyInt.one_pop(phi, xx, TF, nu=nuF, ploidyflag=autoflag)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
+    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nuWGD, 
+                          sel_dict={"gamma": gamma}, ploidyflag=autoflag)
+    phi = PolyInt.one_pop(phi, xx, TF, nu=nuF, 
+                          sel_dict={"gamma": gamma}, ploidyflag=autoflag)
     fs = Spectrum.from_phi(phi, ns, (xx,))
     return fs
-three_epoch.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF']
+three_epoch_sel.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF', 'gamma']
 
 ### Single autotetraploid population models with the diploid progenitors
 
-def bottleneck_w_dips(params, ns, pts):
+def bottleneck_w_dips_sel(params, ns, pts):
     """
     Two population model of autotetraploid formation where the 
     autotetraploid population splits and maintains a bottlenecked size of nu_auto.
@@ -136,6 +135,9 @@ def bottleneck_w_dips(params, ns, pts):
 
             - nu_auto: Ratio of contemporary autotetraploid to ancient diploid population size 
                (ratio of *census* sizes).
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
+                Note that this is used for both the diploid and autotetraploid populations.
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
 
@@ -145,11 +147,11 @@ def bottleneck_w_dips(params, ns, pts):
     Raises:
         ValueError: If `params` does not contain the expected number of elements.
     """
-    T_WGD, nu_auto = params
-    return bottleneck_asym_mig_w_dips((T_WGD, nu_auto, 0, 0), ns, pts)
-bottleneck_w_dips.__param_names__ = ['T_WGD', 'nu_auto']
+    T_WGD, nu_auto, gamma = params
+    return bottleneck_asym_mig_w_dips_sel((T_WGD, nu_auto, 0, 0, gamma), ns, pts)
+bottleneck_w_dips_sel.__param_names__ = ['T_WGD', 'nu_auto', 'gamma']
 
-def bottleneck_mig_w_dips(params, ns, pts):
+def bottleneck_mig_w_dips_sel(params, ns, pts):
     """
     Two population model of autotetraploid formation with subsequent migration where the 
     autotetraploid population splits and maintains a bottlenecked size of nu_auto.
@@ -164,6 +166,9 @@ def bottleneck_mig_w_dips(params, ns, pts):
                (ratio of *census* sizes).
 
             - m: symmetric migration rate between the two populations (2*Na*m)
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
+                Note that this is used for both the diploid and autotetraploid populations.
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
 
@@ -173,12 +178,12 @@ def bottleneck_mig_w_dips(params, ns, pts):
     Raises:
         ValueError: If `params` does not contain the expected number of elements.
     """
-    T_WGD, nu_auto, m = params
+    T_WGD, nu_auto, m, gamma = params
 
-    return bottleneck_asym_mig_w_dips((T_WGD, nu_auto, m, m), ns, pts)
-bottleneck_mig_w_dips.__param_names__ = ['T_WGD', 'nu_auto', 'm']
+    return bottleneck_asym_mig_w_dips_sel((T_WGD, nu_auto, m, m, gamma), ns, pts)
+bottleneck_mig_w_dips_sel.__param_names__ = ['T_WGD', 'nu_auto', 'm', 'gamma']
 
-def bottleneck_asym_mig_w_dips(params, ns, pts):
+def bottleneck_asym_mig_w_dips_sel(params, ns, pts):
     """
     Two population model of autotetraploid formation with subsequent migration where the 
     autotetraploid population splits and maintains a bottlenecked size of nu_auto.
@@ -195,6 +200,9 @@ def bottleneck_asym_mig_w_dips(params, ns, pts):
             - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
 
             - m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
+                Note that this is used for both the diploid and autotetraploid populations.
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
 
@@ -204,24 +212,25 @@ def bottleneck_asym_mig_w_dips(params, ns, pts):
     Raises:
         ValueError: If `params` does not contain the expected number of elements.
     """
-    T_WGD, nu_auto, m12, m21 = params
+    T_WGD, nu_auto, m12, m21, gamma = params
 
     autoflag = PolyInt.PloidyType.AUTO
 
     xx = Numerics.default_grid(pts)
-    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
 
     # Note: here, we set pop1 = dips and pop2 = autos
     # integrate from the WGD to the present
     phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_auto, m12=m12, m21=m21,
+                           sel_dict1={"gamma": gamma}, sel_dict2={"gamma": gamma},
                            ploidyflag2=autoflag)
     
     fs = Spectrum.from_phi(phi, ns, (xx,xx)) 
     return fs
-bottleneck_asym_mig_w_dips.__param_names__ = ['T_WGD', 'nu_auto', 'm12', 'm21']
+bottleneck_asym_mig_w_dips_sel.__param_names__ = ['T_WGD', 'nu_auto', 'm12', 'm21', 'gamma']
 
-def bottlegrowth_w_dips(params, ns, pts):
+def bottlegrowth_w_dips_sel(params, ns, pts):
     """
     Two population model of autotetraploid formation where the 
     autotetraploid population splits and maintains a size of nu_auto.
@@ -238,6 +247,9 @@ def bottlegrowth_w_dips(params, ns, pts):
             - nuF: Ratio of final or contemporary autotetraploid to ancient diploid population size 
                (ratio of *census* sizes).
 
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
+                Note that this is used for both the diploid and autotetraploid populations.
+
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
 
@@ -247,12 +259,12 @@ def bottlegrowth_w_dips(params, ns, pts):
     Raises:
         ValueError: If `params` does not contain the expected number of elements.
     """
-    T_WGD, nuB, nuF = params
+    T_WGD, nuB, nuF, gamma = params
 
-    return bottlegrowth_asym_mig_w_dips((T_WGD, nuB, nuF, 0, 0), ns, pts)
-bottlegrowth_w_dips.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm12', 'm21']
+    return bottlegrowth_asym_mig_w_dips_sel((T_WGD, nuB, nuF, 0, 0, gamma), ns, pts)
+bottlegrowth_w_dips_sel.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm12', 'm21', 'gamma']
 
-def bottlegrowth_mig_w_dips(params, ns, pts):
+def bottlegrowth_mig_w_dips_sel(params, ns, pts):
     """
     Two population model of autotetraploid formation where the 
     autotetraploid population splits and maintains a size of nu_auto.
@@ -270,6 +282,9 @@ def bottlegrowth_mig_w_dips(params, ns, pts):
                (ratio of *census* sizes).
 
             - m: symmetric migration rate between the two populations (2*Na*m)
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
+                Note that this is used for both the diploid and autotetraploid populations.
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
 
@@ -279,12 +294,12 @@ def bottlegrowth_mig_w_dips(params, ns, pts):
     Raises:
         ValueError: If `params` does not contain the expected number of elements.
     """
-    T_WGD, nuB, nuF, m = params
+    T_WGD, nuB, nuF, m, gamma = params
 
-    return bottlegrowth_asym_mig_w_dips((T_WGD, nuB, nuF, m, m), ns, pts)
-bottlegrowth_mig_w_dips.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm']
+    return bottlegrowth_asym_mig_w_dips_sel((T_WGD, nuB, nuF, m, m, gamma), ns, pts)
+bottlegrowth_mig_w_dips_sel.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm', 'gamma']
 
-def bottlegrowth_asym_mig_w_dips(params, ns, pts):
+def bottlegrowth_asym_mig_w_dips_sel(params, ns, pts):
     """
     Two population model of autotetraploid formation where the 
     autotetraploid population splits and maintains a size of nu_auto.
@@ -304,6 +319,9 @@ def bottlegrowth_asym_mig_w_dips(params, ns, pts):
             - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
 
             - m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+
+            - gamma: population-scaled selection coefficient (= 2*Na*s)
+                Note that this is used for both the diploid and autotetraploid populations.
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
 
@@ -313,20 +331,22 @@ def bottlegrowth_asym_mig_w_dips(params, ns, pts):
     Raises:
         ValueError: If `params` does not contain the expected number of elements.
     """
-    T_WGD, nuB, nuF, m12, m21 = params
+    T_WGD, nuB, nuF, m12, m21, gamma = params
 
     autoflag = PolyInt.PloidyType.AUTO
 
     xx = Numerics.default_grid(pts)
-    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D(xx, gamma=gamma)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
     
     # set up the nu_func for only the auotetraploid population
     nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB)* t/T_WGD)
     
     # Note: here, we set pop1 = dips and pop2 = autos
-    phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_func, m12=m12, m21=m21, ploidyflag2=autoflag)
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_func, m12=m12, m21=m21, 
+                           sel_dict1={"gamma": gamma}, sel_dict2={"gamma": gamma},
+                           ploidyflag2=autoflag)
     
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
-bottlegrowth_asym_mig_w_dips.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm12', 'm21']
+bottlegrowth_asym_mig_w_dips_sel.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm12', 'm21', 'gamma']
