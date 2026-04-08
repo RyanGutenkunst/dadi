@@ -3,7 +3,6 @@ from dadi.Spectrum_mod import Spectrum
 from . import Integration as PolyInt
 import numpy
 
-
 ### Single allotetraploid population models
 
 def two_epoch(params, ns, pts):
@@ -13,7 +12,10 @@ def two_epoch(params, ns, pts):
     allotetraploid population splits and maintains a size of nu.
     
     Parameters:
-        params (tuple): (T_WGD, nu, H)
+        params (tuple): (T_div, T_WGD, nu, H)
+            - T_div: Divergence period between the two diploid progenitors 
+               (in units of 2*Na generations).
+
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
@@ -27,20 +29,19 @@ def two_epoch(params, ns, pts):
     Returns:
         fs (Spectrum): The resulting (collapsed) frequency spectrum.
     """
-    T_WGD, nu, H = params
+    T_div, T_WGD, nu, H = params
     alloaflag = PolyInt.PloidyType.ALLOa
     allobflag = PolyInt.PloidyType.ALLOb
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
-    # integrate for T=1 to model diploid divergence
-    phi = PolyInt.two_pops(phi, xx, 1)
+    phi = PolyInt.two_pops(phi, xx, T_div)
     # then, integrate for T_WGD with allotetraploids
     phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nu, nu2=nu, m12=H, m21=H,
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
-two_epoch.__param_names__ = ['T_WGD', 'nu', 'H']
+two_epoch.__param_names__ = ['T_div', 'T_WGD', 'nu', 'H']
 
 def two_epoch_noHE(params, ns, pts):
     """
@@ -49,7 +50,10 @@ def two_epoch_noHE(params, ns, pts):
     allotetraploid population splits and maintains a size of nu.
     
     Parameters:
-        params (tuple): (T_WGD, nu)
+        params (tuple): (T_div, T_WGD, nu)
+            - T_div: Divergence period between the two diploid progenitors 
+               (in units of 2*Na generations).
+
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
@@ -61,11 +65,10 @@ def two_epoch_noHE(params, ns, pts):
     Returns:
         fs (Spectrum): The resulting (collapsed) frequency spectrum.
     """
-    T_WGD, nu = params
-    fs = two_epoch((T_WGD, nu, 0), ns, pts)
+    T_div, T_WGD, nu = params
+    fs = two_epoch((T_div, T_WGD, nu, 0), ns, pts)
     return fs
-two_epoch_noHE.__param_names__ = ['T_WGD', 'nu']
-
+two_epoch_noHE.__param_names__ = ['T_div', 'T_WGD', 'nu']
 
 def bottlegrowth(params, ns, pts):
     """
@@ -74,7 +77,9 @@ def bottlegrowth(params, ns, pts):
     grows exponentially to a size of nuF
     
     Parameters:
-        params (tuple): (T_WGD, nuWGD, nuF, H)
+        params (tuple): (T_div, T_WGD, nuWGD, nuF, H)
+            - T_div: Divergence period between the two diploid progenitors 
+               (in units of 2*Na generations).
 
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                allotetraploid population (in units of 2*Na generations).
@@ -92,20 +97,19 @@ def bottlegrowth(params, ns, pts):
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, nuWGD, nuF, H = params
+    T_div, T_WGD, nuWGD, nuF, H = params
     nu_f = lambda t: nuWGD*numpy.exp(numpy.log(nuF/nuWGD) * t/T_WGD)
     alloaflag = PolyInt.PloidyType.ALLOa
     allobflag = PolyInt.PloidyType.ALLOb
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
-    # T=1 divergence period between diploids
-    phi = PolyInt.two_pops(phi, xx, 1)
-    phi = PolyInt.two_pops(phi, xx, T_WGD, nu=nu_f, m12=H, m21=H,
+    phi = PolyInt.two_pops(phi, xx, T_div)
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nu_f, nu2=nu_f, m12=H, m21=H,
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
-bottlegrowth.__param_names__ = ["T_WGD", "nuWGD", "nuF", "H"]
+bottlegrowth.__param_names__ = ["T_div", "T_WGD", "nuWGD", "nuF", "H"]
 
 def bottlegrowth_noHE(params, ns, pts):
     """
@@ -114,7 +118,9 @@ def bottlegrowth_noHE(params, ns, pts):
     grows exponentially to a size of nuF
     
     Parameters:
-        params (tuple): (T_WGD, nuWGD, nuF)
+        params (tuple): (T_div, T_WGD, nuWGD, nuF)
+            - T_div: Divergence period between the two diploid progenitors 
+               (in units of 2*Na generations).
 
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                allotetraploid population (in units of 2*Na generations).
@@ -130,10 +136,10 @@ def bottlegrowth_noHE(params, ns, pts):
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, nuWGD, nuF = params
-    fs = bottlegrowth((T_WGD, nuWGD, nuF, 0), ns, pts)
+    T_div, T_WGD, nuWGD, nuF = params
+    fs = bottlegrowth((T_div, T_WGD, nuWGD, nuF, 0), ns, pts)
     return fs
-bottlegrowth_noHE.__param_names__ = ["T_WGD", "nuWGD", "nuF"]
+bottlegrowth_noHE.__param_names__ = ["T_div", "T_WGD", "nuWGD", "nuF"]
 
 def three_epoch(params, ns, pts):
     """
@@ -144,6 +150,8 @@ def three_epoch(params, ns, pts):
     
     Parameters:
         params (tuple): (T_WGD, TF, nuWGD, nuF, H)
+            - T_div: Divergence period between the two diploid progenitors 
+               (in units of 2*Na generations).
 
             - T_WGD: Time length between the WGD event and second size change, creating the  
                allotetraploid population (in units of 2*Na generations).
@@ -163,14 +171,13 @@ def three_epoch(params, ns, pts):
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, TF, nuWGD, nuF, H  = params
+    T_div, T_WGD, TF, nuWGD, nuF, H  = params
     alloaflag = PolyInt.PloidyType.ALLOa
     allobflag = PolyInt.PloidyType.ALLOb
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
     phi = PhiManip.phi_1D_to_2D(xx, phi)
-    # T=1 divergence period between diploids
-    phi = PolyInt.two_pops(phi, xx, 1)
+    phi = PolyInt.two_pops(phi, xx, T_div)
     # second epoch
     phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nuWGD, nu2=nuWGD, m12=H, m21=H,
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
@@ -179,7 +186,7 @@ def three_epoch(params, ns, pts):
                            ploidyflag1=alloaflag, ploidyflag2=allobflag)
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
-three_epoch.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF', 'H']
+three_epoch.__param_names__ = ['T_div', 'T_WGD', 'TF', 'nuWGD', 'nuF', 'H']
 
 
 def three_epoch_noHE(params, ns, pts):
@@ -190,7 +197,9 @@ def three_epoch_noHE(params, ns, pts):
     This is similar to having a bottleneck for some period and then recover after the bottleneck.
     
     Parameters:
-        params (tuple): (T_WGD, TF, nuWGD, nuF)
+        params (tuple): (T_div, T_WGD, TF, nuWGD, nuF)
+            - T_div: Divergence period between the two diploid progenitors 
+               (in units of 2*Na generations).
 
             - T_WGD: Time length between the WGD event and second size change, creating the  
                allotetraploid population (in units of 2*Na generations).
@@ -208,10 +217,10 @@ def three_epoch_noHE(params, ns, pts):
     Returns:
         fs (Spectrum): The resulting frequency spectrum.
     """
-    T_WGD, TF, nuWGD, nuF = params
-    fs = three_epoch((T_WGD, TF, nuWGD, nuF, 0), ns, pts)
+    T_div, T_WGD, TF, nuWGD, nuF = params
+    fs = three_epoch((T_div, T_WGD, TF, nuWGD, nuF, 0), ns, pts)
     return fs
-three_epoch_noHE.__param_names__ = ['T_WGD', 'TF', 'nuWGD', 'nuF']
+three_epoch_noHE.__param_names__ = ['T_div', 'T_WGD', 'TF', 'nuWGD', 'nuF']
 
 
 ### Single allotetraploid population models with the diploid progenitors
