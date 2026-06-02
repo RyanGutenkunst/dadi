@@ -209,14 +209,14 @@ def test_4d_integration_allotetraploid():
                                 m12=e12, m13=m13, m14=m14, m21=e21, m23=m23, m24=m24,
                                 m31=m31, m32=m32, m34=e34, m41=m41, m42=m42, m43=e43,
                                 sel_dict1=s_dict1, sel_dict2=s_dict2, sel_dict3=s_dict3, sel_dict4=s_dict4,
-                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOa,
+                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOb,
                                 theta0=theta0, frozen1=f1, frozen2=f2, frozen3=f3, frozen4=f4)
     dadi.cuda_enabled(False)
     phi_cpu = PolyInt.four_pops(phi.copy(), xx, T=T, nu1=nu1, nu2=nu2, nu3=nu3, nu4=nu4,
                                 m12=e12, m13=m13, m14=m14, m21=e21, m23=m23, m24=m24,
                                 m31=m31, m32=m32, m34=e34, m41=m41, m42=m42, m43=e43,
                                 sel_dict1=s_dict1, sel_dict2=s_dict2, sel_dict3=s_dict3, sel_dict4=s_dict4,
-                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOa,
+                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOb,
                                 theta0=theta0, frozen1=f1, frozen2=f2, frozen3=f3, frozen4=f4)
 
     assert(np.allclose(phi_cpu, phi_gpu))
@@ -231,14 +231,14 @@ def test_4d_integration_allotetraploid():
                                                 m12=e12, m13=m13, m14=m14, m21=e21, m23=m23, m24=m24,
                                                 m31=m31, m32=m32, m34=e34, m41=m41, m42=m42, m43=e43,
                                                 sel_dict1=s_dict1, sel_dict2=s_dict2, sel_dict3=s_dict3, sel_dict4=s_dict4,
-                                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOa,
+                                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOb,
                                                 theta0=theta0, frozen1=f1, frozen2=f2, frozen3=f3, frozen4=f4)
                     dadi.cuda_enabled(False)
                     phi_cpu = PolyInt.four_pops(phi.copy(), xx, T=T, nu1=nu1, nu2=nu2, nu3=nu3, nu4=nu4,
                                                 m12=e12, m13=m13, m14=m14, m21=e21, m23=m23, m24=m24,
                                                 m31=m31, m32=m32, m34=e34, m41=m41, m42=m42, m43=e43,
                                                 sel_dict1=s_dict1, sel_dict2=s_dict2, sel_dict3=s_dict3, sel_dict4=s_dict4,
-                                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOa,
+                                                ploidyflag1=ALLOa, ploidyflag2=ALLOb, ploidyflag3=ALLOa, ploidyflag4=ALLOb,
                                                 theta0=theta0, frozen1=f1, frozen2=f2, frozen3=f3, frozen4=f4)
                     assert(np.allclose(phi_cpu, phi_gpu))
 

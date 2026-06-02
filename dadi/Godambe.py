@@ -548,7 +548,7 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return score_adj, score_org
     return score_adj
 
-def effective_dimension(func_ex, grid_pts, all_boot, p0, data, log=False,
+def effective_dimension(func_ex, grid_pts, all_boot, p0, data,
                multinom=True, eps=0.01, boot_theta_adjusts=None):
     """
     Computes the effective number of parameters for calculating CLAIC and CLBIC
@@ -558,9 +558,6 @@ def effective_dimension(func_ex, grid_pts, all_boot, p0, data, log=False,
     all_boot: List of bootstrap frequency spectra
     p0: Best-fit parameters for func_ex
     data: Original data frequency spectrum
-    log: If True, assume log-normal distribution of parameters. Returned values
-         are then the standard deviations of the *logs* of the parameter values,
-         which can be interpreted as relative parameter uncertainties.
     multinom: If True, assume model is defined without an explicit parameter for
               theta. Because uncertainty in theta must be accounted for to get
               correct uncertainties for other parameters, this function will
