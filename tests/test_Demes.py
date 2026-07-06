@@ -5,9 +5,9 @@ import numpy as np
 # Check if Demes is installed
 try:
     from dadi.Demes import Demes
-    dadi.Spectrum.from_demes("tests/demes/gutenkunst_ooa.yaml", 
-                            sampled_demes=["YRI", "CEU", "CHB"], 
-                            sample_sizes=[2, 3, 4], 
+    dadi.Spectrum.from_demes("tests/demes/gutenkunst_ooa.yaml",
+                            sampled_demes=["YRI", "CEU", "CHB"],
+                            sample_sizes=[2, 3, 4],
                             pts=[15,20,25])
     skip = False
 except:
@@ -32,7 +32,7 @@ def test_split(test_details):
     dadi_phi2D = dadi.PhiManip.phi_1D_to_2D(xx, phi1D)
     dadi_phi3D_split_1 = dadi.PhiManip.phi_2D_to_3D_split_1(xx, dadi_phi2D)
     dadi_phi3D_split_2 = dadi.PhiManip.phi_2D_to_3D_split_2(xx, dadi_phi2D)
-    
+
     pop_ids = ['1']
     parent = '1'
     children=['A', 'B']
@@ -45,7 +45,7 @@ def test_split(test_details):
         dadi_phi3D = phifunc(xx, dadi_phi2D)
         demes_phi3D = Demes._split_phi(demes_phi2D, xx, pop_ids, parent, new_pop_ids=['A','B','C'])
         assert(np.allclose(demes_phi3D, dadi_phi3D))
-    
+
     pop_ids = ['A','B','C']
     proportions = [[1,0,0], [0,1,0], [0,0,1]]
     for props, parent in zip(proportions, pop_ids):
@@ -84,13 +84,13 @@ def test_integration(test_details):
     assert(np.allclose(demes_phi2D, dadi_phi2D))
 
     integration_params = nu, T, M, gamma, h, theta, frozen = [
-    [2,1,3],1, np.array([[0,1,2],[1,0,2],[2,2,0]]), 
+    [2,1,3],1, np.array([[0,1,2],[1,0,2],[2,2,0]]),
     [0,0,0], [0.5,0.5,0.5], 1, [False,False,False]
     ]
     pop_ids = ['1','2','3']
     phi3D = dadi.PhiManip.phi_2D_to_3D_split_2(xx, dadi_phi2D)
 
-    dadi_phi3D = dadi.Integration.three_pops(phi3D, xx, T, nu[0], nu[1], nu[2], 
+    dadi_phi3D = dadi.Integration.three_pops(phi3D, xx, T, nu[0], nu[1], nu[2],
     	m12=M[0,1], m13=M[0,2], m21=M[1,0], m23=M[1,2], m31=M[2,0], m32=M[2,1])
     demes_phi3D = Demes._integrate_phi(phi3D, xx, integration_params, pop_ids)
     assert(np.allclose(demes_phi3D, dadi_phi3D))
@@ -144,7 +144,7 @@ def test_basic_loading(test_details):
 @pytest.mark.skipif(skip, reason="Could not load Demes")
 def test_demes_vs_dadi(test_details):
     fs_demes = dadi.Spectrum.from_demes(pytest.model, sampled_demes=pytest.sampled_demes, sample_sizes=pytest.sample_sizes, pts=pytest.pts_l)
-    
+
     def OutOfAfrica_with_demes_reordering(params, ns, pts):
         nuAf, nuB, nuEu0, nuEu, nuAs0, nuAs, mAfB, mAfEu, mAfAs, mEuAs, TAf, TB, TEuAs = params
         xx = dadi.Numerics.default_grid(pts)
@@ -252,3 +252,84 @@ def test_export_mapping():
     g = dadi.Demes.output(deme_mapping={'YRI':['d1_1', 'd1_2', 'd1_3'], 'Bottle':['d2_2'],
                                                 'CEU':['d2_3'], 'CHB':['d3_3']})
     # The correctness test here is visual. Here just testing whether method crashes.
+
+
+@pytest.mark.skipif(skip, reason="Could not load Demes")
+def test_object_func_returns_neg_ll():
+    from dadi.Demes.Inference import _object_func, _get_demes_dict
+
+    builder = _get_demes_dict("tests/demes/two_epoch.yaml")
+
+    # Fit the recent epoch's population size (epoch index 1, start_size)
+    options = {
+        "parameters": [
+            {
+                "name": "N",
+                "values": [{"demes": {"deme0": {"epochs": {1: "start_size"}}}}],
+            }
+        ]
+    }
+
+    data = dadi.Spectrum.from_demes(
+        "tests/demes/two_epoch.yaml",
+        sampled_demes=["deme0"],
+        sample_sizes=[10],
+        pts=[15, 20, 25],
+    )
+
+    params = np.array([2000.0])
+    result = _object_func(params, data, [15, 20, 25], builder, options)
+
+    # _object_func returns -LL for use by minimization optimizers; LL <= 0 so -LL >= 0
+    assert result > 0, f"Expected positive -LL from dadi.Demes.Inference._object_func, got {result}"
+
+@pytest.mark.skipif(skip, reason="Could not load Demes")
+def test_optimize_moves_toward_optimum():
+    """
+    _object_func returns -LL (positive), matching dadi.Inference._object_func.
+    scipy.optimize.fmin minimizes its objective, so minimizing -LL is equivalent
+    to maximizing LL — the optimizer should move toward a better fit.
+
+    Starts from a perturbed parameter value and verifies that fmin reduces
+    the objective (i.e., -LL at xopt <= -LL at start).
+    """
+    import scipy.optimize
+    from dadi.Demes.Inference import _object_func, _get_demes_dict
+
+    builder = _get_demes_dict("tests/demes/two_epoch.yaml")
+
+    options = {
+        "parameters": [
+            {
+                "name": "N",
+                "values": [{"demes": {"deme0": {"epochs": {1: "start_size"}}}}],
+            }
+        ]
+    }
+
+    data = dadi.Spectrum.from_demes(
+        "tests/demes/two_epoch.yaml",
+        sampled_demes=["deme0"],
+        sample_sizes=[10],
+        pts=[15, 20, 25],
+    )
+
+    # Start away from the true optimum (true N=2000)
+    perturbed_params = np.array([500.0])
+    neg_ll_start = _object_func(perturbed_params, data, [15, 20, 25], builder, options)
+
+    xopt, fopt, _, _, _ = scipy.optimize.fmin(
+        _object_func,
+        perturbed_params,
+        args=(data, [15, 20, 25], builder, options),
+        disp=False,
+        maxiter=50,
+        maxfun=50,
+        full_output=True,
+    )
+    neg_ll_end = _object_func(xopt, data, [15, 20, 25], builder, options)
+
+    assert neg_ll_end <= neg_ll_start, (
+        f"fmin did not improve the fit (-LL went from {neg_ll_start} to {neg_ll_end}); "
+        "_object_func may have the wrong sign for scipy minimizers."
+    )

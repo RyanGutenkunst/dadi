@@ -373,7 +373,7 @@ def _object_func(
     # model = dadi.Demes.SFS(
     #     g, input_sampled_demes, sample_sizes, sample_times, pts
     # )
-    
+
     # if fit_ancestral_misid:
     #     model = dadi.Numerics.make_anc_state_misid_func(model)
 
@@ -401,7 +401,7 @@ def _object_func(
     #     output_stream.write("%-8i, %-12g, %s%s" % (_counter, LL, param_str, os.linesep))
     #     moments.Misc.delayed_flush(stream=output_stream, delay=0.5)
 
-    return LL
+    return -1 * LL
 
 
 def _object_func_log(log_params, *args, **kwargs):
@@ -466,7 +466,7 @@ def optimize(
         output (str, optional): If given, the filename for the output best-fit model YAML.
         overwrite (bool, optional): If True, overwrites any existing file with the same output
             name.
-    
+
     Returns:
         param_names (list[str]): List of parameter names
         xopt (list[float]): The optimal parameters
