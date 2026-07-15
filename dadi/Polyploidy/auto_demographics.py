@@ -34,7 +34,7 @@ def two_epoch(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nu: Ratio of contemporary autotetraploid to ancient diploid population size 
+            - nu: Ratio of contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
         ns (tuple): Sample sizes (n1,).
         pts (int): Number of grid points to use in integration.
@@ -64,10 +64,10 @@ def bottlegrowth(params, ns, pts):
                autotetraploid population (in units of 2*Na generations).
 
             - nuWGD: Ratio of autotetraploid population immediately after WGD
-                to ancient diploid population size (ratio of *census* sizes).
+                to ancestral diploid population size (ratio of *census* sizes).
 
             - nuF: Ratio of contemporary autotetraploid population
-                to ancient diploid population size (ratio of *census* sizes).
+                to ancestral diploid population size (ratio of *census* sizes).
         ns (tuple): Sample sizes (n1,).
         pts (int): Number of grid points to use in integration.
 
@@ -101,10 +101,10 @@ def three_epoch(params, ns, pts):
             - TF: Time in the past at which the second epoch begins.
 
             - nuWGD: Ratio of initial autotetraploid population (during first epoch)
-                 to ancient diploid population size (ratio of *census* sizes).
+                 to ancestral diploid population size (ratio of *census* sizes).
 
             - nuF: Ratio of contemporary autotetraploid population (during second epoch)
-                 to ancient diploid population size (ratio of *census* sizes).
+                 to ancestral diploid population size (ratio of *census* sizes).
         ns (tuple): Sample sizes (n1,).
         pts (int): Number of grid points to use in integration.
 
@@ -134,7 +134,7 @@ def bottleneck_w_dips(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nu_auto: Ratio of contemporary autotetraploid to ancient diploid population size 
+            - nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
         ns (tuple): Sample sizes (n1, n2).
         pts (int): Number of grid points to use in integration.
@@ -160,7 +160,7 @@ def bottleneck_mig_w_dips(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nu_auto: Ratio of contemporary autotetraploid to ancient diploid population size 
+            - nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - m: symmetric migration rate between the two populations (2*Na*m)
@@ -189,7 +189,7 @@ def bottleneck_asym_mig_w_dips(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nu_auto: Ratio of contemporary autotetraploid to ancient diploid population size 
+            - nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
@@ -227,15 +227,15 @@ def bottlegrowth_w_dips(params, ns, pts):
     autotetraploid population splits and maintains a size of nu_auto.
 
     Parameters:
-        params (tuple): (T, nuB, nuF)
+        params (tuple): (T_WGD, nuB, nuF)
 
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nuB: Ratio of bottlenecked autotetraploid to ancient diploid population size s
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
                (ratio of *census* sizes).
 
-            - nuF: Ratio of final or contemporary autotetraploid to ancient diploid population size 
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
         ns (tuple): Sample sizes (n1, n2).
@@ -258,15 +258,15 @@ def bottlegrowth_mig_w_dips(params, ns, pts):
     autotetraploid population splits and maintains a size of nu_auto.
 
     Parameters:
-        params (tuple): (T, nuB, nuF, m)
+        params (tuple): (T_WGD, nuB, nuF, m)
 
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nuB: Ratio of bottlenecked autotetraploid to ancient diploid population size s
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
                (ratio of *census* sizes).
 
-            - nuF: Ratio of final or contemporary autotetraploid to ancient diploid population size 
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - m: symmetric migration rate between the two populations (2*Na*m)
@@ -290,15 +290,15 @@ def bottlegrowth_asym_mig_w_dips(params, ns, pts):
     autotetraploid population splits and maintains a size of nu_auto.
 
     Parameters:
-        params (tuple): (T, nuB, nuF, m12, m21)
+        params (tuple): (T_WGD, nuB, nuF, m12, m21)
 
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nuB: Ratio of bottlenecked autotetraploid to ancient diploid population size s
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
                (ratio of *census* sizes).
 
-            - nuF: Ratio of final or contemporary autotetraploid to ancient diploid population size 
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
@@ -330,3 +330,132 @@ def bottlegrowth_asym_mig_w_dips(params, ns, pts):
     fs = Spectrum.from_phi(phi, ns, (xx,xx))
     return fs
 bottlegrowth_asym_mig_w_dips.__param_names__ = ['T_WGD', 'nuB', 'nuF', 'm12', 'm21']
+
+
+def bottlegrowth_dip_size_change(params, ns, pts):
+    """
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip)
+
+            - T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+            - T_dip: Time in the past at which the diploid population changes size
+                (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    """
+    T_WGD, T_dip, nuB, nuF, nu_dip = params
+
+    return bottlegrowth_dip_size_change_asym_mig((T_WGD, T_dip, nuB, nuF, nu_dip, 0, 0), ns, pts)
+bottlegrowth_dip_size_change.__param_names__ = ['T_WGD', 'T_dip', 'nuB', 'nuF', 'nu_dip']
+
+
+def bottlegrowth_dip_size_change_mig(params, ns, pts):
+    """
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip, m)
+
+            - T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+            - T_dip: Time in the past at which the diploid population changes size
+                (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+            - m: symmetric migration rate between the two populations (2*Na*m)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    """
+    T_WGD, T_dip, nuB, nuF, nu_dip, m = params
+
+    return bottlegrowth_dip_size_change_asym_mig((T_WGD, T_dip, nuB, nuF, nu_dip, m, m), ns, pts)
+bottlegrowth_dip_size_change_mig.__param_names__ = ['T_WGD', 'T_dip', 'nuB', 'nuF', 'nu_dip', 'm']
+
+
+def bottlegrowth_dip_size_change_asym_mig(params, ns, pts):
+    """
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip, m12, m21)
+
+            - T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+            - T_dip: Time in the past at which the diploid population changes size
+                (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+            - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+            - m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    """
+    T_WGD, T_dip, nuB, nuF, nu_dip, m12, m21 = params
+
+    autoflag = PolyInt.PloidyType.AUTO
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    
+    T_total = T_WGD + T_dip
+    # set up the nu_func for only the auotetraploid population
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB)* t/T_total)
+    
+    # Note: here, we set pop1 = dips and pop2 = autos
+    # integrate from the WGD to dip size change
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_func, m12=m12, m21=m21, ploidyflag2=autoflag)
+    # integrate from dip size change to the present
+    phi = PolyInt.two_pops(phi, xx, T_total, nu1=nu_dip, nu2=nu_func, m12=m12, m21=m21, ploidyflag2=autoflag, initial_t = T_WGD)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs
+bottlegrowth_dip_size_change_asym_mig.__param_names__ = ['T_WGD', 'T_dip', 'nuB', 'nuF', 'nu_dip', 'm12', 'm21']

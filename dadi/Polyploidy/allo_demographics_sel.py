@@ -19,7 +19,7 @@ def two_epoch_sel(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nu: Ratio of contemporary autotetraploid to ancient diploid population size 
+            - nu: Ratio of contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - H: homoeologous exchange rate (in terms of 2*Na*eta)
@@ -60,7 +60,7 @@ def two_epoch_sel_noHE(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                autotetraploid population (in units of 2*Na generations).
 
-            - nu: Ratio of contemporary autotetraploid to ancient diploid population size 
+            - nu: Ratio of contemporary autotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - gamma: population-scaled selection coefficient (= 2*Na*s)
@@ -90,10 +90,10 @@ def bottlegrowth_sel(params, ns, pts):
                allotetraploid population (in units of 2*Na generations).
 
             - nuWGD: Ratio of allotetraploid population immediately after WGD
-                to ancient diploid population size (ratio of *census* sizes).
+                to ancestral diploid population size (ratio of *census* sizes).
 
             - nuF: Ratio of contemporary allotetraploid population
-                to ancient diploid population size (ratio of *census* sizes).
+                to ancestral diploid population size (ratio of *census* sizes).
 
             - H: homoeologous exchange rate (in terms of 2*Na*eta)
 
@@ -134,10 +134,10 @@ def bottlegrowth_sel_noHE(params, ns, pts):
                allotetraploid population (in units of 2*Na generations).
 
             - nuWGD: Ratio of allotetraploid population immediately after WGD
-                to ancient diploid population size (ratio of *census* sizes).
+                to ancestral diploid population size (ratio of *census* sizes).
 
             - nuF: Ratio of contemporary allotetraploid population
-                to ancient diploid population size (ratio of *census* sizes).
+                to ancestral diploid population size (ratio of *census* sizes).
 
             - gamma: population-scaled selection coefficient (= 2*Na*s)
         ns (tuple): Sample sizes (n1,n2).
@@ -169,10 +169,10 @@ def three_epoch_sel(params, ns, pts):
             - TF: Time in the past at which the second epoch begins.
 
             - nuWGD: Ratio of initial allotetraploid population (during first epoch)
-                 to ancient diploid population size (ratio of *census* sizes).
+                 to ancestral diploid population size (ratio of *census* sizes).
 
             - nuF: Ratio of contemporary allotetraploid population (during second epoch)
-                 to ancient diploid population size (ratio of *census* sizes).
+                 to ancestral diploid population size (ratio of *census* sizes).
 
             - H: homoeologous exchange rate (in terms of 2*Na*eta)
 
@@ -221,10 +221,10 @@ def three_epoch_sel_noHE(params, ns, pts):
             - TF: Time in the past at which the second epoch begins.
 
             - nuWGD: Ratio of initial allotetraploid population (during first epoch)
-                 to ancient diploid population size (ratio of *census* sizes).
+                 to ancestral diploid population size (ratio of *census* sizes).
 
             - nuF: Ratio of contemporary allotetraploid population (during second epoch)
-                 to ancient diploid population size (ratio of *census* sizes).
+                 to ancestral diploid population size (ratio of *census* sizes).
 
             - gamma: population-scaled selection coefficient (= 2*Na*s)
         ns (tuple): Sample sizes (n1,n2).
@@ -255,7 +255,7 @@ def bottleneck_asym_mig_w_dips_sel(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                allotetraploid population (in units of 2*Na generations).
 
-            - nu_allo: Ratio of contemporary allotetraploid to ancient diploid population size 
+            - nu_allo: Ratio of contemporary allotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - H: homoeologous exchange rate between the two subgenomes, = 4*Na*eta
@@ -320,7 +320,7 @@ def bottleneck_mig_w_dips_sel(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                allotetraploid population (in units of 2*Na generations).
 
-            - nu_allo: Ratio of contemporary allotetraploid to ancient diploid population size 
+            - nu_allo: Ratio of contemporary allotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - H: homoeologous exchange rate between the two subgenomes, = 4*Na*eta
@@ -359,7 +359,7 @@ def bottleneck_w_dips_sel(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                allotetraploid population (in units of 2*Na generations).
 
-            - nu_allo: Ratio of contemporary allotetraploid to ancient diploid population size 
+            - nu_allo: Ratio of contemporary allotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - H: homoeologous exchange rate between the two subgenomes, = 4*Na*eta
@@ -395,7 +395,7 @@ def bottleneck_noHE_w_dips_sel(params, ns, pts):
             - T_WGD: Time in the past at which the WGD occurred, creating the  
                allotetraploid population (in units of 2*Na generations).
 
-            - nu_allo: Ratio of contemporary allotetraploid to ancient diploid population size 
+            - nu_allo: Ratio of contemporary allotetraploid to ancestral diploid population size 
                (ratio of *census* sizes).
 
             - gamma: population-scaled selection coefficient (= 2*Na*s)
