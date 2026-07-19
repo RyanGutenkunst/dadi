@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.Godambe API documentation</title>
+<meta name="description" content="Parameter uncertainties and likelihood ratio tests using Godambe information." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Godambe</code></h1>
+</header>
+<section id="section-intro">
+<p>Parameter uncertainties and likelihood ratio tests using Godambe information.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Parameter uncertainties and likelihood ratio tests using Godambe information.
+&#34;&#34;&#34;
+import numpy
+
+from dadi import Inference
+from dadi.Spectrum_mod import Spectrum
+
+two_pt_deriv_test = False
+
+def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
+    &#34;&#34;&#34;
+    Calculate element [ii][jj] of the Hessian matrix, a matrix
+    of partial second derivatives w.r.t. to parameters ii and jj
+        
+    func: Model function
+    f0: Evaluation of func at p0
+    p0: Parameters for func
+    eps: List of absolute step sizes to use for each parameter when taking
+         finite differences.
+    args: Additional arguments to func
+    one_sided: Optionally, pass in a sequence of length p0 that determines
+               whether a one-sided derivative will be used for each parameter.
+    &#34;&#34;&#34;
+    # Note that we need to specify dtype=float, to avoid this being an integer
+    # array which will silently fail when adding fractional eps.
+    if one_sided is None:
+        one_sided = [False]*len(p0)
+
+    pwork = numpy.array(p0, copy=True, dtype=float)
+    if ii == jj:
+        if pwork[ii] != 0 and not one_sided[ii]:
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+            
+            pwork[ii] = p0[ii] - eps[ii]
+            fm = func(pwork, *args)
+            
+            element = (fp - 2*f0 + fm)/eps[ii]**2
+        else:
+            pwork[ii] = p0[ii] + 2*eps[ii]
+            fpp = func(pwork, *args)
+            
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+
+            element = (fpp - 2*fp + f0)/eps[ii]**2
+    else:
+        if pwork[ii] != 0 and pwork[jj] != 0 and not one_sided[ii] and not one_sided[jj]:
+            # f(xi + hi, xj + h)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fpp = func(pwork, *args)
+            
+            # f(xi + hi, xj - hj)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj] - eps[jj]
+            fpm = func(pwork, *args)
+            
+            # f(xi - hi, xj + hj)
+            pwork[ii] = p0[ii] - eps[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fmp = func(pwork, *args)
+            
+            # f(xi - hi, xj - hj)
+            pwork[ii] = p0[ii] - eps[ii]
+            pwork[jj] = p0[jj] - eps[jj]
+            fmm = func(pwork, *args)
+
+            element = (fpp - fpm - fmp + fmm)/(4 * eps[ii]*eps[jj])
+        else:
+            # f(xi + hi, xj + h)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fpp = func(pwork, *args)
+            
+            # f(xi + hi, xj)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj]
+            fpm = func(pwork, *args)
+            
+            # f(xi, xj + hj)
+            pwork[ii] = p0[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fmp = func(pwork, *args)
+            
+            element = (fpp - fpm - fmp + f0)/(eps[ii]*eps[jj])
+    return element
+
+def get_hess(func, p0, eps, args=()):
+    &#34;&#34;&#34;
+    Calculate Hessian matrix of partial second derivatives. 
+    Hij = dfunc/(dp_i dp_j)
+    
+    func: Model function
+    p0: Parameter values to take derivative around
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    args: Additional arguments to func
+    &#34;&#34;&#34;
+    # Calculate step sizes for finite-differences.
+    eps_in = eps
+    eps = numpy.empty([len(p0)])
+    one_sided = [False]*len(p0)
+    for i, pval in enumerate(p0):
+        if pval != 0:
+            # Account for floating point arithmetic issues
+            if pval*eps_in &lt; 1e-6:
+                eps[i] = eps_in
+                one_sided[i] = True
+            else:
+                eps[i] = eps_in*pval
+        else:
+            # Account for parameters equal to zero
+            eps[i] = eps_in
+
+    f0 = func(p0, *args)
+    hess = numpy.empty((len(p0), len(p0)))
+    for ii in range(len(p0)):
+        for jj in range(ii, len(p0)):
+            hess[ii][jj] = hessian_elem(func, f0, p0, ii, jj, eps, args=args, one_sided=one_sided)
+            hess[jj][ii] = hess[ii][jj]
+    return hess
+
+def get_grad(func, p0, eps, args=()):
+    &#34;&#34;&#34;
+    Calculate gradient vector
+    
+    func: Model function
+    p0: Parameters for func
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    args: Additional arguments to func
+    &#34;&#34;&#34;
+    # Calculate step sizes for finite-differences.
+    eps_in = eps
+    eps = numpy.empty([len(p0)])
+    one_sided = [False]*len(p0)
+    for i, pval in enumerate(p0):
+        if pval != 0:
+            # Account for floating point arithmetic issues
+            if pval*eps_in &lt; 1e-6:
+                eps[i] = eps_in
+                one_sided[i] = True
+            else:
+                eps[i] = eps_in*pval
+        else:
+            # Account for parameters equal to zero
+            eps[i] = eps_in
+
+    grad = numpy.empty([len(p0), 1])
+    for ii in range(len(p0)):
+        pwork = numpy.array(p0, copy=True, dtype=float)
+
+        if p0[ii] != 0 and not one_sided[ii]:
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+
+            pwork[ii] = p0[ii] - eps[ii]
+            fm = func(pwork, *args)
+
+            grad[ii] = (fp - fm)/(2*eps[ii])
+        else:
+            # Do one-sided finite-difference 
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+
+            pwork[ii] = p0[ii]
+            fm = func(pwork, *args)
+
+            grad[ii] = (fp - fm)/eps[ii]
+            if two_pt_deriv_test:
+                pwork[ii] = p0[ii] + 2*eps[ii]
+                fpp = func(pwork, *args)
+                grad[ii] = (4*fp - fpp - 3*fm)/(2*eps[ii])
+    return grad
+
+cache = {}
+def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
+                just_hess=False, boot_theta_adjusts=[]):
+    &#34;&#34;&#34;
+    Godambe information and Hessian matrices
+
+    func_ex: Model function
+    grid_pts: Number of grid points to evaluate the model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    log: If True, calculate derivatives in terms of log-parameters
+    just_hess: If True, only evaluate and return the Hessian matrix
+    boot_theta_adjusts: Factors by which to adjust theta for each bootstrap
+                        sample, relative to full data theta.
+    &#34;&#34;&#34;
+    ns = data.sample_sizes
+    if not boot_theta_adjusts:
+        boot_theta_adjusts = numpy.ones(len(all_boot))
+
+    # Cache evaluations of the frequency spectrum inside our hessian/J 
+    # evaluation function
+    def func(params, data, theta_adjust=1):
+        key = (func_ex.__hash__(), tuple(params), tuple(ns), tuple(grid_pts))
+        if key not in cache:
+            cache[key] = func_ex(params, ns, grid_pts)
+        # theta_adjust deals with bootstraps that need  different thetas
+        fs = theta_adjust*cache[key]
+        return Inference.ll(fs, data)
+    def log_func(logparams, data, theta_adjust=1):
+        return func(numpy.exp(logparams), data, theta_adjust)
+
+    # First calculate the observed hessian.
+    # theta_adjust defaults to 1.
+    if not log:
+        hess = -get_hess(func, p0, eps, args=[data])
+    else:
+        hess = -get_hess(log_func, numpy.log(p0), eps, args=[data])
+
+    if just_hess:
+        return hess
+
+    # Now the expectation of J over the bootstrap data
+    J = numpy.zeros((len(p0), len(p0)))
+    # cU is a column vector
+    cU = numpy.zeros((len(p0),1))
+    for ii, (boot,theta_adjust) in enumerate(zip(all_boot, boot_theta_adjusts)):
+        boot = Spectrum(boot)
+        if not log:
+            grad_temp = get_grad(func, p0, eps, args=[boot, theta_adjust])
+        else:
+            grad_temp = get_grad(log_func, numpy.log(p0), eps,
+                                 args=[boot, theta_adjust])
+        J_temp = numpy.outer(grad_temp, grad_temp)
+        J = J + J_temp
+        cU = cU + grad_temp
+    J = J/len(all_boot)
+    cU = cU/len(all_boot)
+
+    # G = H*J^-1*H
+    J_inv = numpy.linalg.inv(J)
+    godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
+    return godambe, hess, J, cU
+
+def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
+               multinom=True, eps=0.01, return_GIM=False,
+               boot_theta_adjusts=None):
+    &#34;&#34;&#34;
+    Parameter uncertainties from Godambe Information Matrix (GIM)
+
+    Returns standard deviations of parameter values.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    return_GIM: If true, also return the full GIM.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    &#34;&#34;&#34;
+    if multinom:
+        if boot_theta_adjusts:
+            raise ValueError(&#39;boot_thetas option can only be used with &#39;
+                             &#39;multinom=False&#39;)
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+    GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log,
+                                boot_theta_adjusts=boot_theta_adjusts)
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
+    if not return_GIM:
+        return uncerts
+    else:
+        return uncerts, GIM, H
+
+def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False):
+    &#34;&#34;&#34;
+    Parameter uncertainties from Fisher Information Matrix
+
+    Returns standard deviations of parameter values.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    &#34;&#34;&#34;
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+    H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    if not return_FIM:
+        return uncerts
+    else:
+        return uncerts, H
+
+def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
+    &#34;&#34;&#34;
+    First-order moment matching adjustment factor for likelihood ratio test
+
+    func_ex: Model function for complex model
+    grid_pts: Grid points at which to evaluate func_ex
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you&#39;d like
+        to evaluate.
+    data: Original data frequency spectrum
+    nested_indices: List of positions of nested parameters in complex model
+                    parameter list
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    &#34;&#34;&#34;
+    if multinom and boot_theta_adjusts:
+        raise ValueError(&#39;Cannot use boot_theta_adjusts with multinom=True.&#39;)
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p0, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[nested_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
+                                eps, log=False, boot_theta_adjusts=boot_theta_adjusts)
+
+    adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
+    return adjust
+
+def sum_chi2_ppf(x, weights=(0,1)):
+    &#34;&#34;&#34;
+    Percent point function (inverse of cdf) of weighted sum of chi^2
+    distributions.
+
+    x: Value(s) at which to evaluate ppf
+    weights: Weights of chi^2 distributions, beginning with zero d.o.f.
+             For example, weights=(0,1) is the normal chi^2 distribution with 1
+             d.o.f. For single parameters on the boundary, the correct
+             distribution for the LRT is 0.5*chi^2_0 + 0.5*chi^2_1, which would
+             be weights=(0.5,0.5).
+    &#34;&#34;&#34;
+    import scipy.stats.distributions as ssd
+    # Ensure that weights are valid
+    if abs(numpy.sum(weights) - 1) &gt; 1e-6:
+        raise ValueError(&#39;Weights must sum to 1.&#39;)
+    # A little clunky, but we want to handle x = 0.5, and x = [2, 3, 4]
+    # correctly. So if x is a scalar, we record that fact so we can return a
+    # scalar on output.
+    if numpy.isscalar(x):
+        scalar_input = True
+    # Convert x into an array, so we can index it easily.
+    x = numpy.atleast_1d(x)
+    # Calculate total cdf of all chi^2 dists with dof &gt; 1.
+    # (ssd.chi2.cdf(x,0) is always nan, so we avoid that.)
+    cdf = numpy.sum([w*ssd.chi2.cdf(x, d+1) for (d, w)
+                     in enumerate(weights[1:])], axis=0)
+    # Add in contribution from 0 d.o.f.
+    cdf[x &gt; 0] += weights[0]
+    # Convert to ppf
+    ppf = 1-cdf
+
+    if scalar_input:
+        return ppf[0]
+    else:
+        return ppf
+
+def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+              full_params, multinom=True, eps=0.01, adj_and_org=False):
+    # XXX: Implement boot_theta_adjusts
+    &#34;&#34;&#34;
+    Calculate test stastic from wald test
+             
+    func_ex: Model function for complex model
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you&#39;d like
+        to evaluate.
+    data: Original data frequency spectrum
+    nested_indices: List of positions of nested parameters in complex model
+    parameter list
+    full_params: Parameter values for parameters found only in complex model,
+                 Can either be array with just values found only in the compelx
+                 model, or entire list of parameters from complex model.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    adj_and_org: If False, return only adjusted Wald statistic. If True, also
+                 return unadjusted statistic as second return value.
+    &#34;&#34;&#34;
+    if multinom:
+         func_multi = func_ex
+         model = func_multi(p0, data.sample_sizes, grid_pts)
+         theta_opt = Inference.optimal_sfs_scaling(model, data)
+         # Also need to extend full_params
+         if len(full_params) == len(p0):
+             full_params = numpy.concatenate((full_params, [theta_opt]))
+         p0 = list(p0) + [theta_opt]
+         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+         
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+         # diff_params argument is only the nested parameters. All the rest
+         # should come from p0
+         full_params = numpy.array(p0, copy=True, dtype=float)
+         # Use numpy indexing to set relevant parameters
+         full_params[nested_indices] = diff_params
+         return func_ex(full_params, ns, grid_pts)
+    
+    # Reduce full params list to be same length as nested indices
+    if len(full_params) == len(p0):
+        full_params = numpy.asarray(full_params)[nested_indices]
+    if len(full_params) != len(nested_indices):
+        raise KeyError(&#39;Full parameters not equal in length to p0 or nested &#39;
+                       &#39;indices&#39;)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
+                                eps, log=False)
+    param_diff = full_params-p_nested
+
+    wald_adj = numpy.dot(numpy.dot(numpy.transpose(param_diff),GIM), param_diff)
+    wald_org = numpy.dot(numpy.dot(numpy.transpose(param_diff),H),param_diff)
+
+    if adj_and_org:
+        return wald_adj, wald_org
+    return wald_adj
+
+def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+               multinom=True, eps=0.01, adj_and_org=False):
+    # XXX: Implement boot_theta_adjusts
+    &#34;&#34;&#34;
+    Calculate test stastic from score test
+        
+    func_ex: Model function for complex model
+    grid_pts: Grid points to evaluate model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you&#39;d like
+        to evaluate.
+    data: Original data frequency spectrum
+    nested_indices: List of positions of nested parameters in complex model
+                    parameter list
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    adj_and_org: If False, return only adjusted score statistic. If True, also
+                 return unadjusted statistic as second return value.
+    &#34;&#34;&#34;
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p0, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[nested_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
+                                eps, log=False)
+    
+    score_org = numpy.dot(numpy.dot(numpy.transpose(cU),
+                                    numpy.linalg.inv(H)),cU)[0,0]
+    score_adj = numpy.dot(numpy.dot(numpy.transpose(cU),
+                                    numpy.linalg.inv(J)),cU)[0,0]
+
+    if adj_and_org:
+        return score_adj, score_org
+    return score_adj</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Godambe.FIM_uncert"><code class="name flex">
+<span>def <span class="ident">FIM_uncert</span></span>(<span>func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parameter uncertainties from Fisher Information Matrix</p>
+<p>Returns standard deviations of parameter values.</p>
+<p>func_ex: Model function
+all_boot: List of bootstrap frequency spectra
+p0: Best-fit parameters for func_ex
+data: Original data frequency spectrum
+eps: Fractional stepsize to use when taking finite-difference derivatives.
+Note that if eps<em>param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+log: If True, assume log-normal distribution of parameters. Returned values
+are then the standard deviations of the </em>logs* of the parameter values,
+which can be interpreted as relative parameter uncertainties.
+multinom: If True, assume model is defined without an explicit parameter for
+theta. Because uncertainty in theta must be accounted for to get
+correct uncertainties for other parameters, this function will
+automatically consider theta if multinom=True. In that case, the
+final entry of the returned uncertainties will correspond to
+theta.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, return_FIM=False):
+    &#34;&#34;&#34;
+    Parameter uncertainties from Fisher Information Matrix
+
+    Returns standard deviations of parameter values.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    &#34;&#34;&#34;
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+    H = get_godambe(func_ex, grid_pts, [], p0, data, eps, log, just_hess=True)
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(H)))
+    if not return_FIM:
+        return uncerts
+    else:
+        return uncerts, H</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.GIM_uncert"><code class="name flex">
+<span>def <span class="ident">GIM_uncert</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, log=False, multinom=True, eps=0.01, return_GIM=False, boot_theta_adjusts=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parameter uncertainties from Godambe Information Matrix (GIM)</p>
+<p>Returns standard deviations of parameter values.</p>
+<p>func_ex: Model function
+all_boot: List of bootstrap frequency spectra
+p0: Best-fit parameters for func_ex
+data: Original data frequency spectrum
+eps: Fractional stepsize to use when taking finite-difference derivatives.
+Note that if eps<em>param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+log: If True, assume log-normal distribution of parameters. Returned values
+are then the standard deviations of the </em>logs<em> of the parameter values,
+which can be interpreted as relative parameter uncertainties.
+multinom: If True, assume model is defined without an explicit parameter for
+theta. Because uncertainty in theta must be accounted for to get
+correct uncertainties for other parameters, this function will
+automatically consider theta if multinom=True. In that case, the
+final entry of the returned uncertainties will correspond to
+theta.
+return_GIM: If true, also return the full GIM.
+boot_theta_adjusts: Optionally, a sequence of </em>relative* values of theta
+(compared to original data) to assume for bootstrap
+data sets. Only valid when multinom=False.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
+               multinom=True, eps=0.01, return_GIM=False,
+               boot_theta_adjusts=None):
+    &#34;&#34;&#34;
+    Parameter uncertainties from Godambe Information Matrix (GIM)
+
+    Returns standard deviations of parameter values.
+
+    func_ex: Model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives.
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    log: If True, assume log-normal distribution of parameters. Returned values
+         are then the standard deviations of the *logs* of the parameter values,
+         which can be interpreted as relative parameter uncertainties.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    return_GIM: If true, also return the full GIM.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    &#34;&#34;&#34;
+    if multinom:
+        if boot_theta_adjusts:
+            raise ValueError(&#39;boot_thetas option can only be used with &#39;
+                             &#39;multinom=False&#39;)
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+    GIM, H, J, cU = get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log,
+                                boot_theta_adjusts=boot_theta_adjusts)
+    uncerts = numpy.sqrt(numpy.diag(numpy.linalg.inv(GIM)))
+    if not return_GIM:
+        return uncerts
+    else:
+        return uncerts, GIM, H</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.LRT_adjust"><code class="name flex">
+<span>def <span class="ident">LRT_adjust</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, multinom=True, eps=0.01, boot_theta_adjusts=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>First-order moment matching adjustment factor for likelihood ratio test</p>
+<p>func_ex: Model function for complex model
+grid_pts: Grid points at which to evaluate func_ex
+all_boot: List of bootstrap frequency spectra
+p0: Best-fit parameters for the simple model, with nested parameter
+explicity defined.
+Although equal to values for simple model, should
+be in a list form that can be taken in by the complex model you'd like
+to evaluate.
+data: Original data frequency spectrum
+nested_indices: List of positions of nested parameters in complex model
+parameter list
+multinom: If True, assume model is defined without an explicit parameter for
+theta. Because uncertainty in theta must be accounted for to get
+correct uncertainties for other parameters, this function will
+automatically consider theta if multinom=True.
+eps: Fractional stepsize to use when taking finite-difference derivatives
+Note that if eps<em>param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+boot_theta_adjusts: Optionally, a sequence of </em>relative* values of theta
+(compared to original data) to assume for bootstrap
+data sets. Only valid when multinom=False.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+               multinom=True, eps=0.01, boot_theta_adjusts=None):
+    &#34;&#34;&#34;
+    First-order moment matching adjustment factor for likelihood ratio test
+
+    func_ex: Model function for complex model
+    grid_pts: Grid points at which to evaluate func_ex
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you&#39;d like
+        to evaluate.
+    data: Original data frequency spectrum
+    nested_indices: List of positions of nested parameters in complex model
+                    parameter list
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
+                        (compared to original data) to assume for bootstrap
+                        data sets. Only valid when multinom=False.
+    &#34;&#34;&#34;
+    if multinom and boot_theta_adjusts:
+        raise ValueError(&#39;Cannot use boot_theta_adjusts with multinom=True.&#39;)
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p0, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[nested_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
+                                eps, log=False, boot_theta_adjusts=boot_theta_adjusts)
+
+    adjust = len(nested_indices)/numpy.trace(numpy.dot(J, numpy.linalg.inv(H)))
+    return adjust</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.Wald_stat"><code class="name flex">
+<span>def <span class="ident">Wald_stat</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, full_params, multinom=True, eps=0.01, adj_and_org=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate test stastic from wald test</p>
+<p>func_ex: Model function for complex model
+all_boot: List of bootstrap frequency spectra
+p0: Best-fit parameters for the simple model, with nested parameter
+explicity defined.
+Although equal to values for simple model, should
+be in a list form that can be taken in by the complex model you'd like
+to evaluate.
+data: Original data frequency spectrum
+nested_indices: List of positions of nested parameters in complex model
+parameter list
+full_params: Parameter values for parameters found only in complex model,
+Can either be array with just values found only in the compelx
+model, or entire list of parameters from complex model.
+multinom: If True, assume model is defined without an explicit parameter for
+theta. Because uncertainty in theta must be accounted for to get
+correct uncertainties for other parameters, this function will
+automatically consider theta if multinom=True. In that case, the
+final entry of the returned uncertainties will correspond to
+theta.
+eps: Fractional stepsize to use when taking finite-difference derivatives
+Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+adj_and_org: If False, return only adjusted Wald statistic. If True, also
+return unadjusted statistic as second return value.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+              full_params, multinom=True, eps=0.01, adj_and_org=False):
+    # XXX: Implement boot_theta_adjusts
+    &#34;&#34;&#34;
+    Calculate test stastic from wald test
+             
+    func_ex: Model function for complex model
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you&#39;d like
+        to evaluate.
+    data: Original data frequency spectrum
+    nested_indices: List of positions of nested parameters in complex model
+    parameter list
+    full_params: Parameter values for parameters found only in complex model,
+                 Can either be array with just values found only in the compelx
+                 model, or entire list of parameters from complex model.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True. In that case, the
+              final entry of the returned uncertainties will correspond to
+              theta.
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    adj_and_org: If False, return only adjusted Wald statistic. If True, also
+                 return unadjusted statistic as second return value.
+    &#34;&#34;&#34;
+    if multinom:
+         func_multi = func_ex
+         model = func_multi(p0, data.sample_sizes, grid_pts)
+         theta_opt = Inference.optimal_sfs_scaling(model, data)
+         # Also need to extend full_params
+         if len(full_params) == len(p0):
+             full_params = numpy.concatenate((full_params, [theta_opt]))
+         p0 = list(p0) + [theta_opt]
+         func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+         
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+         # diff_params argument is only the nested parameters. All the rest
+         # should come from p0
+         full_params = numpy.array(p0, copy=True, dtype=float)
+         # Use numpy indexing to set relevant parameters
+         full_params[nested_indices] = diff_params
+         return func_ex(full_params, ns, grid_pts)
+    
+    # Reduce full params list to be same length as nested indices
+    if len(full_params) == len(p0):
+        full_params = numpy.asarray(full_params)[nested_indices]
+    if len(full_params) != len(nested_indices):
+        raise KeyError(&#39;Full parameters not equal in length to p0 or nested &#39;
+                       &#39;indices&#39;)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
+                                eps, log=False)
+    param_diff = full_params-p_nested
+
+    wald_adj = numpy.dot(numpy.dot(numpy.transpose(param_diff),GIM), param_diff)
+    wald_org = numpy.dot(numpy.dot(numpy.transpose(param_diff),H),param_diff)
+
+    if adj_and_org:
+        return wald_adj, wald_org
+    return wald_adj</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.get_godambe"><code class="name flex">
+<span>def <span class="ident">get_godambe</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, eps, log=False, just_hess=False, boot_theta_adjusts=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Godambe information and Hessian matrices</p>
+<p>func_ex: Model function
+grid_pts: Number of grid points to evaluate the model function
+all_boot: List of bootstrap frequency spectra
+p0: Best-fit parameters for func_ex.
+data: Original data frequency spectrum
+eps: Fractional stepsize to use when taking finite-difference derivatives
+Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+log: If True, calculate derivatives in terms of log-parameters
+just_hess: If True, only evaluate and return the Hessian matrix
+boot_theta_adjusts: Factors by which to adjust theta for each bootstrap
+sample, relative to full data theta.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
+                just_hess=False, boot_theta_adjusts=[]):
+    &#34;&#34;&#34;
+    Godambe information and Hessian matrices
+
+    func_ex: Model function
+    grid_pts: Number of grid points to evaluate the model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for func_ex.
+    data: Original data frequency spectrum
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    log: If True, calculate derivatives in terms of log-parameters
+    just_hess: If True, only evaluate and return the Hessian matrix
+    boot_theta_adjusts: Factors by which to adjust theta for each bootstrap
+                        sample, relative to full data theta.
+    &#34;&#34;&#34;
+    ns = data.sample_sizes
+    if not boot_theta_adjusts:
+        boot_theta_adjusts = numpy.ones(len(all_boot))
+
+    # Cache evaluations of the frequency spectrum inside our hessian/J 
+    # evaluation function
+    def func(params, data, theta_adjust=1):
+        key = (func_ex.__hash__(), tuple(params), tuple(ns), tuple(grid_pts))
+        if key not in cache:
+            cache[key] = func_ex(params, ns, grid_pts)
+        # theta_adjust deals with bootstraps that need  different thetas
+        fs = theta_adjust*cache[key]
+        return Inference.ll(fs, data)
+    def log_func(logparams, data, theta_adjust=1):
+        return func(numpy.exp(logparams), data, theta_adjust)
+
+    # First calculate the observed hessian.
+    # theta_adjust defaults to 1.
+    if not log:
+        hess = -get_hess(func, p0, eps, args=[data])
+    else:
+        hess = -get_hess(log_func, numpy.log(p0), eps, args=[data])
+
+    if just_hess:
+        return hess
+
+    # Now the expectation of J over the bootstrap data
+    J = numpy.zeros((len(p0), len(p0)))
+    # cU is a column vector
+    cU = numpy.zeros((len(p0),1))
+    for ii, (boot,theta_adjust) in enumerate(zip(all_boot, boot_theta_adjusts)):
+        boot = Spectrum(boot)
+        if not log:
+            grad_temp = get_grad(func, p0, eps, args=[boot, theta_adjust])
+        else:
+            grad_temp = get_grad(log_func, numpy.log(p0), eps,
+                                 args=[boot, theta_adjust])
+        J_temp = numpy.outer(grad_temp, grad_temp)
+        J = J + J_temp
+        cU = cU + grad_temp
+    J = J/len(all_boot)
+    cU = cU/len(all_boot)
+
+    # G = H*J^-1*H
+    J_inv = numpy.linalg.inv(J)
+    godambe = numpy.dot(numpy.dot(hess, J_inv), hess)
+    return godambe, hess, J, cU</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.get_grad"><code class="name flex">
+<span>def <span class="ident">get_grad</span></span>(<span>func, p0, eps, args=())</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate gradient vector</p>
+<p>func: Model function
+p0: Parameters for func
+eps: Fractional stepsize to use when taking finite-difference derivatives
+Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+args: Additional arguments to func</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_grad(func, p0, eps, args=()):
+    &#34;&#34;&#34;
+    Calculate gradient vector
+    
+    func: Model function
+    p0: Parameters for func
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    args: Additional arguments to func
+    &#34;&#34;&#34;
+    # Calculate step sizes for finite-differences.
+    eps_in = eps
+    eps = numpy.empty([len(p0)])
+    one_sided = [False]*len(p0)
+    for i, pval in enumerate(p0):
+        if pval != 0:
+            # Account for floating point arithmetic issues
+            if pval*eps_in &lt; 1e-6:
+                eps[i] = eps_in
+                one_sided[i] = True
+            else:
+                eps[i] = eps_in*pval
+        else:
+            # Account for parameters equal to zero
+            eps[i] = eps_in
+
+    grad = numpy.empty([len(p0), 1])
+    for ii in range(len(p0)):
+        pwork = numpy.array(p0, copy=True, dtype=float)
+
+        if p0[ii] != 0 and not one_sided[ii]:
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+
+            pwork[ii] = p0[ii] - eps[ii]
+            fm = func(pwork, *args)
+
+            grad[ii] = (fp - fm)/(2*eps[ii])
+        else:
+            # Do one-sided finite-difference 
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+
+            pwork[ii] = p0[ii]
+            fm = func(pwork, *args)
+
+            grad[ii] = (fp - fm)/eps[ii]
+            if two_pt_deriv_test:
+                pwork[ii] = p0[ii] + 2*eps[ii]
+                fpp = func(pwork, *args)
+                grad[ii] = (4*fp - fpp - 3*fm)/(2*eps[ii])
+    return grad</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.get_hess"><code class="name flex">
+<span>def <span class="ident">get_hess</span></span>(<span>func, p0, eps, args=())</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate Hessian matrix of partial second derivatives.
+Hij = dfunc/(dp_i dp_j)</p>
+<p>func: Model function
+p0: Parameter values to take derivative around
+eps: Fractional stepsize to use when taking finite-difference derivatives
+Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+args: Additional arguments to func</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_hess(func, p0, eps, args=()):
+    &#34;&#34;&#34;
+    Calculate Hessian matrix of partial second derivatives. 
+    Hij = dfunc/(dp_i dp_j)
+    
+    func: Model function
+    p0: Parameter values to take derivative around
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    args: Additional arguments to func
+    &#34;&#34;&#34;
+    # Calculate step sizes for finite-differences.
+    eps_in = eps
+    eps = numpy.empty([len(p0)])
+    one_sided = [False]*len(p0)
+    for i, pval in enumerate(p0):
+        if pval != 0:
+            # Account for floating point arithmetic issues
+            if pval*eps_in &lt; 1e-6:
+                eps[i] = eps_in
+                one_sided[i] = True
+            else:
+                eps[i] = eps_in*pval
+        else:
+            # Account for parameters equal to zero
+            eps[i] = eps_in
+
+    f0 = func(p0, *args)
+    hess = numpy.empty((len(p0), len(p0)))
+    for ii in range(len(p0)):
+        for jj in range(ii, len(p0)):
+            hess[ii][jj] = hessian_elem(func, f0, p0, ii, jj, eps, args=args, one_sided=one_sided)
+            hess[jj][ii] = hess[ii][jj]
+    return hess</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.hessian_elem"><code class="name flex">
+<span>def <span class="ident">hessian_elem</span></span>(<span>func, f0, p0, ii, jj, eps, args=(), one_sided=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate element [ii][jj] of the Hessian matrix, a matrix
+of partial second derivatives w.r.t. to parameters ii and jj</p>
+<p>func: Model function
+f0: Evaluation of func at p0
+p0: Parameters for func
+eps: List of absolute step sizes to use for each parameter when taking
+finite differences.
+args: Additional arguments to func
+one_sided: Optionally, pass in a sequence of length p0 that determines
+whether a one-sided derivative will be used for each parameter.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hessian_elem(func, f0, p0, ii, jj, eps, args=(), one_sided=None):
+    &#34;&#34;&#34;
+    Calculate element [ii][jj] of the Hessian matrix, a matrix
+    of partial second derivatives w.r.t. to parameters ii and jj
+        
+    func: Model function
+    f0: Evaluation of func at p0
+    p0: Parameters for func
+    eps: List of absolute step sizes to use for each parameter when taking
+         finite differences.
+    args: Additional arguments to func
+    one_sided: Optionally, pass in a sequence of length p0 that determines
+               whether a one-sided derivative will be used for each parameter.
+    &#34;&#34;&#34;
+    # Note that we need to specify dtype=float, to avoid this being an integer
+    # array which will silently fail when adding fractional eps.
+    if one_sided is None:
+        one_sided = [False]*len(p0)
+
+    pwork = numpy.array(p0, copy=True, dtype=float)
+    if ii == jj:
+        if pwork[ii] != 0 and not one_sided[ii]:
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+            
+            pwork[ii] = p0[ii] - eps[ii]
+            fm = func(pwork, *args)
+            
+            element = (fp - 2*f0 + fm)/eps[ii]**2
+        else:
+            pwork[ii] = p0[ii] + 2*eps[ii]
+            fpp = func(pwork, *args)
+            
+            pwork[ii] = p0[ii] + eps[ii]
+            fp = func(pwork, *args)
+
+            element = (fpp - 2*fp + f0)/eps[ii]**2
+    else:
+        if pwork[ii] != 0 and pwork[jj] != 0 and not one_sided[ii] and not one_sided[jj]:
+            # f(xi + hi, xj + h)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fpp = func(pwork, *args)
+            
+            # f(xi + hi, xj - hj)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj] - eps[jj]
+            fpm = func(pwork, *args)
+            
+            # f(xi - hi, xj + hj)
+            pwork[ii] = p0[ii] - eps[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fmp = func(pwork, *args)
+            
+            # f(xi - hi, xj - hj)
+            pwork[ii] = p0[ii] - eps[ii]
+            pwork[jj] = p0[jj] - eps[jj]
+            fmm = func(pwork, *args)
+
+            element = (fpp - fpm - fmp + fmm)/(4 * eps[ii]*eps[jj])
+        else:
+            # f(xi + hi, xj + h)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fpp = func(pwork, *args)
+            
+            # f(xi + hi, xj)
+            pwork[ii] = p0[ii] + eps[ii]
+            pwork[jj] = p0[jj]
+            fpm = func(pwork, *args)
+            
+            # f(xi, xj + hj)
+            pwork[ii] = p0[ii]
+            pwork[jj] = p0[jj] + eps[jj]
+            fmp = func(pwork, *args)
+            
+            element = (fpp - fpm - fmp + f0)/(eps[ii]*eps[jj])
+    return element</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.score_stat"><code class="name flex">
+<span>def <span class="ident">score_stat</span></span>(<span>func_ex, grid_pts, all_boot, p0, data, nested_indices, multinom=True, eps=0.01, adj_and_org=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate test stastic from score test</p>
+<p>func_ex: Model function for complex model
+grid_pts: Grid points to evaluate model function
+all_boot: List of bootstrap frequency spectra
+p0: Best-fit parameters for the simple model, with nested parameter
+explicity defined.
+Although equal to values for simple model, should
+be in a list form that can be taken in by the complex model you'd like
+to evaluate.
+data: Original data frequency spectrum
+nested_indices: List of positions of nested parameters in complex model
+parameter list
+eps: Fractional stepsize to use when taking finite-difference derivatives
+Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+will simply be eps, to avoid numerical issues with small parameter
+perturbations.
+multinom: If True, assume model is defined without an explicit parameter for
+theta. Because uncertainty in theta must be accounted for to get
+correct uncertainties for other parameters, this function will
+automatically consider theta if multinom=True.
+adj_and_org: If False, return only adjusted score statistic. If True, also
+return unadjusted statistic as second return value.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
+               multinom=True, eps=0.01, adj_and_org=False):
+    # XXX: Implement boot_theta_adjusts
+    &#34;&#34;&#34;
+    Calculate test stastic from score test
+        
+    func_ex: Model function for complex model
+    grid_pts: Grid points to evaluate model function
+    all_boot: List of bootstrap frequency spectra
+    p0: Best-fit parameters for the simple model, with nested parameter
+        explicity defined.  Although equal to values for simple model, should
+        be in a list form that can be taken in by the complex model you&#39;d like
+        to evaluate.
+    data: Original data frequency spectrum
+    nested_indices: List of positions of nested parameters in complex model
+                    parameter list
+    eps: Fractional stepsize to use when taking finite-difference derivatives
+         Note that if eps*param is &lt; 1e-6, then the step size for that parameter
+         will simply be eps, to avoid numerical issues with small parameter
+         perturbations.
+    multinom: If True, assume model is defined without an explicit parameter for
+              theta. Because uncertainty in theta must be accounted for to get
+              correct uncertainties for other parameters, this function will
+              automatically consider theta if multinom=True.
+    adj_and_org: If False, return only adjusted score statistic. If True, also
+                 return unadjusted statistic as second return value.
+    &#34;&#34;&#34;
+    if multinom:
+        func_multi = func_ex
+        model = func_multi(p0, data.sample_sizes, grid_pts)
+        theta_opt = Inference.optimal_sfs_scaling(model, data)
+        p0 = list(p0) + [theta_opt]
+        func_ex = lambda p, ns, pts: p[-1]*func_multi(p[:-1], ns, pts)
+
+    # We only need to take derivatives with respect to the parameters in the
+    # complex model that have been set to specified values in the simple model
+    def diff_func(diff_params, ns, grid_pts):
+        # diff_params argument is only the nested parameters. All the rest
+        # should come from p0
+        full_params = numpy.array(p0, copy=True, dtype=float)
+        # Use numpy indexing to set relevant parameters
+        full_params[nested_indices] = diff_params
+        return func_ex(full_params, ns, grid_pts)
+
+    p_nested = numpy.asarray(p0)[nested_indices]
+    GIM, H, J, cU = get_godambe(diff_func, grid_pts, all_boot, p_nested, data, 
+                                eps, log=False)
+    
+    score_org = numpy.dot(numpy.dot(numpy.transpose(cU),
+                                    numpy.linalg.inv(H)),cU)[0,0]
+    score_adj = numpy.dot(numpy.dot(numpy.transpose(cU),
+                                    numpy.linalg.inv(J)),cU)[0,0]
+
+    if adj_and_org:
+        return score_adj, score_org
+    return score_adj</code></pre>
+</details>
+</dd>
+<dt id="dadi.Godambe.sum_chi2_ppf"><code class="name flex">
+<span>def <span class="ident">sum_chi2_ppf</span></span>(<span>x, weights=(0, 1))</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Percent point function (inverse of cdf) of weighted sum of chi^2
+distributions.</p>
+<p>x: Value(s) at which to evaluate ppf
+weights: Weights of chi^2 distributions, beginning with zero d.o.f.
+For example, weights=(0,1) is the normal chi^2 distribution with 1
+d.o.f. For single parameters on the boundary, the correct
+distribution for the LRT is 0.5<em>chi^2_0 + 0.5</em>chi^2_1, which would
+be weights=(0.5,0.5).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sum_chi2_ppf(x, weights=(0,1)):
+    &#34;&#34;&#34;
+    Percent point function (inverse of cdf) of weighted sum of chi^2
+    distributions.
+
+    x: Value(s) at which to evaluate ppf
+    weights: Weights of chi^2 distributions, beginning with zero d.o.f.
+             For example, weights=(0,1) is the normal chi^2 distribution with 1
+             d.o.f. For single parameters on the boundary, the correct
+             distribution for the LRT is 0.5*chi^2_0 + 0.5*chi^2_1, which would
+             be weights=(0.5,0.5).
+    &#34;&#34;&#34;
+    import scipy.stats.distributions as ssd
+    # Ensure that weights are valid
+    if abs(numpy.sum(weights) - 1) &gt; 1e-6:
+        raise ValueError(&#39;Weights must sum to 1.&#39;)
+    # A little clunky, but we want to handle x = 0.5, and x = [2, 3, 4]
+    # correctly. So if x is a scalar, we record that fact so we can return a
+    # scalar on output.
+    if numpy.isscalar(x):
+        scalar_input = True
+    # Convert x into an array, so we can index it easily.
+    x = numpy.atleast_1d(x)
+    # Calculate total cdf of all chi^2 dists with dof &gt; 1.
+    # (ssd.chi2.cdf(x,0) is always nan, so we avoid that.)
+    cdf = numpy.sum([w*ssd.chi2.cdf(x, d+1) for (d, w)
+                     in enumerate(weights[1:])], axis=0)
+    # Add in contribution from 0 d.o.f.
+    cdf[x &gt; 0] += weights[0]
+    # Convert to ppf
+    ppf = 1-cdf
+
+    if scalar_input:
+        return ppf[0]
+    else:
+        return ppf</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="dadi.Godambe.FIM_uncert" href="#dadi.Godambe.FIM_uncert">FIM_uncert</a></code></li>
+<li><code><a title="dadi.Godambe.GIM_uncert" href="#dadi.Godambe.GIM_uncert">GIM_uncert</a></code></li>
+<li><code><a title="dadi.Godambe.LRT_adjust" href="#dadi.Godambe.LRT_adjust">LRT_adjust</a></code></li>
+<li><code><a title="dadi.Godambe.Wald_stat" href="#dadi.Godambe.Wald_stat">Wald_stat</a></code></li>
+<li><code><a title="dadi.Godambe.get_godambe" href="#dadi.Godambe.get_godambe">get_godambe</a></code></li>
+<li><code><a title="dadi.Godambe.get_grad" href="#dadi.Godambe.get_grad">get_grad</a></code></li>
+<li><code><a title="dadi.Godambe.get_hess" href="#dadi.Godambe.get_hess">get_hess</a></code></li>
+<li><code><a title="dadi.Godambe.hessian_elem" href="#dadi.Godambe.hessian_elem">hessian_elem</a></code></li>
+<li><code><a title="dadi.Godambe.score_stat" href="#dadi.Godambe.score_stat">score_stat</a></code></li>
+<li><code><a title="dadi.Godambe.sum_chi2_ppf" href="#dadi.Godambe.sum_chi2_ppf">sum_chi2_ppf</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Basic Workflow 1D Demographics - dadi</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">dadi</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">User Guide</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../user-guide/installation/" class="dropdown-item">Installation</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/importing-data/" class="dropdown-item">Importing data</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/manipulating-spectra/" class="dropdown-item">Manipulating spectra</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/specifying-a-model/" class="dropdown-item">Specifying a model</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/simulation-and-fitting/" class="dropdown-item">Simulation and fitting</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/plotting/" class="dropdown-item">Plotting</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/bootstrapping/" class="dropdown-item">Bootstrapping</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/uncertainty-analysis/" class="dropdown-item">Uncertainty analysis</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/likelihood-ratio-test/" class="dropdown-item">Likelihood ratio test</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/triallelic-spectra/" class="dropdown-item">Triallelic spectra</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/dfe-inference/" class="dropdown-item">DFE inference</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/inbreeding/" class="dropdown-item">Inbreeding</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/low-pass/" class="dropdown-item">Low-Pass</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/polyploidy.md" class="dropdown-item">Polyploidy</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/GPU-computing/" class="dropdown-item">GPU computing</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/demes/" class="dropdown-item">Demes integration</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/frequently-asked-questions/" class="dropdown-item">Frequently asked questions</a>
+</li>
+                                    
+<li>
+    <a href="../../../user-guide/references/" class="dropdown-item">References</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Examples</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../fs_from_data/fs_from_data/" class="dropdown-item">Frequency spectrum from data</a>
+</li>
+                                    
+<li>
+    <a href="../../YRI_CEU/YRI_CEU/" class="dropdown-item">Demography inference for YRI and CEU</a>
+</li>
+                                    
+<li>
+    <a href="../../DFE/DFE/" class="dropdown-item">DFE inference</a>
+</li>
+                                    
+<li>
+    <a href="../../Triallele/TrialleleModel/" class="dropdown-item">Triallelic model</a>
+</li>
+                                    
+<li>
+    <a href="../../TwoLocus/TwoLocusModel/" class="dropdown-item">Two Locus model</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Basic Workflow 1D Demographics</a>
+</li>
+                                    
+<li>
+    <a href="../basic_workflow_2d_demographics/" class="dropdown-item">Basic Workflow 2D Demographics</a>
+</li>
+                                    
+<li>
+    <a href="../basic_workflow_cache_generation/" class="dropdown-item">Basic Workflow Cache Generation</a>
+</li>
+                                    
+<li>
+    <a href="../basic_workflow_1d_dfe/" class="dropdown-item">Basic Workflow 1D DFE</a>
+</li>
+                                    
+<li>
+    <a href="../basic_workflow_2d_dfe/" class="dropdown-item">Basic Workflow 2D DFE</a>
+</li>
+                                    
+<li>
+    <a href="../../LowPass/low-pass/" class="dropdown-item">Low-Pass Example</a>
+</li>
+                                    
+<li>
+    <a href="../../Polyploidy/PolyploidyModel/" class="dropdown-item">Polyploidy models</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../../api/dadi/" class="nav-link">API</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../TwoLocus/TwoLocusModel/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../basic_workflow_2d_demographics/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://bitbucket.org/gutenkunstlab/dadi/src/master" class="nav-link"><i class="fa-brands fa-bitbucket"></i> Bitbucket</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#basic-workflow-for-single-population-demographic-inference" class="nav-link">Basic workflow for single population demographic inference</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#creating-a-frequency-spectrum-fs" class="nav-link">Creating a frequency spectrum (FS)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#infer-the-demographic-model" class="nav-link">Infer the demographic model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#plotting-demographic-inference" class="nav-link">Plotting demographic inference</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#godambe-for-demographic-fits" class="nav-link">Godambe for demographic fits</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="basic-workflow-for-single-population-demographic-inference">Basic workflow for single population demographic inference</h1>
+<p>The example code can be ran from <code>dadi/examples/basic_workflow_1d/</code> directory. You may need to be on the developmental branch of dadi.</p>
+<h2 id="creating-a-frequency-spectrum-fs">Creating a frequency spectrum (FS)</h2>
+<p>Much of this section currently repeates the "Frequency spectrum from data" example, please view that example for more details on FS.
+First we load the modules we will use for our workflow:</p>
+<pre><code class="language-python"># Pickle is used to save variables as files for future use
+import pickle
+# NLopt is the optimization libary dadi uses
+import nlopt
+# MatPlotLib is a libary dadi uses for plotting frequency spectrum
+import matplotlib.pyplot as plt
+import dadi
+</code></pre>
+<p>Use dadi functions to parse the VCF file to generate a data dictionary.</p>
+<pre><code class="language-python">datafile = '../fs_from_data/1KG.YRI.CEU.biallelic.synonymous.snps.withanc.strict.subset.vcf.gz'
+dd = dadi.Misc.make_data_dict_vcf(datafile, '../fs_from_data/1KG.YRI.CEU.popfile.txt')
+</code></pre>
+<p>Extract the SFS for the Yoruba (YRI) population from that dictionary, with YRI projected down to 20. 
+We project down for this example to make it doable on a laptop. 
+For a real analysis we would probably not project so severely (the 1000 Genomes Yoruba population's sample size can be as high as 216).</p>
+<pre><code class="language-python">pop_ids, ns = ['YRI'], [20]
+data_fs = dadi.Spectrum.from_data_dict(dd, pop_ids, ns)
+
+# Save our extracted spectrum to disk.
+data_fs.to_file('data/fs/1KG.YRI.biallelic.synonymous.snps.withanc.strict.subset.fs')
+</code></pre>
+<p>If we didn't have outgroup information, we could fold the fs.</p>
+<pre><code class="language-python">data_fs_folded = dadi.Spectrum.from_data_dict(dd, pop_ids, ns, polarized=False)
+</code></pre>
+<p>We can see how much data is in the SFS. 
+As a rule of thumb we want to maximize this number. 
+We can do this by trying different sample sizes for our population(s).</p>
+<pre><code class="language-python">print(data_fs.S())
+</code></pre>
+<p>We can save the data dictionary for later, incase we want a new population from the VCF, generate FS with a bigger sample size, or to make bootstrapped genomes to get confidence intervals.</p>
+<pre><code class="language-python"># Make directory for saving data dictionaries
+import os
+if not os.path.exists('data/data_dictionaries'):
+  os.makedirs('data/data_dictionaries')
+
+pick = open('data/data_dictionaries/1KG.YRI.biallelic.synonymous.snps.withanc.strict.subset.bpkl','wb')
+pickle.dump(dd, pick, 2)
+
+# We can open the pickled data dictionary with:
+dd = pickle.load(open('data/data_dictionaries/1KG.YRI.biallelic.synonymous.snps.withanc.strict.subset.bpkl','rb'))
+</code></pre>
+<p>We can generate and save the FS for bootstraped genomes:</p>
+<pre><code class="language-python"># Nboot is the number of bootstraped datasets we want
+# chunk_size is the genome chunks we use to make the
+# randomized genomes.
+Nboot, chunk_size = 100, 1e7
+
+# Break up the data dictionari into a list of
+# dictionary entries for each chunk of the genome.
+# Ex, the fist 10^7 base pairs will be element 0,
+# the next 10^7 base pairs will be element 1, etc.
+# to the last 10^7 base pairs will be the last element/element -1.
+chunks = dadi.Misc.fragment_data_dict(dd, chunk_size)
+
+# If we want to do bootstrapping on both the
+# synonymous and nonsynonymous variants,
+# we want to set a seed so that the same random
+# chunks of genome are picked for both.
+import random
+random.seed(12345)
+
+# Get a list containin the SFS of the bootstraped genomes.
+boots = dadi.Misc.bootstraps_from_dd_chunks(chunks, Nboot, pop_ids, ns)
+
+# Save the bootstraps
+for i in range(len(boots)):
+  boots[i].to_file('data/fs/bootstraps_syn/1KG.YRI.biallelic.synonymous.snps.withanc.strict.subset.boot_{0}.fs'.format(str(i)))
+</code></pre>
+<p>We can plot the data spectra.</p>
+<pre><code class="language-python">fig = plt.figure(219033)
+fig.clear()
+dadi.Plotting.plot_1d_fs(data_fs)
+</code></pre>
+<h2 id="infer-the-demographic-model">Infer the demographic model</h2>
+<p>We start by generating the FS (in these examples, the data is different from the previous, as this data is more complete but would have been time-consuming to use with the previous examples) and some properties of it that are needed for inference.</p>
+<pre><code class="language-python"># If we have multiple datasets to work with, we can make a variable to store the name of the dataset that we can easily change and redo the inference with a different dataset.
+dataset = '1KG.YRI.20'
+
+# Load the synonymous frequency spectrum
+data_fs = dadi.Spectrum.from_file('data/fs/'+dataset+'.synonymous.snps.unfold.fs')
+
+# Retrive the sample sizes from the data
+ns = data_fs.sample_sizes
+
+# Define the grid points based on the sample size.
+# For smaller data (largest sample size is about &lt;100) [ns+20, ns+30, ns+40] is a good starting point.
+# For larger data (largest sample size is about &gt;=100) or for heavily down projected data [ns+100, ns+110, ns+120] is a good starting point.
+pts_l = [max(ns)+120, max(ns)+130, max(ns)+140]
+</code></pre>
+<p>Define the demographic model.</p>
+<p>Single population demographic models are in <code>dadi.Demographics1D</code>.</p>
+<p>Two population demographic models are in <code>dadi.Demographics2D</code>.</p>
+<pre><code class="language-python">demo_model = dadi.Demographics1D.two_epoch
+
+# If the data is unfolded (the ancestral allele was known), as the example data is,
+# wrap the demographic model in a function that adds a parameter to estimate the rate of misidentification.
+demo_model = dadi.Numerics.make_anc_state_misid_func(demo_model)
+
+# Wrap the demographic model in a function that utilizes grid points which increases dadi's ability to more accurately generate a model frequency spectrum.
+demo_model_ex = dadi.Numerics.make_extrap_func(demo_model)
+</code></pre>
+<p>Choose starting parameters and boundaries for inference</p>
+<pre><code class="language-python"># Define starting parameters
+params = [1, 0.01, 0.01]
+
+# Define boundaries of optimization.
+# It is a good idea to have boundaries to avoid optimization
+# from trying parameter sets that are time consuming without
+# nessicarily being correct.
+# If optimization infers parameters very close to the boundaries, we should increase them.
+lower_bounds = [1e-2, 1e-3, 1e-3]
+upper_bounds = [5, 3, 1]
+</code></pre>
+<p>Create a file to store fits in.</p>
+<p>For running on an HPC job array, it is a good idea to
+check if file is made before making it so
+that we don't overwrite other results.</p>
+<pre><code class="language-python"># Create or append to an file to store optimization results
+try:
+  fid = open('results/'+dataset+'_1d_demo_fits.txt','a')
+except:
+  fid = open('results/'+dataset+'_1d_demo_fits.txt','w')
+</code></pre>
+<p>Optimize parameters</p>
+<pre><code class="language-python"># Perturb parameters
+# Optimizers dadi uses are mostly deterministic
+# so we will want to randomize parameters for each optimization.
+# It is recommended to optimize at least 20 time if we only have
+# our local machin, 100 times if we have access to an HPC.
+# If we want a single script to do multiple runs, we will want to
+# start a for loop here
+p0 = dadi.Misc.perturb_params(params, fold=1, upper_bound=upper_bounds,
+                              lower_bound=lower_bounds)
+
+# Run optimization
+# At the end of the optimization we will get the
+# optimal parameters and log-likelihood.
+# We can modify verbose to watch how the optimizer behaves,
+# what number we pass it how many evaluations are done
+# before the evaluation is printed.
+
+popt, ll_model = dadi.Inference.opt(p0, data_fs, demo_model_ex, pts_l,
+                             lower_bound=lower_bounds,
+                             upper_bound=upper_bounds,
+                             algorithm=nlopt.LN_BOBYQA,
+                             maxeval=600, verbose=0)
+
+# Calculate the synonymous theta
+model_fs = demo_model_ex(popt, ns, pts_l)
+theta0 = dadi.Inference.optimal_sfs_scaling(model_fs, data_fs)
+
+# Write results to fid
+res = [ll_model] + list(popt) + [theta0]
+fid.write('\t'.join([str(ele) for ele in res])+'\n')
+fid.close()
+</code></pre>
+<p>If we use a loop we will want to close the file (<code>fid.close()</code>) after the loop, or open for appending (<code>fid = open('results/'+dataset+'_demo_fits.txt','a')</code>) it for each step of the loop.
+We can use a BASH command like sort on the files to more easily tell what the
+best fit is and how the log-likelihoods compare. The best log-likelihood is the lest negative (the closest to 0).</p>
+<p>ex:</p>
+<pre><code class="language-bash">sort results/1KG.YRI.20_demo_fits.txt
+</code></pre>
+<h2 id="plotting-demographic-inference">Plotting demographic inference</h2>
+<pre><code class="language-python"># Using inference information to generate the model the best fit parameters with the two_epoch model is [2.279, 0.608, 0.0249]
+popt = [2.279, 0.608, 0.0249]
+model_fs = demo_model_ex(popt, ns, pts_l)
+
+import matplotlib.pyplot as plt
+fig = plt.figure(219033)
+fig.clear()
+dadi.Plotting.plot_1d_comp_multinom(model_fs, data_fs)
+fig.savefig('results/'+dataset+'_demo_plot.png')
+</code></pre>
+<h2 id="godambe-for-demographic-fits">Godambe for demographic fits</h2>
+<pre><code class="language-python"># Load bootstraped frequency spectrum (if they haven't been made, there is an example in the &quot;Creating a frequency spectrum&quot; section)
+import glob
+boots_fids = glob.glob('data/fs/bootstraps_non/'+dataset+'.nonsynonymous.snps.unfold.boot_*.fs')
+boots_syn = [dadi.Spectrum.from_file(fid) for fid in boots_fids]
+
+# Godambe uncertainties
+# Will contain uncertainties for the
+# estimated demographic parameters and theta.
+
+# Start a file to contain the confidence intervals
+fi = open('results/'+dataset+'_demographic_confidence_intervals.txt','w')
+fi.write('Optimized parameters: {0}\n\n'.format(popt))
+
+# we want to try a few different step sizes (eps) to see if
+# uncertainties very wildly with changes to step size.
+for eps in [0.01, 0.001, 0.0001]:
+    uncerts_adj = dadi.Godambe.GIM_uncert(demo_model_ex, pts_l, boots_syn, popt, data_fs, eps=eps)
+    fi.write('Estimated 95% uncerts (with step size '+str(eps)+'): {0}\n'.format(1.96*uncerts_adj[:-1]))
+    fi.write('Lower bounds of 95% confidence interval : {0}\n'.format(popt-1.96*uncerts_adj[:-1]))
+    fi.write('Upper bounds of 95% confidence interval : {0}\n\n'.format(popt+1.96*uncerts_adj[:-1]))
+fi.close()
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

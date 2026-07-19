@@ -1,0 +1,3193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.Inference API documentation</title>
+<meta name="description" content="Comparison and optimization of model spectra to data." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Inference</code></h1>
+</header>
+<section id="section-intro">
+<p>Comparison and optimization of model spectra to data.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Comparison and optimization of model spectra to data.
+&#34;&#34;&#34;
+import logging
+logger = logging.getLogger(&#39;Inference&#39;)
+
+import os,sys, warnings
+
+import numpy
+from numpy import logical_and, logical_not
+
+from dadi import Misc, Numerics
+from scipy.special import gammaln
+import scipy.optimize
+
+#: Stores thetas
+_theta_store = {}
+#: Counts calls to object_func
+_counter = 0
+#: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
+_out_of_bounds_val = -1e8
+def _object_func(params, data, model_func, pts, 
+                 lower_bound=None, upper_bound=None, 
+                 verbose=0, multinom=True, flush_delay=0,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_stream=sys.stdout, store_thetas=False):
+    &#34;&#34;&#34;
+    Objective function for optimization.
+    &#34;&#34;&#34;
+    global _counter
+    _counter += 1
+
+    # Deal with fixed parameters
+    params_up = _project_params_up(params, fixed_params)
+
+    # Check our parameter bounds
+    if lower_bound is not None:
+        for pval,bound in zip(params_up, lower_bound):
+            if bound is not None and pval &lt; bound:
+                return -_out_of_bounds_val/ll_scale
+    if upper_bound is not None:
+        for pval,bound in zip(params_up, upper_bound):
+            if bound is not None and pval &gt; bound:
+                return -_out_of_bounds_val/ll_scale
+
+    ns = data.sample_sizes 
+    all_args = [params_up, ns] + list(func_args)
+    # Pass the pts argument via keyword, but don&#39;t alter the passed-in 
+    # func_kwargs
+    func_kwargs = func_kwargs.copy()
+    func_kwargs[&#39;pts&#39;] = pts
+    sfs = model_func(*all_args, **func_kwargs)
+    if multinom:
+        result = ll_multinom(sfs, data)
+    else:
+        result = ll(sfs, data)
+
+    if store_thetas:
+        global _theta_store
+        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+
+    # Bad result
+    if numpy.isnan(result):
+        result = _out_of_bounds_val
+
+    if (verbose &gt; 0) and (_counter % verbose == 0):
+        param_str = &#39;array([%s])&#39; % (&#39;, &#39;.join([&#39;%- 12g&#39;%v for v in params_up]))
+        output_stream.write(&#39;%-8i, %-12g, %s%s&#39; % (_counter, result, param_str,
+                                                   os.linesep))
+        Misc.delayed_flush(delay=flush_delay)
+
+    return -result/ll_scale
+
+def _object_func_log(log_params, *args, **kwargs):
+    &#34;&#34;&#34;
+    Objective function for optimization in log(params).
+    &#34;&#34;&#34;
+    return _object_func(numpy.exp(log_params), *args, **kwargs)
+
+def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+                 verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
+                                       numpy.log(p0), epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
+def _object_func_resid(params, data, model_func, target_resid, pts, 
+                 lower_bound=None, upper_bound=None, 
+                 verbose=0, multinom=True, flush_delay=0,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_stream=sys.stdout, store_thetas=False):
+    &#34;&#34;&#34;
+    Objective function for optimization.
+    &#34;&#34;&#34;
+    global _counter
+    _counter += 1
+
+    # Deal with fixed parameters
+    params_up = _project_params_up(params, fixed_params)
+
+    # Check our parameter bounds
+    if lower_bound is not None:
+        for pval,bound in zip(params_up, lower_bound):
+            if bound is not None and pval &lt; bound:
+                return -_out_of_bounds_val/ll_scale
+    if upper_bound is not None:
+        for pval,bound in zip(params_up, upper_bound):
+            if bound is not None and pval &gt; bound:
+                return -_out_of_bounds_val/ll_scale
+
+    ns = data.sample_sizes 
+    all_args = [params_up, ns] + list(func_args)
+    # Pass the pts argument via keyword, but don&#39;t alter the passed-in 
+    # func_kwargs
+    func_kwargs = func_kwargs.copy()
+    func_kwargs[&#39;pts&#39;] = pts
+    sfs = model_func(*all_args, **func_kwargs)
+    
+    model_resid = Anscombe_Poisson_residual(sfs, data)
+    resid = target_resid-model_resid
+    resid.data[resid.mask==True]=0
+    result=numpy.sum(resid.data**2)
+
+    if store_thetas:
+        global _theta_store
+        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+
+    # Bad result
+    if numpy.isnan(result):
+        result = _out_of_bounds_val
+
+    if (verbose &gt; 0) and (_counter % verbose == 0):
+        param_str = &#39;array([%s])&#39; % (&#39;, &#39;.join([&#39;%- 12g&#39;%v for v in params_up]))
+        output_stream.write(&#39;%-8i, %-12g, %s%s&#39; % (_counter, result, param_str,
+                                                   os.linesep))
+        Misc.delayed_flush(delay=flush_delay)
+
+    return result
+
+def _object_func_log_resid(log_params, *args, **kwargs):
+    &#34;&#34;&#34;
+    Objective function for optimization in log(params).
+    &#34;&#34;&#34;
+    return _object_func_resid(numpy.exp(log_params), *args, **kwargs)
+
+def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None, upper_bound=None,
+                 verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    target_resid: The residual sfs that we want to match, obtained from the 
+                  synonymous fits.
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, target_resid, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log_resid, 
+                                       numpy.log(p0), epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
+def optimize_log_lbfgsb(p0, data, model_func, pts, 
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum algorithm iterations to run.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    else:
+        lower_bound = numpy.log(lower_bound)
+        lower_bound[numpy.isnan(lower_bound)] = None
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    else:
+        upper_bound = numpy.log(upper_bound)
+        upper_bound[numpy.isnan(upper_bound)] = None
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func_log, 
+                                           numpy.log(p0), bounds = bounds,
+                                           epsilon=epsilon, args = args,
+                                           iprint = -1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, info_dict
+
+def minus_ll(model, data):
+    &#34;&#34;&#34;
+    The negative of the log-likelihood of the data given the model sfs.
+    &#34;&#34;&#34;
+    return -ll(model, data)
+
+def ll(model, data):
+    &#34;&#34;&#34;
+    The log-likelihood of the data given the model sfs.
+
+    Evaluate the log-likelihood of the data given the model. This is based on
+    Poisson statistics, where the probability of observing k entries in a cell
+    given that the mean number is given by the model is 
+    P(k) = exp(-model) * model**k / k!
+
+    Note: If either the model or the data is a masked array, the return ll will
+          ignore any elements that are masked in *either* the model or the data.
+    &#34;&#34;&#34;
+    ll_arr = ll_per_bin(model, data)
+    return ll_arr.sum()
+
+def ll_per_bin(model, data, missing_model_cutoff=1e-6):
+    &#34;&#34;&#34;
+    The Poisson log-likelihood of each entry in the data given the model sfs.
+
+    missing_model_cutoff: Due to numerical issues, there may be entries in the
+                          FS that cannot be stable calculated. If these entries
+                          involve a fraction of the data larger than
+                          missing_model_cutoff, a warning is printed.
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+
+    # Using numpy.ma.log here ensures that any negative or nan entries in model
+    # yield masked entries in result. We can then check for correctness of
+    # calculation by simply comparing masks.
+    # Note: Using .data attributes directly saves a little computation time. We
+    # use model and data as a whole at least once, to ensure masking is done
+    # properly.
+    result = -model.data + data.data*model.log() - gammaln(data + 1.)
+    if numpy.all(result.mask == data.mask):
+        return result
+
+    not_data_mask = logical_not(data.mask)
+    data_sum = data.sum()
+
+    missing = logical_and(model &lt; 0, not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data.sum() &gt; missing_model_cutoff:
+        logger.warning(&#39;Model is &lt; 0 where data is not masked.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    # If the data is 0, it&#39;s okay for the model to be 0. In that case the ll
+    # contribution is 0, which is fine.
+    missing = logical_and(model == 0, logical_and(data &gt; 0, not_data_mask))
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum &gt; missing_model_cutoff:
+        logger.warning(&#39;Model is 0 where data is neither masked nor 0.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    missing = numpy.logical_and(model.mask, not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum &gt; missing_model_cutoff:
+        print(data[missing].sum(), data_sum)
+        logger.warning(&#39;Model is masked in some entries where data is not.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    missing = numpy.logical_and(numpy.isnan(model), not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum &gt; missing_model_cutoff:
+        logger.warning(&#39;Model is nan in some entries where data is not masked.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    return result
+
+
+def ll_multinom_per_bin(model, data):
+    &#34;&#34;&#34;
+    Mutlinomial log-likelihood of each entry in the data given the model.
+
+    Scales the model sfs to have the optimal theta for comparison with the data.
+    &#34;&#34;&#34;
+    theta_opt = optimal_sfs_scaling(model, data)
+    return ll_per_bin(theta_opt*model, data)
+
+def ll_multinom(model, data):
+    &#34;&#34;&#34;
+    Log-likelihood of the data given the model, with optimal rescaling.
+
+    Evaluate the log-likelihood of the data given the model. This is based on
+    Poisson statistics, where the probability of observing k entries in a cell
+    given that the mean number is given by the model is 
+    P(k) = exp(-model) * model**k / k!
+
+    model is optimally scaled to maximize ll before calculation.
+
+    Note: If either the model or the data is a masked array, the return ll will
+          ignore any elements that are masked in *either* the model or the data.
+    &#34;&#34;&#34;
+    ll_arr = ll_multinom_per_bin(model, data)
+    return ll_arr.sum()
+
+def minus_ll_multinom(model, data):
+    &#34;&#34;&#34;
+    The negative of the log-likelihood of the data given the model sfs.
+
+    Return a double that is -(log-likelihood)
+    &#34;&#34;&#34;
+    return -ll_multinom(model, data)
+
+def linear_Poisson_residual(model, data, mask=None):
+    &#34;&#34;&#34;
+    Return the Poisson residuals, (model - data)/sqrt(model), of model and data.
+
+    mask sets the level in model below which the returned residual array is
+    masked. The default of 0 excludes values where the residuals are not 
+    defined.
+
+    In the limit that the mean of the Poisson distribution is large, these
+    residuals are normally distributed. (If the mean is small, the Anscombe
+    residuals are better.)
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+
+    resid = (model - data)/numpy.ma.sqrt(model)
+    if mask is not None:
+        tomask = numpy.logical_and(model &lt;= mask, data &lt;= mask)
+        resid = numpy.ma.masked_where(tomask, resid)
+    return resid
+
+def Anscombe_Poisson_residual(model, data, mask=None):
+    &#34;&#34;&#34;
+    Return the Anscombe Poisson residuals between model and data.
+
+    mask sets the level in model below which the returned residual array is
+    masked. This excludes very small values where the residuals are not normal.
+    1e-2 seems to be a good default for the NIEHS human data. (model = 1e-2,
+    data = 0, yields a residual of ~1.5.)
+
+    Residuals defined in this manner are more normally distributed than the
+    linear residuals when the mean is small. See this reference below for
+    justification: Pierce DA and Schafer DW, &#34;Residuals in generalized linear
+    models&#34; Journal of the American Statistical Association, 81(396)977-986
+    (1986).
+
+    Note that I tried implementing the &#34;adjusted deviance&#34; residuals, but they
+    always looked very biased for the cases where the data was 0.
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+    # Because my data have often been projected downward or averaged over many
+    # iterations, it appears better to apply the same transformation to the data
+    # and the model.
+    # For some reason data**(-1./3) results in entries in data that are zero
+    # becoming masked. Not just the result, but the data array itself. We use
+    # the power call to get around that.
+    # This seems to be a common problem, that we want to use numpy.ma functions
+    # on masked arrays, because otherwise the mask on the input itself can be
+    # changed. Subtle and annoying. If we need to create our own functions, we
+    # can use numpy.ma.core._MaskedUnaryOperation.
+    datatrans = data**(2./3) - numpy.ma.power(data,-1./3)/9
+    modeltrans = model**(2./3) - numpy.ma.power(model,-1./3)/9
+    resid = 1.5*(datatrans - modeltrans)/model**(1./6)
+    if mask is not None:
+        tomask = numpy.logical_and(model &lt;= mask, data &lt;= mask)
+        tomask = numpy.logical_or(tomask, data == 0)
+        resid = numpy.ma.masked_where(tomask, resid)
+    # It makes more sense to me to have a minus sign here... So when the
+    # model is high, the residual is positive. This is opposite of the
+    # Pierce and Schafner convention.
+    return -resid
+
+def optimally_scaled_sfs(model, data):
+    &#34;&#34;&#34;
+    Optimially scale model sfs to data sfs.
+
+    Returns a new scaled model sfs.
+    &#34;&#34;&#34;
+    return optimal_sfs_scaling(model,data) * model
+
+def optimal_sfs_scaling(model, data):
+    &#34;&#34;&#34;
+    Optimal multiplicative scaling factor between model and data.
+
+    This scaling is based on only those entries that are masked in neither
+    model nor data.
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+
+    model, data = Numerics.intersect_masks(model, data)
+    return data.sum()/model.sum()
+
+def optimize_log_fmin(p0, data, model_func, pts, 
+                      lower_bound=None, upper_bound=None,
+                      verbose=0, flush_delay=0.5, 
+                      multinom=True, maxiter=None, 
+                      full_output=False, func_args=[], 
+                      func_kwargs={},
+                      fixed_params=None, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using Nelder-Mead. 
+
+    This optimization method may work better than BFGS when far from a
+    minimum. It is much slower, but more robust, because it doesn&#39;t use
+    gradient information.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over large scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If True, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, iter, funcalls, warnflag
+
+def optimize_log_powell(p0, data, model_func, pts,
+                      lower_bound=None, upper_bound=None,
+                      verbose=0, flush_delay=0.5,
+                      multinom=True, maxiter=None,
+                      full_output=False, func_args=[],
+                      func_kwargs={},
+                      fixed_params=None, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using Powell&#39;s method.
+        
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+        (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+        length as p0. A parameter can be declared unbound by assigning
+        a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+        length as p0. A parameter can be declared unbound by assigning
+        a bound of None.
+    verbose: If True, print optimization status every &lt;verbose&gt; steps.
+        output_file: Stream verbose output into this filename. If None, stream to
+        standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+        minutes. This is useful to avoid overloading I/O on clusters.
+        multinom: If True, do a multinomial fit where model is optimially scaled to
+        data at each step. If False, assume theta is a parameter and do
+        no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in
+        help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that
+        model_func&#39;s first argument is an array of parameters to
+        optimize, that its second argument is an array of sample sizes
+        for the sfs, and that its last argument is the list of grid
+        points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+        particular values. For example, if the model parameters
+        are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+        will hold nu1=0.5 and m=2. The optimizer will only change
+        T and m. Note that the bounds lists must include all
+        parameters. Optimization will fail if the fixed values
+        lie outside their bounds. A full-length p0 should be passed
+        in; values corresponding to fixed parameters are ignored.
+        (See help(dadi.Inference.optimize_log for examples of func_args and
+        fixed_params usage.)
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_powell(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    xopt, fopt, direc, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+                                  
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, direc, iter, funcalls, warnflag
+
+def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+             verbose=0, flush_delay=0.5, epsilon=1e-3, 
+             gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+             func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+             output_file=None):
+    &#34;&#34;&#34;
+    Optimize params to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
+                                       epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag
+
+
+def optimize_lbfgsb(p0, data, model_func, pts, 
+                    lower_bound=None, upper_bound=None,
+                    verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                    pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+                    func_args=[], func_kwargs={}, fixed_params=None, 
+                    ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum algorithm iterations evaluations to run.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func, 
+                                           numpy.log(p0), bounds=bounds,
+                                           epsilon=epsilon, args=args,
+                                           iprint=-1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, info_dict
+
+def optimize_cons(p0, data, model_func, pts,
+                  eq_constraint=None, ieq_constraint=None,
+                  lower_bound=None, upper_bound=None, 
+                  verbose=0, flush_delay=0.5, epsilon=1e-4,
+                  gtol=1e-5, multinom=True, maxiter=None,
+                  full_output=False, func_args=[], func_kwargs={},
+                  fixed_params=None, ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize params to fit model to data using constrainted optimization.
+
+    This method will ensure parameter constraints are satisfied.
+    For example, you might constrain than one parameter is larger than other,
+     or that the sum of several parameters is a particular value.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    eq_constraint: Function that returns a 1D array in which each element must
+                   equal to 0 in a successful result.
+                   For example, to constraint p[1] + p[2] = 1 and p[3] - p[2] = 3,
+                   def eq_constraint(p): return [p[1]+p[2]-1, p[3]-p[2]-3]
+    ieq_constraint: Function that returns a 1D array in which each element must
+                    greater than or equal to 0 in a successful result.
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_slsqp)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+    
+    args = (data, model_func, pts, None, None, verbose, 
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    if (lower_bound is not None) and (upper_bound is not None):
+        bnds = tuple(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_slsqp(_object_func, 
+        p0, bounds = bnds, args = args,
+        f_eqcons = eq_constraint, f_ieqcons = ieq_constraint,
+        epsilon = epsilon,
+        iter = maxiter, full_output = True,
+        disp = False)
+    xopt, fopt, func_calls, grad_calls, warnflag = outputs
+
+    xopt = _project_params_up(xopt, fixed_params)
+    
+    if output_file:
+        output_stream.close()
+    
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, func_calls, grad_calls, warnflag
+
+def _project_params_down(pin, fixed_params):
+    &#34;&#34;&#34;
+    Eliminate fixed parameters from pin.
+    &#34;&#34;&#34;
+    if fixed_params is None:
+        return pin
+
+    if len(pin) != len(fixed_params):
+        raise ValueError(&#39;fixed_params list must have same length as input &#39;
+                         &#39;parameter array.&#39;)
+
+    pout = []
+    for ii, (curr_val,fixed_val) in enumerate(zip(pin, fixed_params)):
+        if fixed_val is None:
+            pout.append(curr_val)
+
+    return numpy.array(pout)
+
+def _project_params_up(pin, fixed_params):
+    &#34;&#34;&#34;
+    Fold fixed parameters into pin.
+    &#34;&#34;&#34;
+    if fixed_params is None:
+        return pin
+
+    if numpy.isscalar(pin):
+        pin = [pin]
+
+    pout = numpy.zeros(len(fixed_params))
+    orig_ii = 0
+    for out_ii, val in enumerate(fixed_params):
+        if val is None:
+            pout[out_ii] = pin[orig_ii]
+            orig_ii += 1
+        else:
+            pout[out_ii] = fixed_params[out_ii]
+    return pout
+
+index_exp = numpy.index_exp
+def optimize_grid(data, model_func, pts, grid,
+                  verbose=0, flush_delay=0.5,
+                  multinom=True, full_output=False,
+                  func_args=[], func_kwargs={}, fixed_params=None,
+                  output_file=None):
+    &#34;&#34;&#34;
+    Optimize params to fit model to data using brute force search over a grid.
+
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                (params, (n1,n2...), pts)
+    pts: Grid points list for evaluating likelihoods
+    grid: Grid of parameter values over which to evaluate likelihood. See
+          below for specification instructions.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    full_output: If True, return popt, llopt, grid, llout, thetas. Here popt is
+                 the best parameter set found and llopt is the corresponding
+                 (composite) log-likelihood. grid is the array of parameter
+                 values tried, llout is the corresponding log-likelihoods, and
+                 thetas is the corresponding thetas. Note that the grid includes
+                 only the parameters optimized over, and that the order of
+                 indices is such that grid[:,0,2] would be a set of parameters
+                 if two parameters were optimized over. (Note the : in the
+                 first index.)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+
+    Search grids are specified using a dadi.Inference.index_exp object (which
+    is an alias for numpy.index_exp). The grid is specified by passing a range
+    of values for each parameter. For example, index_exp[0:1.1:0.3,
+    0.7:0.9:11j] will search over parameter 1 with values 0,0.3,0.6,0.9 and
+    over parameter 2 with 11 points between 0.7 and 0.9 (inclusive). (Notice
+    the 11j in the second parameter range specification.) Note that the grid
+    list should include only parameters that are optimized over, not fixed
+    parameter values.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream, full_output)
+
+    if full_output:
+        global _theta_store
+        _theta_store = {}
+
+    outputs = scipy.optimize.brute(_object_func, ranges=grid,
+                                   args=args, full_output=full_output,
+                                   finish=False)
+    if full_output:
+        xopt, fopt, grid, fout = outputs
+        # Thetas are stored as a dictionary, because we can&#39;t guarantee
+        # iteration order in brute(). So we have to iterate back over them
+        # to produce the proper order to return.
+        thetas = numpy.zeros(fout.shape)
+        for indices, temp in numpy.ndenumerate(fout):
+            # This is awkward, because we need to access grid[:,indices]
+            grid_indices = tuple([slice(None,None,None)] + list(indices))
+            thetas[indices] = _theta_store[tuple(grid[grid_indices])]
+    else:
+        xopt = outputs
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, grid, fout, thetas
+
+def add_misid_param(func):
+    &#34;&#34;&#34;
+    Add parameter to model ancestral state misidentification.
+
+    The returned function will have an additional element of the params
+    list, which is the proportion of segregating sites whose ancestral state
+    were misidentified.
+    &#34;&#34;&#34;
+    warnings.warning(&#34;Inference.add_misid_param is deprecated. Please use the updated Numerics.make_anc_state_misd_func instead.\n&#34;, FutureWarning)
+    def misid_func(params, *args, **kwargs):
+        misid = params[-1]
+        fs = func(params[:-1], *args, **kwargs)
+        return (1-misid)*fs + misid*Numerics.reverse_array(fs)
+    misid_func.__name__ = func.__name__
+    misid_func.__doc__ = func.__doc__
+    return misid_func
+
+from .NLopt_mod import opt</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Inference.Anscombe_Poisson_residual"><code class="name flex">
+<span>def <span class="ident">Anscombe_Poisson_residual</span></span>(<span>model, data, mask=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the Anscombe Poisson residuals between model and data.</p>
+<p>mask sets the level in model below which the returned residual array is
+masked. This excludes very small values where the residuals are not normal.
+1e-2 seems to be a good default for the NIEHS human data. (model = 1e-2,
+data = 0, yields a residual of ~1.5.)</p>
+<p>Residuals defined in this manner are more normally distributed than the
+linear residuals when the mean is small. See this reference below for
+justification: Pierce DA and Schafer DW, "Residuals in generalized linear
+models" Journal of the American Statistical Association, 81(396)977-986
+(1986).</p>
+<p>Note that I tried implementing the "adjusted deviance" residuals, but they
+always looked very biased for the cases where the data was 0.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Anscombe_Poisson_residual(model, data, mask=None):
+    &#34;&#34;&#34;
+    Return the Anscombe Poisson residuals between model and data.
+
+    mask sets the level in model below which the returned residual array is
+    masked. This excludes very small values where the residuals are not normal.
+    1e-2 seems to be a good default for the NIEHS human data. (model = 1e-2,
+    data = 0, yields a residual of ~1.5.)
+
+    Residuals defined in this manner are more normally distributed than the
+    linear residuals when the mean is small. See this reference below for
+    justification: Pierce DA and Schafer DW, &#34;Residuals in generalized linear
+    models&#34; Journal of the American Statistical Association, 81(396)977-986
+    (1986).
+
+    Note that I tried implementing the &#34;adjusted deviance&#34; residuals, but they
+    always looked very biased for the cases where the data was 0.
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+    # Because my data have often been projected downward or averaged over many
+    # iterations, it appears better to apply the same transformation to the data
+    # and the model.
+    # For some reason data**(-1./3) results in entries in data that are zero
+    # becoming masked. Not just the result, but the data array itself. We use
+    # the power call to get around that.
+    # This seems to be a common problem, that we want to use numpy.ma functions
+    # on masked arrays, because otherwise the mask on the input itself can be
+    # changed. Subtle and annoying. If we need to create our own functions, we
+    # can use numpy.ma.core._MaskedUnaryOperation.
+    datatrans = data**(2./3) - numpy.ma.power(data,-1./3)/9
+    modeltrans = model**(2./3) - numpy.ma.power(model,-1./3)/9
+    resid = 1.5*(datatrans - modeltrans)/model**(1./6)
+    if mask is not None:
+        tomask = numpy.logical_and(model &lt;= mask, data &lt;= mask)
+        tomask = numpy.logical_or(tomask, data == 0)
+        resid = numpy.ma.masked_where(tomask, resid)
+    # It makes more sense to me to have a minus sign here... So when the
+    # model is high, the residual is positive. This is opposite of the
+    # Pierce and Schafner convention.
+    return -resid</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.add_misid_param"><code class="name flex">
+<span>def <span class="ident">add_misid_param</span></span>(<span>func)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add parameter to model ancestral state misidentification.</p>
+<p>The returned function will have an additional element of the params
+list, which is the proportion of segregating sites whose ancestral state
+were misidentified.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_misid_param(func):
+    &#34;&#34;&#34;
+    Add parameter to model ancestral state misidentification.
+
+    The returned function will have an additional element of the params
+    list, which is the proportion of segregating sites whose ancestral state
+    were misidentified.
+    &#34;&#34;&#34;
+    warnings.warning(&#34;Inference.add_misid_param is deprecated. Please use the updated Numerics.make_anc_state_misd_func instead.\n&#34;, FutureWarning)
+    def misid_func(params, *args, **kwargs):
+        misid = params[-1]
+        fs = func(params[:-1], *args, **kwargs)
+        return (1-misid)*fs + misid*Numerics.reverse_array(fs)
+    misid_func.__name__ = func.__name__
+    misid_func.__doc__ = func.__doc__
+    return misid_func</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.linear_Poisson_residual"><code class="name flex">
+<span>def <span class="ident">linear_Poisson_residual</span></span>(<span>model, data, mask=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the Poisson residuals, (model - data)/sqrt(model), of model and data.</p>
+<p>mask sets the level in model below which the returned residual array is
+masked. The default of 0 excludes values where the residuals are not
+defined.</p>
+<p>In the limit that the mean of the Poisson distribution is large, these
+residuals are normally distributed. (If the mean is small, the Anscombe
+residuals are better.)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def linear_Poisson_residual(model, data, mask=None):
+    &#34;&#34;&#34;
+    Return the Poisson residuals, (model - data)/sqrt(model), of model and data.
+
+    mask sets the level in model below which the returned residual array is
+    masked. The default of 0 excludes values where the residuals are not 
+    defined.
+
+    In the limit that the mean of the Poisson distribution is large, these
+    residuals are normally distributed. (If the mean is small, the Anscombe
+    residuals are better.)
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+
+    resid = (model - data)/numpy.ma.sqrt(model)
+    if mask is not None:
+        tomask = numpy.logical_and(model &lt;= mask, data &lt;= mask)
+        resid = numpy.ma.masked_where(tomask, resid)
+    return resid</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.ll"><code class="name flex">
+<span>def <span class="ident">ll</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The log-likelihood of the data given the model sfs.</p>
+<p>Evaluate the log-likelihood of the data given the model. This is based on
+Poisson statistics, where the probability of observing k entries in a cell
+given that the mean number is given by the model is
+P(k) = exp(-model) * model**k / k!</p>
+<p>Note: If either the model or the data is a masked array, the return ll will
+ignore any elements that are masked in <em>either</em> the model or the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll(model, data):
+    &#34;&#34;&#34;
+    The log-likelihood of the data given the model sfs.
+
+    Evaluate the log-likelihood of the data given the model. This is based on
+    Poisson statistics, where the probability of observing k entries in a cell
+    given that the mean number is given by the model is 
+    P(k) = exp(-model) * model**k / k!
+
+    Note: If either the model or the data is a masked array, the return ll will
+          ignore any elements that are masked in *either* the model or the data.
+    &#34;&#34;&#34;
+    ll_arr = ll_per_bin(model, data)
+    return ll_arr.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.ll_multinom"><code class="name flex">
+<span>def <span class="ident">ll_multinom</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Log-likelihood of the data given the model, with optimal rescaling.</p>
+<p>Evaluate the log-likelihood of the data given the model. This is based on
+Poisson statistics, where the probability of observing k entries in a cell
+given that the mean number is given by the model is
+P(k) = exp(-model) * model**k / k!</p>
+<p>model is optimally scaled to maximize ll before calculation.</p>
+<p>Note: If either the model or the data is a masked array, the return ll will
+ignore any elements that are masked in <em>either</em> the model or the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_multinom(model, data):
+    &#34;&#34;&#34;
+    Log-likelihood of the data given the model, with optimal rescaling.
+
+    Evaluate the log-likelihood of the data given the model. This is based on
+    Poisson statistics, where the probability of observing k entries in a cell
+    given that the mean number is given by the model is 
+    P(k) = exp(-model) * model**k / k!
+
+    model is optimally scaled to maximize ll before calculation.
+
+    Note: If either the model or the data is a masked array, the return ll will
+          ignore any elements that are masked in *either* the model or the data.
+    &#34;&#34;&#34;
+    ll_arr = ll_multinom_per_bin(model, data)
+    return ll_arr.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.ll_multinom_per_bin"><code class="name flex">
+<span>def <span class="ident">ll_multinom_per_bin</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Mutlinomial log-likelihood of each entry in the data given the model.</p>
+<p>Scales the model sfs to have the optimal theta for comparison with the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_multinom_per_bin(model, data):
+    &#34;&#34;&#34;
+    Mutlinomial log-likelihood of each entry in the data given the model.
+
+    Scales the model sfs to have the optimal theta for comparison with the data.
+    &#34;&#34;&#34;
+    theta_opt = optimal_sfs_scaling(model, data)
+    return ll_per_bin(theta_opt*model, data)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.ll_per_bin"><code class="name flex">
+<span>def <span class="ident">ll_per_bin</span></span>(<span>model, data, missing_model_cutoff=1e-06)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The Poisson log-likelihood of each entry in the data given the model sfs.</p>
+<p>missing_model_cutoff: Due to numerical issues, there may be entries in the
+FS that cannot be stable calculated. If these entries
+involve a fraction of the data larger than
+missing_model_cutoff, a warning is printed.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_per_bin(model, data, missing_model_cutoff=1e-6):
+    &#34;&#34;&#34;
+    The Poisson log-likelihood of each entry in the data given the model sfs.
+
+    missing_model_cutoff: Due to numerical issues, there may be entries in the
+                          FS that cannot be stable calculated. If these entries
+                          involve a fraction of the data larger than
+                          missing_model_cutoff, a warning is printed.
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+
+    # Using numpy.ma.log here ensures that any negative or nan entries in model
+    # yield masked entries in result. We can then check for correctness of
+    # calculation by simply comparing masks.
+    # Note: Using .data attributes directly saves a little computation time. We
+    # use model and data as a whole at least once, to ensure masking is done
+    # properly.
+    result = -model.data + data.data*model.log() - gammaln(data + 1.)
+    if numpy.all(result.mask == data.mask):
+        return result
+
+    not_data_mask = logical_not(data.mask)
+    data_sum = data.sum()
+
+    missing = logical_and(model &lt; 0, not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data.sum() &gt; missing_model_cutoff:
+        logger.warning(&#39;Model is &lt; 0 where data is not masked.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    # If the data is 0, it&#39;s okay for the model to be 0. In that case the ll
+    # contribution is 0, which is fine.
+    missing = logical_and(model == 0, logical_and(data &gt; 0, not_data_mask))
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum &gt; missing_model_cutoff:
+        logger.warning(&#39;Model is 0 where data is neither masked nor 0.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    missing = numpy.logical_and(model.mask, not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum &gt; missing_model_cutoff:
+        print(data[missing].sum(), data_sum)
+        logger.warning(&#39;Model is masked in some entries where data is not.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    missing = numpy.logical_and(numpy.isnan(model), not_data_mask)
+    if numpy.any(missing)\
+       and data[missing].sum()/data_sum &gt; missing_model_cutoff:
+        logger.warning(&#39;Model is nan in some entries where data is not masked.&#39;)
+        logger.warning(&#39;Number of affected entries is %i. Sum of data in those &#39;
+                    &#39;entries is %g:&#39; % (missing.sum(), data[missing].sum()))
+
+    return result</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.minus_ll"><code class="name flex">
+<span>def <span class="ident">minus_ll</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The negative of the log-likelihood of the data given the model sfs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def minus_ll(model, data):
+    &#34;&#34;&#34;
+    The negative of the log-likelihood of the data given the model sfs.
+    &#34;&#34;&#34;
+    return -ll(model, data)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.minus_ll_multinom"><code class="name flex">
+<span>def <span class="ident">minus_ll_multinom</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The negative of the log-likelihood of the data given the model sfs.</p>
+<p>Return a double that is -(log-likelihood)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def minus_ll_multinom(model, data):
+    &#34;&#34;&#34;
+    The negative of the log-likelihood of the data given the model sfs.
+
+    Return a double that is -(log-likelihood)
+    &#34;&#34;&#34;
+    return -ll_multinom(model, data)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimal_sfs_scaling"><code class="name flex">
+<span>def <span class="ident">optimal_sfs_scaling</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimal multiplicative scaling factor between model and data.</p>
+<p>This scaling is based on only those entries that are masked in neither
+model nor data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimal_sfs_scaling(model, data):
+    &#34;&#34;&#34;
+    Optimal multiplicative scaling factor between model and data.
+
+    This scaling is based on only those entries that are masked in neither
+    model nor data.
+    &#34;&#34;&#34;
+    if hasattr(data, &#39;folded&#39;) and data.folded and not model.folded:
+        model = model.fold()
+    if hasattr(data, &#39;folded_ancestral&#39;) and data.folded_ancestral\
+       and not model.folded_ancestral:
+        model = model.fold_ancestral()
+    if hasattr(data, &#39;folded_major&#39;) and data.folded_major\
+       and not model.folded_major:
+        model = model.fold_major()
+
+    model, data = Numerics.intersect_masks(model, data)
+    return data.sum()/model.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimally_scaled_sfs"><code class="name flex">
+<span>def <span class="ident">optimally_scaled_sfs</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimially scale model sfs to data sfs.</p>
+<p>Returns a new scaled model sfs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimally_scaled_sfs(model, data):
+    &#34;&#34;&#34;
+    Optimially scale model sfs to data sfs.
+
+    Returns a new scaled model sfs.
+    &#34;&#34;&#34;
+    return optimal_sfs_scaling(model,data) * model</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize"><code class="name flex">
+<span>def <span class="ident">optimize</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize params to fit model to data using the BFGS method.</p>
+<p>This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+gtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_bfgs)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+             verbose=0, flush_delay=0.5, epsilon=1e-3, 
+             gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+             func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+             output_file=None):
+    &#34;&#34;&#34;
+    Optimize params to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func, p0, 
+                                       epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_cons"><code class="name flex">
+<span>def <span class="ident">optimize_cons</span></span>(<span>p0, data, model_func, pts, eq_constraint=None, ieq_constraint=None, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.0001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize params to fit model to data using constrainted optimization.</p>
+<p>This method will ensure parameter constraints are satisfied.
+For example, you might constrain than one parameter is larger than other,
+or that the sum of several parameters is a particular value.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_func: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+eq_constraint: Function that returns a 1D array in which each element must
+equal to 0 in a successful result.
+For example, to constraint p[1] + p[2] = 1 and p[3] - p[2] = 3,
+def eq_constraint(p): return [p[1]+p[2]-1, p[3]-p[2]-3]
+ieq_constraint: Function that returns a 1D array in which each element must
+greater than or equal to 0 in a successful result.
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+gtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_bfgs)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_slsqp)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+Using func_args.
+For example, you could define your model function as
+def func((p1,p2), ns, f1, f2, pts):
+....
+If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+would pass func_args = [0.1,0.2] (and ignore the fixed_params
+argument).
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+For example, suppose your model function is
+def func((p1,f1,p2,f2), ns, pts):
+....
+If you wanted to fix f1=0.1 and f2=0.2 in the optimization,
+you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+the func_args argument).
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_cons(p0, data, model_func, pts,
+                  eq_constraint=None, ieq_constraint=None,
+                  lower_bound=None, upper_bound=None, 
+                  verbose=0, flush_delay=0.5, epsilon=1e-4,
+                  gtol=1e-5, multinom=True, maxiter=None,
+                  full_output=False, func_args=[], func_kwargs={},
+                  fixed_params=None, ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize params to fit model to data using constrainted optimization.
+
+    This method will ensure parameter constraints are satisfied.
+    For example, you might constrain than one parameter is larger than other,
+     or that the sum of several parameters is a particular value.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    eq_constraint: Function that returns a 1D array in which each element must
+                   equal to 0 in a successful result.
+                   For example, to constraint p[1] + p[2] = 1 and p[3] - p[2] = 3,
+                   def eq_constraint(p): return [p[1]+p[2]-1, p[3]-p[2]-3]
+    ieq_constraint: Function that returns a 1D array in which each element must
+                    greater than or equal to 0 in a successful result.
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_slsqp)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+    
+    args = (data, model_func, pts, None, None, verbose, 
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    if (lower_bound is not None) and (upper_bound is not None):
+        bnds = tuple(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_slsqp(_object_func, 
+        p0, bounds = bnds, args = args,
+        f_eqcons = eq_constraint, f_ieqcons = ieq_constraint,
+        epsilon = epsilon,
+        iter = maxiter, full_output = True,
+        disp = False)
+    xopt, fopt, func_calls, grad_calls, warnflag = outputs
+
+    xopt = _project_params_up(xopt, fixed_params)
+    
+    if output_file:
+        output_stream.close()
+    
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, func_calls, grad_calls, warnflag</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_grid"><code class="name flex">
+<span>def <span class="ident">optimize_grid</span></span>(<span>data, model_func, pts, grid, verbose=0, flush_delay=0.5, multinom=True, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize params to fit model to data using brute force search over a grid.</p>
+<p>data: Spectrum with data.
+model_func: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+pts: Grid points list for evaluating likelihoods
+grid: Grid of parameter values over which to evaluate likelihood. See
+below for specification instructions.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+full_output: If True, return popt, llopt, grid, llout, thetas. Here popt is
+the best parameter set found and llopt is the corresponding
+(composite) log-likelihood. grid is the array of parameter
+values tried, llout is the corresponding log-likelihoods, and
+thetas is the corresponding thetas. Note that the grid includes
+only the parameters optimized over, and that the order of
+indices is such that grid[:,0,2] would be a set of parameters
+if two parameters were optimized over. (Note the : in the
+first index.)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)</p>
+<p>Search grids are specified using a dadi.Inference.index_exp object (which
+is an alias for numpy.index_exp). The grid is specified by passing a range
+of values for each parameter. For example, index_exp[0:1.1:0.3,
+0.7:0.9:11j] will search over parameter 1 with values 0,0.3,0.6,0.9 and
+over parameter 2 with 11 points between 0.7 and 0.9 (inclusive). (Notice
+the 11j in the second parameter range specification.) Note that the grid
+list should include only parameters that are optimized over, not fixed
+parameter values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_grid(data, model_func, pts, grid,
+                  verbose=0, flush_delay=0.5,
+                  multinom=True, full_output=False,
+                  func_args=[], func_kwargs={}, fixed_params=None,
+                  output_file=None):
+    &#34;&#34;&#34;
+    Optimize params to fit model to data using brute force search over a grid.
+
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                (params, (n1,n2...), pts)
+    pts: Grid points list for evaluating likelihoods
+    grid: Grid of parameter values over which to evaluate likelihood. See
+          below for specification instructions.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    full_output: If True, return popt, llopt, grid, llout, thetas. Here popt is
+                 the best parameter set found and llopt is the corresponding
+                 (composite) log-likelihood. grid is the array of parameter
+                 values tried, llout is the corresponding log-likelihoods, and
+                 thetas is the corresponding thetas. Note that the grid includes
+                 only the parameters optimized over, and that the order of
+                 indices is such that grid[:,0,2] would be a set of parameters
+                 if two parameters were optimized over. (Note the : in the
+                 first index.)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+
+    Search grids are specified using a dadi.Inference.index_exp object (which
+    is an alias for numpy.index_exp). The grid is specified by passing a range
+    of values for each parameter. For example, index_exp[0:1.1:0.3,
+    0.7:0.9:11j] will search over parameter 1 with values 0,0.3,0.6,0.9 and
+    over parameter 2 with 11 points between 0.7 and 0.9 (inclusive). (Notice
+    the 11j in the second parameter range specification.) Note that the grid
+    list should include only parameters that are optimized over, not fixed
+    parameter values.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream, full_output)
+
+    if full_output:
+        global _theta_store
+        _theta_store = {}
+
+    outputs = scipy.optimize.brute(_object_func, ranges=grid,
+                                   args=args, full_output=full_output,
+                                   finish=False)
+    if full_output:
+        xopt, fopt, grid, fout = outputs
+        # Thetas are stored as a dictionary, because we can&#39;t guarantee
+        # iteration order in brute(). So we have to iterate back over them
+        # to produce the proper order to return.
+        thetas = numpy.zeros(fout.shape)
+        for indices, temp in numpy.ndenumerate(fout):
+            # This is awkward, because we need to access grid[:,indices]
+            grid_indices = tuple([slice(None,None,None)] + list(indices))
+            thetas[indices] = _theta_store[tuple(grid[grid_indices])]
+    else:
+        xopt = outputs
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, grid, fout, thetas</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_lbfgsb"><code class="name flex">
+<span>def <span class="ident">optimize_lbfgsb</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using the L-BFGS-B method.</p>
+<p>This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum. This method is
+better than optimize_log if the optimum lies at one or more of the
+parameter bounds. However, if your optimum is not on the bounds, this
+method may be much slower.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+pgtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_l_bfgs_b)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum algorithm iterations evaluations to run.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p>
+<p>The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+Nocedal. The algorithm is described in:
+* R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+Constrained Optimization, (1995), SIAM Journal on Scientific and
+Statistical Computing , 16, 5, pp. 1190-1208.
+* C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+FORTRAN routines for large scale bound constrained optimization (1997),
+ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_lbfgsb(p0, data, model_func, pts, 
+                    lower_bound=None, upper_bound=None,
+                    verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                    pgtol=1e-5, multinom=True, maxiter=1e5, full_output=False,
+                    func_args=[], func_kwargs={}, fixed_params=None, 
+                    ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum algorithm iterations evaluations to run.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func, 
+                                           numpy.log(p0), bounds=bounds,
+                                           epsilon=epsilon, args=args,
+                                           iprint=-1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
+    xopt = _project_params_up(xopt, fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, info_dict</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_log"><code class="name flex">
+<span>def <span class="ident">optimize_log</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using the BFGS method.</p>
+<p>This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum.</p>
+<p>Because this works in log(params), it cannot explore values of params &lt; 0.
+It should also perform better when parameters range over scales.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+gtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_bfgs)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+Using func_args.
+For example, you could define your model function as
+def func((p1,p2), ns, f1, f2, pts):
+....
+If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+would pass func_args = [0.1,0.2] (and ignore the fixed_params
+argument).
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+For example, suppose your model function is
+def func((p1,f1,p2,f2), ns, pts):
+....
+If you wanted to fix f1=0.1 and f2=0.2 in the optimization,
+you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+the func_args argument).
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log(p0, data, model_func, pts, lower_bound=None, upper_bound=None,
+                 verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log, 
+                                       numpy.log(p0), epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_log_fmin"><code class="name flex">
+<span>def <span class="ident">optimize_log_fmin</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using Nelder-Mead. </p>
+<p>This optimization method may work better than BFGS when far from a
+minimum. It is much slower, but more robust, because it doesn't use
+gradient information.</p>
+<p>Because this works in log(params), it cannot explore values of params &lt; 0.
+It should also perform better when parameters range over large scales.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+verbose: If True, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_fmin(p0, data, model_func, pts, 
+                      lower_bound=None, upper_bound=None,
+                      verbose=0, flush_delay=0.5, 
+                      multinom=True, maxiter=None, 
+                      full_output=False, func_args=[], 
+                      func_kwargs={},
+                      fixed_params=None, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using Nelder-Mead. 
+
+    This optimization method may work better than BFGS when far from a
+    minimum. It is much slower, but more robust, because it doesn&#39;t use
+    gradient information.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over large scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If True, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, iter, funcalls, warnflag</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_log_lbfgsb"><code class="name flex">
+<span>def <span class="ident">optimize_log_lbfgsb</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using the L-BFGS-B method.</p>
+<p>This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum. This method is
+better than optimize_log if the optimum lies at one or more of the
+parameter bounds. However, if your optimum is not on the bounds, this
+method may be much slower.</p>
+<p>Because this works in log(params), it cannot explore values of params &lt; 0.
+It should also perform better when parameters range over scales.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+pgtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_l_bfgs_b)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum algorithm iterations to run.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p>
+<p>The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+Nocedal. The algorithm is described in:
+* R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+Constrained Optimization, (1995), SIAM Journal on Scientific and
+Statistical Computing , 16, 5, pp. 1190-1208.
+* C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+FORTRAN routines for large scale bound constrained optimization (1997),
+ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_lbfgsb(p0, data, model_func, pts, 
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum algorithm iterations to run.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    else:
+        lower_bound = numpy.log(lower_bound)
+        lower_bound[numpy.isnan(lower_bound)] = None
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    else:
+        upper_bound = numpy.log(upper_bound)
+        upper_bound[numpy.isnan(upper_bound)] = None
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func_log, 
+                                           numpy.log(p0), bounds = bounds,
+                                           epsilon=epsilon, args = args,
+                                           iprint = -1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, info_dict</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_log_powell"><code class="name flex">
+<span>def <span class="ident">optimize_log_powell</span></span>(<span>p0, data, model_func, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using Powell's method.</p>
+<p>Because this works in log(params), it cannot explore values of params &lt; 0.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+verbose: If True, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_powell(p0, data, model_func, pts,
+                      lower_bound=None, upper_bound=None,
+                      verbose=0, flush_delay=0.5,
+                      multinom=True, maxiter=None,
+                      full_output=False, func_args=[],
+                      func_kwargs={},
+                      fixed_params=None, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using Powell&#39;s method.
+        
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+        (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+        length as p0. A parameter can be declared unbound by assigning
+        a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+        length as p0. A parameter can be declared unbound by assigning
+        a bound of None.
+    verbose: If True, print optimization status every &lt;verbose&gt; steps.
+        output_file: Stream verbose output into this filename. If None, stream to
+        standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+        minutes. This is useful to avoid overloading I/O on clusters.
+        multinom: If True, do a multinomial fit where model is optimially scaled to
+        data at each step. If False, assume theta is a parameter and do
+        no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in
+        help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that
+        model_func&#39;s first argument is an array of parameters to
+        optimize, that its second argument is an array of sample sizes
+        for the sfs, and that its last argument is the list of grid
+        points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+        particular values. For example, if the model parameters
+        are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+        will hold nu1=0.5 and m=2. The optimizer will only change
+        T and m. Note that the bounds lists must include all
+        parameters. Optimization will fail if the fixed values
+        lie outside their bounds. A full-length p0 should be passed
+        in; values corresponding to fixed parameters are ignored.
+        (See help(dadi.Inference.optimize_log for examples of func_args and
+        fixed_params usage.)
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_powell(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    xopt, fopt, direc, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+                                  
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, direc, iter, funcalls, warnflag</code></pre>
+</details>
+</dd>
+<dt id="dadi.Inference.optimize_log_resid"><code class="name flex">
+<span>def <span class="ident">optimize_log_resid</span></span>(<span>p0, data, model_func, target_resid, pts, lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, gtol=1e-05, multinom=True, maxiter=None, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using the BFGS method.</p>
+<p>This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum.</p>
+<p>Because this works in log(params), it cannot explore values of params &lt; 0.
+It should also perform better when parameters range over scales.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+target_resid: The residual sfs that we want to match, obtained from the
+synonymous fits.
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+gtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_bfgs)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum iterations to run for.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+Using func_args.
+For example, you could define your model function as
+def func((p1,p2), ns, f1, f2, pts):
+....
+If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+would pass func_args = [0.1,0.2] (and ignore the fixed_params
+argument).
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+For example, suppose your model function is
+def func((p1,f1,p2,f2), ns, pts):
+....
+If you wanted to fix f1=0.1 and f2=0.2 in the optimization,
+you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+the func_args argument).
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_resid(p0, data, model_func, target_resid, pts, lower_bound=None, upper_bound=None,
+                 verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                 gtol=1e-5, multinom=True, maxiter=None, full_output=False,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the BFGS method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    target_resid: The residual sfs that we want to match, obtained from the 
+                  synonymous fits.
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    gtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_bfgs)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum iterations to run for.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+               Using func_args.
+               For example, you could define your model function as
+               def func((p1,p2), ns, f1, f2, pts):
+                   ....
+               If you wanted to fix f1=0.1 and f2=0.2 in the optimization, you
+               would pass func_args = [0.1,0.2] (and ignore the fixed_params 
+               argument).
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+                  For example, suppose your model function is 
+                  def func((p1,f1,p2,f2), ns, pts):
+                      ....
+                  If you wanted to fix f1=0.1 and f2=0.2 in the optimization, 
+                  you would pass fixed_params = [None,0.1,None,0.2] (and ignore
+                  the func_args argument).
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data, model_func, target_resid, pts, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+    outputs = scipy.optimize.fmin_bfgs(_object_func_log_resid, 
+                                       numpy.log(p0), epsilon=epsilon,
+                                       args = args, gtol=gtol, 
+                                       full_output=True,
+                                       disp=False,
+                                       maxiter=maxiter)
+    xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, gopt, Bopt, func_calls, grad_calls, warnflag</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Inference.Anscombe_Poisson_residual" href="#dadi.Inference.Anscombe_Poisson_residual">Anscombe_Poisson_residual</a></code></li>
+<li><code><a title="dadi.Inference.add_misid_param" href="#dadi.Inference.add_misid_param">add_misid_param</a></code></li>
+<li><code><a title="dadi.Inference.linear_Poisson_residual" href="#dadi.Inference.linear_Poisson_residual">linear_Poisson_residual</a></code></li>
+<li><code><a title="dadi.Inference.ll" href="#dadi.Inference.ll">ll</a></code></li>
+<li><code><a title="dadi.Inference.ll_multinom" href="#dadi.Inference.ll_multinom">ll_multinom</a></code></li>
+<li><code><a title="dadi.Inference.ll_multinom_per_bin" href="#dadi.Inference.ll_multinom_per_bin">ll_multinom_per_bin</a></code></li>
+<li><code><a title="dadi.Inference.ll_per_bin" href="#dadi.Inference.ll_per_bin">ll_per_bin</a></code></li>
+<li><code><a title="dadi.Inference.minus_ll" href="#dadi.Inference.minus_ll">minus_ll</a></code></li>
+<li><code><a title="dadi.Inference.minus_ll_multinom" href="#dadi.Inference.minus_ll_multinom">minus_ll_multinom</a></code></li>
+<li><code><a title="dadi.Inference.optimal_sfs_scaling" href="#dadi.Inference.optimal_sfs_scaling">optimal_sfs_scaling</a></code></li>
+<li><code><a title="dadi.Inference.optimally_scaled_sfs" href="#dadi.Inference.optimally_scaled_sfs">optimally_scaled_sfs</a></code></li>
+<li><code><a title="dadi.Inference.optimize" href="#dadi.Inference.optimize">optimize</a></code></li>
+<li><code><a title="dadi.Inference.optimize_cons" href="#dadi.Inference.optimize_cons">optimize_cons</a></code></li>
+<li><code><a title="dadi.Inference.optimize_grid" href="#dadi.Inference.optimize_grid">optimize_grid</a></code></li>
+<li><code><a title="dadi.Inference.optimize_lbfgsb" href="#dadi.Inference.optimize_lbfgsb">optimize_lbfgsb</a></code></li>
+<li><code><a title="dadi.Inference.optimize_log" href="#dadi.Inference.optimize_log">optimize_log</a></code></li>
+<li><code><a title="dadi.Inference.optimize_log_fmin" href="#dadi.Inference.optimize_log_fmin">optimize_log_fmin</a></code></li>
+<li><code><a title="dadi.Inference.optimize_log_lbfgsb" href="#dadi.Inference.optimize_log_lbfgsb">optimize_log_lbfgsb</a></code></li>
+<li><code><a title="dadi.Inference.optimize_log_powell" href="#dadi.Inference.optimize_log_powell">optimize_log_powell</a></code></li>
+<li><code><a title="dadi.Inference.optimize_log_resid" href="#dadi.Inference.optimize_log_resid">optimize_log_resid</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,0 +1,1976 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.Plotting API documentation</title>
+<meta name="description" content="Routines for Plotting comparisons between model and data …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Plotting</code></h1>
+</header>
+<section id="section-intro">
+<p>Routines for Plotting comparisons between model and data.</p>
+<p>These can serve as inspiration for custom routines for one's own purposes.
+Note that all the plotting is done with pylab. To see additional pylab methods:
+"import pylab; help(pylab)". Pylab's many functions are documented at
+<a href="http://matplotlib.sourceforge.net/contents.html">http://matplotlib.sourceforge.net/contents.html</a></p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Routines for Plotting comparisons between model and data.
+
+These can serve as inspiration for custom routines for one&#39;s own purposes.
+Note that all the plotting is done with pylab. To see additional pylab methods:
+&#34;import pylab; help(pylab)&#34;. Pylab&#39;s many functions are documented at 
+http://matplotlib.sourceforge.net/contents.html
+&#34;&#34;&#34;
+
+import matplotlib
+import pylab
+import numpy
+
+#: Custom ticks that label only the lowest and highest bins in an FS plot.
+class _sfsTickLocator(matplotlib.ticker.Locator):
+    def __call__(self):
+        &#39;Return the locations of the ticks&#39;
+
+        try:
+            vmin, vmax = self.axis.get_view_interval()
+            dmin, dmax = self.axis.get_data_interval()
+        except AttributeError:
+            self.verify_intervals()
+            vmin, vmax = self.viewInterval.get_bounds()
+            dmin, dmax = self.dataInterval.get_bounds()
+
+        tmin = max(vmin, dmin)
+        tmax = min(vmax, dmax)
+
+        return numpy.array([round(tmin)+0.5, round(tmax)-0.5])
+#: Custom tick formatter
+_ctf = matplotlib.ticker.FuncFormatter(lambda x,pos: &#39;%i&#39; % (x-0.4))
+
+
+from dadi import Numerics, Inference
+
+def plot_1d_fs(fs, fig_num=None, show=True):
+    &#34;&#34;&#34;
+    Plot a 1-dimensional frequency spectrum.
+
+    fs: 1-dimensional Spectrum
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    show: If True, execute pylab.show command to make sure plot displays.
+
+    Note that all the plotting is done with pylab. To see additional pylab
+    methods: &#34;import pylab; help(pylab)&#34;. Pylab&#39;s many functions are documented
+    at http://matplotlib.sourceforge.net/contents.html
+    &#34;&#34;&#34;
+
+    if fig_num is None:
+        fig = pylab.gcf()
+    else:
+        fig = pylab.figure(fig_num, figsize=(7,7))
+    fig.clear()
+
+    ax = fig.add_subplot(1,1,1)
+    ax.semilogy(fs, &#39;-ob&#39;)
+
+    ax.set_xlim(0, fs.sample_sizes[0])
+    if show:
+        fig.show()
+
+def plot_1d_comp_multinom(model, data, fig_num=None, residual=&#39;Anscombe&#39;,
+                          plot_masked=False, show=True):
+    &#34;&#34;&#34;
+    Mulitnomial comparison between 1d model and data.
+
+
+    model: 1-dimensional model SFS
+    data: 1-dimensional data SFS
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    plot_masked: Additionally plots (in open circles) results for points in the 
+                 model or data that were masked.
+    show: If True, execute pylab.show command to make sure plot displays.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    &#34;&#34;&#34;
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_1d_comp_Poisson(model, data, fig_num, residual,
+                         plot_masked, show)
+
+def plot_1d_comp_Poisson(model, data, fig_num=None, residual=&#39;Anscombe&#39;,
+                         plot_masked=False, show=True):
+    &#34;&#34;&#34;
+    Poisson comparison between 1d model and data.
+
+
+    model: 1-dimensional model SFS
+    data: 1-dimensional data SFS
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    plot_masked: Additionally plots (in open circles) results for points in the 
+                 model or data that were masked.
+    show: If True, execute pylab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+    pylab.clf()
+
+    if data.folded and not model.folded:
+        model = model.fold()
+
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    ax = pylab.subplot(2,1,1)
+    pylab.semilogy(masked_data, &#39;-ob&#39;, label=&#39;data&#39;)
+    pylab.semilogy(masked_model, &#39;-or&#39;, label=&#39;model&#39;)
+
+    if plot_masked:
+        pylab.semilogy(masked_data.data, &#39;--ob&#39;, mfc=&#39;w&#39;, zorder=-100)
+        pylab.semilogy(masked_model.data, &#39;--or&#39;, mfc=&#39;w&#39;, zorder=-100)
+
+    ax.legend(loc=&#39;upper right&#39;)
+
+    pylab.subplot(2,1,2, sharex = ax)
+    if residual == &#39;Anscombe&#39;:
+        resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data)
+    elif residual == &#39;linear&#39;:
+        resid = Inference.linear_Poisson_residual(masked_model, masked_data)
+    else:
+        raise ValueError(&#34;Unknown class of residual &#39;%s&#39;.&#34; % residual)
+    pylab.plot(resid, &#39;-og&#39;)
+    if plot_masked:
+        pylab.plot(resid.data, &#39;--og&#39;, mfc=&#39;w&#39;, zorder=-100)
+
+    ax.set_xlim(0, data.shape[0]-1)
+    if show:
+        pylab.show()
+
+def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
+                       pop_ids=None, extend=&#39;neither&#39;, colorbar=True,
+                       cmap=pylab.cm.viridis_r):
+    &#34;&#34;&#34;
+    Heatmap of single 2d SFS. 
+    
+    If vmax is greater than a factor of 10, plot on log scale.
+
+    Returns colorbar that is created.
+
+    sfs: SFS to plot
+    vmin: Values in sfs below vmin are masked in plot.
+    vmax: Values in sfs above vmax saturate the color spectrum.
+    ax: Axes object to plot into. If None, the result of pylab.gca() is used.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    extend: Whether the colorbar should have &#39;extension&#39; arrows. See
+            help(pylab.colorbar) for more details.
+    colorbar: Should we plot a colorbar?
+    cmap: Pylab colormap to use for plotting.
+    &#34;&#34;&#34;
+    if ax is None:
+        ax = pylab.gca()
+
+    if vmin is None:
+        vmin = sfs.min()
+    if vmax is None:
+        vmax = sfs.max()
+
+    if vmax / vmin &gt; 10:
+        # Under matplotlib 1.0.1, default LogFormatter omits some tick lines.
+        # This works more consistently.
+        norm = matplotlib.colors.LogNorm(vmin=vmin*(1-1e-3), vmax=vmax*(1+1e-3))
+        format = matplotlib.ticker.LogFormatterMathtext()
+    else:
+        norm = matplotlib.colors.Normalize(vmin=vmin*(1-1e-3), 
+                                           vmax=vmax*(1+1e-3))
+        format = None
+    mappable=ax.pcolor(numpy.ma.masked_where(sfs&lt;vmin, sfs), 
+                       cmap=cmap, edgecolors=&#39;none&#39;,
+                       norm=norm)
+    cb = ax.figure.colorbar(mappable, extend=extend, format=format)
+    if not colorbar:
+        ax.figure.delaxes(ax.figure.axes[-1])
+    else:
+        # A hack so we can manually work around weird ticks in some colorbars
+        try:
+            ax.figure.dadi_colorbars.append(cb)
+        except AttributeError:
+            ax.figure.dadi_colorbars = [cb]
+
+    ax.plot([0,sfs.shape[1]],[0, sfs.shape[0]], &#39;-k&#39;, lw=0.2)
+
+    if pop_ids is None:
+        if sfs.pop_ids is not None:
+            pop_ids = sfs.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;]
+    ax.set_ylabel(pop_ids[0], verticalalignment=&#39;top&#39;)
+    ax.set_xlabel(pop_ids[1], verticalalignment=&#39;bottom&#39;)
+
+    ax.xaxis.set_major_formatter(_ctf)
+    ax.xaxis.set_major_locator(_sfsTickLocator())
+    ax.yaxis.set_major_formatter(_ctf)
+    ax.yaxis.set_major_locator(_sfsTickLocator())
+    for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
+        tick.set_visible(False)
+
+    ax.set_xlim(0, sfs.shape[1])
+    ax.set_ylim(0, sfs.shape[0])
+
+    return cb
+
+
+def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
+                  extend=&#39;neither&#39;, colorbar=True,cmap=pylab.cm.RdBu_r):
+    &#34;&#34;&#34;
+    Linear heatmap of 2d residual array.
+
+    sfs: Residual array to plot.
+    resid_range: Values &gt; resid range or &lt; resid_range saturate the color
+                 spectrum.
+    ax: Axes object to plot into. If None, the result of pylab.gca() is used.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    extend: Whether the colorbar should have &#39;extension&#39; arrows. See
+            help(pylab.colorbar) for more details.
+    colorbar: Should we plot a colorbar?
+    &#34;&#34;&#34;
+    if ax is None:
+        ax = pylab.gca()
+
+    if resid_range is None:
+        resid_range = abs(resid).max()
+
+    mappable=ax.pcolor(resid, cmap=cmap, vmin=-resid_range, 
+                       vmax=resid_range, edgecolors=&#39;none&#39;)
+
+    cbticks = [-resid_range, 0, resid_range]
+    format = matplotlib.ticker.FormatStrFormatter(&#39;%.2g&#39;)
+    cb = ax.figure.colorbar(mappable, ticks=cbticks, format=format,
+                            extend=extend)
+    if not colorbar:
+        ax.figure.delaxes(ax.figure.axes[-1])
+    else:
+        try:
+            ax.figure.dadi_colorbars.append(cb)
+        except AttributeError:
+            ax.figure.dadi_colorbars = [cb]
+
+    ax.plot([0,resid.shape[1]],[0, resid.shape[0]], &#39;-k&#39;, lw=0.2)
+
+    if pop_ids is None:
+        if resid.pop_ids is not None:
+            pop_ids = resid.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;]
+    ax.set_ylabel(pop_ids[0], verticalalignment=&#39;top&#39;)
+    ax.set_xlabel(pop_ids[1], verticalalignment=&#39;bottom&#39;)
+
+    ax.xaxis.set_major_formatter(_ctf)
+    ax.xaxis.set_major_locator(_sfsTickLocator())
+    ax.yaxis.set_major_formatter(_ctf)
+    ax.yaxis.set_major_locator(_sfsTickLocator())
+    for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
+        tick.set_visible(False)
+
+    ax.set_xlim(0, resid.shape[1])
+    ax.set_ylim(0, resid.shape[0])
+
+    return cb
+
+# Used to determine whether colorbars should have &#39;extended&#39; arrows
+_extend_mapping = {(True, True): &#39;neither&#39;,
+                   (False, True): &#39;min&#39;,
+                   (True, False): &#39;max&#39;,
+                   (False, False): &#39;both&#39;}
+
+def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
+                          resid_range=None, fig_num=None,
+                          pop_ids=None, residual=&#39;Anscombe&#39;,
+                          adjust=True,show=True):
+    &#34;&#34;&#34;
+    Mulitnomial comparison between 2d model and data.
+
+
+    model: 2-dimensional model SFS
+    data: 2-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: Display the figure? False is useful for saving many comparisons
+            in a loop.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    &#34;&#34;&#34;
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_2d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
+                         resid_range=resid_range, fig_num=fig_num,
+                         pop_ids=pop_ids, residual=residual,
+                         adjust=adjust,show=show)
+
+def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
+                       fig_num=None, pop_ids=None, 
+                       adjust=True, show=True):
+
+    &#34;&#34;&#34;
+    Comparison between 2d nonsynonymous residual and 2d synonymous residual.
+
+    s_resid: residual SFS from synonymous data
+    ns_resid: residual SFS from nonsynonymous data
+    resid_range: Residual plot saturates at +- resid_range. This range applies to both
+                 the residual SFS&#39;s supplied as well as the meta-residual plot.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: Display the plot? False can be useful when plotting many in a loop.
+    &#34;&#34;&#34;
+
+    if ns_resid.folded and not s_resid.folded:
+        s_resid = s_resid.fold()
+
+    masked_s, masked_ns = Numerics.intersect_masks(s_resid,ns_resid)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.94, right=0.95, 
+                              hspace=0.26, wspace=0.26) 
+                                 
+    max_toplot = max(masked_s.max(), masked_ns.max())
+    min_toplot = min(masked_s.min(), masked_ns.min())
+
+    if pop_ids is not None:
+        ns_pop_ids = s_pop_ids = resid_pop_ids = pop_ids
+        if len(pop_ids) != 2:
+            raise ValueError(&#39;pop_ids must be of length 2.&#39;)
+    else:
+        ns_pop_ids = masked_ns.pop_ids
+        s_pop_ids = masked_s.pop_ids
+        if masked_s.pop_ids is None:
+            s_pop_ids = ns_pop_ids
+
+        if s_pop_ids == ns_pop_ids:
+           resid_pop_ids = s_pop_ids
+        else:
+            resid_pop_ids = None
+
+    if resid_range is None:
+        resid_range = max((abs(masked_s.max()), abs(masked_s.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= masked_s.min(), 
+                                   resid_range &gt;= masked_s.max()]
+
+    ax = pylab.subplot(2,2,1)
+    plot_2d_resid(masked_s, resid_range=resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax.set_title(&#39;Synonymous Residuals&#39;)
+
+    if resid_range is None:
+        resid_range = max((abs(masked_ns.max()), abs(masked_ns.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= masked_ns.min(), 
+                                   resid_range &gt;= masked_ns.max()]
+
+    ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
+    plot_2d_resid(masked_ns, resid_range=resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax2.set_title(&#39;Nonsynonymous Residuals&#39;)
+
+    resid = masked_s-masked_ns
+
+    if resid_range is None:
+        resid_range = max((abs(resid.max()), abs(resid.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= resid.min(), 
+                                   resid_range &gt;= resid.max()]
+
+    ax3 = pylab.subplot(2,2,3, sharex=ax, sharey=ax)
+    plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend,cmap=pylab.cm.PuOr_r)
+    ax3.set_title(&#39;Meta-residuals&#39;)
+
+    ax = pylab.subplot(2,2,4)
+    flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                               resid.ravel())
+    ax.hist(flatresid, bins=20, density=True,color=&#39;purple&#39;)
+
+    resid.data[resid.mask==True]=0
+    sum_squares=numpy.sum(resid.data**2)
+    ax.set_title(r&#39;$res^2$ = &#39;+&#39;{0:.3f}&#39;.format(sum_squares))
+    ax.set_yticks([])
+
+    if show:
+        pylab.show()
+
+def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
+                         resid_range=None, fig_num=None,
+                         pop_ids=None, residual=&#39;Anscombe&#39;,
+                         adjust=True, show=True):
+    &#34;&#34;&#34;
+    Poisson comparison between 2d model and data.
+
+
+    model: 2-dimensional model SFS
+    data: 2-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    &#34;&#34;&#34;
+    if data.folded and not model.folded:
+        model = model.fold()
+
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.94, right=0.95, 
+                              hspace=0.26, wspace=0.26)
+
+    max_toplot = max(masked_model.max(), masked_data.max())
+    min_toplot = min(masked_model.min(), masked_data.min())
+    if vmax is None:
+        vmax = max_toplot
+    if vmin is None:
+        vmin = min_toplot
+    extend = _extend_mapping[vmin &lt;= min_toplot, vmax &gt;= max_toplot]
+
+    if pop_ids is not None:
+        data_pop_ids = model_pop_ids = resid_pop_ids = pop_ids
+        if len(pop_ids) != 2:
+            raise ValueError(&#39;pop_ids must be of length 2.&#39;)
+    else:
+        data_pop_ids = masked_data.pop_ids
+        model_pop_ids = masked_model.pop_ids
+        if masked_model.pop_ids is None:
+            model_pop_ids = data_pop_ids
+
+        if model_pop_ids == data_pop_ids:
+           resid_pop_ids = model_pop_ids
+        else:
+            resid_pop_ids = None
+
+    ax = pylab.subplot(2,2,1)
+    plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
+                       pop_ids=data_pop_ids, colorbar=False)
+    ax.set_title(&#39;data&#39;)
+
+    ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
+    plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
+                       pop_ids=model_pop_ids, extend=extend)
+    ax2.set_title(&#39;model&#39;)
+
+    if residual == &#39;Anscombe&#39;:
+        resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data,
+                                              mask=vmin)
+    elif residual == &#39;linear&#39;:
+        resid = Inference.linear_Poisson_residual(masked_model, masked_data,
+                                            mask=vmin)
+    else:
+        raise ValueError(&#34;Unknown class of residual &#39;%s&#39;.&#34; % residual)
+
+    if resid_range is None:
+        resid_range = max((abs(resid.max()), abs(resid.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= resid.min(), 
+                                   resid_range &gt;= resid.max()]
+
+    ax3 = pylab.subplot(2,2,3, sharex=ax, sharey=ax)
+    plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax3.set_title(&#39;residuals&#39;)
+
+    ax = pylab.subplot(2,2,4)
+    flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                               resid.ravel())
+    ax.hist(flatresid, bins=20, density=True)
+    ax.set_title(&#39;residuals&#39;)
+    ax.set_yticks([])
+    if show:
+        pylab.show()
+
+def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
+                          resid_range=None, fig_num=None,
+                          pop_ids=None, residual=&#39;Anscombe&#39;, adjust=True, show=True):
+    &#34;&#34;&#34;
+    Multinomial comparison between 3d model and data.
+
+
+    model: 3-dimensional model SFS
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    &#34;&#34;&#34;
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_3d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
+                         resid_range=resid_range, fig_num=fig_num,
+                         pop_ids=pop_ids, residual=residual,
+                         adjust=adjust, show=show)
+
+def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
+                         resid_range=None, fig_num=None, pop_ids=None, 
+                         residual=&#39;Anscombe&#39;, adjust=True, show=True):
+    &#34;&#34;&#34;
+    Poisson comparison between 3d model and data.
+
+
+    model: 3-dimensional model SFS
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    if data.folded and not model.folded:
+        model = model.fold()
+
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(8,10))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+
+    modelmax = max(masked_model.sum(axis=sax).max() for sax in range(3))
+    datamax = max(masked_data.sum(axis=sax).max() for sax in range(3))
+    modelmin = min(masked_model.sum(axis=sax).min() for sax in range(3))
+    datamin = min(masked_data.sum(axis=sax).min() for sax in range(3))
+    max_toplot = max(modelmax, datamax)
+    min_toplot = min(modelmin, datamin)
+
+    if vmax is None:
+        vmax = max_toplot
+    if vmin is None:
+        vmin = min_toplot
+    extend = _extend_mapping[vmin &lt;= min_toplot, vmax &gt;= max_toplot]
+
+    # Calculate the residuals
+    if residual == &#39;Anscombe&#39;:
+        resids = [Inference.\
+                  Anscombe_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                            masked_data.sum(axis=2-sax), 
+                                            mask=vmin) for sax in range(3)]
+    elif residual == &#39;linear&#39;:
+        resids =[Inference.\
+                 linear_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                         masked_data.sum(axis=2-sax), 
+                                         mask=vmin) for sax in range(3)]
+    else:
+        raise ValueError(&#34;Unknown class of residual &#39;%s&#39;.&#34; % residual)
+
+
+    min_resid = min([r.min() for r in resids])
+    max_resid = max([r.max() for r in resids])
+    if resid_range is None:
+        resid_range = max((abs(max_resid), abs(min_resid)))
+    resid_extend = _extend_mapping[-resid_range &lt;= min_resid, 
+                                   resid_range &gt;= max_resid]
+
+    if pop_ids is not None:
+        if len(pop_ids) != 3:
+            raise ValueError(&#39;pop_ids must be of length 3.&#39;)
+        data_ids = model_ids = resid_ids = pop_ids
+    else:
+        data_ids = masked_data.pop_ids
+        model_ids = masked_model.pop_ids
+
+        if model_ids is None:
+            model_ids = data_ids
+
+        if model_ids == data_ids:
+           resid_ids = model_ids
+        else:
+            resid_ids = None
+
+    for sax in range(3):
+        marg_data = masked_data.sum(axis=2-sax)
+        marg_model = masked_model.sum(axis=2-sax)
+
+        curr_ids = []
+        for ids in [data_ids, model_ids, resid_ids]:
+            if ids is None:
+                ids = [&#39;pop0&#39;, &#39;pop1&#39;, &#39;pop2&#39;]
+
+            if ids is not None:
+                ids = list(ids)
+                del ids[2-sax]
+
+            curr_ids.append(ids)
+
+        ax = pylab.subplot(4,3,sax+1)
+        plot_colorbar = (sax == 2)
+        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=curr_ids[0],
+                           extend=extend, colorbar=plot_colorbar)
+
+        pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
+        plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax, 
+                           pop_ids=curr_ids[1], extend=extend, colorbar=False)
+
+        resid = resids[sax]
+        pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
+        plot_2d_resid(resid, resid_range, pop_ids=curr_ids[2],
+                      extend=resid_extend, colorbar=plot_colorbar)
+
+        ax = pylab.subplot(4,3,sax+10)
+        flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                                   resid.ravel())
+        ax.hist(flatresid, bins=20, density=True)
+        ax.set_yticks([])
+    if show:
+        pylab.show()
+
+def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None,
+                     show=True):
+    &#34;&#34;&#34;
+    Logarithmic heatmap of single 3d FS.
+
+    Note that this method is slow, because it relies on matplotlib&#39;s software
+    rendering. For faster and better looking plots, use plot_3d_spectrum_mayavi.
+
+    fs: FS to plot
+    vmin: Values in fs below vmin are masked in plot.
+    vmax: Values in fs above vmax saturate the color spectrum.
+    fignum: Figure number to plot into. If None, a new figure will be created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    show: If True, execute pylab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    import mpl_toolkits.mplot3d as mplot3d
+    
+    fig = pylab.figure(fignum)
+    ax = mplot3d.Axes3D(fig)
+
+    if vmin is None:
+        vmin = fs.min()
+    if vmax is None:
+        vmax = fs.max()
+
+    # Which entries should I plot?
+    toplot = numpy.logical_not(fs.mask)
+    toplot = numpy.logical_and(toplot, fs.data &gt;= vmin)
+    
+    # Figure out the color mapping.
+    normalized = (numpy.log(fs)-numpy.log(vmin))\
+            /(numpy.log(vmax)-numpy.log(vmin))
+    normalized = numpy.minimum(normalized, 1)
+    colors = pylab.cm.hsv(normalized)
+    
+    # We draw by calculating which faces are visible and including each as a
+    # polygon.
+    polys, polycolors = [],[]
+    for ii in range(fs.shape[0]):
+        for jj in range(fs.shape[1]):
+            for kk in range(fs.shape[2]):
+                if not toplot[ii,jj,kk]:
+                    continue
+                if kk &lt; fs.shape[2]-1 and toplot[ii,jj,kk+1]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj-0.5,kk+0.5],[ii-0.5,jj-0.5,kk+0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if kk &gt; 0 and toplot[ii,jj,kk-1]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk-0.5],[ii+0.5,jj+0.5,kk-0.5],
+                                  [ii+0.5,jj-0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if jj &lt; fs.shape[1]-1 and toplot[ii,jj+1,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj+0.5,kk-0.5],[ii-0.5,jj+0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if jj &gt; 0 and toplot[ii,jj-1,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj-0.5,kk+0.5],[ii+0.5,jj-0.5,kk+0.5],
+                                  [ii+0.5,jj-0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if ii &lt; fs.shape[0]-1 and toplot[ii+1,jj,kk]:
+                    pass
+                else:
+                    polys.append([[ii+0.5,jj-0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj+0.5,kk-0.5],[ii+0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if ii &gt; 0 and toplot[ii-1,jj,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj-0.5,kk+0.5],[ii-0.5,jj+0.5,kk+0.5],
+                                  [ii-0.5,jj+0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                    
+
+    polycoll = mplot3d.art3d.Poly3DCollection(polys, facecolor=polycolors, 
+                                              edgecolor=&#39;k&#39;, linewidths=0.5)
+    ax.add_collection(polycoll)
+
+    # Set the limits
+    ax.set_xlim3d(-0.5,fs.shape[0]-0.5)
+    ax.set_ylim3d(-0.5,fs.shape[1]-0.5)
+    ax.set_zlim3d(-0.5,fs.shape[2]-0.5)
+
+    if pop_ids is None:
+        if fs.pop_ids is not None:
+            pop_ids = fs.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;,&#39;pop2&#39;]
+    ax.set_xlabel(pop_ids[0], horizontalalignment=&#39;left&#39;)
+    ax.set_ylabel(pop_ids[1], verticalalignment=&#39;bottom&#39;)
+    ax.set_zlabel(pop_ids[2], verticalalignment=&#39;bottom&#39;)
+
+    # XXX: I can&#39;t set the axis ticks to be just the endpoints.
+
+    if show:
+        pylab.show()
+
+def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None, 
+                            pop_ids=None, show=True):
+    &#34;&#34;&#34;
+    Logarithmic heatmap of single 3d FS.
+
+    This method relies on MayaVi2&#39;s mlab interface. See http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html . To edit plot
+    properties, click leftmost icon in the toolbar.
+
+    If you get an ImportError upon calling this function, it is likely that you
+    don&#39;t have mayavi installed.
+
+    fs: FS to plot
+    vmin: Values in fs below vmin are masked in plot.
+    vmax: Values in fs above vmax saturate the color spectrum.
+    fignum: Figure number to plot into. If None, a new figure will be created.
+            Note that these are MayaVi figures, which are separate from
+            matplotlib figures.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    show: If True, execute mlab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    from enthought.mayavi import mlab
+
+    fig = mlab.figure(fignum, bgcolor=(1,1,1))
+    mlab.clf(fig)
+
+    if vmin is None:
+        vmin = fs.min()
+    if vmax is None:
+        vmax = fs.max()
+
+    # Which entries should I plot?
+    toplot = numpy.logical_not(fs.mask)
+    toplot = numpy.logical_and(toplot, fs.data &gt;= vmin)
+
+    # For the color mapping
+    normalized = (numpy.log(fs)-numpy.log(vmin))\
+            /(numpy.log(vmax)-numpy.log(vmin))
+    normalized = numpy.minimum(normalized, 1)
+
+    xs,ys,zs = numpy.indices(fs.shape)
+    flat_xs = xs.flatten()
+    flat_ys = ys.flatten()
+    flat_zs = zs.flatten()
+    flat_toplot = toplot.flatten()
+    
+    mlab.barchart(flat_xs[flat_toplot], flat_ys[flat_toplot], 
+                  flat_zs[flat_toplot], normalized.flatten()[flat_toplot], 
+                  colormap=&#39;hsv&#39;, scale_mode=&#39;none&#39;, lateral_scale=1, 
+                  figure=fig)
+
+    if pop_ids is None:
+        if fs.pop_ids is not None:
+            pop_ids = fs.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;,&#39;pop2&#39;]
+
+    a = mlab.axes(xlabel=pop_ids[0],ylabel=pop_ids[1],zlabel=pop_ids[2], 
+                  figure=fig, color=(0,0,0))
+    a.axes.label_format = &#34;&#34;
+    a.title_text_property.color = (0,0,0)
+    mlab.text3d(fs.sample_sizes[0],fs.sample_sizes[1],fs.sample_sizes[2]+1, 
+                &#39;(%i,%i,%i)&#39;%tuple(fs.sample_sizes), scale=0.75, figure=fig,
+                color=(0,0,0))
+    mlab.view(azimuth=-40, elevation=65, distance=&#39;auto&#39;, focalpoint=&#39;auto&#39;)
+
+    if show:
+        mlab.show()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Plotting.plot_1d_comp_Poisson"><code class="name flex">
+<span>def <span class="ident">plot_1d_comp_Poisson</span></span>(<span>model, data, fig_num=None, residual='Anscombe', plot_masked=False, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Poisson comparison between 1d model and data.</p>
+<p>model: 1-dimensional model SFS
+data: 1-dimensional data SFS
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+residual: 'Anscombe' for Anscombe residuals, which are more normally
+distributed for Poisson sampling. 'linear' for the linear
+residuals, which can be less biased.
+plot_masked: Additionally plots (in open circles) results for points in the
+model or data that were masked.
+show: If True, execute pylab.show command to make sure plot displays.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_1d_comp_Poisson(model, data, fig_num=None, residual=&#39;Anscombe&#39;,
+                         plot_masked=False, show=True):
+    &#34;&#34;&#34;
+    Poisson comparison between 1d model and data.
+
+
+    model: 1-dimensional model SFS
+    data: 1-dimensional data SFS
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    plot_masked: Additionally plots (in open circles) results for points in the 
+                 model or data that were masked.
+    show: If True, execute pylab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+    pylab.clf()
+
+    if data.folded and not model.folded:
+        model = model.fold()
+
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    ax = pylab.subplot(2,1,1)
+    pylab.semilogy(masked_data, &#39;-ob&#39;, label=&#39;data&#39;)
+    pylab.semilogy(masked_model, &#39;-or&#39;, label=&#39;model&#39;)
+
+    if plot_masked:
+        pylab.semilogy(masked_data.data, &#39;--ob&#39;, mfc=&#39;w&#39;, zorder=-100)
+        pylab.semilogy(masked_model.data, &#39;--or&#39;, mfc=&#39;w&#39;, zorder=-100)
+
+    ax.legend(loc=&#39;upper right&#39;)
+
+    pylab.subplot(2,1,2, sharex = ax)
+    if residual == &#39;Anscombe&#39;:
+        resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data)
+    elif residual == &#39;linear&#39;:
+        resid = Inference.linear_Poisson_residual(masked_model, masked_data)
+    else:
+        raise ValueError(&#34;Unknown class of residual &#39;%s&#39;.&#34; % residual)
+    pylab.plot(resid, &#39;-og&#39;)
+    if plot_masked:
+        pylab.plot(resid.data, &#39;--og&#39;, mfc=&#39;w&#39;, zorder=-100)
+
+    ax.set_xlim(0, data.shape[0]-1)
+    if show:
+        pylab.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_1d_comp_multinom"><code class="name flex">
+<span>def <span class="ident">plot_1d_comp_multinom</span></span>(<span>model, data, fig_num=None, residual='Anscombe', plot_masked=False, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Mulitnomial comparison between 1d model and data.</p>
+<p>model: 1-dimensional model SFS
+data: 1-dimensional data SFS
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+residual: 'Anscombe' for Anscombe residuals, which are more normally
+distributed for Poisson sampling. 'linear' for the linear
+residuals, which can be less biased.
+plot_masked: Additionally plots (in open circles) results for points in the
+model or data that were masked.
+show: If True, execute pylab.show command to make sure plot displays.</p>
+<p>This comparison is multinomial in that it rescales the model to optimally
+fit the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_1d_comp_multinom(model, data, fig_num=None, residual=&#39;Anscombe&#39;,
+                          plot_masked=False, show=True):
+    &#34;&#34;&#34;
+    Mulitnomial comparison between 1d model and data.
+
+
+    model: 1-dimensional model SFS
+    data: 1-dimensional data SFS
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    plot_masked: Additionally plots (in open circles) results for points in the 
+                 model or data that were masked.
+    show: If True, execute pylab.show command to make sure plot displays.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    &#34;&#34;&#34;
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_1d_comp_Poisson(model, data, fig_num, residual,
+                         plot_masked, show)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_1d_fs"><code class="name flex">
+<span>def <span class="ident">plot_1d_fs</span></span>(<span>fs, fig_num=None, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plot a 1-dimensional frequency spectrum.</p>
+<p>fs: 1-dimensional Spectrum
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+show: If True, execute pylab.show command to make sure plot displays.</p>
+<p>Note that all the plotting is done with pylab. To see additional pylab
+methods: "import pylab; help(pylab)". Pylab's many functions are documented
+at <a href="http://matplotlib.sourceforge.net/contents.html">http://matplotlib.sourceforge.net/contents.html</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_1d_fs(fs, fig_num=None, show=True):
+    &#34;&#34;&#34;
+    Plot a 1-dimensional frequency spectrum.
+
+    fs: 1-dimensional Spectrum
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    show: If True, execute pylab.show command to make sure plot displays.
+
+    Note that all the plotting is done with pylab. To see additional pylab
+    methods: &#34;import pylab; help(pylab)&#34;. Pylab&#39;s many functions are documented
+    at http://matplotlib.sourceforge.net/contents.html
+    &#34;&#34;&#34;
+
+    if fig_num is None:
+        fig = pylab.gcf()
+    else:
+        fig = pylab.figure(fig_num, figsize=(7,7))
+    fig.clear()
+
+    ax = fig.add_subplot(1,1,1)
+    ax.semilogy(fs, &#39;-ob&#39;)
+
+    ax.set_xlim(0, fs.sample_sizes[0])
+    if show:
+        fig.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_2d_comp_Poisson"><code class="name flex">
+<span>def <span class="ident">plot_2d_comp_Poisson</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Poisson comparison between 2d model and data.</p>
+<p>model: 2-dimensional model SFS
+data: 2-dimensional data SFS
+vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+vmax respectively.
+resid_range: Residual plot saturates at +- resid_range.
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+residual: 'Anscombe' for Anscombe residuals, which are more normally
+distributed for Poisson sampling. 'linear' for the linear
+residuals, which can be less biased.
+adjust: Should method use automatic 'subplots_adjust'? For advanced
+manipulation of plots, it may be useful to make this False.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_2d_comp_Poisson(model, data, vmin=None, vmax=None,
+                         resid_range=None, fig_num=None,
+                         pop_ids=None, residual=&#39;Anscombe&#39;,
+                         adjust=True, show=True):
+    &#34;&#34;&#34;
+    Poisson comparison between 2d model and data.
+
+
+    model: 2-dimensional model SFS
+    data: 2-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    &#34;&#34;&#34;
+    if data.folded and not model.folded:
+        model = model.fold()
+
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.94, right=0.95, 
+                              hspace=0.26, wspace=0.26)
+
+    max_toplot = max(masked_model.max(), masked_data.max())
+    min_toplot = min(masked_model.min(), masked_data.min())
+    if vmax is None:
+        vmax = max_toplot
+    if vmin is None:
+        vmin = min_toplot
+    extend = _extend_mapping[vmin &lt;= min_toplot, vmax &gt;= max_toplot]
+
+    if pop_ids is not None:
+        data_pop_ids = model_pop_ids = resid_pop_ids = pop_ids
+        if len(pop_ids) != 2:
+            raise ValueError(&#39;pop_ids must be of length 2.&#39;)
+    else:
+        data_pop_ids = masked_data.pop_ids
+        model_pop_ids = masked_model.pop_ids
+        if masked_model.pop_ids is None:
+            model_pop_ids = data_pop_ids
+
+        if model_pop_ids == data_pop_ids:
+           resid_pop_ids = model_pop_ids
+        else:
+            resid_pop_ids = None
+
+    ax = pylab.subplot(2,2,1)
+    plot_single_2d_sfs(masked_data, vmin=vmin, vmax=vmax,
+                       pop_ids=data_pop_ids, colorbar=False)
+    ax.set_title(&#39;data&#39;)
+
+    ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
+    plot_single_2d_sfs(masked_model, vmin=vmin, vmax=vmax,
+                       pop_ids=model_pop_ids, extend=extend)
+    ax2.set_title(&#39;model&#39;)
+
+    if residual == &#39;Anscombe&#39;:
+        resid = Inference.Anscombe_Poisson_residual(masked_model, masked_data,
+                                              mask=vmin)
+    elif residual == &#39;linear&#39;:
+        resid = Inference.linear_Poisson_residual(masked_model, masked_data,
+                                            mask=vmin)
+    else:
+        raise ValueError(&#34;Unknown class of residual &#39;%s&#39;.&#34; % residual)
+
+    if resid_range is None:
+        resid_range = max((abs(resid.max()), abs(resid.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= resid.min(), 
+                                   resid_range &gt;= resid.max()]
+
+    ax3 = pylab.subplot(2,2,3, sharex=ax, sharey=ax)
+    plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax3.set_title(&#39;residuals&#39;)
+
+    ax = pylab.subplot(2,2,4)
+    flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                               resid.ravel())
+    ax.hist(flatresid, bins=20, density=True)
+    ax.set_title(&#39;residuals&#39;)
+    ax.set_yticks([])
+    if show:
+        pylab.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_2d_comp_multinom"><code class="name flex">
+<span>def <span class="ident">plot_2d_comp_multinom</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Mulitnomial comparison between 2d model and data.</p>
+<p>model: 2-dimensional model SFS
+data: 2-dimensional data SFS
+vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+vmax respectively.
+resid_range: Residual plot saturates at +- resid_range.
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+residual: 'Anscombe' for Anscombe residuals, which are more normally
+distributed for Poisson sampling. 'linear' for the linear
+residuals, which can be less biased.
+adjust: Should method use automatic 'subplots_adjust'? For advanced
+manipulation of plots, it may be useful to make this False.
+show: Display the figure? False is useful for saving many comparisons
+in a loop.</p>
+<p>This comparison is multinomial in that it rescales the model to optimally
+fit the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_2d_comp_multinom(model, data, vmin=None, vmax=None,
+                          resid_range=None, fig_num=None,
+                          pop_ids=None, residual=&#39;Anscombe&#39;,
+                          adjust=True,show=True):
+    &#34;&#34;&#34;
+    Mulitnomial comparison between 2d model and data.
+
+
+    model: 2-dimensional model SFS
+    data: 2-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: Display the figure? False is useful for saving many comparisons
+            in a loop.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    &#34;&#34;&#34;
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_2d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
+                         resid_range=resid_range, fig_num=fig_num,
+                         pop_ids=pop_ids, residual=residual,
+                         adjust=adjust,show=show)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_2d_meta_resid"><code class="name flex">
+<span>def <span class="ident">plot_2d_meta_resid</span></span>(<span>s_resid, ns_resid, resid_range=None, fig_num=None, pop_ids=None, adjust=True, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Comparison between 2d nonsynonymous residual and 2d synonymous residual.</p>
+<p>s_resid: residual SFS from synonymous data
+ns_resid: residual SFS from nonsynonymous data
+resid_range: Residual plot saturates at +- resid_range. This range applies to both
+the residual SFS's supplied as well as the meta-residual plot.
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+adjust: Should method use automatic 'subplots_adjust'? For advanced
+manipulation of plots, it may be useful to make this False.
+show: Display the plot? False can be useful when plotting many in a loop.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_2d_meta_resid(s_resid,ns_resid,resid_range=None,
+                       fig_num=None, pop_ids=None, 
+                       adjust=True, show=True):
+
+    &#34;&#34;&#34;
+    Comparison between 2d nonsynonymous residual and 2d synonymous residual.
+
+    s_resid: residual SFS from synonymous data
+    ns_resid: residual SFS from nonsynonymous data
+    resid_range: Residual plot saturates at +- resid_range. This range applies to both
+                 the residual SFS&#39;s supplied as well as the meta-residual plot.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: Display the plot? False can be useful when plotting many in a loop.
+    &#34;&#34;&#34;
+
+    if ns_resid.folded and not s_resid.folded:
+        s_resid = s_resid.fold()
+
+    masked_s, masked_ns = Numerics.intersect_masks(s_resid,ns_resid)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(7,7))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.94, right=0.95, 
+                              hspace=0.26, wspace=0.26) 
+                                 
+    max_toplot = max(masked_s.max(), masked_ns.max())
+    min_toplot = min(masked_s.min(), masked_ns.min())
+
+    if pop_ids is not None:
+        ns_pop_ids = s_pop_ids = resid_pop_ids = pop_ids
+        if len(pop_ids) != 2:
+            raise ValueError(&#39;pop_ids must be of length 2.&#39;)
+    else:
+        ns_pop_ids = masked_ns.pop_ids
+        s_pop_ids = masked_s.pop_ids
+        if masked_s.pop_ids is None:
+            s_pop_ids = ns_pop_ids
+
+        if s_pop_ids == ns_pop_ids:
+           resid_pop_ids = s_pop_ids
+        else:
+            resid_pop_ids = None
+
+    if resid_range is None:
+        resid_range = max((abs(masked_s.max()), abs(masked_s.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= masked_s.min(), 
+                                   resid_range &gt;= masked_s.max()]
+
+    ax = pylab.subplot(2,2,1)
+    plot_2d_resid(masked_s, resid_range=resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax.set_title(&#39;Synonymous Residuals&#39;)
+
+    if resid_range is None:
+        resid_range = max((abs(masked_ns.max()), abs(masked_ns.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= masked_ns.min(), 
+                                   resid_range &gt;= masked_ns.max()]
+
+    ax2 = pylab.subplot(2,2,2, sharex=ax, sharey=ax)
+    plot_2d_resid(masked_ns, resid_range=resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend)
+    ax2.set_title(&#39;Nonsynonymous Residuals&#39;)
+
+    resid = masked_s-masked_ns
+
+    if resid_range is None:
+        resid_range = max((abs(resid.max()), abs(resid.min())))
+    resid_extend = _extend_mapping[-resid_range &lt;= resid.min(), 
+                                   resid_range &gt;= resid.max()]
+
+    ax3 = pylab.subplot(2,2,3, sharex=ax, sharey=ax)
+    plot_2d_resid(resid, resid_range, pop_ids=resid_pop_ids,
+                  extend=resid_extend,cmap=pylab.cm.PuOr_r)
+    ax3.set_title(&#39;Meta-residuals&#39;)
+
+    ax = pylab.subplot(2,2,4)
+    flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                               resid.ravel())
+    ax.hist(flatresid, bins=20, density=True,color=&#39;purple&#39;)
+
+    resid.data[resid.mask==True]=0
+    sum_squares=numpy.sum(resid.data**2)
+    ax.set_title(r&#39;$res^2$ = &#39;+&#39;{0:.3f}&#39;.format(sum_squares))
+    ax.set_yticks([])
+
+    if show:
+        pylab.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_2d_resid"><code class="name flex">
+<span>def <span class="ident">plot_2d_resid</span></span>(<span>resid, resid_range=None, ax=None, pop_ids=None, extend='neither', colorbar=True, cmap=&lt;matplotlib.colors.LinearSegmentedColormap object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Linear heatmap of 2d residual array.</p>
+<p>sfs: Residual array to plot.
+resid_range: Values &gt; resid range or &lt; resid_range saturate the color
+spectrum.
+ax: Axes object to plot into. If None, the result of pylab.gca() is used.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+extend: Whether the colorbar should have 'extension' arrows. See
+help(pylab.colorbar) for more details.
+colorbar: Should we plot a colorbar?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_2d_resid(resid, resid_range=None, ax=None, pop_ids=None,
+                  extend=&#39;neither&#39;, colorbar=True,cmap=pylab.cm.RdBu_r):
+    &#34;&#34;&#34;
+    Linear heatmap of 2d residual array.
+
+    sfs: Residual array to plot.
+    resid_range: Values &gt; resid range or &lt; resid_range saturate the color
+                 spectrum.
+    ax: Axes object to plot into. If None, the result of pylab.gca() is used.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    extend: Whether the colorbar should have &#39;extension&#39; arrows. See
+            help(pylab.colorbar) for more details.
+    colorbar: Should we plot a colorbar?
+    &#34;&#34;&#34;
+    if ax is None:
+        ax = pylab.gca()
+
+    if resid_range is None:
+        resid_range = abs(resid).max()
+
+    mappable=ax.pcolor(resid, cmap=cmap, vmin=-resid_range, 
+                       vmax=resid_range, edgecolors=&#39;none&#39;)
+
+    cbticks = [-resid_range, 0, resid_range]
+    format = matplotlib.ticker.FormatStrFormatter(&#39;%.2g&#39;)
+    cb = ax.figure.colorbar(mappable, ticks=cbticks, format=format,
+                            extend=extend)
+    if not colorbar:
+        ax.figure.delaxes(ax.figure.axes[-1])
+    else:
+        try:
+            ax.figure.dadi_colorbars.append(cb)
+        except AttributeError:
+            ax.figure.dadi_colorbars = [cb]
+
+    ax.plot([0,resid.shape[1]],[0, resid.shape[0]], &#39;-k&#39;, lw=0.2)
+
+    if pop_ids is None:
+        if resid.pop_ids is not None:
+            pop_ids = resid.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;]
+    ax.set_ylabel(pop_ids[0], verticalalignment=&#39;top&#39;)
+    ax.set_xlabel(pop_ids[1], verticalalignment=&#39;bottom&#39;)
+
+    ax.xaxis.set_major_formatter(_ctf)
+    ax.xaxis.set_major_locator(_sfsTickLocator())
+    ax.yaxis.set_major_formatter(_ctf)
+    ax.yaxis.set_major_locator(_sfsTickLocator())
+    for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
+        tick.set_visible(False)
+
+    ax.set_xlim(0, resid.shape[1])
+    ax.set_ylim(0, resid.shape[0])
+
+    return cb</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_3d_comp_Poisson"><code class="name flex">
+<span>def <span class="ident">plot_3d_comp_Poisson</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Poisson comparison between 3d model and data.</p>
+<p>model: 3-dimensional model SFS
+data: 3-dimensional data SFS
+vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+vmax respectively.
+resid_range: Residual plot saturates at +- resid_range.
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+residual: 'Anscombe' for Anscombe residuals, which are more normally
+distributed for Poisson sampling. 'linear' for the linear
+residuals, which can be less biased.
+adjust: Should method use automatic 'subplots_adjust'? For advanced
+manipulation of plots, it may be useful to make this False.
+show: If True, execute pylab.show command to make sure plot displays.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_3d_comp_Poisson(model, data, vmin=None, vmax=None,
+                         resid_range=None, fig_num=None, pop_ids=None, 
+                         residual=&#39;Anscombe&#39;, adjust=True, show=True):
+    &#34;&#34;&#34;
+    Poisson comparison between 3d model and data.
+
+
+    model: 3-dimensional model SFS
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    if data.folded and not model.folded:
+        model = model.fold()
+
+    masked_model, masked_data = Numerics.intersect_masks(model, data)
+
+    if fig_num is None:
+        f = pylab.gcf()
+    else:
+        f = pylab.figure(fig_num, figsize=(8,10))
+
+    pylab.clf()
+    if adjust:
+        pylab.subplots_adjust(bottom=0.07, left=0.07, top=0.95, right=0.95)
+
+    modelmax = max(masked_model.sum(axis=sax).max() for sax in range(3))
+    datamax = max(masked_data.sum(axis=sax).max() for sax in range(3))
+    modelmin = min(masked_model.sum(axis=sax).min() for sax in range(3))
+    datamin = min(masked_data.sum(axis=sax).min() for sax in range(3))
+    max_toplot = max(modelmax, datamax)
+    min_toplot = min(modelmin, datamin)
+
+    if vmax is None:
+        vmax = max_toplot
+    if vmin is None:
+        vmin = min_toplot
+    extend = _extend_mapping[vmin &lt;= min_toplot, vmax &gt;= max_toplot]
+
+    # Calculate the residuals
+    if residual == &#39;Anscombe&#39;:
+        resids = [Inference.\
+                  Anscombe_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                            masked_data.sum(axis=2-sax), 
+                                            mask=vmin) for sax in range(3)]
+    elif residual == &#39;linear&#39;:
+        resids =[Inference.\
+                 linear_Poisson_residual(masked_model.sum(axis=2-sax), 
+                                         masked_data.sum(axis=2-sax), 
+                                         mask=vmin) for sax in range(3)]
+    else:
+        raise ValueError(&#34;Unknown class of residual &#39;%s&#39;.&#34; % residual)
+
+
+    min_resid = min([r.min() for r in resids])
+    max_resid = max([r.max() for r in resids])
+    if resid_range is None:
+        resid_range = max((abs(max_resid), abs(min_resid)))
+    resid_extend = _extend_mapping[-resid_range &lt;= min_resid, 
+                                   resid_range &gt;= max_resid]
+
+    if pop_ids is not None:
+        if len(pop_ids) != 3:
+            raise ValueError(&#39;pop_ids must be of length 3.&#39;)
+        data_ids = model_ids = resid_ids = pop_ids
+    else:
+        data_ids = masked_data.pop_ids
+        model_ids = masked_model.pop_ids
+
+        if model_ids is None:
+            model_ids = data_ids
+
+        if model_ids == data_ids:
+           resid_ids = model_ids
+        else:
+            resid_ids = None
+
+    for sax in range(3):
+        marg_data = masked_data.sum(axis=2-sax)
+        marg_model = masked_model.sum(axis=2-sax)
+
+        curr_ids = []
+        for ids in [data_ids, model_ids, resid_ids]:
+            if ids is None:
+                ids = [&#39;pop0&#39;, &#39;pop1&#39;, &#39;pop2&#39;]
+
+            if ids is not None:
+                ids = list(ids)
+                del ids[2-sax]
+
+            curr_ids.append(ids)
+
+        ax = pylab.subplot(4,3,sax+1)
+        plot_colorbar = (sax == 2)
+        plot_single_2d_sfs(marg_data, vmin=vmin, vmax=vmax, pop_ids=curr_ids[0],
+                           extend=extend, colorbar=plot_colorbar)
+
+        pylab.subplot(4,3,sax+4, sharex=ax, sharey=ax)
+        plot_single_2d_sfs(marg_model, vmin=vmin, vmax=vmax, 
+                           pop_ids=curr_ids[1], extend=extend, colorbar=False)
+
+        resid = resids[sax]
+        pylab.subplot(4,3,sax+7, sharex=ax, sharey=ax)
+        plot_2d_resid(resid, resid_range, pop_ids=curr_ids[2],
+                      extend=resid_extend, colorbar=plot_colorbar)
+
+        ax = pylab.subplot(4,3,sax+10)
+        flatresid = numpy.compress(numpy.logical_not(resid.mask.ravel()), 
+                                   resid.ravel())
+        ax.hist(flatresid, bins=20, density=True)
+        ax.set_yticks([])
+    if show:
+        pylab.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_3d_comp_multinom"><code class="name flex">
+<span>def <span class="ident">plot_3d_comp_multinom</span></span>(<span>model, data, vmin=None, vmax=None, resid_range=None, fig_num=None, pop_ids=None, residual='Anscombe', adjust=True, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Multinomial comparison between 3d model and data.</p>
+<p>model: 3-dimensional model SFS
+data: 3-dimensional data SFS
+vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+vmax respectively.
+resid_range: Residual plot saturates at +- resid_range.
+fig_num: Clear and use figure fig_num for display. If None, an new figure
+window is created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+residual: 'Anscombe' for Anscombe residuals, which are more normally
+distributed for Poisson sampling. 'linear' for the linear
+residuals, which can be less biased.
+adjust: Should method use automatic 'subplots_adjust'? For advanced
+manipulation of plots, it may be useful to make this False.
+show: If True, execute pylab.show command to make sure plot displays.</p>
+<p>This comparison is multinomial in that it rescales the model to optimally
+fit the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_3d_comp_multinom(model, data, vmin=None, vmax=None,
+                          resid_range=None, fig_num=None,
+                          pop_ids=None, residual=&#39;Anscombe&#39;, adjust=True, show=True):
+    &#34;&#34;&#34;
+    Multinomial comparison between 3d model and data.
+
+
+    model: 3-dimensional model SFS
+    data: 3-dimensional data SFS
+    vmin, vmax: Minimum and maximum values plotted for sfs are vmin and
+                vmax respectively.
+    resid_range: Residual plot saturates at +- resid_range.
+    fig_num: Clear and use figure fig_num for display. If None, an new figure
+             window is created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    residual: &#39;Anscombe&#39; for Anscombe residuals, which are more normally
+              distributed for Poisson sampling. &#39;linear&#39; for the linear
+              residuals, which can be less biased.
+    adjust: Should method use automatic &#39;subplots_adjust&#39;? For advanced
+            manipulation of plots, it may be useful to make this False.
+    show: If True, execute pylab.show command to make sure plot displays.
+
+    This comparison is multinomial in that it rescales the model to optimally
+    fit the data.
+    &#34;&#34;&#34;
+    model = Inference.optimally_scaled_sfs(model, data)
+
+    plot_3d_comp_Poisson(model, data, vmin=vmin, vmax=vmax,
+                         resid_range=resid_range, fig_num=fig_num,
+                         pop_ids=pop_ids, residual=residual,
+                         adjust=adjust, show=show)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_3d_spectrum"><code class="name flex">
+<span>def <span class="ident">plot_3d_spectrum</span></span>(<span>fs, fignum=None, vmin=None, vmax=None, pop_ids=None, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Logarithmic heatmap of single 3d FS.</p>
+<p>Note that this method is slow, because it relies on matplotlib's software
+rendering. For faster and better looking plots, use plot_3d_spectrum_mayavi.</p>
+<p>fs: FS to plot
+vmin: Values in fs below vmin are masked in plot.
+vmax: Values in fs above vmax saturate the color spectrum.
+fignum: Figure number to plot into. If None, a new figure will be created.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+show: If True, execute pylab.show command to make sure plot displays.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_3d_spectrum(fs, fignum=None, vmin=None, vmax=None, pop_ids=None,
+                     show=True):
+    &#34;&#34;&#34;
+    Logarithmic heatmap of single 3d FS.
+
+    Note that this method is slow, because it relies on matplotlib&#39;s software
+    rendering. For faster and better looking plots, use plot_3d_spectrum_mayavi.
+
+    fs: FS to plot
+    vmin: Values in fs below vmin are masked in plot.
+    vmax: Values in fs above vmax saturate the color spectrum.
+    fignum: Figure number to plot into. If None, a new figure will be created.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    show: If True, execute pylab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    import mpl_toolkits.mplot3d as mplot3d
+    
+    fig = pylab.figure(fignum)
+    ax = mplot3d.Axes3D(fig)
+
+    if vmin is None:
+        vmin = fs.min()
+    if vmax is None:
+        vmax = fs.max()
+
+    # Which entries should I plot?
+    toplot = numpy.logical_not(fs.mask)
+    toplot = numpy.logical_and(toplot, fs.data &gt;= vmin)
+    
+    # Figure out the color mapping.
+    normalized = (numpy.log(fs)-numpy.log(vmin))\
+            /(numpy.log(vmax)-numpy.log(vmin))
+    normalized = numpy.minimum(normalized, 1)
+    colors = pylab.cm.hsv(normalized)
+    
+    # We draw by calculating which faces are visible and including each as a
+    # polygon.
+    polys, polycolors = [],[]
+    for ii in range(fs.shape[0]):
+        for jj in range(fs.shape[1]):
+            for kk in range(fs.shape[2]):
+                if not toplot[ii,jj,kk]:
+                    continue
+                if kk &lt; fs.shape[2]-1 and toplot[ii,jj,kk+1]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj-0.5,kk+0.5],[ii-0.5,jj-0.5,kk+0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if kk &gt; 0 and toplot[ii,jj,kk-1]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk-0.5],[ii+0.5,jj+0.5,kk-0.5],
+                                  [ii+0.5,jj-0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if jj &lt; fs.shape[1]-1 and toplot[ii,jj+1,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj+0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj+0.5,kk-0.5],[ii-0.5,jj+0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if jj &gt; 0 and toplot[ii,jj-1,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj-0.5,kk+0.5],[ii+0.5,jj-0.5,kk+0.5],
+                                  [ii+0.5,jj-0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if ii &lt; fs.shape[0]-1 and toplot[ii+1,jj,kk]:
+                    pass
+                else:
+                    polys.append([[ii+0.5,jj-0.5,kk+0.5],[ii+0.5,jj+0.5,kk+0.5],
+                                  [ii+0.5,jj+0.5,kk-0.5],[ii+0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                if ii &gt; 0 and toplot[ii-1,jj,kk]:
+                    pass
+                else:
+                    polys.append([[ii-0.5,jj-0.5,kk+0.5],[ii-0.5,jj+0.5,kk+0.5],
+                                  [ii-0.5,jj+0.5,kk-0.5],[ii-0.5,jj-0.5,kk-0.5]]
+                                 )
+                    polycolors.append(colors[ii,jj,kk])
+                    
+
+    polycoll = mplot3d.art3d.Poly3DCollection(polys, facecolor=polycolors, 
+                                              edgecolor=&#39;k&#39;, linewidths=0.5)
+    ax.add_collection(polycoll)
+
+    # Set the limits
+    ax.set_xlim3d(-0.5,fs.shape[0]-0.5)
+    ax.set_ylim3d(-0.5,fs.shape[1]-0.5)
+    ax.set_zlim3d(-0.5,fs.shape[2]-0.5)
+
+    if pop_ids is None:
+        if fs.pop_ids is not None:
+            pop_ids = fs.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;,&#39;pop2&#39;]
+    ax.set_xlabel(pop_ids[0], horizontalalignment=&#39;left&#39;)
+    ax.set_ylabel(pop_ids[1], verticalalignment=&#39;bottom&#39;)
+    ax.set_zlabel(pop_ids[2], verticalalignment=&#39;bottom&#39;)
+
+    # XXX: I can&#39;t set the axis ticks to be just the endpoints.
+
+    if show:
+        pylab.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_3d_spectrum_mayavi"><code class="name flex">
+<span>def <span class="ident">plot_3d_spectrum_mayavi</span></span>(<span>fs, fignum=None, vmin=None, vmax=None, pop_ids=None, show=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Logarithmic heatmap of single 3d FS.</p>
+<p>This method relies on MayaVi2's mlab interface. See <a href="http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html">http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html</a> . To edit plot
+properties, click leftmost icon in the toolbar.</p>
+<p>If you get an ImportError upon calling this function, it is likely that you
+don't have mayavi installed.</p>
+<p>fs: FS to plot
+vmin: Values in fs below vmin are masked in plot.
+vmax: Values in fs above vmax saturate the color spectrum.
+fignum: Figure number to plot into. If None, a new figure will be created.
+Note that these are MayaVi figures, which are separate from
+matplotlib figures.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+show: If True, execute mlab.show command to make sure plot displays.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_3d_spectrum_mayavi(fs, fignum=None, vmin=None, vmax=None, 
+                            pop_ids=None, show=True):
+    &#34;&#34;&#34;
+    Logarithmic heatmap of single 3d FS.
+
+    This method relies on MayaVi2&#39;s mlab interface. See http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/mlab.html . To edit plot
+    properties, click leftmost icon in the toolbar.
+
+    If you get an ImportError upon calling this function, it is likely that you
+    don&#39;t have mayavi installed.
+
+    fs: FS to plot
+    vmin: Values in fs below vmin are masked in plot.
+    vmax: Values in fs above vmax saturate the color spectrum.
+    fignum: Figure number to plot into. If None, a new figure will be created.
+            Note that these are MayaVi figures, which are separate from
+            matplotlib figures.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    show: If True, execute mlab.show command to make sure plot displays.
+    &#34;&#34;&#34;
+    from enthought.mayavi import mlab
+
+    fig = mlab.figure(fignum, bgcolor=(1,1,1))
+    mlab.clf(fig)
+
+    if vmin is None:
+        vmin = fs.min()
+    if vmax is None:
+        vmax = fs.max()
+
+    # Which entries should I plot?
+    toplot = numpy.logical_not(fs.mask)
+    toplot = numpy.logical_and(toplot, fs.data &gt;= vmin)
+
+    # For the color mapping
+    normalized = (numpy.log(fs)-numpy.log(vmin))\
+            /(numpy.log(vmax)-numpy.log(vmin))
+    normalized = numpy.minimum(normalized, 1)
+
+    xs,ys,zs = numpy.indices(fs.shape)
+    flat_xs = xs.flatten()
+    flat_ys = ys.flatten()
+    flat_zs = zs.flatten()
+    flat_toplot = toplot.flatten()
+    
+    mlab.barchart(flat_xs[flat_toplot], flat_ys[flat_toplot], 
+                  flat_zs[flat_toplot], normalized.flatten()[flat_toplot], 
+                  colormap=&#39;hsv&#39;, scale_mode=&#39;none&#39;, lateral_scale=1, 
+                  figure=fig)
+
+    if pop_ids is None:
+        if fs.pop_ids is not None:
+            pop_ids = fs.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;,&#39;pop2&#39;]
+
+    a = mlab.axes(xlabel=pop_ids[0],ylabel=pop_ids[1],zlabel=pop_ids[2], 
+                  figure=fig, color=(0,0,0))
+    a.axes.label_format = &#34;&#34;
+    a.title_text_property.color = (0,0,0)
+    mlab.text3d(fs.sample_sizes[0],fs.sample_sizes[1],fs.sample_sizes[2]+1, 
+                &#39;(%i,%i,%i)&#39;%tuple(fs.sample_sizes), scale=0.75, figure=fig,
+                color=(0,0,0))
+    mlab.view(azimuth=-40, elevation=65, distance=&#39;auto&#39;, focalpoint=&#39;auto&#39;)
+
+    if show:
+        mlab.show()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Plotting.plot_single_2d_sfs"><code class="name flex">
+<span>def <span class="ident">plot_single_2d_sfs</span></span>(<span>sfs, vmin=None, vmax=None, ax=None, pop_ids=None, extend='neither', colorbar=True, cmap=&lt;matplotlib.colors.ListedColormap object&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Heatmap of single 2d SFS. </p>
+<p>If vmax is greater than a factor of 10, plot on log scale.</p>
+<p>Returns colorbar that is created.</p>
+<p>sfs: SFS to plot
+vmin: Values in sfs below vmin are masked in plot.
+vmax: Values in sfs above vmax saturate the color spectrum.
+ax: Axes object to plot into. If None, the result of pylab.gca() is used.
+pop_ids: If not None, override pop_ids stored in Spectrum.
+extend: Whether the colorbar should have 'extension' arrows. See
+help(pylab.colorbar) for more details.
+colorbar: Should we plot a colorbar?
+cmap: Pylab colormap to use for plotting.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_single_2d_sfs(sfs, vmin=None, vmax=None, ax=None, 
+                       pop_ids=None, extend=&#39;neither&#39;, colorbar=True,
+                       cmap=pylab.cm.viridis_r):
+    &#34;&#34;&#34;
+    Heatmap of single 2d SFS. 
+    
+    If vmax is greater than a factor of 10, plot on log scale.
+
+    Returns colorbar that is created.
+
+    sfs: SFS to plot
+    vmin: Values in sfs below vmin are masked in plot.
+    vmax: Values in sfs above vmax saturate the color spectrum.
+    ax: Axes object to plot into. If None, the result of pylab.gca() is used.
+    pop_ids: If not None, override pop_ids stored in Spectrum.
+    extend: Whether the colorbar should have &#39;extension&#39; arrows. See
+            help(pylab.colorbar) for more details.
+    colorbar: Should we plot a colorbar?
+    cmap: Pylab colormap to use for plotting.
+    &#34;&#34;&#34;
+    if ax is None:
+        ax = pylab.gca()
+
+    if vmin is None:
+        vmin = sfs.min()
+    if vmax is None:
+        vmax = sfs.max()
+
+    if vmax / vmin &gt; 10:
+        # Under matplotlib 1.0.1, default LogFormatter omits some tick lines.
+        # This works more consistently.
+        norm = matplotlib.colors.LogNorm(vmin=vmin*(1-1e-3), vmax=vmax*(1+1e-3))
+        format = matplotlib.ticker.LogFormatterMathtext()
+    else:
+        norm = matplotlib.colors.Normalize(vmin=vmin*(1-1e-3), 
+                                           vmax=vmax*(1+1e-3))
+        format = None
+    mappable=ax.pcolor(numpy.ma.masked_where(sfs&lt;vmin, sfs), 
+                       cmap=cmap, edgecolors=&#39;none&#39;,
+                       norm=norm)
+    cb = ax.figure.colorbar(mappable, extend=extend, format=format)
+    if not colorbar:
+        ax.figure.delaxes(ax.figure.axes[-1])
+    else:
+        # A hack so we can manually work around weird ticks in some colorbars
+        try:
+            ax.figure.dadi_colorbars.append(cb)
+        except AttributeError:
+            ax.figure.dadi_colorbars = [cb]
+
+    ax.plot([0,sfs.shape[1]],[0, sfs.shape[0]], &#39;-k&#39;, lw=0.2)
+
+    if pop_ids is None:
+        if sfs.pop_ids is not None:
+            pop_ids = sfs.pop_ids
+        else:
+            pop_ids = [&#39;pop0&#39;,&#39;pop1&#39;]
+    ax.set_ylabel(pop_ids[0], verticalalignment=&#39;top&#39;)
+    ax.set_xlabel(pop_ids[1], verticalalignment=&#39;bottom&#39;)
+
+    ax.xaxis.set_major_formatter(_ctf)
+    ax.xaxis.set_major_locator(_sfsTickLocator())
+    ax.yaxis.set_major_formatter(_ctf)
+    ax.yaxis.set_major_locator(_sfsTickLocator())
+    for tick in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
+        tick.set_visible(False)
+
+    ax.set_xlim(0, sfs.shape[1])
+    ax.set_ylim(0, sfs.shape[0])
+
+    return cb</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Plotting.plot_1d_comp_Poisson" href="#dadi.Plotting.plot_1d_comp_Poisson">plot_1d_comp_Poisson</a></code></li>
+<li><code><a title="dadi.Plotting.plot_1d_comp_multinom" href="#dadi.Plotting.plot_1d_comp_multinom">plot_1d_comp_multinom</a></code></li>
+<li><code><a title="dadi.Plotting.plot_1d_fs" href="#dadi.Plotting.plot_1d_fs">plot_1d_fs</a></code></li>
+<li><code><a title="dadi.Plotting.plot_2d_comp_Poisson" href="#dadi.Plotting.plot_2d_comp_Poisson">plot_2d_comp_Poisson</a></code></li>
+<li><code><a title="dadi.Plotting.plot_2d_comp_multinom" href="#dadi.Plotting.plot_2d_comp_multinom">plot_2d_comp_multinom</a></code></li>
+<li><code><a title="dadi.Plotting.plot_2d_meta_resid" href="#dadi.Plotting.plot_2d_meta_resid">plot_2d_meta_resid</a></code></li>
+<li><code><a title="dadi.Plotting.plot_2d_resid" href="#dadi.Plotting.plot_2d_resid">plot_2d_resid</a></code></li>
+<li><code><a title="dadi.Plotting.plot_3d_comp_Poisson" href="#dadi.Plotting.plot_3d_comp_Poisson">plot_3d_comp_Poisson</a></code></li>
+<li><code><a title="dadi.Plotting.plot_3d_comp_multinom" href="#dadi.Plotting.plot_3d_comp_multinom">plot_3d_comp_multinom</a></code></li>
+<li><code><a title="dadi.Plotting.plot_3d_spectrum" href="#dadi.Plotting.plot_3d_spectrum">plot_3d_spectrum</a></code></li>
+<li><code><a title="dadi.Plotting.plot_3d_spectrum_mayavi" href="#dadi.Plotting.plot_3d_spectrum_mayavi">plot_3d_spectrum_mayavi</a></code></li>
+<li><code><a title="dadi.Plotting.plot_single_2d_sfs" href="#dadi.Plotting.plot_single_2d_sfs">plot_single_2d_sfs</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>DFE inference - dadi</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">dadi</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">User Guide</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../installation/" class="dropdown-item">Installation</a>
+</li>
+                                    
+<li>
+    <a href="../importing-data/" class="dropdown-item">Importing data</a>
+</li>
+                                    
+<li>
+    <a href="../manipulating-spectra/" class="dropdown-item">Manipulating spectra</a>
+</li>
+                                    
+<li>
+    <a href="../specifying-a-model/" class="dropdown-item">Specifying a model</a>
+</li>
+                                    
+<li>
+    <a href="../simulation-and-fitting/" class="dropdown-item">Simulation and fitting</a>
+</li>
+                                    
+<li>
+    <a href="../plotting/" class="dropdown-item">Plotting</a>
+</li>
+                                    
+<li>
+    <a href="../bootstrapping/" class="dropdown-item">Bootstrapping</a>
+</li>
+                                    
+<li>
+    <a href="../uncertainty-analysis/" class="dropdown-item">Uncertainty analysis</a>
+</li>
+                                    
+<li>
+    <a href="../likelihood-ratio-test/" class="dropdown-item">Likelihood ratio test</a>
+</li>
+                                    
+<li>
+    <a href="../triallelic-spectra/" class="dropdown-item">Triallelic spectra</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">DFE inference</a>
+</li>
+                                    
+<li>
+    <a href="../inbreeding/" class="dropdown-item">Inbreeding</a>
+</li>
+                                    
+<li>
+    <a href="../low-pass/" class="dropdown-item">Low-Pass</a>
+</li>
+                                    
+<li>
+    <a href="../polyploidy.md" class="dropdown-item">Polyploidy</a>
+</li>
+                                    
+<li>
+    <a href="../GPU-computing/" class="dropdown-item">GPU computing</a>
+</li>
+                                    
+<li>
+    <a href="../demes/" class="dropdown-item">Demes integration</a>
+</li>
+                                    
+<li>
+    <a href="../frequently-asked-questions/" class="dropdown-item">Frequently asked questions</a>
+</li>
+                                    
+<li>
+    <a href="../references/" class="dropdown-item">References</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Examples</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../examples/fs_from_data/fs_from_data/" class="dropdown-item">Frequency spectrum from data</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/YRI_CEU/YRI_CEU/" class="dropdown-item">Demography inference for YRI and CEU</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/DFE/DFE/" class="dropdown-item">DFE inference</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/Triallele/TrialleleModel/" class="dropdown-item">Triallelic model</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/TwoLocus/TwoLocusModel/" class="dropdown-item">Two Locus model</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_1d_demographics/" class="dropdown-item">Basic Workflow 1D Demographics</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_2d_demographics/" class="dropdown-item">Basic Workflow 2D Demographics</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_cache_generation/" class="dropdown-item">Basic Workflow Cache Generation</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_1d_dfe/" class="dropdown-item">Basic Workflow 1D DFE</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_2d_dfe/" class="dropdown-item">Basic Workflow 2D DFE</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/LowPass/low-pass/" class="dropdown-item">Low-Pass Example</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/Polyploidy/PolyploidyModel/" class="dropdown-item">Polyploidy models</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../api/dadi/" class="nav-link">API</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../triallelic-spectra/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../inbreeding/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://bitbucket.org/gutenkunstlab/dadi/src/master" class="nav-link"><i class="fa-brands fa-bitbucket"></i> Bitbucket</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#dfe-inference" class="nav-link">DFE inference</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="dfe-inference">DFE inference</h1>
+<p>Note: This section is adaptive from the fit∂a∂i manual written by Bernard Kim and Kirk Lohmueller. If you use this code, please be sure to cite their paper<sup><a href="../references/">8</a></sup>.</p>
+<p>The code examples shown here are meant to work with the example dataset. For simplicity's sake, I have generated an example dataset with PReFerSIM<sup><a href="../references/">9</a></sup>. Furthermore, we will work with a relatively small sample size and simple demographic model so that the examples can be worked through quickly on a laptop. Lastly, all the example code is provided in the <code>example.py</code> script as well as in this document.</p>
+<p>Another important thing to note: dadi characterizes genotype fitnesses as: \(1\), \(1 + 2sh\), and \(1 + 2s\), where \(1 + 2sh\) is the fitness of the heterozygote. Furthermore, the DFEs inferred and scaled in terms of the ancestral population size: \(\gamma = 2N_As\). This means that the selection coefficients must sometimes be rescaled, for instance when using the program SLiM<sup><a href="../references/">10</a></sup>. </p>
+<h3 id="example-dataset">Example dataset</h3>
+<p>The example dataset used in the example script was generated with forward simulations under the PRF model, with the simulation program PReFerSIM. Additionally, we will assume we know the true underlying demographic model rather than trying to fit one.</p>
+<p>This dataset is summarized with a site frequency spectrum, has sample size \(2n = 250\) (125 diploids), and is saved in the file <code>sample.sfs</code> file. It was generated with a single size change demography and an underlying gamma DFE. Specifically, a population of size \(N = 10,000\) diploids expands to 20,000 diploids 1000 generations ago and the gamma DFE has shape parameter 0.186 and scale parameter 686.7. This is the same gamma DFE that we inferred from the 1000 Genomes EUR dataset, but the scale parameter has been rescaled to the ancestral population size of 10,000 diploids. Finally, the amount of diversity in the sample dataset matches \(\theta_{NS} = 4000 = 4N_A\mu L_{NS}\).</p>
+<h3 id="demographic-inference">Demographic inference</h3>
+<p>Because the usage of dadi for demographic inference is extensively documented, it will not be discussed in detail here. In practice, we find that, as long as the demographic model that fits the synonymous sites reasonably well also works well for inference of the DFE.</p>
+<p>Briefly, we fit a demographic model to synonymous sites, which are assumed to be evolving in a neutral or nearly neutral manner. We believe this accurately represents the effects of linked selection and population structure, and condition upon this demographic model to fit the DFE. However, note the assumption of neutral synonymous variants may not hold for species with large population sizes, since this will increase the efficacy of selection on mutations with small fitness effects.</p>
+<p>Our sample dataset was generated with a two epoch (single size change) demography. We will assume we infer a 2-fold population expansion \(0.05 * 2N_A\)generations ago, where \(N_A\)is the ancestral population size. Therefore, the parameter vector is: <code>[nu, T]</code>.</p>
+<p>Again, we assume that the population scaled nonsynonymous mutation rate, \(\theta_{NS} = 4000\). In practice, we compute the synonymous mutation rate, \(\theta_S\), by using the multinomial likelihood to fit the demographic model. Because this method only fits the proportional SFS, \(\theta_S\) is estimated with the <code>dadi.Inference.optimal_sfs_scaling</code> method. Then, we multiply \(\theta_S\) by 2.31 to get \(\theta_{NS}\), i.e. \(\theta_S * 2.31 = \theta_{NS}\). Remember that our sample size is 125 diploids (250 chromosomes).</p>
+<h3 id="pre-computing-of-the-sfs-for-many-gamma">Pre-computing of the SFS for many \(\gamma\)</h3>
+<p>Next, we must generate frequency spectra for a range of gammas. The demographic function is modified to allow for a single selection coefficient. Here, each selection coefficient is scaled with the ancestral population size, \(\gamma = 2N_As\). In other words, if <code>gamma = 0</code>, this function is the same as the original demographic function. This function is defined as <code>two_epoch</code> in <code>dadi.DFE.DemogSelModels.py</code>.</p>
+<pre><code>def two_epoch(params, ns, pts):
+    nu, T, gamma = params
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx, gamma = gamma)
+    phi = Integration.one_pop(phi, xx, T, nu, gamma = gamma)
+    fs = Spectrum. from_phi(phi, ns, (xx,))
+
+    return fs
+</code></pre>
+<p>Then, we generate the frequency spectra for a range of gammas. The following code generates expected frequency spectra, conditional on the demographic model fit to synonymous sites, over <code>gamma_pts</code> log-spaced points over the range of <code>gamma_bounds</code>. Additionally, the <code>mp=True</code> argument specifies usage of multiple cores/threads, which is convenient since this step takes the longest. If the argument <code>cpus</code> is passed, we will utilize that many cores, but if <code>mp=True</code> and no <code>cpus</code> argument is passed, we will use <code>n-1</code> threads, where <code>n</code> is the number of threads available. If <code>mp=False</code>, each SFS will be computed in serial. This step should take 1-10 minutes depending on your CPU.</p>
+<pre><code>spectra = DFE.Cache1D(demog_params, ns, DFE.DemogSelModels.two_epoch, pts_l=pts_l, 
+                      gamma_bounds=(1e-5, 500), gamma_pts=100, verbose=True,
+                      mp=True)
+</code></pre>
+<p>Note, one error message that will come up often with very negative selection coefficients is:
+<code>WARNING:Numerics:Extrapolation may have failed. Check resulting frequency spectrum for unexpected results.</code></p>
+<p>One way to fix this is by increasing the <code>pts_l</code> grid sizes -- this will need to increase as the sample size increases and/or if the integration is done over a range which includes stronger selection coefficients. <code>dadi.Numerics.make_extrap_func</code> is used to extrapolate the frequency spectra to infinitely many gridpoints, but will sometimes return tiny negative values (often \(|X_i|&lt;1\text{e}^{-50}\)) due to floating point rounding errors. In practice, it seems that the tiny negative values do not affect the integration because they are insignificant, but if the error message appears it is good to manually double-check each SFS. Alternately, the small negative values can be manually approximated with 0.</p>
+<p>In the example, the pre-computed SFSs are saved in the list <code>spectra.spectra</code>. For convenience's sake, the <code>spectra</code> object can be pickled.</p>
+<pre><code>pickle.dump(spectra, open('example_spectra.bpkl','wb'))
+spectra = pickle.load(open('example_spectra.bpkl','rb'))
+</code></pre>
+<h3 id="fitting-a-dfe">Fitting a DFE</h3>
+<h4 id="fitting-simple-dfes">Fitting simple DFEs</h4>
+<p>Fitting a DFE is the quickest part of this procedure, especially for simple distributions such as the gamma distribution. If you wish to get an SFS for a specific DFE, you can use the <code>integrate</code> method that is built into the spectra object: <code>spectra.integrate(sel_params, None, sel_dist, theta, None)</code>. <code>sel_params</code> is a list containing the DFE parameters, <code>sel_dist</code> is the distribution used for the DFE, and <code>theta</code> is \(\theta_{NS}\). To compute the expected SFS for our simulations with the true parameter values, we would use <code>spectra.integrate([0.186, 686.7], None, Selection.gamma_dist, 4000., None)</code>. (The <code>None</code> arguments are for <code>ns</code> and <code>pts</code>, which are ignored. These are useful to ensure compatibility with dadi's optimization functions.)</p>
+<p>First, load the sample data:</p>
+<pre><code>data = dadi.Spectrum.from_file('example.fs')
+</code></pre>
+<p>Similar to the way in which vanilla dadi is used, you should have a starting guess at the parameters. Set an upper and lower bound. Perturb the parameters to select a random starting point, then fit the DFE. This should be done multiple times from different starting points. We use the <code>spectra.integrate</code> methods to generate the expected SFSs during each step of the optimization. The following lines of code fit a gamma DFE to the example data:</p>
+<pre><code>sel_params = [0.2, 1000.]
+lower_bound, upper_bound = [1e-3, 1e-2], [1, 50000.]
+p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
+                              upper_bound=upper_bound)
+popt, ll = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+                                   func_args=[DFE.PDFs.gamma, theta_ns],
+                                   lower_bound=lower_bound, upper_bound=upper_bound, 
+                                   verbose=len(sel_params), maxiter=10, multinom=False)
+</code></pre>
+<p>If this runs correctly, you should infer something close to, but not exactly, the true DFE. The final results will be stored in <code>popt</code>.
+The expected SFS at the MLE can be computed with:</p>
+<pre><code>model_sfs = spectra.integrate(popt, None, DFE.PDFs.gamma, theta_ns, None)
+</code></pre>
+<h4 id="fitting-complex-dfes">Fitting complex DFEs</h4>
+<p>Fitting complex distributions is similar to fitting simple DFEs, but requires a few additional steps. The following code can be used to fit a neutral+gamma mixture DFE to the data. Note that the gamma DFE should fit better if assessing model fit using AIC. Additionally, we assume that every selection coefficient \(\gamma &lt; 1\text{e}^{-4}\) is effectively neutral. Since this is a mixture of two distributions, we infer the proportion of neutral mutations, \(p_\text{neu}\), and assume the complement of that (i.e. \(1-p_\text{neu}\)) is the proportion of new mutations drawn from a gamma distribution. Therefore, the parameter vector should be: [\(p_\text{neu}\),shape, scale]. The gamma DFE is still the true DFE.</p>
+<pre><code>def neugamma(xx, params):
+    pneu, alpha, beta = params
+    xx = np.atleast_1d(xx)
+    out = (1-pneu)*DFE.PDFs.gamma(xx, (alpha, beta))
+    # Assume gamma &lt; 1e-4 is essentially neutral
+    out[np.logical_and(0 &lt;= xx, xx &lt; 1e-4)] += pneu/1e-4
+    # Reduce xx back to scalar if it's possible
+    return np.squeeze(out)
+</code></pre>
+<p>Fit the DFE as before, accounting for the extra parameter to describe the proportion of neutral new mutations. Note that \(p_\text{neu}\) is explicitly bounded to be \(0 &lt; p_\text{neu} \leq 1\).</p>
+<pre><code>sel_params = [0.2, 0.2, 1000.]
+lower_bound, upper_bound = [1e-3, 1e-3, 1e-2], [1, 1, 50000.]
+p0 = dadi.Misc.perturb_params(sel_params, lower_bound=lower_bound,
+                              upper_bound=upper_bound)
+popt = dadi.Inference.opt(p0, data, spectra.integrate, pts=None,
+                          func_args=[neugamma, theta_ns],
+                          lower_bound=lower_bound, upper_bound=upper_bound, 
+                          verbose=len(sel_params),
+                          maxiter=10, multinom=False)
+</code></pre>
+<p>For fitting with ancestral state misidentification or including a point mass of positive selection, see <code>example1D.py</code>.</p>
+<h3 id="fitting-joint-dfes">Fitting joint DFEs</h3>
+<p>dadi can also fit joint DFEs between populations, in a similar fashion to one-dimensional DFEs.</p>
+<p>Caching is similar to the one-dimensional case, although note that it is generally much more computationally expensive.</p>
+<pre><code>    s2 = Cache2D(demo_params, ns, DemogSelModels.IM, pts=pts_l, gamma_pts=100,
+                 gamma_bounds=(1e-2, 10), verbose=True, mp=True,
+                 additional_gammas=[1.2, 4.3])
+</code></pre>
+<p>dadi currently includes a few simple models for joint DFEs in <code>dadi.DFE.PDFs</code>.
+Note that the semi-analytic integration of the distribution over the regime not covered by the cache is expensive.
+Therefore, C implementations of the PDFs can make a big difference in computational time, and we provide
+C implementations for the default PDFs.</p>
+<p>Calculating individual spectra is very similar to the 1D case.</p>
+<pre><code>input_params, theta = [0.5,0.5,-0.8], 1e5
+sel_dist = PDFs.biv_lognormal
+target = s2.integrate(input_params, None, sel_dist, theta, None)
+</code></pre>
+<p>As is optimization.</p>
+<pre><code>p0 = [0,1.,0.8]
+popt = dadi.Inference.opt(p0, data, s2.integrate, pts=None,
+                          func_args=[sel_dist, theta],
+                          lower_bound=[None,0,-1],
+                          upper_bound=[None,None,1],
+                          verbose=30, multinom=False)
+</code></pre>
+<p>Note that when a point mass of positive selection is included in a 2D DFE, the assumed value for the positive \(\gamma\) must be cached, otherwise evaluation would be too expensive.</p>
+<p>dadi also implements mixture models, in which the total DFE is a sum of a 2D distribution plus a 1D distribution representing perfect correlation.
+These are implemented by <code>dadi.DFE.mixture</code>.</p>
+<pre><code>input_params, theta = [0.5,0.3,0,0.2,1.2,0.2], 1e5
+target = mixture_symmetric_point_pos(input_params,None,s1,s2,PDFs.lognormal,
+                                     PDFs.biv_lognormal, theta)
+</code></pre>
+<p>Using a mixture model requires both a 1D and a 2D cache.</p>
+<p>For additional examples, see <code>examples/DFE/example2D.py</code> in the source distribution.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

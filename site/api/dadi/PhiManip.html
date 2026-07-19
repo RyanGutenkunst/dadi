@@ -1,0 +1,2493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.PhiManip API documentation</title>
+<meta name="description" content="Manipulating population frequency spectra phi. e.g. population splittings and
+admixture" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.PhiManip</code></h1>
+</header>
+<section id="section-intro">
+<p>Manipulating population frequency spectra phi. e.g. population splittings and
+admixture</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Manipulating population frequency spectra phi. e.g. population splittings and
+admixture
+&#34;&#34;&#34;
+import numpy
+from numpy import newaxis as nuax
+import scipy.integrate
+
+from dadi import Numerics
+
+def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
+    &#34;&#34;&#34;
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
+           selective advantage.
+    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+       aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
+       genic selection.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+
+    if theta is not None:
+        raise ValueError(&#39;The parameter theta has been deprecated in favor of &#39;
+                         &#39;parameters nu and theta0, for consistency with the &#39;
+                         &#39;Integration functions.&#39;)
+
+    if h == 0.5:
+        return phi_1D_genic(xx, nu, theta0, gamma, beta=beta)
+
+    # Eqn 1 from Williamson, Fledel-Alon, Bustamante _Genetics_ 168:463 (2004).
+
+    # Modified to incorporate fact that for beta != 1, we get a term of 
+    # 4*beta/(beta+1)^2 in V. This can be implemented by rescaling gamma
+    # and rescaling the final phi.
+    gamma = gamma * 4.*beta/(beta+1.)**2
+
+    # Our final result is of the form 
+    # exp(Q) * int_0_x exp(-Q) / int_0_1 exp(-Q)
+
+    # For large negative gamma, exp(-Q) becomes numerically infinite.
+    # To work around this, we can adjust Q in both the top and bottom
+    # integrals by the same factor. We choose to make that factor the 
+    # maximum of -Q, which is -2*gamma.
+    Qadjust = 0
+    # For negative gamma, the maximum of -Q is -2*gamma.
+    if gamma &lt; 0 and numpy.isinf(numpy.exp(-2*gamma)):
+        Qadjust = -2*gamma
+
+    # For large positive gamma, the prefactor exp(Q) becomes numerically
+    # infinite, while the numerator becomes very small. To work around this,
+    # we&#39;ll can pull the prefactor into the numerator integral.
+
+    # Evaluate the denominator integral.
+    integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2
+                                     - Qadjust)
+    int0, eps = scipy.integrate.quad(integrand, 0, 1, epsabs=0,
+                                     points=numpy.linspace(0,1,41))
+
+    ints = numpy.empty(len(xx))
+    # Evaluate the numerator integrals
+    if gamma &lt; 0:
+        # In this case, the prefactor is not divergent, so we can evaluate
+        # the numerator as before, using the Qadjust if necessary.
+        for ii,q in enumerate(xx):
+            val, eps = scipy.integrate.quad(integrand, q, 1, epsabs=0,
+                                            points=numpy.linspace(q,1,41))
+            ints[ii] = val
+        phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
+    else:
+        # In this case, the prefactor may be divergent, so we do the integral
+        # with the prefactor pulled inside
+        integrand = lambda xi, q: numpy.exp(-4*gamma*h*(xi-q) -
+                                            2*gamma*(1-2*h)*(xi**2-q**2))
+        for ii,q in enumerate(xx):
+            val, eps = scipy.integrate.quad(integrand, q, 1, args=(q,))
+            ints[ii] = val
+        phi = ints/int0
+
+    # Protect from division by zero errors
+    phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    # Technically, phi diverges at 0. This kludge lets us do numerics
+    # sensibly.
+    phi[0] = phi[1]
+    # I used Mathematica to calculate the proper limit for x goes to 1.
+    # But if we&#39;ve adjusted the denominator integrand, then that limit doesn&#39;t
+    # hold. We only need to do that in cases of strong negative selection,
+    # when phi near 1 should be almost zero anyways. So we&#39;ll just ensure
+    # that it is at least monotonically decreasing.
+    if Qadjust == 0:
+        phi[-1] = 1./int0
+    else:
+        phi[-1] = min(phi[-1], phi[-2])
+
+    return phi * nu*theta0 * 4.*beta/(beta+1.)**2
+
+def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
+    &#34;&#34;&#34;
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
+           selective advantage.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+
+    if theta is not None:
+        raise ValueError(&#39;The parameter theta has been deprecated in favor of &#39;
+                         &#39;parameters nu and theta0, for consistency with the &#39;
+                         &#39;Integration functions.&#39;)
+    if gamma == 0:
+        return phi_1D_snm(xx, nu, theta0, beta=beta)
+
+    # Beta effectively re-scales gamma.
+    gamma = gamma * 4.*beta/(beta+1.)**2
+
+    exp = numpy.exp
+    # Protect from warnings on division by zero
+    if xx[0] == 0 and xx[-1] == 1:
+        phi = 0*xx
+        if gamma &gt; -300:
+            phi[1:-1] = 1./(xx[1:-1]*(1-xx[1:-1]))\
+                    * (1-exp(-2*gamma*(1-xx[1:-1])))/(1-exp(-2*gamma))
+        else:
+            # Avoid overflow issues for very negative gammas
+            phi[1:-1] = 1./(xx[1:-1]*(1-xx[1:-1])) * exp(2*gamma*xx[1:-1])
+    else:
+        if gamma &gt; -300:
+            phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+        else:
+            phi = 1./(xx*(1-xx)) * exp(2*gamma*xx)
+
+    if xx[0] == 0:
+        phi[0] = phi[1]
+    if xx[-1] == 1:
+        if gamma &lt; 300:
+            limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
+        else:
+            limit = 2*gamma
+        phi[-1] = limit
+    return phi * nu*theta0 * 4.*beta/(beta+1.)**2
+
+def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
+    &#34;&#34;&#34;
+    Standard neutral one-dimensional probability density.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+
+    if theta is not None:
+        raise ValueError(&#39;The parameter theta has been deprecated in favor of &#39;
+                         &#39;parameters nu and theta0, for consistency with the &#39;
+                         &#39;Integration functions.&#39;)
+    # Protect from division by zero errors
+    if xx[0] == 0:
+        phi = 0*xx
+        phi[1:] = nu*theta0/xx[1:]
+        phi[0] = phi[1]
+    else:
+        phi = nu*theta0/xx
+    return phi * 4.*beta/(beta+1.)**2
+
+def check_xx(xx):
+    &#34;&#34;&#34;
+    Check whether xx is monotonically increasing from 0 to 1. 
+    &#34;&#34;&#34;
+    if not xx[0] == 0 and xx[1] == 1:
+        raise ValueError(&#39;Input xx argument does not run from 0 to 1.&#39;
+                         &#39;Have you passed in an incorrect argument?&#39;)
+    if not numpy.all(numpy.diff(xx) &gt;= 0):
+        raise ValueError(&#39;Input xx argument is not monotonically increasing. &#39;
+                         &#39;Have you passed in an incorrect argument?&#39;)
+
+def phi_1D_to_2D(xx, phi_1D):
+    &#34;&#34;&#34;
+    Implement a one-to-two population split.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    phi1D: initial probability density
+
+    Returns a new two-dimensional phi array.
+    &#34;&#34;&#34;
+    check_xx(xx)
+
+    pts = len(xx)
+    phi_2D = numpy.zeros((pts, pts))
+    for ii in range(1, pts-1):
+        phi_2D[ii,ii] = phi_1D[ii] * 2/(xx[ii+1]-xx[ii-1])
+    return phi_2D
+
+def phi_2D_to_3D_split_2(xx, phi_2D):
+    &#34;&#34;&#34;
+    Split population 2 into populations 2 and 3.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    phi2D: initial probability density
+
+    Returns a new three-dimensional phi array.
+    &#34;&#34;&#34;
+    check_xx(xx)
+
+    return phi_2D_to_3D_admix(phi_2D,0,xx,xx,xx)
+
+def phi_2D_to_3D_split_1(xx, phi_2D):
+    &#34;&#34;&#34;
+    Split population 1 into populations 1 and 3.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    phi2D: initial probability density
+
+    Returns a new three-dimensional phi array.
+    &#34;&#34;&#34;
+    check_xx(xx)
+
+    return phi_2D_to_3D_admix(phi_2D,1,xx,xx,xx)
+
+def _admixture_intermediates(phi, ad_z, zz):
+    # Find where those z values map to in the zz array.
+    # Note that zz[upper_z[ii,jj]] &gt;= ad_z[ii,jj]
+    upper_z_index = numpy.searchsorted(zz, ad_z)
+    # I occasionally seem to get values &gt; 1 (floating pt error) in ad_z. This
+    # corrects them.
+    upper_z_index = numpy.minimum(upper_z_index, len(zz)-1)
+    # Also ensure that upper_z_index &gt;= 1, so lower_z_index is never &lt; 0.
+    upper_z_index = numpy.maximum(upper_z_index, 1)
+    lower_z_index = upper_z_index - 1
+    upper_z = zz[upper_z_index]
+    lower_z = zz[lower_z_index]
+    
+    # These are the spacings between points. To special-case the endpoints, we
+    # use where to set the appropriate spacings to zero. This turns out to be
+    # what we want to do for proper normalization via the trapezoid rule.
+    delz0 = zz[lower_z_index] - zz[lower_z_index-1]
+    delz0 = numpy.where(lower_z_index == 0, 0, delz0)
+    
+    delz1 = zz[upper_z_index] - zz[lower_z_index]
+    delz1 = numpy.where(upper_z_index == 0, 0, delz1)
+    
+    delz2 = zz[(upper_z_index+1)%len(zz)] - zz[upper_z_index]
+    delz2 = numpy.where(upper_z_index == len(zz)-1, 0, delz2)
+    
+    # frac_lower is the fraction that gets assigned to the lower z index
+    frac_lower = (upper_z - ad_z)/(upper_z - lower_z)
+    # frac_upper is the fraction that gets assigned to the upper z index
+    frac_upper = (ad_z-lower_z)/(upper_z - lower_z)
+    # This is the overall normalization for the entry
+    norm = 2*phi/(frac_lower*delz0 + delz1 + frac_upper*delz2)
+
+    return lower_z_index, upper_z_index, frac_lower, frac_upper, norm
+
+def _two_pop_admixture_intermediates(phi_2D, f, xx,yy,zz):
+    &#34;&#34;&#34;
+    Intermediate results used when splitting a new population out from a 2D phi.
+    &#34;&#34;&#34;
+    # For each point x,y in phi, this is the corresponding frequency z that SNPs
+    # with frequency x and y in populations 1 and 2 would map to.
+    ad_z = f*xx[:,nuax] + (1-f)*yy[nuax,:]
+
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _admixture_intermediates(phi_2D, ad_z, zz)
+
+    return lower_z_index, upper_z_index, frac_lower, frac_upper, norm
+
+def _three_pop_admixture_intermediates(phi_3D, f1,f2, xx,yy,zz,ww):
+    &#34;&#34;&#34;
+    Intermediate results used when splitting a new population out from a 3D phi.
+
+    ww: frequency mapping for the new population.
+    &#34;&#34;&#34;
+    # For each point x,y,z in phi, this is the corresponding frequency w that
+    # SNPs with frequency x,y,z in populations 1,2,3 would map to.
+    if f1 + f2 &gt; 1:
+        raise ValueError(&#39;Admixture proportions (f1=%f, f2 = %f) are &#39;
+                         &#39;non-sensible.&#39; % (f1, f2))
+    ad_w = f1*xx[:,nuax,nuax] + f2*yy[nuax,:,nuax] + (1-f1-f2)*zz[nuax,nuax,:]
+
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _admixture_intermediates(phi_3D, ad_w, ww)
+
+    return lower_w_index, upper_w_index, frac_lower, frac_upper, norm
+
+def _four_pop_admixture_intermediates(phi_4D, f1,f2,f3, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Intermediate results used when splitting a new population out from a 4D phi.
+
+    ww: frequency mapping for the new population.
+    &#34;&#34;&#34;
+    # For each point x,y,z,a in phi, this is the corresponding frequency b that
+    # SNPs with frequency x,y,z,a in populations 1,2,3,4 would map to.
+    if f1 + f2 + f3&gt; 1:
+        raise ValueError(&#39;Admixture proportions (f1=%f, f2 = %f, f3=%f) are &#39;
+                         &#39;non-sensible.&#39; % (f1, f2, f3))
+    ad_w = f1*xx[:,nuax,nuax,nuax] + f2*yy[nuax,:,nuax,nuax] + f3*zz[nuax,nuax,:,nuax]\
+        + (1-f1-f2-f3)*aa[nuax,nuax,nuax,:]
+
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _admixture_intermediates(phi_4D, ad_w, bb)
+
+    return lower_w_index, upper_w_index, frac_lower, frac_upper, norm
+
+def _five_pop_admixture_intermediates(phi_5D, f1,f2,f3,f4, xx,yy,zz,aa,bb,cc):
+    &#34;&#34;&#34;
+    Intermediate results used when splitting a new population out from a 4D phi.
+
+    ww: frequency mapping for the new population.
+    &#34;&#34;&#34;
+    # For each point x,y,z,a,b in phi, this is the corresponding frequency c that
+    # SNPs with frequency x,y,z,a,b in populations 1,2,3,4,5 would map to.
+    if f1 + f2 + f3 + f4 &gt; 1:
+        raise ValueError(&#39;Admixture proportions (f1=%f, f2 = %f, f3=%f, f4=%f) are &#39;
+                         &#39;non-sensible.&#39; % (f1, f2, f3,  f4))
+    ad_w = f1*xx[:,nuax,nuax,nuax,nuax] + f2*yy[nuax,:,nuax,nuax,nuax] + f3*zz[nuax,nuax,:,nuax,nuax]\
+        + f4*aa[nuax,nuax,nuax,:,nuax] + (1-f1-f2-f3-f4)*bb[nuax,nuax,nuax,nuax,:]
+
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _admixture_intermediates(phi_5D, ad_w, cc)
+
+    return lower_w_index, upper_w_index, frac_lower, frac_upper, norm
+
+
+def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
+    &#34;&#34;&#34;
+    Create population 3 admixed from populations 1 and 2.
+
+    Returns a 3D sfs of shape (len(xx),len(yy),len(zz))
+
+    phi:   phi corresponding to original 2 populations
+    f1:     Fraction of population 3 derived from population 1. (A fraction 1-f1
+             will be derived from population 2.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    zz:    Frequency mapping that will be used along population 3 axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, f1, xx,yy,zz)
+
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,numpy.newaxis]
+    idx_j = numpy.arange(len(yy))[numpy.newaxis,:]
+
+    phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
+    phi_3D[idx_i, idx_j, lower_z_index] = frac_lower*norm
+    phi_3D[idx_i, idx_j, upper_z_index] += frac_upper*norm
+
+    return phi_3D
+phi_2D_to_3D = phi_2D_to_3D_admix
+
+def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Create population 4 from populations 1, 2, and 3.
+
+    Returns a 4D sfs of shape (len(xx),len(yy),len(zz),len(aa))
+
+    phi:   phi corresponding to original 3 populations
+    f1:    Fraction of population 4 derived from population 1.
+    f2:    Fraction of population 4 derived from population 2.
+           (A fraction 1-f1-f2 will be derived from population 3.)
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1, 2, and 3.
+    aa:    Frequency mapping that will be used along population 4 axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, f1, f2, xx,yy,zz, aa)
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,nuax,nuax]
+    idx_j = numpy.arange(len(yy))[nuax,:,nuax]
+    idx_k = numpy.arange(len(zz))[nuax,nuax,:]
+
+    phi_4D = numpy.zeros((len(xx), len(yy), len(zz), len(aa)))
+    phi_4D[idx_i, idx_j, idx_k, lower_z_index] = frac_lower*norm
+    phi_4D[idx_i, idx_j, idx_k, upper_z_index] += frac_upper*norm
+
+    return phi_4D
+
+def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Create population 5 from populations 1, 2, 3, and 4.
+
+    Returns a 5D sfs of shape (len(xx),len(yy),len(zz),len(aa),len(bb))
+
+    phi:   phi corresponding to original 3 populations
+    f1:    Fraction of population 4 derived from population 1.
+    f2:    Fraction of population 4 derived from population 2.
+    f4:    Fraction of population 4 derived from population 3.
+           (A fraction 1-f1-f2-f3 will be derived from population 4.)
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1, 2, 3, 4.
+    bb:    Frequency mapping that will be used along population bb axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, bb)
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,nuax,nuax,nuax]
+    idx_j = numpy.arange(len(yy))[nuax,:,nuax,nuax]
+    idx_k = numpy.arange(len(zz))[nuax,nuax,:,nuax]
+    idx_l = numpy.arange(len(aa))[nuax,nuax,nuax,:]
+
+    phi_5D = numpy.zeros((len(xx), len(yy), len(zz), len(aa), len(bb)))
+    phi_5D[idx_i, idx_j, idx_k, idx_l, lower_z_index] = frac_lower*norm
+    phi_5D[idx_i, idx_j, idx_k, idx_l, upper_z_index] += frac_upper*norm
+
+    return phi_5D
+
+def phi_2D_admix_1_into_2(phi, f, xx,yy):
+    &#34;&#34;&#34;
+    Admix population 1 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:   phi corresponding to original 2 populations
+    f:     Fraction of updated population 2 to be derived from population 1. 
+             (A fraction 1-f will be derived from the original population 2.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    &#34;&#34;&#34;
+    # This is just like the the split_admix situation, but we&#39;re splitting into
+    # a population with zz=yy. We could do this by creating a xx by yy by yy
+    # array, then integrating out the second population. That&#39;s a big waste of
+    # memory, however.
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, f, xx,yy,yy)
+
+    # Basically, we&#39;re splitting into a third zz population, then integrating
+    # over yy to be left with the two populations we care about.
+    lower_cont = frac_lower*norm
+    upper_cont = frac_upper*norm
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+        # Use fancy indexing to avoid the commented out loop.
+        #for jj in range(len(yy)):
+        #    phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
+        #    phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
+        phi_int[idx_j, lower_z_index[ii]] = lower_cont[ii]
+        phi_int[idx_j, upper_z_index[ii]] += upper_cont[ii]
+        phi[ii] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi
+
+def phi_2D_admix_2_into_1(phi, f, xx,yy):
+    &#34;&#34;&#34;
+    Admix population 2 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:   phi corresponding to original 2 populations
+    f:     Fraction of updated population 1 to be derived from population 2. 
+             (A fraction 1-f will be derived from the original population 1.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    &#34;&#34;&#34;
+    # Note that it&#39;s 1-f here since f now denotes the fraction coming from
+    # population 2.
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, 1-f, xx,yy,xx)
+
+    idx_i = numpy.arange(phi.shape[0])
+    lower_cont = frac_lower*norm
+    upper_cont = frac_upper*norm
+    for jj in range(len(yy)):
+        phi_int = numpy.zeros((len(xx), len(xx)))
+        phi_int[idx_i, lower_z_index[:,jj]] = lower_cont[:,jj]
+        phi_int[idx_i, upper_z_index[:,jj]] = upper_cont[:,jj]
+        phi[:,jj] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
+    &#34;&#34;&#34;
+    Admix populations 1 and 2 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 3 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+              A fraction (1-f1-f2) will be derived from the original pop 3.
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, f1,f2, xx,yy,zz, zz)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fourth ww population, then integrating
+    # over zz to be left with the two populations we care about.
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+            phi_int[idx_k, lower_w_index[ii,jj]] = lower_cont[ii,jj]
+            phi_int[idx_k, upper_w_index[ii,jj]] = upper_cont[ii,jj]
+            phi[ii,jj] = Numerics.trapz(phi_int, zz, axis=0)
+
+    return phi
+
+def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
+    &#34;&#34;&#34;
+    Admix populations 1 and 3 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 3 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+              A fraction (1-f1-f3) will be derived from the original pop 2.
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, f1,1-f1-f3, xx,yy,zz, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fourth ww population, then integrating
+    # over yy to be left with the two populations we care about.
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+            phi_int[idx_j, lower_w_index[ii,:,kk]] = lower_cont[ii,:,kk]
+            phi_int[idx_j, upper_w_index[ii,:,kk]] = upper_cont[ii,:,kk]
+            phi[ii,:,kk] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi
+
+def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
+    &#34;&#34;&#34;
+    Admix populations 2 and 3 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 3 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+              A fraction (1-f2-f3) will be derived from the original pop 1.
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, 1-f2-f3,f2, xx,yy,zz, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fourth ww population, then integrating
+    # over yy to be left with the two populations we care about.
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+            phi_int[idx_i, lower_w_index[:,jj,kk]] = lower_cont[:,jj,kk]
+            phi_int[idx_i, upper_w_index[:,jj,kk]] = upper_cont[:,jj,kk]
+            phi[:,jj,kk] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_4D_admix_into_1(phi, f2,f3,f4, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 2, 3, and 4 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+    f4:       Fraction of updated population 1 to be derived from population 4. 
+              A fraction (1-f2-f3-f4) will be derived from the original pop 1.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3, and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, 1-f2-f3-f4,f2,f3, xx,yy,zz,aa, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fifth bb population, then integrating
+    # over xx to be left with the two populations we care about.
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+                phi_int[idx_i, lower_w_index[:,jj,kk,ll]] = lower_cont[:,jj,kk,ll]
+                phi_int[idx_i, upper_w_index[:,jj,kk,ll]] = upper_cont[:,jj,kk,ll]
+                phi[:,jj,kk,ll] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_4D_admix_into_4(phi, f1,f2,f3, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 1,2, and 3 into population 4.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f1:       Fraction of updated population 4 to be derived from population 1. 
+    f2:       Fraction of updated population 4 to be derived from population 2. 
+    f3:       Fraction of updated population 4 to be derived from population 3. 
+              A fraction (1-f1-f2-f3) will be derived from the original pop 4.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_l = numpy.arange(phi.shape[3])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                phi_int = numpy.zeros((phi.shape[3], phi.shape[3]))
+                phi_int[idx_l, lower_w_index[ii,jj,kk,:]] = lower_cont[ii,jj,kk,:]
+                phi_int[idx_l, upper_w_index[ii,jj,kk,:]] = upper_cont[ii,jj,kk,:]
+                phi[ii,jj,kk,:] = Numerics.trapz(phi_int, aa, axis=0)
+
+    return phi
+
+def phi_4D_admix_into_3(phi, f1,f2,f4, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 1,2, and 4 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+    f4:       Fraction of updated population 3 to be derived from population 4. 
+              A fraction (1-f1-f2-f4) will be derived from the original pop 3.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,1-f1-f2-f4, xx,yy,zz,aa, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for ll in range(phi.shape[3]):
+                phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+                phi_int[idx_k, lower_w_index[ii,jj,:,ll]] = lower_cont[ii,jj,:,ll]
+                phi_int[idx_k, upper_w_index[ii,jj,:,ll]] = upper_cont[ii,jj,:,ll]
+                phi[ii,jj,:,ll] = Numerics.trapz(phi_int, zz, axis=0)
+
+    return phi
+
+def phi_4D_admix_into_2(phi, f1,f3,f4, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 1,3, and 4 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+    f4:       Fraction of updated population 2 to be derived from population 4. 
+              A fraction (1-f1-f3-f4) will be derived from the original pop 2.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,1-f1-f3-f4,f3, xx,yy,zz,aa, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+                phi_int[idx_j, lower_w_index[ii,:,kk,ll]] = lower_cont[ii,:,kk,ll]
+                phi_int[idx_j, upper_w_index[ii,:,kk,ll]] = upper_cont[ii,:,kk,ll]
+                phi[ii,:,kk,ll] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_1(phi, f2,f3,f4,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 2, 3, 4, and 5 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+    f4:       Fraction of updated population 1 to be derived from population 4. 
+    f5:       Fraction of updated population 1 to be derived from population 5. 
+              A fraction (1-f2-f3-f4-f5) will be derived from the original pop 1.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, 1-f2-f3-f4-f5,f2,f3,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+                    phi_int[idx_i, lower_w_index[:,jj,kk,ll,mm]] = lower_cont[:,jj,kk,ll,mm]
+                    phi_int[idx_i, upper_w_index[:,jj,kk,ll,mm]] = upper_cont[:,jj,kk,ll,mm]
+                    phi[:,jj,kk,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_2(phi, f1,f3,f4,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 3, 4, and 5 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+    f4:       Fraction of updated population 2 to be derived from population 4. 
+    f5:       Fraction of updated population 2 to be derived from population 5. 
+              A fraction (1-f1-f3-f4-f5) will be derived from the original pop 2.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, 1-f1-f3-f4-f5,f3,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+                    phi_int[idx_j, lower_w_index[ii,:,kk,ll,mm]] = lower_cont[ii,:,kk,ll,mm]
+                    phi_int[idx_j, upper_w_index[ii,:,kk,ll,mm]] = upper_cont[ii,:,kk,ll,mm]
+                    phi[ii,:,kk,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_3(phi, f1,f2,f4,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 2, 4, and 5 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+    f4:       Fraction of updated population 3 to be derived from population 4. 
+    f5:       Fraction of updated population 3 to be derived from population 5. 
+              A fraction (1-f1-f2-f4-f5) will be derived from the original pop 3.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, 1-f1-f2-f4-f5,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+                    phi_int[idx_k, lower_w_index[ii,jj,:,ll,mm]] = lower_cont[ii,jj,:,ll,mm]
+                    phi_int[idx_k, upper_w_index[ii,jj,:,ll,mm]] = upper_cont[ii,jj,:,ll,mm]
+                    phi[ii,jj,:,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_4(phi, f1,f2,f3,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 2, 3, and 5 into population 4.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 4 to be derived from population 1. 
+    f2:       Fraction of updated population 4 to be derived from population 2. 
+    f3:       Fraction of updated population 4 to be derived from population 3. 
+    f5:       Fraction of updated population 4 to be derived from population 5. 
+              A fraction (1-f1-f2-f3-f5) will be derived from the original pop 4.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, f3, 1-f1-f2-f3-f5, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_l = numpy.arange(phi.shape[3])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[3], phi.shape[3]))
+                    phi_int[idx_l, lower_w_index[ii,jj,kk,:,mm]] = lower_cont[ii,jj,kk,:,mm]
+                    phi_int[idx_l, upper_w_index[ii,jj,kk,:,mm]] = upper_cont[ii,jj,kk,:,mm]
+                    phi[ii,jj,kk,:,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def phi_5D_admix_into_5(phi, f1,f2,f3,f4, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 2, 3, and 4 into population 5.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 5 to be derived from population 1. 
+    f2:       Fraction of updated population 5 to be derived from population 2. 
+    f3:       Fraction of updated population 5 to be derived from population 3. 
+    f4:       Fraction of updated population 5 to be derived from population 3. 
+              A fraction (1-f1-f2-f3-f4) will be derived from the original pop 5.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, f3, f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_m = numpy.arange(phi.shape[4])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                for ll in range(phi.shape[3]):
+                    phi_int = numpy.zeros((phi.shape[4], phi.shape[4]))
+                    phi_int[idx_m, lower_w_index[ii,jj,kk,ll,:]] = lower_cont[ii,jj,kk,ll,:]
+                    phi_int[idx_m, upper_w_index[ii,jj,kk,ll,:]] = upper_cont[ii,jj,kk,ll,:]
+                    phi[ii,jj,kk,ll,:] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi
+
+def remove_pop(phi, xx, popnum):
+    &#34;&#34;&#34;
+    Remove a population from phi.
+
+    Returns new phi with one fewer population.
+
+    phi: phi corresponding to original populations
+    xx: Mapping of points in phi to frequencies in population to be removed
+    popnum: Population number to remove, numbering from 1.
+    &#34;&#34;&#34;
+    return Numerics.trapz(phi, xx, axis=popnum-1)
+
+def filter_pops(phi, xx, tokeep):
+    &#34;&#34;&#34;
+    Filter phi to keep only certain populations.
+
+    Returns new phi with len(tokeep) populations.
+
+    phi: phi corresponding to original populations
+    xx: Mapping of points in phi to frequencies in population to be removed
+    tokeep: List of population numbers to keep, numbering from 1.
+    &#34;&#34;&#34;
+    toremove = list(range(1, phi.ndim+1))
+    for pop_ii in tokeep:
+        toremove.remove(pop_ii)
+    for pop_ii in sorted(toremove)[::-1]:
+        phi = remove_pop(phi, xx, pop_ii)
+    return phi
+
+def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
+    &#34;&#34;&#34;
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
+           selective advantage.
+    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+       aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
+       1+2s. h = 0.5 corresonds to genic selection.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+    Kv = (2.*beta+4.)*(beta+1.)/(9.*beta)
+    Km1 = 4./3. * gamma*(0.5+h)
+    Km2 = 4./3.*gamma*(1.-2.*h)
+    g1 = Km1/Kv
+    g2 = Km2/Kv
+
+    # First we evaluate the relevant integrals.
+    ints = numpy.empty(len(xx))
+    integrand = lambda xi: numpy.exp(-2*g1*xi - g2*xi**2)
+    val, eps = scipy.integrate.quad(integrand, 0, 1)
+    int0 = val
+    for ii,q in enumerate(xx):
+        val, eps = scipy.integrate.quad(integrand, q, 1)
+        ints[ii] = val
+
+    phi = numpy.exp(2*g1*xx + g2*xx**2)*ints/int0
+    # Protect from division by zero errors
+    if xx[0] == 0 and xx[-1] == 1:
+        phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    else:
+        phi *= 1./(xx*(1-xx))
+
+    if xx[0] == 0:
+        # Technically, phi diverges at 0. This fixes lets us do numerics
+        # sensibly.
+        phi[0] = phi[1]
+    if xx[-1] == 1:
+        # I used Mathematica to check that this was the proper limit.
+        phi[-1] = 1./int0
+    return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)
+
+
+def reorder_pops(phi, neworder):
+    &#34;&#34;&#34;
+    Get Spectrum with populations in new order
+
+    Returns new Spectrum with same number of populations, but in a different order
+
+    neworder: Integer list defining new order of populations, indexing the orginal
+              populations from 1. Must contain all integers from 1 to number of pops.
+    &#34;&#34;&#34;
+    if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:
+        raise(ValueError(&#34;neworder argument misspecified&#34;))
+    newaxes = [_-1 for _ in neworder]
+    phi = phi.transpose(newaxes)
+    
+    return phi</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.PhiManip.check_xx"><code class="name flex">
+<span>def <span class="ident">check_xx</span></span>(<span>xx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check whether xx is monotonically increasing from 0 to 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_xx(xx):
+    &#34;&#34;&#34;
+    Check whether xx is monotonically increasing from 0 to 1. 
+    &#34;&#34;&#34;
+    if not xx[0] == 0 and xx[1] == 1:
+        raise ValueError(&#39;Input xx argument does not run from 0 to 1.&#39;
+                         &#39;Have you passed in an incorrect argument?&#39;)
+    if not numpy.all(numpy.diff(xx) &gt;= 0):
+        raise ValueError(&#39;Input xx argument is not monotonically increasing. &#39;
+                         &#39;Have you passed in an incorrect argument?&#39;)</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.filter_pops"><code class="name flex">
+<span>def <span class="ident">filter_pops</span></span>(<span>phi, xx, tokeep)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filter phi to keep only certain populations.</p>
+<p>Returns new phi with len(tokeep) populations.</p>
+<p>phi: phi corresponding to original populations
+xx: Mapping of points in phi to frequencies in population to be removed
+tokeep: List of population numbers to keep, numbering from 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def filter_pops(phi, xx, tokeep):
+    &#34;&#34;&#34;
+    Filter phi to keep only certain populations.
+
+    Returns new phi with len(tokeep) populations.
+
+    phi: phi corresponding to original populations
+    xx: Mapping of points in phi to frequencies in population to be removed
+    tokeep: List of population numbers to keep, numbering from 1.
+    &#34;&#34;&#34;
+    toremove = list(range(1, phi.ndim+1))
+    for pop_ii in tokeep:
+        toremove.remove(pop_ii)
+    for pop_ii in sorted(toremove)[::-1]:
+        phi = remove_pop(phi, xx, pop_ii)
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_1D"><code class="name flex">
+<span>def <span class="ident">phi_1D</span></span>(<span>xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>One-dimensional phi for a constant-sized population with genic selection.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4<em>Nref * u, where u is the mutation
+event rate per generation for the simulated locus and Nref is the
+reference population size.
+gamma: scaled selection coefficient, equal to 2</em>Nref * s, where s is the
+selective advantage.
+h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
+genic selection.
+theta: deprecated in favor of distinct nu and theta0 arguments, for
+consistency with Integration functions.</p>
+<p>Returns a new phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_1D(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, theta=None, beta=1):
+    &#34;&#34;&#34;
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
+           selective advantage.
+    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+       aA has fitness 1+2sh and AA has fitness 1+2s. h = 0.5 corresonds to
+       genic selection.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+
+    if theta is not None:
+        raise ValueError(&#39;The parameter theta has been deprecated in favor of &#39;
+                         &#39;parameters nu and theta0, for consistency with the &#39;
+                         &#39;Integration functions.&#39;)
+
+    if h == 0.5:
+        return phi_1D_genic(xx, nu, theta0, gamma, beta=beta)
+
+    # Eqn 1 from Williamson, Fledel-Alon, Bustamante _Genetics_ 168:463 (2004).
+
+    # Modified to incorporate fact that for beta != 1, we get a term of 
+    # 4*beta/(beta+1)^2 in V. This can be implemented by rescaling gamma
+    # and rescaling the final phi.
+    gamma = gamma * 4.*beta/(beta+1.)**2
+
+    # Our final result is of the form 
+    # exp(Q) * int_0_x exp(-Q) / int_0_1 exp(-Q)
+
+    # For large negative gamma, exp(-Q) becomes numerically infinite.
+    # To work around this, we can adjust Q in both the top and bottom
+    # integrals by the same factor. We choose to make that factor the 
+    # maximum of -Q, which is -2*gamma.
+    Qadjust = 0
+    # For negative gamma, the maximum of -Q is -2*gamma.
+    if gamma &lt; 0 and numpy.isinf(numpy.exp(-2*gamma)):
+        Qadjust = -2*gamma
+
+    # For large positive gamma, the prefactor exp(Q) becomes numerically
+    # infinite, while the numerator becomes very small. To work around this,
+    # we&#39;ll can pull the prefactor into the numerator integral.
+
+    # Evaluate the denominator integral.
+    integrand = lambda xi: numpy.exp(-4*gamma*h*xi - 2*gamma*(1-2*h)*xi**2
+                                     - Qadjust)
+    int0, eps = scipy.integrate.quad(integrand, 0, 1, epsabs=0,
+                                     points=numpy.linspace(0,1,41))
+
+    ints = numpy.empty(len(xx))
+    # Evaluate the numerator integrals
+    if gamma &lt; 0:
+        # In this case, the prefactor is not divergent, so we can evaluate
+        # the numerator as before, using the Qadjust if necessary.
+        for ii,q in enumerate(xx):
+            val, eps = scipy.integrate.quad(integrand, q, 1, epsabs=0,
+                                            points=numpy.linspace(q,1,41))
+            ints[ii] = val
+        phi = numpy.exp(4*gamma*h*xx + 2*gamma*(1-2*h)*xx**2)*ints/int0
+    else:
+        # In this case, the prefactor may be divergent, so we do the integral
+        # with the prefactor pulled inside
+        integrand = lambda xi, q: numpy.exp(-4*gamma*h*(xi-q) -
+                                            2*gamma*(1-2*h)*(xi**2-q**2))
+        for ii,q in enumerate(xx):
+            val, eps = scipy.integrate.quad(integrand, q, 1, args=(q,))
+            ints[ii] = val
+        phi = ints/int0
+
+    # Protect from division by zero errors
+    phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    # Technically, phi diverges at 0. This kludge lets us do numerics
+    # sensibly.
+    phi[0] = phi[1]
+    # I used Mathematica to calculate the proper limit for x goes to 1.
+    # But if we&#39;ve adjusted the denominator integrand, then that limit doesn&#39;t
+    # hold. We only need to do that in cases of strong negative selection,
+    # when phi near 1 should be almost zero anyways. So we&#39;ll just ensure
+    # that it is at least monotonically decreasing.
+    if Qadjust == 0:
+        phi[-1] = 1./int0
+    else:
+        phi[-1] = min(phi[-1], phi[-2])
+
+    return phi * nu*theta0 * 4.*beta/(beta+1.)**2</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_1D_X"><code class="name flex">
+<span>def <span class="ident">phi_1D_X</span></span>(<span>xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>One-dimensional phi for a constant-sized population with genic selection.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4<em>Nref * u, where u is the mutation
+event rate per generation for the simulated locus and Nref is the
+reference population size.
+gamma: scaled selection coefficient, equal to 2</em>Nref * s, where s is the
+selective advantage.
+h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
+1+2s. h = 0.5 corresonds to genic selection.</p>
+<p>Returns a new phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_1D_X(xx, nu=1.0, theta0=1.0, gamma=0, h=0.5, beta=1, alpha=1):
+    &#34;&#34;&#34;
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
+           selective advantage.
+    h: Dominance coefficient. If A is the selected allele, the aa has fitness 1,
+       aA has fitness 1+2sh and AA has fitness 1+2s. Male carriers have fitness
+       1+2s. h = 0.5 corresonds to genic selection.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+    Kv = (2.*beta+4.)*(beta+1.)/(9.*beta)
+    Km1 = 4./3. * gamma*(0.5+h)
+    Km2 = 4./3.*gamma*(1.-2.*h)
+    g1 = Km1/Kv
+    g2 = Km2/Kv
+
+    # First we evaluate the relevant integrals.
+    ints = numpy.empty(len(xx))
+    integrand = lambda xi: numpy.exp(-2*g1*xi - g2*xi**2)
+    val, eps = scipy.integrate.quad(integrand, 0, 1)
+    int0 = val
+    for ii,q in enumerate(xx):
+        val, eps = scipy.integrate.quad(integrand, q, 1)
+        ints[ii] = val
+
+    phi = numpy.exp(2*g1*xx + g2*xx**2)*ints/int0
+    # Protect from division by zero errors
+    if xx[0] == 0 and xx[-1] == 1:
+        phi[1:-1] *= 1./(xx[1:-1]*(1-xx[1:-1]))
+    else:
+        phi *= 1./(xx*(1-xx))
+
+    if xx[0] == 0:
+        # Technically, phi diverges at 0. This fixes lets us do numerics
+        # sensibly.
+        phi[0] = phi[1]
+    if xx[-1] == 1:
+        # I used Mathematica to check that this was the proper limit.
+        phi[-1] = 1./int0
+    return phi * nu*theta0 * 1./Kv * 2./(1.+2.*beta)*(1./(1.+alpha) + beta)</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_1D_genic"><code class="name flex">
+<span>def <span class="ident">phi_1D_genic</span></span>(<span>xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>One-dimensional phi for a constant-sized population with genic selection.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4<em>Nref * u, where u is the mutation
+event rate per generation for the simulated locus and Nref is the
+reference population size.
+gamma: scaled selection coefficient, equal to 2</em>Nref * s, where s is the
+selective advantage.
+theta: deprecated in favor of distinct nu and theta0 arguments, for
+consistency with Integration functions.</p>
+<p>Returns a new phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_1D_genic(xx, nu=1.0, theta0=1.0, gamma=0, theta=None, beta=1):
+    &#34;&#34;&#34;
+    One-dimensional phi for a constant-sized population with genic selection.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    gamma: scaled selection coefficient, equal to 2*Nref * s, where s is the
+           selective advantage.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+
+    if theta is not None:
+        raise ValueError(&#39;The parameter theta has been deprecated in favor of &#39;
+                         &#39;parameters nu and theta0, for consistency with the &#39;
+                         &#39;Integration functions.&#39;)
+    if gamma == 0:
+        return phi_1D_snm(xx, nu, theta0, beta=beta)
+
+    # Beta effectively re-scales gamma.
+    gamma = gamma * 4.*beta/(beta+1.)**2
+
+    exp = numpy.exp
+    # Protect from warnings on division by zero
+    if xx[0] == 0 and xx[-1] == 1:
+        phi = 0*xx
+        if gamma &gt; -300:
+            phi[1:-1] = 1./(xx[1:-1]*(1-xx[1:-1]))\
+                    * (1-exp(-2*gamma*(1-xx[1:-1])))/(1-exp(-2*gamma))
+        else:
+            # Avoid overflow issues for very negative gammas
+            phi[1:-1] = 1./(xx[1:-1]*(1-xx[1:-1])) * exp(2*gamma*xx[1:-1])
+    else:
+        if gamma &gt; -300:
+            phi = 1./(xx*(1-xx)) * (1-exp(-2*gamma*(1-xx)))/(1-exp(-2*gamma))
+        else:
+            phi = 1./(xx*(1-xx)) * exp(2*gamma*xx)
+
+    if xx[0] == 0:
+        phi[0] = phi[1]
+    if xx[-1] == 1:
+        if gamma &lt; 300:
+            limit = 2*gamma * exp(2*gamma)/(exp(2*gamma)-1)
+        else:
+            limit = 2*gamma
+        phi[-1] = limit
+    return phi * nu*theta0 * 4.*beta/(beta+1.)**2</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_1D_snm"><code class="name flex">
+<span>def <span class="ident">phi_1D_snm</span></span>(<span>xx, nu=1.0, theta0=1.0, theta=None, beta=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Standard neutral one-dimensional probability density.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+nu: size of this population, relative to the reference population size Nref.
+theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation
+event rate per generation for the simulated locus and Nref is the
+reference population size.
+theta: deprecated in favor of distinct nu and theta0 arguments, for
+consistency with Integration functions.</p>
+<p>Returns a new phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_1D_snm(xx, nu=1.0, theta0=1.0, theta=None, beta=1):
+    &#34;&#34;&#34;
+    Standard neutral one-dimensional probability density.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    nu: size of this population, relative to the reference population size Nref.
+    theta0: scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
+            event rate per generation for the simulated locus and Nref is the 
+            reference population size.
+    theta: deprecated in favor of distinct nu and theta0 arguments, for 
+           consistency with Integration functions.
+
+    Returns a new phi array.
+    &#34;&#34;&#34;
+
+    if theta is not None:
+        raise ValueError(&#39;The parameter theta has been deprecated in favor of &#39;
+                         &#39;parameters nu and theta0, for consistency with the &#39;
+                         &#39;Integration functions.&#39;)
+    # Protect from division by zero errors
+    if xx[0] == 0:
+        phi = 0*xx
+        phi[1:] = nu*theta0/xx[1:]
+        phi[0] = phi[1]
+    else:
+        phi = nu*theta0/xx
+    return phi * 4.*beta/(beta+1.)**2</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_1D_to_2D"><code class="name flex">
+<span>def <span class="ident">phi_1D_to_2D</span></span>(<span>xx, phi_1D)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implement a one-to-two population split.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+phi1D: initial probability density</p>
+<p>Returns a new two-dimensional phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_1D_to_2D(xx, phi_1D):
+    &#34;&#34;&#34;
+    Implement a one-to-two population split.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    phi1D: initial probability density
+
+    Returns a new two-dimensional phi array.
+    &#34;&#34;&#34;
+    check_xx(xx)
+
+    pts = len(xx)
+    phi_2D = numpy.zeros((pts, pts))
+    for ii in range(1, pts-1):
+        phi_2D[ii,ii] = phi_1D[ii] * 2/(xx[ii+1]-xx[ii-1])
+    return phi_2D</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_2D_admix_1_into_2"><code class="name flex">
+<span>def <span class="ident">phi_2D_admix_1_into_2</span></span>(<span>phi, f, xx, yy)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix population 1 into population 2.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 2 populations
+f:
+Fraction of updated population 2 to be derived from population 1.
+(A fraction 1-f will be derived from the original population 2.)
+xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_2D_admix_1_into_2(phi, f, xx,yy):
+    &#34;&#34;&#34;
+    Admix population 1 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:   phi corresponding to original 2 populations
+    f:     Fraction of updated population 2 to be derived from population 1. 
+             (A fraction 1-f will be derived from the original population 2.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    &#34;&#34;&#34;
+    # This is just like the the split_admix situation, but we&#39;re splitting into
+    # a population with zz=yy. We could do this by creating a xx by yy by yy
+    # array, then integrating out the second population. That&#39;s a big waste of
+    # memory, however.
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, f, xx,yy,yy)
+
+    # Basically, we&#39;re splitting into a third zz population, then integrating
+    # over yy to be left with the two populations we care about.
+    lower_cont = frac_lower*norm
+    upper_cont = frac_upper*norm
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+        # Use fancy indexing to avoid the commented out loop.
+        #for jj in range(len(yy)):
+        #    phi_int[jj, upper_z_index[ii,jj]] += frac_upper[ii,jj]*norm[ii,jj]
+        #    phi_int[jj, lower_z_index[ii,jj]] += frac_lower[ii,jj]*norm[ii,jj]
+        phi_int[idx_j, lower_z_index[ii]] = lower_cont[ii]
+        phi_int[idx_j, upper_z_index[ii]] += upper_cont[ii]
+        phi[ii] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_2D_admix_2_into_1"><code class="name flex">
+<span>def <span class="ident">phi_2D_admix_2_into_1</span></span>(<span>phi, f, xx, yy)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix population 2 into population 1.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 2 populations
+f:
+Fraction of updated population 1 to be derived from population 2.
+(A fraction 1-f will be derived from the original population 1.)
+xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_2D_admix_2_into_1(phi, f, xx,yy):
+    &#34;&#34;&#34;
+    Admix population 2 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:   phi corresponding to original 2 populations
+    f:     Fraction of updated population 1 to be derived from population 2. 
+             (A fraction 1-f will be derived from the original population 1.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    &#34;&#34;&#34;
+    # Note that it&#39;s 1-f here since f now denotes the fraction coming from
+    # population 2.
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, 1-f, xx,yy,xx)
+
+    idx_i = numpy.arange(phi.shape[0])
+    lower_cont = frac_lower*norm
+    upper_cont = frac_upper*norm
+    for jj in range(len(yy)):
+        phi_int = numpy.zeros((len(xx), len(xx)))
+        phi_int[idx_i, lower_z_index[:,jj]] = lower_cont[:,jj]
+        phi_int[idx_i, upper_z_index[:,jj]] = upper_cont[:,jj]
+        phi[:,jj] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_2D_to_3D"><code class="name flex">
+<span>def <span class="ident">phi_2D_to_3D</span></span>(<span>phi, f1, xx, yy, zz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create population 3 admixed from populations 1 and 2.</p>
+<p>Returns a 3D sfs of shape (len(xx),len(yy),len(zz))</p>
+<p>phi:
+phi corresponding to original 2 populations
+f1:
+Fraction of population 3 derived from population 1. (A fraction 1-f1
+will be derived from population 2.)
+xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+zz:
+Frequency mapping that will be used along population 3 axis.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
+    &#34;&#34;&#34;
+    Create population 3 admixed from populations 1 and 2.
+
+    Returns a 3D sfs of shape (len(xx),len(yy),len(zz))
+
+    phi:   phi corresponding to original 2 populations
+    f1:     Fraction of population 3 derived from population 1. (A fraction 1-f1
+             will be derived from population 2.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    zz:    Frequency mapping that will be used along population 3 axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, f1, xx,yy,zz)
+
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,numpy.newaxis]
+    idx_j = numpy.arange(len(yy))[numpy.newaxis,:]
+
+    phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
+    phi_3D[idx_i, idx_j, lower_z_index] = frac_lower*norm
+    phi_3D[idx_i, idx_j, upper_z_index] += frac_upper*norm
+
+    return phi_3D</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_2D_to_3D_admix"><code class="name flex">
+<span>def <span class="ident">phi_2D_to_3D_admix</span></span>(<span>phi, f1, xx, yy, zz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create population 3 admixed from populations 1 and 2.</p>
+<p>Returns a 3D sfs of shape (len(xx),len(yy),len(zz))</p>
+<p>phi:
+phi corresponding to original 2 populations
+f1:
+Fraction of population 3 derived from population 1. (A fraction 1-f1
+will be derived from population 2.)
+xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+zz:
+Frequency mapping that will be used along population 3 axis.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_2D_to_3D_admix(phi, f1, xx,yy,zz):
+    &#34;&#34;&#34;
+    Create population 3 admixed from populations 1 and 2.
+
+    Returns a 3D sfs of shape (len(xx),len(yy),len(zz))
+
+    phi:   phi corresponding to original 2 populations
+    f1:     Fraction of population 3 derived from population 1. (A fraction 1-f1
+             will be derived from population 2.)
+    xx,yy: Mapping of points in phi to frequencies in populations 1 and 2.
+    zz:    Frequency mapping that will be used along population 3 axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _two_pop_admixture_intermediates(phi, f1, xx,yy,zz)
+
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,numpy.newaxis]
+    idx_j = numpy.arange(len(yy))[numpy.newaxis,:]
+
+    phi_3D = numpy.zeros((len(xx), len(yy), len(zz)))
+    phi_3D[idx_i, idx_j, lower_z_index] = frac_lower*norm
+    phi_3D[idx_i, idx_j, upper_z_index] += frac_upper*norm
+
+    return phi_3D</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_2D_to_3D_split_1"><code class="name flex">
+<span>def <span class="ident">phi_2D_to_3D_split_1</span></span>(<span>xx, phi_2D)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Split population 1 into populations 1 and 3.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+phi2D: initial probability density</p>
+<p>Returns a new three-dimensional phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_2D_to_3D_split_1(xx, phi_2D):
+    &#34;&#34;&#34;
+    Split population 1 into populations 1 and 3.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    phi2D: initial probability density
+
+    Returns a new three-dimensional phi array.
+    &#34;&#34;&#34;
+    check_xx(xx)
+
+    return phi_2D_to_3D_admix(phi_2D,1,xx,xx,xx)</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_2D_to_3D_split_2"><code class="name flex">
+<span>def <span class="ident">phi_2D_to_3D_split_2</span></span>(<span>xx, phi_2D)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Split population 2 into populations 2 and 3.</p>
+<p>xx: one-dimensional grid of frequencies upon which phi is defined
+phi2D: initial probability density</p>
+<p>Returns a new three-dimensional phi array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_2D_to_3D_split_2(xx, phi_2D):
+    &#34;&#34;&#34;
+    Split population 2 into populations 2 and 3.
+
+    xx: one-dimensional grid of frequencies upon which phi is defined
+    phi2D: initial probability density
+
+    Returns a new three-dimensional phi array.
+    &#34;&#34;&#34;
+    check_xx(xx)
+
+    return phi_2D_to_3D_admix(phi_2D,0,xx,xx,xx)</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_3D_admix_1_and_2_into_3"><code class="name flex">
+<span>def <span class="ident">phi_3D_admix_1_and_2_into_3</span></span>(<span>phi, f1, f2, xx, yy, zz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1 and 2 into population 3.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 3 populations.
+f1:
+Fraction of updated population 3 to be derived from population 1.
+f2:
+Fraction of updated population 3 to be derived from population 2.
+A fraction (1-f1-f2) will be derived from the original pop 3.
+xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_3D_admix_1_and_2_into_3(phi, f1,f2, xx,yy,zz):
+    &#34;&#34;&#34;
+    Admix populations 1 and 2 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 3 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+              A fraction (1-f1-f2) will be derived from the original pop 3.
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, f1,f2, xx,yy,zz, zz)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fourth ww population, then integrating
+    # over zz to be left with the two populations we care about.
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+            phi_int[idx_k, lower_w_index[ii,jj]] = lower_cont[ii,jj]
+            phi_int[idx_k, upper_w_index[ii,jj]] = upper_cont[ii,jj]
+            phi[ii,jj] = Numerics.trapz(phi_int, zz, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_3D_admix_1_and_3_into_2"><code class="name flex">
+<span>def <span class="ident">phi_3D_admix_1_and_3_into_2</span></span>(<span>phi, f1, f3, xx, yy, zz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1 and 3 into population 2.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 3 populations.
+f1:
+Fraction of updated population 2 to be derived from population 1.
+f3:
+Fraction of updated population 2 to be derived from population 3.
+A fraction (1-f1-f3) will be derived from the original pop 2.
+xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_3D_admix_1_and_3_into_2(phi, f1,f3, xx,yy,zz):
+    &#34;&#34;&#34;
+    Admix populations 1 and 3 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 3 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+              A fraction (1-f1-f3) will be derived from the original pop 2.
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, f1,1-f1-f3, xx,yy,zz, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fourth ww population, then integrating
+    # over yy to be left with the two populations we care about.
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+            phi_int[idx_j, lower_w_index[ii,:,kk]] = lower_cont[ii,:,kk]
+            phi_int[idx_j, upper_w_index[ii,:,kk]] = upper_cont[ii,:,kk]
+            phi[ii,:,kk] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_3D_admix_2_and_3_into_1"><code class="name flex">
+<span>def <span class="ident">phi_3D_admix_2_and_3_into_1</span></span>(<span>phi, f2, f3, xx, yy, zz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 2 and 3 into population 1.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 3 populations.
+f2:
+Fraction of updated population 1 to be derived from population 2.
+f3:
+Fraction of updated population 1 to be derived from population 3.
+A fraction (1-f2-f3) will be derived from the original pop 1.
+xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_3D_admix_2_and_3_into_1(phi, f2,f3, xx,yy,zz):
+    &#34;&#34;&#34;
+    Admix populations 2 and 3 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 3 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+              A fraction (1-f2-f3) will be derived from the original pop 1.
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1,2 and 3.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, 1-f2-f3,f2, xx,yy,zz, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fourth ww population, then integrating
+    # over yy to be left with the two populations we care about.
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+            phi_int[idx_i, lower_w_index[:,jj,kk]] = lower_cont[:,jj,kk]
+            phi_int[idx_i, upper_w_index[:,jj,kk]] = upper_cont[:,jj,kk]
+            phi[:,jj,kk] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_3D_to_4D"><code class="name flex">
+<span>def <span class="ident">phi_3D_to_4D</span></span>(<span>phi, f1, f2, xx, yy, zz, aa)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create population 4 from populations 1, 2, and 3.</p>
+<p>Returns a 4D sfs of shape (len(xx),len(yy),len(zz),len(aa))</p>
+<p>phi:
+phi corresponding to original 3 populations
+f1:
+Fraction of population 4 derived from population 1.
+f2:
+Fraction of population 4 derived from population 2.
+(A fraction 1-f1-f2 will be derived from population 3.)
+xx,yy,zz: Mapping of points in phi to frequencies in populations 1, 2, and 3.
+aa:
+Frequency mapping that will be used along population 4 axis.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_3D_to_4D(phi, f1,f2, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Create population 4 from populations 1, 2, and 3.
+
+    Returns a 4D sfs of shape (len(xx),len(yy),len(zz),len(aa))
+
+    phi:   phi corresponding to original 3 populations
+    f1:    Fraction of population 4 derived from population 1.
+    f2:    Fraction of population 4 derived from population 2.
+           (A fraction 1-f1-f2 will be derived from population 3.)
+    xx,yy,zz: Mapping of points in phi to frequencies in populations 1, 2, and 3.
+    aa:    Frequency mapping that will be used along population 4 axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _three_pop_admixture_intermediates(phi, f1, f2, xx,yy,zz, aa)
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,nuax,nuax]
+    idx_j = numpy.arange(len(yy))[nuax,:,nuax]
+    idx_k = numpy.arange(len(zz))[nuax,nuax,:]
+
+    phi_4D = numpy.zeros((len(xx), len(yy), len(zz), len(aa)))
+    phi_4D[idx_i, idx_j, idx_k, lower_z_index] = frac_lower*norm
+    phi_4D[idx_i, idx_j, idx_k, upper_z_index] += frac_upper*norm
+
+    return phi_4D</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_4D_admix_into_1"><code class="name flex">
+<span>def <span class="ident">phi_4D_admix_into_1</span></span>(<span>phi, f2, f3, f4, xx, yy, zz, aa)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 2, 3, and 4 into population 1.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 4 populations.
+f2:
+Fraction of updated population 1 to be derived from population 2.
+f3:
+Fraction of updated population 1 to be derived from population 3.
+f4:
+Fraction of updated population 1 to be derived from population 4.
+A fraction (1-f2-f3-f4) will be derived from the original pop 1.
+xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3, and 4.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_4D_admix_into_1(phi, f2,f3,f4, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 2, 3, and 4 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+    f4:       Fraction of updated population 1 to be derived from population 4. 
+              A fraction (1-f2-f3-f4) will be derived from the original pop 1.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3, and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, 1-f2-f3-f4,f2,f3, xx,yy,zz,aa, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    # Basically, we&#39;re splitting into a fifth bb population, then integrating
+    # over xx to be left with the two populations we care about.
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+                phi_int[idx_i, lower_w_index[:,jj,kk,ll]] = lower_cont[:,jj,kk,ll]
+                phi_int[idx_i, upper_w_index[:,jj,kk,ll]] = upper_cont[:,jj,kk,ll]
+                phi[:,jj,kk,ll] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_4D_admix_into_2"><code class="name flex">
+<span>def <span class="ident">phi_4D_admix_into_2</span></span>(<span>phi, f1, f3, f4, xx, yy, zz, aa)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1,3, and 4 into population 2.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 4 populations.
+f1:
+Fraction of updated population 2 to be derived from population 1.
+f3:
+Fraction of updated population 2 to be derived from population 3.
+f4:
+Fraction of updated population 2 to be derived from population 4.
+A fraction (1-f1-f3-f4) will be derived from the original pop 2.
+xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_4D_admix_into_2(phi, f1,f3,f4, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 1,3, and 4 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+    f4:       Fraction of updated population 2 to be derived from population 4. 
+              A fraction (1-f1-f3-f4) will be derived from the original pop 2.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,1-f1-f3-f4,f3, xx,yy,zz,aa, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+                phi_int[idx_j, lower_w_index[ii,:,kk,ll]] = lower_cont[ii,:,kk,ll]
+                phi_int[idx_j, upper_w_index[ii,:,kk,ll]] = upper_cont[ii,:,kk,ll]
+                phi[ii,:,kk,ll] = Numerics.trapz(phi_int, yy, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_4D_admix_into_3"><code class="name flex">
+<span>def <span class="ident">phi_4D_admix_into_3</span></span>(<span>phi, f1, f2, f4, xx, yy, zz, aa)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1,2, and 4 into population 3.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 4 populations.
+f1:
+Fraction of updated population 3 to be derived from population 1.
+f2:
+Fraction of updated population 3 to be derived from population 2.
+f4:
+Fraction of updated population 3 to be derived from population 4.
+A fraction (1-f1-f2-f4) will be derived from the original pop 3.
+xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_4D_admix_into_3(phi, f1,f2,f4, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 1,2, and 4 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+    f4:       Fraction of updated population 3 to be derived from population 4. 
+              A fraction (1-f1-f2-f4) will be derived from the original pop 3.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,1-f1-f2-f4, xx,yy,zz,aa, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for ll in range(phi.shape[3]):
+                phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+                phi_int[idx_k, lower_w_index[ii,jj,:,ll]] = lower_cont[ii,jj,:,ll]
+                phi_int[idx_k, upper_w_index[ii,jj,:,ll]] = upper_cont[ii,jj,:,ll]
+                phi[ii,jj,:,ll] = Numerics.trapz(phi_int, zz, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_4D_admix_into_4"><code class="name flex">
+<span>def <span class="ident">phi_4D_admix_into_4</span></span>(<span>phi, f1, f2, f3, xx, yy, zz, aa)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1,2, and 3 into population 4.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 4 populations.
+f1:
+Fraction of updated population 4 to be derived from population 1.
+f2:
+Fraction of updated population 4 to be derived from population 2.
+f3:
+Fraction of updated population 4 to be derived from population 3.
+A fraction (1-f1-f2-f3) will be derived from the original pop 4.
+xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_4D_admix_into_4(phi, f1,f2,f3, xx,yy,zz,aa):
+    &#34;&#34;&#34;
+    Admix populations 1,2, and 3 into population 4.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 4 populations.
+    f1:       Fraction of updated population 4 to be derived from population 1. 
+    f2:       Fraction of updated population 4 to be derived from population 2. 
+    f3:       Fraction of updated population 4 to be derived from population 3. 
+              A fraction (1-f1-f2-f3) will be derived from the original pop 4.
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1,2,3 and 4.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, yy)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_l = numpy.arange(phi.shape[3])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                phi_int = numpy.zeros((phi.shape[3], phi.shape[3]))
+                phi_int[idx_l, lower_w_index[ii,jj,kk,:]] = lower_cont[ii,jj,kk,:]
+                phi_int[idx_l, upper_w_index[ii,jj,kk,:]] = upper_cont[ii,jj,kk,:]
+                phi[ii,jj,kk,:] = Numerics.trapz(phi_int, aa, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_4D_to_5D"><code class="name flex">
+<span>def <span class="ident">phi_4D_to_5D</span></span>(<span>phi, f1, f2, f3, xx, yy, zz, aa, bb)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create population 5 from populations 1, 2, 3, and 4.</p>
+<p>Returns a 5D sfs of shape (len(xx),len(yy),len(zz),len(aa),len(bb))</p>
+<p>phi:
+phi corresponding to original 3 populations
+f1:
+Fraction of population 4 derived from population 1.
+f2:
+Fraction of population 4 derived from population 2.
+f4:
+Fraction of population 4 derived from population 3.
+(A fraction 1-f1-f2-f3 will be derived from population 4.)
+xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1, 2, 3, 4.
+bb:
+Frequency mapping that will be used along population bb axis.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_4D_to_5D(phi, f1,f2,f3, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Create population 5 from populations 1, 2, 3, and 4.
+
+    Returns a 5D sfs of shape (len(xx),len(yy),len(zz),len(aa),len(bb))
+
+    phi:   phi corresponding to original 3 populations
+    f1:    Fraction of population 4 derived from population 1.
+    f2:    Fraction of population 4 derived from population 2.
+    f4:    Fraction of population 4 derived from population 3.
+           (A fraction 1-f1-f2-f3 will be derived from population 4.)
+    xx,yy,zz,aa: Mapping of points in phi to frequencies in populations 1, 2, 3, 4.
+    bb:    Frequency mapping that will be used along population bb axis.
+    &#34;&#34;&#34;
+    lower_z_index, upper_z_index, frac_lower, frac_upper, norm \
+            = _four_pop_admixture_intermediates(phi, f1,f2,f3, xx,yy,zz,aa, bb)
+
+    # Assemble our result.
+    # This uses numpy&#39;s fancy indexing. It is much, much faster than an
+    # explicit loop.
+    # See the numpy-discussion post &#34;Numpy Advanced Indexing Question&#34; by
+    # Robert Kern on July 16, 2008
+    # http://projects.scipy.org/pipermail/numpy-discussion/2008-July/035776.html
+    idx_i = numpy.arange(len(xx))[:,nuax,nuax,nuax]
+    idx_j = numpy.arange(len(yy))[nuax,:,nuax,nuax]
+    idx_k = numpy.arange(len(zz))[nuax,nuax,:,nuax]
+    idx_l = numpy.arange(len(aa))[nuax,nuax,nuax,:]
+
+    phi_5D = numpy.zeros((len(xx), len(yy), len(zz), len(aa), len(bb)))
+    phi_5D[idx_i, idx_j, idx_k, idx_l, lower_z_index] = frac_lower*norm
+    phi_5D[idx_i, idx_j, idx_k, idx_l, upper_z_index] += frac_upper*norm
+
+    return phi_5D</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_5D_admix_into_1"><code class="name flex">
+<span>def <span class="ident">phi_5D_admix_into_1</span></span>(<span>phi, f2, f3, f4, f5, xx, yy, zz, aa, bb)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 2, 3, 4, and 5 into population 1.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 5 populations.
+f2:
+Fraction of updated population 1 to be derived from population 2.
+f3:
+Fraction of updated population 1 to be derived from population 3.
+f4:
+Fraction of updated population 1 to be derived from population 4.
+f5:
+Fraction of updated population 1 to be derived from population 5.
+A fraction (1-f2-f3-f4-f5) will be derived from the original pop 1.
+xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_5D_admix_into_1(phi, f2,f3,f4,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 2, 3, 4, and 5 into population 1.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f2:       Fraction of updated population 1 to be derived from population 2. 
+    f3:       Fraction of updated population 1 to be derived from population 3. 
+    f4:       Fraction of updated population 1 to be derived from population 4. 
+    f5:       Fraction of updated population 1 to be derived from population 5. 
+              A fraction (1-f2-f3-f4-f5) will be derived from the original pop 1.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, 1-f2-f3-f4-f5,f2,f3,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_i = numpy.arange(phi.shape[0])
+    for jj in range(phi.shape[1]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[0], phi.shape[0]))
+                    phi_int[idx_i, lower_w_index[:,jj,kk,ll,mm]] = lower_cont[:,jj,kk,ll,mm]
+                    phi_int[idx_i, upper_w_index[:,jj,kk,ll,mm]] = upper_cont[:,jj,kk,ll,mm]
+                    phi[:,jj,kk,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_5D_admix_into_2"><code class="name flex">
+<span>def <span class="ident">phi_5D_admix_into_2</span></span>(<span>phi, f1, f3, f4, f5, xx, yy, zz, aa, bb)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1, 3, 4, and 5 into population 2.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 5 populations.
+f1:
+Fraction of updated population 2 to be derived from population 1.
+f3:
+Fraction of updated population 2 to be derived from population 3.
+f4:
+Fraction of updated population 2 to be derived from population 4.
+f5:
+Fraction of updated population 2 to be derived from population 5.
+A fraction (1-f1-f3-f4-f5) will be derived from the original pop 2.
+xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_5D_admix_into_2(phi, f1,f3,f4,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 3, 4, and 5 into population 2.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 2 to be derived from population 1. 
+    f3:       Fraction of updated population 2 to be derived from population 3. 
+    f4:       Fraction of updated population 2 to be derived from population 4. 
+    f5:       Fraction of updated population 2 to be derived from population 5. 
+              A fraction (1-f1-f3-f4-f5) will be derived from the original pop 2.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, 1-f1-f3-f4-f5,f3,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_j = numpy.arange(phi.shape[1])
+    for ii in range(phi.shape[0]):
+        for kk in range(phi.shape[2]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[1], phi.shape[1]))
+                    phi_int[idx_j, lower_w_index[ii,:,kk,ll,mm]] = lower_cont[ii,:,kk,ll,mm]
+                    phi_int[idx_j, upper_w_index[ii,:,kk,ll,mm]] = upper_cont[ii,:,kk,ll,mm]
+                    phi[ii,:,kk,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_5D_admix_into_3"><code class="name flex">
+<span>def <span class="ident">phi_5D_admix_into_3</span></span>(<span>phi, f1, f2, f4, f5, xx, yy, zz, aa, bb)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1, 2, 4, and 5 into population 3.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 5 populations.
+f1:
+Fraction of updated population 3 to be derived from population 1.
+f2:
+Fraction of updated population 3 to be derived from population 2.
+f4:
+Fraction of updated population 3 to be derived from population 4.
+f5:
+Fraction of updated population 3 to be derived from population 5.
+A fraction (1-f1-f2-f4-f5) will be derived from the original pop 3.
+xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_5D_admix_into_3(phi, f1,f2,f4,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 2, 4, and 5 into population 3.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 3 to be derived from population 1. 
+    f2:       Fraction of updated population 3 to be derived from population 2. 
+    f4:       Fraction of updated population 3 to be derived from population 4. 
+    f5:       Fraction of updated population 3 to be derived from population 5. 
+              A fraction (1-f1-f2-f4-f5) will be derived from the original pop 3.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, 1-f1-f2-f4-f5,f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_k = numpy.arange(phi.shape[2])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for ll in range(phi.shape[3]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[2], phi.shape[2]))
+                    phi_int[idx_k, lower_w_index[ii,jj,:,ll,mm]] = lower_cont[ii,jj,:,ll,mm]
+                    phi_int[idx_k, upper_w_index[ii,jj,:,ll,mm]] = upper_cont[ii,jj,:,ll,mm]
+                    phi[ii,jj,:,ll,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_5D_admix_into_4"><code class="name flex">
+<span>def <span class="ident">phi_5D_admix_into_4</span></span>(<span>phi, f1, f2, f3, f5, xx, yy, zz, aa, bb)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1, 2, 3, and 5 into population 4.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 5 populations.
+f1:
+Fraction of updated population 4 to be derived from population 1.
+f2:
+Fraction of updated population 4 to be derived from population 2.
+f3:
+Fraction of updated population 4 to be derived from population 3.
+f5:
+Fraction of updated population 4 to be derived from population 5.
+A fraction (1-f1-f2-f3-f5) will be derived from the original pop 4.
+xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_5D_admix_into_4(phi, f1,f2,f3,f5, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 2, 3, and 5 into population 4.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 4 to be derived from population 1. 
+    f2:       Fraction of updated population 4 to be derived from population 2. 
+    f3:       Fraction of updated population 4 to be derived from population 3. 
+    f5:       Fraction of updated population 4 to be derived from population 5. 
+              A fraction (1-f1-f2-f3-f5) will be derived from the original pop 4.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, f3, 1-f1-f2-f3-f5, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_l = numpy.arange(phi.shape[3])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                for mm in range(phi.shape[4]):
+                    phi_int = numpy.zeros((phi.shape[3], phi.shape[3]))
+                    phi_int[idx_l, lower_w_index[ii,jj,kk,:,mm]] = lower_cont[ii,jj,kk,:,mm]
+                    phi_int[idx_l, upper_w_index[ii,jj,kk,:,mm]] = upper_cont[ii,jj,kk,:,mm]
+                    phi[ii,jj,kk,:,mm] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.phi_5D_admix_into_5"><code class="name flex">
+<span>def <span class="ident">phi_5D_admix_into_5</span></span>(<span>phi, f1, f2, f3, f4, xx, yy, zz, aa, bb)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Admix populations 1, 2, 3, and 4 into population 5.</p>
+<p>Alters phi in place and returns the new version.</p>
+<p>phi:
+phi corresponding to original 5 populations.
+f1:
+Fraction of updated population 5 to be derived from population 1.
+f2:
+Fraction of updated population 5 to be derived from population 2.
+f3:
+Fraction of updated population 5 to be derived from population 3.
+f4:
+Fraction of updated population 5 to be derived from population 3.
+A fraction (1-f1-f2-f3-f4) will be derived from the original pop 5.
+xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_5D_admix_into_5(phi, f1,f2,f3,f4, xx,yy,zz,aa,bb):
+    &#34;&#34;&#34;
+    Admix populations 1, 2, 3, and 4 into population 5.
+
+    Alters phi in place and returns the new version.
+
+    phi:      phi corresponding to original 5 populations.
+    f1:       Fraction of updated population 5 to be derived from population 1. 
+    f2:       Fraction of updated population 5 to be derived from population 2. 
+    f3:       Fraction of updated population 5 to be derived from population 3. 
+    f4:       Fraction of updated population 5 to be derived from population 3. 
+              A fraction (1-f1-f2-f3-f4) will be derived from the original pop 5.
+    xx,yy,zz,aa,bb: Mapping of points in phi to frequencies in populations 1,2,3,4, and 5.
+    &#34;&#34;&#34;
+    lower_w_index, upper_w_index, frac_lower, frac_upper, norm \
+            = _five_pop_admixture_intermediates(phi, f1, f2, f3, f4, xx,yy,zz,aa,bb, xx)
+
+    lower_cont = frac_lower * norm
+    upper_cont = frac_upper * norm
+
+    idx_m = numpy.arange(phi.shape[4])
+    for ii in range(phi.shape[0]):
+        for jj in range(phi.shape[1]):
+            for kk in range(phi.shape[2]):
+                for ll in range(phi.shape[3]):
+                    phi_int = numpy.zeros((phi.shape[4], phi.shape[4]))
+                    phi_int[idx_m, lower_w_index[ii,jj,kk,ll,:]] = lower_cont[ii,jj,kk,ll,:]
+                    phi_int[idx_m, upper_w_index[ii,jj,kk,ll,:]] = upper_cont[ii,jj,kk,ll,:]
+                    phi[ii,jj,kk,ll,:] = Numerics.trapz(phi_int, xx, axis=0)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.remove_pop"><code class="name flex">
+<span>def <span class="ident">remove_pop</span></span>(<span>phi, xx, popnum)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove a population from phi.</p>
+<p>Returns new phi with one fewer population.</p>
+<p>phi: phi corresponding to original populations
+xx: Mapping of points in phi to frequencies in population to be removed
+popnum: Population number to remove, numbering from 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_pop(phi, xx, popnum):
+    &#34;&#34;&#34;
+    Remove a population from phi.
+
+    Returns new phi with one fewer population.
+
+    phi: phi corresponding to original populations
+    xx: Mapping of points in phi to frequencies in population to be removed
+    popnum: Population number to remove, numbering from 1.
+    &#34;&#34;&#34;
+    return Numerics.trapz(phi, xx, axis=popnum-1)</code></pre>
+</details>
+</dd>
+<dt id="dadi.PhiManip.reorder_pops"><code class="name flex">
+<span>def <span class="ident">reorder_pops</span></span>(<span>phi, neworder)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get Spectrum with populations in new order</p>
+<p>Returns new Spectrum with same number of populations, but in a different order</p>
+<p>neworder: Integer list defining new order of populations, indexing the orginal
+populations from 1. Must contain all integers from 1 to number of pops.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reorder_pops(phi, neworder):
+    &#34;&#34;&#34;
+    Get Spectrum with populations in new order
+
+    Returns new Spectrum with same number of populations, but in a different order
+
+    neworder: Integer list defining new order of populations, indexing the orginal
+              populations from 1. Must contain all integers from 1 to number of pops.
+    &#34;&#34;&#34;
+    if sorted(neworder) != [_+1 for _ in range(phi.ndim)]:
+        raise(ValueError(&#34;neworder argument misspecified&#34;))
+    newaxes = [_-1 for _ in neworder]
+    phi = phi.transpose(newaxes)
+    
+    return phi</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.PhiManip.check_xx" href="#dadi.PhiManip.check_xx">check_xx</a></code></li>
+<li><code><a title="dadi.PhiManip.filter_pops" href="#dadi.PhiManip.filter_pops">filter_pops</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_1D" href="#dadi.PhiManip.phi_1D">phi_1D</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_1D_X" href="#dadi.PhiManip.phi_1D_X">phi_1D_X</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_1D_genic" href="#dadi.PhiManip.phi_1D_genic">phi_1D_genic</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_1D_snm" href="#dadi.PhiManip.phi_1D_snm">phi_1D_snm</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_1D_to_2D" href="#dadi.PhiManip.phi_1D_to_2D">phi_1D_to_2D</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_2D_admix_1_into_2" href="#dadi.PhiManip.phi_2D_admix_1_into_2">phi_2D_admix_1_into_2</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_2D_admix_2_into_1" href="#dadi.PhiManip.phi_2D_admix_2_into_1">phi_2D_admix_2_into_1</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_2D_to_3D" href="#dadi.PhiManip.phi_2D_to_3D">phi_2D_to_3D</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_2D_to_3D_admix" href="#dadi.PhiManip.phi_2D_to_3D_admix">phi_2D_to_3D_admix</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_2D_to_3D_split_1" href="#dadi.PhiManip.phi_2D_to_3D_split_1">phi_2D_to_3D_split_1</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_2D_to_3D_split_2" href="#dadi.PhiManip.phi_2D_to_3D_split_2">phi_2D_to_3D_split_2</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_3D_admix_1_and_2_into_3" href="#dadi.PhiManip.phi_3D_admix_1_and_2_into_3">phi_3D_admix_1_and_2_into_3</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_3D_admix_1_and_3_into_2" href="#dadi.PhiManip.phi_3D_admix_1_and_3_into_2">phi_3D_admix_1_and_3_into_2</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_3D_admix_2_and_3_into_1" href="#dadi.PhiManip.phi_3D_admix_2_and_3_into_1">phi_3D_admix_2_and_3_into_1</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_3D_to_4D" href="#dadi.PhiManip.phi_3D_to_4D">phi_3D_to_4D</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_4D_admix_into_1" href="#dadi.PhiManip.phi_4D_admix_into_1">phi_4D_admix_into_1</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_4D_admix_into_2" href="#dadi.PhiManip.phi_4D_admix_into_2">phi_4D_admix_into_2</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_4D_admix_into_3" href="#dadi.PhiManip.phi_4D_admix_into_3">phi_4D_admix_into_3</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_4D_admix_into_4" href="#dadi.PhiManip.phi_4D_admix_into_4">phi_4D_admix_into_4</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_4D_to_5D" href="#dadi.PhiManip.phi_4D_to_5D">phi_4D_to_5D</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_5D_admix_into_1" href="#dadi.PhiManip.phi_5D_admix_into_1">phi_5D_admix_into_1</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_5D_admix_into_2" href="#dadi.PhiManip.phi_5D_admix_into_2">phi_5D_admix_into_2</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_5D_admix_into_3" href="#dadi.PhiManip.phi_5D_admix_into_3">phi_5D_admix_into_3</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_5D_admix_into_4" href="#dadi.PhiManip.phi_5D_admix_into_4">phi_5D_admix_into_4</a></code></li>
+<li><code><a title="dadi.PhiManip.phi_5D_admix_into_5" href="#dadi.PhiManip.phi_5D_admix_into_5">phi_5D_admix_into_5</a></code></li>
+<li><code><a title="dadi.PhiManip.remove_pop" href="#dadi.PhiManip.remove_pop">remove_pop</a></code></li>
+<li><code><a title="dadi.PhiManip.reorder_pops" href="#dadi.PhiManip.reorder_pops">reorder_pops</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

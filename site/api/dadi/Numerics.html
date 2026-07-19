@@ -1,0 +1,1626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.Numerics API documentation</title>
+<meta name="description" content="Numerically useful functions, including extrapolation and default grid." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Numerics</code></h1>
+</header>
+<section id="section-intro">
+<p>Numerically useful functions, including extrapolation and default grid.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Numerically useful functions, including extrapolation and default grid.
+&#34;&#34;&#34;
+import logging
+logger = logging.getLogger(&#39;Numerics&#39;)
+
+import functools, os
+import numpy
+# Account for difference in scipy installations.
+from scipy.special import comb
+from scipy.special import gammaln, betaln, beta
+
+_multinomln_cache = {}
+def multinomln(N):
+    &#34;&#34;&#34;
+    Get the multinomial coefficient for an array N.
+    
+    N: array of integers.
+    &#34;&#34;&#34;
+    if tuple(N) not in _multinomln_cache:
+        N_sum = numpy.sum(N)
+        res = gammaln(N_sum+1)
+        for n in N:
+            res -= gammaln(n+1)
+        _multinomln_cache[tuple(N)] = res
+    return _multinomln_cache[tuple(N)]
+
+_BetaBinomln_cache = {}
+def BetaBinomln(i,n,a,b):
+    if (i,n,a,b) not in _BetaBinomln_cache:
+        _BetaBinomln_cache[i,n,a,b] = _lncomb(n,i) + betaln(i+a,n-i+b) - betaln(a,b)
+    return _BetaBinomln_cache[i,n,a,b]
+
+_part_cache = {}
+def cached_part(x,n,minval=0,maxval=2):
+    &#34;&#34;&#34;
+    Returns the integer partition summing to x with n entries and
+    min and max equal to 0 and 2 (or ploidy level), respectively.
+
+    This version uses a cache to speed up repeated evaluations.
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    &#34;&#34;&#34;
+    if (x,n,minval,maxval) not in _part_cache:
+        _part_cache[x,n,minval,maxval] = list(part(x,n,minval,maxval))
+    return _part_cache[x,n,minval,maxval]
+
+def part(x, n, minval=0, maxval=2):
+    &#34;&#34;&#34;
+    Returns the integer partition summing to x with n entries and
+    min and max equal to 0 and 2 (or ploidy level), respectively.
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    &#34;&#34;&#34;
+    if not n * minval &lt;= x &lt;= n * maxval:
+        return
+    elif n == 0:
+        yield []
+    else:
+        for val in range(minval, maxval + 1):
+            for p in part(x - val, n - 1, val, maxval):
+                yield [val] + p
+
+def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
+    &#34;&#34;&#34;
+    Returns the probability of observing i &#39;successes&#39; across
+    n beta binomial random variables with equal alpha,
+    beta, and number of trials.
+    &#34;&#34;&#34;
+    res=0.0
+    # Create list of BetaBinomln results, because list indexing
+    # is much faster than the function call and hashing inside
+    # the cached BetaBinomln. Caching in BetaBinomln is still
+    # marginally useful, even after caching at this level.
+    BetaBinomln_cache = [BetaBinomln(_,ploidy,alpha,beta) for _ in range(ploidy+1)]
+    partitions = cached_part(i,n,maxval=ploidy)
+    for prt in partitions:
+        tmp=0.0
+        # Partitions p have many repeated elements. It&#39;s faster
+        # to count each unique element and use that, rather than 
+        # iterating through all elements
+        coeff = [prt.count(p) for p in range(ploidy+1)]
+        for p in range(ploidy+1):
+            tmp += BetaBinomln_cache[p]*coeff[p]
+        tmp += multinomln(coeff)
+        res += numpy.exp(tmp)
+    return res
+
+def apply_anc_state_misid(fs, p_misid):
+    &#34;&#34;&#34;
+    Model ancestral state misidentification in a frequency spectrum.
+
+    fs: Input frequency spectrum.
+    p_misid: Fraction of sites assumed to suffer from ancestral
+             state misidentification.
+    &#34;&#34;&#34;
+    return (1-p_misid)*fs + p_misid*reverse_array(fs)
+
+def make_anc_state_misid_func(func):
+    &#34;&#34;&#34;
+    Generate a version of func accounting for ancestral state misidentification.
+
+    func: The function to which misidentification should be incorporated. It
+          is assumed that the first argument of the function is a params
+          vector, to which the misidentification parameter will be added.
+
+    Returns a new function which takes in a params vector that is one entry
+    longer than the original function. The fraction misidentification will
+    be the last entry in the new params vector.
+    &#34;&#34;&#34;
+    def misid_func(*args, **kwargs):
+        all_params = args[0]
+        p_misid = all_params[-1]
+        args = list(args)
+        args[0] = all_params[:-1]
+        fs = func(*args, **kwargs)
+        return apply_anc_state_misid(fs, p_misid)
+    misid_func.__name__ = func.__name__ + &#39;_misid&#39;
+    misid_func.__doc__ = func.__doc__
+    return misid_func
+
+def quadratic_grid(num_pts):
+    &#34;&#34;&#34;
+    A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.
+
+    The grid is weighted to be denser near 0 and 1, which is useful for
+    population genetic simulations. In between, it smoothly increases and
+    then decreases the step size.
+    &#34;&#34;&#34;
+    # Rounds down...
+    small_pts = int(num_pts / 10)
+    large_pts = num_pts - small_pts+1
+
+    grid = numpy.linspace(0, 0.05, small_pts)
+
+    # The interior grid spacings are a quadratic function of x, being
+    # approximately x1 at the boundaries. To achieve this, our actual grid
+    # positions must come from a cubic function.
+    # Here I calculate and apply the appropriate conditions:
+    #   x[q = 0] = x_start  =&gt;  d = x_start
+    #   dx/dq [q = 0] = dx_start =&gt; c = dx_start/dq
+    #   x[q = 1] = 1
+    #   dx/dq [q = 1] = dx_start
+    
+    q = numpy.linspace(0, 1, large_pts)
+    dq = q[1] - q[0]
+    x_start = grid[-1]
+    dx_start = grid[-1] - grid[-2]
+
+    d = x_start
+    c = dx_start/dq
+    b = -3*(-dq + dx_start + dq*x_start)/dq
+    a = -2 * b/3
+    grid = numpy.concatenate((grid[:-1], a*q**3 + b*q**2 + c*q + d))
+
+    return grid
+
+def estimate_best_exp_grid_crwd(ns):
+    &#34;&#34;&#34;
+    Emperical &#34;best&#34; values for exponential grid crowding.
+
+    These functional forms were estimated by running many simulations at
+    different parameter values and asking when a simulation at pts_l = [max(ns),
+    max(ns)+10, max(ns)+20] was most accurate.
+
+    These cannot be considered absolute best values, as that may depend on the
+    model. It does seem broadly true that the optimal value of crwd increases
+    with system size, up to a point.
+    &#34;&#34;&#34;
+    xx = numpy.mean(ns)
+    if len(ns) == 1:
+        return min(max(xx**0.4 / 1.3, 1), 9)
+    elif len(ns) == 2:
+        return min(max(1.5 * xx**0.4, 1), 8)
+    else:
+        raise ValueError(&#39;Due to computational expense, no optimum has been &#39;
+                         &#39;determined for 3D or more models. Try sticking with &#39;
+                         &#39;crwd=8.&#39;)
+
+def exponential_grid(pts, crwd=8.):
+    &#34;&#34;&#34;
+    An exponentially spaced grid. This is now the default grid.
+
+    crwd controls the degree to which grid points crowd against x=0 or x=1.
+    The value of crwd=8 seems to be a good default for integration with large
+    systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+    beyond this.
+
+    This grid was contributed by Simon Gravel.
+    &#34;&#34;&#34;
+    unif = numpy.linspace(-1,1,pts)
+    grid = 1./(1. + numpy.exp(-crwd*unif))
+
+    # Normalize
+    grid = (grid-grid[0])/(grid[-1]-grid[0])
+    return grid
+
+default_grid = exponential_grid
+
+def end_point_first_derivs(xx):
+    &#34;&#34;&#34;
+    Coefficients for a 5-point one-sided approximation of the first derivative.
+
+    xx: grid on which the data to be differentiated lives
+
+    Returns ret, a 2x5 array. ret[0] is the coefficients for an approximation
+    of the derivative at xx[0]. It is used by deriv = numpy.dot(ret[0],
+    yy[:5]). ret[1] is the coefficients for the derivative at xx[-1]. It can be
+    used by deriv = dot(ret[1][::-1], yy[-5:]). (Note that we need to reverse
+    the coefficient array here.
+    &#34;&#34;&#34;
+    output = numpy.zeros((2,5))
+
+    # These are the coefficients for a one-sided 1st derivative of f[0].
+    # So f&#39;[0] = d10_0 f[0] + d10_1 f[1] + d10_2 f[2] + d10_3 f[3] + d10_4 f[4]
+    # This expression is 4th order accurate.
+    # To derive it in Mathematica, use NDSolve`FiniteDifferenceDerivative[1, {xx[0], xx[1], xx[2], xx[3], xx[4]}, {f[0], f[1], f[2], f[3], f[4]}, DifferenceOrder -&gt; 4][[1]] // Simplify
+    d10_0 = (-1 + ((-1 + ((-2*xx[0] + xx[1] + xx[2]) * (-xx[0] + xx[3]))/ ((xx[0] - xx[1])*(-xx[0] + xx[2])))* (-xx[0] + xx[4]))/(-xx[0] + xx[3]))/ (-xx[0] + xx[4])
+    d10_1 = -(((xx[0] - xx[2])*(xx[0] - xx[3])*(xx[0] - xx[4]))/ ((xx[0] - xx[1])*(xx[1] - xx[2])*(xx[1] - xx[3])* (xx[1] - xx[4])))
+    d10_2 = ((xx[0] - xx[1])*(xx[0] - xx[3])*(xx[0] - xx[4]))/ ((xx[0] - xx[2])*(xx[1] - xx[2])*(xx[2] - xx[3])* (xx[2] - xx[4]))
+    d10_3 = -(((xx[0] - xx[1])*(xx[0] - xx[2])*(xx[0] - xx[4]))/ ((xx[0] - xx[3])*(-xx[1] + xx[3])* (-xx[2] + xx[3])*(xx[3] - xx[4])))
+    d10_4 = ((xx[0] - xx[1])*(xx[0] - xx[2])*(xx[0] - xx[3]))/ ((xx[0] - xx[4])*(xx[1] - xx[4])*(xx[2] - xx[4])* (xx[3] - xx[4]))
+
+    output[0] = (d10_0, d10_1, d10_2, d10_3, d10_4)
+
+    # These are the coefficients for a one-sided 1st derivative of f[-1].
+    # So f&#39;[-1] = d1m1_m1 f[-1] + d1m1_m2 f[-2] + d1m1_m3 f[-3] + d1m1_m4 f[-4]
+    #             + d1m1_m5 f[-5]
+    d1m1_m1 = (xx[-1]*((3*xx[-2] - 4*xx[-1])*xx[-1] + xx[-3]*(-2*xx[-2] + 3*xx[-1])) + xx[-4]*(xx[-3]*(xx[-2] - 2*xx[-1]) + xx[-1]*(-2*xx[-2] + 3*xx[-1])) + xx[-5]*(xx[-3]*(xx[-2] - 2*xx[-1]) + xx[-4]*(xx[-3] + xx[-2] - 2*xx[-1]) + xx[-1]*(-2*xx[-2] + 3*xx[-1])))/ ((xx[-4] - xx[-1])*(-xx[-5] + xx[-1])* (-xx[-3] + xx[-1])*(-xx[-2] + xx[-1]))
+    d1m1_m2 = ((xx[-5] - xx[-1])*(xx[-4] - xx[-1])* (xx[-3] - xx[-1]))/ ((xx[-5] - xx[-2])*(-xx[-4] + xx[-2])*(-xx[-3] + xx[-2])*(xx[-2] - xx[-1]))
+    d1m1_m3 = ((xx[-5] - xx[-1])*(xx[-4] - xx[-1])* (xx[-2] - xx[-1]))/ ((xx[-5] - xx[-3])*(-xx[-4] + xx[-3])* (xx[-3] - xx[-2])*(xx[-3] - xx[-1]))
+    d1m1_m4 = ((xx[-5] - xx[-1])*(xx[-3] - xx[-1])* (xx[-2] - xx[-1]))/ ((xx[-5] - xx[-4])*(xx[-4] - xx[-3])* (xx[-4] - xx[-2])*(xx[-4] - xx[-1])) 
+    d1m1_m5 = ((xx[-4] - xx[-1])*(xx[-3] - xx[-1])* (xx[-2] - xx[-1]))/ ((xx[-5] - xx[-4])*(xx[-5] - xx[-3])* (xx[-5] - xx[-2])*(-xx[-5] + xx[-1]))
+
+    output[1] = (d1m1_m1, d1m1_m2, d1m1_m3, d1m1_m4, d1m1_m5)
+
+    return output
+#
+def reverse_array(arr):
+    &#34;&#34;&#34;
+    Reverse an array along all axes, so arr[i,j] -&gt; arr[-(i+1),-(j+1)].
+    &#34;&#34;&#34;
+    reverse_slice = tuple(slice(None, None, -1) for ii in arr.shape)
+    return arr[reverse_slice]
+
+def intersect_masks(m1, m2):
+    &#34;&#34;&#34;
+    Versions of m1 and m2 that are masked where either m1 or m2 were masked.
+
+    If neither m1 or m2 is masked, just returns m1 and m2. Otherwise returns
+    m1 and m2 wrapped as masked_arrays with identical masks.
+    &#34;&#34;&#34;
+    ma = numpy.ma
+    if ma.isMaskedArray(m1) and ma.isMaskedArray(m2)\
+       and numpy.all(m1.mask == m2.mask):
+        return m1,m2
+
+    if ma.isMaskedArray(m1) or ma.isMaskedArray(m2):
+        joint_mask = ma.mask_or(ma.getmask(m1), ma.getmask(m2))
+
+        import dadi
+        m1 = dadi.Spectrum(m1, mask=joint_mask.copy())
+        m2 = dadi.Spectrum(m2, mask=joint_mask.copy())
+    return m1,m2
+
+def trapz(yy, xx=None, dx=None, axis=-1):
+    &#34;&#34;&#34;
+    Integrate yy(xx) along given axis using the composite trapezoidal rule.
+    
+    xx must be one-dimensional and len(xx) must equal yy.shape[axis].
+
+    This is modified from the SciPy version to work with n-D yy and 1-D xx.
+    &#34;&#34;&#34;
+    if (xx is None and dx is None)\
+       or (xx is not None and dx is not None):
+        raise ValueError(&#39;One and only one of xx or dx must be specified.&#39;)
+    elif (xx is not None) and (dx is None):
+        dx = numpy.diff(xx)
+    yy = numpy.asanyarray(yy)
+    nd = yy.ndim
+
+    if yy.shape[axis] != (len(dx)+1):
+        raise ValueError(&#39;Length of xx must be equal to length of yy along &#39;
+                         &#39;specified axis. Here len(xx) = %i and &#39;
+                         &#39;yy.shape[axis] = %i.&#39; % (len(dx)+1, yy.shape[axis]))
+
+    slice1 = [slice(None)]*nd
+    slice2 = [slice(None)]*nd
+    slice1[axis] = slice(1,None)
+    slice2[axis] = slice(None,-1)
+    sliceX = [numpy.newaxis]*nd
+    sliceX[axis] = slice(None)
+    slice1, slice2, sliceX = tuple(slice1), tuple(slice2), tuple(sliceX)
+
+    return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)
+
+def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
+    &#34;&#34;&#34;
+    Generate a version of func that extrapolates to infinitely many gridpoints.
+
+    func: A function that returns a single scalar or array and whose last
+        non-keyword argument is &#39;pts&#39;: the number of default_grid points to use
+        in calculation.  
+    extrap_x_l: An explict list of x values to use for extrapolation. If not 
+        provided, the extrapolation routine will look for &#39;.extrap_x&#39;
+        attributes on the results of func. The method Spectrum.from_phi will
+        add an extrap_x attribute to resulting Spectra, equal to the x-value
+        of the first non-zero grid point. An explicit list is useful if you
+        want to override this behavior for testing.
+    fail_mag:  Simon Gravel noted that there can be numerical instabilities in
+        extrapolation when working with large spectra that have very small
+        entires (of order 1e-24). To avoid these instabilities, we ignore the 
+        extrapolation values (and use the input result with the smallest x) 
+        if the extrapolation is more than fail_mag orders of magnitude away
+        from the smallest x input result.
+
+    Returns a new function whose last argument is a list of numbers of grid
+    points and that returns a result extrapolated to infinitely many grid
+    points.
+    &#34;&#34;&#34;
+    x_l_from_results = (extrap_x_l is None)
+
+    def extrap_func(*args, **kwargs):
+        # Separate pts (or pts_l) from arguments
+        if &#39;pts&#39; not in kwargs:
+            other_args, pts_l = args[:-1], args[-1]
+        else:
+            other_args = args
+            pts_l = kwargs[&#39;pts&#39;]
+            del kwargs[&#39;pts&#39;]
+
+        if &#39;no_extrap&#39; in kwargs:
+            no_extrap = True
+            del kwargs[&#39;no_extrap&#39;]
+        else:
+            no_extrap = False
+
+        if numpy.isscalar(pts_l):
+            pts_l = [pts_l]
+
+        # Create a sub-function that fixes all other arguments and only
+        # takes in pts.
+        partial_func = functools.partial(func, *other_args, **kwargs)
+
+        ##
+        ## The commented-out code implements distribution of fs calculations
+        ## among multiple processors. Unfortunately, it doesn&#39;t work with
+        ## iPython, because pickling functions is very fragile in the
+        ## interactive interpreter. If we had some sort of data structure for
+        ## defining models, then this would be much easier to implement. Note
+        ## that there might still be issues on Windows systems, because of its
+        ## poor-man&#39;s version of fork().
+        ##
+        #import cPickle, multiprocessing
+        #try:
+        #    # Test whether sub-function is picklable. If not, pool.map will
+        #    # hang.
+        #    cPickle.dumps(partial_func)
+        #    pool = multiprocessing.Pool()
+        #    result_l = pool.map(partial_func, pts_l)
+        #    pool.close()
+        #except (cPickle.PicklingError, TypeError):
+        #    print(&#39;Function passed to extrap func must be picklable for &#39;
+        #          &#39;multi-processor executation.&#39;)
+        #    import sys
+        #    sys.exit()
+
+        result_l = list(map(partial_func, pts_l))
+        if no_extrap:
+            return result_l
+
+        if x_l_from_results:
+            try:
+                x_l = [r.extrap_x for r in result_l]
+            except AttributeError:
+                raise ValueError(&#34;Extrapolation function error: No explicit extrapolation x_l provided, and results do not have &#39;extrap_x&#39; attributes. If this is an FS extrapolation, check your from_phi method.&#34;)
+        else:
+            x_l = extrap_x_l
+
+        if extrap_log:
+            result_l = [numpy.log(r) for r in result_l]
+
+        # Extrapolate
+        if len(pts_l) == 1:
+            ex_result = result_l[0]
+        elif len(pts_l) == 2:
+            ex_result = linear_extrap(result_l, x_l)
+        elif len(pts_l) == 3:
+            ex_result = quadratic_extrap(result_l, x_l)
+        elif len(pts_l) == 4:
+            ex_result = cubic_extrap(result_l, x_l)
+        elif len(pts_l) == 5:
+            ex_result = quartic_extrap(result_l, x_l)
+        elif len(pts_l) == 6:
+            ex_result = quintic_extrap(result_l, x_l)
+        else:
+            raise ValueError(&#39;Number of calculations to use for extrapolation &#39;
+                             &#39;must be between 1 and 6&#39;)
+
+        if extrap_log:
+            ex_result = numpy.exp(ex_result)
+
+        # Simon Gravel noted that there can be numerical instabilities in
+        # extrapolation when working with large spectra that have very small
+        # entires (of order 1e-24).
+        # To avoid these instabilities, we ignore the extrapolation values
+        # if it is too different from the input values.
+        if len(pts_l) &gt; 1:
+            # Assume the best input value comes from the smallest grid.
+            best_result = result_l[numpy.argmin(x_l)]
+            if extrap_log:
+                best_result = numpy.exp(best_result)
+
+            # The extrapolation is deemed to have failed if it results in a
+            # value more than fail_mag orders of magnitude away from the 
+            # best input value.
+            extrap_failed = abs(numpy.log10(ex_result/best_result)) &gt; fail_mag
+            if numpy.any(extrap_failed):
+                logger.warning(&#39;Extrapolation may have failed. Check resulting &#39;
+                            &#39;frequency spectrum for unexpected results.&#39;)
+
+            # For entries that fail, use the &#34;best&#34; input result.
+            ex_result[extrap_failed] = best_result[extrap_failed]
+
+        try:
+            ex_result.pop_ids = result_l[0].pop_ids
+        except AttributeError:
+            pass
+        return ex_result
+
+    extrap_func.__name__ = func.__name__
+    extrap_func.__doc__ = func.__doc__
+
+    return extrap_func
+
+def make_extrap_log_func(func, extrap_x_l=None):
+    &#34;&#34;&#34;
+    Generate a version of func that extrapolates to infinitely many gridpoints.
+
+    Note that extrapolation here is done on the *log* of the function result,
+    so this will fail if any returned values are &lt; 0. It does seem to be better
+    behaved for SFS calculation.
+
+    func: A function whose last argument is the number of Numerics.default_grid 
+          points to use in calculation and that returns a single scalar or 
+          array.
+    extrap_x_l: An explict list of x values to use for extrapolation. If not 
+         provided, the extrapolation routine will look for &#39;.extrap_x&#39;
+         attributes on the results of func. The method Spectrum.from_phi will
+         add an extrap_x attribute to resulting Spectra, equal to the x-value
+         of the first non-zero grid point. An explicit list is useful if you
+         want to override this behavior for testing.
+
+    Returns a new function whose last argument is a list of numbers of grid
+    points and that returns a result extrapolated to infinitely many grid
+    points.
+    &#34;&#34;&#34;
+    return make_extrap_func(func, extrap_x_l=extrap_x_l, extrap_log=True)
+
+_projection_cache = {}
+def _lncomb(N,k):
+    &#34;&#34;&#34;
+    Log of N choose k.
+    &#34;&#34;&#34;
+    return gammaln(N+1) - gammaln(k+1) - gammaln(N-k+1)
+
+def _cached_projection(proj_to, proj_from, hits):
+    &#34;&#34;&#34;
+    Coefficients for projection from a different fs size.
+
+    proj_to: Numper of samples to project down to.
+    proj_from: Numper of samples to project from.
+    hits: Number of derived alleles projecting from.
+    &#34;&#34;&#34;
+    key = (proj_to, proj_from, hits)
+    try:
+        return _projection_cache[key]
+    except KeyError:
+        pass
+
+    if numpy.isscalar(proj_to) and numpy.isscalar(proj_from)\
+       and proj_from &lt; proj_to:
+        # Short-circuit calculation.
+        contrib = numpy.zeros(proj_to+1)
+    else:
+        # We set numpy&#39;s error reporting so that it will ignore underflows, 
+        # because those just imply that contrib is 0.
+        previous_err_state = numpy.seterr(under=&#39;ignore&#39;, divide=&#39;raise&#39;,
+                                          over=&#39;raise&#39;, invalid=&#39;raise&#39;)
+        proj_hits = numpy.arange(proj_to+1)
+        # For large sample sizes, we need to do the calculation in logs, and it
+        # is accurate enough for small sizes as well.
+        lncontrib = _lncomb(proj_to,proj_hits)
+        lncontrib += _lncomb(proj_from-proj_to,hits-proj_hits)
+        lncontrib -= _lncomb(proj_from, hits)
+        contrib = numpy.exp(lncontrib)
+        numpy.seterr(**previous_err_state)
+    _projection_cache[key] = contrib
+    return contrib
+
+def array_from_file(fid, return_comments=False):
+    &#34;&#34;&#34;
+    Read array from file.
+
+    fid: string with file name to read from or an open file object.
+    return_comments: If True, the return value is (fs, comments), where
+                     comments is a list of strings containing the comments
+                     from the file (without #&#39;s).
+
+    The file format is:
+        # Any number of comment lines beginning with a &#39;#&#39;
+        A single line containing N integers giving the dimensions of the fs
+          array. So this line would be &#39;5 5 3&#39; for an SFS that was 5x5x3.
+          (That would be 4x4x2 *samples*.)
+        A single line giving the array elements. The order of elements is 
+          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+    &#34;&#34;&#34;
+    newfile = False
+    # Try to read from fid. If we can&#39;t, assume it&#39;s something that we can
+    # use to open a file.
+    if not hasattr(fid, &#39;read&#39;):
+        newfile = True
+        fid = open(fid, &#39;r&#39;)
+
+    line = fid.readline()
+    # Strip out the comments
+    comments = []
+    while line.startswith(&#39;#&#39;):
+        comments.append(line[1:].strip())
+        line = fid.readline()
+
+    # Read the shape of the data
+    shape = tuple([int(d) for d in line.split()])
+
+    data = numpy.fromfile(fid, count=numpy.product(shape), sep=&#39; &#39;)
+    # fromfile returns a 1-d array. Reshape it to the proper form.
+    data = data.reshape(*shape)
+
+    # If we opened a new file, clean it up.
+    if newfile:
+        fid.close()
+
+    if not return_comments:
+        return data
+    else:
+        return data,comments
+
+def array_to_file(data, fid, precision=16, comment_lines = []):
+    &#34;&#34;&#34;
+    Write array to file.
+
+    data: array to write
+    fid: string with file name to write to or an open file object.
+    precision: precision with which to write out entries of the SFS. (They 
+               are formated via %.&lt;p&gt;g, where &lt;p&gt; is the precision.)
+    comment lines: list of strings to be used as comment lines in the header
+                   of the output file.
+
+    The file format is:
+        # Any number of comment lines beginning with a &#39;#&#39;
+        A single line containing N integers giving the dimensions of the fs
+          array. So this line would be &#39;5 5 3&#39; for an SFS that was 5x5x3.
+          (That would be 4x4x2 *samples*.)
+        A single line giving the array elements. The order of elements is 
+          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+    &#34;&#34;&#34;
+    # Open the file object.
+    newfile = False
+    if not hasattr(fid, &#39;write&#39;):
+        newfile = True
+        fid = open(fid, &#39;w&#39;)
+
+    # Write comments
+    for line in comment_lines:
+        fid.write(&#39;# &#39;)
+        fid.write(line.strip())
+        fid.write(os.linesep)
+
+    # Write out the shape of the fs
+    for elem in data.shape:
+        fid.write(&#39;%i &#39; % elem)
+    fid.write(os.linesep)
+
+    if hasattr(data, &#39;filled&#39;):
+        # Masked entries in the fs will go in as &#39;nan&#39;
+        data = data.filled()
+    # Write to file
+    data.tofile(fid, &#39; &#39;, &#39;%%.%ig&#39; % precision)
+    fid.write(os.linesep)
+
+    # Close file
+    if newfile:
+        fid.close()
+
+def linear_extrap(ys, xs):
+    &#34;&#34;&#34;
+    Linearly extrapolate from two x,y pairs to x = 0.
+
+    ys: y values from x,y pairs. Note that these can be arrays of values.
+    xs: x values from x,y pairs. These should be scalars.
+
+    Returns extrapolated y at x=0.
+    &#34;&#34;&#34;
+    y1,y2 = ys
+    x1,x2 = xs
+    return (x2 * y1 - x1 * y2)/(x2 - x1)
+
+def quadratic_extrap(ys, xs):
+    &#34;&#34;&#34;
+    Quadratically extrapolate from three x,y pairs to x = 0.
+
+    ys: y values from x,y pairs. Note that these can be arrays of values.
+    xs: x values from x,y pairs. These should be scalars.
+
+    Returns extrapolated y at x=0.
+    &#34;&#34;&#34;
+    y1,y2,y3 = ys
+    x1,x2,x3 = xs
+    return x2*x3/((x1-x2)*(x1-x3)) * y1 + x1*x3/((x2-x1)*(x2-x3)) * y2\
+            + x1*x2/((x3-x1)*(x3-x2)) * y3</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Numerics.BetaBinomConvolution"><code class="name flex">
+<span>def <span class="ident">BetaBinomConvolution</span></span>(<span>i, n, alpha, beta, ploidy=2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the probability of observing i 'successes' across
+n beta binomial random variables with equal alpha,
+beta, and number of trials.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def BetaBinomConvolution(i,n,alpha,beta,ploidy=2):
+    &#34;&#34;&#34;
+    Returns the probability of observing i &#39;successes&#39; across
+    n beta binomial random variables with equal alpha,
+    beta, and number of trials.
+    &#34;&#34;&#34;
+    res=0.0
+    # Create list of BetaBinomln results, because list indexing
+    # is much faster than the function call and hashing inside
+    # the cached BetaBinomln. Caching in BetaBinomln is still
+    # marginally useful, even after caching at this level.
+    BetaBinomln_cache = [BetaBinomln(_,ploidy,alpha,beta) for _ in range(ploidy+1)]
+    partitions = cached_part(i,n,maxval=ploidy)
+    for prt in partitions:
+        tmp=0.0
+        # Partitions p have many repeated elements. It&#39;s faster
+        # to count each unique element and use that, rather than 
+        # iterating through all elements
+        coeff = [prt.count(p) for p in range(ploidy+1)]
+        for p in range(ploidy+1):
+            tmp += BetaBinomln_cache[p]*coeff[p]
+        tmp += multinomln(coeff)
+        res += numpy.exp(tmp)
+    return res</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.BetaBinomln"><code class="name flex">
+<span>def <span class="ident">BetaBinomln</span></span>(<span>i, n, a, b)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def BetaBinomln(i,n,a,b):
+    if (i,n,a,b) not in _BetaBinomln_cache:
+        _BetaBinomln_cache[i,n,a,b] = _lncomb(n,i) + betaln(i+a,n-i+b) - betaln(a,b)
+    return _BetaBinomln_cache[i,n,a,b]</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.apply_anc_state_misid"><code class="name flex">
+<span>def <span class="ident">apply_anc_state_misid</span></span>(<span>fs, p_misid)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Model ancestral state misidentification in a frequency spectrum.</p>
+<p>fs: Input frequency spectrum.
+p_misid: Fraction of sites assumed to suffer from ancestral
+state misidentification.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_anc_state_misid(fs, p_misid):
+    &#34;&#34;&#34;
+    Model ancestral state misidentification in a frequency spectrum.
+
+    fs: Input frequency spectrum.
+    p_misid: Fraction of sites assumed to suffer from ancestral
+             state misidentification.
+    &#34;&#34;&#34;
+    return (1-p_misid)*fs + p_misid*reverse_array(fs)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.array_from_file"><code class="name flex">
+<span>def <span class="ident">array_from_file</span></span>(<span>fid, return_comments=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read array from file.</p>
+<p>fid: string with file name to read from or an open file object.
+return_comments: If True, the return value is (fs, comments), where
+comments is a list of strings containing the comments
+from the file (without #'s).</p>
+<p>The file format is:
+# Any number of comment lines beginning with a '#'
+A single line containing N integers giving the dimensions of the fs
+array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+(That would be 4x4x2 <em>samples</em>.)
+A single line giving the array elements. The order of elements is
+e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def array_from_file(fid, return_comments=False):
+    &#34;&#34;&#34;
+    Read array from file.
+
+    fid: string with file name to read from or an open file object.
+    return_comments: If True, the return value is (fs, comments), where
+                     comments is a list of strings containing the comments
+                     from the file (without #&#39;s).
+
+    The file format is:
+        # Any number of comment lines beginning with a &#39;#&#39;
+        A single line containing N integers giving the dimensions of the fs
+          array. So this line would be &#39;5 5 3&#39; for an SFS that was 5x5x3.
+          (That would be 4x4x2 *samples*.)
+        A single line giving the array elements. The order of elements is 
+          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+    &#34;&#34;&#34;
+    newfile = False
+    # Try to read from fid. If we can&#39;t, assume it&#39;s something that we can
+    # use to open a file.
+    if not hasattr(fid, &#39;read&#39;):
+        newfile = True
+        fid = open(fid, &#39;r&#39;)
+
+    line = fid.readline()
+    # Strip out the comments
+    comments = []
+    while line.startswith(&#39;#&#39;):
+        comments.append(line[1:].strip())
+        line = fid.readline()
+
+    # Read the shape of the data
+    shape = tuple([int(d) for d in line.split()])
+
+    data = numpy.fromfile(fid, count=numpy.product(shape), sep=&#39; &#39;)
+    # fromfile returns a 1-d array. Reshape it to the proper form.
+    data = data.reshape(*shape)
+
+    # If we opened a new file, clean it up.
+    if newfile:
+        fid.close()
+
+    if not return_comments:
+        return data
+    else:
+        return data,comments</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.array_to_file"><code class="name flex">
+<span>def <span class="ident">array_to_file</span></span>(<span>data, fid, precision=16, comment_lines=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Write array to file.</p>
+<p>data: array to write
+fid: string with file name to write to or an open file object.
+precision: precision with which to write out entries of the SFS. (They
+are formated via %.<p>g, where <p> is the precision.)
+comment lines: list of strings to be used as comment lines in the header
+of the output file.</p>
+<p>The file format is:
+# Any number of comment lines beginning with a '#'
+A single line containing N integers giving the dimensions of the fs
+array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+(That would be 4x4x2 <em>samples</em>.)
+A single line giving the array elements. The order of elements is
+e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] &hellip; fs[0,1,0] fs[0,1,1] &hellip;</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def array_to_file(data, fid, precision=16, comment_lines = []):
+    &#34;&#34;&#34;
+    Write array to file.
+
+    data: array to write
+    fid: string with file name to write to or an open file object.
+    precision: precision with which to write out entries of the SFS. (They 
+               are formated via %.&lt;p&gt;g, where &lt;p&gt; is the precision.)
+    comment lines: list of strings to be used as comment lines in the header
+                   of the output file.
+
+    The file format is:
+        # Any number of comment lines beginning with a &#39;#&#39;
+        A single line containing N integers giving the dimensions of the fs
+          array. So this line would be &#39;5 5 3&#39; for an SFS that was 5x5x3.
+          (That would be 4x4x2 *samples*.)
+        A single line giving the array elements. The order of elements is 
+          e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+    &#34;&#34;&#34;
+    # Open the file object.
+    newfile = False
+    if not hasattr(fid, &#39;write&#39;):
+        newfile = True
+        fid = open(fid, &#39;w&#39;)
+
+    # Write comments
+    for line in comment_lines:
+        fid.write(&#39;# &#39;)
+        fid.write(line.strip())
+        fid.write(os.linesep)
+
+    # Write out the shape of the fs
+    for elem in data.shape:
+        fid.write(&#39;%i &#39; % elem)
+    fid.write(os.linesep)
+
+    if hasattr(data, &#39;filled&#39;):
+        # Masked entries in the fs will go in as &#39;nan&#39;
+        data = data.filled()
+    # Write to file
+    data.tofile(fid, &#39; &#39;, &#39;%%.%ig&#39; % precision)
+    fid.write(os.linesep)
+
+    # Close file
+    if newfile:
+        fid.close()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.cached_part"><code class="name flex">
+<span>def <span class="ident">cached_part</span></span>(<span>x, n, minval=0, maxval=2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the integer partition summing to x with n entries and
+min and max equal to 0 and 2 (or ploidy level), respectively.</p>
+<p>This version uses a cache to speed up repeated evaluations.</p>
+<p>x: integer summand.
+n: number of partition entries.
+minval: minimum value allowed for partition entries.
+maxval: maximum value allowed for partition entries.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cached_part(x,n,minval=0,maxval=2):
+    &#34;&#34;&#34;
+    Returns the integer partition summing to x with n entries and
+    min and max equal to 0 and 2 (or ploidy level), respectively.
+
+    This version uses a cache to speed up repeated evaluations.
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    &#34;&#34;&#34;
+    if (x,n,minval,maxval) not in _part_cache:
+        _part_cache[x,n,minval,maxval] = list(part(x,n,minval,maxval))
+    return _part_cache[x,n,minval,maxval]</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.default_grid"><code class="name flex">
+<span>def <span class="ident">default_grid</span></span>(<span>pts, crwd=8.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An exponentially spaced grid. This is now the default grid.</p>
+<p>crwd controls the degree to which grid points crowd against x=0 or x=1.
+The value of crwd=8 seems to be a good default for integration with large
+systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+beyond this.</p>
+<p>This grid was contributed by Simon Gravel.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exponential_grid(pts, crwd=8.):
+    &#34;&#34;&#34;
+    An exponentially spaced grid. This is now the default grid.
+
+    crwd controls the degree to which grid points crowd against x=0 or x=1.
+    The value of crwd=8 seems to be a good default for integration with large
+    systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+    beyond this.
+
+    This grid was contributed by Simon Gravel.
+    &#34;&#34;&#34;
+    unif = numpy.linspace(-1,1,pts)
+    grid = 1./(1. + numpy.exp(-crwd*unif))
+
+    # Normalize
+    grid = (grid-grid[0])/(grid[-1]-grid[0])
+    return grid</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.end_point_first_derivs"><code class="name flex">
+<span>def <span class="ident">end_point_first_derivs</span></span>(<span>xx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Coefficients for a 5-point one-sided approximation of the first derivative.</p>
+<p>xx: grid on which the data to be differentiated lives</p>
+<p>Returns ret, a 2x5 array. ret[0] is the coefficients for an approximation
+of the derivative at xx[0]. It is used by deriv = numpy.dot(ret[0],
+yy[:5]). ret[1] is the coefficients for the derivative at xx[-1]. It can be
+used by deriv = dot(ret[1][::-1], yy[-5:]). (Note that we need to reverse
+the coefficient array here.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def end_point_first_derivs(xx):
+    &#34;&#34;&#34;
+    Coefficients for a 5-point one-sided approximation of the first derivative.
+
+    xx: grid on which the data to be differentiated lives
+
+    Returns ret, a 2x5 array. ret[0] is the coefficients for an approximation
+    of the derivative at xx[0]. It is used by deriv = numpy.dot(ret[0],
+    yy[:5]). ret[1] is the coefficients for the derivative at xx[-1]. It can be
+    used by deriv = dot(ret[1][::-1], yy[-5:]). (Note that we need to reverse
+    the coefficient array here.
+    &#34;&#34;&#34;
+    output = numpy.zeros((2,5))
+
+    # These are the coefficients for a one-sided 1st derivative of f[0].
+    # So f&#39;[0] = d10_0 f[0] + d10_1 f[1] + d10_2 f[2] + d10_3 f[3] + d10_4 f[4]
+    # This expression is 4th order accurate.
+    # To derive it in Mathematica, use NDSolve`FiniteDifferenceDerivative[1, {xx[0], xx[1], xx[2], xx[3], xx[4]}, {f[0], f[1], f[2], f[3], f[4]}, DifferenceOrder -&gt; 4][[1]] // Simplify
+    d10_0 = (-1 + ((-1 + ((-2*xx[0] + xx[1] + xx[2]) * (-xx[0] + xx[3]))/ ((xx[0] - xx[1])*(-xx[0] + xx[2])))* (-xx[0] + xx[4]))/(-xx[0] + xx[3]))/ (-xx[0] + xx[4])
+    d10_1 = -(((xx[0] - xx[2])*(xx[0] - xx[3])*(xx[0] - xx[4]))/ ((xx[0] - xx[1])*(xx[1] - xx[2])*(xx[1] - xx[3])* (xx[1] - xx[4])))
+    d10_2 = ((xx[0] - xx[1])*(xx[0] - xx[3])*(xx[0] - xx[4]))/ ((xx[0] - xx[2])*(xx[1] - xx[2])*(xx[2] - xx[3])* (xx[2] - xx[4]))
+    d10_3 = -(((xx[0] - xx[1])*(xx[0] - xx[2])*(xx[0] - xx[4]))/ ((xx[0] - xx[3])*(-xx[1] + xx[3])* (-xx[2] + xx[3])*(xx[3] - xx[4])))
+    d10_4 = ((xx[0] - xx[1])*(xx[0] - xx[2])*(xx[0] - xx[3]))/ ((xx[0] - xx[4])*(xx[1] - xx[4])*(xx[2] - xx[4])* (xx[3] - xx[4]))
+
+    output[0] = (d10_0, d10_1, d10_2, d10_3, d10_4)
+
+    # These are the coefficients for a one-sided 1st derivative of f[-1].
+    # So f&#39;[-1] = d1m1_m1 f[-1] + d1m1_m2 f[-2] + d1m1_m3 f[-3] + d1m1_m4 f[-4]
+    #             + d1m1_m5 f[-5]
+    d1m1_m1 = (xx[-1]*((3*xx[-2] - 4*xx[-1])*xx[-1] + xx[-3]*(-2*xx[-2] + 3*xx[-1])) + xx[-4]*(xx[-3]*(xx[-2] - 2*xx[-1]) + xx[-1]*(-2*xx[-2] + 3*xx[-1])) + xx[-5]*(xx[-3]*(xx[-2] - 2*xx[-1]) + xx[-4]*(xx[-3] + xx[-2] - 2*xx[-1]) + xx[-1]*(-2*xx[-2] + 3*xx[-1])))/ ((xx[-4] - xx[-1])*(-xx[-5] + xx[-1])* (-xx[-3] + xx[-1])*(-xx[-2] + xx[-1]))
+    d1m1_m2 = ((xx[-5] - xx[-1])*(xx[-4] - xx[-1])* (xx[-3] - xx[-1]))/ ((xx[-5] - xx[-2])*(-xx[-4] + xx[-2])*(-xx[-3] + xx[-2])*(xx[-2] - xx[-1]))
+    d1m1_m3 = ((xx[-5] - xx[-1])*(xx[-4] - xx[-1])* (xx[-2] - xx[-1]))/ ((xx[-5] - xx[-3])*(-xx[-4] + xx[-3])* (xx[-3] - xx[-2])*(xx[-3] - xx[-1]))
+    d1m1_m4 = ((xx[-5] - xx[-1])*(xx[-3] - xx[-1])* (xx[-2] - xx[-1]))/ ((xx[-5] - xx[-4])*(xx[-4] - xx[-3])* (xx[-4] - xx[-2])*(xx[-4] - xx[-1])) 
+    d1m1_m5 = ((xx[-4] - xx[-1])*(xx[-3] - xx[-1])* (xx[-2] - xx[-1]))/ ((xx[-5] - xx[-4])*(xx[-5] - xx[-3])* (xx[-5] - xx[-2])*(-xx[-5] + xx[-1]))
+
+    output[1] = (d1m1_m1, d1m1_m2, d1m1_m3, d1m1_m4, d1m1_m5)
+
+    return output</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.estimate_best_exp_grid_crwd"><code class="name flex">
+<span>def <span class="ident">estimate_best_exp_grid_crwd</span></span>(<span>ns)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Emperical "best" values for exponential grid crowding.</p>
+<p>These functional forms were estimated by running many simulations at
+different parameter values and asking when a simulation at pts_l = [max(ns),
+max(ns)+10, max(ns)+20] was most accurate.</p>
+<p>These cannot be considered absolute best values, as that may depend on the
+model. It does seem broadly true that the optimal value of crwd increases
+with system size, up to a point.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def estimate_best_exp_grid_crwd(ns):
+    &#34;&#34;&#34;
+    Emperical &#34;best&#34; values for exponential grid crowding.
+
+    These functional forms were estimated by running many simulations at
+    different parameter values and asking when a simulation at pts_l = [max(ns),
+    max(ns)+10, max(ns)+20] was most accurate.
+
+    These cannot be considered absolute best values, as that may depend on the
+    model. It does seem broadly true that the optimal value of crwd increases
+    with system size, up to a point.
+    &#34;&#34;&#34;
+    xx = numpy.mean(ns)
+    if len(ns) == 1:
+        return min(max(xx**0.4 / 1.3, 1), 9)
+    elif len(ns) == 2:
+        return min(max(1.5 * xx**0.4, 1), 8)
+    else:
+        raise ValueError(&#39;Due to computational expense, no optimum has been &#39;
+                         &#39;determined for 3D or more models. Try sticking with &#39;
+                         &#39;crwd=8.&#39;)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.exponential_grid"><code class="name flex">
+<span>def <span class="ident">exponential_grid</span></span>(<span>pts, crwd=8.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An exponentially spaced grid. This is now the default grid.</p>
+<p>crwd controls the degree to which grid points crowd against x=0 or x=1.
+The value of crwd=8 seems to be a good default for integration with large
+systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+beyond this.</p>
+<p>This grid was contributed by Simon Gravel.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exponential_grid(pts, crwd=8.):
+    &#34;&#34;&#34;
+    An exponentially spaced grid. This is now the default grid.
+
+    crwd controls the degree to which grid points crowd against x=0 or x=1.
+    The value of crwd=8 seems to be a good default for integration with large
+    systems. See estimate_best_exp_grid_crwd for some empirical optimizations
+    beyond this.
+
+    This grid was contributed by Simon Gravel.
+    &#34;&#34;&#34;
+    unif = numpy.linspace(-1,1,pts)
+    grid = 1./(1. + numpy.exp(-crwd*unif))
+
+    # Normalize
+    grid = (grid-grid[0])/(grid[-1]-grid[0])
+    return grid</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.intersect_masks"><code class="name flex">
+<span>def <span class="ident">intersect_masks</span></span>(<span>m1, m2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Versions of m1 and m2 that are masked where either m1 or m2 were masked.</p>
+<p>If neither m1 or m2 is masked, just returns m1 and m2. Otherwise returns
+m1 and m2 wrapped as masked_arrays with identical masks.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def intersect_masks(m1, m2):
+    &#34;&#34;&#34;
+    Versions of m1 and m2 that are masked where either m1 or m2 were masked.
+
+    If neither m1 or m2 is masked, just returns m1 and m2. Otherwise returns
+    m1 and m2 wrapped as masked_arrays with identical masks.
+    &#34;&#34;&#34;
+    ma = numpy.ma
+    if ma.isMaskedArray(m1) and ma.isMaskedArray(m2)\
+       and numpy.all(m1.mask == m2.mask):
+        return m1,m2
+
+    if ma.isMaskedArray(m1) or ma.isMaskedArray(m2):
+        joint_mask = ma.mask_or(ma.getmask(m1), ma.getmask(m2))
+
+        import dadi
+        m1 = dadi.Spectrum(m1, mask=joint_mask.copy())
+        m2 = dadi.Spectrum(m2, mask=joint_mask.copy())
+    return m1,m2</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.linear_extrap"><code class="name flex">
+<span>def <span class="ident">linear_extrap</span></span>(<span>ys, xs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Linearly extrapolate from two x,y pairs to x = 0.</p>
+<p>ys: y values from x,y pairs. Note that these can be arrays of values.
+xs: x values from x,y pairs. These should be scalars.</p>
+<p>Returns extrapolated y at x=0.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def linear_extrap(ys, xs):
+    &#34;&#34;&#34;
+    Linearly extrapolate from two x,y pairs to x = 0.
+
+    ys: y values from x,y pairs. Note that these can be arrays of values.
+    xs: x values from x,y pairs. These should be scalars.
+
+    Returns extrapolated y at x=0.
+    &#34;&#34;&#34;
+    y1,y2 = ys
+    x1,x2 = xs
+    return (x2 * y1 - x1 * y2)/(x2 - x1)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.make_anc_state_misid_func"><code class="name flex">
+<span>def <span class="ident">make_anc_state_misid_func</span></span>(<span>func)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a version of func accounting for ancestral state misidentification.</p>
+<p>func: The function to which misidentification should be incorporated. It
+is assumed that the first argument of the function is a params
+vector, to which the misidentification parameter will be added.</p>
+<p>Returns a new function which takes in a params vector that is one entry
+longer than the original function. The fraction misidentification will
+be the last entry in the new params vector.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_anc_state_misid_func(func):
+    &#34;&#34;&#34;
+    Generate a version of func accounting for ancestral state misidentification.
+
+    func: The function to which misidentification should be incorporated. It
+          is assumed that the first argument of the function is a params
+          vector, to which the misidentification parameter will be added.
+
+    Returns a new function which takes in a params vector that is one entry
+    longer than the original function. The fraction misidentification will
+    be the last entry in the new params vector.
+    &#34;&#34;&#34;
+    def misid_func(*args, **kwargs):
+        all_params = args[0]
+        p_misid = all_params[-1]
+        args = list(args)
+        args[0] = all_params[:-1]
+        fs = func(*args, **kwargs)
+        return apply_anc_state_misid(fs, p_misid)
+    misid_func.__name__ = func.__name__ + &#39;_misid&#39;
+    misid_func.__doc__ = func.__doc__
+    return misid_func</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.make_extrap_func"><code class="name flex">
+<span>def <span class="ident">make_extrap_func</span></span>(<span>func, extrap_x_l=None, extrap_log=False, fail_mag=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a version of func that extrapolates to infinitely many gridpoints.</p>
+<p>func: A function that returns a single scalar or array and whose last
+non-keyword argument is 'pts': the number of default_grid points to use
+in calculation.<br>
+extrap_x_l: An explict list of x values to use for extrapolation. If not
+provided, the extrapolation routine will look for '.extrap_x'
+attributes on the results of func. The method Spectrum.from_phi will
+add an extrap_x attribute to resulting Spectra, equal to the x-value
+of the first non-zero grid point. An explicit list is useful if you
+want to override this behavior for testing.
+fail_mag:
+Simon Gravel noted that there can be numerical instabilities in
+extrapolation when working with large spectra that have very small
+entires (of order 1e-24). To avoid these instabilities, we ignore the
+extrapolation values (and use the input result with the smallest x)
+if the extrapolation is more than fail_mag orders of magnitude away
+from the smallest x input result.</p>
+<p>Returns a new function whose last argument is a list of numbers of grid
+points and that returns a result extrapolated to infinitely many grid
+points.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_extrap_func(func, extrap_x_l=None, extrap_log=False, fail_mag=10):
+    &#34;&#34;&#34;
+    Generate a version of func that extrapolates to infinitely many gridpoints.
+
+    func: A function that returns a single scalar or array and whose last
+        non-keyword argument is &#39;pts&#39;: the number of default_grid points to use
+        in calculation.  
+    extrap_x_l: An explict list of x values to use for extrapolation. If not 
+        provided, the extrapolation routine will look for &#39;.extrap_x&#39;
+        attributes on the results of func. The method Spectrum.from_phi will
+        add an extrap_x attribute to resulting Spectra, equal to the x-value
+        of the first non-zero grid point. An explicit list is useful if you
+        want to override this behavior for testing.
+    fail_mag:  Simon Gravel noted that there can be numerical instabilities in
+        extrapolation when working with large spectra that have very small
+        entires (of order 1e-24). To avoid these instabilities, we ignore the 
+        extrapolation values (and use the input result with the smallest x) 
+        if the extrapolation is more than fail_mag orders of magnitude away
+        from the smallest x input result.
+
+    Returns a new function whose last argument is a list of numbers of grid
+    points and that returns a result extrapolated to infinitely many grid
+    points.
+    &#34;&#34;&#34;
+    x_l_from_results = (extrap_x_l is None)
+
+    def extrap_func(*args, **kwargs):
+        # Separate pts (or pts_l) from arguments
+        if &#39;pts&#39; not in kwargs:
+            other_args, pts_l = args[:-1], args[-1]
+        else:
+            other_args = args
+            pts_l = kwargs[&#39;pts&#39;]
+            del kwargs[&#39;pts&#39;]
+
+        if &#39;no_extrap&#39; in kwargs:
+            no_extrap = True
+            del kwargs[&#39;no_extrap&#39;]
+        else:
+            no_extrap = False
+
+        if numpy.isscalar(pts_l):
+            pts_l = [pts_l]
+
+        # Create a sub-function that fixes all other arguments and only
+        # takes in pts.
+        partial_func = functools.partial(func, *other_args, **kwargs)
+
+        ##
+        ## The commented-out code implements distribution of fs calculations
+        ## among multiple processors. Unfortunately, it doesn&#39;t work with
+        ## iPython, because pickling functions is very fragile in the
+        ## interactive interpreter. If we had some sort of data structure for
+        ## defining models, then this would be much easier to implement. Note
+        ## that there might still be issues on Windows systems, because of its
+        ## poor-man&#39;s version of fork().
+        ##
+        #import cPickle, multiprocessing
+        #try:
+        #    # Test whether sub-function is picklable. If not, pool.map will
+        #    # hang.
+        #    cPickle.dumps(partial_func)
+        #    pool = multiprocessing.Pool()
+        #    result_l = pool.map(partial_func, pts_l)
+        #    pool.close()
+        #except (cPickle.PicklingError, TypeError):
+        #    print(&#39;Function passed to extrap func must be picklable for &#39;
+        #          &#39;multi-processor executation.&#39;)
+        #    import sys
+        #    sys.exit()
+
+        result_l = list(map(partial_func, pts_l))
+        if no_extrap:
+            return result_l
+
+        if x_l_from_results:
+            try:
+                x_l = [r.extrap_x for r in result_l]
+            except AttributeError:
+                raise ValueError(&#34;Extrapolation function error: No explicit extrapolation x_l provided, and results do not have &#39;extrap_x&#39; attributes. If this is an FS extrapolation, check your from_phi method.&#34;)
+        else:
+            x_l = extrap_x_l
+
+        if extrap_log:
+            result_l = [numpy.log(r) for r in result_l]
+
+        # Extrapolate
+        if len(pts_l) == 1:
+            ex_result = result_l[0]
+        elif len(pts_l) == 2:
+            ex_result = linear_extrap(result_l, x_l)
+        elif len(pts_l) == 3:
+            ex_result = quadratic_extrap(result_l, x_l)
+        elif len(pts_l) == 4:
+            ex_result = cubic_extrap(result_l, x_l)
+        elif len(pts_l) == 5:
+            ex_result = quartic_extrap(result_l, x_l)
+        elif len(pts_l) == 6:
+            ex_result = quintic_extrap(result_l, x_l)
+        else:
+            raise ValueError(&#39;Number of calculations to use for extrapolation &#39;
+                             &#39;must be between 1 and 6&#39;)
+
+        if extrap_log:
+            ex_result = numpy.exp(ex_result)
+
+        # Simon Gravel noted that there can be numerical instabilities in
+        # extrapolation when working with large spectra that have very small
+        # entires (of order 1e-24).
+        # To avoid these instabilities, we ignore the extrapolation values
+        # if it is too different from the input values.
+        if len(pts_l) &gt; 1:
+            # Assume the best input value comes from the smallest grid.
+            best_result = result_l[numpy.argmin(x_l)]
+            if extrap_log:
+                best_result = numpy.exp(best_result)
+
+            # The extrapolation is deemed to have failed if it results in a
+            # value more than fail_mag orders of magnitude away from the 
+            # best input value.
+            extrap_failed = abs(numpy.log10(ex_result/best_result)) &gt; fail_mag
+            if numpy.any(extrap_failed):
+                logger.warning(&#39;Extrapolation may have failed. Check resulting &#39;
+                            &#39;frequency spectrum for unexpected results.&#39;)
+
+            # For entries that fail, use the &#34;best&#34; input result.
+            ex_result[extrap_failed] = best_result[extrap_failed]
+
+        try:
+            ex_result.pop_ids = result_l[0].pop_ids
+        except AttributeError:
+            pass
+        return ex_result
+
+    extrap_func.__name__ = func.__name__
+    extrap_func.__doc__ = func.__doc__
+
+    return extrap_func</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.make_extrap_log_func"><code class="name flex">
+<span>def <span class="ident">make_extrap_log_func</span></span>(<span>func, extrap_x_l=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a version of func that extrapolates to infinitely many gridpoints.</p>
+<p>Note that extrapolation here is done on the <em>log</em> of the function result,
+so this will fail if any returned values are &lt; 0. It does seem to be better
+behaved for SFS calculation.</p>
+<p>func: A function whose last argument is the number of Numerics.default_grid
+points to use in calculation and that returns a single scalar or
+array.
+extrap_x_l: An explict list of x values to use for extrapolation. If not
+provided, the extrapolation routine will look for '.extrap_x'
+attributes on the results of func. The method Spectrum.from_phi will
+add an extrap_x attribute to resulting Spectra, equal to the x-value
+of the first non-zero grid point. An explicit list is useful if you
+want to override this behavior for testing.</p>
+<p>Returns a new function whose last argument is a list of numbers of grid
+points and that returns a result extrapolated to infinitely many grid
+points.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_extrap_log_func(func, extrap_x_l=None):
+    &#34;&#34;&#34;
+    Generate a version of func that extrapolates to infinitely many gridpoints.
+
+    Note that extrapolation here is done on the *log* of the function result,
+    so this will fail if any returned values are &lt; 0. It does seem to be better
+    behaved for SFS calculation.
+
+    func: A function whose last argument is the number of Numerics.default_grid 
+          points to use in calculation and that returns a single scalar or 
+          array.
+    extrap_x_l: An explict list of x values to use for extrapolation. If not 
+         provided, the extrapolation routine will look for &#39;.extrap_x&#39;
+         attributes on the results of func. The method Spectrum.from_phi will
+         add an extrap_x attribute to resulting Spectra, equal to the x-value
+         of the first non-zero grid point. An explicit list is useful if you
+         want to override this behavior for testing.
+
+    Returns a new function whose last argument is a list of numbers of grid
+    points and that returns a result extrapolated to infinitely many grid
+    points.
+    &#34;&#34;&#34;
+    return make_extrap_func(func, extrap_x_l=extrap_x_l, extrap_log=True)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.multinomln"><code class="name flex">
+<span>def <span class="ident">multinomln</span></span>(<span>N)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the multinomial coefficient for an array N.</p>
+<p>N: array of integers.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multinomln(N):
+    &#34;&#34;&#34;
+    Get the multinomial coefficient for an array N.
+    
+    N: array of integers.
+    &#34;&#34;&#34;
+    if tuple(N) not in _multinomln_cache:
+        N_sum = numpy.sum(N)
+        res = gammaln(N_sum+1)
+        for n in N:
+            res -= gammaln(n+1)
+        _multinomln_cache[tuple(N)] = res
+    return _multinomln_cache[tuple(N)]</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.part"><code class="name flex">
+<span>def <span class="ident">part</span></span>(<span>x, n, minval=0, maxval=2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the integer partition summing to x with n entries and
+min and max equal to 0 and 2 (or ploidy level), respectively.</p>
+<p>x: integer summand.
+n: number of partition entries.
+minval: minimum value allowed for partition entries.
+maxval: maximum value allowed for partition entries.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def part(x, n, minval=0, maxval=2):
+    &#34;&#34;&#34;
+    Returns the integer partition summing to x with n entries and
+    min and max equal to 0 and 2 (or ploidy level), respectively.
+    
+    x: integer summand.
+    n: number of partition entries.
+    minval: minimum value allowed for partition entries.
+    maxval: maximum value allowed for partition entries.
+    &#34;&#34;&#34;
+    if not n * minval &lt;= x &lt;= n * maxval:
+        return
+    elif n == 0:
+        yield []
+    else:
+        for val in range(minval, maxval + 1):
+            for p in part(x - val, n - 1, val, maxval):
+                yield [val] + p</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.quadratic_extrap"><code class="name flex">
+<span>def <span class="ident">quadratic_extrap</span></span>(<span>ys, xs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Quadratically extrapolate from three x,y pairs to x = 0.</p>
+<p>ys: y values from x,y pairs. Note that these can be arrays of values.
+xs: x values from x,y pairs. These should be scalars.</p>
+<p>Returns extrapolated y at x=0.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def quadratic_extrap(ys, xs):
+    &#34;&#34;&#34;
+    Quadratically extrapolate from three x,y pairs to x = 0.
+
+    ys: y values from x,y pairs. Note that these can be arrays of values.
+    xs: x values from x,y pairs. These should be scalars.
+
+    Returns extrapolated y at x=0.
+    &#34;&#34;&#34;
+    y1,y2,y3 = ys
+    x1,x2,x3 = xs
+    return x2*x3/((x1-x2)*(x1-x3)) * y1 + x1*x3/((x2-x1)*(x2-x3)) * y2\
+            + x1*x2/((x3-x1)*(x3-x2)) * y3</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.quadratic_grid"><code class="name flex">
+<span>def <span class="ident">quadratic_grid</span></span>(<span>num_pts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.</p>
+<p>The grid is weighted to be denser near 0 and 1, which is useful for
+population genetic simulations. In between, it smoothly increases and
+then decreases the step size.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def quadratic_grid(num_pts):
+    &#34;&#34;&#34;
+    A nonuniform grid of points on [0,1] with a quadratic pattern of spacings.
+
+    The grid is weighted to be denser near 0 and 1, which is useful for
+    population genetic simulations. In between, it smoothly increases and
+    then decreases the step size.
+    &#34;&#34;&#34;
+    # Rounds down...
+    small_pts = int(num_pts / 10)
+    large_pts = num_pts - small_pts+1
+
+    grid = numpy.linspace(0, 0.05, small_pts)
+
+    # The interior grid spacings are a quadratic function of x, being
+    # approximately x1 at the boundaries. To achieve this, our actual grid
+    # positions must come from a cubic function.
+    # Here I calculate and apply the appropriate conditions:
+    #   x[q = 0] = x_start  =&gt;  d = x_start
+    #   dx/dq [q = 0] = dx_start =&gt; c = dx_start/dq
+    #   x[q = 1] = 1
+    #   dx/dq [q = 1] = dx_start
+    
+    q = numpy.linspace(0, 1, large_pts)
+    dq = q[1] - q[0]
+    x_start = grid[-1]
+    dx_start = grid[-1] - grid[-2]
+
+    d = x_start
+    c = dx_start/dq
+    b = -3*(-dq + dx_start + dq*x_start)/dq
+    a = -2 * b/3
+    grid = numpy.concatenate((grid[:-1], a*q**3 + b*q**2 + c*q + d))
+
+    return grid</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.reverse_array"><code class="name flex">
+<span>def <span class="ident">reverse_array</span></span>(<span>arr)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reverse an array along all axes, so arr[i,j] -&gt; arr[-(i+1),-(j+1)].</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reverse_array(arr):
+    &#34;&#34;&#34;
+    Reverse an array along all axes, so arr[i,j] -&gt; arr[-(i+1),-(j+1)].
+    &#34;&#34;&#34;
+    reverse_slice = tuple(slice(None, None, -1) for ii in arr.shape)
+    return arr[reverse_slice]</code></pre>
+</details>
+</dd>
+<dt id="dadi.Numerics.trapz"><code class="name flex">
+<span>def <span class="ident">trapz</span></span>(<span>yy, xx=None, dx=None, axis=-1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate yy(xx) along given axis using the composite trapezoidal rule.</p>
+<p>xx must be one-dimensional and len(xx) must equal yy.shape[axis].</p>
+<p>This is modified from the SciPy version to work with n-D yy and 1-D xx.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def trapz(yy, xx=None, dx=None, axis=-1):
+    &#34;&#34;&#34;
+    Integrate yy(xx) along given axis using the composite trapezoidal rule.
+    
+    xx must be one-dimensional and len(xx) must equal yy.shape[axis].
+
+    This is modified from the SciPy version to work with n-D yy and 1-D xx.
+    &#34;&#34;&#34;
+    if (xx is None and dx is None)\
+       or (xx is not None and dx is not None):
+        raise ValueError(&#39;One and only one of xx or dx must be specified.&#39;)
+    elif (xx is not None) and (dx is None):
+        dx = numpy.diff(xx)
+    yy = numpy.asanyarray(yy)
+    nd = yy.ndim
+
+    if yy.shape[axis] != (len(dx)+1):
+        raise ValueError(&#39;Length of xx must be equal to length of yy along &#39;
+                         &#39;specified axis. Here len(xx) = %i and &#39;
+                         &#39;yy.shape[axis] = %i.&#39; % (len(dx)+1, yy.shape[axis]))
+
+    slice1 = [slice(None)]*nd
+    slice2 = [slice(None)]*nd
+    slice1[axis] = slice(1,None)
+    slice2[axis] = slice(None,-1)
+    sliceX = [numpy.newaxis]*nd
+    sliceX[axis] = slice(None)
+    slice1, slice2, sliceX = tuple(slice1), tuple(slice2), tuple(sliceX)
+
+    return numpy.sum(dx[sliceX] * (yy[slice1]+yy[slice2])/2.0, axis=axis)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Numerics.BetaBinomConvolution" href="#dadi.Numerics.BetaBinomConvolution">BetaBinomConvolution</a></code></li>
+<li><code><a title="dadi.Numerics.BetaBinomln" href="#dadi.Numerics.BetaBinomln">BetaBinomln</a></code></li>
+<li><code><a title="dadi.Numerics.apply_anc_state_misid" href="#dadi.Numerics.apply_anc_state_misid">apply_anc_state_misid</a></code></li>
+<li><code><a title="dadi.Numerics.array_from_file" href="#dadi.Numerics.array_from_file">array_from_file</a></code></li>
+<li><code><a title="dadi.Numerics.array_to_file" href="#dadi.Numerics.array_to_file">array_to_file</a></code></li>
+<li><code><a title="dadi.Numerics.cached_part" href="#dadi.Numerics.cached_part">cached_part</a></code></li>
+<li><code><a title="dadi.Numerics.default_grid" href="#dadi.Numerics.default_grid">default_grid</a></code></li>
+<li><code><a title="dadi.Numerics.end_point_first_derivs" href="#dadi.Numerics.end_point_first_derivs">end_point_first_derivs</a></code></li>
+<li><code><a title="dadi.Numerics.estimate_best_exp_grid_crwd" href="#dadi.Numerics.estimate_best_exp_grid_crwd">estimate_best_exp_grid_crwd</a></code></li>
+<li><code><a title="dadi.Numerics.exponential_grid" href="#dadi.Numerics.exponential_grid">exponential_grid</a></code></li>
+<li><code><a title="dadi.Numerics.intersect_masks" href="#dadi.Numerics.intersect_masks">intersect_masks</a></code></li>
+<li><code><a title="dadi.Numerics.linear_extrap" href="#dadi.Numerics.linear_extrap">linear_extrap</a></code></li>
+<li><code><a title="dadi.Numerics.make_anc_state_misid_func" href="#dadi.Numerics.make_anc_state_misid_func">make_anc_state_misid_func</a></code></li>
+<li><code><a title="dadi.Numerics.make_extrap_func" href="#dadi.Numerics.make_extrap_func">make_extrap_func</a></code></li>
+<li><code><a title="dadi.Numerics.make_extrap_log_func" href="#dadi.Numerics.make_extrap_log_func">make_extrap_log_func</a></code></li>
+<li><code><a title="dadi.Numerics.multinomln" href="#dadi.Numerics.multinomln">multinomln</a></code></li>
+<li><code><a title="dadi.Numerics.part" href="#dadi.Numerics.part">part</a></code></li>
+<li><code><a title="dadi.Numerics.quadratic_extrap" href="#dadi.Numerics.quadratic_extrap">quadratic_extrap</a></code></li>
+<li><code><a title="dadi.Numerics.quadratic_grid" href="#dadi.Numerics.quadratic_grid">quadratic_grid</a></code></li>
+<li><code><a title="dadi.Numerics.reverse_array" href="#dadi.Numerics.reverse_array">reverse_array</a></code></li>
+<li><code><a title="dadi.Numerics.trapz" href="#dadi.Numerics.trapz">trapz</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

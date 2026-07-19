@@ -1,0 +1,1666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.Triallele.numerics API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Triallele.numerics</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import numpy as np
+from scipy.sparse import lil_matrix
+from scipy.sparse import identity
+from scipy.sparse.linalg import spsolve
+from scipy.integrate import trapz
+from scipy.special import gamma
+from numpy import newaxis as nuax
+from dadi import Numerics
+from dadi.Spectrum_mod import Spectrum
+import dadi
+import math
+import pickle
+
+from dadi.Triallele.TriSpectrum_mod import TriSpectrum
+
+def grid_dx(x):
+    &#34;&#34;&#34;
+    We use uniform grids in x, using np.linspace(0,1,numpts)
+    Grid spacing Delta, which is halved at the first and last grid points.
+    &#34;&#34;&#34;
+    return (np.concatenate((np.diff(x),np.array([0]))) + np.concatenate((np.array([0]),np.diff(x))))/2
+
+def grid_dx_2d(x,dx):
+    &#34;&#34;&#34;
+    The two dimensional grid spacing over the domain.
+    Grid points lie along the diagonal boundary, and Delta for those points is halved
+    &#34;&#34;&#34;
+    DXX = dx[:,nuax]*dx[nuax,:]
+    for ii in range(len(x)):
+        DXX[ii,len(x)-ii-1] *= 1./2
+    return DXX
+
+def int2(DXX,U):
+    &#34;&#34;&#34;
+    Integrate the density function over the domain
+    DXX - two dimensional grid
+    U - density function
+    &#34;&#34;&#34;
+    return np.sum(DXX*U)
+
+def domain(x):
+    &#34;&#34;&#34;
+    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
+    &#34;&#34;&#34;
+    tol = 1e-12
+    U01 = np.ones((len(x),len(x)))
+    XX = x[:,nuax] + x[nuax,:]
+    U01[np.where(XX &gt; 1+tol)] = 0
+    return U01
+
+### transition matrices
+
+def transition1(x, dx, U01, sig1, sig2):
+    &#34;&#34;&#34;
+    Implicit transition matrix for the ADI components of the discretization of the diffusion
+    Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    sig1/2 - population scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    print(&#34;using numpy, not cython&#34;)
+    PV = np.zeros((len(x),3,len(x)))
+    PM = np.zeros((len(x),3,len(x)))
+    for jj in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if jj &gt; 0:
+            V = x*(1-x)
+            V[np.max(np.where(U01[:,jj] == 1))] = 0
+            for ii in np.where(U01[:,jj] == 1)[0][:-1]:
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == np.where(U01[:,jj] == 1)[0][:-1][-1]:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        if jj == 0:
+            V = x*(1-x)
+            for ii in range(len(x)):
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == len(x)-1:
+                    A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        
+        PV[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[jj,1,:] = np.diagonal(A)
+        PV[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
+        x2 = x[jj]
+        sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[:,jj] == 1)[0][-1]] = 0
+        for ii in np.where(U01[:,jj] == 1)[0]:
+            if ii == 0:
+                A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+            elif ii == np.where(U01[:,jj] == 1)[0][-1]:
+                A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
+                A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
+            else:
+                A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+        PM[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[jj,1,:] = np.diagonal(A)
+        PM[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM
+
+def transition2(x, dx, U01, sig1, sig2):
+    &#34;&#34;&#34;
+    Implicit transition matrix for the ADI components of the discretization of the diffusion
+    Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    sig1/2 - population scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    PV = np.zeros((len(x),3,len(x)))
+    PM = np.zeros((len(x),3,len(x)))
+    for ii in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if ii &gt; 0:
+            V = x*(1-x)
+            V[np.max(np.where(U01[ii,:] == 1))] = 0
+            for jj in np.where(U01[ii,:] == 1)[0][:-1]:
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == np.where(U01[ii,:] == 1)[0][:-1][-1]:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        if ii == 0:
+            V = x*(1-x)
+            for jj in range(len(x)):
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == len(x)-1:
+                    A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        
+        PV[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[ii,1,:] = np.diagonal(A)
+        PV[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
+        x1 = x[ii]
+        sig_new = sig2*(1-x-x1)/(1-x) + (sig2-sig1)*x1/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[ii,:] == 1)[0][-1]] = 0
+        for jj in np.where(U01[ii,:] == 1)[0]:
+            if jj == 0:
+                A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+            elif jj == np.where(U01[ii,:] == 1)[0][-1]:
+                A[jj,jj-1] += 1/dx[jj] * 2 * ( - M[jj-1] ) / 2
+                A[jj,jj] += 1/dx[jj] * 2 * ( - M[jj] ) / 2
+            else:
+                A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                A[jj,jj] += 0 # 1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+        
+        PM[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[ii,1,:] = np.diagonal(A)
+        PM[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM
+
+def transition12(x, dx, U01):
+    &#34;&#34;&#34;
+    Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x*y*phi)
+    As with the ADI components, final transition matrix is given by I + dt/nu*P
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    &#34;&#34;&#34;        
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    C = lil_matrix((len(x)**2,len(x)**2))
+    for ii in range(len(x)-1)[:-1]:
+        for jj in range(len(x)-1)[:-1]:
+            if U01[ii+2,jj+2] == 1 or U01[ii+1,jj+2] == 1 or U01[ii+2,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj+1 &lt; len(x) and U01[ii+1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
+                    
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+            
+            elif U01[ii+1,jj+1] == 1 or U01[ii+1,jj] == 1 or U01[ii,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+    ii = 0
+    jj = len(x)-2
+    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+    ii = len(x)-2
+    jj = 0
+    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+    return C
+
+def transition1D(x, dx, sig):
+    &#34;&#34;&#34;
+    transition matrix for one dimensional integration
+    x - grid
+    dx - grid spacing
+    dt - timestep for integration
+    sig - selection coefficient
+    nu - relative population size
+    &#34;&#34;&#34;
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    PV = np.zeros((len(x),len(x)))
+    PM = np.zeros((len(x),len(x)))
+    for ii in range(len(x)):
+        if ii == 0:
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            PV[ii,ii+1] = -1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii])
+            PM[ii,ii+1] = sig / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+        elif ii == len(x) - 1:
+            PV[ii,ii-1] = - 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1])
+            PM[ii,ii-1] = sig / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
+        else:
+            PV[ii,ii-1] = - 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1])
+            PM[ii,ii-1] = - sig / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            PV[ii,ii+1] = - 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii])
+            PM[ii,ii+1] = sig / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+    return PV,PM
+
+transition1D_cache = {}
+def cached_transition1D(numpts,sig):
+    key = (numpts,sig)
+    try:
+        return transition1D_cache[key]
+    except KeyError:
+        pass
+    x = np.linspace(0,1,numpts+1)
+    dx = grid_dx(x)
+    V,M = transition1D(x,dx,sig)
+    transition1D_cache[key] = [V,M]
+    return transition1D_cache[key]
+
+def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
+    &#34;&#34;&#34;
+    Numerically determine the amount of density that should be lost to the diagonal boundary.
+    Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
+    We then check the fraction of density that is lost to z=1.
+    If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1*x/(x+y) + sig2*y/(x+y)
+    x - one dimensional grid of domain
+    dt - time step of integration
+    nu - relative population size
+    sig1,sig2 - selection coefficients
+    &#34;&#34;&#34;
+    dx = grid_dx(x)
+    P = np.zeros((len(x),len(x)))
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if x[ii]+x[jj] &lt; 1.0 and x[ii]+x[jj] &gt; .75:
+                sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj])
+                V,M = cached_transition1D(len(x)-1,sig)
+                P1D = np.eye(len(x)) + dt*(V/nu+M)
+                y = np.zeros(len(x))
+                y[ii+jj] = 1./dx[ii+jj]
+                y = advance1D(y,P1D)
+                prob = y[-1]*dx[-1]
+                P[ii,jj] = prob
+                if ii+jj == len(x)-2:
+                    if ii==1:
+                        V,M = cached_transition1D(len(x)-1,sig1)
+                        P1D = np.eye(len(x)) + dt*(V/nu+M)
+                        y = np.zeros(len(x))
+                        y[ii] = 1./dx[ii]
+                        y = advance1D(y,P1D)
+                        prob2 = y[0]*dx[0]
+                        P[ii,jj] += prob2
+                    elif jj==1:
+                        V,M = cached_transition1D(len(x)-1,sig2)
+                        P1D = np.eye(len(x)) + dt*(V/nu+M)
+                        y = np.zeros(len(x))
+                        y[jj] = 1./dx[jj]
+                        y = advance1D(y,P1D)
+                        prob2 = y[0]*dx[0]
+                        P[ii,jj] += prob2
+    
+    P[:,0] = 0
+    P[0,:] = 0
+    return P
+
+def move_density_to_bdry(x,phi,P):
+    &#34;&#34;&#34;
+    P tells us how much should be removed, by multiplying phi*P
+    Take that density and instead of deleting it, move straight to boundary
+    P - stores how much denstity from each grid point should be moved to diagonal
+    &#34;&#34;&#34;
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if P[ii,jj] == 0:
+                continue
+            else:
+                amnt = P[ii,jj]
+                s = ii+jj
+                if ii == 1 and jj == len(x)-3:
+                    phi[ii+1,jj] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii,jj+1] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii-1,jj] += phi[ii,jj]*amnt/2 * 2
+                    phi[ii,jj] *= (1-amnt)
+                elif ii == len(x)-3 and jj == 1:
+                    phi[ii+1,jj] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii,jj+1] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii,jj-1] += phi[ii,jj]*amnt/2 * 2
+                    phi[ii,jj] *= (1-amnt)
+                elif (len(x)-1-s) % 2 == 1:
+                    # split between two points
+                    dist = (len(x)-1-s) // 2
+                    phi[ii+dist+1,jj+dist] += phi[ii,jj]*amnt/2. * 2
+                    phi[ii+dist,jj+dist+1] += phi[ii,jj]*amnt/2. * 2
+                    phi[ii,jj] *= (1-amnt)
+                else:
+                    # straight to boundary grid point
+                    dist = (len(x)-1-s) // 2
+                    phi[ii+dist,jj+dist] += phi[ii,jj]*amnt * 2
+                    phi[ii,jj] *= (1-amnt)
+
+    return phi
+
+### forward integration methods
+
+def advance_adi(U,U01,P1,P2,x,ii):
+    &#34;&#34;&#34;
+    Integrate the ADI components forward in time, alternating which direction occurs first
+    U - density function
+    U01 - stores which points are in the domain
+    P1,P2 - transition matrices
+    ii - count of integration step
+    &#34;&#34;&#34;
+    if np.mod(ii,2) == 0:
+        for jj in range(len(x)):
+            if np.sum(U01[:,jj]) &gt; 1:
+                U[:,jj] = dadi.Integration.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
+        for ii in range(len(x)):
+            if np.sum(U01[ii,:]) &gt; 1:
+                U[ii,:] = dadi.Integration.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
+    else:
+        for ii in range(len(x)):
+            if np.sum(U01[ii,:]) &gt; 1:
+                U[ii,:] = dadi.Integration.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
+        for jj in range(len(x)):
+            if np.sum(U01[:,jj]) &gt; 1:
+                U[:,jj] = dadi.Integration.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
+    return U
+
+def advance_cov(U,C,x,dx):
+    &#34;&#34;&#34;
+    Explicit integration of the covariance term, using scipy&#39;s sparse matrix for C
+    U - density function
+    C - transition matrix
+    &#34;&#34;&#34;
+    U = ( C * U.reshape(len(x)**2)).reshape(len(x),len(x))
+    return U
+
+def advance1D(u,P):
+    &#34;&#34;&#34;
+    tridiag breakdown for integration along the diagonal boundary
+    u - density along that diagonal
+    P - transition matrix
+    &#34;&#34;&#34;
+    a = np.concatenate((np.array([0]),np.diag(P,-1)))
+    b = np.diag(P)
+    c = np.concatenate((np.diag(P,1),np.array([0])))
+    u = dadi.Integration.tridiag.tridiag(a,b,c,u)
+    return u
+
+def advance_line(x,phi,P):
+    &#34;&#34;&#34;
+    Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
+    P - one dimensional transition matrix for the diagonal boundary
+    &#34;&#34;&#34;
+    u = np.diag(np.fliplr(phi))
+    u = advance1D(u,P)
+    for ii in range(len(x)):
+        phi[ii,len(x) - ii - 1] = u[ii]
+    return phi
+
+### sampling methods
+
+sample_cache = {}
+def sample(phi, ns, x):
+    &#34;&#34;&#34;
+    Obtain the expected sample frequency spectrum from the density function
+    &#34;&#34;&#34;
+    dx = grid_dx(x)
+    DXX = grid_dx_2d(x,dx)
+
+    # Assume ns is typically a list of length 1, if not, make it into one.
+    try:
+        ns = tuple(ns)
+    except TypeError:
+        ns = (ns,)
+
+    # We cache calculations of several big matrices that will be re-used 
+    # within and between integrations.
+    key = (ns, tuple(x))
+    if key not in sample_cache:
+        this_cache = {}
+        for ii in range(1,ns[0]-1):
+            # Create our cache
+            this_cache[ii] = (1-x[:,nuax]-x[nuax,:])**ii
+            # Somewhat ugly hack to use negative values to store second array
+            # to cache.
+            this_cache[-ii] = x[nuax,:]**ii
+        sample_cache[key] = this_cache
+    else:
+        this_cache = sample_cache[key]
+
+    #dx = grid_dx(x)
+    F = np.zeros((ns[0]+1,ns[0]+1))
+    prod_phi = DXX*phi
+    for ii in range(len(F)):
+        prod_x = prod_phi * x[:,nuax]**ii
+        for jj in range(len(F)):
+            if ii+jj &lt; ns[0] and ii != 0 and jj != 0:
+                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
+                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(prod_x * this_cache[-jj] * this_cache[ns[0]-ii-jj])
+    F = TriSpectrum(F)
+    F.folded_major = False
+    F.folded_ancestral = False
+    F.extrap_x = x[1]
+    return F
+
+def trinomial(ns,ii,jj):
+    &#34;&#34;&#34;
+    Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values
+    &#34;&#34;&#34;
+    return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(ns-ii-jj+1))
+
+
+### various methods for spectrum manipulation or other methods needed for data fitting
+
+def misidentification(F, p):
+    &#34;&#34;&#34;
+    Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
+    Then refold to return folded spectrum
+    &#34;&#34;&#34;
+    F = TriF(np.zeros((len(F),len(F))))
+    for ii in range(len(F))[1:-1]:
+        for jj in range(len(F))[1:ii+1]:
+            if ii+jj &lt; len(F):
+                F[ii,jj] += (1 - p) * F[ii,jj]
+                F[len(F)-1-ii-jj,jj] += p/2. * F[ii,jj]
+                F[ii,len(F)-1-ii-jj] += p/2. * F[ii,jj]
+    
+    return F.fold()
+    
+def fold(spectrum):
+    &#34;&#34;&#34;
+    Note: this is now handled in the TriSpectrum class
+    Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
+    &#34;&#34;&#34;
+    spectrum = TriSpectrum(spectrum)
+    if spectrum.folded_major == True:
+        print(&#34;error: trying to fold a spectrum that is already folded&#34;)
+        return spectrum
+    else:
+        spectrum = (spectrum + np.transpose(spectrum))
+        for ii in range(len(spectrum)):
+            spectrum[ii,ii] = spectrum[ii,ii]/2
+        spectrum.mask[0,:] = True
+        spectrum.mask[:,0] = True
+        for ii in range(len(spectrum)):
+            spectrum.mask[ii,ii+1:] = True
+            spectrum.mask[ii,len(spectrum)-1-ii:] = True
+        return spectrum
+
+def univariate_lognormal_pdf(x,sigma,mu):
+    &#34;&#34;&#34;
+    Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))
+    &#34;&#34;&#34;
+    return 1./(x*sigma*np.sqrt(2*math.pi)) * np.exp ( -(np.log(x) - mu)**2 / (2*sigma**2) )
+
+def bivariate_lognormal_pdf(xx, params):
+    &#34;&#34;&#34;
+    mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
+    We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn&#39;t necessary for the general bivariate lognormal distribution
+    &#34;&#34;&#34;
+    mu1, mu2, sigma1, sigma2, rho = params
+    norm = 1./(2 * np.pi * (sigma1*sigma2) * np.sqrt(1-rho**2) * np.outer(xx,xx) )
+    q = 1/(1-rho**2) * ( ((np.log(xx[nuax,:])-mu1)/sigma1)**2 - 2*rho*((np.log(xx[nuax,:])-mu1)/sigma1)*((np.log(xx[:,nuax])-mu2)/sigma2) + ((np.log(xx[:,nuax])-mu2)/sigma2)**2 )
+    prob = norm * np.exp( -q/2. )
+    
+    return prob
+
+def ms_demo_params_to_dadi(nu_ms,tau_ms):
+    &#34;&#34;&#34;
+    convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)
+    &#34;&#34;&#34;
+    return 1./nu_ms,2*tau_ms/nu_ms
+
+def optimal_sfs_scaling(model,data):
+    data = numerics.fold(data)
+    model = numerics.fold(data)
+    model, data = Numerics.intersect_masks(model, data)
+    return data.sum()/model.sum()
+
+#def tri_spectrum(array):
+#    &#34;&#34;&#34;
+#    takes array and outputs correctly masked triallele spectrum
+#    &#34;&#34;&#34;
+#    F = dadi.Spectrum(array)
+#    F.mask[:,0] = True
+#    F.mask[0,:] = True
+#    for ii in range(len(F))[1:]:
+#        F.mask[ii,len(F)-ii-1:] = True
+#    return F
+    
+def fold_ancestral(F):
+    &#34;&#34;&#34;
+    Note: this is now handled by the TriSpectrum class
+    Don&#39;t know ancestral state, so track minor frequencies
+    Store spectrum of two minor allele frequencies
+    &#34;&#34;&#34;
+    F_new = 0*F
+    F_new = TriSpectrum(F_new)
+    ns = len(F)-1
+    for ii in range(ns):
+        for jj in range(ns):
+            kk = ns-ii-jj
+            if F.mask[ii,jj] == True:
+                continue
+            elif ii &lt;= kk and jj &lt;= kk:
+                if ii &gt;= jj:
+                    F_new[ii,jj] += F[ii,jj]
+                else:
+                    F_new[jj,ii] += F[ii,jj]
+            elif ii &gt; kk and jj &lt;= kk:
+                F_new[kk,jj] += F[ii,jj]
+            elif ii &lt;= kk and jj &gt; kk:
+                F_new[kk,ii] += F[ii,jj]
+            else: # ii &gt; kk and jj &gt; kk
+                if ii &gt;= jj:
+                    F_new[jj,kk] += F[ii,jj]
+                else:
+                    F_new[ii,kk] += F[ii,jj]
+    # mask if not a valid entry for ancestrally folded spectrum
+    for ii in range(ns):
+        for jj in range(ns):
+            kk = ns-ii-jj
+            if not (kk&gt;=ii&gt;=jj):
+                F_new.mask[ii,jj] = True
+    return F_new
+
+def ln_binomial(n,k):
+    return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)
+
+projection_cache = {}
+def cached_projection(proj_to,proj_from,hits):
+    &#34;&#34;&#34;
+    Coefficients for projection from a larger size to smaller
+    proj_to: Number of samples to project down to
+    proj_from: Number of samples to project from
+    hits: Number of derived alleles projecting from - tuple of (n1,n3)
+    &#34;&#34;&#34;
+    key = (proj_to, proj_from, hits)
+    try:
+        return projection_cache[key]
+    except KeyError:
+        pass
+    
+    X1, X2 = hits
+    X3 = proj_from - X1 - X2
+    proj_weights = np.zeros((proj_to+1,proj_to+1))
+    for ii in range(X1+1):
+        for jj in range(X2+1):
+            kk = proj_to - ii - jj
+            if kk &gt; X3 or kk &lt;0:
+                continue
+            f = ln_binomial(X1,ii) + ln_binomial(X2,jj) + ln_binomial(X3,kk) - ln_binomial(proj_from,proj_to)
+            proj_weights[ii,jj] = np.exp(f)
+    
+    projection_cache[key] = proj_weights
+    return proj_weights
+    
+def project(F_from, proj_to):
+    proj_from = len(F_from)-1
+    if proj_to == proj_from:
+        return F_from
+    elif proj_to &gt; proj_from:
+        print(&#39;sorry, but projection must be to smaller size!&#39;)
+        return F_from
+    else:
+        F_proj = np.zeros((proj_to+1,proj_to+1))
+        for X1 in range(proj_from):
+            for X2 in range(proj_from):
+                if F_from.mask[X1,X2] == False:
+                    hits = (X1,X2)
+                    proj_weights = cached_projection(proj_to,proj_from,hits)
+                    F_proj += proj_weights * F_from[X1,X2]
+        
+        return TriSpectrum(F_proj).fold()
+
+
+# Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.
+try:
+    from transition1 import transition1
+    from transition2 import transition2
+    from transition12 import transition12
+    from transition1D import transition1D
+except ImportError:
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Triallele.numerics.advance1D"><code class="name flex">
+<span>def <span class="ident">advance1D</span></span>(<span>u, P)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>tridiag breakdown for integration along the diagonal boundary
+u - density along that diagonal
+P - transition matrix</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance1D(u,P):
+    &#34;&#34;&#34;
+    tridiag breakdown for integration along the diagonal boundary
+    u - density along that diagonal
+    P - transition matrix
+    &#34;&#34;&#34;
+    a = np.concatenate((np.array([0]),np.diag(P,-1)))
+    b = np.diag(P)
+    c = np.concatenate((np.diag(P,1),np.array([0])))
+    u = dadi.Integration.tridiag.tridiag(a,b,c,u)
+    return u</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.advance_adi"><code class="name flex">
+<span>def <span class="ident">advance_adi</span></span>(<span>U, U01, P1, P2, x, ii)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate the ADI components forward in time, alternating which direction occurs first
+U - density function
+U01 - stores which points are in the domain
+P1,P2 - transition matrices
+ii - count of integration step</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_adi(U,U01,P1,P2,x,ii):
+    &#34;&#34;&#34;
+    Integrate the ADI components forward in time, alternating which direction occurs first
+    U - density function
+    U01 - stores which points are in the domain
+    P1,P2 - transition matrices
+    ii - count of integration step
+    &#34;&#34;&#34;
+    if np.mod(ii,2) == 0:
+        for jj in range(len(x)):
+            if np.sum(U01[:,jj]) &gt; 1:
+                U[:,jj] = dadi.Integration.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
+        for ii in range(len(x)):
+            if np.sum(U01[ii,:]) &gt; 1:
+                U[ii,:] = dadi.Integration.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
+    else:
+        for ii in range(len(x)):
+            if np.sum(U01[ii,:]) &gt; 1:
+                U[ii,:] = dadi.Integration.tridiag.tridiag(P2[ii,0,:],P2[ii,1,:],P2[ii,2,:],U[ii,:])
+        for jj in range(len(x)):
+            if np.sum(U01[:,jj]) &gt; 1:
+                U[:,jj] = dadi.Integration.tridiag.tridiag(P1[jj,0,:],P1[jj,1,:],P1[jj,2,:],U[:,jj])
+    return U</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.advance_cov"><code class="name flex">
+<span>def <span class="ident">advance_cov</span></span>(<span>U, C, x, dx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Explicit integration of the covariance term, using scipy's sparse matrix for C
+U - density function
+C - transition matrix</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_cov(U,C,x,dx):
+    &#34;&#34;&#34;
+    Explicit integration of the covariance term, using scipy&#39;s sparse matrix for C
+    U - density function
+    C - transition matrix
+    &#34;&#34;&#34;
+    U = ( C * U.reshape(len(x)**2)).reshape(len(x),len(x))
+    return U</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.advance_line"><code class="name flex">
+<span>def <span class="ident">advance_line</span></span>(<span>x, phi, P)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
+P - one dimensional transition matrix for the diagonal boundary</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_line(x,phi,P):
+    &#34;&#34;&#34;
+    Integrate along the diagonal boundary. Density gets fixed along the boundary, and then diffuses along that boundary until being fixed in one of the two corners
+    P - one dimensional transition matrix for the diagonal boundary
+    &#34;&#34;&#34;
+    u = np.diag(np.fliplr(phi))
+    u = advance1D(u,P)
+    for ii in range(len(x)):
+        phi[ii,len(x) - ii - 1] = u[ii]
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.bivariate_lognormal_pdf"><code class="name flex">
+<span>def <span class="ident">bivariate_lognormal_pdf</span></span>(<span>xx, params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
+We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn't necessary for the general bivariate lognormal distribution</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bivariate_lognormal_pdf(xx, params):
+    &#34;&#34;&#34;
+    mu_i = mu_yi and sigma_i = sigma_yi are the associated means and variances of the bivariate normal distr which gets exponentiated
+    We assume for our application that mu1=mu2 and sigma1=sigma2, though this isn&#39;t necessary for the general bivariate lognormal distribution
+    &#34;&#34;&#34;
+    mu1, mu2, sigma1, sigma2, rho = params
+    norm = 1./(2 * np.pi * (sigma1*sigma2) * np.sqrt(1-rho**2) * np.outer(xx,xx) )
+    q = 1/(1-rho**2) * ( ((np.log(xx[nuax,:])-mu1)/sigma1)**2 - 2*rho*((np.log(xx[nuax,:])-mu1)/sigma1)*((np.log(xx[:,nuax])-mu2)/sigma2) + ((np.log(xx[:,nuax])-mu2)/sigma2)**2 )
+    prob = norm * np.exp( -q/2. )
+    
+    return prob</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.cached_projection"><code class="name flex">
+<span>def <span class="ident">cached_projection</span></span>(<span>proj_to, proj_from, hits)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Coefficients for projection from a larger size to smaller
+proj_to: Number of samples to project down to
+proj_from: Number of samples to project from
+hits: Number of derived alleles projecting from - tuple of (n1,n3)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cached_projection(proj_to,proj_from,hits):
+    &#34;&#34;&#34;
+    Coefficients for projection from a larger size to smaller
+    proj_to: Number of samples to project down to
+    proj_from: Number of samples to project from
+    hits: Number of derived alleles projecting from - tuple of (n1,n3)
+    &#34;&#34;&#34;
+    key = (proj_to, proj_from, hits)
+    try:
+        return projection_cache[key]
+    except KeyError:
+        pass
+    
+    X1, X2 = hits
+    X3 = proj_from - X1 - X2
+    proj_weights = np.zeros((proj_to+1,proj_to+1))
+    for ii in range(X1+1):
+        for jj in range(X2+1):
+            kk = proj_to - ii - jj
+            if kk &gt; X3 or kk &lt;0:
+                continue
+            f = ln_binomial(X1,ii) + ln_binomial(X2,jj) + ln_binomial(X3,kk) - ln_binomial(proj_from,proj_to)
+            proj_weights[ii,jj] = np.exp(f)
+    
+    projection_cache[key] = proj_weights
+    return proj_weights</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.cached_transition1D"><code class="name flex">
+<span>def <span class="ident">cached_transition1D</span></span>(<span>numpts, sig)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cached_transition1D(numpts,sig):
+    key = (numpts,sig)
+    try:
+        return transition1D_cache[key]
+    except KeyError:
+        pass
+    x = np.linspace(0,1,numpts+1)
+    dx = grid_dx(x)
+    V,M = transition1D(x,dx,sig)
+    transition1D_cache[key] = [V,M]
+    return transition1D_cache[key]</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.domain"><code class="name flex">
+<span>def <span class="ident">domain</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def domain(x):
+    &#34;&#34;&#34;
+    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
+    &#34;&#34;&#34;
+    tol = 1e-12
+    U01 = np.ones((len(x),len(x)))
+    XX = x[:,nuax] + x[nuax,:]
+    U01[np.where(XX &gt; 1+tol)] = 0
+    return U01</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.fold"><code class="name flex">
+<span>def <span class="ident">fold</span></span>(<span>spectrum)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Note: this is now handled in the TriSpectrum class
+Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fold(spectrum):
+    &#34;&#34;&#34;
+    Note: this is now handled in the TriSpectrum class
+    Given a frequency spectrum over the full domain, fold into a spectrum with major and minor derived alleles
+    &#34;&#34;&#34;
+    spectrum = TriSpectrum(spectrum)
+    if spectrum.folded_major == True:
+        print(&#34;error: trying to fold a spectrum that is already folded&#34;)
+        return spectrum
+    else:
+        spectrum = (spectrum + np.transpose(spectrum))
+        for ii in range(len(spectrum)):
+            spectrum[ii,ii] = spectrum[ii,ii]/2
+        spectrum.mask[0,:] = True
+        spectrum.mask[:,0] = True
+        for ii in range(len(spectrum)):
+            spectrum.mask[ii,ii+1:] = True
+            spectrum.mask[ii,len(spectrum)-1-ii:] = True
+        return spectrum</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.fold_ancestral"><code class="name flex">
+<span>def <span class="ident">fold_ancestral</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Note: this is now handled by the TriSpectrum class
+Don't know ancestral state, so track minor frequencies
+Store spectrum of two minor allele frequencies</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fold_ancestral(F):
+    &#34;&#34;&#34;
+    Note: this is now handled by the TriSpectrum class
+    Don&#39;t know ancestral state, so track minor frequencies
+    Store spectrum of two minor allele frequencies
+    &#34;&#34;&#34;
+    F_new = 0*F
+    F_new = TriSpectrum(F_new)
+    ns = len(F)-1
+    for ii in range(ns):
+        for jj in range(ns):
+            kk = ns-ii-jj
+            if F.mask[ii,jj] == True:
+                continue
+            elif ii &lt;= kk and jj &lt;= kk:
+                if ii &gt;= jj:
+                    F_new[ii,jj] += F[ii,jj]
+                else:
+                    F_new[jj,ii] += F[ii,jj]
+            elif ii &gt; kk and jj &lt;= kk:
+                F_new[kk,jj] += F[ii,jj]
+            elif ii &lt;= kk and jj &gt; kk:
+                F_new[kk,ii] += F[ii,jj]
+            else: # ii &gt; kk and jj &gt; kk
+                if ii &gt;= jj:
+                    F_new[jj,kk] += F[ii,jj]
+                else:
+                    F_new[ii,kk] += F[ii,jj]
+    # mask if not a valid entry for ancestrally folded spectrum
+    for ii in range(ns):
+        for jj in range(ns):
+            kk = ns-ii-jj
+            if not (kk&gt;=ii&gt;=jj):
+                F_new.mask[ii,jj] = True
+    return F_new</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.grid_dx"><code class="name flex">
+<span>def <span class="ident">grid_dx</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>We use uniform grids in x, using np.linspace(0,1,numpts)
+Grid spacing Delta, which is halved at the first and last grid points.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid_dx(x):
+    &#34;&#34;&#34;
+    We use uniform grids in x, using np.linspace(0,1,numpts)
+    Grid spacing Delta, which is halved at the first and last grid points.
+    &#34;&#34;&#34;
+    return (np.concatenate((np.diff(x),np.array([0]))) + np.concatenate((np.array([0]),np.diff(x))))/2</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.grid_dx_2d"><code class="name flex">
+<span>def <span class="ident">grid_dx_2d</span></span>(<span>x, dx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The two dimensional grid spacing over the domain.
+Grid points lie along the diagonal boundary, and Delta for those points is halved</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid_dx_2d(x,dx):
+    &#34;&#34;&#34;
+    The two dimensional grid spacing over the domain.
+    Grid points lie along the diagonal boundary, and Delta for those points is halved
+    &#34;&#34;&#34;
+    DXX = dx[:,nuax]*dx[nuax,:]
+    for ii in range(len(x)):
+        DXX[ii,len(x)-ii-1] *= 1./2
+    return DXX</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.int2"><code class="name flex">
+<span>def <span class="ident">int2</span></span>(<span>DXX, U)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate the density function over the domain
+DXX - two dimensional grid
+U - density function</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def int2(DXX,U):
+    &#34;&#34;&#34;
+    Integrate the density function over the domain
+    DXX - two dimensional grid
+    U - density function
+    &#34;&#34;&#34;
+    return np.sum(DXX*U)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.ln_binomial"><code class="name flex">
+<span>def <span class="ident">ln_binomial</span></span>(<span>n, k)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ln_binomial(n,k):
+    return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.misidentification"><code class="name flex">
+<span>def <span class="ident">misidentification</span></span>(<span>F, p)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
+Then refold to return folded spectrum</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def misidentification(F, p):
+    &#34;&#34;&#34;
+    Given folded spectrum, and probability p that one of the derived alleles is the actual ancestral allele
+    Then refold to return folded spectrum
+    &#34;&#34;&#34;
+    F = TriF(np.zeros((len(F),len(F))))
+    for ii in range(len(F))[1:-1]:
+        for jj in range(len(F))[1:ii+1]:
+            if ii+jj &lt; len(F):
+                F[ii,jj] += (1 - p) * F[ii,jj]
+                F[len(F)-1-ii-jj,jj] += p/2. * F[ii,jj]
+                F[ii,len(F)-1-ii-jj] += p/2. * F[ii,jj]
+    
+    return F.fold()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.move_density_to_bdry"><code class="name flex">
+<span>def <span class="ident">move_density_to_bdry</span></span>(<span>x, phi, P)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>P tells us how much should be removed, by multiplying phi*P
+Take that density and instead of deleting it, move straight to boundary
+P - stores how much denstity from each grid point should be moved to diagonal</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def move_density_to_bdry(x,phi,P):
+    &#34;&#34;&#34;
+    P tells us how much should be removed, by multiplying phi*P
+    Take that density and instead of deleting it, move straight to boundary
+    P - stores how much denstity from each grid point should be moved to diagonal
+    &#34;&#34;&#34;
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if P[ii,jj] == 0:
+                continue
+            else:
+                amnt = P[ii,jj]
+                s = ii+jj
+                if ii == 1 and jj == len(x)-3:
+                    phi[ii+1,jj] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii,jj+1] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii-1,jj] += phi[ii,jj]*amnt/2 * 2
+                    phi[ii,jj] *= (1-amnt)
+                elif ii == len(x)-3 and jj == 1:
+                    phi[ii+1,jj] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii,jj+1] += phi[ii,jj]*amnt/4. * 2
+                    phi[ii,jj-1] += phi[ii,jj]*amnt/2 * 2
+                    phi[ii,jj] *= (1-amnt)
+                elif (len(x)-1-s) % 2 == 1:
+                    # split between two points
+                    dist = (len(x)-1-s) // 2
+                    phi[ii+dist+1,jj+dist] += phi[ii,jj]*amnt/2. * 2
+                    phi[ii+dist,jj+dist+1] += phi[ii,jj]*amnt/2. * 2
+                    phi[ii,jj] *= (1-amnt)
+                else:
+                    # straight to boundary grid point
+                    dist = (len(x)-1-s) // 2
+                    phi[ii+dist,jj+dist] += phi[ii,jj]*amnt * 2
+                    phi[ii,jj] *= (1-amnt)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.ms_demo_params_to_dadi"><code class="name flex">
+<span>def <span class="ident">ms_demo_params_to_dadi</span></span>(<span>nu_ms, tau_ms)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ms_demo_params_to_dadi(nu_ms,tau_ms):
+    &#34;&#34;&#34;
+    convert from ms parameters (which use current pop size) for nu and tau to dadi parameters (which use ancestral pop size)
+    &#34;&#34;&#34;
+    return 1./nu_ms,2*tau_ms/nu_ms</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.optimal_sfs_scaling"><code class="name flex">
+<span>def <span class="ident">optimal_sfs_scaling</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimal_sfs_scaling(model,data):
+    data = numerics.fold(data)
+    model = numerics.fold(data)
+    model, data = Numerics.intersect_masks(model, data)
+    return data.sum()/model.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.project"><code class="name flex">
+<span>def <span class="ident">project</span></span>(<span>F_from, proj_to)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def project(F_from, proj_to):
+    proj_from = len(F_from)-1
+    if proj_to == proj_from:
+        return F_from
+    elif proj_to &gt; proj_from:
+        print(&#39;sorry, but projection must be to smaller size!&#39;)
+        return F_from
+    else:
+        F_proj = np.zeros((proj_to+1,proj_to+1))
+        for X1 in range(proj_from):
+            for X2 in range(proj_from):
+                if F_from.mask[X1,X2] == False:
+                    hits = (X1,X2)
+                    proj_weights = cached_projection(proj_to,proj_from,hits)
+                    F_proj += proj_weights * F_from[X1,X2]
+        
+        return TriSpectrum(F_proj).fold()</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.remove_diag_density_weights_nonneutral"><code class="name flex">
+<span>def <span class="ident">remove_diag_density_weights_nonneutral</span></span>(<span>x, dt, nu, sig1, sig2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Numerically determine the amount of density that should be lost to the diagonal boundary.
+Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
+We then check the fraction of density that is lost to z=1.
+If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1<em>x/(x+y) + sig2</em>y/(x+y)
+x - one dimensional grid of domain
+dt - time step of integration
+nu - relative population size
+sig1,sig2 - selection coefficients</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_diag_density_weights_nonneutral(x,dt,nu,sig1,sig2):
+    &#34;&#34;&#34;
+    Numerically determine the amount of density that should be lost to the diagonal boundary.
+    Numerically integrate 1D array with initial point mass at z0, where z0 is the frequency x+y, integrated for time step dt.
+    We then check the fraction of density that is lost to z=1.
+    If sig1 or sig2 are nonzero, estimate the selection pressure on z as sig = sig1*x/(x+y) + sig2*y/(x+y)
+    x - one dimensional grid of domain
+    dt - time step of integration
+    nu - relative population size
+    sig1,sig2 - selection coefficients
+    &#34;&#34;&#34;
+    dx = grid_dx(x)
+    P = np.zeros((len(x),len(x)))
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if x[ii]+x[jj] &lt; 1.0 and x[ii]+x[jj] &gt; .75:
+                sig = sig1*x[ii]/(x[ii]+x[jj]) + sig2*x[jj]/(x[ii]+x[jj])
+                V,M = cached_transition1D(len(x)-1,sig)
+                P1D = np.eye(len(x)) + dt*(V/nu+M)
+                y = np.zeros(len(x))
+                y[ii+jj] = 1./dx[ii+jj]
+                y = advance1D(y,P1D)
+                prob = y[-1]*dx[-1]
+                P[ii,jj] = prob
+                if ii+jj == len(x)-2:
+                    if ii==1:
+                        V,M = cached_transition1D(len(x)-1,sig1)
+                        P1D = np.eye(len(x)) + dt*(V/nu+M)
+                        y = np.zeros(len(x))
+                        y[ii] = 1./dx[ii]
+                        y = advance1D(y,P1D)
+                        prob2 = y[0]*dx[0]
+                        P[ii,jj] += prob2
+                    elif jj==1:
+                        V,M = cached_transition1D(len(x)-1,sig2)
+                        P1D = np.eye(len(x)) + dt*(V/nu+M)
+                        y = np.zeros(len(x))
+                        y[jj] = 1./dx[jj]
+                        y = advance1D(y,P1D)
+                        prob2 = y[0]*dx[0]
+                        P[ii,jj] += prob2
+    
+    P[:,0] = 0
+    P[0,:] = 0
+    return P</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.sample"><code class="name flex">
+<span>def <span class="ident">sample</span></span>(<span>phi, ns, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Obtain the expected sample frequency spectrum from the density function</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample(phi, ns, x):
+    &#34;&#34;&#34;
+    Obtain the expected sample frequency spectrum from the density function
+    &#34;&#34;&#34;
+    dx = grid_dx(x)
+    DXX = grid_dx_2d(x,dx)
+
+    # Assume ns is typically a list of length 1, if not, make it into one.
+    try:
+        ns = tuple(ns)
+    except TypeError:
+        ns = (ns,)
+
+    # We cache calculations of several big matrices that will be re-used 
+    # within and between integrations.
+    key = (ns, tuple(x))
+    if key not in sample_cache:
+        this_cache = {}
+        for ii in range(1,ns[0]-1):
+            # Create our cache
+            this_cache[ii] = (1-x[:,nuax]-x[nuax,:])**ii
+            # Somewhat ugly hack to use negative values to store second array
+            # to cache.
+            this_cache[-ii] = x[nuax,:]**ii
+        sample_cache[key] = this_cache
+    else:
+        this_cache = sample_cache[key]
+
+    #dx = grid_dx(x)
+    F = np.zeros((ns[0]+1,ns[0]+1))
+    prod_phi = DXX*phi
+    for ii in range(len(F)):
+        prod_x = prod_phi * x[:,nuax]**ii
+        for jj in range(len(F)):
+            if ii+jj &lt; ns[0] and ii != 0 and jj != 0:
+                #F[ii,jj] = math.factorial(ns)/(math.factorial(ii)*math.factorial(jj)*math.factorial(ns-ii-jj)) * int2(x, dx, phi*x[:,nuax]**ii*x[nuax,:]**jj*(1-x[:,nuax]-x[nuax,:])**(ns-ii-jj) )
+                F[ii,jj] = trinomial(ns[0],ii,jj) * np.sum(prod_x * this_cache[-jj] * this_cache[ns[0]-ii-jj])
+    F = TriSpectrum(F)
+    F.folded_major = False
+    F.folded_ancestral = False
+    F.extrap_x = x[1]
+    return F</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.transition1"><code class="name flex">
+<span>def <span class="ident">transition1</span></span>(<span>x, dx, U01, sig1, sig2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implicit transition matrix for the ADI components of the discretization of the diffusion
+Time scaled by 2N, with variance and mean terms x(1-x) and \sigma<em>x(1-x), resp.
+Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt</em>P, where I is the identity matrix
+x - grid
+dx - grid spacing
+U01 - domain markers
+sig1/2 - population scaled selection coefficients
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition1(x, dx, U01, sig1, sig2):
+    &#34;&#34;&#34;
+    Implicit transition matrix for the ADI components of the discretization of the diffusion
+    Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    sig1/2 - population scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    print(&#34;using numpy, not cython&#34;)
+    PV = np.zeros((len(x),3,len(x)))
+    PM = np.zeros((len(x),3,len(x)))
+    for jj in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if jj &gt; 0:
+            V = x*(1-x)
+            V[np.max(np.where(U01[:,jj] == 1))] = 0
+            for ii in np.where(U01[:,jj] == 1)[0][:-1]:
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == np.where(U01[:,jj] == 1)[0][:-1][-1]:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        if jj == 0:
+            V = x*(1-x)
+            for ii in range(len(x)):
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == len(x)-1:
+                    A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        
+        PV[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[jj,1,:] = np.diagonal(A)
+        PV[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
+        x2 = x[jj]
+        sig_new = sig1*(1-x-x2)/(1-x) + (sig1-sig2)*x2/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[:,jj] == 1)[0][-1]] = 0
+        for ii in np.where(U01[:,jj] == 1)[0]:
+            if ii == 0:
+                A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+            elif ii == np.where(U01[:,jj] == 1)[0][-1]:
+                A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
+                A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
+            else:
+                A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+        PM[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[jj,1,:] = np.diagonal(A)
+        PM[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.transition12"><code class="name flex">
+<span>def <span class="ident">transition12</span></span>(<span>x, dx, U01)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x<em>y</em>phi)
+As with the ADI components, final transition matrix is given by I + dt/nu*P
+x - grid
+dx - grid spacing
+U01 - domain markers</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition12(x, dx, U01):
+    &#34;&#34;&#34;
+    Transition matrix for the covariance term of the diffusion operator, with term D_{xy} (-x*y*phi)
+    As with the ADI components, final transition matrix is given by I + dt/nu*P
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    &#34;&#34;&#34;        
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    C = lil_matrix((len(x)**2,len(x)**2))
+    for ii in range(len(x)-1)[:-1]:
+        for jj in range(len(x)-1)[:-1]:
+            if U01[ii+2,jj+2] == 1 or U01[ii+1,jj+2] == 1 or U01[ii+2,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj+1 &lt; len(x) and U01[ii+1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
+                    
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+            
+            elif U01[ii+1,jj+1] == 1 or U01[ii+1,jj] == 1 or U01[ii,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+    ii = 0
+    jj = len(x)-2
+    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+    ii = len(x)-2
+    jj = 0
+    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+    return C</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.transition1D"><code class="name flex">
+<span>def <span class="ident">transition1D</span></span>(<span>x, dx, sig)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>transition matrix for one dimensional integration
+x - grid
+dx - grid spacing
+dt - timestep for integration
+sig - selection coefficient
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition1D(x, dx, sig):
+    &#34;&#34;&#34;
+    transition matrix for one dimensional integration
+    x - grid
+    dx - grid spacing
+    dt - timestep for integration
+    sig - selection coefficient
+    nu - relative population size
+    &#34;&#34;&#34;
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    PV = np.zeros((len(x),len(x)))
+    PM = np.zeros((len(x),len(x)))
+    for ii in range(len(x)):
+        if ii == 0:
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            PV[ii,ii+1] = -1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii])
+            PM[ii,ii+1] = sig / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+        elif ii == len(x) - 1:
+            PV[ii,ii-1] = - 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1])
+            PM[ii,ii-1] = sig / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
+        else:
+            PV[ii,ii-1] = - 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1])
+            PM[ii,ii-1] = - sig / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            PV[ii,ii] = 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            PV[ii,ii+1] = - 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii])
+            PM[ii,ii+1] = sig / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+    return PV,PM</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.transition2"><code class="name flex">
+<span>def <span class="ident">transition2</span></span>(<span>x, dx, U01, sig1, sig2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implicit transition matrix for the ADI components of the discretization of the diffusion
+Time scaled by 2N, with variance and mean terms x(1-x) and \sigma<em>x(1-x), resp.
+Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt</em>P, where I is the identity matrix
+x - grid
+dx - grid spacing
+U01 - domain markers
+sig1/2 - population scaled selection coefficients
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition2(x, dx, U01, sig1, sig2):
+    &#34;&#34;&#34;
+    Implicit transition matrix for the ADI components of the discretization of the diffusion
+    Time scaled by 2N, with variance and mean terms x(1-x) and \sigma*x(1-x), resp.
+    Store the tridiagonal elements of the matrices, which need to be adjusted by I + dt*P, where I is the identity matrix
+    x - grid
+    dx - grid spacing
+    U01 - domain markers
+    sig1/2 - population scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    # XXX: Note that this function has been Cythonized. Below, an attempt is made to import the Cythonized version so that it will
+    #      be automatically used instead of this version, if the user has compiled it.
+    PV = np.zeros((len(x),3,len(x)))
+    PM = np.zeros((len(x),3,len(x)))
+    for ii in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if ii &gt; 0:
+            V = x*(1-x)
+            V[np.max(np.where(U01[ii,:] == 1))] = 0
+            for jj in np.where(U01[ii,:] == 1)[0][:-1]:
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == np.where(U01[ii,:] == 1)[0][:-1][-1]:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        if ii == 0:
+            V = x*(1-x)
+            for jj in range(len(x)):
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == len(x)-1:
+                    A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        
+        PV[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PV[ii,1,:] = np.diagonal(A)
+        PV[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+
+        A = np.zeros((len(x),len(x)))
+        x1 = x[ii]
+        sig_new = sig2*(1-x-x1)/(1-x) + (sig2-sig1)*x1/(1-x)
+        sig_new[-1] = 0
+        M = sig_new*x*(1-x)
+        M[np.where(U01[ii,:] == 1)[0][-1]] = 0
+        for jj in np.where(U01[ii,:] == 1)[0]:
+            if jj == 0:
+                A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+            elif jj == np.where(U01[ii,:] == 1)[0][-1]:
+                A[jj,jj-1] += 1/dx[jj] * 2 * ( - M[jj-1] ) / 2
+                A[jj,jj] += 1/dx[jj] * 2 * ( - M[jj] ) / 2
+            else:
+                A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                A[jj,jj] += 0 # 1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+        
+        PM[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        PM[ii,1,:] = np.diagonal(A)
+        PM[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return PV,PM</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.trinomial"><code class="name flex">
+<span>def <span class="ident">trinomial</span></span>(<span>ns, ii, jj)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def trinomial(ns,ii,jj):
+    &#34;&#34;&#34;
+    Return ns!/(ii! * jj! * (ns-ii-jj)!) for large values
+    &#34;&#34;&#34;
+    return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(ns-ii-jj+1))</code></pre>
+</details>
+</dd>
+<dt id="dadi.Triallele.numerics.univariate_lognormal_pdf"><code class="name flex">
+<span>def <span class="ident">univariate_lognormal_pdf</span></span>(<span>x, sigma, mu)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def univariate_lognormal_pdf(x,sigma,mu):
+    &#34;&#34;&#34;
+    Can compare to scipy.stats.lognorm.pdf(x,sigma,0,np.exp(mu))
+    &#34;&#34;&#34;
+    return 1./(x*sigma*np.sqrt(2*math.pi)) * np.exp ( -(np.log(x) - mu)**2 / (2*sigma**2) )</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.Triallele" href="index.html">dadi.Triallele</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Triallele.numerics.advance1D" href="#dadi.Triallele.numerics.advance1D">advance1D</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.advance_adi" href="#dadi.Triallele.numerics.advance_adi">advance_adi</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.advance_cov" href="#dadi.Triallele.numerics.advance_cov">advance_cov</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.advance_line" href="#dadi.Triallele.numerics.advance_line">advance_line</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.bivariate_lognormal_pdf" href="#dadi.Triallele.numerics.bivariate_lognormal_pdf">bivariate_lognormal_pdf</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.cached_projection" href="#dadi.Triallele.numerics.cached_projection">cached_projection</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.cached_transition1D" href="#dadi.Triallele.numerics.cached_transition1D">cached_transition1D</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.domain" href="#dadi.Triallele.numerics.domain">domain</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.fold" href="#dadi.Triallele.numerics.fold">fold</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.fold_ancestral" href="#dadi.Triallele.numerics.fold_ancestral">fold_ancestral</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.grid_dx" href="#dadi.Triallele.numerics.grid_dx">grid_dx</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.grid_dx_2d" href="#dadi.Triallele.numerics.grid_dx_2d">grid_dx_2d</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.int2" href="#dadi.Triallele.numerics.int2">int2</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.ln_binomial" href="#dadi.Triallele.numerics.ln_binomial">ln_binomial</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.misidentification" href="#dadi.Triallele.numerics.misidentification">misidentification</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.move_density_to_bdry" href="#dadi.Triallele.numerics.move_density_to_bdry">move_density_to_bdry</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.ms_demo_params_to_dadi" href="#dadi.Triallele.numerics.ms_demo_params_to_dadi">ms_demo_params_to_dadi</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.optimal_sfs_scaling" href="#dadi.Triallele.numerics.optimal_sfs_scaling">optimal_sfs_scaling</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.project" href="#dadi.Triallele.numerics.project">project</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.remove_diag_density_weights_nonneutral" href="#dadi.Triallele.numerics.remove_diag_density_weights_nonneutral">remove_diag_density_weights_nonneutral</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.sample" href="#dadi.Triallele.numerics.sample">sample</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.transition1" href="#dadi.Triallele.numerics.transition1">transition1</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.transition12" href="#dadi.Triallele.numerics.transition12">transition12</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.transition1D" href="#dadi.Triallele.numerics.transition1D">transition1D</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.transition2" href="#dadi.Triallele.numerics.transition2">transition2</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.trinomial" href="#dadi.Triallele.numerics.trinomial">trinomial</a></code></li>
+<li><code><a title="dadi.Triallele.numerics.univariate_lognormal_pdf" href="#dadi.Triallele.numerics.univariate_lognormal_pdf">univariate_lognormal_pdf</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

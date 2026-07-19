@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.TwoLocus.inference API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.TwoLocus.inference</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import numpy as np, dadi
+import numpy
+import scipy, math
+from scipy.special import gammaln
+import scipy.optimize
+from numpy import logical_and, logical_not
+from . import numerics
+import os,sys
+
+
+###
+### This is almost entirely adapted from the dadi.Inference functions
+###
+#: Counts calls to object_func
+_counter = 0
+#: Returned when object_func is passed out-of-bounds params or gets a NaN ll.
+_out_of_bounds_val = -1e8
+
+def ll(model, data):
+    &#34;&#34;&#34;
+    The log-likelihood of the data given the model linkage frequency spectrum
+    &#34;&#34;&#34;
+    ll_arr = ll_per_bin(model,data)
+    return ll_arr.sum()
+
+def ll_per_bin(model, data):
+    &#34;&#34;&#34;
+    Poisson log-likelihood of each entry in the data given the model sfs
+    &#34;&#34;&#34;
+    result = -model.data + data.data*np.log(model) - gammaln(data + 1.)
+    return result
+
+def ll_multinom(model,data):
+    &#34;&#34;&#34;
+    LL of the data given the model, with optimal rescaling
+    &#34;&#34;&#34;
+    ll_arr = ll_multinom_per_bin(model,data)
+    return ll_arr.sum()
+
+def ll_multinom_per_bin(model,data):
+    &#34;&#34;&#34;
+    Multinomial log-likelihood of each entry in the data given the model
+    &#34;&#34;&#34;
+    theta_opt = optimal_sfs_scaling(model,data)
+    return ll_per_bin(theta_opt*model,data)
+
+def optimal_sfs_scaling(model,data):
+    &#34;&#34;&#34;
+    Optimal multiplicative scaling factor between model and data
+    &#34;&#34;&#34;
+    model, data = dadi.Numerics.intersect_masks(model,data)
+    return data.sum()/model.sum()
+
+def optimally_scaled_sfs(model,data):
+    &#34;&#34;&#34;
+    Optimally scaled model to data
+    &#34;&#34;&#34;
+    return optimal_sfs_scaling(model,data) * model
+
+
+def ll_over_rho_bins(model_list,data_list):
+    &#34;&#34;&#34;
+    The log-likelihood of the binned data given the model spectra for the same bins
+    Input list of models for rho bins, and list of data for rho bins
+    &#34;&#34;&#34;
+    if len(model_list) != len(data_list):
+        print(&#39;model list and data list must be of same length&#39;)
+        return 0
+    LL = 0
+    for ii in range(len(model_list)):
+        LL += ll(model_list[ii],data_list[ii])
+    return LL
+
+
+def ll_over_rho_bins_multinom(model_list,data_list):
+    &#34;&#34;&#34;
+    The log-likelihood of the binned data given the model spectra for the same bins
+    Input list of models for rho bins, and list of data for rho bins
+    &#34;&#34;&#34;
+    if len(model_list) != len(data_list):
+        print(&#39;model list and data list must be of same length&#39;)
+        return 0
+    LL = 0
+    for ii in range(len(model_list)):
+        LL += ll_multinom(model_list[ii],data_list[ii])
+    return LL
+
+
+### what if we want multinom log likelihoods, but the relative theta for each bin is known?
+
+
+def _project_params_up(pin, fixed_params):
+    &#34;&#34;&#34;
+    Fold fixed parameters into pin.
+    &#34;&#34;&#34;
+    if fixed_params is None:
+        return pin
+
+    if numpy.isscalar(pin):
+        pin = [pin]
+
+    pout = numpy.zeros(len(fixed_params))
+    orig_ii = 0
+    for out_ii, val in enumerate(fixed_params):
+        if val is None:
+            pout[out_ii] = pin[orig_ii]
+            orig_ii += 1
+        else:
+            pout[out_ii] = fixed_params[out_ii]
+    return pout
+
+def _project_params_down(pin, fixed_params):
+    &#34;&#34;&#34;
+    Eliminate fixed parameters from pin.
+    &#34;&#34;&#34;
+    if fixed_params is None:
+        return pin
+
+    if len(pin) != len(fixed_params):
+        raise ValueError(&#39;fixed_params list must have same length as input &#39;
+                         &#39;parameter array.&#39;)
+
+    pout = []
+    for ii, (curr_val,fixed_val) in enumerate(zip(pin, fixed_params)):
+        if fixed_val is None:
+            pout.append(curr_val)
+
+    return numpy.array(pout)
+
+def _object_func(params, data_list, model_func, pts, dts, rhos=[0],
+                 lower_bound=None, upper_bound=None, 
+                 verbose=0, multinom=True, flush_delay=0,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_stream=sys.stdout, store_thetas=False):
+    &#34;&#34;&#34;
+    Objective function for optimization.
+    &#34;&#34;&#34;
+    global _counter
+    _counter += 1
+
+    # Deal with fixed parameters
+    params_up = _project_params_up(params, fixed_params)
+
+    # Check our parameter bounds
+    if lower_bound is not None:
+        for pval,bound in zip(params_up, lower_bound):
+            if bound is not None and pval &lt; bound:
+                return -_out_of_bounds_val/ll_scale
+    if upper_bound is not None:
+        for pval,bound in zip(params_up, upper_bound):
+            if bound is not None and pval &gt; bound:
+                return -_out_of_bounds_val/ll_scale
+
+#    ns = data.sample_sizes 
+    ns = (len(data_list[0])-1,) ###XXX changed by AR
+    if ns == (43499,):
+        ns = (20,)
+    
+    all_args = [params_up, ns, pts, dts]
+    # Pass the pts argument via keyword, but don&#39;t alter the passed-in 
+    # func_kwargs
+    func_kwargs = func_kwargs.copy()
+    func_kwargs[&#39;rhos&#39;] = rhos
+    
+    model_list = model_func(*all_args, **func_kwargs) ###XXX: need a model that constructs the model_list
+                                                      #       which stores the expected two-locus fs for each
+                                                      #       bin center
+                                                      
+    if multinom:
+        result = ll_over_rho_bins_multinom(model_list, data_list)
+    else:
+        result = ll_over_rho_bins(model_list, data_list)
+
+    if store_thetas:
+        global _theta_store
+        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+
+    # Bad result
+    if numpy.isnan(result):
+        result = _out_of_bounds_val
+
+    if (verbose &gt; 0) and (_counter % verbose == 0):
+        param_str = &#39;array([%s])&#39; % (&#39;, &#39;.join([&#39;%- 12g&#39;%v for v in params_up]))
+        output_stream.write(&#39;%-8i, %-12g, %s%s&#39; % (_counter, result, param_str,
+                                                   os.linesep))
+        dadi.Misc.delayed_flush(delay=flush_delay)
+
+    return -result/ll_scale
+
+def _object_func_log(log_params, *args, **kwargs):
+    &#34;&#34;&#34;
+    Objective function for optimization in log(params).
+    &#34;&#34;&#34;
+    return _object_func(numpy.exp(log_params), *args, **kwargs)
+
+
+
+
+def optimize_log_lbfgsb(p0, data_list, model_func, pts, dts, rhos=[0],
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum algorithm iterations to run.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data_list, model_func, pts, dts, rhos,
+            None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    else:
+        lower_bound = numpy.log(lower_bound)
+        lower_bound[numpy.isnan(lower_bound)] = None
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    else:
+        upper_bound = numpy.log(upper_bound)
+        upper_bound[numpy.isnan(upper_bound)] = None
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func_log, 
+                                           numpy.log(p0), bounds = bounds,
+                                           epsilon=epsilon, args = args,
+                                           iprint = -1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, info_dict
+
+
+
+
+def optimize_log_fmin(p0, data_list, model_func, pts, dts, rhos=[0],
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None):
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data_list, model_func, pts, dts, rhos, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    
+    xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, iter, funcalls, warnflag 
+
+
+# interpolation
+
+def optimize_log_fmin_interp(p0, data_list, model_func, pts, dts, model_rhos=[0], data_rhos=[0],
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None,
+                        sorted_keys=None):
+    &#34;&#34;&#34;
+    sorted_keys: 
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data_list, model_func, pts, dts, model_rhos, data_rhos, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin(_object_func_log_interp, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    
+    xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, iter, funcalls, warnflag 
+
+def _object_func_interp(params, data_list, model_func, pts, dts, model_rhos=[0], data_rhos = [0],
+                 lower_bound=None, upper_bound=None, 
+                 verbose=0, multinom=True, flush_delay=0,
+                 func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1,
+                 output_stream=sys.stdout, store_thetas=False):
+    &#34;&#34;&#34;
+    Objective function for optimization.
+    &#34;&#34;&#34;
+    global _counter
+    _counter += 1
+
+    # Deal with fixed parameters
+    params_up = _project_params_up(params, fixed_params)
+
+    # Check our parameter bounds
+    if lower_bound is not None:
+        for pval,bound in zip(params_up, lower_bound):
+            if bound is not None and pval &lt; bound:
+                return -_out_of_bounds_val/ll_scale
+    if upper_bound is not None:
+        for pval,bound in zip(params_up, upper_bound):
+            if bound is not None and pval &gt; bound:
+                return -_out_of_bounds_val/ll_scale
+
+#    ns = data.sample_sizes 
+    ns = (len(data_list[0])-1,) ###XXX changed by AR
+    if ns == (43499,):
+        ns = (20,)
+    
+    all_args = [params_up, ns, pts, dts]
+    # Pass the pts argument via keyword, but don&#39;t alter the passed-in 
+    # func_kwargs
+    func_kwargs = func_kwargs.copy()
+    func_kwargs[&#39;model_rhos&#39;] = model_rhos
+    func_kwargs[&#39;data_rhos&#39;] = data_rhos
+    
+    model_list = model_func(*all_args, **func_kwargs) ###XXX: need a model that constructs the model_list
+                                                      #       which stores the expected two-locus fs for each
+                                                      #       bin center
+                                                      
+    if multinom:
+        result = ll_over_rho_bins_multinom(model_list, data_list)
+    else:
+        result = ll_over_rho_bins(model_list, data_list)
+
+    if store_thetas:
+        global _theta_store
+        _theta_store[tuple(params)] = optimal_sfs_scaling(sfs, data)
+
+    # Bad result
+    if numpy.isnan(result):
+        result = _out_of_bounds_val
+
+    if (verbose &gt; 0) and (_counter % verbose == 0):
+        param_str = &#39;array([%s])&#39; % (&#39;, &#39;.join([&#39;%- 12g&#39;%v for v in params_up]))
+        output_stream.write(&#39;%-8i, %-12g, %s%s&#39; % (_counter, result, param_str,
+                                                   os.linesep))
+        dadi.Misc.delayed_flush(delay=flush_delay)
+
+    return -result/ll_scale
+
+def _object_func_log_interp(log_params, *args, **kwargs):
+    &#34;&#34;&#34;
+    Objective function for optimization in log(params).
+    &#34;&#34;&#34;
+    return _object_func_interp(numpy.exp(log_params), *args, **kwargs)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.TwoLocus.inference.ll"><code class="name flex">
+<span>def <span class="ident">ll</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The log-likelihood of the data given the model linkage frequency spectrum</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll(model, data):
+    &#34;&#34;&#34;
+    The log-likelihood of the data given the model linkage frequency spectrum
+    &#34;&#34;&#34;
+    ll_arr = ll_per_bin(model,data)
+    return ll_arr.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.ll_multinom"><code class="name flex">
+<span>def <span class="ident">ll_multinom</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>LL of the data given the model, with optimal rescaling</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_multinom(model,data):
+    &#34;&#34;&#34;
+    LL of the data given the model, with optimal rescaling
+    &#34;&#34;&#34;
+    ll_arr = ll_multinom_per_bin(model,data)
+    return ll_arr.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.ll_multinom_per_bin"><code class="name flex">
+<span>def <span class="ident">ll_multinom_per_bin</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Multinomial log-likelihood of each entry in the data given the model</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_multinom_per_bin(model,data):
+    &#34;&#34;&#34;
+    Multinomial log-likelihood of each entry in the data given the model
+    &#34;&#34;&#34;
+    theta_opt = optimal_sfs_scaling(model,data)
+    return ll_per_bin(theta_opt*model,data)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.ll_over_rho_bins"><code class="name flex">
+<span>def <span class="ident">ll_over_rho_bins</span></span>(<span>model_list, data_list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The log-likelihood of the binned data given the model spectra for the same bins
+Input list of models for rho bins, and list of data for rho bins</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_over_rho_bins(model_list,data_list):
+    &#34;&#34;&#34;
+    The log-likelihood of the binned data given the model spectra for the same bins
+    Input list of models for rho bins, and list of data for rho bins
+    &#34;&#34;&#34;
+    if len(model_list) != len(data_list):
+        print(&#39;model list and data list must be of same length&#39;)
+        return 0
+    LL = 0
+    for ii in range(len(model_list)):
+        LL += ll(model_list[ii],data_list[ii])
+    return LL</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.ll_over_rho_bins_multinom"><code class="name flex">
+<span>def <span class="ident">ll_over_rho_bins_multinom</span></span>(<span>model_list, data_list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The log-likelihood of the binned data given the model spectra for the same bins
+Input list of models for rho bins, and list of data for rho bins</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_over_rho_bins_multinom(model_list,data_list):
+    &#34;&#34;&#34;
+    The log-likelihood of the binned data given the model spectra for the same bins
+    Input list of models for rho bins, and list of data for rho bins
+    &#34;&#34;&#34;
+    if len(model_list) != len(data_list):
+        print(&#39;model list and data list must be of same length&#39;)
+        return 0
+    LL = 0
+    for ii in range(len(model_list)):
+        LL += ll_multinom(model_list[ii],data_list[ii])
+    return LL</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.ll_per_bin"><code class="name flex">
+<span>def <span class="ident">ll_per_bin</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Poisson log-likelihood of each entry in the data given the model sfs</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ll_per_bin(model, data):
+    &#34;&#34;&#34;
+    Poisson log-likelihood of each entry in the data given the model sfs
+    &#34;&#34;&#34;
+    result = -model.data + data.data*np.log(model) - gammaln(data + 1.)
+    return result</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.optimal_sfs_scaling"><code class="name flex">
+<span>def <span class="ident">optimal_sfs_scaling</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimal multiplicative scaling factor between model and data</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimal_sfs_scaling(model,data):
+    &#34;&#34;&#34;
+    Optimal multiplicative scaling factor between model and data
+    &#34;&#34;&#34;
+    model, data = dadi.Numerics.intersect_masks(model,data)
+    return data.sum()/model.sum()</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.optimally_scaled_sfs"><code class="name flex">
+<span>def <span class="ident">optimally_scaled_sfs</span></span>(<span>model, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimally scaled model to data</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimally_scaled_sfs(model,data):
+    &#34;&#34;&#34;
+    Optimally scaled model to data
+    &#34;&#34;&#34;
+    return optimal_sfs_scaling(model,data) * model</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.optimize_log_fmin"><code class="name flex">
+<span>def <span class="ident">optimize_log_fmin</span></span>(<span>p0, data_list, model_func, pts, dts, rhos=[0], lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_fmin(p0, data_list, model_func, pts, dts, rhos=[0],
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None):
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data_list, model_func, pts, dts, rhos, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin(_object_func_log, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    
+    xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, iter, funcalls, warnflag </code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.optimize_log_fmin_interp"><code class="name flex">
+<span>def <span class="ident">optimize_log_fmin_interp</span></span>(<span>p0, data_list, model_func, pts, dts, model_rhos=[0], data_rhos=[0], lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None, sorted_keys=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>sorted_keys:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_fmin_interp(p0, data_list, model_func, pts, dts, model_rhos=[0], data_rhos=[0],
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None,
+                        sorted_keys=None):
+    &#34;&#34;&#34;
+    sorted_keys: 
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data_list, model_func, pts, dts, model_rhos, data_rhos, lower_bound, upper_bound, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 1.0,
+            output_stream)
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin(_object_func_log_interp, numpy.log(p0), args = args,
+                                  disp=False, maxiter=maxiter, full_output=True)
+    
+    xopt, fopt, iter, funcalls, warnflag = outputs
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, iter, funcalls, warnflag </code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.inference.optimize_log_lbfgsb"><code class="name flex">
+<span>def <span class="ident">optimize_log_lbfgsb</span></span>(<span>p0, data_list, model_func, pts, dts, rhos=[0], lower_bound=None, upper_bound=None, verbose=0, flush_delay=0.5, epsilon=0.001, pgtol=1e-05, multinom=True, maxiter=100000.0, full_output=False, func_args=[], func_kwargs={}, fixed_params=None, ll_scale=1, output_file=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Optimize log(params) to fit model to data using the L-BFGS-B method.</p>
+<p>This optimization method works well when we start reasonably close to the
+optimum. It is best at burrowing down a single minimum. This method is
+better than optimize_log if the optimum lies at one or more of the
+parameter bounds. However, if your optimum is not on the bounds, this
+method may be much slower.</p>
+<p>Because this works in log(params), it cannot explore values of params &lt; 0.
+It should also perform better when parameters range over scales.</p>
+<p>p0: Initial parameters.
+data: Spectrum with data.
+model_function: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+lower_bound: Lower bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+upper_bound: Upper bound on parameter values. If not None, must be of same
+length as p0. A parameter can be declared unbound by assigning
+a bound of None.
+verbose: If &gt; 0, print optimization status every <verbose> steps.
+output_file: Stream verbose output into this filename. If None, stream to
+standard out.
+flush_delay: Standard output will be flushed once every <flush_delay>
+minutes. This is useful to avoid overloading I/O on clusters.
+epsilon: Step-size to use for finite-difference derivatives.
+pgtol: Convergence criterion for optimization. For more info,
+see help(scipy.optimize.fmin_l_bfgs_b)
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+maxiter: Maximum algorithm iterations to run.
+full_output: If True, return full outputs as in described in
+help(scipy.optimize.fmin_bfgs)
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)
+ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+too large. (This appears to be a flaw in the scipy
+implementation.) To overcome this, pass ll_scale &gt; 1, which will
+simply reduce the magnitude of the log-likelihood. Once in a
+region of reasonable likelihood, you'll probably want to
+re-optimize with ll_scale=1.</p>
+<p>The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+Nocedal. The algorithm is described in:
+* R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+Constrained Optimization, (1995), SIAM Journal on Scientific and
+Statistical Computing , 16, 5, pp. 1190-1208.
+* C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+FORTRAN routines for large scale bound constrained optimization (1997),
+ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize_log_lbfgsb(p0, data_list, model_func, pts, dts, rhos=[0],
+                        lower_bound=None, upper_bound=None,
+                        verbose=0, flush_delay=0.5, epsilon=1e-3, 
+                        pgtol=1e-5, multinom=True, maxiter=1e5, 
+                        full_output=False,
+                        func_args=[], func_kwargs={}, fixed_params=None, 
+                        ll_scale=1, output_file=None):
+    &#34;&#34;&#34;
+    Optimize log(params) to fit model to data using the L-BFGS-B method.
+
+    This optimization method works well when we start reasonably close to the
+    optimum. It is best at burrowing down a single minimum. This method is
+    better than optimize_log if the optimum lies at one or more of the
+    parameter bounds. However, if your optimum is not on the bounds, this
+    method may be much slower.
+
+    Because this works in log(params), it cannot explore values of params &lt; 0.
+    It should also perform better when parameters range over scales.
+
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_function: Function to evaluate model spectrum. Should take arguments
+                    (params, (n1,n2...), pts)
+    lower_bound: Lower bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    upper_bound: Upper bound on parameter values. If not None, must be of same
+                 length as p0. A parameter can be declared unbound by assigning
+                 a bound of None.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; steps.
+    output_file: Stream verbose output into this filename. If None, stream to
+                 standard out.
+    flush_delay: Standard output will be flushed once every &lt;flush_delay&gt;
+                 minutes. This is useful to avoid overloading I/O on clusters.
+    epsilon: Step-size to use for finite-difference derivatives.
+    pgtol: Convergence criterion for optimization. For more info, 
+          see help(scipy.optimize.fmin_l_bfgs_b)
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    maxiter: Maximum algorithm iterations to run.
+    full_output: If True, return full outputs as in described in 
+                 help(scipy.optimize.fmin_bfgs)
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    ll_scale: The bfgs algorithm may fail if your initial log-likelihood is
+              too large. (This appears to be a flaw in the scipy
+              implementation.) To overcome this, pass ll_scale &gt; 1, which will
+              simply reduce the magnitude of the log-likelihood. Once in a
+              region of reasonable likelihood, you&#39;ll probably want to
+              re-optimize with ll_scale=1.
+
+    The L-BFGS-B method was developed by Ciyou Zhu, Richard Byrd, and Jorge
+    Nocedal. The algorithm is described in:
+      * R. H. Byrd, P. Lu and J. Nocedal. A Limited Memory Algorithm for Bound
+        Constrained Optimization, (1995), SIAM Journal on Scientific and
+        Statistical Computing , 16, 5, pp. 1190-1208.
+      * C. Zhu, R. H. Byrd and J. Nocedal. L-BFGS-B: Algorithm 778: L-BFGS-B,
+        FORTRAN routines for large scale bound constrained optimization (1997),
+        ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550-560.
+    
+    &#34;&#34;&#34;
+    if output_file:
+        output_stream = open(output_file, &#39;w&#39;)
+    else:
+        output_stream = sys.stdout
+
+    args = (data_list, model_func, pts, dts, rhos,
+            None, None, verbose,
+            multinom, flush_delay, func_args, func_kwargs, fixed_params, 
+            ll_scale, output_stream)
+
+    # Make bounds list. For this method it needs to be in terms of log params.
+    if lower_bound is None:
+        lower_bound = [None] * len(p0)
+    else:
+        lower_bound = numpy.log(lower_bound)
+        lower_bound[numpy.isnan(lower_bound)] = None
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    if upper_bound is None:
+        upper_bound = [None] * len(p0)
+    else:
+        upper_bound = numpy.log(upper_bound)
+        upper_bound[numpy.isnan(upper_bound)] = None
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    bounds = list(zip(lower_bound,upper_bound))
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    outputs = scipy.optimize.fmin_l_bfgs_b(_object_func_log, 
+                                           numpy.log(p0), bounds = bounds,
+                                           epsilon=epsilon, args = args,
+                                           iprint = -1, pgtol=pgtol,
+                                           maxfun=maxiter, approx_grad=True)
+    xopt, fopt, info_dict = outputs
+
+    xopt = _project_params_up(numpy.exp(xopt), fixed_params)
+
+    if output_file:
+        output_stream.close()
+
+    if not full_output:
+        return xopt
+    else:
+        return xopt, fopt, info_dict</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.TwoLocus" href="index.html">dadi.TwoLocus</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.TwoLocus.inference.ll" href="#dadi.TwoLocus.inference.ll">ll</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.ll_multinom" href="#dadi.TwoLocus.inference.ll_multinom">ll_multinom</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.ll_multinom_per_bin" href="#dadi.TwoLocus.inference.ll_multinom_per_bin">ll_multinom_per_bin</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.ll_over_rho_bins" href="#dadi.TwoLocus.inference.ll_over_rho_bins">ll_over_rho_bins</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.ll_over_rho_bins_multinom" href="#dadi.TwoLocus.inference.ll_over_rho_bins_multinom">ll_over_rho_bins_multinom</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.ll_per_bin" href="#dadi.TwoLocus.inference.ll_per_bin">ll_per_bin</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.optimal_sfs_scaling" href="#dadi.TwoLocus.inference.optimal_sfs_scaling">optimal_sfs_scaling</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.optimally_scaled_sfs" href="#dadi.TwoLocus.inference.optimally_scaled_sfs">optimally_scaled_sfs</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.optimize_log_fmin" href="#dadi.TwoLocus.inference.optimize_log_fmin">optimize_log_fmin</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.optimize_log_fmin_interp" href="#dadi.TwoLocus.inference.optimize_log_fmin_interp">optimize_log_fmin_interp</a></code></li>
+<li><code><a title="dadi.TwoLocus.inference.optimize_log_lbfgsb" href="#dadi.TwoLocus.inference.optimize_log_lbfgsb">optimize_log_lbfgsb</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

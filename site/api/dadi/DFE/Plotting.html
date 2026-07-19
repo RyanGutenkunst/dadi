@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.DFE.Plotting API documentation</title>
+<meta name="description" content="Miscellaneous functions for plotting DFEs" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.DFE.Plotting</code></h1>
+</header>
+<section id="section-intro">
+<p>Miscellaneous functions for plotting DFEs</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Miscellaneous functions for plotting DFEs
+&#34;&#34;&#34;
+import numpy as np
+
+def plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=None,
+                 xlabel=&#39;$\gamma_1$&#39;, ylabel=&#39;$\gamma_2$&#39;, cmap=&#39;gray_r&#39;,
+                 colorbar=True, vmin=0, clip_on=True):
+    &#34;&#34;&#34;
+    Plot bivariate DFE (for negative gammas).
+
+    gammax, gammay: Grids of gamma values to plot with. Note that non-negative
+                    values are discarded.
+    sel_dist: Bivariate probability distribution,
+              taking in arguments (xx, yy, params)
+    params: Parameters for sel_dist
+    logweight: If True, plotted values are weighted by x and y, so that the
+               total probability within each cell is plotted, rather than the
+               probability density. This is typically easier to interpret.
+    ax: Matplotlib axes to plot into. If None, plt.gca() is used.
+    xlabel, ylabel: Labels for x and y axes.
+    cmap: Colormap to plot with. For useful advice regarding colormaps, see
+          http://matplotlib.org/users/colormaps.html .
+    colorbar: If True, include a colorbar alongside the plot.
+    vmin: Values below this will be colored white.
+    clip_on: If False, plot will extend outside of axes.
+    &#34;&#34;&#34;
+    # Discard non-negative values of gamma.
+    gammax = gammax[gammax &lt; 0]
+    gammay = gammay[gammay &lt; 0]
+
+    # Midpoints of each gamma bin (on a log-scale)
+    xmid = np.sqrt(gammax[:-1] * gammax[1:])
+    ymid = np.sqrt(gammay[:-1] * gammay[1:])
+    # Calculate weights
+    weights = sel_dist(xmid, ymid, params)
+    # Convert from probability density to probability value within each cell.
+    if logweight:
+        weights *= xmid[:,np.newaxis] * ymid[np.newaxis,:]
+
+    # Plot data
+    X,Y = np.meshgrid(gammax, gammay)
+
+    if not ax:
+        # Hiding import here, so Selection_2d.py isn&#39;t dependent on matplotlib.
+        import matplotlib.pyplot as plt
+        ax = plt.gca()
+    masked = np.ma.masked_where(weights.T&lt;vmin,weights.T)
+    mappable = ax.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, clip_on=clip_on)
+
+    # Plot the colorbar, labeling carefully depending on logweight
+    if colorbar:
+        cb = ax.get_figure().colorbar(mappable)
+        if logweight:
+            cb.set_label(&#39;Probability&#39;)
+        else:
+            cb.set_label(&#39;Probability density&#39;)
+
+    # Set to logscale. Use symlog because it handles negative values cleanly
+    ax.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
+
+    ax.set_xlabel(xlabel, fontsize=&#39;large&#39;)
+    ax.set_ylabel(ylabel, fontsize=&#39;large&#39;)
+
+    return ax
+
+def plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params, rho=0,
+                           logweight=True, xlabel=&#39;$\gamma_1$&#39;,
+                           ylabel=&#39;$\gamma_2$&#39;, cmap=&#39;gray_r&#39;, fignum=None,
+                           colorbar=True, vmin=0):
+    &#34;&#34;&#34;
+    Plot bivariate DFE (for negative gammas) with positive point mass.
+
+    Returns figure for plot.
+
+    Note: You might need to adjust subplot parameters using fig.subplots_adjust
+          after plotting to see all labels, etc.
+
+    gammax, gammay: Grids of gamma values to plot with. Note that non-negative
+                    values are discarded.
+    sel_dist: Bivariate probability distribution,
+              taking in arguments (xx, yy, params)
+    params: Parameters for sel_dist and positive selection.
+            It is assumed that the last four parameters are:
+            Proportion positive selection in pop1, postive gamma for pop1,
+             prop. positive in pop2, and positive gamma for pop2.
+            Earlier arguments are assumed to be for the continuous bivariate
+            distribution.
+    rho: Correlation coefficient used to connect negative and positive
+         components of DFE.
+    logweight: If True, plotted values are weighted by x and y, so that the
+               total probability within each cell is plotted, rather than the
+               probability density. This is typically easier to interpret.
+    xlabel, ylabel: Labels for x and y axes.
+    cmap: Colormap to plot with. For useful advice regarding colormaps, see
+          http://matplotlib.org/users/colormaps.html .
+    fignum: Figure number to use. If None or figure does not exist, a new
+            one will be created.
+    colorbar: If True, plot scale bar for probability
+    vmin: Values below this will be colored white.
+    &#34;&#34;&#34;
+    biv_params = params[:-4]
+    ppos1, gammapos1, ppos2, gammapos2 = params[-4:]
+
+    # Pull out negative gammas and calculate (log) midpoints.
+    gammax = gammax[gammax &lt; 0]
+    gammay = gammay[gammay &lt; 0]
+    xmid = np.sqrt(gammax[:-1] * gammax[1:])
+    ymid = np.sqrt(gammay[:-1] * gammay[1:])
+
+    # Bivariate negative part of DFE
+    neg_neg = sel_dist(xmid, ymid, biv_params)
+    # Marginal DFEs from integrating along each axis
+    neg_pos = np.trapz(neg_neg, ymid, axis=1)
+    pos_neg = np.trapz(neg_neg, xmid, axis=0)
+
+    if logweight:
+        neg_neg *= xmid[:,np.newaxis] * ymid[np.newaxis,:]
+        neg_pos *= xmid
+        pos_neg *= ymid
+
+    # Weighting factors for each quadrant of the DFE. Note that in the case
+    # that ppos1==ppos2, these reduce to the model of Ragsdale et al. (2016)
+    p_pos_pos = ppos1*ppos2 + rho*(np.sqrt(ppos1*ppos2) - ppos1*ppos2)
+    p_pos_neg = (1-rho) * ppos1*(1-ppos2)
+    p_neg_pos = (1-rho) * (1-ppos1)*ppos2
+    p_neg_neg = (1-ppos1)*(1-ppos2)\
+            + rho*(1-np.sqrt(ppos1*ppos2) - (1-ppos1)*(1-ppos2))
+
+    # Apply weighting factors
+    pos_neg *= p_pos_neg
+    neg_pos *= p_neg_pos
+    neg_neg *= p_neg_neg
+
+    # For plotting, to put all on same color-scale.
+    vmax = max([neg_neg.max(), neg_pos.max(), pos_neg.max(), p_pos_pos])
+
+    # Grid points for plotting in positive selection regime.
+    if gammapos1 != gammapos2:
+        pos_grid = np.array(sorted([gammapos1, (gammapos1 + gammapos2)/2.,
+                                    gammapos2]))
+    else:
+        pos_grid = np.array([gammapos1-1, gammapos1, gammapos1+1])
+
+    # Fill in grids for plotting positive terms
+    pos_neg_grid = np.zeros((3, len(ymid)))
+    pos_neg_grid[pos_grid == gammapos1] = pos_neg
+    neg_pos_grid = np.zeros((len(xmid), 3))
+    neg_pos_grid[:,pos_grid == gammapos2] = neg_pos[:,np.newaxis]
+    pos_pos_grid = np.zeros((3,3))
+    pos_pos_grid[pos_grid == gammapos1, pos_grid == gammapos2] = p_pos_pos
+
+    # For plotting with pcolor, need grid one size bigger.
+    d = pos_grid[1] - pos_grid[0]
+    plot_pos_grid = np.linspace(pos_grid[0] - d/2., pos_grid[-1] + d/2., 4)
+
+    import matplotlib.pyplot as plt
+    fig = plt.figure(num=fignum, figsize=(4,3), dpi=150)
+    fig.clear()
+
+    gs = plt.matplotlib.gridspec.GridSpec(2,3, width_ratios=[9,1,0.5],
+                                          height_ratios=[1,9],
+                                          wspace=0.15, hspace=0.15)
+    # Create our four axes
+    ax_ll = fig.add_subplot(gs[1,0])
+    ax_ul = fig.add_subplot(gs[0,0], sharex=ax_ll)
+    ax_lr = fig.add_subplot(gs[1,1], sharey=ax_ll)
+    ax_ur = fig.add_subplot(gs[0,1], sharex=ax_lr, sharey=ax_ul)
+
+    # Plot in each axis
+    X,Y = np.meshgrid(gammax, gammay)
+    masked = np.ma.masked_where(neg_neg.T&lt;vmin,neg_neg.T)
+    mappable = ax_ll.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+    X,Y = np.meshgrid(plot_pos_grid, plot_pos_grid)
+    masked = np.ma.masked_where(pos_pos_grid.T&lt;vmin,pos_pos_grid.T)
+    ax_ur.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+    X,Y = np.meshgrid(plot_pos_grid, gammay)
+    masked = np.ma.masked_where(pos_neg_grid.T&lt;vmin,pos_neg_grid.T)
+    ax_lr.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+    X,Y = np.meshgrid(gammax, plot_pos_grid)
+    masked = np.ma.masked_where(neg_pos_grid.T&lt;vmin,neg_pos_grid.T)
+    ax_ul.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+
+    # Set logarithmic scale on legative parts
+    ax_ll.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax_ll.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
+
+    # Remove interior axes lines and tickmarks
+    ax_ll.spines[&#39;right&#39;].set_visible(False)
+    ax_ll.spines[&#39;top&#39;].set_visible(False)
+    ax_ll.tick_params(&#39;both&#39;, top=False, right=False, which=&#39;both&#39;)
+
+    ax_ul.spines[&#39;right&#39;].set_visible(False)
+    ax_ul.spines[&#39;bottom&#39;].set_visible(False)
+    ax_ul.tick_params(&#39;both&#39;, top=True, bottom=False,
+                      labelbottom=False, right=False, which=&#39;both&#39;)
+
+    ax_lr.spines[&#39;left&#39;].set_visible(False)
+    ax_lr.spines[&#39;top&#39;].set_visible(False)
+    ax_lr.tick_params(&#39;both&#39;, right=True, left=False,
+                      labelleft=False, top=False, which=&#39;both&#39;)
+
+    ax_ur.spines[&#39;left&#39;].set_visible(False)
+    ax_ur.spines[&#39;bottom&#39;].set_visible(False)
+    ax_ur.tick_params(&#39;both&#39;, right=True, left=False,
+                      labelleft=False, top=True, bottom=False,
+                      labelbottom=False, which=&#39;both&#39;)
+
+    # Set tickmarks for positive selection
+    if gammapos1 != gammapos2:
+        ax_ur.set_xticks([gammapos1, gammapos2])
+        ax_ur.set_yticks([gammapos1, gammapos2])
+    else:
+        ax_ur.set_xticks([gammapos1])
+        ax_ur.set_yticks([gammapos1])
+
+    ax_ll.set_xlabel(xlabel, fontsize=&#39;large&#39;)
+    ax_ll.set_ylabel(ylabel, fontsize=&#39;large&#39;)
+
+    if colorbar:
+        ax = fig.add_subplot(gs[1,2])
+        cb = fig.colorbar(mappable, cax=ax, use_gridspec=True)
+        if logweight:
+            cb.set_label(&#39;Probability&#39;)
+    fig.subplots_adjust(top=0.99, right=0.82, bottom=0.19, left=0.18)
+
+    return fig</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.DFE.Plotting.plot_biv_dfe"><code class="name flex">
+<span>def <span class="ident">plot_biv_dfe</span></span>(<span>gammax, gammay, sel_dist, params, logweight=True, ax=None, xlabel='$\\gamma_1$', ylabel='$\\gamma_2$', cmap='gray_r', colorbar=True, vmin=0, clip_on=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plot bivariate DFE (for negative gammas).</p>
+<p>gammax, gammay: Grids of gamma values to plot with. Note that non-negative
+values are discarded.
+sel_dist: Bivariate probability distribution,
+taking in arguments (xx, yy, params)
+params: Parameters for sel_dist
+logweight: If True, plotted values are weighted by x and y, so that the
+total probability within each cell is plotted, rather than the
+probability density. This is typically easier to interpret.
+ax: Matplotlib axes to plot into. If None, plt.gca() is used.
+xlabel, ylabel: Labels for x and y axes.
+cmap: Colormap to plot with. For useful advice regarding colormaps, see
+<a href="http://matplotlib.org/users/colormaps.html">http://matplotlib.org/users/colormaps.html</a> .
+colorbar: If True, include a colorbar alongside the plot.
+vmin: Values below this will be colored white.
+clip_on: If False, plot will extend outside of axes.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_biv_dfe(gammax, gammay, sel_dist, params, logweight=True, ax=None,
+                 xlabel=&#39;$\gamma_1$&#39;, ylabel=&#39;$\gamma_2$&#39;, cmap=&#39;gray_r&#39;,
+                 colorbar=True, vmin=0, clip_on=True):
+    &#34;&#34;&#34;
+    Plot bivariate DFE (for negative gammas).
+
+    gammax, gammay: Grids of gamma values to plot with. Note that non-negative
+                    values are discarded.
+    sel_dist: Bivariate probability distribution,
+              taking in arguments (xx, yy, params)
+    params: Parameters for sel_dist
+    logweight: If True, plotted values are weighted by x and y, so that the
+               total probability within each cell is plotted, rather than the
+               probability density. This is typically easier to interpret.
+    ax: Matplotlib axes to plot into. If None, plt.gca() is used.
+    xlabel, ylabel: Labels for x and y axes.
+    cmap: Colormap to plot with. For useful advice regarding colormaps, see
+          http://matplotlib.org/users/colormaps.html .
+    colorbar: If True, include a colorbar alongside the plot.
+    vmin: Values below this will be colored white.
+    clip_on: If False, plot will extend outside of axes.
+    &#34;&#34;&#34;
+    # Discard non-negative values of gamma.
+    gammax = gammax[gammax &lt; 0]
+    gammay = gammay[gammay &lt; 0]
+
+    # Midpoints of each gamma bin (on a log-scale)
+    xmid = np.sqrt(gammax[:-1] * gammax[1:])
+    ymid = np.sqrt(gammay[:-1] * gammay[1:])
+    # Calculate weights
+    weights = sel_dist(xmid, ymid, params)
+    # Convert from probability density to probability value within each cell.
+    if logweight:
+        weights *= xmid[:,np.newaxis] * ymid[np.newaxis,:]
+
+    # Plot data
+    X,Y = np.meshgrid(gammax, gammay)
+
+    if not ax:
+        # Hiding import here, so Selection_2d.py isn&#39;t dependent on matplotlib.
+        import matplotlib.pyplot as plt
+        ax = plt.gca()
+    masked = np.ma.masked_where(weights.T&lt;vmin,weights.T)
+    mappable = ax.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, clip_on=clip_on)
+
+    # Plot the colorbar, labeling carefully depending on logweight
+    if colorbar:
+        cb = ax.get_figure().colorbar(mappable)
+        if logweight:
+            cb.set_label(&#39;Probability&#39;)
+        else:
+            cb.set_label(&#39;Probability density&#39;)
+
+    # Set to logscale. Use symlog because it handles negative values cleanly
+    ax.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
+
+    ax.set_xlabel(xlabel, fontsize=&#39;large&#39;)
+    ax.set_ylabel(ylabel, fontsize=&#39;large&#39;)
+
+    return ax</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.Plotting.plot_biv_point_pos_dfe"><code class="name flex">
+<span>def <span class="ident">plot_biv_point_pos_dfe</span></span>(<span>gammax, gammay, sel_dist, params, rho=0, logweight=True, xlabel='$\\gamma_1$', ylabel='$\\gamma_2$', cmap='gray_r', fignum=None, colorbar=True, vmin=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plot bivariate DFE (for negative gammas) with positive point mass.</p>
+<p>Returns figure for plot.</p>
+<p>Note: You might need to adjust subplot parameters using fig.subplots_adjust
+after plotting to see all labels, etc.</p>
+<p>gammax, gammay: Grids of gamma values to plot with. Note that non-negative
+values are discarded.
+sel_dist: Bivariate probability distribution,
+taking in arguments (xx, yy, params)
+params: Parameters for sel_dist and positive selection.
+It is assumed that the last four parameters are:
+Proportion positive selection in pop1, postive gamma for pop1,
+prop. positive in pop2, and positive gamma for pop2.
+Earlier arguments are assumed to be for the continuous bivariate
+distribution.
+rho: Correlation coefficient used to connect negative and positive
+components of DFE.
+logweight: If True, plotted values are weighted by x and y, so that the
+total probability within each cell is plotted, rather than the
+probability density. This is typically easier to interpret.
+xlabel, ylabel: Labels for x and y axes.
+cmap: Colormap to plot with. For useful advice regarding colormaps, see
+<a href="http://matplotlib.org/users/colormaps.html">http://matplotlib.org/users/colormaps.html</a> .
+fignum: Figure number to use. If None or figure does not exist, a new
+one will be created.
+colorbar: If True, plot scale bar for probability
+vmin: Values below this will be colored white.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_biv_point_pos_dfe(gammax, gammay, sel_dist, params, rho=0,
+                           logweight=True, xlabel=&#39;$\gamma_1$&#39;,
+                           ylabel=&#39;$\gamma_2$&#39;, cmap=&#39;gray_r&#39;, fignum=None,
+                           colorbar=True, vmin=0):
+    &#34;&#34;&#34;
+    Plot bivariate DFE (for negative gammas) with positive point mass.
+
+    Returns figure for plot.
+
+    Note: You might need to adjust subplot parameters using fig.subplots_adjust
+          after plotting to see all labels, etc.
+
+    gammax, gammay: Grids of gamma values to plot with. Note that non-negative
+                    values are discarded.
+    sel_dist: Bivariate probability distribution,
+              taking in arguments (xx, yy, params)
+    params: Parameters for sel_dist and positive selection.
+            It is assumed that the last four parameters are:
+            Proportion positive selection in pop1, postive gamma for pop1,
+             prop. positive in pop2, and positive gamma for pop2.
+            Earlier arguments are assumed to be for the continuous bivariate
+            distribution.
+    rho: Correlation coefficient used to connect negative and positive
+         components of DFE.
+    logweight: If True, plotted values are weighted by x and y, so that the
+               total probability within each cell is plotted, rather than the
+               probability density. This is typically easier to interpret.
+    xlabel, ylabel: Labels for x and y axes.
+    cmap: Colormap to plot with. For useful advice regarding colormaps, see
+          http://matplotlib.org/users/colormaps.html .
+    fignum: Figure number to use. If None or figure does not exist, a new
+            one will be created.
+    colorbar: If True, plot scale bar for probability
+    vmin: Values below this will be colored white.
+    &#34;&#34;&#34;
+    biv_params = params[:-4]
+    ppos1, gammapos1, ppos2, gammapos2 = params[-4:]
+
+    # Pull out negative gammas and calculate (log) midpoints.
+    gammax = gammax[gammax &lt; 0]
+    gammay = gammay[gammay &lt; 0]
+    xmid = np.sqrt(gammax[:-1] * gammax[1:])
+    ymid = np.sqrt(gammay[:-1] * gammay[1:])
+
+    # Bivariate negative part of DFE
+    neg_neg = sel_dist(xmid, ymid, biv_params)
+    # Marginal DFEs from integrating along each axis
+    neg_pos = np.trapz(neg_neg, ymid, axis=1)
+    pos_neg = np.trapz(neg_neg, xmid, axis=0)
+
+    if logweight:
+        neg_neg *= xmid[:,np.newaxis] * ymid[np.newaxis,:]
+        neg_pos *= xmid
+        pos_neg *= ymid
+
+    # Weighting factors for each quadrant of the DFE. Note that in the case
+    # that ppos1==ppos2, these reduce to the model of Ragsdale et al. (2016)
+    p_pos_pos = ppos1*ppos2 + rho*(np.sqrt(ppos1*ppos2) - ppos1*ppos2)
+    p_pos_neg = (1-rho) * ppos1*(1-ppos2)
+    p_neg_pos = (1-rho) * (1-ppos1)*ppos2
+    p_neg_neg = (1-ppos1)*(1-ppos2)\
+            + rho*(1-np.sqrt(ppos1*ppos2) - (1-ppos1)*(1-ppos2))
+
+    # Apply weighting factors
+    pos_neg *= p_pos_neg
+    neg_pos *= p_neg_pos
+    neg_neg *= p_neg_neg
+
+    # For plotting, to put all on same color-scale.
+    vmax = max([neg_neg.max(), neg_pos.max(), pos_neg.max(), p_pos_pos])
+
+    # Grid points for plotting in positive selection regime.
+    if gammapos1 != gammapos2:
+        pos_grid = np.array(sorted([gammapos1, (gammapos1 + gammapos2)/2.,
+                                    gammapos2]))
+    else:
+        pos_grid = np.array([gammapos1-1, gammapos1, gammapos1+1])
+
+    # Fill in grids for plotting positive terms
+    pos_neg_grid = np.zeros((3, len(ymid)))
+    pos_neg_grid[pos_grid == gammapos1] = pos_neg
+    neg_pos_grid = np.zeros((len(xmid), 3))
+    neg_pos_grid[:,pos_grid == gammapos2] = neg_pos[:,np.newaxis]
+    pos_pos_grid = np.zeros((3,3))
+    pos_pos_grid[pos_grid == gammapos1, pos_grid == gammapos2] = p_pos_pos
+
+    # For plotting with pcolor, need grid one size bigger.
+    d = pos_grid[1] - pos_grid[0]
+    plot_pos_grid = np.linspace(pos_grid[0] - d/2., pos_grid[-1] + d/2., 4)
+
+    import matplotlib.pyplot as plt
+    fig = plt.figure(num=fignum, figsize=(4,3), dpi=150)
+    fig.clear()
+
+    gs = plt.matplotlib.gridspec.GridSpec(2,3, width_ratios=[9,1,0.5],
+                                          height_ratios=[1,9],
+                                          wspace=0.15, hspace=0.15)
+    # Create our four axes
+    ax_ll = fig.add_subplot(gs[1,0])
+    ax_ul = fig.add_subplot(gs[0,0], sharex=ax_ll)
+    ax_lr = fig.add_subplot(gs[1,1], sharey=ax_ll)
+    ax_ur = fig.add_subplot(gs[0,1], sharex=ax_lr, sharey=ax_ul)
+
+    # Plot in each axis
+    X,Y = np.meshgrid(gammax, gammay)
+    masked = np.ma.masked_where(neg_neg.T&lt;vmin,neg_neg.T)
+    mappable = ax_ll.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+    X,Y = np.meshgrid(plot_pos_grid, plot_pos_grid)
+    masked = np.ma.masked_where(pos_pos_grid.T&lt;vmin,pos_pos_grid.T)
+    ax_ur.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+    X,Y = np.meshgrid(plot_pos_grid, gammay)
+    masked = np.ma.masked_where(pos_neg_grid.T&lt;vmin,pos_neg_grid.T)
+    ax_lr.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+    X,Y = np.meshgrid(gammax, plot_pos_grid)
+    masked = np.ma.masked_where(neg_pos_grid.T&lt;vmin,neg_pos_grid.T)
+    ax_ul.pcolor(X,Y,masked, cmap=cmap, vmin=vmin, vmax=vmax)
+
+    # Set logarithmic scale on legative parts
+    ax_ll.set_xscale(&#39;symlog&#39;, linthresh=abs(gammax).min())
+    ax_ll.set_yscale(&#39;symlog&#39;, linthresh=abs(gammay).min())
+
+    # Remove interior axes lines and tickmarks
+    ax_ll.spines[&#39;right&#39;].set_visible(False)
+    ax_ll.spines[&#39;top&#39;].set_visible(False)
+    ax_ll.tick_params(&#39;both&#39;, top=False, right=False, which=&#39;both&#39;)
+
+    ax_ul.spines[&#39;right&#39;].set_visible(False)
+    ax_ul.spines[&#39;bottom&#39;].set_visible(False)
+    ax_ul.tick_params(&#39;both&#39;, top=True, bottom=False,
+                      labelbottom=False, right=False, which=&#39;both&#39;)
+
+    ax_lr.spines[&#39;left&#39;].set_visible(False)
+    ax_lr.spines[&#39;top&#39;].set_visible(False)
+    ax_lr.tick_params(&#39;both&#39;, right=True, left=False,
+                      labelleft=False, top=False, which=&#39;both&#39;)
+
+    ax_ur.spines[&#39;left&#39;].set_visible(False)
+    ax_ur.spines[&#39;bottom&#39;].set_visible(False)
+    ax_ur.tick_params(&#39;both&#39;, right=True, left=False,
+                      labelleft=False, top=True, bottom=False,
+                      labelbottom=False, which=&#39;both&#39;)
+
+    # Set tickmarks for positive selection
+    if gammapos1 != gammapos2:
+        ax_ur.set_xticks([gammapos1, gammapos2])
+        ax_ur.set_yticks([gammapos1, gammapos2])
+    else:
+        ax_ur.set_xticks([gammapos1])
+        ax_ur.set_yticks([gammapos1])
+
+    ax_ll.set_xlabel(xlabel, fontsize=&#39;large&#39;)
+    ax_ll.set_ylabel(ylabel, fontsize=&#39;large&#39;)
+
+    if colorbar:
+        ax = fig.add_subplot(gs[1,2])
+        cb = fig.colorbar(mappable, cax=ax, use_gridspec=True)
+        if logweight:
+            cb.set_label(&#39;Probability&#39;)
+    fig.subplots_adjust(top=0.99, right=0.82, bottom=0.19, left=0.18)
+
+    return fig</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.DFE" href="index.html">dadi.DFE</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.DFE.Plotting.plot_biv_dfe" href="#dadi.DFE.Plotting.plot_biv_dfe">plot_biv_dfe</a></code></li>
+<li><code><a title="dadi.DFE.Plotting.plot_biv_point_pos_dfe" href="#dadi.DFE.Plotting.plot_biv_point_pos_dfe">plot_biv_point_pos_dfe</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

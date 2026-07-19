@@ -5,9 +5,9 @@ dadi provides support for demographic models with homoeologous exchange and sele
 
 ### Specifying a Polyploid Model
 
-Defining a demographic model for a polyploid is almost identical to defining a standard dadi demographic model. There are two key differences. First, the integration functions in `dadi.Polyploidy.Integration` must be used in place of the standard `dadi.Integration` functions (although most other dadi functions including those in `dadi.Numerics` and `dadi.PhiManip` can be used without modification).
+Defining a demographic model for a polyploid population is very similar to defining a standard dadi demographic model with two key differences. First, the integration functions in `dadi.Polyploidy.Integration` must be used in place of the standard `dadi.Integration` functions (although virtually all other dadi functions including those in `dadi.Numerics` and `dadi.PhiManip` can be used without modification).
 
-Second, the ploidy of each subgenome/population must be specified during each integration by setting the `ploidyflag` parameter using the `PloidyType` class in `dadi.Polyploidy.Integration`. By default, the ploidy is assumed to be diploid, but this can easily be changed. For example, to model a simple two-epoch (single size change) model for an autotetraploid, we would use the following code from `dadi.Polyploidy.auto_demographics.two_epoch`:
+Second, the ploidy of each subgenome/population must be specified during each integration by setting the `ploidyflag` parameter using the `PloidyType` class in `dadi.Polyploidy.Integration`. For example, to model a simple two-epoch model for an autotetraploid population, we would use the following model function from `dadi.Polyploidy.auto_demographics.two_epoch`:
 
 	def two_epoch_autotetraploid(params, ns, pts):
     	T_WGD, nu = params
@@ -21,9 +21,9 @@ Second, the ploidy of each subgenome/population must be specified during each in
     	
 		return fs
 
-A similar model for an allotetraploid (which also includes a divergence period between the two diploid progenitors) is defined in `dadi.Polyploidy.allo_demographics.two_epoch` and is writted as:
+A similar model for an allotetraploid (which also includes a divergence period between the two diploid progenitors) could be specified as: 
 
-	def two_epoch(params, ns, pts):
+	def two_epoch_allotetraploid(params, ns, pts):
 
     	T_div, T_WGD, nu = params
     	xx = Numerics.default_grid(pts)
@@ -46,23 +46,48 @@ A similar model for an allotetraploid (which also includes a divergence period b
 
 ### Homoeologous exchange
 
-Including a migration parameter between subgenomes acts as a proxy for homoeologous exchange (gene flow between subgenomes arising from homoeologous recombination). The following example models an allotetraploid with homoeologous exchange between the two subgenomes which as shown in (TODO: add figure reference) impacts the shared polymorphism in the interior of the SFS and fixed heterozygosity at opposing corners of the SFS.
+To model homoeologous exchange between subgenomes, we can include a migration parameter between subgenomes. Importantly, because homoeologous exchange arises from recombination events, the migration parameter should be symmetric between subgenomes. We can extend the two epoch allotetraploid model above to include homoeologous exchange by adding an additional parameter: 
 
-TODO: Add model with homoeologous exchange and figure.
+	def two_epoch_allotetraploid_with_homoeologous_exchange(params, ns, pts):
+
+    	T_div, T_WGD, nu, H = params
+    	xx = Numerics.default_grid(pts)
+
+    	alloaflag = Polyploidy.Integration.PloidyType.ALLOa
+    	allobflag = Polyploidy.Integration.PloidyType.ALLOb
+    
+    	phi = PhiManip.phi_1D(xx)
+    	phi = PhiManip.phi_1D_to_2D(xx, phi)
+    	
+		# integration for the diploid progenitors diverging
+    	phi = Polyploidy.Integration.two_pops(phi, xx, T_div)
+
+    	# then, integration for the allotetraploid formation
+    	phi = PolyInt.two_pops(phi, xx, T_WGD, nu1=nu, nu2=nu, m12=H, m21=H,
+                           	   ploidyflag1=alloaflag, ploidyflag2=allobflag)
+    	fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    	
+		return fs
+
+TODO: Add figure showing the difference in the SFS with and without HEs?
 
 ### Collapsing into a single, one-dimensional SFS
 
-The separate subgenomes of a polyploid can also be collapsed into a single, one-dimensional SFS. Depending on the biological context, this approach may be useful as there is no need to predetermine if the lineage is auto- or allopolyploid. There is also no need to separate SNP calls between subgenomes because fixed heterozygosity is naturally accommodated by combining each subgenome's frequency spectra into a single SFS.
+The separate subgenomes of a polyploid can also be collapsed into a single, one-dimensional SFS. Depending on the biological context, this approach may be useful as there is no need to predetermine if the population is auto- or allopolyploid. There is also no need to separate SNP calls between subgenomes because fixed heterozygosity is naturally accommodated by combining each subgenome's frequency spectra into a single SFS.
 
-TODO: Add code for collapsing into a single SFS here with a figure.
+Taking the two epoch model with homoeologous exchange defined above, we can collapse the subgenomes using the `combine_pops` method from `dadi.Spectrum`. Collapsing the SFS from the allotetraploid two epoch model results in a single, one-dimensional SFS with a peak at half the total sample size. 
+
+TODO: Add a figure.
 
 ### Selection 
 
-As in standard dadi models, genotype fitnesses are specified as \\(1+2s_i\\) where \\(s_i\\) is the selection coefficient for genotype \\(i\\). So, selection coefficients sometimes need to be rescaled by a factor of two when working with other software for inference or simulation, including SLiM <sup>[10](./references.md)</sup>.
+While a model of selection for diploids can be fully specified using just two parameters --- a selection coefficient \\(s \\) and a dominance coefficient \\(h \\) --- for polyploids, a full model of selection requires additional parameters. For example, we use four selection coefficients \\( s_1, s_2, s_3, \\) and \\( s_4\\) to specify an **autotetraploid** model of selection where \\(s_i \\) corresponds to the selection coefficient for an individual with \\(i \\) derived alleles. So, following the definition of genotype fitnesses, \\(1, 1 + 2s_1, 1 + 2s_2, 1 + 2s_3\\), and \\(1 + 2s_4\\) correspond to the relative fitnesses for an **autotetraploid** with \\(0, 1, 2, 3, \\) and \\( 4 \\) derived alleles. (The fitnesses are defined as \\(1+2s_i\\) to maintain consistency with how fitnesses are defined in dadi models for diploids. In some cases, this requires rescaling selection coefficients by a factor of two when working with other software for inference or simulation, including SLiM<sup>[10](./references.md)</sup>.)
 
-As a concrete example, the fitnesses for an **autotetraploid** with \\(0, 1, 2, 3, \\) and \\( 4 \\) derived alleles are \\(1, 1 + 2s_1, 1 + 2s_2, 1 + 2s_3\\), and \\(1 + 2s_4\\). So, \\(s_i \\) corresponds to the selection coefficient for an individual with \\(i \\) derived alleles. 
+Given the added complexity in the selection models for polyploids, the integration methods in `dadi.Polyploidy.Integration` accept a dictionary of selection parameters instead of single parameters. Notably, specifying different sets of parameters in the dictionary results in different models of selection. 
 
-Outline how to specify a model with selection here (for an additive case and a more complicated case).
+To specify an additive model of selection in which relative fitness is proportional to the total number of derived alleles across subgenomes, we can pass a dictionary with a single key `'gamma'` and corresponding value to the `sel_dict` argument for any ploidy type (e.g., `{'gamma' : -1}`). For this example, the population scaled selection coefficient (\\( \gamma = 2 N_a s\\)) for individuals homozygous for the derived allele in every subgenome is equal to `-1`. In the autotetraploid example above, this is equivalent to setting \\( 4s_1 = 3s_2 = 2s_3 = s_4 = -1/(2 N_a) \\) and \\( s_1 = s_2 = 1 \\).
+
+More complicated models of selection with non-additive effects within or across subgenomes can also be specified by passing a dictionary with multiple keys and corresponding values for different subgenomes (see the `dadi.Polyploidy.Integration.PloidyType` class for more details).
 
 ### Initializing phi for polyploid models
 
@@ -71,6 +96,12 @@ For autopolyploids, we provide support for starting a demographic model from the
 To model the transition to polyploidy for an autotetraploid, we can start with the diploid equilibrium and model the demographic history of the autotetraploid since the whole genome duplication event: (TODO: add code)
 
 Alternatively, we can start from the polyploid equilibrium and focus on modeling the more recent history of the autotetraploid: (TODO: add code)
+
+### Other thoughts?
+
+Note on effective population size and allotetraploid models? 
+
+
 
 
 ![Tetraploid example SFS](TetraploidSFS.png)

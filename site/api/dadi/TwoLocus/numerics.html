@@ -1,0 +1,3590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.TwoLocus.numerics API documentation</title>
+<meta name="description" content="methods for numerics of two locus diffusion - grids, transition matrices, etc" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.TwoLocus.numerics</code></h1>
+</header>
+<section id="section-intro">
+<p>methods for numerics of two locus diffusion - grids, transition matrices, etc</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+methods for numerics of two locus diffusion - grids, transition matrices, etc
+&#34;&#34;&#34;
+import numpy as np
+import dadi
+from numpy import newaxis as nuax
+from scipy.sparse import lil_matrix,identity
+import math
+
+from dadi.TwoLocus.TLSpectrum_mod import TLSpectrum
+
+tol = 1e-12
+
+def LD_per_bin(ns):
+    &#34;&#34;&#34;
+    LD statistics per bin for a TLSpectrum.
+
+    ns: Number of samples
+
+    Returns (D, r2). Both are TLSpectrum objects in which each entry is the
+    value of D or r^2 for that combination of haplotypes.
+    &#34;&#34;&#34;
+    temp = np.arange(ns+1, dtype=float)/ns
+    # Fancy array arithmetic, to avoid explicity for loops.
+    pAB = temp[:,nuax,nuax]
+    pAb = temp[nuax,:,nuax]
+    paB = temp[nuax,nuax,:]
+    pA = pAB + pAb
+    pB = pAB + paB
+    D = TLSpectrum(pAB - pA*pB)
+    r2 = TLSpectrum(D**2/(pA*(1-pA)*pB*(1-pB)))
+
+    return D,r2
+
+def grid(numpts):
+    &#34;&#34;&#34;
+    Default grid is uniform, so that grid points lie directly on the boundaries
+    Here, delta_x = 1./numpts
+    numpts - number of grid points (less one) 
+    &#34;&#34;&#34;
+    return np.linspace(0,1,numpts+1)
+
+def grid_dx(x):
+    &#34;&#34;&#34;
+    Given 1D grid x, this returns the 1D grid spacing for x
+    &#34;&#34;&#34;
+    return (np.concatenate((np.diff(x),np.array([0]))) + np.concatenate((np.array([0]),np.diff(x))))/2
+
+def domain(x):
+    &#34;&#34;&#34;
+    Array of same dimension as density function discretization
+    Has a 1 if grid point lies in domain, 0 if outside domain
+    x - 1D grid
+    &#34;&#34;&#34;
+    tol = 1e-12
+    U01 = np.ones((len(x),len(x),len(x)))
+    XX = x[:,nuax,nuax] + x[nuax,:,nuax] + x[nuax,nuax,:]
+    U01[np.where(XX &gt; 1+tol)] = 0
+    return U01
+
+def grid_dx3(x,dx):
+    &#34;&#34;&#34;
+    For integrating over the 3D domain (see int3)
+    x - 1D grid
+    dx - 1D grid spacing
+    &#34;&#34;&#34;
+    DX = dx[:,nuax,nuax]*dx[nuax,:,nuax]*dx[nuax,nuax,:]
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            DX[ii,jj,len(x)-ii-jj-1] *= 1./2
+    return DX
+
+def int3(DX,U):
+    &#34;&#34;&#34;
+    Numerically integrate the density function phi
+    phi - density function
+    DX - 3D grid spacing for integration weights
+    &#34;&#34;&#34;
+    return np.sum(DX*U)
+
+&#34;&#34;&#34;
+Injection of new mutations along axes
+&#34;&#34;&#34;
+
+def injectA(x,dx,dt,yB,phi,thetaA):
+    &#34;&#34;&#34;
+    Injection new derived mutations A onto background of B/b
+    x - 1D grid
+    dx - 1D grid spacing
+    dt - integration time step
+    yA - biallelic frequency spectrum integrated by dadi
+    phi - density function
+    thetaA - scaled mutation rate
+    &#34;&#34;&#34;
+    phi[0,1,1:-1] += dt/dx[1] / x[1]**2 * yB[1:-1] * (1-x[1:-1]) * thetaA/2.
+    phi[1,0,1:-1] += dt/dx[1] / x[1]**2 * yB[1:-1] * x[1:-1] * thetaA/2.
+    phi[1,0,0] += dt/dx[1] * 2 / x[1]**2 * yB[1] * x[1] * thetaA/2. 
+    return phi
+
+def injectB(x,dx,dt,yA,phi,thetaB):
+    &#34;&#34;&#34;
+    Injection new derived mutations B onto background of A/a
+    x - 1D grid
+    dx - 1D grid spacing
+    dt - integration time step
+    yB - biallelic frequency spectrum integrated by dadi
+    phi - density function
+    thetaB - scaled mutation rate
+    &#34;&#34;&#34;
+    phi[0,1:-1,1] += dt/dx[1] / x[1]**2 * yA[1:-1] * (1-x[1:-1]) * thetaB/2.
+    phi[1,1:-1,0] += dt/dx[1] / x[1]**2 * yA[1:-1] * x[1:-1] * thetaB/2.
+    phi[1,0,0] += dt/dx[1] * 2 / x[1]**2 * yA[1] * x[1] * thetaB/2. 
+    return phi
+
+&#34;&#34;&#34;
+Transition matrices for forward integration in bulk of domain.
+&#34;&#34;&#34;
+
+def transition1(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    Transition matrix for ADI method along first axis
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    P = np.zeros((len(x),len(x),3,len(x)))
+    for jj in range(len(x)):
+        for kk in range(len(x)):
+            if len(np.where(U01[:,jj,kk] == 1)[0]) &lt;= 2:
+                continue
+            A = np.zeros((len(x),len(x)))
+            # drift
+            if (jj &gt; 0 or kk &gt; 0) and x[jj] + x[kk] &lt; 1 - tol:
+                V = x*(1-x)/nu
+                for ii in np.where(U01[:,jj,kk] == 1)[0][:-1]:
+                    if ii == 0:
+                        A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                    elif ii == np.where(U01[:,jj,kk] == 1)[0][:-1][-1]:
+                        A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                        A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
+                    else:
+                        A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                        A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                
+                x2 = x[jj]
+                x3 = x[kk]
+                M = 2*gammaA * x*(1-x-x2)*(hA+(x+x2)*(1-2*hA)) + 2*gammaB * x*(1-x-x3)*(hB+(x+x3)*(1-2*hB)) - rho/2. * (x*(1-x-x2-x3) - x2*x3)
+                for ii in np.where(U01[:,jj,kk] == 1)[0][:-1]:
+                    if ii == 0:
+                        A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+                    elif ii == np.where(U01[:,jj,kk] == 1)[0][:-1][-1]:
+                        A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                        A[ii,ii] += 1/dx[ii] * ( - M[ii] ) / 2
+                    else:
+                        A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                        A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+
+            if jj == 0 and kk == 0:
+                V = x*(1-x)/nu
+                for ii in range(len(x)):
+                    if ii == 0:
+                        A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                    elif ii == len(x)-1:
+                        A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                        A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
+                    else:
+                        A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                        A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                        A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                
+                x2 = x[jj]
+                x3 = x[kk]
+                M = 2*gammaA * x*(1-x-x2)*(hA+(x+x2)*(1-2*hA)) + 2*gammaB * x*(1-x-x3)*(hB+(x+x3)*(1-2*hB)) - rho/2. * (x*(1-x-x2-x3) - x2*x3)
+                for ii in range(len(x)):
+                    if ii == 0:
+                        A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+                    elif ii == len(x)-1:
+                        A[ii,ii-1] += 1/dx[ii]*2 * ( - M[ii-1] ) / 2
+                        A[ii,ii] += 1/dx[ii]*2 * ( - M[ii] ) / 2
+                    else:
+                        A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                        A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                        A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+            
+            P[jj,kk,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+            P[jj,kk,1,:] = np.diagonal(A)
+            P[jj,kk,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+def transition2(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    Transition matrix for ADI method along second axis
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    P = np.zeros((len(x),len(x),3,len(x)))
+    for ii in range(len(x)):
+        for kk in range(len(x)):
+            if len(np.where(U01[ii,:,kk] == 1)[0]) &lt;= 2:
+                continue
+            A = np.zeros((len(x),len(x)))
+            # drift
+            if (ii &gt; 0 or kk &gt; 0) and x[ii] + x[kk] &lt; 1 - tol:
+                V = x*(1-x)/nu
+                for jj in np.where(U01[ii,:,kk] == 1)[0][:-1]:
+                    if jj == 0:
+                        A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                    elif jj == np.where(U01[ii,:,kk] == 1)[0][:-1][-1]:
+                        A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                        A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
+                    else:
+                        A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                        A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                
+                x1 = x[ii]
+                x3 = x[kk]
+                M = 2*gammaA * x*(1-x1-x)*(hA+(x1+x)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
+                for jj in np.where(U01[ii,:,kk] == 1)[0][:-1]:
+                    if jj == 0:
+                        A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+                    elif jj == np.where(U01[ii,:,kk] == 1)[0][:-1][-1]:
+                        A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                        A[jj,jj] += 1/dx[jj] * ( - M[jj] ) / 2
+                    else:
+                        A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                        A[jj,jj] += 0 #1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+
+
+            if ii == 0 and kk == 0:
+                V = x*(1-x)/nu
+                for jj in range(len(x)):
+                    if jj == 0:
+                        A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                    elif jj == len(x)-1:
+                        A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                        A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
+                    else:
+                        A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                        A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                        A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                
+                x1 = x[ii]
+                x3 = x[kk]
+                M = 2*gammaA * x*(1-x1-x)*(hA+(x1+x)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
+                for jj in range(len(x)):
+                    if jj == 0:
+                        A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+                    elif jj == len(x)-1:
+                        A[jj,jj-1] += 1/dx[jj]*2 * ( - M[jj-1] ) / 2
+                        A[jj,jj] += 1/dx[jj]*2 * ( - M[jj] ) / 2
+                    else:
+                        A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                        A[jj,jj] += 0 #1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                        A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+
+            
+            P[ii,kk,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+            P[ii,kk,1,:] = np.diagonal(A)
+            P[ii,kk,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+
+def transition3(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    Transition matrix for ADI method along third axis
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    P = np.zeros((len(x),len(x),3,len(x)))
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if len(np.where(U01[ii,jj,:] == 1)[0]) &lt;= 2:
+                continue
+            A = np.zeros((len(x),len(x)))
+            # drift
+            if (ii &gt; 0 or jj &gt; 0) and x[ii] + x[jj] &lt; 1 - tol:
+                V = x*(1-x)/nu
+                for kk in np.where(U01[ii,jj,:] == 1)[0][:-1]:
+                    if kk == 0:
+                        A[kk,kk] =  - 1/(2*dx[kk]) * ( -V[kk]/(x[kk+1]-x[kk]) )
+                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
+                    elif kk == np.where(U01[ii,jj,:] == 1)[0][:-1][-1]:
+                        A[kk,kk-1] = - 1/(2*dx[kk]) * ( V[kk-1]/(x[kk]-x[kk-1]) )
+                        A[kk,kk] = - 1/(2*dx[kk]) * ( -V[kk]/(x[kk]-x[kk-1]) )
+                    else:
+                        A[kk,kk-1] = - 1/(2*dx[kk]) * ( V[kk-1]/(x[kk]-x[kk-1]) )
+                        A[kk,kk] = - 1/(2*dx[kk]) * ( -V[kk]/(x[kk]-x[kk-1]) -V[kk]/(x[kk+1]-x[kk]) )
+                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
+                
+                x1 = x[ii]
+                x2 = x[jj]
+                M = - 2*gammaA * x*(x1+x2)*(hA+(x1+x2)*(1-2*hA)) + 2*gammaB * x*(1-x1-x)*(hB+(x1+x)*(1-2*hB)) + rho/2. * (x1*(1-x1-x2-x) - x2*x)
+                for kk in np.where(U01[ii,jj,:] == 1)[0][:-1]:
+                    if kk == 0:
+                        A[kk,kk] += 1/dx[kk] * ( M[kk] ) / 2
+                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
+                    elif kk == np.where(U01[ii,jj,:] == 1)[0][:-1][-1]:
+                        A[kk,kk-1] += 1/dx[kk] * ( - M[kk-1] ) / 2
+                        A[kk,kk] += 1/dx[kk] * ( - M[kk] ) / 2
+                    else:
+                        A[kk,kk-1] += 1/dx[kk] * ( - M[kk-1] ) / 2
+                        A[kk,kk] += 0 #1/dx[kk] * ( M[kk] - M[kk-1] ) / 2
+                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
+
+
+            if ii == 0 and jj == 0:
+                V = x*(1-x)/nu
+                for kk in range(len(x)):
+                    if kk == 0:
+                        A[kk,kk] =  - 1/(2*dx[kk]) * ( -V[kk]/(x[kk+1]-x[kk]) )
+                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
+                    elif kk == len(x)-1:
+                        A[kk,kk-1] = - 1/(2*dx[kk])*2 * ( V[kk-1]/(x[kk]-x[kk-1]) )
+                        A[kk,kk] = - 1/(2*dx[kk])*2 * ( -V[kk]/(x[kk]-x[kk-1]) )
+                    else:
+                        A[kk,kk-1] = - 1/(2*dx[kk]) * ( V[kk-1]/(x[kk]-x[kk-1]) )
+                        A[kk,kk] = - 1/(2*dx[kk]) * ( -V[kk]/(x[kk]-x[kk-1]) -V[kk]/(x[kk+1]-x[kk]) )
+                        A[kk,kk+1] = - 1/(2*dx[kk]) * ( V[kk+1]/(x[kk+1]-x[kk]) )
+                
+                x1 = x[ii]
+                x2 = x[jj]
+                M = - 2*gammaA * x*(x1+x2)*(hA+(x1+x2)*(1-2*hA)) + 2*gammaB * x*(1-x1-x)*(hB+(x1+x)*(1-2*hB)) + rho/2. * (x1*(1-x1-x2-x) - x2*x)
+                for kk in range(len(x)):
+                    if kk == 0:
+                        A[kk,kk] += 1/dx[kk] * ( M[kk] ) / 2
+                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
+                    elif kk == len(x)-1:
+                        A[kk,kk-1] += 1/dx[kk]*2 * ( - M[kk-1] ) / 2
+                        A[kk,kk] += 1/dx[kk]*2 * ( - M[kk] ) / 2
+                    else:
+                        A[kk,kk-1] += 1/dx[kk] * ( - M[kk-1] ) / 2
+                        A[kk,kk] += 0 #1/dx[kk] * ( M[kk] - M[kk-1] ) / 2
+                        A[kk,kk+1] += 1/dx[kk] * ( M[kk+1] ) / 2
+
+            
+            P[ii,jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+            P[ii,jj,1,:] = np.diagonal(A)
+            P[ii,jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+def transition12(x, dx, U01):
+    &#34;&#34;&#34;
+    Covariance discretization for slice along axes 1 and 2
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    P = []*len(x)
+    for kk in range(len(x)):
+        C = lil_matrix((len(x)**2,len(x)**2))
+        if kk &lt; len(x) - 4:
+            for ii in range(len(x)-1)[:-1]:
+                for jj in range(len(x)-1)[:-1]:
+                    if U01[ii+2,jj+2,kk] == 1 or U01[ii+1,jj+2,kk] == 1 or U01[ii+2,jj+1,kk] == 1:
+                        if ii+1 &lt; len(x)-kk and jj+1 &lt; len(x)-kk and U01[ii+1,jj+1,kk] == 1:
+                            C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
+                            
+                        if ii+1 &lt; len(x)-kk and jj-1 &gt;= 0 and U01[ii+1,jj-1,kk] == 1:
+                            C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
+                        
+                        if ii-1 &gt;= 0 and jj+1 &lt; len(x)-kk and U01[ii-1,jj+1,kk] == 1:
+                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
+                            
+                        if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1,kk] == 1:
+                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+                    
+                    elif U01[ii+1,jj+1,kk] == 1 or U01[ii+1,jj,kk] == 1 or U01[ii,jj+1,kk] == 1:
+                        if ii+1 &lt; len(x)-kk and jj-1 &gt;= 0 and U01[ii+1,jj-1,kk] == 1:
+                            C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+                        
+                        if ii-1 &gt;= 0 and jj+1 &lt; len(x)-kk and U01[ii-1,jj+1,kk] == 1:
+                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+                            
+                        if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1,kk] == 1:
+                            C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+        
+        if kk == 0:
+            ii = 0
+            jj = len(x)-2-kk
+            C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+            
+            ii = len(x)-2-kk
+            jj = 0
+            C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+        
+        P.append(C)
+    return P
+
+def transition13(x, dx, U01):
+    &#34;&#34;&#34;
+    Covariance discretization for slice along axes 1 and 3
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    P = []*len(x)
+    for jj in range(len(x)):
+        C = lil_matrix((len(x)**2,len(x)**2))
+        if jj &lt; len(x) - 4:
+            for ii in range(len(x)-1)[:-1]:
+                for kk in range(len(x)-1)[:-1]:
+                    if U01[ii+2,jj,kk+2] == 1 or U01[ii+1,jj,kk+2] == 1 or U01[ii+2,jj,kk+1] == 1:
+                        if ii+1 &lt; len(x)-jj and kk+1 &lt; len(x)-jj and U01[ii+1,jj,kk+1] == 1:
+                            C[ii*len(x)+kk,(ii+1)*len(x)+(kk+1)] += 1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk+1])
+                            
+                        if ii+1 &lt; len(x)-jj and kk-1 &gt;= 0 and U01[ii+1,jj,kk-1] == 1:
+                            C[ii*len(x)+kk,(ii+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk-1])
+                        
+                        if ii-1 &gt;= 0 and kk+1 &lt; len(x)-jj and U01[ii-1,jj,kk+1] == 1:
+                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk+1])
+                            
+                        if ii-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii-1,jj,kk-1] == 1:
+                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk-1])
+                    
+                    elif U01[ii+1,jj,kk+1] == 1 or U01[ii+1,jj,kk] == 1 or U01[ii,jj,kk+1] == 1:
+                        if ii+1 &lt; len(x)-jj and kk-1 &gt;= 0 and U01[ii+1,jj,kk-1] == 1:
+                            C[ii*len(x)+kk,(ii+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk-1]) / 2
+                        
+                        if ii-1 &gt;= 0 and kk+1 &lt; len(x)-jj and U01[ii-1,jj,kk+1] == 1:
+                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk+1]) / 2
+                            
+                        if ii-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii-1,jj,kk-1] == 1:
+                            C[ii*len(x)+kk,(ii-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk-1])
+        
+        if jj == 0:
+            ii = 0
+            kk = len(x)-2-jj
+            C[ii*len(x)+kk,(ii+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii+1]*x[kk-1]) / 2
+            
+            ii = len(x)-2-jj
+            kk = 0
+            C[ii*len(x)+kk,(ii-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[ii]*dx[kk]) * (-x[ii-1]*x[kk+1]) / 2
+        
+        P.append(C)
+    return P
+
+def transition23(x, dx, U01):
+    &#34;&#34;&#34;
+    Covariance discretization for slice along axes 2 and 3
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    P = []*len(x)
+    for ii in range(len(x)):
+        C = lil_matrix((len(x)**2,len(x)**2))
+        if ii &lt; len(x) - 4:
+            for jj in range(len(x)-1)[:-1]:
+                for kk in range(len(x)-1)[:-1]:
+                    if U01[ii,jj+2,kk+2] == 1 or U01[ii,jj+1,kk+2] == 1 or U01[ii,jj+2,kk+1] == 1:
+                        if jj+1 &lt; len(x)-ii and kk+1 &lt; len(x)-ii and U01[ii,jj+1,kk+1] == 1:
+                            C[jj*len(x)+kk,(jj+1)*len(x)+(kk+1)] += 1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk+1])
+                            
+                        if jj+1 &lt; len(x)-ii and kk-1 &gt;= 0 and U01[ii,jj+1,kk-1] == 1:
+                            C[jj*len(x)+kk,(jj+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk-1])
+                        
+                        if jj-1 &gt;= 0 and kk+1 &lt; len(x)-ii and U01[ii,jj-1,kk+1] == 1:
+                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk+1])
+                            
+                        if jj-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii,jj-1,kk-1] == 1:
+                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk-1])
+                    
+                    elif U01[ii,jj+1,kk+1] == 1 or U01[ii,jj+1,kk] == 1 or U01[ii,jj,kk+1] == 1:
+                        if jj+1 &lt; len(x)-ii and kk-1 &gt;= 0 and U01[ii,jj+1,kk-1] == 1:
+                            C[jj*len(x)+kk,(jj+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk-1]) / 2
+                        
+                        if jj-1 &gt;= 0 and kk+1 &lt; len(x)-ii and U01[ii,jj-1,kk+1] == 1:
+                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk+1]) / 2
+                            
+                        if jj-1 &gt;= 0 and kk-1 &gt;= 0 and U01[ii,jj-1,kk-1] == 1:
+                            C[jj*len(x)+kk,(jj-1)*len(x)+(kk-1)] += 1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk-1])
+        
+        if ii == 0:
+            jj = 0
+            kk = len(x)-2-ii
+            C[jj*len(x)+kk,(jj+1)*len(x)+(kk-1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj+1]*x[kk-1]) / 2
+            
+            jj = len(x)-2-ii
+            kk = 0
+            C[jj*len(x)+kk,(jj-1)*len(x)+(kk+1)] += -1./4 * 1./(dx[jj]*dx[kk]) * (-x[jj-1]*x[kk+1]) / 2
+        
+        P.append(C)
+    return P
+
+
+&#34;&#34;&#34;
+Transition matrices and methods for interaction with non-square face.
+Note that this is more complicated than the triallele methods, 
+as density can re-enter the domain through recombination; that is, 
+the domain boundaries are not necessarily absorbing!
+&#34;&#34;&#34;
+
+def phi_to_surf(phi,x):
+    &#34;&#34;&#34;
+    non-square  mapped to triallelic domain
+    note that many of the surface interaction methods could be cythonized for increase in speed
+    if x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either A or B have fixed, and that state is absorbing (no recombination can send you back to the interior
+    thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don&#39;t have to worry about that density anymore
+    here, we have x3 lost
+    &#34;&#34;&#34;
+    surf = np.zeros((len(x),len(x)))
+    for ii in range(len(x)): # loop through x1 indices
+        for jj in range(len(x)): # loop through x2 indices
+            kk = len(x)-1 - ii - jj
+            surf[ii,jj] = phi[ii,jj,kk]
+    return surf
+
+def surf_to_phi(surf,phi,x):
+    &#34;&#34;&#34;
+    move the surf density back to the full phi density function
+    &#34;&#34;&#34;
+    for ii in range(len(x)): # loop through x1 indices
+        for jj in range(len(x)): # loop through x2 indices
+            kk = len(x)-1 - ii - jj
+            phi[ii,jj,kk] = surf[ii,jj]
+    return phi
+
+def move_density_to_surface(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
+    &#34;&#34;&#34;
+    for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+    x - grid
+    dx - grid spacing
+    dt - timestep of integration
+    nu - relative population size
+    &#34;&#34;&#34;
+    Psurf = np.zeros((len(x),len(x),len(x)))
+    if gammaA == 0 and gammaB == 0:
+        P1D = transition1D(x,dx,dt,0,nu)
+        weights = {}
+        for ii in range(len(x))[1:-1]:
+            y = np.zeros(len(x))
+            y[ii] = 1./dx[ii]
+            y = advance1D(y,P1D)
+            weights[ii] = y[-1] * dx[-1]
+        for ii in range(len(x))[:len(x)-1]:
+            for jj in range(len(x))[:len(x)-1-ii]:
+                for kk in range(len(x))[:len(x)-1-ii-jj]:
+                    if ii+jj+kk == 0:
+                        continue
+                    Psurf[ii,jj,kk] = weights[ii+jj+kk]
+    else:
+        for ii in range(len(x))[:len(x)-1]:
+            for jj in range(len(x))[:len(x)-1-ii]:
+                for kk in range(len(x))[:len(x)-1-ii-jj]:
+                    if ii+jj+kk == 0:
+                        continue
+                    p = x[ii]+x[jj]
+                    q = x[ii]+x[kk]
+                    #gamma = ((gammaA+gammaB)*x[ii] + gammaA*x[jj] + gammaB*x[kk]) / (x[ii] + x[jj] + x[kk])
+                    ### XXX: why is this divided by (x[ii]+x[jj]+x[kk])?? because it&#39;s an average, sort of
+                    gamma = ((gammaA+gammaB)*x[ii]**2 + 2*(gammaA+hB*gammaB)*x[ii]*x[jj] + 2*(hA*gammaA+gammaB)*x[ii]*x[kk] + (gammaA)*x[jj]**2 + 2*(hA*gammaA+hB*gammaB)*x[jj]*x[kk] + (gammaB)*x[kk]*2 + 2*(hA*gammaA+hB*gammaB)*x[ii]*(1-x[ii]-x[jj]-x[kk]) + 2*(hA*gammaA)*x[jj]*(1-x[ii]-x[jj]-x[kk]) + 2*(hB*gammaB)*x[kk]*(1-x[ii]-x[jj]-x[kk])) / (x[ii]+x[jj]+x[kk])
+                    P1D = transition1D(x,dx,dt,gamma,nu)
+                    y = np.zeros(len(x))
+                    y[ii+jj+kk] = 1./dx[ii+jj+kk]
+                    y = advance1D(y,P1D)
+                    Psurf[ii,jj,kk] = y[-1]*dx[-1]
+    return Psurf
+
+def surface_interaction_b(phi,x,Psurf):
+    for ii in range(len(x))[:len(x)-1]:
+        for jj in range(len(x))[:len(x)-1-ii]:
+            for kk in range(len(x))[:len(x)-1-ii-jj]:
+                if ii == 0 and jj == 0:
+                    continue
+                if ii == 0 and kk == 0:
+                    continue
+                if jj == 0 and kk == 0:
+                    continue
+                if ii == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (jj+kk))//2
+                    rmdr = (len(x)-1 - (jj+kk))%2
+                    if rmdr == 0:
+                        phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                elif jj == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+kk))//2
+                    rmdr = (len(x)-1 - (ii+kk))%2
+                    if rmdr == 0:
+                        phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii+dist,jj,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                elif kk == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+jj))//2
+                    rmdr = (len(x)-1 - (ii+jj))%2
+                    if rmdr == 0:
+                        phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii+dist,jj+dist+1,kk] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                else:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+jj+kk))//3
+                    rmdr = (len(x)-1 - (ii+jj+kk))%3
+                    if rmdr == 0: # in line with boundary grid point
+                        phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 2:
+                        phi[ii+dist+1,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist+1,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist+1,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii,jj,kk] *= (1-amnt)
+
+    return phi
+
+def surface_interaction(phi,x,Psurf):
+    &#34;&#34;&#34;
+    density that should be moved to surface
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for ii in range(len(x))[:len(x)-1]:
+        for jj in range(len(x))[:len(x)-1-ii]:
+            for kk in range(len(x))[:len(x)-1-ii-jj]:
+                if ii == 0 and jj == 0:
+                    continue
+                if ii == 0 and kk == 0:
+                    continue
+                if jj == 0 and kk == 0:
+                    continue
+                if ii == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (jj+kk))//2
+                    rmdr = (len(x)-1 - (jj+kk))%2
+                    if rmdr == 0:
+                        phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                elif jj == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+kk))//2
+                    rmdr = (len(x)-1 - (ii+kk))%2
+                    if rmdr == 0:
+                        phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii+dist,jj,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                elif kk == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+jj))//2
+                    rmdr = (len(x)-1 - (ii+jj))%2
+                    if rmdr == 0:
+                        phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii+dist,jj+dist+1,kk] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                else:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+jj+kk))//3
+                    rmdr = (len(x)-1 - (ii+jj+kk))%3
+                    if rmdr == 0: # in line with boundary grid point
+                        phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 2:
+                        phi[ii+dist+1,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist+1,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist+1,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii,jj,kk] *= (1-amnt)
+
+    return phi
+
+
+def surface_recombination(phi,x,rho,dt):
+    &#34;&#34;&#34;
+    recombination pushes density from surface back into interior of domain
+    &#34;&#34;&#34;
+    if rho == 0:
+        return phi
+    else:
+        for ii in range(len(x)):
+            for jj in range(len(x))[1:]:
+                kk = len(x)-1 - ii - jj
+                if kk &gt; 0:
+                    D = -x[jj]*x[kk] # -x2*x3, since x4=0
+                    if jj-1 &gt; 0:
+                        phi[ii,jj-1,kk] += 1./2 * (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    else:
+                        phi[ii,jj-1,kk] += (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    if kk-1 &gt; 0:
+                        phi[ii,jj,kk-1] += 1./2 * (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    else:
+                        phi[ii,jj,kk-1] += (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    
+                    phi[ii,jj,kk] -= 2 * (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+    return phi
+
+
+
+# triallele methods
+# new gammas: \tilde{gamma1} = gammaA(1-x1-x2)/(1-x1) + gammaB(x2)/(1-x1)
+# \tilde{gamma2} = (gammaA-gammaB)(1-x1-x2)/(1-x2) - gammaB(x1)(1-x2)
+# use the cythonized methods from the triallele code
+&#34;&#34;&#34;
+forward integration
+&#34;&#34;&#34;
+
+def advance_adi1(phi,U01,P1,x):
+    &#34;&#34;&#34;
+    ADI integration along axis 1 of phi
+    phi - density function
+    U01 - domain markers
+    P1 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for jj in range(len(x)):
+        for kk in range(len(x)):
+            if np.sum(U01[:,jj,kk]) &gt; 1:
+                phi[:,jj,kk] = dadi.tridiag.tridiag(P1[jj,kk,0,:],P1[jj,kk,1,:],P1[jj,kk,2,:],phi[:,jj,kk])
+    return phi
+
+def advance_adi2(phi,U01,P2,x):
+    &#34;&#34;&#34;
+    ADI integration along axis 2 of phi
+    phi - density function
+    U01 - domain markers
+    P2 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for ii in range(len(x)):
+        for kk in range(len(x)):
+            if np.sum(U01[ii,:,kk]) &gt; 1:
+                phi[ii,:,kk] = dadi.tridiag.tridiag(P2[ii,kk,0,:],P2[ii,kk,1,:],P2[ii,kk,2,:],phi[ii,:,kk])
+    return phi
+
+def advance_adi3(phi,U01,P3,x):
+    &#34;&#34;&#34;
+    ADI integration along axis 3 of phi
+    phi - density function
+    U01 - domain markers
+    P3 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if np.sum(U01[ii,jj,:]) &gt; 1:
+                phi[ii,jj,:] = dadi.tridiag.tridiag(P3[ii,jj,0,:],P3[ii,jj,1,:],P3[ii,jj,2,:],phi[ii,jj,:])
+    return phi
+
+def advance_adi(phi,U01,P1,P2,P3,x,ii):
+    &#34;&#34;&#34;
+    Combined ADI integration of phi
+    phi - density function
+    U01 - domain markers
+    P1/P2/P3 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    if np.mod(ii,3) == 0:
+        order = [1,2,3]
+    elif np.mod(ii,3) == 1:
+        order = [2,3,1]
+    else:
+        order = [3,1,2]
+    for ord in order:
+        if ord == 1:
+            phi = advance_adi1(phi,U01,P1,x)
+        elif ord == 2:
+            phi = advance_adi2(phi,U01,P2,x)
+        elif ord == 3:
+            phi = advance_adi3(phi,U01,P3,x)
+
+    return phi
+
+def advance_cov12(phi,C12,x):
+    &#34;&#34;&#34;
+    Explicit integration of covariance term in the 1/2 axes planes
+    phi - density function
+    C12 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    for kk in range(len(x)):
+        C = C12[kk]
+        phi[:,:,kk] = ( C * phi[:,:,kk].reshape(len(x)**2) ).reshape(len(x),len(x))
+    return phi
+
+def advance_cov13(phi,C13,x):
+    &#34;&#34;&#34;
+    Explicit integration of covariance term in the 1/3 axes planes
+    phi - density function
+    C13 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    for jj in range(len(x)):
+        C = C13[jj]
+        phi[:,jj,:] = ( C * phi[:,jj,:].reshape(len(x)**2) ).reshape(len(x),len(x))
+    return phi
+
+
+def advance_cov23(phi,C23,x):
+    &#34;&#34;&#34;
+    Explicit integration of covariance term in the 2/3 axes planes
+    phi - density function
+    C23 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    for ii in range(len(x)):
+        C = C23[ii]
+        phi[ii,:,:] = ( C * phi[ii,:,:].reshape(len(x)**2) ).reshape(len(x),len(x))
+    return phi
+
+def advance_cov(phi,C12,C13,C23,x,ii):
+    &#34;&#34;&#34;
+    Combined integration for the covariance terms
+    phi - density function
+    C12/C13/C23 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    if np.mod(ii,3) == 0:
+        order = [1,2,3]
+    elif np.mod(ii,3) == 1:
+        order = [2,3,1]
+    else:
+        order = [3,1,2]
+    for ord in order:
+        if ord == 1:
+            phi = advance_cov12(phi,C12,x)
+        elif ord == 2:
+            phi = advance_cov13(phi,C13,x)
+        elif ord == 3:
+            phi = advance_cov23(phi,C23,x)
+    return phi
+
+# methods for integration of the surface - see triallele methods for these (cythonized in triallele code for the transition matrices)
+
+def domain_surf(x):
+    &#34;&#34;&#34;
+    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
+    &#34;&#34;&#34;
+    tol = 1e-12
+    U01 = np.ones((len(x),len(x)))
+    XX = x[:,nuax] + x[nuax,:]
+    U01[np.where(XX &gt; 1+tol)] = 0
+    return U01
+
+def grid_dx_2d(x,dx):
+    &#34;&#34;&#34;
+    The two dimensional grid spacing over the domain.
+    Grid points lie along the diagonal boundary, and Delta for those points is halved
+    &#34;&#34;&#34;
+    DXX = dx[:,nuax]*dx[nuax,:]
+    for ii in range(len(x)):
+        DXX[ii,len(x)-ii-1] *= 1./2
+    return DXX
+
+def int2(DXX,U):
+    &#34;&#34;&#34;
+    Integrate the density function over the domain
+    DXX - two dimensional grid
+    U - density function
+    &#34;&#34;&#34;
+    return np.sum(DXX*U)
+
+def transition1_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    adi transition matrix for x1 on surface
+    See cythonized versions of these in the dadi/Triallele code
+    x - grid
+    dx - grid spacing
+    U01 - surface domain marker
+    gammaA/B - scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    P = np.zeros((len(x),3,len(x)))
+    for jj in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if jj &gt; 0:
+            V = x*(1-x)/nu
+            V[np.max(np.where(U01[:,jj] == 1))] = 0
+            for ii in np.where(U01[:,jj] == 1)[0][:-1]:
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == np.where(U01[:,jj] == 1)[0][:-1][-1]:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        if jj == 0:
+            V = x*(1-x)/nu
+            for ii in range(len(x)):
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == len(x)-1:
+                    A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        
+        x2 = x[jj]
+        M = 2*gammaA * x*(1-x-x2)*(hA+(x+x2)*(1-2*hA)) + 2*gammaB * x*x2*(hB+(1-x2)*(1-2*hB)) - rho/2. * (-x2*(1-x-x2)) / 2.
+        #M = gammaA * x * (1-x-x2) + gammaB * x * x2 - rho/2. * (-x2*(1-x-x2))
+        M[np.where(U01[:,jj] == 1)[0][-1]] = 0
+        for ii in np.where(U01[:,jj] == 1)[0]:
+            if ii == 0:
+                A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+            elif ii == np.where(U01[:,jj] == 1)[0][-1]:
+                A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
+                A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
+            else:
+                A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+        P[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        P[jj,1,:] = np.diagonal(A)
+        P[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+def transition2_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    adi transition matrix for x2 on surface
+    x - grid
+    dx - grid spacing
+    U01 - surface domain marker
+    gammaA/B - scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    P = np.zeros((len(x),3,len(x)))
+    for ii in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if ii &gt; 0:
+            V = x*(1-x)/nu
+            V[np.max(np.where(U01[ii,:] == 1))] = 0
+            for jj in np.where(U01[ii,:] == 1)[0][:-1]:
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == np.where(U01[ii,:] == 1)[0][:-1][-1]:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        if ii == 0:
+            V = x*(1-x)/nu
+            for jj in range(len(x)):
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == len(x)-1:
+                    A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        
+        x1 = x[ii]
+        M = 2*gammaA * x*(1-x1-x)*(hA+(x+x1)*(1-2*hA)) - 2*gammaB * x*(1-x) + rho/2. * (-x * (1-x1-x)) / 2.
+        #M = gammaA * x * (1-x1-x) - gammaB * x * (1-x) + rho/2. * (-x * (1-x1-x)) / 2. ### note the (/2.) term at the end, since x3 also would decrease by this amount - we separately handle reentry into domain interior
+        M[np.where(U01[ii,:] == 1)[0][-1]] = 0
+        for jj in np.where(U01[ii,:] == 1)[0]:
+            if jj == 0:
+                A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+            elif jj == np.where(U01[ii,:] == 1)[0][-1]:
+                A[jj,jj-1] += 1/dx[jj] * 2 * ( - M[jj-1] ) / 2
+                A[jj,jj] += 1/dx[jj] * 2 * ( - M[jj] ) / 2
+            else:
+                A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                A[jj,jj] += 0 # 1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+        P[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        P[ii,1,:] = np.diagonal(A)
+        P[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P
+
+def transition12_surf(x,dx,U01):
+    &#34;&#34;&#34;
+    transition matrix for explicit integration of mixed derivative term along surface
+    &#34;&#34;&#34;
+    C = lil_matrix((len(x)**2,len(x)**2))
+    for ii in range(len(x)-1)[:-1]:
+        for jj in range(len(x)-1)[:-1]:
+            if U01[ii+2,jj+2] == 1 or U01[ii+1,jj+2] == 1 or U01[ii+2,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj+1 &lt; len(x) and U01[ii+1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
+                    
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+            
+            elif U01[ii+1,jj+1] == 1 or U01[ii+1,jj] == 1 or U01[ii,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+    ii = 0
+    jj = len(x)-2
+    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+    ii = len(x)-2
+    jj = 0
+    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+    return C
+
+def transition1D(x, dx, dt, gamma, nu):
+    &#34;&#34;&#34;
+    transition matrix for one dimenional density function
+    x - grid
+    dx - grid spacing
+    dt - timestep of integration
+    gamma - scaled selection coefficients
+    nu - relative size of population
+    &#34;&#34;&#34;
+    P = np.zeros((len(x),len(x)))
+    for ii in range(len(x)):
+        if ii == 0:
+            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + gamma * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+        elif ii == len(x) - 1:
+            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - gamma * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1])
+        else:
+            P[ii,ii-1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii-1]*(1-x[ii-1]))/(x[ii] - x[ii-1]) - gamma * dt / 2 / dx[ii] * x[ii-1] * (1-x[ii-1])
+            P[ii,ii] = 1 + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii] - x[ii-1]) + dt/nu * 1./2 * 1./dx[ii] * (x[ii]*(1-x[ii]))/(x[ii+1] - x[ii])
+            P[ii,ii+1] = - dt/nu * 1./2 * 1./dx[ii] * (x[ii+1]*(1-x[ii+1]))/(x[ii+1] - x[ii]) + gamma * dt / 2 / dx[ii] * x[ii+1] * (1-x[ii+1])
+    return P
+
+def advance_surf_adi1(surf,U01surf,P1surf,x):
+    &#34;&#34;&#34;
+    Advance the adi method along first axis one of surface domain
+    surf - density function along that surface
+    U01surf - domain markers along grid
+    P1surf - adi transition matrix
+    x - uniform grid
+    &#34;&#34;&#34;
+    for jj in range(len(x)):
+        if np.sum(U01surf[:,jj]) &gt; 1:
+            surf[:,jj] = dadi.tridiag.tridiag(P1surf[jj,0,:],P1surf[jj,1,:],P1surf[jj,2,:],surf[:,jj])
+    return surf
+
+def advance_surf_adi2(surf,U01surf,P2surf,x):
+    &#34;&#34;&#34;
+    Advance the adi method along second axis one of surface domain
+    surf - density function along that surface
+    U01surf - domain markers along grid
+    P2surf - adi transition matrix
+    x - uniform grid
+    &#34;&#34;&#34;
+    for ii in range(len(x)):
+        if np.sum(U01surf[ii,:]) &gt; 1:
+            surf[ii,:] = dadi.tridiag.tridiag(P2surf[ii,0,:],P2surf[ii,1,:],P2surf[ii,2,:],surf[ii,:])
+    return surf
+
+def advance_surf_cov(surf,Csurf,x):
+    &#34;&#34;&#34;
+    Explicit integration of the covariance term, using scipy&#39;s sparse matrix for Csurf
+    surf - density function along the surface
+    Csurf - transition matrix
+    x - grid
+    &#34;&#34;&#34;
+    surf = ( Csurf * surf.reshape(len(x)**2)).reshape(len(x),len(x))
+    return surf
+
+def move_surf_density_to_bdry(x,surf,P):
+    &#34;&#34;&#34;
+    This is an absorbing boundary, so we&#39;ll just remove that density and not worry about integrating along that diagonal
+    &#34;&#34;&#34;
+    for ii in range(len(x))[1:]:
+        for jj in range(len(x))[1:]:
+            if x[ii] + x[jj] &lt; 1:
+                surf[ii,jj] *= (1-P[ii,jj])
+    return surf
+
+def advance1D(u,P):
+    &#34;&#34;&#34;
+    Given transition matrix P, use dadi&#39;s triagonal solver to integrate in 1D
+    u - 1D density function
+    P - transition matrix
+    &#34;&#34;&#34;
+    a = np.concatenate((np.array([0]),np.diag(P,-1)))
+    b = np.diag(P)
+    c = np.concatenate((np.diag(P,1),np.array([0])))
+    u = dadi.tridiag.tridiag(a,b,c,u)
+    return u
+
+def move_surf_to_line(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
+    &#34;&#34;&#34;
+    for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+    x - grid
+    dx - grid spacing
+    dt - timestep of integration
+    gammaA/gammaB - scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    #### XXXX: 11/8/16: assuming that gammaB = 0
+    Psurf = np.zeros((len(x),len(x)))
+    
+    for ii in range(len(x))[1:len(x)-1]:
+        for jj in range(len(x))[1:len(x)-1-ii]:
+            #gamma = ((gammaA+gammaB)*x[ii] + gammaA*x[jj]) / (x[ii] + x[jj]) ### this should also account for dominance
+            gamma = (gammaA*x[ii]**2 + 2*(gammaA)*x[ii]*x[jj] + 2*(hA*gammaA)*x[ii]*(1-x[ii]-x[jj]) + gammaA*x[jj]**2 + 2*(hA*gammaA)*x[jj]*(1-x[ii]-x[jj])) / (x[ii]+x[jj])
+            P1D = transition1D(x,dx,dt,gamma,nu)
+            y = np.zeros(len(x))
+            y[ii+jj] = 1./dx[ii+jj]
+            y = advance1D(y,P1D)
+            Psurf[ii,jj] = y[-1]*dx[-1]
+    return Psurf
+
+def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
+    &#34;&#34;&#34;
+    phi - full density function
+    x - grid
+    P1surf,P2surf - ADI transition matrices for triallele density function
+    Csurf - covarance transition matrix
+    Pline - transition matrix for diagonal boundary of triallele surface
+    P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary
+    &#34;&#34;&#34;
+    # create the triallele domain of the nonsquare surface of the full density function
+    surf = phi_to_surf(phi,x) # done
+    
+    surf = advance_surf_adi1(surf,U01surf,P1surf,x)
+    surf = advance_surf_adi2(surf,U01surf,P2surf,x)
+    surf = advance_surf_cov(surf,Csurf,x)
+    surf = move_surf_density_to_bdry(x,surf,P)
+    #surf = advance1D(x,surf,Pline) # this is an absorbing edge, so we&#39;ll just leave it alone - density lost!
+    
+    phi = surf_to_phi(surf,phi,x) # done
+    return phi
+
+####
+# sampling methods
+
+sample_cache = {}
+def sample_cached(phi, ns, x):
+    dx = grid_dx(x)
+    dx3 = grid_dx3(x,dx)
+
+    if type(ns) == int:
+        ns = (ns,)
+    else:
+        if len(ns) == 1:
+            ns = tuple(ns)
+        else:
+            ns = (ns[0],)
+
+    # cache calculations of several large matrices
+    # cache x**ii, x**jj, and x**kk 
+    # just cache x[:,nuax,nuax]**ii, and then later use np.swapaxes
+    key = (ns, tuple(x))
+    if key not in sample_cache:
+        this_cache = {}
+        for ii in range(ns[0]+1):
+            this_cache[ii] = x[:,nuax,nuax]**ii
+            this_cache[-ii] = (1 - x[:,nuax,nuax] - x[nuax,:,nuax] - x[nuax,nuax,:]) ** ii
+        sample_cache[key] = this_cache
+    else:
+        this_cache = sample_cache[key]
+
+    F = np.zeros((ns[0]+1,ns[0]+1,ns[0]+1))
+    prod_phi = dx3*phi
+    for ii in range(len(F)):
+        prod_x = prod_phi * this_cache[ii]
+        for jj in range(len(F)):
+            prod_y = prod_x * np.swapaxes(this_cache[jj],0,1)
+            for kk in range(len(F)):
+                if ii+jj+kk &lt;= ns[0]:
+                    F[ii,jj,kk] = quadrinomial(ns[0],ii,jj,kk) * np.sum(prod_y * np.swapaxes(this_cache[kk],0,2) * this_cache[-(ns[0]-ii-jj-kk)])
+
+    F = TLSpectrum(F)
+    return F
+
+def quadrinomial(ns,ii,jj,kk):
+    &#34;&#34;&#34;
+    returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)
+    &#34;&#34;&#34;
+    return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(kk+1) - math.lgamma(ns-ii-jj-kk+1))
+
+def ln_binomial(n,k):
+    return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)
+
+def fold_ancestral(F):
+    &#34;&#34;&#34;
+    Takes an unfolded two locus frequency spectrum and folds it (assume don&#39;t konw ancestral state)
+    &#34;&#34;&#34;
+    ns = len(F[:,0,0]) - 1
+    for ii in range(ns+1):
+        for jj in range(ns+1):
+            for kk in range(ns+1):
+                if F.mask[ii,jj,kk]:
+                    continue
+                p = ii + jj
+                q = ii + kk
+                if p &gt; ns/2 and q &gt; ns/2:
+                    # Switch A/a and B/b, so AB becomes ab, Ab becomes aB, etc
+                    F[ns-ii-jj-kk,kk,jj] += F[ii,jj,kk]
+                    F.mask[ii,jj,kk] = True
+                elif p &gt; ns/2:
+                    # Switch A/a, so AB -&gt; aB, Ab -&gt; ab, aB -&gt; AB, and ab -&gt; Ab
+                    F[kk,ns-ii-jj-kk,ii] += F[ii,jj,kk]
+                    F.mask[ii,jj,kk] = True
+                elif q &gt; ns/2:
+                    # Switch B/b, so AB -&gt; Ab, Ab -&gt; AB, aB -&gt; ab, and ab -&gt; aB
+                    F[jj,ii,ns-ii-jj-kk] += F[ii,jj,kk]
+                    F.mask[ii,jj,kk] = True
+                                        
+    return F
+
+def fold_lr(F):
+    &#34;&#34;&#34;
+    Takes an unfolded two locus spectrum and folds based on left/right allele
+    &#34;&#34;&#34;
+    ns = len(F[:,0,0]) - 1
+    for ii in range(ns+1):
+        for jj in range(ns+1):
+            for kk in range(ns+1):
+                if F.mask[ii,jj,kk]:
+                    continue
+                if kk &gt; jj:
+                    F[ii,kk,jj] += F[ii,jj,kk]
+                    F[ii,jj,kk] = 0
+                    F.mask[ii,jj,kk] = True
+    return F
+                    
+def extrap_dt_pts(temps):
+    # in form of temps[dt][numpts]
+    dts = sorted(temps.keys())[::-1]
+    gridpts = sorted(temps[dts[0]].keys())
+    F0 = dadi.Numerics.quadratic_extrap((temps[dts[0]][gridpts[0]],temps[dts[0]][gridpts[1]],temps[dts[0]][gridpts[2]]),(1./gridpts[0],1./gridpts[1],1./gridpts[2]))
+    F1 = dadi.Numerics.quadratic_extrap((temps[dts[1]][gridpts[0]],temps[dts[1]][gridpts[1]],temps[dts[1]][gridpts[2]]),(1./gridpts[0],1./gridpts[1],1./gridpts[2]))
+    F2 = dadi.Numerics.quadratic_extrap((temps[dts[2]][gridpts[0]],temps[dts[2]][gridpts[1]],temps[dts[2]][gridpts[2]]),(1./gridpts[0],1./gridpts[1],1./gridpts[2]))
+
+    return dadi.Numerics.quadratic_extrap((F0,F1,F2),(dts[0],dts[1],dts[2]))
+
+
+def array_to_spectrum(phi):
+    &#34;&#34;&#34;
+    now handled by TLSpectrum_mod.TLSpectrum
+    &#34;&#34;&#34;
+    ns = len(phi)-1
+    phi = dadi.Spectrum(phi)
+    phi = dadi.Spectrum(phi)
+    phi.mask[0,0,0] = True
+    phi.mask[0,:,0] = True
+    phi.mask[0,0,:] = True
+    for ii in range(len(phi)):
+        for jj in range(len(phi)):
+            for kk in range(len(phi)):
+                if ii+jj+kk &gt; ns:
+                    phi.mask[ii,jj,kk] = True
+
+    for ii in range(len(phi)):
+        phi.mask[ii,ns-ii,0] = True
+        phi.mask[ii,0,ns-ii] = True
+    
+    return phi
+
+def to_single_locus(phi):
+    ns = len(phi)-1
+    fsA = dadi.Spectrum(np.zeros(ns+1))
+    fsB = dadi.Spectrum(np.zeros(ns+1))
+    for ii in range(ns+1):
+        for jj in range(ns+1-ii):
+            for kk in range(ns+1-ii-jj):
+                if phi.mask[ii,jj,kk]:
+                    continue
+                p = ii + jj
+                q = ii + kk
+                fsA[p] += phi[ii,jj,kk]
+                fsB[q] += phi[ii,jj,kk]
+    return fsA,fsB
+
+def mean_r2(F):
+    ns = len(F)-1
+    tot = np.sum(F)
+    r2s = []
+    weights = []
+    for ii in range(ns+1):
+        for jj in range(ns+1-ii):
+            for kk in range(ns+1-ii-jj):
+                if F.mask[ii,jj,kk]:
+                    continue
+                p = (ii + jj)/float(ns)
+                q = (ii + kk)/float(ns)
+                pAB = ii/float(ns)
+                D = pAB - p*q
+                r2s.append(D**2/(p*(1-p)*q*(1-q)))
+                weights.append(F[ii,jj,kk])
+    return np.sum(np.array(r2s)*np.array(weights)/tot)
+
+
+# gets too big when I need to cache hundreds of different sample sizes
+#projection_cache = {}
+def cached_projection(proj_to, proj_from, hits):
+    &#34;&#34;&#34;
+    Coefficients for projection from a larger size to smaller
+    proj_to: Number of samples to project down to
+    proj_from: Number of samples to project from
+    hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)
+    &#34;&#34;&#34;
+#    key = (proj_to, proj_from, hits)
+#    try:
+#        return projection_cache[key]
+#    except KeyError:
+#        pass
+    
+    X1, X2, X3 = hits
+    X4 = proj_from - X1 - X2 - X3
+    proj_weights = np.zeros((proj_to+1,proj_to+1,proj_to+1))
+    for ii in range(X1+1):
+        for jj in range(X2+1):
+            for kk in range(X3+1):
+                ll = proj_to - ii - jj - kk
+                if ll &gt; X4 or ll &lt;0:
+                    continue
+                f = ln_binomial(X1,ii) + ln_binomial(X2,jj) + ln_binomial(X3,kk) + ln_binomial(X4,ll) - ln_binomial(proj_from,proj_to)
+                proj_weights[ii,jj,kk] = np.exp(f)
+                
+    
+#    projection_cache[key] = proj_weights
+    return proj_weights
+    
+def project(F_from, proj_to):
+    proj_from = len(F_from)-1
+    if proj_to == proj_from:
+        return F_from
+    elif proj_to &gt; proj_from:
+        print(&#39;nope!&#39;)
+        return F_from
+    else:
+        F_proj = np.zeros((proj_to+1,proj_to+1,proj_to+1))
+        for X1 in range(proj_from):
+            for X2 in range(proj_from):
+                for X3 in range(proj_from):
+                    if F_from.mask[X1,X2,X3] == False:
+                        hits = (X1,X2,X3)
+                        proj_weights = cached_projection(proj_to,proj_from,hits)
+                        F_proj += proj_weights * F_from[X1,X2,X3]
+                        
+        return TLSpectrum(F_proj)
+
+## for projection to genotype spectrum
+def pairings(n):
+    return math.factorial(n)/(math.factorial(n/2)*2**(n/2))
+
+def binom(n,k):
+    return math.factorial(n)/math.factorial(k)/math.factorial(n-k)
+
+def multinomial(n,i,j,k):
+    if i+j+k != n:
+        return &#34;nein&#34;
+    return math.factorial(n)/math.factorial(i)/math.factorial(j)/math.factorial(k)
+
+def genotypes_prob_4(n,colors,hits):
+    (nR,nG,nB,nY) = colors
+    (nRR,nGG,nBB,nYY,nRG,nRB,nRY,nGB,nGY,nBY) = hits
+    if sum(hits) != n/2 or sum(colors) != n: return &#34;nuh uh&#34;
+    return pairings(nR-nRG-nRB-nRY)*pairings(nG-nRG-nGB-nGY)*pairings(nB-nRB-nGB-nBY)*pairings(nY-nRY-nGY-nBY)*binom(nR,nRG+nRB+nRY)*multinomial(nRG+nRB+nRY,nRG,nRB,nRY)*binom(nG,nRG+nGB+nGY)*multinomial(nRG+nGB+nGY,nRG,nGB,nGY)*binom(nB,nRB+nGB+nBY)*multinomial(nRB+nGB+nBY,nRB,nGB,nBY)*binom(nY,nRY+nGY+nBY)*multinomial(nRY+nGY+nBY,nRY,nGY,nBY)*math.factorial(nRG)*math.factorial(nRB)*math.factorial(nRY)*math.factorial(nGB)*math.factorial(nGY)*math.factorial(nBY)
+
+def possible_genotypes_4(n,colors):
+    nR,nG,nB,nY = colors
+    gl = []
+    for pure_red in range(nR/2+1):
+        for pure_green in range(nG/2+1):
+            for pure_blue in range(nB/2+1):
+                for pure_yellow in range(nY/2+1):
+                    mixed_red = nR-2*pure_red
+                    mixed_green = nG-2*pure_green
+                    mixed_blue = nB-2*pure_blue
+                    mixed_yellow = nY-2*pure_yellow
+                    for mixRG in range(min(mixed_red,mixed_green)+1):
+                        for mixRB in range(min(mixed_red-mixRG,mixed_blue)+1):
+                            for mixRY in range(mixed_red-mixRG-mixRB,min(mixed_red-mixRG-mixRB,mixed_yellow)+1):
+                                for mixGB in range(min(mixed_green-mixRG,mixed_blue-mixRB)+1):
+                                    for mixGY in range(mixed_green-mixRG-mixGB,min(mixed_green-mixRG-mixGB,mixed_yellow-mixRY)+1):
+                                        mixBY1 = mixed_blue-mixRB-mixGB
+                                        mixBY2 = mixed_yellow-mixRY-mixGY
+                                        if mixBY1 == mixBY2:
+                                            gl.append((pure_red,pure_green,pure_blue,pure_yellow,mixRG,mixRB,mixRY,mixGB,mixGY,mixBY1))
+    return gl
+
+prob_cache = {} # store possible genotypes and their relative probabilities among all possible genotype sets
+def cached_genotype_exact_projection(n,haplotype_counts):
+    key = (n,haplotype_counts)
+    try:
+        return prob_cache[key]
+    except KeyError:
+        pass
+    
+    gl = possible_genotypes_4(n,haplotype_counts)
+    tot = float(pairings(n))
+    probs = []
+    prob_cache.setdefault(key,{})
+    for hits in gl:
+        prob_cache[key][hits] = float(genotypes_prob_4(n,haplotype_counts,hits))/tot
+    return prob_cache[key]
+
+def genotype_spectrum_from_F(F):
+    n = len(F)-1
+    ng = n/2
+    tot = pairings(n)
+    G = np.zeros((ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1))
+    for ii in range(n+1):
+        for jj in range(n+1):
+            for kk in range(n+1):
+                if F[ii,jj,kk] &gt; 0:# and F.mask[ii,jj,kk] == False:
+                    nAB,nAb,naB,nab = ii,jj,kk,n-ii-jj-kk
+                    gen_probs = cached_genotype_exact_projection(n,(nAB,nAb,naB,nab))
+                    for gens in gen_probs.keys():
+                        g1,g2,g3,g4,g5,g6,g7,g8,g9,g10 = gens
+                        prob = gen_probs[gens]
+                        G[g1,g2,g3,g4,g5,g6,g7,g8,g9] += F[nAB,nAb,naB]*prob
+    return G
+
+def observed_genotype_spectrum_from_F(F):
+    n = len(F)-1
+    ng = n/2
+    G = np.zeros((ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1))
+    for ii in range(n+1):
+        for jj in range(n+1):
+            for kk in range(n+1):
+                if F[ii,jj,kk] &gt; 0:# and F.mask[ii,jj,kk] == False:
+                    nAB,nAb,naB,nab = ii,jj,kk,n-ii-jj-kk
+                    gen_probs = cached_genotype_exact_projection(n,(nAB,nAb,naB,nab))
+                    for gens in gen_probs.keys():
+                        g1,g2,g3,g4,g5,g6,g7,g8,g9,g10 = gens
+                        o1,o2,o3,o4,o5,o6,o7,o8,o9 = g1,g5,g2,g6,g7+g8,g9,g3,g10,g4
+                        prob = gen_probs[gens]
+                        G[o1,o2,o3,o4,o5,o6,o7,o8] += F[nAB,nAb,naB]*prob
+    return G
+
+def observed_genotype_spectrum_dict_from_F(F):
+    &#34;&#34;&#34;
+    Gdict has keys n (num individuals in sample), observed genotypes
+    &#34;&#34;&#34;
+    n = len(F)-1
+    ng = n/2
+    Gdict = {}
+    Gdict.setdefault(ng,{})
+    for ii in range(n+1):
+        for jj in range(n+1):
+            for kk in range(n+1):
+                if F.mask[ii,jj,kk] == False:
+                    nAB,nAb,naB,nab = ii,jj,kk,n-ii-jj-kk
+                    gen_probs = cached_genotype_exact_projection(n,(nAB,nAb,naB,nab))
+                    for gens in gen_probs.keys():
+                        g1,g2,g3,g4,g5,g6,g7,g8,g9,g10 = gens
+                        o1,o2,o3,o4,o5,o6,o7,o8,o9 = g1,g5,g2,g6,g7+g8,g9,g3,g10,g4
+                        prob = gen_probs[gens]
+                        try:
+                            Gdict[ng][(o1,o2,o3,o4,o5,o6,o7,o8)] += F[nAB,nAb,naB]*prob
+                        except KeyError:
+                            Gdict[ng][(o1,o2,o3,o4,o5,o6,o7,o8)] = F[nAB,nAb,naB]*prob
+    return Gdict
+
+from . import projection_genotypes
+
+genotype_projection_cache = {} # this cache can get very large for n_from large (&gt;~100)
+def projection_cache_Gdict(n_from,n_to,hits):
+    key = (n_from,n_to,hits)
+    try:
+        return genotype_projection_cache[key]
+    except KeyError:
+        pass
+    
+#    g1,g2,g3,g4,g5,g6,g7,g8 = hits
+#    g9 = n_from - g1 - g2 - g3 - g4 - g5 - g6 - g7 - g8
+#    weights_to = {}
+#    for o1 in range(0,g1+1):
+#        for o2 in range(0,g2+1):
+#            for o3 in range(0,g3+1):
+#                for o4 in range(0,g4+1):
+#                    for o5 in range(0,g5+1):
+#                        for o6 in range(0,g6+1):
+#                            for o7 in range(0,g7+1):
+#                                for o8 in range(0,g8+1):
+#                                    o9 = n_to-o1-o2-o3-o4-o5-o6-o7-o8
+#                                    if o9 &lt; 0 or o9 &gt; g9:
+#                                        continue
+#                                    else:
+#                                        weight = np.exp(ln_binomial(g1,o1) + ln_binomial(g2,o2) + ln_binomial(g3,o3) + ln_binomial(g4,o4) + ln_binomial(g5,o5) + ln_binomial(g6,o6) + ln_binomial(g7,o7) + ln_binomial(g8,o8) + ln_binomial(g9,o9) - ln_binomial(n_from,n_to))
+#                                        weights_to[(o1,o2,o3,o4,o5,o6,o7,o8)] = weight
+#
+
+    weights_to = projection_genotypes.projection_genotypes(n_from,n_to,hits)
+    genotype_projection_cache[key] = weights_to
+    return weights_to
+
+def project_Gdict(G,n_from,n_to):
+    &#34;&#34;&#34; n_from and n_to are the individual counts, not haplotype counts (so ns/2) &#34;&#34;&#34;
+    G_to = {}
+    G_to.setdefault(n_to,{})
+    for genotypes in G[n_from].keys():
+        weights = projection_cache_Gdict(n_from,n_to,genotypes)
+        for projected_gens in weights.keys():
+            try:
+                G_to[n_to][projected_gens] += weights[projected_gens]*G[genotypes]
+            except KeyError:
+                G_to[n_to][projected_gens] = weights[projected_gens]*G[genotypes]
+    return G_to
+
+def misidentification(F,p):
+    &#34;&#34;&#34;
+    with probability p, ancestral state is misidentified
+    with prob p(1-p) A -&gt; a but B correct
+    with prob p(1-p) B -&gt; b but A correct
+    with prob p^2 A -&gt; a and B -&gt; b
+    &#34;&#34;&#34;
+    F_new = np.zeros(np.shape(F))
+    ns = len(F) - 1
+    for ii in range(len(F)):
+        for jj in range(len(F)):
+            for kk in range(len(F)):
+                if F.mask[ii,jj,kk] == True:
+                    continue
+                ll = ns - ii - jj - kk
+                weight = F[ii,jj,kk]
+                F_new[ii,jj,kk] += weight * (1 - 2*p + p**2)
+                F_new[kk,ll,ii] += weight * p * (1-p)
+                F_new[jj,ii,ll] += weight * p * (1-p)
+                F_new[ll,kk,jj] += weight * p**2
+    return TLSpectrum(F_new)
+
+def misidentification_genotype_dict(G,p):
+    &#34;&#34;&#34;
+    same misidentification probabilities as misidentification(F,p)
+    with prob p(1-p), AA -&gt; aa, aa -&gt; AA, Aa stays the same, B/b stay same
+    with prob p(1-p), 
+    &#34;&#34;&#34;
+    G_new = {}
+    n = G.keys()[0] # first key of G is number of individuals in sample
+    G_new.setdefault(n,{})
+    for genotypes in G[n].keys():
+        G_new[n].setdefault(genotypes,0.0)
+    for genotypes in G[n].keys():
+        weight = G[n][genotypes]
+        g1,g2,g3,g4,g5,g6,g7,g8 = genotypes
+        g9 = n-g1-g2-g3-g4-g5-g6-g7-g8
+        G_new[n][(g1,g2,g3,g4,g5,g6,g7,g8)] += weight * (1 - 2*p + p**2)
+        G_new[n][(g7,g8,g9,g4,g5,g6,g1,g2)] += weight * p * (1-p)
+        G_new[n][(g3,g2,g1,g6,g5,g4,g9,g8)] += weight * p * (1-p)
+        G_new[n][(g9,g8,g7,g6,g5,g4,g3,g2)] += weight * p**2
+    return G_new
+
+def genotype_exp_data_to_arrays(G_exp,G_data):
+    &#34;&#34;&#34;
+    return 1D spectra, to perform likelihood calcs
+    so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods
+    &#34;&#34;&#34;
+    n_exp = G_exp.keys()[0]
+    n_data = G_data.keys()[0]
+    if n_exp != n_data:
+        return &#39;must have same number of sampled individuals&#39;
+    exp_arr = np.zeros(len(G_exp[n_exp]))
+    data_arr = np.zeros(len(G_exp[n_exp]))
+    gl = G_exp[n_exp].keys()
+    for ii in range(len(gl)):
+        g = gl[ii]
+        exp_arr[ii] = G_exp[n_exp][g]
+        try:
+            data_arr[ii] = G_data[n_exp][g]
+        except KeyError:
+            pass
+    
+    e = dadi.Spectrum(np.concatenate((np.array([0]),exp_arr,np.array([0]))))
+    d = dadi.Spectrum(np.concatenate((np.array([0]),data_arr,np.array([0]))))
+    return e,d
+
+def condition(F,i):
+    &#34;&#34;&#34;
+    condition on seeing nA = i
+    Fcond[i,j]: i - number AB, j - number of aB
+    i ranges from 0 to i, j ranges from 0 to n-i
+    &#34;&#34;&#34;
+    ns = len(F)-1
+    Fcond = np.zeros((i+1,ns-i+1))
+    for ii in range(ns):
+        for jj in range(ns):
+            for kk in range(ns):
+                if F.mask[ii,jj,kk] == False:
+                    if ii+jj == i:
+                        Fcond[ii,kk] = F[ii,jj,kk]
+    return Fcond
+
+# Try importing cythonized versions of several slow methods. These imports should overwrite the Python code defined above.
+try:
+    from .transition1D import transition1D
+    from .transition1 import transition1
+    from .transition2 import transition2
+    from .transition3 import transition3
+    from .transition12 import transition12
+    from .transition13 import transition13
+    from .transition23 import transition23
+    from .surface_interaction import surface_interaction
+except ImportError:
+    print(&#34;using numpy versions&#34;)
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.TwoLocus.numerics.LD_per_bin"><code class="name flex">
+<span>def <span class="ident">LD_per_bin</span></span>(<span>ns)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>LD statistics per bin for a TLSpectrum.</p>
+<p>ns: Number of samples</p>
+<p>Returns (D, r2). Both are TLSpectrum objects in which each entry is the
+value of D or r^2 for that combination of haplotypes.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def LD_per_bin(ns):
+    &#34;&#34;&#34;
+    LD statistics per bin for a TLSpectrum.
+
+    ns: Number of samples
+
+    Returns (D, r2). Both are TLSpectrum objects in which each entry is the
+    value of D or r^2 for that combination of haplotypes.
+    &#34;&#34;&#34;
+    temp = np.arange(ns+1, dtype=float)/ns
+    # Fancy array arithmetic, to avoid explicity for loops.
+    pAB = temp[:,nuax,nuax]
+    pAb = temp[nuax,:,nuax]
+    paB = temp[nuax,nuax,:]
+    pA = pAB + pAb
+    pB = pAB + paB
+    D = TLSpectrum(pAB - pA*pB)
+    r2 = TLSpectrum(D**2/(pA*(1-pA)*pB*(1-pB)))
+
+    return D,r2</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance1D"><code class="name flex">
+<span>def <span class="ident">advance1D</span></span>(<span>u, P)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given transition matrix P, use dadi's triagonal solver to integrate in 1D
+u - 1D density function
+P - transition matrix</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance1D(u,P):
+    &#34;&#34;&#34;
+    Given transition matrix P, use dadi&#39;s triagonal solver to integrate in 1D
+    u - 1D density function
+    P - transition matrix
+    &#34;&#34;&#34;
+    a = np.concatenate((np.array([0]),np.diag(P,-1)))
+    b = np.diag(P)
+    c = np.concatenate((np.diag(P,1),np.array([0])))
+    u = dadi.tridiag.tridiag(a,b,c,u)
+    return u</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_adi"><code class="name flex">
+<span>def <span class="ident">advance_adi</span></span>(<span>phi, U01, P1, P2, P3, x, ii)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Combined ADI integration of phi
+phi - density function
+U01 - domain markers
+P1/P2/P3 - ADI transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_adi(phi,U01,P1,P2,P3,x,ii):
+    &#34;&#34;&#34;
+    Combined ADI integration of phi
+    phi - density function
+    U01 - domain markers
+    P1/P2/P3 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    if np.mod(ii,3) == 0:
+        order = [1,2,3]
+    elif np.mod(ii,3) == 1:
+        order = [2,3,1]
+    else:
+        order = [3,1,2]
+    for ord in order:
+        if ord == 1:
+            phi = advance_adi1(phi,U01,P1,x)
+        elif ord == 2:
+            phi = advance_adi2(phi,U01,P2,x)
+        elif ord == 3:
+            phi = advance_adi3(phi,U01,P3,x)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_adi1"><code class="name flex">
+<span>def <span class="ident">advance_adi1</span></span>(<span>phi, U01, P1, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ADI integration along axis 1 of phi
+phi - density function
+U01 - domain markers
+P1 - ADI transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_adi1(phi,U01,P1,x):
+    &#34;&#34;&#34;
+    ADI integration along axis 1 of phi
+    phi - density function
+    U01 - domain markers
+    P1 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for jj in range(len(x)):
+        for kk in range(len(x)):
+            if np.sum(U01[:,jj,kk]) &gt; 1:
+                phi[:,jj,kk] = dadi.tridiag.tridiag(P1[jj,kk,0,:],P1[jj,kk,1,:],P1[jj,kk,2,:],phi[:,jj,kk])
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_adi2"><code class="name flex">
+<span>def <span class="ident">advance_adi2</span></span>(<span>phi, U01, P2, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ADI integration along axis 2 of phi
+phi - density function
+U01 - domain markers
+P2 - ADI transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_adi2(phi,U01,P2,x):
+    &#34;&#34;&#34;
+    ADI integration along axis 2 of phi
+    phi - density function
+    U01 - domain markers
+    P2 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for ii in range(len(x)):
+        for kk in range(len(x)):
+            if np.sum(U01[ii,:,kk]) &gt; 1:
+                phi[ii,:,kk] = dadi.tridiag.tridiag(P2[ii,kk,0,:],P2[ii,kk,1,:],P2[ii,kk,2,:],phi[ii,:,kk])
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_adi3"><code class="name flex">
+<span>def <span class="ident">advance_adi3</span></span>(<span>phi, U01, P3, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ADI integration along axis 3 of phi
+phi - density function
+U01 - domain markers
+P3 - ADI transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_adi3(phi,U01,P3,x):
+    &#34;&#34;&#34;
+    ADI integration along axis 3 of phi
+    phi - density function
+    U01 - domain markers
+    P3 - ADI transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
+    #        this version and the cython version together.
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            if np.sum(U01[ii,jj,:]) &gt; 1:
+                phi[ii,jj,:] = dadi.tridiag.tridiag(P3[ii,jj,0,:],P3[ii,jj,1,:],P3[ii,jj,2,:],phi[ii,jj,:])
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_cov"><code class="name flex">
+<span>def <span class="ident">advance_cov</span></span>(<span>phi, C12, C13, C23, x, ii)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Combined integration for the covariance terms
+phi - density function
+C12/C13/C23 - transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_cov(phi,C12,C13,C23,x,ii):
+    &#34;&#34;&#34;
+    Combined integration for the covariance terms
+    phi - density function
+    C12/C13/C23 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    if np.mod(ii,3) == 0:
+        order = [1,2,3]
+    elif np.mod(ii,3) == 1:
+        order = [2,3,1]
+    else:
+        order = [3,1,2]
+    for ord in order:
+        if ord == 1:
+            phi = advance_cov12(phi,C12,x)
+        elif ord == 2:
+            phi = advance_cov13(phi,C13,x)
+        elif ord == 3:
+            phi = advance_cov23(phi,C23,x)
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_cov12"><code class="name flex">
+<span>def <span class="ident">advance_cov12</span></span>(<span>phi, C12, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Explicit integration of covariance term in the 1/2 axes planes
+phi - density function
+C12 - transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_cov12(phi,C12,x):
+    &#34;&#34;&#34;
+    Explicit integration of covariance term in the 1/2 axes planes
+    phi - density function
+    C12 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    for kk in range(len(x)):
+        C = C12[kk]
+        phi[:,:,kk] = ( C * phi[:,:,kk].reshape(len(x)**2) ).reshape(len(x),len(x))
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_cov13"><code class="name flex">
+<span>def <span class="ident">advance_cov13</span></span>(<span>phi, C13, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Explicit integration of covariance term in the 1/3 axes planes
+phi - density function
+C13 - transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_cov13(phi,C13,x):
+    &#34;&#34;&#34;
+    Explicit integration of covariance term in the 1/3 axes planes
+    phi - density function
+    C13 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    for jj in range(len(x)):
+        C = C13[jj]
+        phi[:,jj,:] = ( C * phi[:,jj,:].reshape(len(x)**2) ).reshape(len(x),len(x))
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_cov23"><code class="name flex">
+<span>def <span class="ident">advance_cov23</span></span>(<span>phi, C23, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Explicit integration of covariance term in the 2/3 axes planes
+phi - density function
+C23 - transition matrices
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_cov23(phi,C23,x):
+    &#34;&#34;&#34;
+    Explicit integration of covariance term in the 2/3 axes planes
+    phi - density function
+    C23 - transition matrices
+    x - grid
+    &#34;&#34;&#34;
+    for ii in range(len(x)):
+        C = C23[ii]
+        phi[ii,:,:] = ( C * phi[ii,:,:].reshape(len(x)**2) ).reshape(len(x),len(x))
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_surf_adi1"><code class="name flex">
+<span>def <span class="ident">advance_surf_adi1</span></span>(<span>surf, U01surf, P1surf, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Advance the adi method along first axis one of surface domain
+surf - density function along that surface
+U01surf - domain markers along grid
+P1surf - adi transition matrix
+x - uniform grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_surf_adi1(surf,U01surf,P1surf,x):
+    &#34;&#34;&#34;
+    Advance the adi method along first axis one of surface domain
+    surf - density function along that surface
+    U01surf - domain markers along grid
+    P1surf - adi transition matrix
+    x - uniform grid
+    &#34;&#34;&#34;
+    for jj in range(len(x)):
+        if np.sum(U01surf[:,jj]) &gt; 1:
+            surf[:,jj] = dadi.tridiag.tridiag(P1surf[jj,0,:],P1surf[jj,1,:],P1surf[jj,2,:],surf[:,jj])
+    return surf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_surf_adi2"><code class="name flex">
+<span>def <span class="ident">advance_surf_adi2</span></span>(<span>surf, U01surf, P2surf, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Advance the adi method along second axis one of surface domain
+surf - density function along that surface
+U01surf - domain markers along grid
+P2surf - adi transition matrix
+x - uniform grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_surf_adi2(surf,U01surf,P2surf,x):
+    &#34;&#34;&#34;
+    Advance the adi method along second axis one of surface domain
+    surf - density function along that surface
+    U01surf - domain markers along grid
+    P2surf - adi transition matrix
+    x - uniform grid
+    &#34;&#34;&#34;
+    for ii in range(len(x)):
+        if np.sum(U01surf[ii,:]) &gt; 1:
+            surf[ii,:] = dadi.tridiag.tridiag(P2surf[ii,0,:],P2surf[ii,1,:],P2surf[ii,2,:],surf[ii,:])
+    return surf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_surf_cov"><code class="name flex">
+<span>def <span class="ident">advance_surf_cov</span></span>(<span>surf, Csurf, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Explicit integration of the covariance term, using scipy's sparse matrix for Csurf
+surf - density function along the surface
+Csurf - transition matrix
+x - grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_surf_cov(surf,Csurf,x):
+    &#34;&#34;&#34;
+    Explicit integration of the covariance term, using scipy&#39;s sparse matrix for Csurf
+    surf - density function along the surface
+    Csurf - transition matrix
+    x - grid
+    &#34;&#34;&#34;
+    surf = ( Csurf * surf.reshape(len(x)**2)).reshape(len(x),len(x))
+    return surf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.advance_surface"><code class="name flex">
+<span>def <span class="ident">advance_surface</span></span>(<span>phi, x, P1surf, P2surf, Csurf, Pline, P, U01surf)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>phi - full density function
+x - grid
+P1surf,P2surf - ADI transition matrices for triallele density function
+Csurf - covarance transition matrix
+Pline - transition matrix for diagonal boundary of triallele surface
+P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
+    &#34;&#34;&#34;
+    phi - full density function
+    x - grid
+    P1surf,P2surf - ADI transition matrices for triallele density function
+    Csurf - covarance transition matrix
+    Pline - transition matrix for diagonal boundary of triallele surface
+    P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary
+    &#34;&#34;&#34;
+    # create the triallele domain of the nonsquare surface of the full density function
+    surf = phi_to_surf(phi,x) # done
+    
+    surf = advance_surf_adi1(surf,U01surf,P1surf,x)
+    surf = advance_surf_adi2(surf,U01surf,P2surf,x)
+    surf = advance_surf_cov(surf,Csurf,x)
+    surf = move_surf_density_to_bdry(x,surf,P)
+    #surf = advance1D(x,surf,Pline) # this is an absorbing edge, so we&#39;ll just leave it alone - density lost!
+    
+    phi = surf_to_phi(surf,phi,x) # done
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.array_to_spectrum"><code class="name flex">
+<span>def <span class="ident">array_to_spectrum</span></span>(<span>phi)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>now handled by TLSpectrum_mod.TLSpectrum</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def array_to_spectrum(phi):
+    &#34;&#34;&#34;
+    now handled by TLSpectrum_mod.TLSpectrum
+    &#34;&#34;&#34;
+    ns = len(phi)-1
+    phi = dadi.Spectrum(phi)
+    phi = dadi.Spectrum(phi)
+    phi.mask[0,0,0] = True
+    phi.mask[0,:,0] = True
+    phi.mask[0,0,:] = True
+    for ii in range(len(phi)):
+        for jj in range(len(phi)):
+            for kk in range(len(phi)):
+                if ii+jj+kk &gt; ns:
+                    phi.mask[ii,jj,kk] = True
+
+    for ii in range(len(phi)):
+        phi.mask[ii,ns-ii,0] = True
+        phi.mask[ii,0,ns-ii] = True
+    
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.binom"><code class="name flex">
+<span>def <span class="ident">binom</span></span>(<span>n, k)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def binom(n,k):
+    return math.factorial(n)/math.factorial(k)/math.factorial(n-k)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.cached_genotype_exact_projection"><code class="name flex">
+<span>def <span class="ident">cached_genotype_exact_projection</span></span>(<span>n, haplotype_counts)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cached_genotype_exact_projection(n,haplotype_counts):
+    key = (n,haplotype_counts)
+    try:
+        return prob_cache[key]
+    except KeyError:
+        pass
+    
+    gl = possible_genotypes_4(n,haplotype_counts)
+    tot = float(pairings(n))
+    probs = []
+    prob_cache.setdefault(key,{})
+    for hits in gl:
+        prob_cache[key][hits] = float(genotypes_prob_4(n,haplotype_counts,hits))/tot
+    return prob_cache[key]</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.cached_projection"><code class="name flex">
+<span>def <span class="ident">cached_projection</span></span>(<span>proj_to, proj_from, hits)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Coefficients for projection from a larger size to smaller
+proj_to: Number of samples to project down to
+proj_from: Number of samples to project from
+hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cached_projection(proj_to, proj_from, hits):
+    &#34;&#34;&#34;
+    Coefficients for projection from a larger size to smaller
+    proj_to: Number of samples to project down to
+    proj_from: Number of samples to project from
+    hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)
+    &#34;&#34;&#34;
+#    key = (proj_to, proj_from, hits)
+#    try:
+#        return projection_cache[key]
+#    except KeyError:
+#        pass
+    
+    X1, X2, X3 = hits
+    X4 = proj_from - X1 - X2 - X3
+    proj_weights = np.zeros((proj_to+1,proj_to+1,proj_to+1))
+    for ii in range(X1+1):
+        for jj in range(X2+1):
+            for kk in range(X3+1):
+                ll = proj_to - ii - jj - kk
+                if ll &gt; X4 or ll &lt;0:
+                    continue
+                f = ln_binomial(X1,ii) + ln_binomial(X2,jj) + ln_binomial(X3,kk) + ln_binomial(X4,ll) - ln_binomial(proj_from,proj_to)
+                proj_weights[ii,jj,kk] = np.exp(f)
+                
+    
+#    projection_cache[key] = proj_weights
+    return proj_weights</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.condition"><code class="name flex">
+<span>def <span class="ident">condition</span></span>(<span>F, i)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>condition on seeing nA = i
+Fcond[i,j]: i - number AB, j - number of aB
+i ranges from 0 to i, j ranges from 0 to n-i</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def condition(F,i):
+    &#34;&#34;&#34;
+    condition on seeing nA = i
+    Fcond[i,j]: i - number AB, j - number of aB
+    i ranges from 0 to i, j ranges from 0 to n-i
+    &#34;&#34;&#34;
+    ns = len(F)-1
+    Fcond = np.zeros((i+1,ns-i+1))
+    for ii in range(ns):
+        for jj in range(ns):
+            for kk in range(ns):
+                if F.mask[ii,jj,kk] == False:
+                    if ii+jj == i:
+                        Fcond[ii,kk] = F[ii,jj,kk]
+    return Fcond</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.domain"><code class="name flex">
+<span>def <span class="ident">domain</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Array of same dimension as density function discretization
+Has a 1 if grid point lies in domain, 0 if outside domain
+x - 1D grid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def domain(x):
+    &#34;&#34;&#34;
+    Array of same dimension as density function discretization
+    Has a 1 if grid point lies in domain, 0 if outside domain
+    x - 1D grid
+    &#34;&#34;&#34;
+    tol = 1e-12
+    U01 = np.ones((len(x),len(x),len(x)))
+    XX = x[:,nuax,nuax] + x[nuax,:,nuax] + x[nuax,nuax,:]
+    U01[np.where(XX &gt; 1+tol)] = 0
+    return U01</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.domain_surf"><code class="name flex">
+<span>def <span class="ident">domain_surf</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def domain_surf(x):
+    &#34;&#34;&#34;
+    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
+    &#34;&#34;&#34;
+    tol = 1e-12
+    U01 = np.ones((len(x),len(x)))
+    XX = x[:,nuax] + x[nuax,:]
+    U01[np.where(XX &gt; 1+tol)] = 0
+    return U01</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.extrap_dt_pts"><code class="name flex">
+<span>def <span class="ident">extrap_dt_pts</span></span>(<span>temps)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extrap_dt_pts(temps):
+    # in form of temps[dt][numpts]
+    dts = sorted(temps.keys())[::-1]
+    gridpts = sorted(temps[dts[0]].keys())
+    F0 = dadi.Numerics.quadratic_extrap((temps[dts[0]][gridpts[0]],temps[dts[0]][gridpts[1]],temps[dts[0]][gridpts[2]]),(1./gridpts[0],1./gridpts[1],1./gridpts[2]))
+    F1 = dadi.Numerics.quadratic_extrap((temps[dts[1]][gridpts[0]],temps[dts[1]][gridpts[1]],temps[dts[1]][gridpts[2]]),(1./gridpts[0],1./gridpts[1],1./gridpts[2]))
+    F2 = dadi.Numerics.quadratic_extrap((temps[dts[2]][gridpts[0]],temps[dts[2]][gridpts[1]],temps[dts[2]][gridpts[2]]),(1./gridpts[0],1./gridpts[1],1./gridpts[2]))
+
+    return dadi.Numerics.quadratic_extrap((F0,F1,F2),(dts[0],dts[1],dts[2]))</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.fold_ancestral"><code class="name flex">
+<span>def <span class="ident">fold_ancestral</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Takes an unfolded two locus frequency spectrum and folds it (assume don't konw ancestral state)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fold_ancestral(F):
+    &#34;&#34;&#34;
+    Takes an unfolded two locus frequency spectrum and folds it (assume don&#39;t konw ancestral state)
+    &#34;&#34;&#34;
+    ns = len(F[:,0,0]) - 1
+    for ii in range(ns+1):
+        for jj in range(ns+1):
+            for kk in range(ns+1):
+                if F.mask[ii,jj,kk]:
+                    continue
+                p = ii + jj
+                q = ii + kk
+                if p &gt; ns/2 and q &gt; ns/2:
+                    # Switch A/a and B/b, so AB becomes ab, Ab becomes aB, etc
+                    F[ns-ii-jj-kk,kk,jj] += F[ii,jj,kk]
+                    F.mask[ii,jj,kk] = True
+                elif p &gt; ns/2:
+                    # Switch A/a, so AB -&gt; aB, Ab -&gt; ab, aB -&gt; AB, and ab -&gt; Ab
+                    F[kk,ns-ii-jj-kk,ii] += F[ii,jj,kk]
+                    F.mask[ii,jj,kk] = True
+                elif q &gt; ns/2:
+                    # Switch B/b, so AB -&gt; Ab, Ab -&gt; AB, aB -&gt; ab, and ab -&gt; aB
+                    F[jj,ii,ns-ii-jj-kk] += F[ii,jj,kk]
+                    F.mask[ii,jj,kk] = True
+                                        
+    return F</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.fold_lr"><code class="name flex">
+<span>def <span class="ident">fold_lr</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Takes an unfolded two locus spectrum and folds based on left/right allele</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fold_lr(F):
+    &#34;&#34;&#34;
+    Takes an unfolded two locus spectrum and folds based on left/right allele
+    &#34;&#34;&#34;
+    ns = len(F[:,0,0]) - 1
+    for ii in range(ns+1):
+        for jj in range(ns+1):
+            for kk in range(ns+1):
+                if F.mask[ii,jj,kk]:
+                    continue
+                if kk &gt; jj:
+                    F[ii,kk,jj] += F[ii,jj,kk]
+                    F[ii,jj,kk] = 0
+                    F.mask[ii,jj,kk] = True
+    return F</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.genotype_exp_data_to_arrays"><code class="name flex">
+<span>def <span class="ident">genotype_exp_data_to_arrays</span></span>(<span>G_exp, G_data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>return 1D spectra, to perform likelihood calcs
+so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def genotype_exp_data_to_arrays(G_exp,G_data):
+    &#34;&#34;&#34;
+    return 1D spectra, to perform likelihood calcs
+    so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods
+    &#34;&#34;&#34;
+    n_exp = G_exp.keys()[0]
+    n_data = G_data.keys()[0]
+    if n_exp != n_data:
+        return &#39;must have same number of sampled individuals&#39;
+    exp_arr = np.zeros(len(G_exp[n_exp]))
+    data_arr = np.zeros(len(G_exp[n_exp]))
+    gl = G_exp[n_exp].keys()
+    for ii in range(len(gl)):
+        g = gl[ii]
+        exp_arr[ii] = G_exp[n_exp][g]
+        try:
+            data_arr[ii] = G_data[n_exp][g]
+        except KeyError:
+            pass
+    
+    e = dadi.Spectrum(np.concatenate((np.array([0]),exp_arr,np.array([0]))))
+    d = dadi.Spectrum(np.concatenate((np.array([0]),data_arr,np.array([0]))))
+    return e,d</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.genotype_spectrum_from_F"><code class="name flex">
+<span>def <span class="ident">genotype_spectrum_from_F</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def genotype_spectrum_from_F(F):
+    n = len(F)-1
+    ng = n/2
+    tot = pairings(n)
+    G = np.zeros((ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1))
+    for ii in range(n+1):
+        for jj in range(n+1):
+            for kk in range(n+1):
+                if F[ii,jj,kk] &gt; 0:# and F.mask[ii,jj,kk] == False:
+                    nAB,nAb,naB,nab = ii,jj,kk,n-ii-jj-kk
+                    gen_probs = cached_genotype_exact_projection(n,(nAB,nAb,naB,nab))
+                    for gens in gen_probs.keys():
+                        g1,g2,g3,g4,g5,g6,g7,g8,g9,g10 = gens
+                        prob = gen_probs[gens]
+                        G[g1,g2,g3,g4,g5,g6,g7,g8,g9] += F[nAB,nAb,naB]*prob
+    return G</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.genotypes_prob_4"><code class="name flex">
+<span>def <span class="ident">genotypes_prob_4</span></span>(<span>n, colors, hits)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def genotypes_prob_4(n,colors,hits):
+    (nR,nG,nB,nY) = colors
+    (nRR,nGG,nBB,nYY,nRG,nRB,nRY,nGB,nGY,nBY) = hits
+    if sum(hits) != n/2 or sum(colors) != n: return &#34;nuh uh&#34;
+    return pairings(nR-nRG-nRB-nRY)*pairings(nG-nRG-nGB-nGY)*pairings(nB-nRB-nGB-nBY)*pairings(nY-nRY-nGY-nBY)*binom(nR,nRG+nRB+nRY)*multinomial(nRG+nRB+nRY,nRG,nRB,nRY)*binom(nG,nRG+nGB+nGY)*multinomial(nRG+nGB+nGY,nRG,nGB,nGY)*binom(nB,nRB+nGB+nBY)*multinomial(nRB+nGB+nBY,nRB,nGB,nBY)*binom(nY,nRY+nGY+nBY)*multinomial(nRY+nGY+nBY,nRY,nGY,nBY)*math.factorial(nRG)*math.factorial(nRB)*math.factorial(nRY)*math.factorial(nGB)*math.factorial(nGY)*math.factorial(nBY)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.grid"><code class="name flex">
+<span>def <span class="ident">grid</span></span>(<span>numpts)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Default grid is uniform, so that grid points lie directly on the boundaries
+Here, delta_x = 1./numpts
+numpts - number of grid points (less one)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid(numpts):
+    &#34;&#34;&#34;
+    Default grid is uniform, so that grid points lie directly on the boundaries
+    Here, delta_x = 1./numpts
+    numpts - number of grid points (less one) 
+    &#34;&#34;&#34;
+    return np.linspace(0,1,numpts+1)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.grid_dx"><code class="name flex">
+<span>def <span class="ident">grid_dx</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given 1D grid x, this returns the 1D grid spacing for x</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid_dx(x):
+    &#34;&#34;&#34;
+    Given 1D grid x, this returns the 1D grid spacing for x
+    &#34;&#34;&#34;
+    return (np.concatenate((np.diff(x),np.array([0]))) + np.concatenate((np.array([0]),np.diff(x))))/2</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.grid_dx3"><code class="name flex">
+<span>def <span class="ident">grid_dx3</span></span>(<span>x, dx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>For integrating over the 3D domain (see int3)
+x - 1D grid
+dx - 1D grid spacing</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid_dx3(x,dx):
+    &#34;&#34;&#34;
+    For integrating over the 3D domain (see int3)
+    x - 1D grid
+    dx - 1D grid spacing
+    &#34;&#34;&#34;
+    DX = dx[:,nuax,nuax]*dx[nuax,:,nuax]*dx[nuax,nuax,:]
+    for ii in range(len(x)):
+        for jj in range(len(x)):
+            DX[ii,jj,len(x)-ii-jj-1] *= 1./2
+    return DX</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.grid_dx_2d"><code class="name flex">
+<span>def <span class="ident">grid_dx_2d</span></span>(<span>x, dx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The two dimensional grid spacing over the domain.
+Grid points lie along the diagonal boundary, and Delta for those points is halved</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def grid_dx_2d(x,dx):
+    &#34;&#34;&#34;
+    The two dimensional grid spacing over the domain.
+    Grid points lie along the diagonal boundary, and Delta for those points is halved
+    &#34;&#34;&#34;
+    DXX = dx[:,nuax]*dx[nuax,:]
+    for ii in range(len(x)):
+        DXX[ii,len(x)-ii-1] *= 1./2
+    return DXX</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.injectA"><code class="name flex">
+<span>def <span class="ident">injectA</span></span>(<span>x, dx, dt, yB, phi, thetaA)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Injection new derived mutations A onto background of B/b
+x - 1D grid
+dx - 1D grid spacing
+dt - integration time step
+yA - biallelic frequency spectrum integrated by dadi
+phi - density function
+thetaA - scaled mutation rate</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def injectA(x,dx,dt,yB,phi,thetaA):
+    &#34;&#34;&#34;
+    Injection new derived mutations A onto background of B/b
+    x - 1D grid
+    dx - 1D grid spacing
+    dt - integration time step
+    yA - biallelic frequency spectrum integrated by dadi
+    phi - density function
+    thetaA - scaled mutation rate
+    &#34;&#34;&#34;
+    phi[0,1,1:-1] += dt/dx[1] / x[1]**2 * yB[1:-1] * (1-x[1:-1]) * thetaA/2.
+    phi[1,0,1:-1] += dt/dx[1] / x[1]**2 * yB[1:-1] * x[1:-1] * thetaA/2.
+    phi[1,0,0] += dt/dx[1] * 2 / x[1]**2 * yB[1] * x[1] * thetaA/2. 
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.injectB"><code class="name flex">
+<span>def <span class="ident">injectB</span></span>(<span>x, dx, dt, yA, phi, thetaB)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Injection new derived mutations B onto background of A/a
+x - 1D grid
+dx - 1D grid spacing
+dt - integration time step
+yB - biallelic frequency spectrum integrated by dadi
+phi - density function
+thetaB - scaled mutation rate</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def injectB(x,dx,dt,yA,phi,thetaB):
+    &#34;&#34;&#34;
+    Injection new derived mutations B onto background of A/a
+    x - 1D grid
+    dx - 1D grid spacing
+    dt - integration time step
+    yB - biallelic frequency spectrum integrated by dadi
+    phi - density function
+    thetaB - scaled mutation rate
+    &#34;&#34;&#34;
+    phi[0,1:-1,1] += dt/dx[1] / x[1]**2 * yA[1:-1] * (1-x[1:-1]) * thetaB/2.
+    phi[1,1:-1,0] += dt/dx[1] / x[1]**2 * yA[1:-1] * x[1:-1] * thetaB/2.
+    phi[1,0,0] += dt/dx[1] * 2 / x[1]**2 * yA[1] * x[1] * thetaB/2. 
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.int2"><code class="name flex">
+<span>def <span class="ident">int2</span></span>(<span>DXX, U)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate the density function over the domain
+DXX - two dimensional grid
+U - density function</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def int2(DXX,U):
+    &#34;&#34;&#34;
+    Integrate the density function over the domain
+    DXX - two dimensional grid
+    U - density function
+    &#34;&#34;&#34;
+    return np.sum(DXX*U)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.int3"><code class="name flex">
+<span>def <span class="ident">int3</span></span>(<span>DX, U)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Numerically integrate the density function phi
+phi - density function
+DX - 3D grid spacing for integration weights</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def int3(DX,U):
+    &#34;&#34;&#34;
+    Numerically integrate the density function phi
+    phi - density function
+    DX - 3D grid spacing for integration weights
+    &#34;&#34;&#34;
+    return np.sum(DX*U)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.ln_binomial"><code class="name flex">
+<span>def <span class="ident">ln_binomial</span></span>(<span>n, k)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ln_binomial(n,k):
+    return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.mean_r2"><code class="name flex">
+<span>def <span class="ident">mean_r2</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mean_r2(F):
+    ns = len(F)-1
+    tot = np.sum(F)
+    r2s = []
+    weights = []
+    for ii in range(ns+1):
+        for jj in range(ns+1-ii):
+            for kk in range(ns+1-ii-jj):
+                if F.mask[ii,jj,kk]:
+                    continue
+                p = (ii + jj)/float(ns)
+                q = (ii + kk)/float(ns)
+                pAB = ii/float(ns)
+                D = pAB - p*q
+                r2s.append(D**2/(p*(1-p)*q*(1-q)))
+                weights.append(F[ii,jj,kk])
+    return np.sum(np.array(r2s)*np.array(weights)/tot)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.misidentification"><code class="name flex">
+<span>def <span class="ident">misidentification</span></span>(<span>F, p)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>with probability p, ancestral state is misidentified
+with prob p(1-p) A -&gt; a but B correct
+with prob p(1-p) B -&gt; b but A correct
+with prob p^2 A -&gt; a and B -&gt; b</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def misidentification(F,p):
+    &#34;&#34;&#34;
+    with probability p, ancestral state is misidentified
+    with prob p(1-p) A -&gt; a but B correct
+    with prob p(1-p) B -&gt; b but A correct
+    with prob p^2 A -&gt; a and B -&gt; b
+    &#34;&#34;&#34;
+    F_new = np.zeros(np.shape(F))
+    ns = len(F) - 1
+    for ii in range(len(F)):
+        for jj in range(len(F)):
+            for kk in range(len(F)):
+                if F.mask[ii,jj,kk] == True:
+                    continue
+                ll = ns - ii - jj - kk
+                weight = F[ii,jj,kk]
+                F_new[ii,jj,kk] += weight * (1 - 2*p + p**2)
+                F_new[kk,ll,ii] += weight * p * (1-p)
+                F_new[jj,ii,ll] += weight * p * (1-p)
+                F_new[ll,kk,jj] += weight * p**2
+    return TLSpectrum(F_new)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.misidentification_genotype_dict"><code class="name flex">
+<span>def <span class="ident">misidentification_genotype_dict</span></span>(<span>G, p)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>same misidentification probabilities as misidentification(F,p)
+with prob p(1-p), AA -&gt; aa, aa -&gt; AA, Aa stays the same, B/b stay same
+with prob p(1-p),</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def misidentification_genotype_dict(G,p):
+    &#34;&#34;&#34;
+    same misidentification probabilities as misidentification(F,p)
+    with prob p(1-p), AA -&gt; aa, aa -&gt; AA, Aa stays the same, B/b stay same
+    with prob p(1-p), 
+    &#34;&#34;&#34;
+    G_new = {}
+    n = G.keys()[0] # first key of G is number of individuals in sample
+    G_new.setdefault(n,{})
+    for genotypes in G[n].keys():
+        G_new[n].setdefault(genotypes,0.0)
+    for genotypes in G[n].keys():
+        weight = G[n][genotypes]
+        g1,g2,g3,g4,g5,g6,g7,g8 = genotypes
+        g9 = n-g1-g2-g3-g4-g5-g6-g7-g8
+        G_new[n][(g1,g2,g3,g4,g5,g6,g7,g8)] += weight * (1 - 2*p + p**2)
+        G_new[n][(g7,g8,g9,g4,g5,g6,g1,g2)] += weight * p * (1-p)
+        G_new[n][(g3,g2,g1,g6,g5,g4,g9,g8)] += weight * p * (1-p)
+        G_new[n][(g9,g8,g7,g6,g5,g4,g3,g2)] += weight * p**2
+    return G_new</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.move_density_to_surface"><code class="name flex">
+<span>def <span class="ident">move_density_to_surface</span></span>(<span>x, dx, dt, gammaA, gammaB, nu, hA=0.5, hB=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+x - grid
+dx - grid spacing
+dt - timestep of integration
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def move_density_to_surface(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
+    &#34;&#34;&#34;
+    for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+    x - grid
+    dx - grid spacing
+    dt - timestep of integration
+    nu - relative population size
+    &#34;&#34;&#34;
+    Psurf = np.zeros((len(x),len(x),len(x)))
+    if gammaA == 0 and gammaB == 0:
+        P1D = transition1D(x,dx,dt,0,nu)
+        weights = {}
+        for ii in range(len(x))[1:-1]:
+            y = np.zeros(len(x))
+            y[ii] = 1./dx[ii]
+            y = advance1D(y,P1D)
+            weights[ii] = y[-1] * dx[-1]
+        for ii in range(len(x))[:len(x)-1]:
+            for jj in range(len(x))[:len(x)-1-ii]:
+                for kk in range(len(x))[:len(x)-1-ii-jj]:
+                    if ii+jj+kk == 0:
+                        continue
+                    Psurf[ii,jj,kk] = weights[ii+jj+kk]
+    else:
+        for ii in range(len(x))[:len(x)-1]:
+            for jj in range(len(x))[:len(x)-1-ii]:
+                for kk in range(len(x))[:len(x)-1-ii-jj]:
+                    if ii+jj+kk == 0:
+                        continue
+                    p = x[ii]+x[jj]
+                    q = x[ii]+x[kk]
+                    #gamma = ((gammaA+gammaB)*x[ii] + gammaA*x[jj] + gammaB*x[kk]) / (x[ii] + x[jj] + x[kk])
+                    ### XXX: why is this divided by (x[ii]+x[jj]+x[kk])?? because it&#39;s an average, sort of
+                    gamma = ((gammaA+gammaB)*x[ii]**2 + 2*(gammaA+hB*gammaB)*x[ii]*x[jj] + 2*(hA*gammaA+gammaB)*x[ii]*x[kk] + (gammaA)*x[jj]**2 + 2*(hA*gammaA+hB*gammaB)*x[jj]*x[kk] + (gammaB)*x[kk]*2 + 2*(hA*gammaA+hB*gammaB)*x[ii]*(1-x[ii]-x[jj]-x[kk]) + 2*(hA*gammaA)*x[jj]*(1-x[ii]-x[jj]-x[kk]) + 2*(hB*gammaB)*x[kk]*(1-x[ii]-x[jj]-x[kk])) / (x[ii]+x[jj]+x[kk])
+                    P1D = transition1D(x,dx,dt,gamma,nu)
+                    y = np.zeros(len(x))
+                    y[ii+jj+kk] = 1./dx[ii+jj+kk]
+                    y = advance1D(y,P1D)
+                    Psurf[ii,jj,kk] = y[-1]*dx[-1]
+    return Psurf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.move_surf_density_to_bdry"><code class="name flex">
+<span>def <span class="ident">move_surf_density_to_bdry</span></span>(<span>x, surf, P)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This is an absorbing boundary, so we'll just remove that density and not worry about integrating along that diagonal</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def move_surf_density_to_bdry(x,surf,P):
+    &#34;&#34;&#34;
+    This is an absorbing boundary, so we&#39;ll just remove that density and not worry about integrating along that diagonal
+    &#34;&#34;&#34;
+    for ii in range(len(x))[1:]:
+        for jj in range(len(x))[1:]:
+            if x[ii] + x[jj] &lt; 1:
+                surf[ii,jj] *= (1-P[ii,jj])
+    return surf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.move_surf_to_line"><code class="name flex">
+<span>def <span class="ident">move_surf_to_line</span></span>(<span>x, dx, dt, gammaA, gammaB, nu, hA=0.5, hB=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+x - grid
+dx - grid spacing
+dt - timestep of integration
+gammaA/gammaB - scaled selection coefficients
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def move_surf_to_line(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
+    &#34;&#34;&#34;
+    for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
+    x - grid
+    dx - grid spacing
+    dt - timestep of integration
+    gammaA/gammaB - scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    #### XXXX: 11/8/16: assuming that gammaB = 0
+    Psurf = np.zeros((len(x),len(x)))
+    
+    for ii in range(len(x))[1:len(x)-1]:
+        for jj in range(len(x))[1:len(x)-1-ii]:
+            #gamma = ((gammaA+gammaB)*x[ii] + gammaA*x[jj]) / (x[ii] + x[jj]) ### this should also account for dominance
+            gamma = (gammaA*x[ii]**2 + 2*(gammaA)*x[ii]*x[jj] + 2*(hA*gammaA)*x[ii]*(1-x[ii]-x[jj]) + gammaA*x[jj]**2 + 2*(hA*gammaA)*x[jj]*(1-x[ii]-x[jj])) / (x[ii]+x[jj])
+            P1D = transition1D(x,dx,dt,gamma,nu)
+            y = np.zeros(len(x))
+            y[ii+jj] = 1./dx[ii+jj]
+            y = advance1D(y,P1D)
+            Psurf[ii,jj] = y[-1]*dx[-1]
+    return Psurf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.multinomial"><code class="name flex">
+<span>def <span class="ident">multinomial</span></span>(<span>n, i, j, k)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multinomial(n,i,j,k):
+    if i+j+k != n:
+        return &#34;nein&#34;
+    return math.factorial(n)/math.factorial(i)/math.factorial(j)/math.factorial(k)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.observed_genotype_spectrum_dict_from_F"><code class="name flex">
+<span>def <span class="ident">observed_genotype_spectrum_dict_from_F</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gdict has keys n (num individuals in sample), observed genotypes</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observed_genotype_spectrum_dict_from_F(F):
+    &#34;&#34;&#34;
+    Gdict has keys n (num individuals in sample), observed genotypes
+    &#34;&#34;&#34;
+    n = len(F)-1
+    ng = n/2
+    Gdict = {}
+    Gdict.setdefault(ng,{})
+    for ii in range(n+1):
+        for jj in range(n+1):
+            for kk in range(n+1):
+                if F.mask[ii,jj,kk] == False:
+                    nAB,nAb,naB,nab = ii,jj,kk,n-ii-jj-kk
+                    gen_probs = cached_genotype_exact_projection(n,(nAB,nAb,naB,nab))
+                    for gens in gen_probs.keys():
+                        g1,g2,g3,g4,g5,g6,g7,g8,g9,g10 = gens
+                        o1,o2,o3,o4,o5,o6,o7,o8,o9 = g1,g5,g2,g6,g7+g8,g9,g3,g10,g4
+                        prob = gen_probs[gens]
+                        try:
+                            Gdict[ng][(o1,o2,o3,o4,o5,o6,o7,o8)] += F[nAB,nAb,naB]*prob
+                        except KeyError:
+                            Gdict[ng][(o1,o2,o3,o4,o5,o6,o7,o8)] = F[nAB,nAb,naB]*prob
+    return Gdict</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.observed_genotype_spectrum_from_F"><code class="name flex">
+<span>def <span class="ident">observed_genotype_spectrum_from_F</span></span>(<span>F)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observed_genotype_spectrum_from_F(F):
+    n = len(F)-1
+    ng = n/2
+    G = np.zeros((ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1))
+    for ii in range(n+1):
+        for jj in range(n+1):
+            for kk in range(n+1):
+                if F[ii,jj,kk] &gt; 0:# and F.mask[ii,jj,kk] == False:
+                    nAB,nAb,naB,nab = ii,jj,kk,n-ii-jj-kk
+                    gen_probs = cached_genotype_exact_projection(n,(nAB,nAb,naB,nab))
+                    for gens in gen_probs.keys():
+                        g1,g2,g3,g4,g5,g6,g7,g8,g9,g10 = gens
+                        o1,o2,o3,o4,o5,o6,o7,o8,o9 = g1,g5,g2,g6,g7+g8,g9,g3,g10,g4
+                        prob = gen_probs[gens]
+                        G[o1,o2,o3,o4,o5,o6,o7,o8] += F[nAB,nAb,naB]*prob
+    return G</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.pairings"><code class="name flex">
+<span>def <span class="ident">pairings</span></span>(<span>n)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pairings(n):
+    return math.factorial(n)/(math.factorial(n/2)*2**(n/2))</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.phi_to_surf"><code class="name flex">
+<span>def <span class="ident">phi_to_surf</span></span>(<span>phi, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>non-square
+mapped to triallelic domain
+note that many of the surface interaction methods could be cythonized for increase in speed
+if x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either A or B have fixed, and that state is absorbing (no recombination can send you back to the interior
+thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don't have to worry about that density anymore
+here, we have x3 lost</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def phi_to_surf(phi,x):
+    &#34;&#34;&#34;
+    non-square  mapped to triallelic domain
+    note that many of the surface interaction methods could be cythonized for increase in speed
+    if x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either A or B have fixed, and that state is absorbing (no recombination can send you back to the interior
+    thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don&#39;t have to worry about that density anymore
+    here, we have x3 lost
+    &#34;&#34;&#34;
+    surf = np.zeros((len(x),len(x)))
+    for ii in range(len(x)): # loop through x1 indices
+        for jj in range(len(x)): # loop through x2 indices
+            kk = len(x)-1 - ii - jj
+            surf[ii,jj] = phi[ii,jj,kk]
+    return surf</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.possible_genotypes_4"><code class="name flex">
+<span>def <span class="ident">possible_genotypes_4</span></span>(<span>n, colors)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def possible_genotypes_4(n,colors):
+    nR,nG,nB,nY = colors
+    gl = []
+    for pure_red in range(nR/2+1):
+        for pure_green in range(nG/2+1):
+            for pure_blue in range(nB/2+1):
+                for pure_yellow in range(nY/2+1):
+                    mixed_red = nR-2*pure_red
+                    mixed_green = nG-2*pure_green
+                    mixed_blue = nB-2*pure_blue
+                    mixed_yellow = nY-2*pure_yellow
+                    for mixRG in range(min(mixed_red,mixed_green)+1):
+                        for mixRB in range(min(mixed_red-mixRG,mixed_blue)+1):
+                            for mixRY in range(mixed_red-mixRG-mixRB,min(mixed_red-mixRG-mixRB,mixed_yellow)+1):
+                                for mixGB in range(min(mixed_green-mixRG,mixed_blue-mixRB)+1):
+                                    for mixGY in range(mixed_green-mixRG-mixGB,min(mixed_green-mixRG-mixGB,mixed_yellow-mixRY)+1):
+                                        mixBY1 = mixed_blue-mixRB-mixGB
+                                        mixBY2 = mixed_yellow-mixRY-mixGY
+                                        if mixBY1 == mixBY2:
+                                            gl.append((pure_red,pure_green,pure_blue,pure_yellow,mixRG,mixRB,mixRY,mixGB,mixGY,mixBY1))
+    return gl</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.project"><code class="name flex">
+<span>def <span class="ident">project</span></span>(<span>F_from, proj_to)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def project(F_from, proj_to):
+    proj_from = len(F_from)-1
+    if proj_to == proj_from:
+        return F_from
+    elif proj_to &gt; proj_from:
+        print(&#39;nope!&#39;)
+        return F_from
+    else:
+        F_proj = np.zeros((proj_to+1,proj_to+1,proj_to+1))
+        for X1 in range(proj_from):
+            for X2 in range(proj_from):
+                for X3 in range(proj_from):
+                    if F_from.mask[X1,X2,X3] == False:
+                        hits = (X1,X2,X3)
+                        proj_weights = cached_projection(proj_to,proj_from,hits)
+                        F_proj += proj_weights * F_from[X1,X2,X3]
+                        
+        return TLSpectrum(F_proj)</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.project_Gdict"><code class="name flex">
+<span>def <span class="ident">project_Gdict</span></span>(<span>G, n_from, n_to)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>n_from and n_to are the individual counts, not haplotype counts (so ns/2)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def project_Gdict(G,n_from,n_to):
+    &#34;&#34;&#34; n_from and n_to are the individual counts, not haplotype counts (so ns/2) &#34;&#34;&#34;
+    G_to = {}
+    G_to.setdefault(n_to,{})
+    for genotypes in G[n_from].keys():
+        weights = projection_cache_Gdict(n_from,n_to,genotypes)
+        for projected_gens in weights.keys():
+            try:
+                G_to[n_to][projected_gens] += weights[projected_gens]*G[genotypes]
+            except KeyError:
+                G_to[n_to][projected_gens] = weights[projected_gens]*G[genotypes]
+    return G_to</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.projection_cache_Gdict"><code class="name flex">
+<span>def <span class="ident">projection_cache_Gdict</span></span>(<span>n_from, n_to, hits)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def projection_cache_Gdict(n_from,n_to,hits):
+    key = (n_from,n_to,hits)
+    try:
+        return genotype_projection_cache[key]
+    except KeyError:
+        pass
+    
+#    g1,g2,g3,g4,g5,g6,g7,g8 = hits
+#    g9 = n_from - g1 - g2 - g3 - g4 - g5 - g6 - g7 - g8
+#    weights_to = {}
+#    for o1 in range(0,g1+1):
+#        for o2 in range(0,g2+1):
+#            for o3 in range(0,g3+1):
+#                for o4 in range(0,g4+1):
+#                    for o5 in range(0,g5+1):
+#                        for o6 in range(0,g6+1):
+#                            for o7 in range(0,g7+1):
+#                                for o8 in range(0,g8+1):
+#                                    o9 = n_to-o1-o2-o3-o4-o5-o6-o7-o8
+#                                    if o9 &lt; 0 or o9 &gt; g9:
+#                                        continue
+#                                    else:
+#                                        weight = np.exp(ln_binomial(g1,o1) + ln_binomial(g2,o2) + ln_binomial(g3,o3) + ln_binomial(g4,o4) + ln_binomial(g5,o5) + ln_binomial(g6,o6) + ln_binomial(g7,o7) + ln_binomial(g8,o8) + ln_binomial(g9,o9) - ln_binomial(n_from,n_to))
+#                                        weights_to[(o1,o2,o3,o4,o5,o6,o7,o8)] = weight
+#
+
+    weights_to = projection_genotypes.projection_genotypes(n_from,n_to,hits)
+    genotype_projection_cache[key] = weights_to
+    return weights_to</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.quadrinomial"><code class="name flex">
+<span>def <span class="ident">quadrinomial</span></span>(<span>ns, ii, jj, kk)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def quadrinomial(ns,ii,jj,kk):
+    &#34;&#34;&#34;
+    returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)
+    &#34;&#34;&#34;
+    return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(kk+1) - math.lgamma(ns-ii-jj-kk+1))</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.sample_cached"><code class="name flex">
+<span>def <span class="ident">sample_cached</span></span>(<span>phi, ns, x)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_cached(phi, ns, x):
+    dx = grid_dx(x)
+    dx3 = grid_dx3(x,dx)
+
+    if type(ns) == int:
+        ns = (ns,)
+    else:
+        if len(ns) == 1:
+            ns = tuple(ns)
+        else:
+            ns = (ns[0],)
+
+    # cache calculations of several large matrices
+    # cache x**ii, x**jj, and x**kk 
+    # just cache x[:,nuax,nuax]**ii, and then later use np.swapaxes
+    key = (ns, tuple(x))
+    if key not in sample_cache:
+        this_cache = {}
+        for ii in range(ns[0]+1):
+            this_cache[ii] = x[:,nuax,nuax]**ii
+            this_cache[-ii] = (1 - x[:,nuax,nuax] - x[nuax,:,nuax] - x[nuax,nuax,:]) ** ii
+        sample_cache[key] = this_cache
+    else:
+        this_cache = sample_cache[key]
+
+    F = np.zeros((ns[0]+1,ns[0]+1,ns[0]+1))
+    prod_phi = dx3*phi
+    for ii in range(len(F)):
+        prod_x = prod_phi * this_cache[ii]
+        for jj in range(len(F)):
+            prod_y = prod_x * np.swapaxes(this_cache[jj],0,1)
+            for kk in range(len(F)):
+                if ii+jj+kk &lt;= ns[0]:
+                    F[ii,jj,kk] = quadrinomial(ns[0],ii,jj,kk) * np.sum(prod_y * np.swapaxes(this_cache[kk],0,2) * this_cache[-(ns[0]-ii-jj-kk)])
+
+    F = TLSpectrum(F)
+    return F</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.surf_to_phi"><code class="name flex">
+<span>def <span class="ident">surf_to_phi</span></span>(<span>surf, phi, x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>move the surf density back to the full phi density function</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def surf_to_phi(surf,phi,x):
+    &#34;&#34;&#34;
+    move the surf density back to the full phi density function
+    &#34;&#34;&#34;
+    for ii in range(len(x)): # loop through x1 indices
+        for jj in range(len(x)): # loop through x2 indices
+            kk = len(x)-1 - ii - jj
+            phi[ii,jj,kk] = surf[ii,jj]
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.surface_interaction_b"><code class="name flex">
+<span>def <span class="ident">surface_interaction_b</span></span>(<span>phi, x, Psurf)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def surface_interaction_b(phi,x,Psurf):
+    for ii in range(len(x))[:len(x)-1]:
+        for jj in range(len(x))[:len(x)-1-ii]:
+            for kk in range(len(x))[:len(x)-1-ii-jj]:
+                if ii == 0 and jj == 0:
+                    continue
+                if ii == 0 and kk == 0:
+                    continue
+                if jj == 0 and kk == 0:
+                    continue
+                if ii == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (jj+kk))//2
+                    rmdr = (len(x)-1 - (jj+kk))%2
+                    if rmdr == 0:
+                        phi[ii,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                elif jj == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+kk))//2
+                    rmdr = (len(x)-1 - (ii+kk))%2
+                    if rmdr == 0:
+                        phi[ii+dist,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj,kk+dist] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii+dist,jj,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                elif kk == 0:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+jj))//2
+                    rmdr = (len(x)-1 - (ii+jj))%2
+                    if rmdr == 0:
+                        phi[ii+dist,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj+dist,kk] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii+dist,jj+dist+1,kk] += amnt * phi[ii,jj,kk] * 2/2.
+                        phi[ii,jj,kk] *= (1-amnt)
+                else:
+                    amnt = Psurf[ii,jj,kk]
+                    dist = (len(x)-1 - (ii+jj+kk))//3
+                    rmdr = (len(x)-1 - (ii+jj+kk))%3
+                    if rmdr == 0: # in line with boundary grid point
+                        phi[ii+dist,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 1:
+                        phi[ii+dist+1,jj+dist,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii,jj,kk] *= (1-amnt)
+                    elif rmdr == 2:
+                        phi[ii+dist+1,jj+dist+1,kk+dist] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist+1,jj+dist,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii+dist,jj+dist+1,kk+dist+1] += amnt * phi[ii,jj,kk] * 2/3.
+                        phi[ii,jj,kk] *= (1-amnt)
+
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.surface_recombination"><code class="name flex">
+<span>def <span class="ident">surface_recombination</span></span>(<span>phi, x, rho, dt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>recombination pushes density from surface back into interior of domain</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def surface_recombination(phi,x,rho,dt):
+    &#34;&#34;&#34;
+    recombination pushes density from surface back into interior of domain
+    &#34;&#34;&#34;
+    if rho == 0:
+        return phi
+    else:
+        for ii in range(len(x)):
+            for jj in range(len(x))[1:]:
+                kk = len(x)-1 - ii - jj
+                if kk &gt; 0:
+                    D = -x[jj]*x[kk] # -x2*x3, since x4=0
+                    if jj-1 &gt; 0:
+                        phi[ii,jj-1,kk] += 1./2 * (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    else:
+                        phi[ii,jj-1,kk] += (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    if kk-1 &gt; 0:
+                        phi[ii,jj,kk-1] += 1./2 * (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    else:
+                        phi[ii,jj,kk-1] += (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+                    
+                    phi[ii,jj,kk] -= 2 * (-D) * dt * phi[ii,jj,kk] * rho/4. / x[1]
+    return phi</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.to_single_locus"><code class="name flex">
+<span>def <span class="ident">to_single_locus</span></span>(<span>phi)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_single_locus(phi):
+    ns = len(phi)-1
+    fsA = dadi.Spectrum(np.zeros(ns+1))
+    fsB = dadi.Spectrum(np.zeros(ns+1))
+    for ii in range(ns+1):
+        for jj in range(ns+1-ii):
+            for kk in range(ns+1-ii-jj):
+                if phi.mask[ii,jj,kk]:
+                    continue
+                p = ii + jj
+                q = ii + kk
+                fsA[p] += phi[ii,jj,kk]
+                fsB[q] += phi[ii,jj,kk]
+    return fsA,fsB</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.transition12_surf"><code class="name flex">
+<span>def <span class="ident">transition12_surf</span></span>(<span>x, dx, U01)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>transition matrix for explicit integration of mixed derivative term along surface</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition12_surf(x,dx,U01):
+    &#34;&#34;&#34;
+    transition matrix for explicit integration of mixed derivative term along surface
+    &#34;&#34;&#34;
+    C = lil_matrix((len(x)**2,len(x)**2))
+    for ii in range(len(x)-1)[:-1]:
+        for jj in range(len(x)-1)[:-1]:
+            if U01[ii+2,jj+2] == 1 or U01[ii+1,jj+2] == 1 or U01[ii+2,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj+1 &lt; len(x) and U01[ii+1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj+1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj+1])
+                    
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1])
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1])
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+            
+            elif U01[ii+1,jj+1] == 1 or U01[ii+1,jj] == 1 or U01[ii,jj+1] == 1:
+                if ii+1 &lt; len(x) and jj-1 &gt;= 0 and U01[ii+1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+                
+                if ii-1 &gt;= 0 and jj+1 &lt; len(x) and U01[ii-1,jj+1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+                    
+                if ii-1 &gt;= 0 and jj-1 &gt;= 0 and U01[ii-1,jj-1] == 1:
+                    C[ii*len(x)+jj,(ii-1)*len(x)+(jj-1)] += 1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj-1])
+    ii = 0
+    jj = len(x)-2
+    C[ii*len(x)+jj,(ii+1)*len(x)+(jj-1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii+1]*x[jj-1]) / 2
+    ii = len(x)-2
+    jj = 0
+    C[ii*len(x)+jj,(ii-1)*len(x)+(jj+1)] += -1./4 * 1./(dx[ii]*dx[jj]) * (-x[ii-1]*x[jj+1]) / 2
+    return C</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.transition1_surf"><code class="name flex">
+<span>def <span class="ident">transition1_surf</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>adi transition matrix for x1 on surface
+See cythonized versions of these in the dadi/Triallele code
+x - grid
+dx - grid spacing
+U01 - surface domain marker
+gammaA/B - scaled selection coefficients
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition1_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    adi transition matrix for x1 on surface
+    See cythonized versions of these in the dadi/Triallele code
+    x - grid
+    dx - grid spacing
+    U01 - surface domain marker
+    gammaA/B - scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    P = np.zeros((len(x),3,len(x)))
+    for jj in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if jj &gt; 0:
+            V = x*(1-x)/nu
+            V[np.max(np.where(U01[:,jj] == 1))] = 0
+            for ii in np.where(U01[:,jj] == 1)[0][:-1]:
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == np.where(U01[:,jj] == 1)[0][:-1][-1]:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        if jj == 0:
+            V = x*(1-x)/nu
+            for ii in range(len(x)):
+                if ii == 0:
+                    A[ii,ii] =  - 1/(2*dx[ii]) * ( -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+                elif ii == len(x)-1:
+                    A[ii,ii-1] = - 1/(2*dx[ii])*2 * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii])*2 * ( -V[ii]/(x[ii]-x[ii-1]) )
+                else:
+                    A[ii,ii-1] = - 1/(2*dx[ii]) * ( V[ii-1]/(x[ii]-x[ii-1]) )
+                    A[ii,ii] = - 1/(2*dx[ii]) * ( -V[ii]/(x[ii]-x[ii-1]) -V[ii]/(x[ii+1]-x[ii]) )
+                    A[ii,ii+1] = - 1/(2*dx[ii]) * ( V[ii+1]/(x[ii+1]-x[ii]) )
+        
+        x2 = x[jj]
+        M = 2*gammaA * x*(1-x-x2)*(hA+(x+x2)*(1-2*hA)) + 2*gammaB * x*x2*(hB+(1-x2)*(1-2*hB)) - rho/2. * (-x2*(1-x-x2)) / 2.
+        #M = gammaA * x * (1-x-x2) + gammaB * x * x2 - rho/2. * (-x2*(1-x-x2))
+        M[np.where(U01[:,jj] == 1)[0][-1]] = 0
+        for ii in np.where(U01[:,jj] == 1)[0]:
+            if ii == 0:
+                A[ii,ii] += 1/dx[ii] * ( M[ii] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+            elif ii == np.where(U01[:,jj] == 1)[0][-1]:
+                A[ii,ii-1] += 1/dx[ii] * 2 * ( - M[ii-1] ) / 2
+                A[ii,ii] += 1/dx[ii] * 2 * ( - M[ii] ) / 2
+            else:
+                A[ii,ii-1] += 1/dx[ii] * ( - M[ii-1] ) / 2
+                A[ii,ii] += 0 #1/dx[ii] * ( M[ii] - M[ii-1] ) / 2
+                A[ii,ii+1] += 1/dx[ii] * ( M[ii+1] ) / 2
+
+        P[jj,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        P[jj,1,:] = np.diagonal(A)
+        P[jj,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P</code></pre>
+</details>
+</dd>
+<dt id="dadi.TwoLocus.numerics.transition2_surf"><code class="name flex">
+<span>def <span class="ident">transition2_surf</span></span>(<span>x, dx, U01, gammaA, gammaB, rho, nu, hA=0.5, hB=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>adi transition matrix for x2 on surface
+x - grid
+dx - grid spacing
+U01 - surface domain marker
+gammaA/B - scaled selection coefficients
+nu - relative population size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transition2_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
+    &#34;&#34;&#34;
+    adi transition matrix for x2 on surface
+    x - grid
+    dx - grid spacing
+    U01 - surface domain marker
+    gammaA/B - scaled selection coefficients
+    nu - relative population size
+    &#34;&#34;&#34;
+    P = np.zeros((len(x),3,len(x)))
+    for ii in range(len(x)):
+        A = np.zeros((len(x),len(x)))
+        if ii &gt; 0:
+            V = x*(1-x)/nu
+            V[np.max(np.where(U01[ii,:] == 1))] = 0
+            for jj in np.where(U01[ii,:] == 1)[0][:-1]:
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == np.where(U01[ii,:] == 1)[0][:-1][-1]:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        if ii == 0:
+            V = x*(1-x)/nu
+            for jj in range(len(x)):
+                if jj == 0:
+                    A[jj,jj] =  - 1/(2*dx[jj]) * ( -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+                elif jj == len(x)-1:
+                    A[jj,jj-1] = - 1/(2*dx[jj])*2 * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj])*2 * ( -V[jj]/(x[jj]-x[jj-1]) )
+                else:
+                    A[jj,jj-1] = - 1/(2*dx[jj]) * ( V[jj-1]/(x[jj]-x[jj-1]) )
+                    A[jj,jj] = - 1/(2*dx[jj]) * ( -V[jj]/(x[jj]-x[jj-1]) -V[jj]/(x[jj+1]-x[jj]) )
+                    A[jj,jj+1] = - 1/(2*dx[jj]) * ( V[jj+1]/(x[jj+1]-x[jj]) )
+        
+        x1 = x[ii]
+        M = 2*gammaA * x*(1-x1-x)*(hA+(x+x1)*(1-2*hA)) - 2*gammaB * x*(1-x) + rho/2. * (-x * (1-x1-x)) / 2.
+        #M = gammaA * x * (1-x1-x) - gammaB * x * (1-x) + rho/2. * (-x * (1-x1-x)) / 2. ### note the (/2.) term at the end, since x3 also would decrease by this amount - we separately handle reentry into domain interior
+        M[np.where(U01[ii,:] == 1)[0][-1]] = 0
+        for jj in np.where(U01[ii,:] == 1)[0]:
+            if jj == 0:
+                A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+            elif jj == np.where(U01[ii,:] == 1)[0][-1]:
+                A[jj,jj-1] += 1/dx[jj] * 2 * ( - M[jj-1] ) / 2
+                A[jj,jj] += 1/dx[jj] * 2 * ( - M[jj] ) / 2
+            else:
+                A[jj,jj-1] += 1/dx[jj] * ( - M[jj-1] ) / 2
+                A[jj,jj] += 0 # 1/dx[jj] * ( M[jj] - M[jj-1] ) / 2
+                A[jj,jj+1] += 1/dx[jj] * ( M[jj+1] ) / 2
+        P[ii,0,:] = np.concatenate(( np.array([0]), np.diagonal(A,-1) ))
+        P[ii,1,:] = np.diagonal(A)
+        P[ii,2,:] = np.concatenate(( np.diagonal(A,1), np.array([0]) ))
+    return P</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.TwoLocus" href="index.html">dadi.TwoLocus</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.TwoLocus.numerics.LD_per_bin" href="#dadi.TwoLocus.numerics.LD_per_bin">LD_per_bin</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance1D" href="#dadi.TwoLocus.numerics.advance1D">advance1D</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_adi" href="#dadi.TwoLocus.numerics.advance_adi">advance_adi</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_adi1" href="#dadi.TwoLocus.numerics.advance_adi1">advance_adi1</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_adi2" href="#dadi.TwoLocus.numerics.advance_adi2">advance_adi2</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_adi3" href="#dadi.TwoLocus.numerics.advance_adi3">advance_adi3</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_cov" href="#dadi.TwoLocus.numerics.advance_cov">advance_cov</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_cov12" href="#dadi.TwoLocus.numerics.advance_cov12">advance_cov12</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_cov13" href="#dadi.TwoLocus.numerics.advance_cov13">advance_cov13</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_cov23" href="#dadi.TwoLocus.numerics.advance_cov23">advance_cov23</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_surf_adi1" href="#dadi.TwoLocus.numerics.advance_surf_adi1">advance_surf_adi1</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_surf_adi2" href="#dadi.TwoLocus.numerics.advance_surf_adi2">advance_surf_adi2</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_surf_cov" href="#dadi.TwoLocus.numerics.advance_surf_cov">advance_surf_cov</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.advance_surface" href="#dadi.TwoLocus.numerics.advance_surface">advance_surface</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.array_to_spectrum" href="#dadi.TwoLocus.numerics.array_to_spectrum">array_to_spectrum</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.binom" href="#dadi.TwoLocus.numerics.binom">binom</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.cached_genotype_exact_projection" href="#dadi.TwoLocus.numerics.cached_genotype_exact_projection">cached_genotype_exact_projection</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.cached_projection" href="#dadi.TwoLocus.numerics.cached_projection">cached_projection</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.condition" href="#dadi.TwoLocus.numerics.condition">condition</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.domain" href="#dadi.TwoLocus.numerics.domain">domain</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.domain_surf" href="#dadi.TwoLocus.numerics.domain_surf">domain_surf</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.extrap_dt_pts" href="#dadi.TwoLocus.numerics.extrap_dt_pts">extrap_dt_pts</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.fold_ancestral" href="#dadi.TwoLocus.numerics.fold_ancestral">fold_ancestral</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.fold_lr" href="#dadi.TwoLocus.numerics.fold_lr">fold_lr</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.genotype_exp_data_to_arrays" href="#dadi.TwoLocus.numerics.genotype_exp_data_to_arrays">genotype_exp_data_to_arrays</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.genotype_spectrum_from_F" href="#dadi.TwoLocus.numerics.genotype_spectrum_from_F">genotype_spectrum_from_F</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.genotypes_prob_4" href="#dadi.TwoLocus.numerics.genotypes_prob_4">genotypes_prob_4</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.grid" href="#dadi.TwoLocus.numerics.grid">grid</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.grid_dx" href="#dadi.TwoLocus.numerics.grid_dx">grid_dx</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.grid_dx3" href="#dadi.TwoLocus.numerics.grid_dx3">grid_dx3</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.grid_dx_2d" href="#dadi.TwoLocus.numerics.grid_dx_2d">grid_dx_2d</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.injectA" href="#dadi.TwoLocus.numerics.injectA">injectA</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.injectB" href="#dadi.TwoLocus.numerics.injectB">injectB</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.int2" href="#dadi.TwoLocus.numerics.int2">int2</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.int3" href="#dadi.TwoLocus.numerics.int3">int3</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.ln_binomial" href="#dadi.TwoLocus.numerics.ln_binomial">ln_binomial</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.mean_r2" href="#dadi.TwoLocus.numerics.mean_r2">mean_r2</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.misidentification" href="#dadi.TwoLocus.numerics.misidentification">misidentification</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.misidentification_genotype_dict" href="#dadi.TwoLocus.numerics.misidentification_genotype_dict">misidentification_genotype_dict</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.move_density_to_surface" href="#dadi.TwoLocus.numerics.move_density_to_surface">move_density_to_surface</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.move_surf_density_to_bdry" href="#dadi.TwoLocus.numerics.move_surf_density_to_bdry">move_surf_density_to_bdry</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.move_surf_to_line" href="#dadi.TwoLocus.numerics.move_surf_to_line">move_surf_to_line</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.multinomial" href="#dadi.TwoLocus.numerics.multinomial">multinomial</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.observed_genotype_spectrum_dict_from_F" href="#dadi.TwoLocus.numerics.observed_genotype_spectrum_dict_from_F">observed_genotype_spectrum_dict_from_F</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.observed_genotype_spectrum_from_F" href="#dadi.TwoLocus.numerics.observed_genotype_spectrum_from_F">observed_genotype_spectrum_from_F</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.pairings" href="#dadi.TwoLocus.numerics.pairings">pairings</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.phi_to_surf" href="#dadi.TwoLocus.numerics.phi_to_surf">phi_to_surf</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.possible_genotypes_4" href="#dadi.TwoLocus.numerics.possible_genotypes_4">possible_genotypes_4</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.project" href="#dadi.TwoLocus.numerics.project">project</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.project_Gdict" href="#dadi.TwoLocus.numerics.project_Gdict">project_Gdict</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.projection_cache_Gdict" href="#dadi.TwoLocus.numerics.projection_cache_Gdict">projection_cache_Gdict</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.quadrinomial" href="#dadi.TwoLocus.numerics.quadrinomial">quadrinomial</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.sample_cached" href="#dadi.TwoLocus.numerics.sample_cached">sample_cached</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.surf_to_phi" href="#dadi.TwoLocus.numerics.surf_to_phi">surf_to_phi</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.surface_interaction_b" href="#dadi.TwoLocus.numerics.surface_interaction_b">surface_interaction_b</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.surface_recombination" href="#dadi.TwoLocus.numerics.surface_recombination">surface_recombination</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.to_single_locus" href="#dadi.TwoLocus.numerics.to_single_locus">to_single_locus</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.transition12_surf" href="#dadi.TwoLocus.numerics.transition12_surf">transition12_surf</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.transition1_surf" href="#dadi.TwoLocus.numerics.transition1_surf">transition1_surf</a></code></li>
+<li><code><a title="dadi.TwoLocus.numerics.transition2_surf" href="#dadi.TwoLocus.numerics.transition2_surf">transition2_surf</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

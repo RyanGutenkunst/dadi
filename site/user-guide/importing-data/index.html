@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Importing data - dadi</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">dadi</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">User Guide</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../installation/" class="dropdown-item">Installation</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Importing data</a>
+</li>
+                                    
+<li>
+    <a href="../manipulating-spectra/" class="dropdown-item">Manipulating spectra</a>
+</li>
+                                    
+<li>
+    <a href="../specifying-a-model/" class="dropdown-item">Specifying a model</a>
+</li>
+                                    
+<li>
+    <a href="../simulation-and-fitting/" class="dropdown-item">Simulation and fitting</a>
+</li>
+                                    
+<li>
+    <a href="../plotting/" class="dropdown-item">Plotting</a>
+</li>
+                                    
+<li>
+    <a href="../bootstrapping/" class="dropdown-item">Bootstrapping</a>
+</li>
+                                    
+<li>
+    <a href="../uncertainty-analysis/" class="dropdown-item">Uncertainty analysis</a>
+</li>
+                                    
+<li>
+    <a href="../likelihood-ratio-test/" class="dropdown-item">Likelihood ratio test</a>
+</li>
+                                    
+<li>
+    <a href="../triallelic-spectra/" class="dropdown-item">Triallelic spectra</a>
+</li>
+                                    
+<li>
+    <a href="../dfe-inference/" class="dropdown-item">DFE inference</a>
+</li>
+                                    
+<li>
+    <a href="../inbreeding/" class="dropdown-item">Inbreeding</a>
+</li>
+                                    
+<li>
+    <a href="../low-pass/" class="dropdown-item">Low-Pass</a>
+</li>
+                                    
+<li>
+    <a href="../polyploidy.md" class="dropdown-item">Polyploidy</a>
+</li>
+                                    
+<li>
+    <a href="../GPU-computing/" class="dropdown-item">GPU computing</a>
+</li>
+                                    
+<li>
+    <a href="../demes/" class="dropdown-item">Demes integration</a>
+</li>
+                                    
+<li>
+    <a href="../frequently-asked-questions/" class="dropdown-item">Frequently asked questions</a>
+</li>
+                                    
+<li>
+    <a href="../references/" class="dropdown-item">References</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Examples</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../examples/fs_from_data/fs_from_data/" class="dropdown-item">Frequency spectrum from data</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/YRI_CEU/YRI_CEU/" class="dropdown-item">Demography inference for YRI and CEU</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/DFE/DFE/" class="dropdown-item">DFE inference</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/Triallele/TrialleleModel/" class="dropdown-item">Triallelic model</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/TwoLocus/TwoLocusModel/" class="dropdown-item">Two Locus model</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_1d_demographics/" class="dropdown-item">Basic Workflow 1D Demographics</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_2d_demographics/" class="dropdown-item">Basic Workflow 2D Demographics</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_cache_generation/" class="dropdown-item">Basic Workflow Cache Generation</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_1d_dfe/" class="dropdown-item">Basic Workflow 1D DFE</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/basic_workflow/basic_workflow_2d_dfe/" class="dropdown-item">Basic Workflow 2D DFE</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/LowPass/low-pass/" class="dropdown-item">Low-Pass Example</a>
+</li>
+                                    
+<li>
+    <a href="../../examples/Polyploidy/PolyploidyModel/" class="dropdown-item">Polyploidy models</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../api/dadi/" class="nav-link">API</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../installation/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../manipulating-spectra/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://bitbucket.org/gutenkunstlab/dadi/src/master" class="nav-link"><i class="fa-brands fa-bitbucket"></i> Bitbucket</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#importing-data" class="nav-link">Importing data</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="importing-data">Importing data</h1>
+<p>dadi represents frequency spectra using <code>dadi.Spectrum</code> objects. As desccribed in the <a href="../manipulating-spectra/">Manipulating spectra section</a>, <code>Spectrum</code> objects are subclassed from <code>numpy.masked_array</code> and thus can be constructed similarly. The most basic way to create a <code>Spectrum</code> is manually:</p>
+<pre><code>fs = dadi.Spectrum([0, 100, 20, 10, 1, 0])
+</code></pre>
+<p>This creates a <code>Spectrum</code> object representing the FS from a single population, from which we have 5 samples (The first and last entries in <code>fs</code> correspond to mutations observed in zero or all samples. These are thus not polymorphisms, and by default dadi masks out those entries so they are ignored.)</p>
+<p>For nontrivial data sets, entering the FS manually is infeasible, so we will focus on automatic methods of generating a <code>Spectrum</code> object. The most direct way is to load a pre-generated FS from a file, using</p>
+<pre><code>fs = dadi.Spectrum.from_file(filename)
+</code></pre>
+<p>The appropriate file format is detailed in the next section. We have also added fuction to generate the FS from a VCF file.</p>
+<h3 id="frequency-spectrum-file-format">Frequency spectrum file format</h3>
+<p>dadi uses a simple fie format for storing the FS. Each file begins with any number of comment lines beginning with <code>#</code>. the first non-comment line contain <em>P</em> integers giving the dimensions of the FS array, where <em>P</em> is the number of populations represented. For a FS representing data from 4×4×2 samples, this would be <code>5 5 3</code>. (Each dimension is one larger than the number of samples, because the number of observations can range, for example, from 0 to 4 if there are 4 samples, for a total of 5 possibilities.) On the same line, the string <code>folded</code> or <code>unfolded</code> denoting whether or not the stored FS is folded.</p>
+<p>The actual data is stored in a single line listing all the FS elements separated by spaces, in the order <code>fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...</code> This is followed by a single line giving the elements of the mask in the same order as the data, with <code>1</code> indicating masked and <code>0</code> indicating unmasked.</p>
+<p>The file corresponding to the <code>Spectrum fs</code> can be written using the ccommand <code>fs.to_file(filename)</code></p>
+<h3 id="frequency-spectra-from-vcf-files">Frequency spectra from VCF files</h3>
+<p>Data can be loaded from VCF files. The main function for accomplishing this is <code>make_data_dict_vcf</code> in the <code>dadi.Misc</code> submodule. The function has two required arguments: </p>
+<ol>
+<li>The name of the VCF (can be gzipped [*.vcf.ga])</li>
+<li>The name of a file describing how individuals map to populations.</li>
+</ol>
+<p>This second file is a plain-text, two-column file containing the individual names in column one and their respective populations in column two:</p>
+<pre><code>i0  pop0
+i1  pop0
+i2  pop0
+...
+iN  pop2
+</code></pre>
+<p>Examples of these files can be found in the <code>examples/fs_from_data/</code> folder in the <a href="https://bitbucket.org/gutenkunstlab/dadi/src/master/">dadi source distribution</a>. Generating a frequency spectrum with these files can then be achieved through the creation of a data dictionary with the following two lines of code:</p>
+<pre><code>dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz", "popfile.txt")
+fs = dadi.Spectrum.from_data_dict(dd, ['pop0', 'pop1'], projections = [20, 30], polarized = False)
+</code></pre>
+<p>Projection is often used to deal with missing data. But projection cannot be used when modeling inbreeding. It also turns the dadi's likelihood function into a composite likelihood, even for unlinked data. We have thus included an option to take a smaller subsample of individuals from a population at each site, so that variants with less missing data than the specified subsampling size are not completely ignored. To specify how many individuals should be subsampled, the function takes an additional dictionary as an argument, where the dictionary simply maps the population names to the desired number of individuals to subsample.</p>
+<pre><code># create the subsample dictionary
+ss = {'pop0':5, 'pop1':10}
+# pass it as an additional argument
+dd = dadi.Misc.make_data_dict_vcf("example.vcf.gz", "popfile.txt", subsample = ss)
+fs = dadi.Spectrum.from_data_dict(dd, ['pop0', 'pop1'], projections = [10, 20], polarized = False)
+</code></pre>
+<p>Subsampling offers an alternative to down projecting your data that preserves individual genotypes. Projecting will consider sampled chromosomes/alleles as exchangeable across all individuals, which is usually OK for a randomly mating population. However, if you want to include inbreeding in your model (see the <a href="../inbreeding/">Inbreeding section</a>), then projecting will erase the signal of excess homozygosity that inbreeding creates by sampling chromosomes instead of individuals. When generating a frequency spectrum from a subsampled data dictionary, be sure to set the projections argument to 2 times the subsample size you specified for each population so that no down projecting is done.</p>
+<h3 id="snp-data-methods">SNP data methods</h3>
+<p>From a data dictionary, the method <code>Spectrum.from_data_dict</code> can be used to create a <code>Spectrum</code>.</p>
+<pre><code>fs = Spectrum.from_data_dict(dd, pop_id = ['YRI', 'CEU'], projections = [10, 12], polarized = True)
+</code></pre>
+<p>The <code>pop_ids</code> argument specifies which populations to use to create the FS, and their order. <code>projections</code> denotes the population sample sizes for resulting FS. (Recall that for a diploid organism, assuming random mating, we get two samples from each individual.) Note that the total number of calls to <code>Allele1</code> and <code>Allele2</code> in a given population need not be the same for each SNP. When constructing the Spectrum, each SNP will be projected down to the requested number of samples in each population. (Note that SNPs cannot be projected up, so SNPs without enough calls in any population will be ignored.) <code>polarized</code> specifies whether dadi should use outgroup information to polarize the SNPs. If <code>polarized = True</code>, SNPs withouth outgroup information, or with that information —— will be ingored. If <code>polarized = False</code>, outgroup information will be ignored and the resulting <code>Spectrum</code> will be folded.</p>
+<p>If your data have missing calls for some individuals, projecting down to a smaller sample size will increase the number of SNPs you can use for analysis. On the other hand, some fraction of the SNPs will now project down to frequency 0, and thus be uninformative. As a rule of thumb, we often choose our projection to maximize the number of segregating sites in our final FS (assessed via <code>fs.S()</code>), although we have not formally tested whether this maximizes statistical power.</p>
+<h3 id="snp-data-format">SNP data format</h3>
+<p>As a convenience, dadi includes several methods for generating frequency spectra directly from SNP data. That relevant SNP file format is described here. An large example can be found in the <code>examples/fs_from_data/data.txt</code> file included with the <a href="https://bitbucket.org/gutenkunstlab/dadi/src/master/">dadi source distribution</a>, and a small example is shown in Listing 1.</p>
+<pre><code>Human   Chimp   Allele1 YRI CEU Allele2 YRI CEU Gene    Position
+ACG     ATG     C       29  24  T       1   0   abcb1   289
+CCT     CCT     C       29  23  G       3   2   abcb1   345
+</code></pre>
+<p align="center"><strong>Listing 1</strong>: Example of SNP file format</p>
+
+<p>The data file begins with any number of comment lines that being with <code>#</code>. The first parsed line is a column header line. Whitespace is used to separate entries within the table, so no spaces are allowed within any entry. Individual rows make be commented out using <code>#</code>.</p>
+<p>The first column contains the in-group reference sequence at that SNP, including the flanking bases. If the flanking bases are unknown, they can be denoted by <code>-</code>. The header label is arbitrary.</p>
+<p>The second column contains the aligned outgroup reference sequency at that SNP, including the flanking bases. Unknown entries can be denoted by `-. The header label is arbitrary.</p>
+<p>The third column gives the first segregating allele. The column header must be exactly <code>Allele1</code>.</p>
+<p>Then follows an arbitrary number of columns, one for each population, each giving the number of times <code>Allele1</code> was observed in that population. The header for each column should be the population identifier.</p>
+<p>The next column gives the second segregating allele. The column header must be exactly <code>Allele2</code>.</p>
+<p>Then follows one column for each population, each giving the number of times <code>Allele2</code> was observed in that population. The header form each column should be the population identifier, and the columns should be in the same order as for the <code>Allele1</code> entries.</p>
+<p>Then follows an arbitrary number of columns which will be concatenated with <code>_</code> to assign a label for each SNP.</p>
+<p>The <code>Allele1</code> and <code>Allele2</code> headers must be exactly those values because the number of columns between those two is used to infer the number of population in the file.</p>
+<p>The method <code>Misc.make_data_dict</code> reads the above SNP file format to generate a Python data dictionary describing the data:</p>
+<pre><code>dd = Misc.make_data_dict(filename)
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

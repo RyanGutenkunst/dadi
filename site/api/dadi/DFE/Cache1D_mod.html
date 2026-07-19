@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>dadi.DFE.Cache1D_mod API documentation</title>
+<meta name="description" content="Initially developed by Bernard Kim and published as fitdadi
+Kim, Huber, Lohmueller (2017) Genetics.
+Modified version of the script found at: …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.DFE.Cache1D_mod</code></h1>
+</header>
+<section id="section-intro">
+<p>Initially developed by Bernard Kim and published as fitdadi
+Kim, Huber, Lohmueller (2017) Genetics.
+Modified version of the script found at: <a href="https://doi.org/10.1534/genetics.116.197145">https://doi.org/10.1534/genetics.116.197145</a> .
+Based on scripts from:
+<a href="https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc">https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc</a> .</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Initially developed by Bernard Kim and published as fitdadi
+Kim, Huber, Lohmueller (2017) Genetics.
+Modified version of the script found at: https://doi.org/10.1534/genetics.116.197145 .
+Based on scripts from:
+https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc .
+&#34;&#34;&#34;
+
+import operator
+import sys, traceback
+import numpy as np
+import scipy.stats.distributions
+import scipy.integrate
+import dadi
+from dadi import Numerics, Spectrum
+
+class Cache1D:
+    def __init__(self, params, ns, demo_sel_func, pts, 
+                 gamma_bounds=(1e-4, 2000), gamma_pts=500, 
+                 additional_gammas=[],
+                 cpus=None, gpus=0, verbose=False):
+        &#34;&#34;&#34;
+        params: Optimized demographic parameters
+        ns: Sample size(s) for cached spectra
+        demo_sel_func: DaDi demographic function with selection. 
+                       gamma must be the last argument.
+        pts: Integration/extrapolation grid points settings for demo_sel_func
+        gamma_bounds: Range of gammas to cache spectra for.
+        gamma_pts: Number of gamma grid points over which to integrate
+        additional_gammas: Additional positive values of gamma to cache for
+        cpus: For multiprocessing, number of CPU jobs to launch.
+              If None (default), then all CPUs available will be used.
+        gpus: For multiprocessing, number of GPU jobs to launch.
+        verbose: If True, print messages to track progress of cache generation.
+        &#34;&#34;&#34;
+        self.params, self.ns, self.pts = tuple(params), tuple(ns), tuple(pts)
+
+        #Create a vector of gammas that are log-spaced over an interval
+        self.gammas = -np.logspace(np.log10(gamma_bounds[1]),
+                                   np.log10(gamma_bounds[0]), gamma_pts)
+
+        # Record negative gammas, for later use
+        self.neg_gammas = self.gammas
+        # Add additional gammas to cache
+        self.gammas = np.concatenate((self.gammas, additional_gammas))
+        self.spectra = [None]*len(self.gammas)
+        self.params = params
+        self.ns = ns
+        self.pts = pts
+        self.func_name = demo_sel_func.__name__
+
+        if cpus is None:
+            import multiprocessing
+            cpus = multiprocessing.cpu_count()
+
+        if not cpus &gt; 1 or gpus &gt; 0: #for running with a single thread
+            self._single_process(verbose, demo_sel_func)
+        else: #for running with with multiple cores
+            self._multiple_processes(cpus, gpus, verbose, demo_sel_func)
+
+        demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
+        self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts)
+        self.spectra = np.array(self.spectra)
+
+    def _single_process(self, verbose, demo_sel_func):
+        demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
+        for ii, gamma in enumerate(self.gammas):
+            self.spectra[ii] = demo_sel_extrap_func(tuple(self.params)+(gamma,), self.ns,
+                                             self.pts)
+            if verbose:
+               print(&#39;{0}: {1}&#39;.format(ii, gamma))
+
+    def _multiple_processes(self, cpus, gpus, verbose, demo_sel_func):
+        from multiprocessing import Manager, Process, cpu_count
+
+        with Manager() as manager:
+            work = manager.Queue(cpus + gpus)
+            results = manager.list()
+
+            # Assemble pool of workers
+            pool = []
+            for ii in range(cpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, False))
+                p.start()
+                pool.append(p)
+            for ii in range(gpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, True))
+                p.start()
+                pool.append(p)
+
+            # Put all jobs on queue
+            for ii, gamma in enumerate(self.gammas):
+                work.put((ii, gamma))
+            # Put commands on queue to close out workers
+            for jj in range(cpus+gpus):
+                work.put(None)
+            # Stop workers
+            for p in pool:
+                p.join()    
+            # Collect results
+            for ii, sfs in results:
+                self.spectra[ii] = sfs
+
+    def _worker_sfs(self, in_queue, outlist, popn_func, params, ns, pts, verbose, usegpu):
+        &#34;&#34;&#34;
+        Worker function -- used to generate SFSes for
+        single values of gamma.
+        &#34;&#34;&#34;
+        popn_func_ex = Numerics.make_extrap_func(popn_func)
+        dadi.cuda_enabled(usegpu)
+        while True:
+            item = in_queue.get()
+            if item is None:
+                return
+            ii, gamma = item
+            try:
+                sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts)
+                if verbose:
+                    print(&#39;{0}: {1}&#39;.format(ii, gamma))
+                outlist.append((ii, sfs))
+            except BaseException as inst:
+                # If an exception occurs in the worker function, print an error
+                # and populate the outlist with an item that will cause a later crash.
+                tb = sys.exc_info()[2]
+                traceback.print_tb(tb)
+                outlist.append(inst)
+
+    def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
+        &#34;&#34;&#34;
+        Integrate spectra over a univariate prob. dist. for negative gammas.
+
+        params: Parameters for sel_dist
+        ns: Ignored
+        sel_dist: Univariate probability distribution,
+                  taking in arguments (xx, params)
+        theta: Population-scaled mutation rate
+        pts: Ignored
+        exterior_int: If False, do not integrate outside sampled domain.
+
+        Note also that the ns and pts arguments are ignored. They are only
+        present for compatibility with other dadi functions that apply to
+        demographic models.
+        &#34;&#34;&#34;
+        # Restrict ourselves to negative gammas
+        Nneg = len(self.neg_gammas)
+        spectra = self.spectra[:Nneg]
+
+        # Weights for integration
+        weights = sel_dist(-self.neg_gammas, params)
+
+        weighted_spectra = 0*spectra
+        for ii, w in enumerate(weights):
+            weighted_spectra[ii] = w*spectra[ii]
+
+        fs = np.trapz(weighted_spectra, self.neg_gammas, axis=0)
+        if not exterior_int:
+            return Spectrum(theta*fs)
+
+        smallest_gamma = self.neg_gammas[-1]
+        largest_gamma = self.neg_gammas[0]
+        # Compute weight for the effectively neutral portion. Not using
+        # CDF function because want this to be able to compute weight
+        # for arbitrary mass functions
+        weight_neu, err_neu = scipy.integrate.quad(sel_dist, 0, -smallest_gamma,
+                                                   args=params)
+        # compute weight for the effectively lethal portion
+        weight_del, err = scipy.integrate.quad(sel_dist, -largest_gamma, np.inf,
+                                               args=params)
+
+        fs += self.neu_spec*weight_neu
+        fs += spectra[0]*weight_del
+
+        return Spectrum(theta*fs)
+
+    def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func=None, 
+                            Npos=1, pts=None, exterior_int=True):
+        &#34;&#34;&#34;
+        Integrate spectra over a univariate prob. dist. for negative gammas,
+        plus one or more point masses of positive selection.
+
+        params: Parameters. The last Npos*2 are assumed to be the proportion of
+                positive selection and the gamma for each point mass, in the order
+                (ppos1, gammapos1, ppos2, gammapos2, ...).
+                The remaining parameters are for the continuous point mass.
+        ns: Ignored
+        sel_dist: Univariate probability distribution,
+                  taking in arguments (xx, params)
+        theta: Population-scaled mutation rate
+        demo_sel_func: DaDi demographic function with selection. 
+                       gamma must be the last argument.
+        Npos: Number of positive point masses to model.
+        pts: Ignored, evaluation of demo_self_func will use pts from orignal
+               caching.
+        exterior_int: If False, do not integrate outside sampled domain.
+
+        Note also that the ns and pts arguments are ignored. They are only
+        present for compatibility with other dadi functions that apply to
+        demographic models.
+        &#34;&#34;&#34;
+        pdf_params, ppos, gammapos = params[:-2*Npos], params[-2], params[-1]
+        ppos_l, gammapos_l = params[-2*Npos::2], params[-2*Npos+1::2]
+
+        pdf_fs = self.integrate(pdf_params, None, sel_dist, theta, None,
+                                exterior_int=exterior_int)
+        result = (1-np.sum(ppos_l))*pdf_fs
+        
+        if demo_sel_func is not None:
+            demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
+
+        for ppos, gammapos in zip(ppos_l, gammapos_l):
+            if gammapos not in self.gammas:
+                if demo_sel_func is None:
+                    raise IndexError(&#39;Failed to find requested gammapos={0:.4f} &#39;
+                                     &#39;in Cache1D spectra. Was it included in &#39;
+                                     &#39;additional_gammas during cache generation?&#39;.format(gammapos))
+                pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
+                                             self.ns, self.pts)
+                self.gammas = np.append(self.gammas, gammapos)
+                self.spectra = np.append(self.spectra, [pos_fs.data], axis=0)
+            ii = list(self.gammas).index(gammapos)
+            pos_fs = Spectrum(self.spectra[ii])
+            result += ppos*pos_fs
+
+        return result</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="dadi.DFE.Cache1D_mod.Cache1D"><code class="flex name class">
+<span>class <span class="ident">Cache1D</span></span>
+<span>(</span><span>params, ns, demo_sel_func, pts, gamma_bounds=(0.0001, 2000), gamma_pts=500, additional_gammas=[], cpus=None, gpus=0, verbose=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>params: Optimized demographic parameters
+ns: Sample size(s) for cached spectra
+demo_sel_func: DaDi demographic function with selection.
+gamma must be the last argument.
+pts: Integration/extrapolation grid points settings for demo_sel_func
+gamma_bounds: Range of gammas to cache spectra for.
+gamma_pts: Number of gamma grid points over which to integrate
+additional_gammas: Additional positive values of gamma to cache for
+cpus: For multiprocessing, number of CPU jobs to launch.
+If None (default), then all CPUs available will be used.
+gpus: For multiprocessing, number of GPU jobs to launch.
+verbose: If True, print messages to track progress of cache generation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cache1D:
+    def __init__(self, params, ns, demo_sel_func, pts, 
+                 gamma_bounds=(1e-4, 2000), gamma_pts=500, 
+                 additional_gammas=[],
+                 cpus=None, gpus=0, verbose=False):
+        &#34;&#34;&#34;
+        params: Optimized demographic parameters
+        ns: Sample size(s) for cached spectra
+        demo_sel_func: DaDi demographic function with selection. 
+                       gamma must be the last argument.
+        pts: Integration/extrapolation grid points settings for demo_sel_func
+        gamma_bounds: Range of gammas to cache spectra for.
+        gamma_pts: Number of gamma grid points over which to integrate
+        additional_gammas: Additional positive values of gamma to cache for
+        cpus: For multiprocessing, number of CPU jobs to launch.
+              If None (default), then all CPUs available will be used.
+        gpus: For multiprocessing, number of GPU jobs to launch.
+        verbose: If True, print messages to track progress of cache generation.
+        &#34;&#34;&#34;
+        self.params, self.ns, self.pts = tuple(params), tuple(ns), tuple(pts)
+
+        #Create a vector of gammas that are log-spaced over an interval
+        self.gammas = -np.logspace(np.log10(gamma_bounds[1]),
+                                   np.log10(gamma_bounds[0]), gamma_pts)
+
+        # Record negative gammas, for later use
+        self.neg_gammas = self.gammas
+        # Add additional gammas to cache
+        self.gammas = np.concatenate((self.gammas, additional_gammas))
+        self.spectra = [None]*len(self.gammas)
+        self.params = params
+        self.ns = ns
+        self.pts = pts
+        self.func_name = demo_sel_func.__name__
+
+        if cpus is None:
+            import multiprocessing
+            cpus = multiprocessing.cpu_count()
+
+        if not cpus &gt; 1 or gpus &gt; 0: #for running with a single thread
+            self._single_process(verbose, demo_sel_func)
+        else: #for running with with multiple cores
+            self._multiple_processes(cpus, gpus, verbose, demo_sel_func)
+
+        demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
+        self.neu_spec = demo_sel_extrap_func(tuple(self.params)+(0,), self.ns, self.pts)
+        self.spectra = np.array(self.spectra)
+
+    def _single_process(self, verbose, demo_sel_func):
+        demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
+        for ii, gamma in enumerate(self.gammas):
+            self.spectra[ii] = demo_sel_extrap_func(tuple(self.params)+(gamma,), self.ns,
+                                             self.pts)
+            if verbose:
+               print(&#39;{0}: {1}&#39;.format(ii, gamma))
+
+    def _multiple_processes(self, cpus, gpus, verbose, demo_sel_func):
+        from multiprocessing import Manager, Process, cpu_count
+
+        with Manager() as manager:
+            work = manager.Queue(cpus + gpus)
+            results = manager.list()
+
+            # Assemble pool of workers
+            pool = []
+            for ii in range(cpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, False))
+                p.start()
+                pool.append(p)
+            for ii in range(gpus):
+                p = Process(target=self._worker_sfs,
+                            args=(work, results, demo_sel_func, self.params, self.ns, self.pts, verbose, True))
+                p.start()
+                pool.append(p)
+
+            # Put all jobs on queue
+            for ii, gamma in enumerate(self.gammas):
+                work.put((ii, gamma))
+            # Put commands on queue to close out workers
+            for jj in range(cpus+gpus):
+                work.put(None)
+            # Stop workers
+            for p in pool:
+                p.join()    
+            # Collect results
+            for ii, sfs in results:
+                self.spectra[ii] = sfs
+
+    def _worker_sfs(self, in_queue, outlist, popn_func, params, ns, pts, verbose, usegpu):
+        &#34;&#34;&#34;
+        Worker function -- used to generate SFSes for
+        single values of gamma.
+        &#34;&#34;&#34;
+        popn_func_ex = Numerics.make_extrap_func(popn_func)
+        dadi.cuda_enabled(usegpu)
+        while True:
+            item = in_queue.get()
+            if item is None:
+                return
+            ii, gamma = item
+            try:
+                sfs = popn_func_ex(tuple(params)+(gamma,), ns, pts)
+                if verbose:
+                    print(&#39;{0}: {1}&#39;.format(ii, gamma))
+                outlist.append((ii, sfs))
+            except BaseException as inst:
+                # If an exception occurs in the worker function, print an error
+                # and populate the outlist with an item that will cause a later crash.
+                tb = sys.exc_info()[2]
+                traceback.print_tb(tb)
+                outlist.append(inst)
+
+    def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
+        &#34;&#34;&#34;
+        Integrate spectra over a univariate prob. dist. for negative gammas.
+
+        params: Parameters for sel_dist
+        ns: Ignored
+        sel_dist: Univariate probability distribution,
+                  taking in arguments (xx, params)
+        theta: Population-scaled mutation rate
+        pts: Ignored
+        exterior_int: If False, do not integrate outside sampled domain.
+
+        Note also that the ns and pts arguments are ignored. They are only
+        present for compatibility with other dadi functions that apply to
+        demographic models.
+        &#34;&#34;&#34;
+        # Restrict ourselves to negative gammas
+        Nneg = len(self.neg_gammas)
+        spectra = self.spectra[:Nneg]
+
+        # Weights for integration
+        weights = sel_dist(-self.neg_gammas, params)
+
+        weighted_spectra = 0*spectra
+        for ii, w in enumerate(weights):
+            weighted_spectra[ii] = w*spectra[ii]
+
+        fs = np.trapz(weighted_spectra, self.neg_gammas, axis=0)
+        if not exterior_int:
+            return Spectrum(theta*fs)
+
+        smallest_gamma = self.neg_gammas[-1]
+        largest_gamma = self.neg_gammas[0]
+        # Compute weight for the effectively neutral portion. Not using
+        # CDF function because want this to be able to compute weight
+        # for arbitrary mass functions
+        weight_neu, err_neu = scipy.integrate.quad(sel_dist, 0, -smallest_gamma,
+                                                   args=params)
+        # compute weight for the effectively lethal portion
+        weight_del, err = scipy.integrate.quad(sel_dist, -largest_gamma, np.inf,
+                                               args=params)
+
+        fs += self.neu_spec*weight_neu
+        fs += spectra[0]*weight_del
+
+        return Spectrum(theta*fs)
+
+    def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func=None, 
+                            Npos=1, pts=None, exterior_int=True):
+        &#34;&#34;&#34;
+        Integrate spectra over a univariate prob. dist. for negative gammas,
+        plus one or more point masses of positive selection.
+
+        params: Parameters. The last Npos*2 are assumed to be the proportion of
+                positive selection and the gamma for each point mass, in the order
+                (ppos1, gammapos1, ppos2, gammapos2, ...).
+                The remaining parameters are for the continuous point mass.
+        ns: Ignored
+        sel_dist: Univariate probability distribution,
+                  taking in arguments (xx, params)
+        theta: Population-scaled mutation rate
+        demo_sel_func: DaDi demographic function with selection. 
+                       gamma must be the last argument.
+        Npos: Number of positive point masses to model.
+        pts: Ignored, evaluation of demo_self_func will use pts from orignal
+               caching.
+        exterior_int: If False, do not integrate outside sampled domain.
+
+        Note also that the ns and pts arguments are ignored. They are only
+        present for compatibility with other dadi functions that apply to
+        demographic models.
+        &#34;&#34;&#34;
+        pdf_params, ppos, gammapos = params[:-2*Npos], params[-2], params[-1]
+        ppos_l, gammapos_l = params[-2*Npos::2], params[-2*Npos+1::2]
+
+        pdf_fs = self.integrate(pdf_params, None, sel_dist, theta, None,
+                                exterior_int=exterior_int)
+        result = (1-np.sum(ppos_l))*pdf_fs
+        
+        if demo_sel_func is not None:
+            demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
+
+        for ppos, gammapos in zip(ppos_l, gammapos_l):
+            if gammapos not in self.gammas:
+                if demo_sel_func is None:
+                    raise IndexError(&#39;Failed to find requested gammapos={0:.4f} &#39;
+                                     &#39;in Cache1D spectra. Was it included in &#39;
+                                     &#39;additional_gammas during cache generation?&#39;.format(gammapos))
+                pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
+                                             self.ns, self.pts)
+                self.gammas = np.append(self.gammas, gammapos)
+                self.spectra = np.append(self.spectra, [pos_fs.data], axis=0)
+            ii = list(self.gammas).index(gammapos)
+            pos_fs = Spectrum(self.spectra[ii])
+            result += ppos*pos_fs
+
+        return result</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="dadi.DFE.Cache1D_mod.Cache1D.integrate"><code class="name flex">
+<span>def <span class="ident">integrate</span></span>(<span>self, params, ns, sel_dist, theta, pts=None, exterior_int=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate spectra over a univariate prob. dist. for negative gammas.</p>
+<p>params: Parameters for sel_dist
+ns: Ignored
+sel_dist: Univariate probability distribution,
+taking in arguments (xx, params)
+theta: Population-scaled mutation rate
+pts: Ignored
+exterior_int: If False, do not integrate outside sampled domain.</p>
+<p>Note also that the ns and pts arguments are ignored. They are only
+present for compatibility with other dadi functions that apply to
+demographic models.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
+    &#34;&#34;&#34;
+    Integrate spectra over a univariate prob. dist. for negative gammas.
+
+    params: Parameters for sel_dist
+    ns: Ignored
+    sel_dist: Univariate probability distribution,
+              taking in arguments (xx, params)
+    theta: Population-scaled mutation rate
+    pts: Ignored
+    exterior_int: If False, do not integrate outside sampled domain.
+
+    Note also that the ns and pts arguments are ignored. They are only
+    present for compatibility with other dadi functions that apply to
+    demographic models.
+    &#34;&#34;&#34;
+    # Restrict ourselves to negative gammas
+    Nneg = len(self.neg_gammas)
+    spectra = self.spectra[:Nneg]
+
+    # Weights for integration
+    weights = sel_dist(-self.neg_gammas, params)
+
+    weighted_spectra = 0*spectra
+    for ii, w in enumerate(weights):
+        weighted_spectra[ii] = w*spectra[ii]
+
+    fs = np.trapz(weighted_spectra, self.neg_gammas, axis=0)
+    if not exterior_int:
+        return Spectrum(theta*fs)
+
+    smallest_gamma = self.neg_gammas[-1]
+    largest_gamma = self.neg_gammas[0]
+    # Compute weight for the effectively neutral portion. Not using
+    # CDF function because want this to be able to compute weight
+    # for arbitrary mass functions
+    weight_neu, err_neu = scipy.integrate.quad(sel_dist, 0, -smallest_gamma,
+                                               args=params)
+    # compute weight for the effectively lethal portion
+    weight_del, err = scipy.integrate.quad(sel_dist, -largest_gamma, np.inf,
+                                           args=params)
+
+    fs += self.neu_spec*weight_neu
+    fs += spectra[0]*weight_del
+
+    return Spectrum(theta*fs)</code></pre>
+</details>
+</dd>
+<dt id="dadi.DFE.Cache1D_mod.Cache1D.integrate_point_pos"><code class="name flex">
+<span>def <span class="ident">integrate_point_pos</span></span>(<span>self, params, ns, sel_dist, theta, demo_sel_func=None, Npos=1, pts=None, exterior_int=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Integrate spectra over a univariate prob. dist. for negative gammas,
+plus one or more point masses of positive selection.</p>
+<p>params: Parameters. The last Npos*2 are assumed to be the proportion of
+positive selection and the gamma for each point mass, in the order
+(ppos1, gammapos1, ppos2, gammapos2, &hellip;).
+The remaining parameters are for the continuous point mass.
+ns: Ignored
+sel_dist: Univariate probability distribution,
+taking in arguments (xx, params)
+theta: Population-scaled mutation rate
+demo_sel_func: DaDi demographic function with selection.
+gamma must be the last argument.
+Npos: Number of positive point masses to model.
+pts: Ignored, evaluation of demo_self_func will use pts from orignal
+caching.
+exterior_int: If False, do not integrate outside sampled domain.</p>
+<p>Note also that the ns and pts arguments are ignored. They are only
+present for compatibility with other dadi functions that apply to
+demographic models.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func=None, 
+                        Npos=1, pts=None, exterior_int=True):
+    &#34;&#34;&#34;
+    Integrate spectra over a univariate prob. dist. for negative gammas,
+    plus one or more point masses of positive selection.
+
+    params: Parameters. The last Npos*2 are assumed to be the proportion of
+            positive selection and the gamma for each point mass, in the order
+            (ppos1, gammapos1, ppos2, gammapos2, ...).
+            The remaining parameters are for the continuous point mass.
+    ns: Ignored
+    sel_dist: Univariate probability distribution,
+              taking in arguments (xx, params)
+    theta: Population-scaled mutation rate
+    demo_sel_func: DaDi demographic function with selection. 
+                   gamma must be the last argument.
+    Npos: Number of positive point masses to model.
+    pts: Ignored, evaluation of demo_self_func will use pts from orignal
+           caching.
+    exterior_int: If False, do not integrate outside sampled domain.
+
+    Note also that the ns and pts arguments are ignored. They are only
+    present for compatibility with other dadi functions that apply to
+    demographic models.
+    &#34;&#34;&#34;
+    pdf_params, ppos, gammapos = params[:-2*Npos], params[-2], params[-1]
+    ppos_l, gammapos_l = params[-2*Npos::2], params[-2*Npos+1::2]
+
+    pdf_fs = self.integrate(pdf_params, None, sel_dist, theta, None,
+                            exterior_int=exterior_int)
+    result = (1-np.sum(ppos_l))*pdf_fs
+    
+    if demo_sel_func is not None:
+        demo_sel_func = Numerics.make_extrap_func(demo_sel_func)
+
+    for ppos, gammapos in zip(ppos_l, gammapos_l):
+        if gammapos not in self.gammas:
+            if demo_sel_func is None:
+                raise IndexError(&#39;Failed to find requested gammapos={0:.4f} &#39;
+                                 &#39;in Cache1D spectra. Was it included in &#39;
+                                 &#39;additional_gammas during cache generation?&#39;.format(gammapos))
+            pos_fs = theta*demo_sel_func(tuple(self.params) + (gammapos,),
+                                         self.ns, self.pts)
+            self.gammas = np.append(self.gammas, gammapos)
+            self.spectra = np.append(self.spectra, [pos_fs.data], axis=0)
+        ii = list(self.gammas).index(gammapos)
+        pos_fs = Spectrum(self.spectra[ii])
+        result += ppos*pos_fs
+
+    return result</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.DFE" href="index.html">dadi.DFE</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="dadi.DFE.Cache1D_mod.Cache1D" href="#dadi.DFE.Cache1D_mod.Cache1D">Cache1D</a></code></h4>
+<ul class="">
+<li><code><a title="dadi.DFE.Cache1D_mod.Cache1D.integrate" href="#dadi.DFE.Cache1D_mod.Cache1D.integrate">integrate</a></code></li>
+<li><code><a title="dadi.DFE.Cache1D_mod.Cache1D.integrate_point_pos" href="#dadi.DFE.Cache1D_mod.Cache1D.integrate_point_pos">integrate_point_pos</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
