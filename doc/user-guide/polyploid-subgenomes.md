@@ -21,6 +21,10 @@ Second, the ploidy of each subgenome/population must be specified during each in
     	
 		return fs
 
+![Autotetraploid example SFS](autotetraploid_sfs.png)
+
+<p align="center"><strong>Figure 1 Autotetraploid SFS:</strong> <i>T<sub><i>WGD</i></sub></i> = 0.25 and <i>&nu;</i> = 0.8.</p>
+
 A similar model for an allotetraploid (which also includes a divergence period between the two diploid progenitors) could be specified as: 
 
 	def two_epoch_allotetraploid(params, ns, pts):
@@ -43,6 +47,10 @@ A similar model for an allotetraploid (which also includes a divergence period b
     	fs = Spectrum.from_phi(phi, ns, (xx,xx))
     	
 		return fs
+
+![Allotetraploid example SFS](allotetraploid_sfs.png)
+
+<p align="center"><strong>Figure 2 Allotetraploid SFS:</strong> <i>T<sub><i>div</i></sub></i> = 0.25, <i>T<sub><i>WGD</i></sub></i> = 0.25 and <i>&nu;</i> = 0.8.</p>
 
 ### Homoeologous exchange
 
@@ -69,7 +77,9 @@ To model homoeologous exchange between subgenomes, we can include a migration pa
     	
 		return fs
 
-TODO: Add figure showing the difference in the SFS with and without HEs?
+![Allotetraploid example SFS with HEs](allotetraploid_sfs_HE.png)
+
+<p align="center"><strong>Figure 3 Allotetraploid SFS with homoeologous exchange:</strong> <i>T<sub><i>div</i></sub></i> = 0.25, <i>T<sub><i>WGD</i></sub></i> = 0.25, <i>&nu;</i> = 0.8, and <i>H</i> = 0.2. Compared to the previous allotetraploid SFS, this SFS has more shared polymorphism between subgenomes due to homoeologous exchange.</p>
 
 ### Collapsing into a single, one-dimensional SFS
 
@@ -77,7 +87,9 @@ The separate subgenomes of a polyploid can also be collapsed into a single, one-
 
 Taking the two epoch model with homoeologous exchange defined above, we can collapse the subgenomes using the `combine_pops` method from `dadi.Spectrum`. Collapsing the SFS from the allotetraploid two epoch model results in a single, one-dimensional SFS with a peak at half the total sample size. 
 
-TODO: Add a figure.
+![Collapsed Allotetraploid example SFS](allotetraploid_collapsed_sfs.png)
+
+<p align="center"><strong>Figure 4 Collapsed Allotetraploid SFS:</strong> <i>T<sub><i>div</i></sub></i> = 0.25, <i>T<sub><i>WGD</i></sub></i> = 0.25, and <i>&nu;</i> = 0.8. Note that the fixed heterozygosity in each subgenome can be seen in the spike in the middle bin of the collapsed SFS.</p>
 
 ### Selection 
 
@@ -85,17 +97,37 @@ While a model of selection for diploids can be fully specified using just two pa
 
 Given the added complexity in the selection models for polyploids, the integration methods in `dadi.Polyploidy.Integration` accept a dictionary of selection parameters instead of single parameters. Notably, specifying different sets of parameters in the dictionary results in different models of selection. 
 
-To specify an additive model of selection in which relative fitness is proportional to the total number of derived alleles across subgenomes, we can pass a dictionary with a single key `'gamma'` and corresponding value to the `sel_dict` argument for any ploidy type (e.g., `{'gamma' : -1}`). For this example, the population scaled selection coefficient (\\( \gamma = 2 N_a s\\)) for individuals homozygous for the derived allele in every subgenome is equal to `-1`. In the autotetraploid example above, this is equivalent to setting \\( 4s_1 = 3s_2 = 2s_3 = s_4 = -1/(2 N_a) \\) and \\( s_1 = s_2 = 1 \\).
+To specify an additive model of selection in which relative fitness is proportional to the total number of derived alleles across subgenomes, we can pass a dictionary with a single key `'gamma'` and corresponding value to the `sel_dict` argument for any ploidy type (e.g., `{'gamma' : -5}`). For this example, the population scaled selection coefficient (\\( \gamma = 2 N_a s\\)) for individuals homozygous for the derived allele in every subgenome is equal to `-5`. In the autotetraploid example above, this is equivalent to setting \\( 4s_1 = 3s_2 = 2s_3 = s_4 = -5/(2 N_a) \\).
 
 More complicated models of selection with non-additive effects within or across subgenomes can also be specified by passing a dictionary with multiple keys and corresponding values for different subgenomes (see the `dadi.Polyploidy.Integration.PloidyType` class for more details).
+
+![Autotetraploid example SFS with selection](autotetraploid_sfs_selection.png)
+
+<p align="center"><strong>Figure 5 Autotetraploid SFS with selection:</strong> <i>T<sub><i>WGD</i></sub></i> = 0.25, <i>&nu;</i> = 0.8, and <i>&gamma;</i> = -5.</p>
 
 ### Initializing phi for polyploid models
 
 For autopolyploids, we provide support for starting a demographic model from the diploid or polyploid equilibrium allele frequency distribution. Depending on the time of the whole genome duplication event and other biological context, one of the two equilibrium distributions may be more appropriate.
 
-To model the transition to polyploidy for an autotetraploid, we can start with the diploid equilibrium and model the demographic history of the autotetraploid since the whole genome duplication event: (TODO: add code)
+The two-epoch model for an autotetraploid listed above models the transition to polyploidy by starting with the diploid equilibrium and modeling the demographic history of the autotetraploid since the whole genome duplication event.
 
-Alternatively, we can start from the polyploid equilibrium and focus on modeling the more recent history of the autotetraploid: (TODO: add code)
+Alternatively, we can start from the polyploid equilibrium and focus on modeling the more recent history of the autotetraploid: 
+
+	def two_epoch_autotetraploid_phi_auto(params, ns, pts):
+    	T_WGD, nu = params
+    	xx = Numerics.default_grid(pts)
+
+		autoflag = Polyploidy.PloidyType.AUTO
+
+    	phi = Polyploidy.PhiManip_supp.phi_1D_autotet(xx)
+    	phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu, ploidyflag=autoflag)
+    	fs = Spectrum.from_phi(phi, ns, (xx,))
+    	
+		return fs
+
+![Autotetraploid example SFS with autotetraploid phi](autotetraploid_sfs_phi_auto.png)
+
+<p align="center"><strong>Figure 6 Autotetraploid SFS starting from autotetraploid phi: </strong> <i>T<sub><i>WGD</i></sub></i> = 0.25 and <i>&nu;</i> = 0.8. Notice the slight differences between this SFS and the SFS starting from the diploid equilibrium in Figure 1.</p>
 
 ### Other thoughts?
 
@@ -103,14 +135,13 @@ Note on effective population size and allotetraploid models?
 
 Note on CUDA integration and GPUs?
 
+Note on order of population specification in the `ploidyflag` argument?
 
 
 
 
 
-![Tetraploid example SFS](TetraploidSFS.png)
 
-<p align="center"><strong>Figure 8 Tetraploid SFS:</strong> <i>F<sub><i>IS</i></sub></i> = 0.8.</p>
 
 	def two_subgenomes(params, ns, pts):
 		T, m = params
