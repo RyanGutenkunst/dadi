@@ -101,6 +101,10 @@ Alternatively, we can start from the polyploid equilibrium and focus on modeling
 
 Note on effective population size and allotetraploid models? 
 
+Note on CUDA integration and GPUs?
+
+
+
 
 
 

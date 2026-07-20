@@ -2,10 +2,12 @@ import dadi.Misc as Misc
 import dadi.Demes as Demes
 import numpy
 from numpy import newaxis as nuax
-import scipy.integrate
+import logging
 import dadi.tridiag_cython as tridiag
 import dadi.Polyploidy.PolyIntegration as PolyInt
 from enum import IntEnum
+
+logger = logging.getLogger("Polyploidy.Integration")
 
 ### ==========================================================================
 ### CONSTANTS
@@ -1162,11 +1164,12 @@ def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, se
     if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):
         if m12_f(T/2) != m21_f(T/2):
             raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
-                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'Here, the migration rates jointly specify a single homoeologous exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) != nu2_f(T/2):
-            raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size. \n')
+            logger.warning('Population 1 and 2 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
             raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
  
@@ -1379,8 +1382,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu2_f(T/2) != nu3_f(T/2):
-            raise ValueError('Population 2 or 3 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 2 or 3 is a polyploid subgenome, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel2_f(T/2) != sel3_f(T/2)):
             raise ValueError('Population 2 or 3 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
@@ -1390,8 +1394,9 @@ def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) !=  nu2_f(T/2) or nu1_f(T/2) != nu3_f(T/2) or nu2_f(T/2) != nu3_f(T/2):
-            raise ValueError('Population 1, 2, or 3 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 1, 2, or 3 is a polyploid subgenome, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)) or numpy.any(sel1_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel3_f(T/2)):
             raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
@@ -1638,8 +1643,9 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) != nu2_f(T/2):
-            raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 1 and 2 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
             raise ValueError('Population 1 or 2 is polyploid subgenome. Both populations must have the same selection parameters.')
 
@@ -1649,8 +1655,9 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu3_f(T/2) != nu4_f(T/2):
-            raise ValueError('Population 3 or 4 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 3 and 4 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel3_f(T/2) != sel4_f(T/2)):
             raise ValueError('Population 3 or 4 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
@@ -1660,8 +1667,9 @@ def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu2_f(T/2) !=  nu3_f(T/2) or nu2_f(T/2) != nu4_f(T/2) or nu3_f(T/2) != nu4_f(T/2):
-            raise ValueError('Population 2, 3, or 4 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 2, 3, or 4 is a polyploid subgenome, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel2_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel4_f(T/2)):
             raise ValueError('Population 2, 3, or 4 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
@@ -1957,8 +1965,9 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu1_f(T/2) != nu2_f(T/2):
-            raise ValueError('Population 1 or 2 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 1 and 2 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
             raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
@@ -1968,8 +1977,9 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu4_f(T/2) != nu5_f(T/2):
-            raise ValueError('Population 4 or 5 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 4 and 5 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel4_f(T/2) != sel5_f(T/2)):
             raise ValueError('Population 4 or 5 is a polyploid subgenome. Both populations must have the same selection parameters.')
 
@@ -1979,8 +1989,9 @@ def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
                                  'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
                                  'See Blischak et al. (2023) for details.')
         if nu3_f(T/2) !=  nu4_f(T/2) or nu3_f(T/2) != nu5_f(T/2) or nu4_f(T/2) != nu5_f(T/2):
-            raise ValueError('Population 3, 4, or 5 is a polyploid subgenome, but do not have the same population size. \n'
-                             'Polyploid subgenomes must have the same population size.')
+            logger.warning('Population 3, 4, and 5 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
         if numpy.any(sel3_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel5_f(T/2)) or numpy.any(sel4_f(T/2) != sel5_f(T/2)):
             raise ValueError('Population 3, 4, or 5 is a polyploid subgenome. All three populations must have the same selection parameters.')
 
