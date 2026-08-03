@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>dadi.Demes.Inference API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Demes.Inference</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Demes.Inference.optimize"><code class="name flex">
+<span>def <span class="ident">optimize</span></span>(<span>deme_graph,<br>inference_options,<br>data,<br>pts,<br>maxiter=1000,<br>perturb=0,<br>verbose=0,<br>uL=None,<br>log=True,<br>method='fmin',<br>fit_ancestral_misid=False,<br>misid_guess=None,<br>output_stream=sys.stdout,<br>output=None,<br>overwrite=False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimize(
+    deme_graph,
+    inference_options,
+    data,
+    pts,
+    maxiter=1000,
+    perturb=0,
+    verbose=0,
+    uL=None,
+    log=True,
+    method=&#34;fmin&#34;,
+    fit_ancestral_misid=False,
+    misid_guess=None,
+    output_stream=sys.stdout,
+    output=None,
+    overwrite=False,
+):
+    &#34;&#34;&#34;
+    Optimize demography given a deme graph of initial and fixed parameters and
+    inference options that specify which parameters to fit, and bounds or constraints
+    on those parameters.
+
+    :param deme_graph: A YAML file in ``demes`` format.
+    :param inference_options: See (url) for how to set this up.
+    :param data: The SFS to fit, which must have pop_ids specified. Can either be a Spectrum
+        object or the file path to the stored frequency spectrum. The populations
+        in the SFS need to be present (with matching IDs) in the deme graph.
+    :param pts: List of grid points to extrapolate.
+    :param maxiter: The maximum number of iterations to run optimization. Defaults
+        to 1000. Note: maxiter does not seem to work with the Powell method! This
+        appears to be a bug within scipy.optimize.
+    :param perturb: The perturbation amount of the initial parameters. Defaults to
+        zero, in which case we do not perturb the initial parameters in the input
+        demes YAML. If perturb is greater than zero, the initial parameters in the input
+        YAML are randomly perturbed by up to `perturb`-fold.
+    :param verbose: The frequency to print updates to `output_stream` if greater than 1.
+    :param uL: The mutuation rate scaled by number of callable sites, so that theta
+        is the compound parameter 4*Ne*uL. If given, we optimize with `multinom=False`,
+        and theta is determined by taking Ne as the ancestral or root population size,
+        which can be fit. Defaults to None. If uL is not given, we use `multinom=True`
+        and we likely do not want to fit the ancestral population size.
+    :param log: If True, optimize over log of the parameters.
+    :param method: The optimization method. Available methods are &#34;fmin&#34;, &#34;powell&#34;,
+        and &#34;lbfgsb&#34;.
+    :param fit_ancestral_misid: If True, we fit the probability that the ancestral
+        state of a given SNP is misidenitified, resulting in ancestral/derived
+        labels being flipped. Note: this is only allowed with *unfolded* spectra.
+        Defaults to False.
+    :param misid_guess: Defaults to 0.01.
+    :output_stream: Defaults to standard output. Can be given an open file stream
+        instead or other output stream.
+    :param output: If given, the filename for the output best-fit model YAML.
+    :param overwrite: If True, overwrites any existing file with the same output
+        name.
+    :return: List of parameter names, optimal parameters, and LL
+    &#34;&#34;&#34;
+    # constraints. Other arguments should be kw args in the function.
+
+    # load file, data,
+    builder = _get_demes_dict(deme_graph)
+    options = _get_params_dict(inference_options)
+
+    if isinstance(data, str):
+        data = dadi.Spectrum.from_file(data)
+
+    if data.pop_ids is None:
+        raise ValueError(&#34;data SFS must specify population IDs&#34;)
+    if len(data.pop_ids) != len(data.sample_sizes):
+        raise ValueError(&#34;pop_ids and sample_sizes have different lengths&#34;)
+
+    param_names, p0, lower_bound, upper_bound = _set_up_params_and_bounds(
+        options, builder
+    )
+    constraints = _set_up_constraints(options, param_names)
+
+    if fit_ancestral_misid:
+        if data.folded:
+            raise ValueError(
+                &#34;Data is folded - can only fit ancestral misid using unfolded data&#34;
+            )
+        if misid_guess is None:
+            misid_guess = 0.05
+        param_names.append(&#34;p_misid&#34;)
+        p0 = np.concatenate((p0, [misid_guess]))
+        lower_bound = np.concatenate((lower_bound, [0]))
+        upper_bound = np.concatenate((upper_bound, [1]))
+
+    if not (isinstance(perturb, float) or isinstance(perturb, int)):
+        raise ValueError(&#34;perturb must be a non-negative number&#34;)
+    if perturb &lt; 0:
+        raise ValueError(&#34;perturb must be non-negative&#34;)
+    elif perturb &gt; 0:
+        p0 = _perturb_params_constrained(
+            p0, perturb, lower_bound, upper_bound, constraints
+        )
+
+    available_methods = [&#34;fmin&#34;, &#34;powell&#34;, &#34;lbfgsb&#34;]
+    if method not in available_methods:
+        raise ValueError(
+            f&#34;method {method} not available,  must be one of {available_methods}&#34;
+        )
+
+    # rescale if log
+    if log:
+        p0 = np.log(p0) + 1
+        obj_fun = _object_func_log
+    else:
+        obj_fun = _object_func
+    print(&#34;builder:&#34;,builder)
+    args = (
+        data,
+        pts,
+        builder,
+        options,
+        lower_bound,
+        upper_bound,
+        constraints,
+        verbose,
+        uL,
+        fit_ancestral_misid,
+        output_stream,
+    )
+
+    # run optimization
+    if method == &#34;fmin&#34;:
+        outputs = scipy.optimize.fmin(
+            obj_fun,
+            p0,
+            args=args,
+            disp=False,
+            maxiter=maxiter,
+            maxfun=maxiter,
+            full_output=True,
+        )
+        xopt, fopt, iter, funcalls, warnflag = outputs
+    elif method == &#34;powell&#34;:
+        outputs = scipy.optimize.fmin_powell(
+            obj_fun,
+            p0,
+            args=args,
+            disp=False,
+            maxiter=maxiter,
+            maxfun=maxiter,
+            full_output=True,
+        )
+        xopt, fopt, direc, iter, funcalls, warnflag = outputs
+    elif method == &#34;lbfgsb&#34;:
+        bounds = list(zip(np.log(lower_bound) + 1, np.log(upper_bound) + 1))
+        outputs = scipy.optimize.fmin_l_bfgs_b(
+            obj_fun,
+            p0,
+            bounds=bounds,
+            epsilon=1e-2,
+            args=args,
+            iprint=-1,
+            pgtol=1e-5,
+            maxiter=maxiter,
+            maxfun=maxiter,
+            approx_grad=True,
+        )
+        xopt, fopt, info_dict = outputs
+
+    if log:
+        xopt = np.exp(xopt - 1)
+
+    if output is not None:
+        builder = _update_builder(builder, options, xopt)
+        g = demes.Graph.fromdict(builder)
+        if overwrite is False and os.path.isfile(output):
+            output_stream.write(
+                f&#34;Did not write output YAML - {output} already exists. The model is &#34;
+                &#34;printed below. To overwrite, set overwrite=True.&#34; + os.linesep
+            )
+            output_stream.write(str(g))
+            moments.Misc.delayed_flush(stream=output_stream, delay=0.5)
+        else:
+            demes.dump(g, output)
+
+    return param_names, xopt, fopt</code></pre>
+</details>
+<div class="desc"><p>Optimize demography given a deme graph of initial and fixed parameters and
+inference options that specify which parameters to fit, and bounds or constraints
+on those parameters.</p>
+<p>:param deme_graph: A YAML file in <code>demes</code> format.
+:param inference_options: See (url) for how to set this up.
+:param data: The SFS to fit, which must have pop_ids specified. Can either be a Spectrum
+object or the file path to the stored frequency spectrum. The populations
+in the SFS need to be present (with matching IDs) in the deme graph.
+:param pts: List of grid points to extrapolate.
+:param maxiter: The maximum number of iterations to run optimization. Defaults
+to 1000. Note: maxiter does not seem to work with the Powell method! This
+appears to be a bug within scipy.optimize.
+:param perturb: The perturbation amount of the initial parameters. Defaults to
+zero, in which case we do not perturb the initial parameters in the input
+demes YAML. If perturb is greater than zero, the initial parameters in the input
+YAML are randomly perturbed by up to <code>perturb</code>-fold.
+:param verbose: The frequency to print updates to <code>output_stream</code> if greater than 1.
+:param uL: The mutuation rate scaled by number of callable sites, so that theta
+is the compound parameter 4<em>Ne</em>uL. If given, we optimize with <code>multinom=False</code>,
+and theta is determined by taking Ne as the ancestral or root population size,
+which can be fit. Defaults to None. If uL is not given, we use <code>multinom=True</code>
+and we likely do not want to fit the ancestral population size.
+:param log: If True, optimize over log of the parameters.
+:param method: The optimization method. Available methods are "fmin", "powell",
+and "lbfgsb".
+:param fit_ancestral_misid: If True, we fit the probability that the ancestral
+state of a given SNP is misidenitified, resulting in ancestral/derived
+labels being flipped. Note: this is only allowed with <em>unfolded</em> spectra.
+Defaults to False.
+:param misid_guess: Defaults to 0.01.
+:output_stream: Defaults to standard output. Can be given an open file stream
+instead or other output stream.
+:param output: If given, the filename for the output best-fit model YAML.
+:param overwrite: If True, overwrites any existing file with the same output
+name.
+:return: List of parameter names, optimal parameters, and LL</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.Demes" href="index.html">dadi.Demes</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Demes.Inference.optimize" href="#dadi.Demes.Inference.optimize">optimize</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
