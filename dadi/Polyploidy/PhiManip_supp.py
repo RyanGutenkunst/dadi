@@ -4,13 +4,14 @@
 import numpy
 import scipy
 import dadi.Demes as Demes
+from .Integration import PloidyType
 
 # notes: 
 # 1. in the case where there is no selection, we should instead scale the equilibrium 
 # phi from phi_1D in phi_manip.py by 2 for autotetraploids and by 3 for autohexaploids
 # 2. in the case where there is genic selection, we should instead scale both the gammas 
 # and the equilibrium phy by factors of 2 for autotetraploids and by 3 for autohexaploids, respectively
-def phi_1D_autotet(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=0, deme_ids=None):
+def phi_1D_autotet(xx, nu=1.0, theta0=1.0, sel_dict={'gamma':0}, deme_ids=None):
     """
     Compute a one-dimensional phi for a constant-sized autotetraploid population 
     with arbitrary selection.
@@ -21,20 +22,17 @@ def phi_1D_autotet(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=
         theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus in a diploid population
             and Nref is the reference population size. 
-        gamma1 (float): Scaled selection coefficient, equal to 2*Nref * s1, where s1 is the
-            selective advantage for the simplex heterozygote (one derived allele).
-        gamma2 (float): Scaled selection coefficient, equal to 2*Nref * s2, where s2 is the
-            selective advantage for the duplex heterozygote (two derived alleles).
-        gamma3 (float): Scaled selection coefficient, equal to 2*Nref * s3, where s3 is the
-            selective advantage for the triplex heterozygote (three derived alleles).
-        gamma4 (float): Scaled selection coefficient, equal to 2*Nref * s4, where s4 is the
-            selective advantage for the derived homozygote (four derived alleles).
+        sel_dict (dictionary): Dictionary of selection parameters 
+            (see PloidyType class for details).
         deme_ids (list, optional): Sequence of strings representing the names of demes.
 
     Returns:
         phi (array): A new phi array.
     """
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
+
+    # convert selection dictionary to gamma values
+    [gamma1, gamma2, gamma3, gamma4] = PloidyType.AUTO.pack_sel_params(sel_dict)
 
     ### Here, we choose not to develop a separate function for the genic selection case
     ### Technically, genic selection for autotetraploids ia s special rescaling (by 2) of 
@@ -116,8 +114,7 @@ def phi_1D_autotet(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=
     # which is half the autotetraploid scaled mutation rate
     return phi * 2*nu*theta0 
 
-def phi_1D_autohex(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=0,
-                   gamma5=0, gamma6=0, deme_ids=None):
+def phi_1D_autohex(xx, nu=1.0, theta0=1.0, sel_dict={'gamma':0}, deme_ids=None):
     """
     Compute a one-dimensional phi for a constant-sized autohexaploid population 
     with arbitrary selection.
@@ -128,24 +125,17 @@ def phi_1D_autohex(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=
         theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus in a diploid population
             and Nref is the reference population size. 
-        gamma1 (float): Scaled selection coefficient, equal to 2*Nref * s1, where s1 is the
-            selective advantage for the heterozygote with one derived allele.
-        gamma2 (float): Scaled selection coefficient, equal to 2*Nref * s2, where s2 is the
-            selective advantage for the heterozygote with two derived alleles.
-        gamma3 (float): Scaled selection coefficient, equal to 2*Nref * s3, where s3 is the
-            selective advantage for the heterozygote with three derived alleles.
-        gamma4 (float): Scaled selection coefficient, equal to 2*Nref * s4, where s4 is the
-            selective advantage for the heterozygote with four derived alleles.
-        gamma5 (float): Scaled selection coefficient, equal to 2*Nref * s5, where s5 is the
-            selective advantage for the heterozygote with fiver derived alleles.
-        gamma6 (float): Scaled selection coefficient, equal to 2*Nref * s6, where s6 is the
-            selective advantage for the derived homozygote (six derived alleles).
+        sel_dict (dictionary): Dictionary of selection parameters 
+            (see PloidyType class for details).
         deme_ids (list, optional): Sequence of strings representing the names of demes.
 
     Returns:
         phi (array): A new phi array.
     """
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
+
+    # convert selection dictionary to gamma values
+    [gamma1, gamma2, gamma3, gamma4, gamma5, gamma6] = PloidyType.AUTOHEX.pack_sel_params(sel_dict)
 
     ### Here, we choose not to develop a separate function for the genic selection case.
     ### Technically, genic selection for autohexaploids ia s special rescaling (by 3) of 
