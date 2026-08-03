@@ -109,8 +109,17 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
     for older, younger in zip(cache[:-1], cache[1:]):
         if younger.deme_ids is None:
             if isinstance(younger, Split):
+                # In dadi, a Split only creates one new deme, always in the
+                # last position; every other deme is numerically unchanged
+                # by the split, so it keeps its existing identity. Renaming
+                # them here would spuriously break their epoch history into
+                # a separate, zero-duration deme whenever two or more Splits
+                # happen back-to-back with no integration in between (e.g.
+                # simultaneous allopolyploid subgenome formation) -- and
+                # demes has no way to represent a zero-duration deme.
                 era += 1
-                younger.deme_ids = ['d{0}_{1}'.format(era, ii+1) for ii in range(len(older.deme_ids)+1)]
+                new_id = 'd{0}_{1}'.format(era, len(older.deme_ids)+1)
+                younger.deme_ids = list(older.deme_ids) + [new_id]
             elif isinstance(younger, Remove):
                 younger.deme_ids = list(older.deme_ids)
                 del younger.deme_ids[younger.removed-1]
