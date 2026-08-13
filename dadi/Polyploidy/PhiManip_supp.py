@@ -32,7 +32,7 @@ def phi_1D_autotet(xx, nu=1.0, theta0=1.0, sel_dict={'gamma':0}, deme_ids=None):
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
 
     # convert selection dictionary to gamma values
-    [gamma1, gamma2, gamma3, gamma4] = PloidyType.AUTO.pack_sel_params(sel_dict)
+    [gamma1, gamma2, gamma3, gamma4] = PloidyType.AUTO.pack_sel_params(sel_dict)[:4]
 
     ### Here, we choose not to develop a separate function for the genic selection case
     ### Technically, genic selection for autotetraploids ia s special rescaling (by 2) of 
@@ -135,7 +135,7 @@ def phi_1D_autohex(xx, nu=1.0, theta0=1.0, sel_dict={'gamma':0}, deme_ids=None):
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
 
     # convert selection dictionary to gamma values
-    [gamma1, gamma2, gamma3, gamma4, gamma5, gamma6] = PloidyType.AUTOHEX.pack_sel_params(sel_dict)
+    [gamma1, gamma2, gamma3, gamma4, gamma5, gamma6] = PloidyType.AUTOHEX.pack_sel_params(sel_dict)[:6]
 
     ### Here, we choose not to develop a separate function for the genic selection case.
     ### Technically, genic selection for autohexaploids ia s special rescaling (by 3) of 
