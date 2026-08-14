@@ -371,6 +371,9 @@ sfs = theta * autohexaploid_formation(params, ns, pts)
 ```
 ![png](autohexaploid_formation.png)
 
+The corresponding demes graph is:
+![png](autohexaploid_demesdraw.png)
+
 #### Alloallohexaploid formation with uniform homoeologous exchange
 Here, we consider a model of alloallohexaploid (a hexaploid with three diploid subgenomes) with uniform homoeologous exchange between all pairs of subgenomes.
 
@@ -436,3 +439,6 @@ theta = 5000
 sfs = theta * alloallohexaploid_formation(params, ns, pts)
 ```
 ![png](alloallohexaploid_formation.png)
+
+The corresponding demes graph is:
+![png](alloallohexaploid_demesdraw.png)
