@@ -219,7 +219,7 @@ sfs = 5000 * autotetraploid_bottlegrowth_selection(params, ns, max(ns)+101, N_a=
 ```
 
 The resulting SFS (from `dadi.Plotting.plot_1d_fs`) is shown below:
-[png](autotetraploid_bottlegrowth_nonadditive_selection.png)
+![png](autotetraploid_bottlegrowth_nonadditive_selection.png)
 
 We can then compare to the comparable diploid model with the same non-additive selection model and demographic history: 
 ```python
@@ -283,7 +283,7 @@ handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles, ['Diploid', 'Autotetraploid'], loc='upper right')
 fig.savefig('dip_auto_nonadditive_selection.png', bbox_inches='tight')
 ```
-[png](dip_auto_nonadditive_selection.png)
+![png](dip_auto_nonadditive_selection.png)
 
 Similiarly, we can compare the bottlegrowth non-additive selection model for autotetraploids to the comparable model with additive selection:
 
@@ -301,7 +301,7 @@ handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles, ['Additive', 'h-s Model'], loc='upper right')
 fig.savefig('auto_additive_nonadditive.png', bbox_inches='tight')
 ```
-[png](auto_additive_nonadditive.png)
+![png](auto_additive_nonadditive.png)
 
 ### A few short models for hexaploids
 
@@ -369,7 +369,7 @@ theta = 5000
 
 sfs = theta * autohexaploid_formation(params, ns, pts)
 ```
-[png](autohexaploid_formation.png)
+![png](autohexaploid_formation.png)
 
 #### Alloallohexaploid formation with uniform homoeologous exchange
 Here, we consider a model of alloallohexaploid (a hexaploid with three diploid subgenomes) with uniform homoeologous exchange between all pairs of subgenomes.
@@ -435,4 +435,4 @@ theta = 5000
 
 sfs = theta * alloallohexaploid_formation(params, ns, pts)
 ```
-[png](alloallohexaploid_formation.png)
+![png](alloallohexaploid_formation.png)
