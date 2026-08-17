@@ -1,0 +1,1586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>dadi.PortikModels.portik_models_2d API documentation</title>
+<meta name="description" content="Models for testing two population scenarios.
+Adapted from https://github.com/dportik">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.PortikModels.portik_models_2d</code></h1>
+</header>
+<section id="section-intro">
+<p>Models for testing two population scenarios.
+Adapted from <a href="https://github.com/dportik">https://github.com/dportik</a></p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.PortikModels.portik_models_2d.anc_asym_mig"><code class="name flex">
+<span>def <span class="ident">anc_asym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def anc_asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with asymmetric migration followed by isolation.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+    T2: The scaled time between the ancient migration and present.
+    &#34;&#34;&#34;
+    nu1, nu2, m12, m21, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=m12, m21=m21)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with asymmetric migration followed by isolation.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12).
+m21: Migration from pop 1 to pop 2.
+T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+T2: The scaled time between the ancient migration and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.anc_asym_mig_size"><code class="name flex">
+<span>def <span class="ident">anc_asym_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def anc_asym_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with asymmetrical gene flow, followed by size change
+    with no gene flow.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: Time in the past of split (in units of 2*Na generations)
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: The scale time between the ancient migration and present.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=m12, m21=m21)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with asymmetrical gene flow, followed by size change
+with no gene flow.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: Time in the past of split (in units of 2<em>Na generations)
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: The scale time between the ancient migration and present.
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12).
+m21: Migration from pop 1 to pop 2.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.anc_sym_mig"><code class="name flex">
+<span>def <span class="ident">anc_sym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def anc_sym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with symmetric migration followed by isolation.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    m: Migration between pop 2 and pop 1.
+    T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+    T2: The scaled time between the ancient migration and present.
+    &#34;&#34;&#34;
+    nu1, nu2, m, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=m, m21=m)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with symmetric migration followed by isolation.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+m: Migration between pop 2 and pop 1.
+T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+T2: The scaled time between the ancient migration and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.anc_sym_mig_size"><code class="name flex">
+<span>def <span class="ident">anc_sym_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def anc_sym_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with symmetrical gene flow, followed by size change
+    with no geneflow.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: Time in the past of split (in units of 2*Na generations)
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: The scale time between the ancient migration and present.
+    m: Migration between pop 2 and pop 1.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=m, m21=m)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with symmetrical gene flow, followed by size change
+with no geneflow.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: Time in the past of split (in units of 2*Na generations)
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: The scale time between the ancient migration and present.
+m: Migration between pop 2 and pop 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.asym_mig"><code class="name flex">
+<span>def <span class="ident">asym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with different migration rates.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+    &#34;&#34;&#34;
+    nu1, nu2, m12, m21, T = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m12, m21=m21)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with different migration rates.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2<em>Na generations)
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12)
+m21: Migration from pop 1 to pop 2</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.asym_mig_size"><code class="name flex">
+<span>def <span class="ident">asym_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def asym_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with different migration rates, then size change
+    with different migration rates.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: Time in the past of split (in units of 2*Na generations)
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: Time of population size change.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+        &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=m12, m21=m21)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=m12, m21=m21)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with different migration rates, then size change
+with different migration rates.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: Time in the past of split (in units of 2<em>Na generations)
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: Time of population size change.
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12)
+m21: Migration from pop 1 to pop 2</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.asym_mig_twoepoch"><code class="name flex">
+<span>def <span class="ident">asym_mig_twoepoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def asym_mig_twoepoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with different migration rates. A second period of asymmetric
+    migration occurs, but can be at different rates. Pop size is same.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+        &#34;&#34;&#34;
+    nu1, nu2, m12a, m21a, m12b, m21b, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=m12a, m21=m21a)
+
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=m12b, m21=m21b)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with different migration rates. A second period of asymmetric
+migration occurs, but can be at different rates. Pop size is same.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2<em>Na generations)
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12)
+m21: Migration from pop 1 to pop 2</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.founder_asym"><code class="name flex">
+<span>def <span class="ident">founder_asym</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def founder_asym(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with two migration rates.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Population two undergoes an exponential growth event to obtain size nu2,
+    while population one is constant. Nref implicitly has size = 1.
+
+    params = 5
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    nu2: Final size of pop 2, after exponential growth.
+    T: Time in the past of split (in units of 2*Na generations)
+    m12: Migration from pop 2 to pop 1 (2*Na*m12)
+    m21: Migration from pop 1 to pop 2
+    &#34;&#34;&#34;
+    nu2, m12, m21, T, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    def nu2_func(t):
+        return s * (nu2/s)**(t/T)
+
+    phi = Integration.two_pops(
+        phi, xx, T, nu1=1-s, nu2=nu2_func, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with two migration rates.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Population two undergoes an exponential growth event to obtain size nu2,
+while population one is constant. Nref implicitly has size = 1.</p>
+<p>params = 5</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+nu2: Final size of pop 2, after exponential growth.
+T: Time in the past of split (in units of 2<em>Na generations)
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12)
+m21: Migration from pop 1 to pop 2</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.founder_nomig"><code class="name flex">
+<span>def <span class="ident">founder_nomig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def founder_nomig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with no migration.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Population two undergoes an exponential growth event to obtain size nu2,
+    while population one is constant. Nref implicitly has size = 1.
+
+    params = 3
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    nu2: Final size of pop 2, after exponential growth.
+    T: Time in the past of split (in units of 2*Na generations)
+    &#34;&#34;&#34;
+    nu2, T, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    def nu2_func(t):
+        return s * (nu2/s)**(t/T)
+
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=nu2_func, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with no migration.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Population two undergoes an exponential growth event to obtain size nu2,
+while population one is constant. Nref implicitly has size = 1.</p>
+<p>params = 3</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+nu2: Final size of pop 2, after exponential growth.
+T: Time in the past of split (in units of 2*Na generations)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.founder_nomig_admix_early"><code class="name flex">
+<span>def <span class="ident">founder_nomig_admix_early</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def founder_nomig_admix_early(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration but a discrete admixture event
+    from pop 1 into pop 2 occurs (before drift). Populations are fractions of
+    the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Population two undergoes an exponential growth event to obtain size
+    nu2, while population one is constant. Nref implicitly has size = 1.
+
+    params = 4
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    nu2: Final size of pop 2, after exponential growth.
+    T: Time in the past of split (in units of 2*Na generations)
+    f: Fraction of updated population 2 to be derived from population 1.
+    &#34;&#34;&#34;
+    nu2, T, s, f = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = PhiManip.phi_2D_admix_1_into_2(phi, f, xx, xx)
+
+    def nu2_func(t):
+        return s * (nu2/s)**(t/T)
+
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=nu2_func, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration but a discrete admixture event
+from pop 1 into pop 2 occurs (before drift). Populations are fractions of
+the reference population, where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Population two undergoes an exponential growth event to obtain size
+nu2, while population one is constant. Nref implicitly has size = 1.</p>
+<p>params = 4</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+nu2: Final size of pop 2, after exponential growth.
+T: Time in the past of split (in units of 2*Na generations)
+f: Fraction of updated population 2 to be derived from population 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.founder_nomig_admix_late"><code class="name flex">
+<span>def <span class="ident">founder_nomig_admix_late</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def founder_nomig_admix_late(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration but a discrete admixture event
+    from pop 1 into pop 2 occurs (after drift). Populations are fractions of
+    the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Population two undergoes an exponential growth event to obtain size nu2,
+    while population one is constant. Admixture occurs when size nu2 is
+    achieved. Nref implicitly has size = 1.
+
+    params = 4
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    nu2: Final size of pop 2, after exponential growth.
+    T: Time in the past of split (in units of 2*Na generations)
+    f: Fraction of updated population 2 to be derived from population 1.
+    &#34;&#34;&#34;
+    nu2, T, s, f = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    def nu2_func(t):
+        return s * (nu2/s)**(t/T)
+
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=nu2_func, m12=0, m21=0)
+
+    phi = PhiManip.phi_2D_admix_1_into_2(phi, f, xx, xx)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration but a discrete admixture event
+from pop 1 into pop 2 occurs (after drift). Populations are fractions of
+the reference population, where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Population two undergoes an exponential growth event to obtain size nu2,
+while population one is constant. Admixture occurs when size nu2 is
+achieved. Nref implicitly has size = 1.</p>
+<p>params = 4</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+nu2: Final size of pop 2, after exponential growth.
+T: Time in the past of split (in units of 2*Na generations)
+f: Fraction of updated population 2 to be derived from population 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.founder_nomig_admix_two_epoch"><code class="name flex">
+<span>def <span class="ident">founder_nomig_admix_two_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def founder_nomig_admix_two_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration but a discrete admixture event
+    from pop 1 into pop 2 occurs (between two drift events). Populations are
+    fractions of the reference population, where population 2 is represented by
+    Nref*(s), and population 1 is represented by Nref*(1-s).
+    Population two undergoes an exponential growth event to obtain size nu2,
+    while population one is constant. Admixture occurs after size nu2 is
+    achieved. Nref implicitly has size = 1.
+
+    params = 5
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    nu2: Final size of pop 2, after exponential growth.
+    T1: Time in the past of split (in units of 2*Na generations)
+    T2: The scaled time between the admixture event and present.
+    f: Fraction of updated population 2 to be derived from population 1.
+    &#34;&#34;&#34;
+    nu2, T1, T2, s, f = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    def nu2_func(t):
+        return s * (nu2/s)**(t/T1)
+
+    phi = Integration.two_pops(
+        phi, xx, T1, nu1=1-s, nu2=nu2_func, m12=0, m21=0)
+
+    phi = PhiManip.phi_2D_admix_1_into_2(phi, f, xx, xx)
+
+    phi = Integration.two_pops(phi, xx, T2, nu1=1-s, nu2=nu2, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration but a discrete admixture event
+from pop 1 into pop 2 occurs (between two drift events). Populations are
+fractions of the reference population, where population 2 is represented by
+Nref<em>(s), and population 1 is represented by Nref</em>(1-s).
+Population two undergoes an exponential growth event to obtain size nu2,
+while population one is constant. Admixture occurs after size nu2 is
+achieved. Nref implicitly has size = 1.</p>
+<p>params = 5</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+nu2: Final size of pop 2, after exponential growth.
+T1: Time in the past of split (in units of 2*Na generations)
+T2: The scaled time between the admixture event and present.
+f: Fraction of updated population 2 to be derived from population 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.founder_sym"><code class="name flex">
+<span>def <span class="ident">founder_sym</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def founder_sym(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with one migration rate.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Population two undergoes an exponential growth event to obtain size nu2,
+    while population one is constant. Nref implicitly has size = 1.
+
+    params = 4
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    nu2: Final size of pop 2, after exponential growth.
+    T: Time in the past of split (in units of 2*Na generations)
+    m: Migration (2*Na*m12)
+    &#34;&#34;&#34;
+    nu2, m, T, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    def nu2_func(t):
+        return s * (nu2/s)**(t/T)
+
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=nu2_func, m12=m, m21=m)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with one migration rate.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Population two undergoes an exponential growth event to obtain size nu2,
+while population one is constant. Nref implicitly has size = 1.</p>
+<p>params = 4</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+nu2: Final size of pop 2, after exponential growth.
+T: Time in the past of split (in units of 2<em>Na generations)
+m: Migration (2</em>Na*m12)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.no_mig"><code class="name flex">
+<span>def <span class="ident">no_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def no_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    &#34;&#34;&#34;
+    nu1, nu2, T = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2*Na generations)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.no_mig_size"><code class="name flex">
+<span>def <span class="ident">no_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def no_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no migration, then size change with no migration.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: Time in the past of split (in units of 2*Na generations)
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: Time of population size change.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no migration, then size change with no migration.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: Time in the past of split (in units of 2*Na generations)
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: Time of population size change.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig"><code class="name flex">
+<span>def <span class="ident">sec_contact_asym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by period of asymmetrical gene flow.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+    T2: The scaled time between the secondary contact and present.
+    &#34;&#34;&#34;
+    nu1, nu2, m12, m21, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=m12, m21=m21)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by period of asymmetrical gene flow.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12).
+m21: Migration from pop 1 to pop 2.
+T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+T2: The scaled time between the secondary contact and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_size"><code class="name flex">
+<span>def <span class="ident">sec_contact_asym_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_asym_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by size change with asymmetrical gene flow.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: The scale time between the secondary contact and present.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=m12, m21=m21)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by size change with asymmetrical gene flow.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: The scaled time between the split and the secondary contact (in units of 2<em>Na generations).
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: The scale time between the secondary contact and present.
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12).
+m21: Migration from pop 1 to pop 2.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_size_three_epoch"><code class="name flex">
+<span>def <span class="ident">sec_contact_asym_mig_size_three_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_asym_mig_size_three_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by size change with asymmetrical gene flow, then isolation.
+
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: The scaled time between the split and the secondary contact
+    (in units of 2*Na generations).
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: The scale time between the secondary contact and isolation.
+    T3: The scaled time between the isolation and present.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2, T3 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=m12, m21=m21)
+    phi = Integration.two_pops(phi, xx, T3, nu1b, nu2b, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by size change with asymmetrical gene flow, then isolation.</p>
+<p>nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: The scaled time between the split and the secondary contact
+(in units of 2<em>Na generations).
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: The scale time between the secondary contact and isolation.
+T3: The scaled time between the isolation and present.
+m12: Migration from pop 2 to pop 1 (2</em>Na*m12).
+m21: Migration from pop 1 to pop 2.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_three_epoch"><code class="name flex">
+<span>def <span class="ident">sec_contact_asym_mig_three_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_asym_mig_three_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by period of asymmetrical gene flow,
+    then isolation.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    T1: The scaled time between the split and the secondary contact
+    (in units of 2*Na generations).
+    T2: The scaled time between the secondary contact and third epoch.
+    T3 (not used): The scaled time between the isolation and present.
+    &#34;&#34;&#34;
+    nu1, nu2, m12, m21, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=m12, m21=m21)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by period of asymmetrical gene flow,
+then isolation.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12).
+m21: Migration from pop 1 to pop 2.
+T1: The scaled time between the split and the secondary contact
+(in units of 2*Na generations).
+T2: The scaled time between the secondary contact and third epoch.
+T3 (not used): The scaled time between the isolation and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig"><code class="name flex">
+<span>def <span class="ident">sec_contact_sym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_sym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by period of symmetrical gene flow.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    m: Migration between pop 2 and pop 1.
+    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+    T2: The scaled time between the secondary contact and present.
+    &#34;&#34;&#34;
+    nu1, nu2, m, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=m, m21=m)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by period of symmetrical gene flow.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+m: Migration between pop 2 and pop 1.
+T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+T2: The scaled time between the secondary contact and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_size"><code class="name flex">
+<span>def <span class="ident">sec_contact_sym_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_sym_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by size change with symmetrical gene flow.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: The scale time between the secondary contact and present.
+    m: Migration between pop 2 and pop 1.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=m, m21=m)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by size change with symmetrical gene flow.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: The scale time between the secondary contact and present.
+m: Migration between pop 2 and pop 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_size_three_epoch"><code class="name flex">
+<span>def <span class="ident">sec_contact_sym_mig_size_three_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_sym_mig_size_three_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by size change with
+    symmetrical gene flow, then isolation.
+
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: The scaled time between the split and the secondary contact
+    (in units of 2*Na generations).
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: The scale time between the secondary contact and isolation.
+    T3: The scaled time between the isolation and present.
+    m: Migration between pop 2 and pop 1.
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m, T1, T2, T3 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=m, m21=m)
+    phi = Integration.two_pops(phi, xx, T3, nu1b, nu2b, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by size change with
+symmetrical gene flow, then isolation.</p>
+<p>nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: The scaled time between the split and the secondary contact
+(in units of 2*Na generations).
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: The scale time between the secondary contact and isolation.
+T3: The scaled time between the isolation and present.
+m: Migration between pop 2 and pop 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_three_epoch"><code class="name flex">
+<span>def <span class="ident">sec_contact_sym_mig_three_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sec_contact_sym_mig_three_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by period of symmetrical gene flow, then isolation.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    m: Migration between pop 2 and pop 1.
+    T1: The scaled time between the split and the secondary contact
+    (in units of 2*Na generations).
+    T2: The scaled time between the secondary contact and third epoch.
+    T3: The scaled time between the isolation and present.
+    &#34;&#34;&#34;
+    nu1, nu2, m, T1, T2, T3 = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=m, m21=m)
+    phi = Integration.two_pops(phi, xx, T3, nu1, nu2, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by period of symmetrical gene flow, then isolation.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+m: Migration between pop 2 and pop 1.
+T1: The scaled time between the split and the secondary contact
+(in units of 2*Na generations).
+T2: The scaled time between the secondary contact and third epoch.
+T3: The scaled time between the isolation and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sym_mig"><code class="name flex">
+<span>def <span class="ident">sym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with symmetric migration.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    m: Migration rate between populations (2*Na*m)
+    &#34;&#34;&#34;
+    nu1, nu2, m, T = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T, nu1, nu2, m12=m, m21=m)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with symmetric migration.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2<em>Na generations)
+m: Migration rate between populations (2</em>Na*m)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sym_mig_size"><code class="name flex">
+<span>def <span class="ident">sym_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sym_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with symmetric migration, then size change with symmetric migration.
+
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    T1: Time in the past of split (in units of 2*Na generations)
+    nu1b: Size of population 1 after time interval.
+    nu2b: Size of population 2 after time interval.
+    T2: Time of population size change.
+    m: Migration rate between populations (2*Na*m)
+    &#34;&#34;&#34;
+    nu1a, nu2a, nu1b, nu2b, m, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nu2a, m12=m, m21=m)
+    phi = Integration.two_pops(phi, xx, T2, nu1b, nu2b, m12=m, m21=m)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with symmetric migration, then size change with symmetric migration.</p>
+<p>nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+T1: Time in the past of split (in units of 2<em>Na generations)
+nu1b: Size of population 1 after time interval.
+nu2b: Size of population 2 after time interval.
+T2: Time of population size change.
+m: Migration rate between populations (2</em>Na*m)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.sym_mig_twoepoch"><code class="name flex">
+<span>def <span class="ident">sym_mig_twoepoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sym_mig_twoepoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, with symmetric migration. A second period of symmetric
+    migration occurs, but can be a different rate. Pop size is same.
+
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    T: Time in the past of split (in units of 2*Na generations)
+    m: Migration rate between populations (2*Na*m)
+    &#34;&#34;&#34;
+    nu1, nu2, m1, m2, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1, nu2, m12=m1, m21=m1)
+    phi = Integration.two_pops(phi, xx, T2, nu1, nu2, m12=m2, m21=m2)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, with symmetric migration. A second period of symmetric
+migration occurs, but can be a different rate. Pop size is same.</p>
+<p>nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+T: Time in the past of split (in units of 2<em>Na generations)
+m: Migration rate between populations (2</em>Na*m)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_anc_asym_mig"><code class="name flex">
+<span>def <span class="ident">vic_anc_asym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_anc_asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with asymmetric migration followed by isolation.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 5
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    T1: The scaled time between the split and the ancient migration
+    (in units of 2*Na generations).
+    T2: The scaled time between the ancient migration and present.
+    &#34;&#34;&#34;
+    m12, m21, T1, T2, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=1-s, nu2=s, m12=m12, m21=m21)
+    phi = Integration.two_pops(phi, xx, T2, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with asymmetric migration followed by isolation.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 5</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12).
+m21: Migration from pop 1 to pop 2.
+T1: The scaled time between the split and the ancient migration
+(in units of 2*Na generations).
+T2: The scaled time between the ancient migration and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_anc_sym_mig"><code class="name flex">
+<span>def <span class="ident">vic_anc_sym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_anc_sym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with symmetric migration followed by isolation.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented  by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 4
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    m: Migration between pop 2 and pop 1 (2*Na*m).
+    T1: The scaled time between the split and the ancient migration
+    (in units of 2*Na generations).
+    T2: The scaled time between the ancient migration and present.
+    &#34;&#34;&#34;
+    m, T1, T2, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=1-s, nu2=s, m12=m, m21=m)
+    phi = Integration.two_pops(phi, xx, T2, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with symmetric migration followed by isolation.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented
+by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 4</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+m: Migration between pop 2 and pop 1 (2<em>Na</em>m).
+T1: The scaled time between the split and the ancient migration
+(in units of 2*Na generations).
+T2: The scaled time between the ancient migration and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_no_mig"><code class="name flex">
+<span>def <span class="ident">vic_no_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_no_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 2
+
+    s: Fraction of Nref that goes to pop2.
+    Pop2 size = s.
+    Pop 1 size = 1-s.
+    T: Time in the past of split (in units of 2*Na generations)
+    &#34;&#34;&#34;
+    T, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=s, m12=0, m21=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 2</p>
+<p>s: Fraction of Nref that goes to pop2.
+Pop2 size = s.
+Pop 1 size = 1-s.
+T: Time in the past of split (in units of 2*Na generations)</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_no_mig_admix_early"><code class="name flex">
+<span>def <span class="ident">vic_no_mig_admix_early</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_no_mig_admix_early(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration but a discrete admixture event
+    from pop 1 into pop 2 occurs (before drift). Populations are fractions of
+    the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 3
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    T: Time in the past of split (in units of 2*Na generations)
+    f: Fraction of updated population 2 to be derived from population 1.
+    &#34;&#34;&#34;
+    T, s, f = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = PhiManip.phi_2D_admix_1_into_2(phi, f, xx, xx)
+
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration but a discrete admixture event
+from pop 1 into pop 2 occurs (before drift). Populations are fractions of
+the reference population, where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 3</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+T: Time in the past of split (in units of 2*Na generations)
+f: Fraction of updated population 2 to be derived from population 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_no_mig_admix_late"><code class="name flex">
+<span>def <span class="ident">vic_no_mig_admix_late</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_no_mig_admix_late(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration but a discrete admixture event
+    from pop 1 into pop 2 occurs (after drift). Populations are fractions of
+    the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 3
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    T: Time in the past of split (in units of 2*Na generations)
+    f: Fraction of updated population 2 to be derived from population 1.
+    &#34;&#34;&#34;
+    T, s, f = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    phi = PhiManip.phi_2D_admix_1_into_2(phi, f, xx, xx)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration but a discrete admixture event
+from pop 1 into pop 2 occurs (after drift). Populations are fractions of
+the reference population, where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 3</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+T: Time in the past of split (in units of 2*Na generations)
+f: Fraction of updated population 2 to be derived from population 1.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_sec_contact_asym_mig"><code class="name flex">
+<span>def <span class="ident">vic_sec_contact_asym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_sec_contact_asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by period of asymmetrical gene flow.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 5
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    m12: Migration from pop 2 to pop 1 (2*Na*m12).
+    m21: Migration from pop 1 to pop 2.
+    T1: The scaled time between the split and the secondary contact
+    (in units of 2*Na generations).
+    T2: The scaled time between the secondary contact and present.
+    &#34;&#34;&#34;
+    m12, m21, T1, T2, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    phi = Integration.two_pops(phi, xx, T2, nu1=1-s, nu2=s, m12=m12, m21=m21)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by period of asymmetrical gene flow.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 5</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+m12: Migration from pop 2 to pop 1 (2<em>Na</em>m12).
+m21: Migration from pop 1 to pop 2.
+T1: The scaled time between the split and the secondary contact
+(in units of 2*Na generations).
+T2: The scaled time between the secondary contact and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_sec_contact_sym_mig"><code class="name flex">
+<span>def <span class="ident">vic_sec_contact_sym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_sec_contact_sym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Split with no gene flow, followed by period of symmetrical gene flow.
+    Populations are fractions of the reference population,
+    where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 4
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    m: Migration between pop 2 and pop 1 (2*Na*m).
+    T1: The scaled time between the split and the secondary contact
+    (in units of 2*Na generations).
+    T2: The scaled time between the secondary contact and present.
+    &#34;&#34;&#34;
+    m, T1, T2, s = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    phi = Integration.two_pops(phi, xx, T2, nu1=1-s, nu2=s, m12=m, m21=m)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split with no gene flow, followed by period of symmetrical gene flow.
+Populations are fractions of the reference population,
+where population 2 is represented by Nref<em>(s),
+and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 4</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+m: Migration between pop 2 and pop 1 (2<em>Na</em>m).
+T1: The scaled time between the split and the secondary contact
+(in units of 2*Na generations).
+T2: The scaled time between the secondary contact and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_2d.vic_two_epoch_admix"><code class="name flex">
+<span>def <span class="ident">vic_two_epoch_admix</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vic_two_epoch_admix(params, ns, pts):
+    &#34;&#34;&#34;
+    Split into two populations, no migration but a discrete admixture event
+    from pop 1 into pop 2 occurs (between two drift events). Populations are
+    fractions of the reference population, where population 2 is represented by
+    Nref*(s), and population 1 is represented by Nref*(1-s).
+    Nref implicitly has size = 1.
+
+    params = 4
+
+    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+    T1: The scaled time between the split and admixture event
+    (in units of 2*Na generations).
+    T2: The scaled time between the admixture event and present.
+    f: Fraction of updated population 2 to be derived from population 1.
+    &#34;&#34;&#34;
+    T1, T2, s, f = params
+
+    xx = Numerics.default_grid(pts)
+
+    phi = PhiManip.phi_1D(xx)
+
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    phi = PhiManip.phi_2D_admix_1_into_2(phi, f, xx, xx)
+
+    phi = Integration.two_pops(phi, xx, T2, nu1=1-s, nu2=s, m12=0, m21=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Split into two populations, no migration but a discrete admixture event
+from pop 1 into pop 2 occurs (between two drift events). Populations are
+fractions of the reference population, where population 2 is represented by
+Nref<em>(s), and population 1 is represented by Nref</em>(1-s).
+Nref implicitly has size = 1.</p>
+<p>params = 4</p>
+<p>s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
+T1: The scaled time between the split and admixture event
+(in units of 2*Na generations).
+T2: The scaled time between the admixture event and present.
+f: Fraction of updated population 2 to be derived from population 1.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.PortikModels" href="index.html">dadi.PortikModels</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.PortikModels.portik_models_2d.anc_asym_mig" href="#dadi.PortikModels.portik_models_2d.anc_asym_mig">anc_asym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.anc_asym_mig_size" href="#dadi.PortikModels.portik_models_2d.anc_asym_mig_size">anc_asym_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.anc_sym_mig" href="#dadi.PortikModels.portik_models_2d.anc_sym_mig">anc_sym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.anc_sym_mig_size" href="#dadi.PortikModels.portik_models_2d.anc_sym_mig_size">anc_sym_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.asym_mig" href="#dadi.PortikModels.portik_models_2d.asym_mig">asym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.asym_mig_size" href="#dadi.PortikModels.portik_models_2d.asym_mig_size">asym_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.asym_mig_twoepoch" href="#dadi.PortikModels.portik_models_2d.asym_mig_twoepoch">asym_mig_twoepoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.founder_asym" href="#dadi.PortikModels.portik_models_2d.founder_asym">founder_asym</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.founder_nomig" href="#dadi.PortikModels.portik_models_2d.founder_nomig">founder_nomig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.founder_nomig_admix_early" href="#dadi.PortikModels.portik_models_2d.founder_nomig_admix_early">founder_nomig_admix_early</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.founder_nomig_admix_late" href="#dadi.PortikModels.portik_models_2d.founder_nomig_admix_late">founder_nomig_admix_late</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.founder_nomig_admix_two_epoch" href="#dadi.PortikModels.portik_models_2d.founder_nomig_admix_two_epoch">founder_nomig_admix_two_epoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.founder_sym" href="#dadi.PortikModels.portik_models_2d.founder_sym">founder_sym</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.no_mig" href="#dadi.PortikModels.portik_models_2d.no_mig">no_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.no_mig_size" href="#dadi.PortikModels.portik_models_2d.no_mig_size">no_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig" href="#dadi.PortikModels.portik_models_2d.sec_contact_asym_mig">sec_contact_asym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_size" href="#dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_size">sec_contact_asym_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_size_three_epoch" href="#dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_size_three_epoch">sec_contact_asym_mig_size_three_epoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_three_epoch" href="#dadi.PortikModels.portik_models_2d.sec_contact_asym_mig_three_epoch">sec_contact_asym_mig_three_epoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig" href="#dadi.PortikModels.portik_models_2d.sec_contact_sym_mig">sec_contact_sym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_size" href="#dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_size">sec_contact_sym_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_size_three_epoch" href="#dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_size_three_epoch">sec_contact_sym_mig_size_three_epoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_three_epoch" href="#dadi.PortikModels.portik_models_2d.sec_contact_sym_mig_three_epoch">sec_contact_sym_mig_three_epoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sym_mig" href="#dadi.PortikModels.portik_models_2d.sym_mig">sym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sym_mig_size" href="#dadi.PortikModels.portik_models_2d.sym_mig_size">sym_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.sym_mig_twoepoch" href="#dadi.PortikModels.portik_models_2d.sym_mig_twoepoch">sym_mig_twoepoch</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_anc_asym_mig" href="#dadi.PortikModels.portik_models_2d.vic_anc_asym_mig">vic_anc_asym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_anc_sym_mig" href="#dadi.PortikModels.portik_models_2d.vic_anc_sym_mig">vic_anc_sym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_no_mig" href="#dadi.PortikModels.portik_models_2d.vic_no_mig">vic_no_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_no_mig_admix_early" href="#dadi.PortikModels.portik_models_2d.vic_no_mig_admix_early">vic_no_mig_admix_early</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_no_mig_admix_late" href="#dadi.PortikModels.portik_models_2d.vic_no_mig_admix_late">vic_no_mig_admix_late</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_sec_contact_asym_mig" href="#dadi.PortikModels.portik_models_2d.vic_sec_contact_asym_mig">vic_sec_contact_asym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_sec_contact_sym_mig" href="#dadi.PortikModels.portik_models_2d.vic_sec_contact_sym_mig">vic_sec_contact_sym_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_2d.vic_two_epoch_admix" href="#dadi.PortikModels.portik_models_2d.vic_two_epoch_admix">vic_two_epoch_admix</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

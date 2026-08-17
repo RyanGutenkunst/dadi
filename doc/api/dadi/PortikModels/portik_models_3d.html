@@ -1,0 +1,1885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>dadi.PortikModels.portik_models_3d API documentation</title>
+<meta name="description" content="Models for testing various three population scenarios.
+Adapted from https://github.com/dportik">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.PortikModels.portik_models_3d</code></h1>
+</header>
+<section id="section-intro">
+<p>Models for testing various three population scenarios.
+Adapted from <a href="https://github.com/dportik">https://github.com/dportik</a></p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.PortikModels.portik_models_3d.admix_origin_no_mig"><code class="name flex">
+<span>def <span class="ident">admix_origin_no_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def admix_origin_no_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and 2, gene flow does not occur.
+    Population 3 is admixed from pop 1 and 2, no gene flow occurs.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after origin.
+    T1: The scaled time between the split of pops 1 vs 2 and origin of 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the origin of pop 3  and the present
+    (in units of 2*Na generations).
+    f: Fraction of pop 3 derived from pop 1
+    (with fraction 1-f derived from pop 2).
+    &#34;&#34;&#34;
+    # 6 parameters
+    nu1, nu2, nu3, T1, T2, f = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nu2, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_admix(phi, f, xx, xx, xx)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and 2, gene flow does not occur.
+Population 3 is admixed from pop 1 and 2, no gene flow occurs.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after origin.
+T1: The scaled time between the split of pops 1 vs 2 and origin of 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the origin of pop 3
+and the present
+(in units of 2</em>Na generations).
+f: Fraction of pop 3 derived from pop 1
+(with fraction 1-f derived from pop 2).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.admix_origin_sym_mig_adj"><code class="name flex">
+<span>def <span class="ident">admix_origin_sym_mig_adj</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def admix_origin_sym_mig_adj(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and 2, gene flow does not occur.
+    Population 3 is admixed from pop 1 and 2.
+    Gene flow between pop1 and pop3, and between pop2 and pop3.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after origin.
+    m3: Migration rate between populations 1 and 3 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and origin of 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the origin of pop 3  and the present
+    (in units of 2*Na generations).
+    f: Fraction of pop 3 derived from pop 1
+    (with fraction 1-f derived from pop 2).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nu2, nu3, m2, m3, T1, T2, f = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nu2, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_admix(phi, f, xx, xx, xx)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=m2, m32=m2, m13=m3, m31=m3)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and 2, gene flow does not occur.
+Population 3 is admixed from pop 1 and 2.
+Gene flow between pop1 and pop3, and between pop2 and pop3.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after origin.
+m3: Migration rate between populations 1 and 3 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+T1: The scaled time between the split of pops 1 vs 2 and origin of 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the origin of pop 3
+and the present
+(in units of 2</em>Na generations).
+f: Fraction of pop 3 derived from pop 1
+(with fraction 1-f derived from pop 2).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.admix_origin_uni_mig_adj"><code class="name flex">
+<span>def <span class="ident">admix_origin_uni_mig_adj</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def admix_origin_uni_mig_adj(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and 2, gene flow does not occur.
+    Population 3 is admixed from pop 1 and 2.
+    Gene flow from pop1 to pop3 (unidirectional), and from pop2 to pop3
+    (unidirectional).
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after origin.
+    m32: Migration rate from pop 2 to pop3 (2*Na*m)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split of pops 1 vs 2 and origin of 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the origin of pop 3  and the present
+    (in units of 2*Na generations).
+    f: Fraction of pop 3 derived from pop 1
+    (with fraction 1-f derived from pop 2).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nu2, nu3, m32, m31, T1, T2, f = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nu2, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_admix(phi, f, xx, xx, xx)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=m32, m13=0, m31=m31)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and 2, gene flow does not occur.
+Population 3 is admixed from pop 1 and 2.
+Gene flow from pop1 to pop3 (unidirectional), and from pop2 to pop3
+(unidirectional).
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after origin.
+m32: Migration rate from pop 2 to pop3 (2<em>Na</em>m)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split of pops 1 vs 2 and origin of 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the origin of pop 3
+and the present
+(in units of 2</em>Na generations).
+f: Fraction of pop 3 derived from pop 1
+(with fraction 1-f derived from pop 2).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.ancmig_2_size"><code class="name flex">
+<span>def <span class="ident">ancmig_2_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ancmig_2_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), with gene flow. Split
+    between pops 2 and 3, and all gene flow ceases, then size change
+    shorter isolation
+    nu1a: Size of population 1 after split.
+    nuA: Size of ancestral population (pops 2 and 3)
+    nu2a: Size of population 2 after split.
+    nu3a: Size of population 3 after split.
+    nu1b: Size of population 1 after size change.
+    nu2b: Size of population 2 after size change.
+    nu3b: Size of population 3 after size change.
+    mA: Migration rate between pops 1 and (2 and 3)
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (ancient migration)(in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+    T3: The scaled time between the size change and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 11 parameters
+    nu1a, nuA, nu2a, nu3a, nu1b, nu2b, nu3b, mA, T1, T2, T3 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1a, nu2a, nu3a, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T3, nu1b, nu2b, nu3b, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), with gene flow. Split
+between pops 2 and 3, and all gene flow ceases, then size change
+shorter isolation
+nu1a: Size of population 1 after split.
+nuA: Size of ancestral population (pops 2 and 3)
+nu2a: Size of population 2 after split.
+nu3a: Size of population 3 after split.
+nu1b: Size of population 1 after size change.
+nu2b: Size of population 2 after size change.
+nu3b: Size of population 3 after size change.
+mA: Migration rate between pops 1 and (2 and 3)
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(ancient migration)(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).
+T3: The scaled time between the size change and the present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.ancmig_adj_1"><code class="name flex">
+<span>def <span class="ident">ancmig_adj_1</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ancmig_adj_1(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), with gene flow. Split
+    between pops 2 and 3 with gene flow, then all gene flow ceases.
+    &#39;shortest isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3 and present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 10 parameters
+    nu1, nuA, nu2, nu3, mA, m1, m2, T1, T2, T3 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T3, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), with gene flow. Split
+between pops 2 and 3 with gene flow, then all gene flow ceases.
+'shortest isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and
+(in units of 2</em>Na generations).
+T2: The scaled time between the split of pops 2 and 3 and present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.ancmig_adj_2"><code class="name flex">
+<span>def <span class="ident">ancmig_adj_2</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ancmig_adj_2(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), with gene flow. Split
+    between pops 2 and 3, and all gene flow ceases.
+    &#39;shorter isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 7 parameters
+    nu1, nuA, nu2, nu3, mA, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), with gene flow. Split
+between pops 2 and 3, and all gene flow ceases.
+'shorter isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.ancmig_adj_3"><code class="name flex">
+<span>def <span class="ident">ancmig_adj_3</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ancmig_adj_3(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), with gene flow, which then stops.
+    Split between pops 2 and 3, gene flow does not occur at all.
+    &#39;longest isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1a: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T1b: The scaled time for no gene flow between pops 1 and (2, 3)
+    (in units of 2*Na generations).
+    T2: The scaled time between the cessation of gene flow and the split of
+    pops 2 and 3 (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nuA, nu2, nu3, mA, T1a, T1b, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1a, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = Integration.two_pops(phi, xx, T1b, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), with gene flow, which then stops.
+Split between pops 2 and 3, gene flow does not occur at all.
+'longest isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1a: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T1b: The scaled time for no gene flow between pops 1 and (2, 3)
+(in units of 2</em>Na generations).
+T2: The scaled time between the cessation of gene flow and the split of
+pops 2 and 3 (in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_1"><code class="name flex">
+<span>def <span class="ident">refugia_adj_1</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_1(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur.
+    Split between pops 2 and 3, gene flow does not occur.
+    Period of symmetric secondary contact occurs between
+    adjacent populations (ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3)
+    after all splits are complete.
+    &#39;longest isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3 (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    T3: The scaled time between the split of pops 2 and 3 and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 9 parameters
+    nu1, nuA, nu2, nu3, m1, m2, T1, T2, T3 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T3, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur.
+Split between pops 2 and 3, gene flow does not occur.
+Period of symmetric secondary contact occurs between
+adjacent populations (ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3)
+after all splits are complete.
+'longest isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3 (in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).
+T3: The scaled time between the split of pops 2 and 3 and the present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_2"><code class="name flex">
+<span>def <span class="ident">refugia_adj_2</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_2(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur.
+    Split between pops 2 and 3, with gene flow. After appearance of 2 and 3,
+    gene flow also occurs between 1 and 2.
+    &#39;shorter isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nuA, nu2, nu3, m1, m2, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur.
+Split between pops 2 and 3, with gene flow. After appearance of 2 and 3,
+gene flow also occurs between 1 and 2.
+'shorter isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_2_var_sym"><code class="name flex">
+<span>def <span class="ident">refugia_adj_2_var_sym</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_2_var_sym(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur.
+    Split between pops 2 and 3, with gene flow. After appearance of 2 and 3,
+    gene flow also occurs between 1 and 3.
+    &#39;shorter isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nuA, nu2, nu3, m2, m3, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=m2, m32=m2, m13=m3, m31=m3)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur.
+Split between pops 2 and 3, with gene flow. After appearance of 2 and 3,
+gene flow also occurs between 1 and 3.
+'shorter isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_2_var_uni"><code class="name flex">
+<span>def <span class="ident">refugia_adj_2_var_uni</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_2_var_uni(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur.
+    Split between pops 2 and 3. Gene flow from pop1 to pop3 (unidirectional),
+    and from pop2 to pop3 (unidirectional).
+    &#39;shorter isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m32: Migration rate from pop 2 to pop3 (2*Na*m)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nuA, nu2, nu3, m32, m31, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=m32, m13=0, m31=m31)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur.
+Split between pops 2 and 3. Gene flow from pop1 to pop3 (unidirectional),
+and from pop2 to pop3 (unidirectional).
+'shorter isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m32: Migration rate from pop 2 to pop3 (2<em>Na</em>m)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_3"><code class="name flex">
+<span>def <span class="ident">refugia_adj_3</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_3(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur,
+    but then secondary contact occurs. Split between pops 2 and 3 occurs with
+    gene flow, and gene flow happens between 1 and 2 as well.
+    &#39;shortest isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 10 parameters
+    nu1, nuA, nu2, nu3, mA, m1, m2, T1a, T1b, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1a, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T1b, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur,
+but then secondary contact occurs. Split between pops 2 and 3 occurs with
+gene flow, and gene flow happens between 1 and 2 as well.
+'shortest isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_3_var_sym"><code class="name flex">
+<span>def <span class="ident">refugia_adj_3_var_sym</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_3_var_sym(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur,
+    but then secondary contact occurs. Split between pops 2 and 3 occurs with
+    gene flow, and gene flow happens between 1 and 3 as well.
+    &#39;shortest isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 10 parameters
+    nu1, nuA, nu2, nu3, mA, m2, m3, T1a, T1b, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1a, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T1b, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=m2, m32=m2, m13=m3, m31=m3)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur,
+but then secondary contact occurs. Split between pops 2 and 3 occurs with
+gene flow, and gene flow happens between 1 and 3 as well.
+'shortest isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.refugia_adj_3_var_uni"><code class="name flex">
+<span>def <span class="ident">refugia_adj_3_var_uni</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refugia_adj_3_var_uni(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), gene flow does not occur, bu
+    then secondary contact occurs. Gene flow from pop1 to pop3 unidirectional),
+    and from pop2 to pop3 (unidirectional).
+    &#39;shortest isolation&#39;
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m32: Migration rate from pop 2 to pop3 (2*Na*m)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the first split and the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 10 parameters
+    nu1, nuA, nu2, nu3, mA, m32, m31, T1a, T1b, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1a, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = Integration.two_pops(phi, xx, T1b, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=m32, m13=0, m31=m31)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), gene flow does not occur, bu
+then secondary contact occurs. Gene flow from pop1 to pop3 unidirectional),
+and from pop2 to pop3 (unidirectional).
+'shortest isolation'
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m32: Migration rate from pop 2 to pop3 (2<em>Na</em>m)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the first split and the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_no_mig"><code class="name flex">
+<span>def <span class="ident">sim_split_no_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_no_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3,
+    gene flow does not occur.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    T1: The scaled time between the split and the present (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 4 parameters
+    nu1, nu2, nu3, T1 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3,
+gene flow does not occur.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+T1: The scaled time between the split and the present (in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_no_mig_size"><code class="name flex">
+<span>def <span class="ident">sim_split_no_mig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_no_mig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3,
+    gene flow does not occur, but size change does.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    nu3a: Size of population 3 after split.
+    nu1b: Size of population 1 after size change.
+    nu2b: Size of population 2 after size change.
+    nu3b: Size of population 3 after size change.
+    T1: The scaled time between the split and the size change
+    (in units of 2*Na generations).
+    T2: The scaled time between the size change and present.
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1a, nu2a, nu3a, nu1b, nu2b, nu3b, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1a, nu2=nu2a, nu3=nu3a,
+        m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1b, nu2=nu2b, nu3=nu3b,
+        m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3,
+gene flow does not occur, but size change does.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+nu3a: Size of population 3 after split.
+nu1b: Size of population 1 after size change.
+nu2b: Size of population 2 after size change.
+nu3b: Size of population 3 after size change.
+T1: The scaled time between the split and the size change
+(in units of 2*Na generations).
+T2: The scaled time between the size change and present.</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent"><code class="name flex">
+<span>def <span class="ident">sim_split_refugia_sym_mig_adjacent</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_refugia_sym_mig_adjacent(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+    Period of symmetric secondary contact occurs between adjacent populations
+    (ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3) after all splits are complete.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    T2: The scaled time between the migration (secondary contact)
+    and the present (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 7 parameters
+    nu1, nu2, nu3, m1, m2, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3,
+        m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3,
+        m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+Period of symmetric secondary contact occurs between adjacent populations
+(ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3) after all splits are complete.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split and the present
+(in units of 2<em>Na generations).
+T2: The scaled time between the migration (secondary contact)
+and the present (in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent_size"><code class="name flex">
+<span>def <span class="ident">sim_split_refugia_sym_mig_adjacent_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_refugia_sym_mig_adjacent_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+    Period of symmetric secondary contact occurs between adjacent populations
+    (ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3) after all splits are complete,
+    and a size change.
+    nu1a: Size of population 1 after split.
+    nu2a: Size of population 2 after split.
+    nu3a: Size of population 3 after split.
+    nu1b: Size of population 1 after size change.
+    nu2b: Size of population 2 after size change.
+    nu3b: Size of population 3 after size change.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations) (in units of 2*Na generations).
+    T2: The scaled time between the split and the migration (secondary contact)
+    (in units of 2*Na generations).
+    T3: The scaled time between the size change and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 11 parameters
+    nu1a, nu2a, nu3a, nu1b, nu2b, nu3b, m1, m2, T1, T2, T3 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1a, nu2a, nu3a, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1a, nu2a, nu3a, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T3, nu1b, nu2b, nu3b, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+Period of symmetric secondary contact occurs between adjacent populations
+(ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3) after all splits are complete,
+and a size change.
+nu1a: Size of population 1 after split.
+nu2a: Size of population 2 after split.
+nu3a: Size of population 3 after split.
+nu1b: Size of population 1 after size change.
+nu2b: Size of population 2 after size change.
+nu3b: Size of population 3 after size change.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations) (in units of 2</em>Na generations).
+T2: The scaled time between the split and the migration (secondary contact)
+(in units of 2<em>Na generations).
+T3: The scaled time between the size change and the present
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent_var"><code class="name flex">
+<span>def <span class="ident">sim_split_refugia_sym_mig_adjacent_var</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_refugia_sym_mig_adjacent_var(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+    Period of symmetric secondary contact occurs between adjacent populations
+    (ie 1&lt;-&gt;3, 2&lt;-&gt;3, but not 1&lt;-&gt;2) after all splits are complete.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    T2: The scaled time between the migration (secondary contact) and the
+    present (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 7 parameters
+    nu1, nu2, nu3, m2, m3, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=m2, m32=m2, m13=m3, m31=m3)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+Period of symmetric secondary contact occurs between adjacent populations
+(ie 1&lt;-&gt;3, 2&lt;-&gt;3, but not 1&lt;-&gt;2) after all splits are complete.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split and the present
+(in units of 2<em>Na generations).
+T2: The scaled time between the migration (secondary contact) and the
+present (in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_all"><code class="name flex">
+<span>def <span class="ident">sim_split_refugia_sym_mig_all</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_refugia_sym_mig_all(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+    Period of symmetric secondary contact occurs between all populations after
+    all splits are complete.
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    T2: The scaled time between the migration (secondary contact)
+    and the present (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nu2, nu3, m1, m2, m3, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3,
+        m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3,
+        m12=m1, m21=m1, m23=m2, m32=m2, m13=m3, m31=m3)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+Period of symmetric secondary contact occurs between all populations after
+all splits are complete.
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split and the present
+(in units of 2<em>Na generations).
+T2: The scaled time between the migration (secondary contact)
+and the present (in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_refugia_uni_mig_adjacent_var"><code class="name flex">
+<span>def <span class="ident">sim_split_refugia_uni_mig_adjacent_var</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_refugia_uni_mig_adjacent_var(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+    After all splits are complete, gene flow from pop1 to pop3
+    (unidirectional), and from pop2 to pop3 (unidirectional).
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m32: Migration rate from pop 2 to pop3 (2*Na*m)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    T2: The scaled time between the migration (secondary contact)
+    and the present (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 7 parameters
+    nu1, nu2, nu3, m32, m31, T1, T2 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=m32, m13=0, m31=m31)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3 followed by isolation.
+After all splits are complete, gene flow from pop1 to pop3
+(unidirectional), and from pop2 to pop3 (unidirectional).
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m32: Migration rate from pop 2 to pop3 (2<em>Na</em>m)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split and the present
+(in units of 2<em>Na generations).
+T2: The scaled time between the migration (secondary contact)
+and the present (in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_sym_mig_adjacent"><code class="name flex">
+<span>def <span class="ident">sim_split_sym_mig_adjacent</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_sym_mig_adjacent(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3
+    Migration is symmetrical between &#39;adjacent&#39; population pairs (ie 1&lt;-&gt;2,
+    2&lt;-&gt;3, but not 1&lt;-&gt;3).
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 6 parameters
+    nu1, nu2, nu3, m1, m2, T1 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3
+Migration is symmetrical between 'adjacent' population pairs (ie 1&lt;-&gt;2,
+2&lt;-&gt;3, but not 1&lt;-&gt;3).
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split and the present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_sym_mig_adjacent_var"><code class="name flex">
+<span>def <span class="ident">sim_split_sym_mig_adjacent_var</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_sym_mig_adjacent_var(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3
+    Migration is symmetrical between &#39;adjacent&#39; population pairs (ie 1&lt;-&gt;3,
+    2&lt;-&gt;3, but not 1&lt;-&gt;2).
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split and the present (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 6 parameters
+    nu1, nu2, nu3, m2, m3, T1 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=m2, m32=m2, m13=m3, m31=m3)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3
+Migration is symmetrical between 'adjacent' population pairs (ie 1&lt;-&gt;3,
+2&lt;-&gt;3, but not 1&lt;-&gt;2).
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split and the present (in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_sym_mig_all"><code class="name flex">
+<span>def <span class="ident">sim_split_sym_mig_all</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_sym_mig_all(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3
+    Migration is symmetrical between all population pairs (ie 1&lt;-&gt;2, 2&lt;-&gt;3,
+    and 1&lt;-&gt;3).
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 7 parameters
+    nu1, nu2, nu3, m1, m2, m3, T1 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=m3, m31=m3)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3
+Migration is symmetrical between all population pairs (ie 1&lt;-&gt;2, 2&lt;-&gt;3,
+and 1&lt;-&gt;3).
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split and the present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.sim_split_uni_mig_adjacent_var"><code class="name flex">
+<span>def <span class="ident">sim_split_uni_mig_adjacent_var</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_split_uni_mig_adjacent_var(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with simultaneous split between pop 1, 2 and 3
+    Gene flow from pop1 to pop3 (unidirectional), and from pop2 to pop3
+    (unidirectional).
+    nu1: Size of population 1 after split.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    m32: Migration rate from pop 2 to pop3 (2*Na*m)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 6 parameters
+    nu1, nu2, nu3, m32, m31, T1 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T1, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=m32, m13=0, m31=m31)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with simultaneous split between pop 1, 2 and 3
+Gene flow from pop1 to pop3 (unidirectional), and from pop2 to pop3
+(unidirectional).
+nu1: Size of population 1 after split.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+m32: Migration rate from pop 2 to pop3 (2<em>Na</em>m)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split and the present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_nomig"><code class="name flex">
+<span>def <span class="ident">split_nomig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_nomig(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Migration does not occur between any population pair.
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 6 parameters
+    nu1, nuA, nu2, nu3, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Migration does not occur between any population pair.
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_nomig_size"><code class="name flex">
+<span>def <span class="ident">split_nomig_size</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_nomig_size(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Migration does not occur between any population pair, size change
+    nu1a: Size of population 1 after split.
+    nuA: Size of ancestral population (pops 2 and 3)
+    nu2a: Size of population 2 after split.
+    nu3a: Size of population 3 after split.
+    nu1b: Size of population 1 after size change.
+    nu2b: Size of population 2 after size change.
+    nu3b: Size of population 3 after size change.
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+    T3: The scaled time between the size change and the present
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 10 parameters
+    nu1a, nuA, nu2a, nu3a, nu1b, nu2b, nu3b, T1, T2, T3 = params
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1a, nuA, m12=0, m21=0)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1a, nu2a, nu3a, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    phi = Integration.three_pops(
+        phi, xx, T3, nu1b, nu2b, nu3b, m12=0, m21=0, m23=0, m32=0, m13=0, m31=0)
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Migration does not occur between any population pair, size change
+nu1a: Size of population 1 after split.
+nuA: Size of ancestral population (pops 2 and 3)
+nu2a: Size of population 2 after split.
+nu3a: Size of population 3 after split.
+nu1b: Size of population 1 after size change.
+nu2b: Size of population 2 after size change.
+nu3b: Size of population 3 after size change.
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).
+T3: The scaled time between the size change and the present
+(in units of 2*Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_sym_mig_adjacent_var1"><code class="name flex">
+<span>def <span class="ident">split_sym_mig_adjacent_var1</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_sym_mig_adjacent_var1(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Migration is symmetrical between &#39;adjacent&#39; population pairs (ie 1&lt;-&gt;3,
+    2&lt;-&gt;3, but not 1&lt;-&gt;2).
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+   &#34;&#34;&#34;
+    # 9 parameters
+    nu1, nuA, nu2, nu3, mA, m2, m3, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=m2, m32=m2, m13=m3, m31=m3)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Migration is symmetrical between 'adjacent' population pairs (ie 1&lt;-&gt;3,
+2&lt;-&gt;3, but not 1&lt;-&gt;2).
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_sym_mig_adjacent_var2"><code class="name flex">
+<span>def <span class="ident">split_sym_mig_adjacent_var2</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_sym_mig_adjacent_var2(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Migration is symmetrical between pop 1 and pop(2,3),
+    then between pop1 and pop3 only.
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+   &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nuA, nu2, nu3, mA, m3, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=m3, m31=m3)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Migration is symmetrical between pop 1 and pop(2,3),
+then between pop1 and pop3 only.
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_symmig_adjacent"><code class="name flex">
+<span>def <span class="ident">split_symmig_adjacent</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_symmig_adjacent(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Assume 2 occurs in between populations 1 and 3, which do not come in to
+    contact with one another.
+    Migration is symmetrical between &#39;adjacent&#39; population pairs
+    (ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3).
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 9 parameters
+    nu1, nuA, nu2, nu3, mA, m1, m2, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=0, m31=0)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Assume 2 occurs in between populations 1 and 3, which do not come in to
+contact with one another.
+Migration is symmetrical between 'adjacent' population pairs
+(ie 1&lt;-&gt;2, 2&lt;-&gt;3, but not 1&lt;-&gt;3).
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_symmig_all"><code class="name flex">
+<span>def <span class="ident">split_symmig_all</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_symmig_all(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Migration is symmetrical between all population pairs (ie 1&lt;-&gt;2, 2&lt;-&gt;3,
+    and 1&lt;-&gt;3).
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m1: Migration rate between populations 1 and 2 (2*Na*m)
+    m2: Migration rate between populations 2 and 3
+    m3: Migration rate between populations 1 and 3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+    &#34;&#34;&#34;
+    # 10 parameters
+    nu1, nuA, nu2, nu3, mA, m1, m2, m3, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=m1, m21=m1, m23=m2, m32=m2, m13=m3, m31=m3)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Migration is symmetrical between all population pairs (ie 1&lt;-&gt;2, 2&lt;-&gt;3,
+and 1&lt;-&gt;3).
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m1: Migration rate between populations 1 and 2 (2<em>Na</em>m)
+m2: Migration rate between populations 2 and 3
+m3: Migration rate between populations 1 and 3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_uni_mig_adjacent_var1"><code class="name flex">
+<span>def <span class="ident">split_uni_mig_adjacent_var1</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_uni_mig_adjacent_var1(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Gene flow from pop1 to pop3 (unidirectional), and from pop2 to pop3
+    (unidirectional).
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m32: Migration rate from pop 2 to pop3  (2*Na*m)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+   &#34;&#34;&#34;
+    # 9 parameters
+    nu1, nuA, nu2, nu3, mA, m32, m31, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=m32, m13=0, m31=m31)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Gene flow from pop1 to pop3 (unidirectional), and from pop2 to pop3
+(unidirectional).
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m32: Migration rate from pop 2 to pop3
+(2<em>Na</em>m)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+<dt id="dadi.PortikModels.portik_models_3d.split_uni_mig_adjacent_var2"><code class="name flex">
+<span>def <span class="ident">split_uni_mig_adjacent_var2</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_uni_mig_adjacent_var2(params, ns, pts):
+    &#34;&#34;&#34;
+    Model with split between pop 1 and (2,3), then split between 2 and 3.
+    Migration is symmetrical between pop 1 and pop(2,3), then from pop1 to pop3
+    (unidirectional).
+    nu1: Size of population 1 after split.
+    nuA: Size of population (2,3) after split from 1.
+    nu2: Size of population 2 after split.
+    nu3: Size of population 3 after split.
+    mA: Migration rate between population 1 and population (2,3)
+    m31: Migration rate from pop 1 to pop3
+    T1: The scaled time between the split of pops 1 vs 2 and 3
+    (in units of 2*Na generations).
+    T2: The scaled time between the split of pops 2 and 3
+    (in units of 2*Na generations).
+   &#34;&#34;&#34;
+    # 8 parameters
+    nu1, nuA, nu2, nu3, mA, m31, T1, T2 = params
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    phi = Integration.two_pops(phi, xx, T1, nu1=nu1, nu2=nuA, m12=mA, m21=mA)
+    phi = PhiManip.phi_2D_to_3D_split_2(xx, phi)
+    phi = Integration.three_pops(
+        phi, xx, T2, nu1=nu1, nu2=nu2, nu3=nu3, m12=0, m21=0, m23=0, m32=0, m13=0, m31=m31)
+
+    fs = Spectrum.from_phi(phi, ns, (xx, xx, xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Model with split between pop 1 and (2,3), then split between 2 and 3.
+Migration is symmetrical between pop 1 and pop(2,3), then from pop1 to pop3
+(unidirectional).
+nu1: Size of population 1 after split.
+nuA: Size of population (2,3) after split from 1.
+nu2: Size of population 2 after split.
+nu3: Size of population 3 after split.
+mA: Migration rate between population 1 and population (2,3)
+m31: Migration rate from pop 1 to pop3
+T1: The scaled time between the split of pops 1 vs 2 and 3
+(in units of 2<em>Na generations).
+T2: The scaled time between the split of pops 2 and 3
+(in units of 2</em>Na generations).</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.PortikModels" href="index.html">dadi.PortikModels</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.PortikModels.portik_models_3d.admix_origin_no_mig" href="#dadi.PortikModels.portik_models_3d.admix_origin_no_mig">admix_origin_no_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.admix_origin_sym_mig_adj" href="#dadi.PortikModels.portik_models_3d.admix_origin_sym_mig_adj">admix_origin_sym_mig_adj</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.admix_origin_uni_mig_adj" href="#dadi.PortikModels.portik_models_3d.admix_origin_uni_mig_adj">admix_origin_uni_mig_adj</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.ancmig_2_size" href="#dadi.PortikModels.portik_models_3d.ancmig_2_size">ancmig_2_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.ancmig_adj_1" href="#dadi.PortikModels.portik_models_3d.ancmig_adj_1">ancmig_adj_1</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.ancmig_adj_2" href="#dadi.PortikModels.portik_models_3d.ancmig_adj_2">ancmig_adj_2</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.ancmig_adj_3" href="#dadi.PortikModels.portik_models_3d.ancmig_adj_3">ancmig_adj_3</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_1" href="#dadi.PortikModels.portik_models_3d.refugia_adj_1">refugia_adj_1</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_2" href="#dadi.PortikModels.portik_models_3d.refugia_adj_2">refugia_adj_2</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_2_var_sym" href="#dadi.PortikModels.portik_models_3d.refugia_adj_2_var_sym">refugia_adj_2_var_sym</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_2_var_uni" href="#dadi.PortikModels.portik_models_3d.refugia_adj_2_var_uni">refugia_adj_2_var_uni</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_3" href="#dadi.PortikModels.portik_models_3d.refugia_adj_3">refugia_adj_3</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_3_var_sym" href="#dadi.PortikModels.portik_models_3d.refugia_adj_3_var_sym">refugia_adj_3_var_sym</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.refugia_adj_3_var_uni" href="#dadi.PortikModels.portik_models_3d.refugia_adj_3_var_uni">refugia_adj_3_var_uni</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_no_mig" href="#dadi.PortikModels.portik_models_3d.sim_split_no_mig">sim_split_no_mig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_no_mig_size" href="#dadi.PortikModels.portik_models_3d.sim_split_no_mig_size">sim_split_no_mig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent" href="#dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent">sim_split_refugia_sym_mig_adjacent</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent_size" href="#dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent_size">sim_split_refugia_sym_mig_adjacent_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent_var" href="#dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_adjacent_var">sim_split_refugia_sym_mig_adjacent_var</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_all" href="#dadi.PortikModels.portik_models_3d.sim_split_refugia_sym_mig_all">sim_split_refugia_sym_mig_all</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_refugia_uni_mig_adjacent_var" href="#dadi.PortikModels.portik_models_3d.sim_split_refugia_uni_mig_adjacent_var">sim_split_refugia_uni_mig_adjacent_var</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_sym_mig_adjacent" href="#dadi.PortikModels.portik_models_3d.sim_split_sym_mig_adjacent">sim_split_sym_mig_adjacent</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_sym_mig_adjacent_var" href="#dadi.PortikModels.portik_models_3d.sim_split_sym_mig_adjacent_var">sim_split_sym_mig_adjacent_var</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_sym_mig_all" href="#dadi.PortikModels.portik_models_3d.sim_split_sym_mig_all">sim_split_sym_mig_all</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.sim_split_uni_mig_adjacent_var" href="#dadi.PortikModels.portik_models_3d.sim_split_uni_mig_adjacent_var">sim_split_uni_mig_adjacent_var</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_nomig" href="#dadi.PortikModels.portik_models_3d.split_nomig">split_nomig</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_nomig_size" href="#dadi.PortikModels.portik_models_3d.split_nomig_size">split_nomig_size</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_sym_mig_adjacent_var1" href="#dadi.PortikModels.portik_models_3d.split_sym_mig_adjacent_var1">split_sym_mig_adjacent_var1</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_sym_mig_adjacent_var2" href="#dadi.PortikModels.portik_models_3d.split_sym_mig_adjacent_var2">split_sym_mig_adjacent_var2</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_symmig_adjacent" href="#dadi.PortikModels.portik_models_3d.split_symmig_adjacent">split_symmig_adjacent</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_symmig_all" href="#dadi.PortikModels.portik_models_3d.split_symmig_all">split_symmig_all</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_uni_mig_adjacent_var1" href="#dadi.PortikModels.portik_models_3d.split_uni_mig_adjacent_var1">split_uni_mig_adjacent_var1</a></code></li>
+<li><code><a title="dadi.PortikModels.portik_models_3d.split_uni_mig_adjacent_var2" href="#dadi.PortikModels.portik_models_3d.split_uni_mig_adjacent_var2">split_uni_mig_adjacent_var2</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
