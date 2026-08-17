@@ -1,6 +1,6 @@
 # Polyploidy
 
-dadi provides support for demographic models with homoeologous exchange and selection for auto- and allopolyploids by treating each subgenome in the polyploid lineage as a separate population. Below, we outline key differences and considerations when using dadi to model polyploids. Brief examples are provided for auto- and allotetraploids with more complex examples given in [Polyploid examples](./polyploid-examples.md).
+dadi provides support for demographic models with homoeologous exchange and selection for auto- and allopolyploids by treating each subgenome in the polyploid lineage as a separate population. Below, we outline key differences and considerations when using dadi to model polyploids. Brief examples are provided for auto- and allotetraploids with more complex examples given in [Polyploid examples](././examples/Polyploidy/PolyploidyModel.md).
 
 
 ### Specifying a Polyploid Model
