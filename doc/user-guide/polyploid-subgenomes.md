@@ -145,7 +145,7 @@ Alternatively, we can start from the polyploid equilibrium and focus on modeling
 
 Similar to the existing diploid code, we also implement GPU computing for the integration of population spectra, `phi`.
 To enable GPU computing, run the command `dadi.Polyploidy.cuda_enabled(True)` in your script, before you carry out any model simulations or optimizations.
-To disable GPU computing, run the command `dadi.POlyploidy.cuda_enabled(False)` in your script.
+To disable GPU computing, run the command `dadi.Polyploidy.cuda_enabled(False)` in your script.
 
 More details regarding GPU computing including installation of the CUDA Toolkit and PyCUDA can be found in the [GPU computing](./GPU-computing.md) section of the user guide.
 
