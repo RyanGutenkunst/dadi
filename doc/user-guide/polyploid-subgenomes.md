@@ -111,7 +111,7 @@ To specify an additive model of selection in which relative fitness is proportio
     	
 		return fs
 
-More complicated models of selection with non-additive effects within or across subgenomes can also be specified by passing a dictionary with multiple gammas or by specifying dominance coefficients (see the `dadi.Polyploidy.Integration.PloidyType` class for more details and ADD REFERENCE TO EXAMPLE HERE).
+More complicated models of selection with non-additive effects within or across subgenomes can also be specified by passing a dictionary with multiple gammas or by specifying dominance coefficients (see the `dadi.Polyploidy.Integration.PloidyType` class for more details and [Polyploid examples - Model of autotetraploids with non-additive selection](../examples/Polyploidy/PolyploidyModel.md) for an example).
 
 ![Autotetraploid example SFS with selection](autotetraploid_sfs_selection.png)
 
