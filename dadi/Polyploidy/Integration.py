@@ -1,0 +1,2965 @@
+import dadi.Misc as Misc
+import dadi.Demes as Demes
+import numpy
+from numpy import newaxis as nuax
+import logging
+import dadi.tridiag_cython as tridiag
+import dadi.Polyploidy.PolyIntegration as PolyInt
+from enum import IntEnum
+
+logger = logging.getLogger("Polyploidy.Integration")
+
+### ==========================================================================
+### CONSTANTS
+### ==========================================================================
+#: Controls use of GPUs and multiprocessing
+cuda_enabled = False
+
+#: Controls use of Chang and Cooper's delj trick, which seems to lower accuracy.
+use_delj_trick = False
+
+#: Controls timestep for integrations. This is a reasonable default for
+#: gridsizes of ~60. See set_timescale_factor for better control.
+timescale_factor = 1e-3
+
+#: Whether to use old timestep method, which is old_timescale_factor * dx[0].
+use_old_timestep = False
+#: Factor for told timestep method.
+old_timescale_factor = 0.1
+
+### Utility function modified from dadi.Misc for handling the selection parameter lists
+def ensure_1arg_func_vectorized(vars_list):
+    """
+    Version of dadi.Misc.ensure_1arg_func that returns a 
+    single vectorized function that can handle multiple parameters at once.
+    This is useful for the selection parameters in polyploidy models.
+    
+    vars_list: List of variables to be passed to the function.
+    
+    Returns:
+        A function that takes t and returns a numpy array of results
+    """
+    processed_funcs = []
+    
+    for var in vars_list:
+        if numpy.isscalar(var):
+            var_f_tmp = lambda t, v=var: v
+        else:
+            var_f_tmp = var
+        
+        var_f = lambda t, f=var_f_tmp: numpy.float64(f(t))
+        
+        if not callable(var_f):
+            raise ValueError('Argument is not a constant or a function.')
+        try:
+            var_f(0.0)
+        except TypeError:
+            raise ValueError('Argument is not a constant or a one-argument function.')
+        
+        processed_funcs.append(var_f)
+    
+    # Return a single function that evaluates all at once
+    def vectorized_func(t):
+        return numpy.array([f(t) for f in processed_funcs])
+    
+    return vectorized_func
+
+
+### ==========================================================================
+### COMPUTE DT FUNCTIONS
+### ==========================================================================
+def _compute_dt(dx, nu, ms, sel, ploidy):
+    """
+    Compute the timestep along a single dimension of phi. 
+
+    Acts as a wrapper to call _compute_dt_* for the corresponding ploidy type.
+
+    sel: vector of selection parameters from unpacking the sel_dict
+    ploidy: vector of ploidy coefficients (length 10)
+            e.g. [0, 1, 0, 0, ...] specifies the current population as autotetraploid
+            e.g. [0, 0, 0, 1, 0, ...] specifies the current population as allotetraploid subgenome b
+            See PloidyType class for more details.
+    """
+    if ploidy[0]:
+        return _compute_dt_dip(dx, nu, ms, sel[0], sel[1])
+    elif ploidy[1]:
+        return _compute_dt_auto(dx, nu, ms, sel[0], sel[1], sel[2], sel[3])
+    elif ploidy[2]:
+        return _compute_dt_allo_a(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
+    elif ploidy[3]:
+        return _compute_dt_allo_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7])
+    elif ploidy[4]:
+        return _compute_dt_autohex(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5])
+    elif ploidy[5]:
+        return _compute_dt_hex_tetra(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], sel[13])
+    elif ploidy[6]:
+        return _compute_dt_hex_dip(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], sel[13])
+    elif ploidy[7]:
+        return _compute_dt_hex_a(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], 
+                                 sel[13], sel[14], sel[15], sel[16], sel[17], sel[18], sel[19], sel[20], sel[21], sel[22], sel[23], sel[24], sel[25])
+    elif ploidy[8]:
+        return _compute_dt_hex_b(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], 
+                                 sel[13], sel[14], sel[15], sel[16], sel[17], sel[18], sel[19], sel[20], sel[21], sel[22], sel[23], sel[24], sel[25])
+    elif ploidy[9]:
+        return _compute_dt_hex_c(dx, nu, ms, sel[0], sel[1], sel[2], sel[3], sel[4], sel[5], sel[6], sel[7], sel[8], sel[9], sel[10], sel[11], sel[12], 
+                                 sel[13], sel[14], sel[15], sel[16], sel[17], sel[18], sel[19], sel[20], sel[21], sel[22], sel[23], sel[24], sel[25])
+
+def _compute_dt_dip(dx, nu, ms, gamma, h):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for diploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # For h != 0.5, the maximum of M_func is not easy analytically. It is close
+    # to the 0.5 or 0.25 value, though, so we use those as an approximation.
+
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+    maxVM = max(0.25/nu, sum(ms),\
+                abs(gamma) * 2*max(numpy.abs(h + (1-2*h)*0.5) * 0.5*(1-0.5),
+                                   numpy.abs(h + (1-2*h)*0.25) * 0.25*(1-0.25)))
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma=%f, h=%f.' % (nu, str(ms), gamma, h))
+    return dt
+
+def _compute_dt_auto(dx, nu, ms, gam1, gam2, gam3, gam4):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autotetraploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # For h != 0.5, the maximum of M_func is not easy analytically. It is close
+    # to the 0.5 or 0.25 value, though, so we use those as an approximation.
+
+    ### I looked at this for the equivalent function for autos and 
+    ### the maximum value seems to sometimes be close to the 0.75 value 
+    ### especially for recessive alleles, so I added that below
+
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+
+    maxVM = max(0.125/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(((((- 4*gam1  + 6*gam2 - 4*gam3 + gam4)*.25 +
+                                                  (9*gam1 - 9*gam2 + 3*gam3)) * .25 +
+                                                  (-6*gam1 + 3*gam2)) * .25 + 
+                                                   gam1)),
+                      0.5*(1-0.5)*numpy.abs(((((- 4*gam1  + 6*gam2 - 4*gam3 + gam4)*.5 +
+                                                (9*gam1 - 9*gam2 + 3*gam3)) * .5 +
+                                                (-6*gam1 + 3*gam2)) * .5 + 
+                                                 gam1)),
+                      0.75*(1-0.75)*numpy.abs(((((- 4*gam1  + 6*gam2 - 4*gam3 + gam4)*.75 +
+                                                  (9*gam1 - 9*gam2 + 3*gam3)) * .75 +
+                                                  (-6*gam1 + 3*gam2)) * .75 + 
+                                                   gam1))
+                    )
+                )
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma1=%f, gamma2=%f, gamma3=%f, gamma4=%f.' 
+                         % (nu, str(ms), gam1, gam2, gam3, gam4))
+    return dt
+
+def _compute_dt_allo_a(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for allotetraploid subgenome a.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_a it 
+    # seems to be near x_a = 0.25, 0.5, 0.75 and x_b = 0, 1 
+    # the nice thing is that x_b = 0, 1 are much simpler than the full M function
+    
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g10 + (-2*g10 + g20)*0.25), # x_a = 0.25, x_b = 0
+                      0.5*(1-0.5)*numpy.abs(g10 + (-2*g10 + g20)*0.5), # x_a = 0.5, x_b = 0
+                      0.75*(1-0.75)*numpy.abs(g10 + (-2*g10 + g20)*0.75), # x_a = 0.75, x_b = 0
+                      0.25*(1-0.25)*numpy.abs(-g02 + g12 + (g02 -2*g12 + g22)*0.25), # x_a = 0.25, x_b = 1
+                      0.5*(1-0.5)*numpy.abs(-g02 + g12 + (g02 -2*g12 + g22)*0.5), # x_a = 0.5, x_b = 1
+                      0.75*(1-0.75)*numpy.abs(-g02 + g12 + (g02 -2*g12 + g22)*0.75))) # x_a = 0.75, x_b = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f' 
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22))
+    return dt
+
+def _compute_dt_allo_b(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for allotetraploid subgenome b.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_a it 
+    # seems to be near x_b = 0.25, 0.5, 0.75 and x_a = 0, 1 
+    # the nice thing is that x_a = 0, 1 are much simpler than the full M function
+    
+    # It might seem natural to scale dt based on dx[0]. However, testing has
+    # shown that extrapolation is much more reliable when the same timesteps
+    # are used in evaluations at different grid sizes.
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g01 + (-2*g01 + g02)*0.25), # x_a = 0, x_b = 0.25
+                      0.5*(1-0.5)*numpy.abs(g01 + (-2*g01 + g02)*0.5), # x_a = 0, x_b = 0.5
+                      0.75*(1-0.75)*numpy.abs(g01 + (-2*g01 + g02)*0.75), # x_a = 0, x_b = 0.75
+                      0.25*(1-0.25)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.25), # x_a = 1, x_b = 0.25
+                      0.5*(1-0.5)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.5), # x_a = 1, x_b = 0.5
+                      0.75*(1-0.75)*numpy.abs(-g20 + g21 + (g20 -2*g21 + g22)*0.75))) # x_a = 1, x_b = 0.75
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f' 
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22))
+    return dt
+
+def _compute_dt_autohex(dx, nu, ms, g1, g2, g3, g4, g5, g6):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autohexaploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+    
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly or analytically where the maximum is,
+    # but for the autohexaploid selection function it seems to be close-ish 
+    # to x = 0.25, 0.5, or 0.75, so we will use those as an approximation.
+
+    maxVM = max(1/(6*nu), sum(ms), \
+                2*max(  0.25*(1-0.25)*numpy.abs((((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * 0.25 +
+                                                (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * 0.25 +
+                                                (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * 0.25 +
+                                                (30*g1 - 30*g2 + 10*g3)) * 0.25 +
+                                                (-10*g1 + 5*g2)) * 0.25 + g1), 
+                        0.5*(1-0.5)*numpy.abs((((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * 0.5 +
+                                                (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * 0.5 +
+                                                (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * 0.5 +
+                                                (30*g1 - 30*g2 + 10*g3)) * 0.5 +
+                                                (-10*g1 + 5*g2)) * 0.5 + g1), 
+                        0.75*(1-0.75)*numpy.abs((((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * 0.75 +
+                                                (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * 0.75 +
+                                                (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * 0.75 +
+                                                (30*g1 - 30*g2 + 10*g3)) * 0.75 +
+                                                (-10*g1 + 5*g2)) * 0.75 + g1) 
+                      )
+                )
+                
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma1=%f, gamma2=%f, gamma3=%f,'
+                         'gamma4=%f, gamma5=%f, gamma6=%f' 
+                         % (nu, str(ms), g1, g2, g3, g4, g5, g6))
+    return dt
+
+def _compute_dt_hex_tetra(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autohexaploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_tetra it 
+    # seems to be near x_4 = 0.25, 0.5, 0.75 and x_2 = 0, 1 
+    # the nice thing is that x_2 = 0, 1 are much simpler than the full M function
+
+    maxVM = max(0.125/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g10 + (-6*g10 + 3*g20)*0.25
+                                                  + (9*g10 - 9*g20 + 3*g30)*.25**2
+                                                  + (-4*g10 + 6*g20 - 4*g30 + g40)*.25**3), # x_4 = 0.25, x_2 = 0
+                      0.5*(1-0.5)*numpy.abs(g10 + (-6*g10 + 3*g20)*0.5 
+                                                + (9*g10 - 9*g20 + 3*g30)*.5**2 
+                                                + (-4*g10 + 6*g20 - 4*g30 + g40)*.5**3), # x_4 = 0.5, x_2 = 0
+                      0.75*(1-0.75)*numpy.abs(g10 + (-6*g10 + 3*g20)*0.75 
+                                                  + (9*g10 - 9*g20 + 3*g30)*.75**2 
+                                                  + (-4*g10 + 6*g20 - 4*g30 + g40)*.75**3), # x_4 = 0.75, x_2 = 0
+                      0.25*(1-0.25)*numpy.abs(g12 - g02 + (3*g02 -6*g12 + 3*g22)*0.25 
+                                                        + (-3*g02 + 9*g12 - 9*g22 + 3*g32)*.25**2 
+                                                        + (g02 - 4*g12 + 6*g22 - 4*g32 + g42)*.25**3), # x_4 = 0.25, x_2 = 1
+                      0.5*(1-0.5)*numpy.abs(g12 - g02 + (3*g02 -6*g12 + 3*g22)*0.5 
+                                                        + (-3*g02 + 9*g12 - 9*g22 + 3*g32)*.5**2 
+                                                        + (g02 - 4*g12 + 6*g22 - 4*g32 + g42)*.5**3), # x_4 = 0.5, x_2 = 1
+                      0.75*(1-0.75)*numpy.abs(g12 - g02 + (3*g02 -6*g12 + 3*g22)*0.75 
+                                                        + (-3*g02 + 9*g12 - 9*g22 + 3*g32)*.75**2 
+                                                        + (g02 - 4*g12 + 6*g22 - 4*g32 + g42)*.75**3))) # x_4 = 0.75, x_2 = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f, gamma30=%f, gamma31=%f, gamma32=%f,'
+                         'gamma40=%f, gamma41=%f, gamma42=%f'
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42))
+    return dt
+ 
+def _compute_dt_hex_dip(dx, nu, ms, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for autohexaploids.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_dip it 
+    # seems to be near x_2 = 0.25, 0.5, 0.75 and x_4 = 0, 1 
+    # the nice thing is that x_4 = 0, 1 are much simpler than the full M function
+
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g01 + (-2*g01 + g02)*0.25), # x_4 = 0, x_2 = 0.25
+                      0.5*(1-0.5)*numpy.abs(g01 + (-2*g01 + g02)*0.5), # x_4 = 0, x_2 = 0.5
+                      0.75*(1-0.75)*numpy.abs(g01 + (-2*g01 + g02)*0.75), # x_4 = 0, x_2 = 0.75
+                      0.25*(1-0.25)*numpy.abs(-g40 + g41 + (g40 -2*g41 + g42)*0.25), # x_4 = 1, x_2 = 0.25
+                      0.5*(1-0.5)*numpy.abs(-g40 + g41 + (g40 -2*g41 + g42)*0.5), # x_4 = 1, x_2 = 0.5
+                      0.75*(1-0.75)*numpy.abs(-g40 + g41 + (g40 -2*g41 + g42)*0.75))) # x_4 = 1, x_2 = 0.75
+ 
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma01=%f, gamma02=%f, gamma10=%f, gamma11=%f, gamma12=%f,'
+                         'gamma20=%f, gamma21=%f, gamma22=%f, gamma30=%f, gamma31=%f, gamma32=%f,'
+                         'gamma40=%f, gamma41=%f, gamma42=%f'
+                         % (nu, str(ms), g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42))
+    return dt
+
+def _compute_dt_hex_a(dx, nu, ms, g001, g002, g010, g011, g012, g020, g021, g022, 
+                      g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                      g200, g201, g202, g210, g211, g212, g220, g221, g222):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for alloallohexaploid subgenome a.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_a it 
+    # seems to be near x_a = 0.25, 0.5, 0.75, x_b = 0, 1, and x_c = 0, 1
+    # the nice thing is that x_b = 0, 1 and x_c = 0, 1 are much simpler than the full M function
+    
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g100 + (-2*g100 + g200)*0.25), # x_a = 0.25, x_b = 0, x_c = 0
+                      0.5*(1-0.5)*numpy.abs(g100 + (-2*g100 + g200)*0.5), # x_a = 0.5, x_b = 0, x_c = 0
+                      0.75*(1-0.75)*numpy.abs(g100 + (-2*g100 + g200)*0.75), # x_a = 0.75, x_b = 0, x_c = 0
+
+                      0.25*(1-0.25)*numpy.abs(g102 - g002 + (g002 - 2*g102 + g202)*0.25), # x_a = 0.25, x_b = 0, x_c = 1
+                      0.5*(1-0.5)*numpy.abs(g102 - g002 + (g002 - 2*g102 + g202)*0.5), # x_a = 0.5, x_b = 0, x_c = 1
+                      0.75*(1-0.75)*numpy.abs(g102 - g002 + (g002 - 2*g102 + g202)*0.75), # x_a = 0.75, x_b = 0, x_c = 1
+
+                      0.25*(1-0.25)*numpy.abs(g120 - g020 + (g020 - 2*g120 + g220)*0.25), # x_a = 0.25, x_b = 1, x_c = 0
+                      0.5*(1-0.5)*numpy.abs(g120 - g020 + (g020 - 2*g120 + g220)*0.5), # x_a = 0.5, x_b = 1, x_c = 0
+                      0.75*(1-0.75)*numpy.abs(g120 - g020 + (g020 - 2*g120 + g220)*0.75), # x_a = 0.75, x_b = 1, x_c = 0
+
+                      0.25*(1-0.25)*numpy.abs(g122 - g022 + (g022 - 2*g122 + g222)*0.25), # x_a = 0.25, x_b = 1, x_c = 1
+                      0.5*(1-0.5)*numpy.abs(g122 - g022 + (g022 - 2*g122 + g222)*0.5), # x_a = 0.5, x_b = 1, x_c = 1
+                      0.75*(1-0.75)*numpy.abs(g122 - g022 + (g022 - 2*g122 + g222)*0.75))) # x_a = 0.75, x_b = 1, x_c = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma001=%f, gamma002=%f, gamma010=%f, gamma011=%f, gamma012=%f,'
+                         'gamma020=%f, gamma021=%f, gamma022=%f,'
+                         'gamma100=%f, gamma101=%f, gamma102=%f, gamma110=%f, gamma111=%f, gamma112=%f,'
+                         'gamma120=%f, gamma121=%f, gamma122=%f,'
+                         'gamma200=%f, gamma201=%f, gamma202=%f, gamma210=%f, gamma211=%f, gamma212=%f,'
+                         'gamma220=%f, gamma221=%f, gamma222=%f' 
+                         % (nu, str(ms), g001, g002, g010, g011, g012, g020, g021, g022,
+                            g100, g101, g102, g110, g111, g112, g120, g121, g122,
+                            g200, g201, g202, g210, g211, g212, g220, g221, g222))
+    return dt
+
+def _compute_dt_hex_b(dx, nu, ms, g001, g002, g010, g011, g012, g020, g021, g022, 
+                      g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                      g200, g201, g202, g210, g211, g212, g220, g221, g222):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for alloallohexaploid subgenome b.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_b it 
+    # seems to be near x_b = 0.25, 0.5, 0.75, x_a = 0, 1, and x_c = 0, 1
+    # the nice thing is that x_a = 0, 1 and x_c = 0, 1 are much simpler than the full M function
+
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g010 + (-2*g010 + g020)*0.25), # x_a = 0, x_b = 0.25, x_c = 0
+                      0.5*(1-0.5)*numpy.abs(g010 + (-2*g010 + g020)*0.5), # x_a = 0, x_b = 0.5, x_c = 0
+                      0.75*(1-0.75)*numpy.abs(g010 + (-2*g010 + g020)*0.75), # x_a = 0, x_b = 0.75, x_c = 0
+
+                      0.25*(1-0.25)*numpy.abs(g012 - g002 + (g002 - 2*g012 + g022)*0.25), # x_a = 0, x_b = 0.25, x_c = 1
+                      0.5*(1-0.5)*numpy.abs(g012 - g002 + (g002 - 2*g012 + g022)*0.5), # x_a = 0, x_b = 0.5, x_c = 1
+                      0.75*(1-0.75)*numpy.abs(g012 - g002 + (g002 - 2*g012 + g022)*0.75), # x_a = 0, x_b = 0.75, x_c = 1
+
+                      0.25*(1-0.25)*numpy.abs(g210 - g200 + (g200 - 2*g210 + g220)*0.25), # x_a = 1, x_b = 0.25, x_c = 0
+                      0.5*(1-0.5)*numpy.abs(g210 - g200 + (g200 - 2*g210 + g220)*0.5), # x_a = 1, x_b = 0.5, x_c = 0
+                      0.75*(1-0.75)*numpy.abs(g210 - g200 + (g200 - 2*g210 + g220)*0.75), # x_a = 1, x_b = 0.75, x_c = 0
+
+                      0.25*(1-0.25)*numpy.abs(g212 - g202 + (g202 - 2*g212 + g222)*0.25), # x_a = 1, x_b = 0.25, x_c = 1
+                      0.5*(1-0.5)*numpy.abs(g212 - g202 + (g202 - 2*g212 + g222)*0.5), # x_a = 1, x_b = 0.5, x_c = 1
+                      0.75*(1-0.75)*numpy.abs(g212 - g202 + (g202 - 2*g212 + g222)*0.75))) # x_a = 1, x_b = 0.75, x_c = 1
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma001=%f, gamma002=%f, gamma010=%f, gamma011=%f, gamma012=%f,'
+                         'gamma020=%f, gamma021=%f, gamma022=%f,'
+                         'gamma100=%f, gamma101=%f, gamma102=%f, gamma110=%f, gamma111=%f, gamma112=%f,'
+                         'gamma120=%f, gamma121=%f, gamma122=%f,'
+                         'gamma200=%f, gamma201=%f, gamma202=%f, gamma210=%f, gamma211=%f, gamma212=%f,'
+                         'gamma220=%f, gamma221=%f, gamma222=%f' 
+                         % (nu, str(ms), g001, g002, g010, g011, g012, g020, g021, g022,
+                            g100, g101, g102, g110, g111, g112, g120, g121, g122,
+                            g200, g201, g202, g210, g211, g212, g220, g221, g222))
+    return dt
+
+def _compute_dt_hex_c(dx, nu, ms, g001, g002, g010, g011, g012, g020, g021, g022, 
+                      g100, g101, g102, g110, g111, g112, g120, g121, g122, 
+                      g200, g201, g202, g210, g211, g212, g220, g221, g222):
+    """
+    Compute the appropriate timestep given the current demographic params
+    for alloallohexaploid subgenome c.
+
+    This is based on the maximum V or M expected in this direction. The
+    timestep is scaled such that if the params are rescaled correctly by a
+    constant, the exact same integration happens. (This is equivalent to
+    multiplying the eqn through by some other 2N...)
+    """
+    if use_old_timestep:
+        return old_timescale_factor * dx[0]
+
+    # These are the maxima for V_func and M_func over the domain
+    # It is difficult to know exactly where the maximum is, but for M_b it 
+    # seems to be near x_c = 0.25, 0.5, 0.75, x_a = 0, 1, and x_b = 0, 1
+    # the nice thing is that x_a = 0, 1 and x_b = 0, 1 are much simpler than the full M function
+
+    maxVM = max(0.25/nu, sum(ms),\
+                2*max(0.25*(1-0.25)*numpy.abs(g001 + (-2*g001 + g002)*0.25), # x_a = 0, x_b = 0, x_c = 0.25
+                      0.5*(1-0.5)*numpy.abs(g001 + (-2*g001 + g002)*0.5), # x_a = 0, x_b = 0, x_c = 0.5
+                      0.75*(1-0.75)*numpy.abs(g001 + (-2*g001 + g002)*0.75), # x_a = 0, x_b = 0, x_c = 0.75
+
+                      0.25*(1-0.25)*numpy.abs(g021 - g020 + (g020 - 2*g021 + g022)*0.25), # x_a = 0, x_b = 1, x_c = 0.25
+                      0.5*(1-0.5)*numpy.abs(g021 - g020 + (g020 - 2*g021 + g022)*0.5), # x_a = 0, x_b = 1, x_c = 0.5
+                      0.75*(1-0.75)*numpy.abs(g021 - g020 + (g020 - 2*g021 + g022)*0.75), # x_a = 0, x_b = 1, x_c = 0.75
+
+                      0.25*(1-0.25)*numpy.abs(g201 - g200 + (g200 - 2*g201 + g202)*0.25), # x_a = 1, x_b = 0, x_c = 0.25
+                      0.5*(1-0.5)*numpy.abs(g201 - g200 + (g200 - 2*g201 + g202)*0.5), # x_a = 1, x_b = 0, x_c = 0.5
+                      0.75*(1-0.75)*numpy.abs(g201 - g200 + (g200 - 2*g201 + g202)*0.75), # x_a = 1, x_b = 0, x_c = 0.75
+
+                      0.25*(1-0.25)*numpy.abs(g221 - g220 + (g220 - 2*g221 + g222)*0.25), # x_a = 1, x_b = 1, x_c = 0.25
+                      0.5*(1-0.5)*numpy.abs(g221 - g220 + (g220 - 2*g221 + g222)*0.5), # x_a = 1, x_b = 1, x_c = 0.5
+                      0.75*(1-0.75)*numpy.abs(g221 - g220 + (g220 - 2*g221 + g222)*0.75))) # x_a = 1, x_b = 1, x_c = 0.75
+    if maxVM > 0:
+        dt = timescale_factor / maxVM
+    else:
+        dt = numpy.inf
+    if dt == 0:
+        raise ValueError('Timestep is zero. Values passed in are nu=%f, ms=%s,'
+                         'gamma001=%f, gamma002=%f, gamma010=%f, gamma011=%f, gamma012=%f,'
+                         'gamma020=%f, gamma021=%f, gamma022=%f,'
+                         'gamma100=%f, gamma101=%f, gamma102=%f, gamma110=%f, gamma111=%f, gamma112=%f,'
+                         'gamma120=%f, gamma121=%f, gamma122=%f,'
+                         'gamma200=%f, gamma201=%f, gamma202=%f, gamma210=%f, gamma211=%f, gamma212=%f,'
+                         'gamma220=%f, gamma221=%f, gamma222=%f' 
+                         % (nu, str(ms), g001, g002, g010, g011, g012, g020, g021, g022,
+                            g100, g101, g102, g110, g111, g112, g120, g121, g122,
+                            g200, g201, g202, g210, g211, g212, g220, g221, g222))
+    return dt
+
+### ==========================================================================
+### INJECT MUTATIONS FUNCTIONS FOR ALL PLOIDIES + DIMENSIONS
+### ==========================================================================
+def _inject_mutations_1D(phi, dt, xx, theta0):
+    """
+    Inject novel mutations for a timestep.
+    """
+    phi[1] += dt/xx[1] * theta0/2 * 2/(xx[2] - xx[0])
+    
+    return phi
+
+def _inject_mutations_2D(phi, dt, xx, yy, theta0, frozen1, frozen2,
+                         nomut1, nomut2):
+    """
+    Inject novel mutations for a timestep.
+    """
+    if not frozen1 and not nomut1:
+        phi[1,0] += dt/xx[1] * theta0/2 * 4/((xx[2] - xx[0]) * yy[1])
+    if not frozen2 and not nomut2:
+        phi[0,1] += dt/yy[1] * theta0/2 * 4/((yy[2] - yy[0]) * xx[1])
+    
+    return phi
+
+def _inject_mutations_3D(phi, dt, xx, yy, zz, theta0, frozen1, frozen2,
+                         frozen3):
+    """
+    Inject novel mutations for a timestep.
+    """
+    if not frozen1:
+        phi[1,0,0] += dt/xx[1] * theta0/2 * 8/((xx[2] - xx[0]) * yy[1] * zz[1])
+    if not frozen2:
+        phi[0,1,0] += dt/yy[1] * theta0/2 * 8/((yy[2] - yy[0]) * xx[1] * zz[1])
+    if not frozen3:
+        phi[0,0,1] += dt/zz[1] * theta0/2 * 8/((zz[2] - zz[0]) * xx[1] * yy[1])
+        
+    return phi
+
+def _inject_mutations_4D(phi, dt, xx, yy, zz, aa, theta0, 
+                         frozen1, frozen2, frozen3, frozen4):
+    """
+    Inject novel mutations for a timestep.
+    """
+    if not frozen1:
+        phi[1,0,0,0] += dt/xx[1] * theta0/2 * 16/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1])
+    if not frozen2:
+        phi[0,1,0,0] += dt/yy[1] * theta0/2 * 16/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1])
+    if not frozen3:
+        phi[0,0,1,0] += dt/zz[1] * theta0/2 * 16/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1])
+    if not frozen4:
+        phi[0,0,0,1] += dt/aa[1] * theta0/2 * 16/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1])
+    
+    return phi
+    
+def _inject_mutations_5D(phi, dt, xx, yy, zz, aa, bb, theta0, 
+                         frozen1, frozen2, frozen3, frozen4, frozen5):
+    """
+    Inject novel mutations for a timestep.
+    """
+    if not frozen1:
+        phi[1,0,0,0,0] += dt/xx[1] * theta0/2 * 32/((xx[2] - xx[0]) * yy[1] * zz[1] * aa[1] * bb[1])
+    if not frozen2:
+        phi[0,1,0,0,0] += dt/yy[1] * theta0/2 * 32/((yy[2] - yy[0]) * xx[1] * zz[1] * aa[1] * bb[1])
+    if not frozen3:
+        phi[0,0,1,0,0] += dt/zz[1] * theta0/2 * 32/((zz[2] - zz[0]) * xx[1] * yy[1] * aa[1] * bb[1])
+    if not frozen4:
+        phi[0,0,0,1,0] += dt/aa[1] * theta0/2 * 32/((aa[2] - aa[0]) * xx[1] * yy[1] * zz[1] * bb[1])
+    if not frozen5:
+        phi[0,0,0,0,1] += dt/bb[1] * theta0/2 * 32/((bb[2] - bb[0]) * xx[1] * yy[1] * zz[1] * aa[1])
+    
+    return phi
+
+### ==========================================================================
+### CLASS DEFINITION FOR SPECIFYING PLOIDY
+### ==========================================================================
+class PloidyType(IntEnum):
+    DIPLOID = 0
+    AUTO = 1
+    ALLOa = 2
+    ALLOb = 3
+    AUTOHEX = 4
+    HEX_tetra = 5
+    HEX_dip = 6
+    HEXa = 7
+    HEXb = 8
+    HEXc = 9
+
+    def param_names(self):
+        """Return parameter names for this ploidy type"""
+        param_map = {
+            PloidyType.DIPLOID:   ['gamma', 'h'],
+            PloidyType.AUTO:      ['gamma1', 'gamma2', 'gamma3', 'gamma4'],
+            PloidyType.ALLOa:     ['gamma01', 'gamma02', 'gamma10', 'gamma11',
+                                   'gamma12', 'gamma20', 'gamma21', 'gamma22'],
+            PloidyType.ALLOb:     ['gamma01', 'gamma02', 'gamma10', 'gamma11', 
+                                   'gamma12', 'gamma20', 'gamma21', 'gamma22'],
+            PloidyType.AUTOHEX:   ['gamma1', 'gamma2', 'gamma3', 'gamma4', 'gamma5', 'gamma6'],
+            PloidyType.HEX_tetra: ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 
+                                   'gamma20', 'gamma21', 'gamma22', 'gamma30', 'gamma31', 'gamma32',
+                                   'gamma40', 'gamma41', 'gamma42'],
+            PloidyType.HEX_dip:   ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 
+                                   'gamma20', 'gamma21', 'gamma22', 'gamma30', 'gamma31', 'gamma32',
+                                   'gamma40', 'gamma41', 'gamma42'],
+            PloidyType.HEXa:      ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 
+                                   'gamma020', 'gamma021', 'gamma022', 'gamma100', 'gamma101', 'gamma102',
+                                   'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                                   'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212',
+                                   'gamma220', 'gamma221', 'gamma222'],
+            PloidyType.HEXb:      ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 
+                                   'gamma020', 'gamma021', 'gamma022', 'gamma100', 'gamma101', 'gamma102',
+                                   'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                                   'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212',
+                                   'gamma220', 'gamma221', 'gamma222'],
+            PloidyType.HEXc:      ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 
+                                   'gamma020', 'gamma021', 'gamma022', 'gamma100', 'gamma101', 'gamma102',
+                                   'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                                   'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212',
+                                   'gamma220', 'gamma221', 'gamma222'],                                              
+        }
+        return param_map[self]
+    
+    @staticmethod
+    def _multiply_params(param1, param2):
+        """Multiply two parameters that can each be either functions or constants.
+           This allows us to support arbitrary combinations of functions of time and constants for selection."""
+        p1_is_func = callable(param1)
+        p2_is_func = callable(param2)
+        
+        # if at least one of the parameters is a function, then we need to return a function
+        if p1_is_func or p2_is_func:
+            return lambda t: (param1(t) if p1_is_func else param1) * \
+                             (param2(t) if p2_is_func else param2)
+        # otherwise, we can just multiply the two constant parameters
+        else:
+            return param1 * param2
+    
+    def pack_sel_params(self, sel_dict, max_params=26):
+        """Pack selection parameters into standardized array.
+        
+        For each ploidy type, there are different ways to specify the selection
+        parameters. This function takes a dictionary of selection parameters
+        and packs them into an array of length max_params. 
+        
+        If the dictionary contains a single key 'gamma', then the array will
+        contain the appropriate selection parameters assuming "additive" dominance.
+
+        If the dictionary contains a single 'gamma' and a dominance coefficient 
+        'h', 'h_i', 'h_ij', etc., for each possible genotype of that ploidy type, then
+        the array will contain the appropriate selection parameters given that dominance.
+
+        Finally, if the dictionary contains a list of keys 'gamma1', 'gamma2', etc., 
+        which correspond to the selection parameters for each possible genotype of that
+        ploidy type, then the array will pack those selection parameters.
+
+        Otherwise, a value error will be raised.
+        """
+        # Initialize with zeros
+        sel_params = [0.0] * max_params
+        
+        if self == PloidyType.DIPLOID:
+            keys_to_check = ['gamma', 'h']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                sel_params[0] = sel_dict.get('gamma', 0) # gamma  
+                sel_params[1] = 0.5 # h
+            elif all(key in sel_dict for key in keys_to_check) and len(sel_dict) == 2:
+                sel_params[0] = sel_dict.get('gamma', 0)
+                sel_params[1] = sel_dict.get('h', 0)
+            else:
+                raise ValueError('For a DIPLOID ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 2 keys: gamma, h.')
+            
+        elif self == PloidyType.AUTO:
+            keys_dominance = ['h1', 'h2', 'h3', 'gamma']
+            keys_gammas = ['gamma1', 'gamma2', 'gamma3', 'gamma4']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, 1/4)   
+                sel_params[1] = self._multiply_params(base_gamma, 1/2)   
+                sel_params[2] = self._multiply_params(base_gamma, 3/4)
+                sel_params[3] = base_gamma
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 4:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h1'])
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h2']) 
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h3'])
+                sel_params[3] = base_gamma    
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 4:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For an AUTO ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 4 keys: gamma, h1, h2, h3 \n' 
+                                 '3. 4 keys: gamma1, gamma2, gamma3, gamma4.')
+            
+        elif self == PloidyType.ALLOa or self == PloidyType.ALLOb:
+            keys_dominance = ['h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'gamma']
+            keys_gammas = ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 'gamma20', 'gamma21', 'gamma22']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, 1/4)   
+                sel_params[1] = self._multiply_params(base_gamma, 1/2)   
+                sel_params[2] = self._multiply_params(base_gamma, 1/4)
+                sel_params[3] = self._multiply_params(base_gamma, 1/2)   
+                sel_params[4] = self._multiply_params(base_gamma, 3/4)   
+                sel_params[5] = self._multiply_params(base_gamma, 1/2)
+                sel_params[6] = self._multiply_params(base_gamma, 3/4)
+                sel_params[7] = base_gamma
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 8:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h01'])    
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h02'])    
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h10']) 
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h11']) 
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h12']) 
+                sel_params[5] = self._multiply_params(base_gamma, sel_dict['h20']) 
+                sel_params[6] = self._multiply_params(base_gamma, sel_dict['h21'])
+                sel_params[7] = base_gamma 
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 8:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For an ALLO ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n'
+                                 '1. 1 key: gamma \n' 
+                                 '2. 8 keys: gamma, h01, h02, h10, h11, h12, h20, h21 \n' 
+                                 '3. 8 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22.')
+        
+        elif self == PloidyType.AUTOHEX:
+            keys_dominance = ['h1', 'h2', 'h3', 'h4', 'h5', 'gamma']
+            keys_gammas = ['gamma1', 'gamma2', 'gamma3', 'gamma4', 'gamma5', 'gamma6']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, 1/6)   
+                sel_params[1] = self._multiply_params(base_gamma, 1/3)   
+                sel_params[2] = self._multiply_params(base_gamma, 1/2)
+                sel_params[3] = self._multiply_params(base_gamma, 2/3)   
+                sel_params[4] = self._multiply_params(base_gamma, 5/6)   
+                sel_params[5] = base_gamma
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 6:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h1'])    
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h2'])    
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h3']) 
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h4']) 
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h5'])
+                sel_params[5] = base_gamma
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 6:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For an AUTOHEX ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 6 keys: gamma, h1, h2, h3, h4, h5 \n'
+                                 '3. 6 keys: gamma1, gamma2, gamma3, gamma4, gamma5, gamma6.')
+        
+        elif self == PloidyType.HEX_tetra or self == PloidyType.HEX_dip:
+            keys_dominance = ['h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'h22',
+                               'h30', 'h31', 'h32', 'h40', 'h41', 'gamma']
+            keys_gammas = ['gamma01', 'gamma02', 'gamma10', 'gamma11', 'gamma12', 'gamma20', 'gamma21', 'gamma22',
+                           'gamma30', 'gamma31', 'gamma32', 'gamma40', 'gamma41', 'gamma42']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, 1/6) # gamma01
+                sel_params[1] = self._multiply_params(base_gamma, 1/3) # gamma02
+                sel_params[2] = self._multiply_params(base_gamma, 1/6) # gamma10
+                sel_params[3] = self._multiply_params(base_gamma, 1/3) # gamma11
+                sel_params[4] = self._multiply_params(base_gamma, 1/2) # gamma12
+                sel_params[5] = self._multiply_params(base_gamma, 1/3) # gamma20
+                sel_params[6] = self._multiply_params(base_gamma, 1/2) # gamma21
+                sel_params[7] = self._multiply_params(base_gamma, 2/3) # gamma22
+                sel_params[8] = self._multiply_params(base_gamma, 1/2) # gamma30
+                sel_params[9] = self._multiply_params(base_gamma, 2/3) # gamma31
+                sel_params[10] = self._multiply_params(base_gamma, 5/6) # gamma32
+                sel_params[11] = self._multiply_params(base_gamma, 2/3) # gamma40
+                sel_params[12] = self._multiply_params(base_gamma, 5/6) # gamma41
+                sel_params[13] = base_gamma # gamma42
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 14:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h01']) # gamma01
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h02']) # gamma02
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h10']) # gamma10
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h11']) # gamma11
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h12']) # gamma12
+                sel_params[5] = self._multiply_params(base_gamma, sel_dict['h20']) # gamma20
+                sel_params[6] = self._multiply_params(base_gamma, sel_dict['h21']) # gamma21
+                sel_params[7] = self._multiply_params(base_gamma, sel_dict['h22']) # gamma22
+                sel_params[8] = self._multiply_params(base_gamma, sel_dict['h30']) # gamma30
+                sel_params[9] = self._multiply_params(base_gamma, sel_dict['h31']) # gamma31
+                sel_params[10] = self._multiply_params(base_gamma, sel_dict['h32']) # gamma32
+                sel_params[11] = self._multiply_params(base_gamma, sel_dict['h40']) # gamma40
+                sel_params[12] = self._multiply_params(base_gamma, sel_dict['h41']) # gamma41
+                sel_params[13] = base_gamma # gamma42
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 14:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For a HEX (4+2) ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n' 
+                                 '1. 1 key: gamma \n' 
+                                 '2. 14 keys: gamma, h01, h02, h10, h11, h12, h20, h21, h22, h30, h31, h32, h40, h41, h42 \n' 
+                                 '3. 14 keys: gamma01, gamma02, gamma10, gamma11, gamma12, gamma20, gamma21, gamma22, \n ' \
+                                 '            gamma30, gamma31, gamma32, gamma40, gamma41, gamma42.')
+        
+        elif self == PloidyType.HEXa or self == PloidyType.HEXb or self == PloidyType.HEXc:
+            keys_dominance = ['h001', 'h002', 'h010', 'h011', 'h012', 'h020', 'h021', 'h022', 'h100', 'h101', 'h102',
+                               'h110', 'h111', 'h112', 'h120', 'h121', 'h122', 'h200', 'h201', 'h202', 'h210', 'h211',
+                               'h212', 'h220', 'h221', 'gamma']
+            keys_gammas = ['gamma001', 'gamma002', 'gamma010', 'gamma011', 'gamma012', 'gamma020', 'gamma021', 'gamma022',
+                           'gamma100', 'gamma101', 'gamma102', 'gamma110', 'gamma111', 'gamma112', 'gamma120', 'gamma121', 'gamma122',
+                           'gamma200', 'gamma201', 'gamma202', 'gamma210', 'gamma211', 'gamma212', 'gamma220', 'gamma221', 'gamma222']
+            if 'gamma' in sel_dict and len(sel_dict) == 1:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, 1/6) # gamma001
+                sel_params[1] = self._multiply_params(base_gamma, 1/3) # gamma002
+                sel_params[2] = self._multiply_params(base_gamma, 1/6) # gamma010
+                sel_params[3] = self._multiply_params(base_gamma, 1/3) # gamma011
+                sel_params[4] = self._multiply_params(base_gamma, 1/2) # gamma012
+                sel_params[5] = self._multiply_params(base_gamma, 1/3) # gamma020
+                sel_params[6] = self._multiply_params(base_gamma, 1/2) # gamma021
+                sel_params[7] = self._multiply_params(base_gamma, 2/3) # gamma022
+                sel_params[8] = self._multiply_params(base_gamma, 1/6) # gamma100
+                sel_params[9] = self._multiply_params(base_gamma, 1/3) # gamma101
+                sel_params[10] = self._multiply_params(base_gamma, 1/2) # gamma102
+                sel_params[11] = self._multiply_params(base_gamma, 1/3) # gamma110
+                sel_params[12] = self._multiply_params(base_gamma, 1/2) # gamma111
+                sel_params[13] = self._multiply_params(base_gamma, 2/3) # gamma112
+                sel_params[14] = self._multiply_params(base_gamma, 1/2) # gamma120
+                sel_params[15] = self._multiply_params(base_gamma, 2/3) # gamma121
+                sel_params[16] = self._multiply_params(base_gamma, 5/6) # gamma122
+                sel_params[17] = self._multiply_params(base_gamma, 1/3) # gamma200
+                sel_params[18] = self._multiply_params(base_gamma, 1/2) # gamma201
+                sel_params[19] = self._multiply_params(base_gamma, 2/3) # gamma202
+                sel_params[20] = self._multiply_params(base_gamma, 1/2) # gamma210
+                sel_params[21] = self._multiply_params(base_gamma, 2/3) # gamma211
+                sel_params[22] = self._multiply_params(base_gamma, 5/6) # gamma212
+                sel_params[23] = self._multiply_params(base_gamma, 2/3) # gamma220
+                sel_params[24] = self._multiply_params(base_gamma, 5/6) # gamma221
+                sel_params[25] = base_gamma # gamma222
+            elif all(key in sel_dict for key in keys_dominance) and len(sel_dict) == 26:
+                base_gamma = sel_dict['gamma']
+                sel_params[0] = self._multiply_params(base_gamma, sel_dict['h001']) # gamma001
+                sel_params[1] = self._multiply_params(base_gamma, sel_dict['h002']) # gamma002
+                sel_params[2] = self._multiply_params(base_gamma, sel_dict['h010']) # gamma010
+                sel_params[3] = self._multiply_params(base_gamma, sel_dict['h011']) # gamma011
+                sel_params[4] = self._multiply_params(base_gamma, sel_dict['h012']) # gamma012
+                sel_params[5] = self._multiply_params(base_gamma, sel_dict['h020']) # gamma020
+                sel_params[6] = self._multiply_params(base_gamma, sel_dict['h021']) # gamma021
+                sel_params[7] = self._multiply_params(base_gamma, sel_dict['h022']) # gamma022
+                sel_params[8] = self._multiply_params(base_gamma, sel_dict['h100']) # gamma100
+                sel_params[9] = self._multiply_params(base_gamma, sel_dict['h101']) # gamma101
+                sel_params[10] = self._multiply_params(base_gamma, sel_dict['h102']) # gamma102
+                sel_params[11] = self._multiply_params(base_gamma, sel_dict['h110']) # gamma110
+                sel_params[12] = self._multiply_params(base_gamma, sel_dict['h111']) # gamma111
+                sel_params[13] = self._multiply_params(base_gamma, sel_dict['h112']) # gamma112
+                sel_params[14] = self._multiply_params(base_gamma, sel_dict['h120']) # gamma120
+                sel_params[15] = self._multiply_params(base_gamma, sel_dict['h121']) # gamma121
+                sel_params[16] = self._multiply_params(base_gamma, sel_dict['h122']) # gamma122
+                sel_params[17] = self._multiply_params(base_gamma, sel_dict['h200']) # gamma200
+                sel_params[18] = self._multiply_params(base_gamma, sel_dict['h201']) # gamma201
+                sel_params[19] = self._multiply_params(base_gamma, sel_dict['h202']) # gamma202
+                sel_params[20] = self._multiply_params(base_gamma, sel_dict['h210']) # gamma210
+                sel_params[21] = self._multiply_params(base_gamma, sel_dict['h211']) # gamma211
+                sel_params[22] = self._multiply_params(base_gamma, sel_dict['h212']) # gamma212
+                sel_params[23] = self._multiply_params(base_gamma, sel_dict['h220']) # gamma220
+                sel_params[24] = self._multiply_params(base_gamma, sel_dict['h221']) # gamma221
+                sel_params[25] = base_gamma # gamma222
+            elif all(key in sel_dict for key in keys_gammas) and len(sel_dict) == 26:
+                param_names = self.param_names()
+                for i, param_name in enumerate(param_names):
+                    sel_params[i] = sel_dict.get(param_name, 0)
+            else:
+                raise ValueError('For a HEX (2+2+2) ploidy, the selection parameters must be ' 
+                                 'specified as one of the following: \n'    
+                                 '1. 1 key: gamma \n' 
+                                 '2. 26 keys: gamma, h001, h002, h010, h011, h012, h020, h021, h022, \n '
+                                 '            h100, h101, h102, h110, h111, h112, h120, h121, h122, \n ' 
+                                 '            h200, h201, h202, h210, h211, h212, h220, h221. \n'
+                                 '3. 26 keys: gamma001, gamma002, gamma010, gamma011, gamma012, gamma020, gamma021, gamma022, \n ' 
+                                 '            gamma100, gamma101, gamma102, gamma110, gamma111, gamma112, gamma120, gamma121, gamma122, \n ' 
+                                 '            gamma200, gamma201, gamma202, gamma210, gamma211, gamma212, gamma220, gamma221, gamma222.')
+        return sel_params
+
+### ==========================================================================
+### MAIN INTEGRATION FUNCTIONS FOR EACH DIMENSION
+### ==========================================================================
+def one_pop(phi, xx, T, nu=1, sel_dict = {'gamma':0}, ploidyflag=PloidyType.DIPLOID, theta0=1.0, initial_t=0, 
+            frozen=False, deme_ids=None):
+    """
+    Integrate a 1-dimensional phi with polyploids foward.
+
+    Args:
+        phi (array-like): Initial 1-dimensional phi
+        xx (array-like): Grid upon (0,1) overwhich phi is defined.
+            nu, gamma, and theta0 may be functions of time.
+        T (float): Time at which to halt integration
+        nu (float): Population size
+        sel_dict (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag (PloidyType): Specifies the ploidy type of the population and handles selection params.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        beta (float): Breeding ratio, beta=Nf/Nm.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen (bool): If True, population is 'frozen' so that it does not change.
+                In the one_pop case, this is equivalent to not running the
+                integration at all.
+        deme_ids (list[str]): sequence of strings representing the names of demes
+    """
+    phi = phi.copy()
+
+    # For a one population integration, freezing means just not integrating.
+    if frozen:
+        return phi
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+    
+    # vector of ploidy coefficients 
+    # e.g. [0, 1, 0, 0, ..., 0] specifies the current population as autotetraploid
+    # this is more convenient than calling if ploidyflag == PloidyType.xxx all the time
+    ploidy = numpy.zeros(10, dtype=numpy.intc)
+    ploidy[ploidyflag] = 1
+    # unpack the selection parameters from dict to list
+    sel = ploidyflag.pack_sel_params(sel_dict)
+    # since sel is a list, we need to unpack it using *
+    vars_to_check = [nu,*sel,theta0]
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, start_sizes = [nu], deme_ids=deme_ids))
+        return _one_pop_const_params(phi, xx, T, sel, ploidy, nu, theta0, initial_t)
+
+    # for convenience, we'll keep the sel_f as a vector of functions
+    # this avoids explicitly writing all of the selection parameters for all of the ploidy types
+    # and avoids some branching which might slow things down
+    # the computaitonal trade off is that sel_f always has 26 elements, even for a diploid with only 2 selection params
+    sel_f = ensure_1arg_func_vectorized(sel)
+    nu_f = Misc.ensure_1arg_func(nu)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    current_t = initial_t
+    nu = nu_f(current_t)
+    sel = sel_f(current_t)
+
+    dx = numpy.diff(xx)
+
+    demes_hist = [[0, [nu], []]]
+    while current_t < T:
+        dt = _compute_dt(dx,nu,[0],sel,ploidy)
+        this_dt = min(dt, T - current_t)
+
+        # Because this is an implicit method, I need the *next* time's params.
+        # So there's a little inconsistency here, in that I'm estimating dt
+        # using the last timepoints nu,gamma,h.
+        next_t = current_t + this_dt
+        sel = sel_f(next_t)
+        nu = nu_f(next_t)
+        theta0 = theta0_f(next_t)
+       
+        demes_hist.append([next_t, [nu], []])
+
+        if numpy.any(numpy.less([T,nu,theta0], 0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+        
+        _inject_mutations_1D(phi, this_dt, xx, theta0)
+        # Do each step in C, since it will be faster to compute the a,b,c
+        # matrices there.
+        PolyInt.implicit_1Dx(phi, xx, nu, sel, this_dt, 
+                                 use_delj_trick, ploidy)
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def two_pops(phi, xx, T, nu1=1, nu2=1, m12=0, m21=0, sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0},
+            ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, theta0=1, initial_t=0, frozen1=False,
+             frozen2=False, nomut1=False, nomut2=False, enable_cuda_cached=False, deme_ids=None):
+    """
+    Integrate a 2-dimensional phi with polyploids foward.
+    
+    Note:
+        - nu's, gamma's, h's, m's, and theta0 may be functions of time.
+
+        - Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+
+    Args:
+        phi (array-like): Initial 2-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        m12 (float): Migration rates. Note that m12 is the rate *into 1 from 2*.
+        m21 (float): Migration rates. Note that m12 is the rate *into 1 from 2*.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        nomut1 (bool): If True, no new mutations will be introduced into the
+                    given population.
+        nomut2 (bool): If True, no new mutations will be introduced into the
+                    given population.
+        enable_cuda_cached (bool): If True, enable CUDA integration with slower constant
+                        parameter method. Likely useful only for benchmarking.
+        deme_ids (list[str]): sequence of strings representing the names of demes
+    """
+    phi = phi.copy()
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 or frozen2) and (m12 != 0 or m21 != 0):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    # check that at least one of the populations is an allo subgenome,
+    # but the pair has not been specified as allo subgenomes of different types
+    if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+        raise ValueError('Either population 1 and 2 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
+
+    if cuda_enabled and (ploidyflag1 in allo_types or ploidyflag2 in allo_types):
+        if ploidyflag1 != PloidyType.ALLOa or ploidyflag2 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
+        raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+
+    if cuda_enabled and (ploidyflag1 in hex_4_2_types or ploidyflag2 in hex_4_2_types):
+        if ploidyflag1 != PloidyType.HEX_tetra or ploidyflag2 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+
+    # unpack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+
+    # since sel1 and sel2 are lists, we need to unpack them using *
+    vars_to_check = [nu1,nu2,m12,m21,*sel1,*sel2,theta0] 
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        # Constant integration with CUDA turns out to be slower,
+        # so we only use it in specific circumsances.
+        Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
+                           start_sizes = [nu1, nu2], mig = [m12,m21], deme_ids=deme_ids))
+        if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
+            return _two_pops_const_params(phi, xx, T, sel1, sel2, ploidy1, ploidy2, 
+                                          nu1, nu2, m12, m21,theta0, initial_t,
+                                          frozen1, frozen2, nomut1, nomut2)
+
+    yy = xx
+
+    sel1_f = ensure_1arg_func_vectorized(sel1)
+    sel2_f = ensure_1arg_func_vectorized(sel2)
+    nu1_f = Misc.ensure_1arg_func(nu1)
+    nu2_f = Misc.ensure_1arg_func(nu2)
+    m12_f = Misc.ensure_1arg_func(m12)
+    m21_f = Misc.ensure_1arg_func(m21)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):
+        if m12_f(T/2) != m21_f(T/2):
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single homoeologous exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) != nu2_f(T/2):
+            logger.warning('Population 1 and 2 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
+ 
+    if cuda_enabled:
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._two_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, m12_f, m21_f, sel1_f, sel2_f, theta0_f, 
+                frozen1, frozen2, nomut1, nomut2, deme_ids, ploidy1, ploidy2)
+        return phi
+
+    current_t = initial_t
+    nu1,nu2 = nu1_f(current_t), nu2_f(current_t)
+    m12,m21 = m12_f(current_t), m21_f(current_t)
+    sel1, sel2 = sel1_f(current_t), sel2_f(current_t)
+    
+    dx,dy = numpy.diff(xx),numpy.diff(yy)
+
+    demes_hist = [[0, [nu1,nu2], [m12,m21]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21],sel2,ploidy2))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1,nu2 = nu1_f(next_t), nu2_f(next_t)
+        m12,m21 = m12_f(next_t), m21_f(next_t)
+        sel1, sel2 = sel1_f(next_t), sel2_f(next_t)
+        theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2], [m12,m21]])
+
+        if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
+                             nomut1, nomut2)
+        if not frozen1:
+            PolyInt.implicit_2Dx(phi, xx, yy, nu1, m12, sel1,
+                                     this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            PolyInt.implicit_2Dy(phi, xx, yy, nu2, m21, sel2,
+                                     this_dt, use_delj_trick, ploidy2)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def three_pops(phi, xx, T, nu1=1, nu2=1, nu3=1,
+               m12=0, m13=0, m21=0, m23=0, m31=0, m32=0,
+               sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0}, sel_dict3 = {'gamma':0},
+               ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID,
+               theta0=1, initial_t=0, frozen1=False, frozen2=False,
+               frozen3=False, enable_cuda_cached=False, deme_ids=None):
+    """
+    Integrate a 3-dimensional phi with polyploids foward.
+
+    Note:
+        - nu's, gamma's, h's, m's, and theta0 may be functions of time.
+
+        - Generalizing to different grids in different phi directions is
+          straightforward. The tricky part will be later doing the extrapolation
+          correctly.
+
+    Args:
+        phi (array-like): Initial 3-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        nu3 (float): Population sizes
+        m12 (float): Migration rates. Note that m12 is the rate 
+             *into 1 from 2*.
+        m13 (float): Migration rates. Note that m13 is the rate 
+             *into 1 from 3*.
+        m21 (float): Migration rates. Note that m21 is the rate 
+             *into 2 from 1*.
+        m23 (float): Migration rates. Note that m23 is the rate 
+             *into 2 from 3*.
+             m31 (float): Migration rates. Note that m31 is the rate 
+             *into 3 from 1*.
+        m32 (float): Migration rates. Note that m32 is the rate 
+             *into 3 from 2*.
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict3 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag3 (PloidyType): Specifies the ploidy type of the population.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen3 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        enable_cuda_cached (bool): If True, enable CUDA integration with slower constant
+                        parameter method. Likely useful only for benchmarking.
+        deme_ids (list[str]): sequence of strings representing the names of demes
+    """
+    phi = phi.copy()
+
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 !=0 or m32 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    # check that at least one of the last two populations is an allo subgenome,
+    # but the pair has not been specified as allo subgenomes of different types
+    if ({ploidyflag2, ploidyflag3} & allo_types) and ({ploidyflag2, ploidyflag3} != allo_types):
+        raise ValueError('Either population 2 and 3 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the last two populations specified must be a pair of subgenomes.')
+
+    if ploidyflag1 in allo_types:
+        raise ValueError('Population 1 is an allotetraploid subgenome. \n'  
+                         'To model allotetraploids in a 3D model, only the last two populations can be specified as an allotetraploid subgenome.')
+
+    if cuda_enabled and (ploidyflag2 in allo_types or ploidyflag3 in allo_types):
+        if ploidyflag2 != PloidyType.ALLOa or ploidyflag3 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag2, ploidyflag3} & hex_4_2_types) and ({ploidyflag2, ploidyflag3} != hex_4_2_types):
+        raise ValueError('Either population 2 and 3 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+
+    if ploidyflag1 in hex_4_2_types:
+        raise ValueError('Population 1 is a HEX (4+2) subgenome. \n'  
+                         'To model hexaploids in a 3D model, only the last two populations can be specified as a HEX (4+2) subgenome.')
+
+    if cuda_enabled and (ploidyflag2 in hex_4_2_types or ploidyflag3 in hex_4_2_types):
+        if ploidyflag2 != PloidyType.HEX_tetra or ploidyflag3 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
+    hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
+    if ({ploidyflag1, ploidyflag2, ploidyflag3} & hex_2_2_2_types) and (ploidyflag1 != PloidyType.HEXa or ploidyflag2 != PloidyType.HEXb or ploidyflag3 != PloidyType.HEXc):    
+        raise ValueError('Either population 1, 2, or 3 is specified as a HEX (2+2+2) subgenome. \n'
+                         'But the other two are not or are specified in an incorrect order. \n'
+                         'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
+                         'Specficially, pop 1 must be HEXa, pop 2 must be HEXb, and pop 3 must be HEXc.')
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy3 = numpy.zeros(10, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+    ploidy3[ploidyflag3] = 1
+
+    # pack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+    sel3 = ploidyflag3.pack_sel_params(sel_dict3)
+
+    # since sel1,2,3 are lists, we need to unpack them using *
+    vars_to_check = [nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,*sel1,*sel2,*sel3,theta0]
+    if numpy.all([numpy.isscalar(var) for var in vars_to_check]):
+        if not cuda_enabled or (cuda_enabled and enable_cuda_cached):
+            Demes.cache.append(Demes.IntegrationConst(duration = T-initial_t, 
+                               start_sizes = [nu1, nu2, nu3],
+                               mig = [m12, m13, m21, m23, m31, m32], deme_ids=deme_ids))
+            return _three_pops_const_params(phi, xx, T, 
+                                            sel1, sel2, sel3,
+                                            ploidy1, ploidy2, ploidy3,
+                                            nu1, nu2, nu3,
+                                            m12, m13, m21, m23, m31, m32,
+                                            theta0, initial_t,
+                                            frozen1, frozen2, frozen3)
+    zz = yy = xx
+
+    nu1_f, nu2_f, nu3_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2), Misc.ensure_1arg_func(nu3)
+    m12_f, m13_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13)
+    m21_f, m23_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23)
+    m31_f, m32_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32)
+    sel1_f, sel2_f, sel3_f = ensure_1arg_func_vectorized(sel1), ensure_1arg_func_vectorized(sel2), ensure_1arg_func_vectorized(sel3)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    if (ploidyflag2 in allo_types) or (ploidyflag3 in allo_types) or (ploidyflag2 in hex_4_2_types) or (ploidyflag3 in hex_4_2_types):
+        if m23_f(T/2) != m32_f(T/2):
+            raise ValueError('Population 2 or 3 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu2_f(T/2) != nu3_f(T/2):
+            logger.warning('Population 2 or 3 is a polyploid subgenome, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel2_f(T/2) != sel3_f(T/2)):
+            raise ValueError('Population 2 or 3 is a polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag1 in hex_2_2_2_types) and (ploidyflag2 in hex_2_2_2_types) and (ploidyflag3 in hex_2_2_2_types):
+        if m12_f(T/2) != m21_f(T/2) or m13_f(T/2) != m31_f(T/2) or m23_f(T/2) != m32_f(T/2):
+            raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All pairs of subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) !=  nu2_f(T/2) or nu1_f(T/2) != nu3_f(T/2) or nu2_f(T/2) != nu3_f(T/2):
+            logger.warning('Population 1, 2, or 3 is a polyploid subgenome, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)) or numpy.any(sel1_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel3_f(T/2)):
+            raise ValueError('Population 1, 2, or 3 is a polyploid subgenome. All three populations must have the same selection parameters.')
+
+    if cuda_enabled:
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._three_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, nu3_f, m12_f, m13_f, m21_f, m23_f, m31_f, m32_f, 
+                sel1_f, sel2_f, sel3_f, 
+                theta0_f, frozen1, frozen2, frozen3, deme_ids,
+                ploidy1, ploidy2, ploidy3)
+        return phi
+
+    current_t = initial_t
+    nu1,nu2,nu3 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t)
+    m12,m13 = m12_f(current_t), m13_f(current_t)
+    m21,m23 = m21_f(current_t), m23_f(current_t)
+    m31,m32 = m31_f(current_t), m32_f(current_t)
+    sel1, sel2, sel3 = sel1_f(current_t), sel2_f(current_t), sel3_f(current_t)
+    
+    dx,dy,dz = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz)
+    
+    demes_hist = [[0, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21,m23],sel2,ploidy2),
+                 _compute_dt(dz,nu3,[m31,m32],sel3,ploidy3))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1,nu2,nu3 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t)
+        m12,m13 = m12_f(next_t), m13_f(next_t)
+        m21,m23 = m21_f(next_t), m23_f(next_t)
+        m31,m32 = m31_f(next_t), m32_f(next_t)
+        sel1, sel2, sel3 = sel1_f(next_t), sel2_f(next_t), sel3_f(next_t)
+        theta0 = theta0_f(next_t)
+        demes_hist.append([next_t, [nu1,nu2,nu3], [m12,m13,m21,m23,m31,m32]])
+
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
+                             frozen1, frozen2, frozen3)
+        if not frozen1:
+            PolyInt.implicit_3Dx(phi, xx, yy, zz, nu1, m12, m13, 
+                                     sel1, this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            PolyInt.implicit_3Dy(phi, xx, yy, zz, nu2, m21, m23, 
+                                     sel2, this_dt, use_delj_trick, ploidy2)
+        if not frozen3:
+            PolyInt.implicit_3Dz(phi, xx, yy, zz, nu3, m31, m32, 
+                                     sel3, this_dt, use_delj_trick, ploidy3)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def four_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1,
+              m12=0, m13=0, m14=0, m21=0, m23=0, m24=0, 
+              m31=0, m32=0, m34=0, m41=0, m42=0, m43=0,
+              sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0}, sel_dict3 = {'gamma':0}, sel_dict4 = {'gamma':0},
+              ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID, ploidyflag4=PloidyType.DIPLOID,
+              theta0=1, initial_t=0, 
+              frozen1=False, frozen2=False, frozen3=False, frozen4=False, deme_ids=None):
+    """
+    Integrate a 4-dimensional phi with polyploids foward.
+
+    Note:
+        - nu's, gamma's, m's, and theta0 may be functions of time.
+
+        - Generalizing to different grids in different phi directions is
+            straightforward. The tricky part will be later doing the extrapolation
+            correctly.
+
+    Args:
+        phi (array-like): Initial 4-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        nu3 (float): Population sizes
+        nu4 (float): Population sizes
+        m12 (float): Migration rates. Note that m12 is the rate 
+             *into 1 from 2*.
+        m13 (float): Migration rates. Note that m13 is the rate 
+             *into 1 from 3*.
+        m14 (float): Migration rates. Note that m14 is the rate
+             *into 1 from 4*.
+        m21 (float): Migration rates. Note that m21 is the rate 
+             *into 2 from 1*.
+        m23 (float): Migration rates. Note that m23 is the rate 
+             *into 2 from 3*.
+        m24 (float): Migration rates. Note that m24 is the rate
+             *into 2 from 4*.
+        m31 (float): Migration rates. Note that m31 is the rate 
+             *into 3 from 1*.
+        m32 (float): Migration rates. Note that m32 is the rate 
+             *into 3 from 2*.
+        m34 (float): Migration rates. Note that m34 is the rate
+             *into 3 from 4*.
+        m41 (float): Migration rates. Note that m41 is the rate
+             *into 4 from 1*.
+        m42 (float): Migration rates. Note that m42 is the rate
+             *into 4 from 2*.
+        m43 (float): Migration rates. Note that m43 is the rate
+             *into 4 from 3*.
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict3 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict4 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag3 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag4 (PloidyType): Specifies the ploidy type of the population.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen3 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen4 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        deme_ids (list[str]): sequence of strings representing the names of demes
+    """
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0 or m34 != 0 or m43 != 0))\
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 !=0 or m42 != 0 or m34 != 0 or m43 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    # here, we allow for the two allotetraploid populations (so two pairs of subgenomes) to be modeled
+    # to do so, we have to enforce that the first two populations form a pair of subgenomes AND 
+    # that the last two populations form a pair of subgenomes
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+        raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag1 in allo_types or ploidyflag2 in allo_types):
+        if ploidyflag1 != PloidyType.ALLOa or ploidyflag2 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+    
+    if ({ploidyflag3, ploidyflag4} & allo_types) and ({ploidyflag3, ploidyflag4} != allo_types):
+        raise ValueError('Either population 3 or 4 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag3 in allo_types or ploidyflag4 in allo_types):
+        if ploidyflag3 != PloidyType.ALLOa or ploidyflag4 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
+        raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag1 in hex_4_2_types or ploidyflag2 in hex_4_2_types):
+        if ploidyflag1 != PloidyType.HEX_tetra or ploidyflag2 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
+    if ({ploidyflag3, ploidyflag4} & hex_4_2_types) and ({ploidyflag3, ploidyflag4} != hex_4_2_types):
+        raise ValueError('Either population 3 and 4 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag3 in hex_4_2_types or ploidyflag4 in hex_4_2_types):
+        if ploidyflag3 != PloidyType.HEX_tetra or ploidyflag4 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
+    hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
+    if ({ploidyflag2, ploidyflag3, ploidyflag4} & hex_2_2_2_types) and (ploidyflag2 != PloidyType.HEXa or ploidyflag3 != PloidyType.HEXb or ploidyflag4 != PloidyType.HEXc):    
+        raise ValueError('Either population 2, 3, or 4 is specified as a HEX (2+2+2) subgenome. \n'
+                         'But the other two are not or are specified in an incorrect order. \n'
+                         'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
+                         'Specficially, for a 4D model, pop 2 must be HEXa, pop 3 must be HEXb, and pop 4 must be HEXc.')
+    
+    if ploidyflag1 in hex_2_2_2_types:
+        raise ValueError('Population 1 is a HEX (2+2+2) subgenome. \n'  
+                         'To model hexaploids in a 4D model, only the last three populations can be specified as a HEX (2+2+2) subgenome.')
+
+    aa = zz = yy = xx
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy3 = numpy.zeros(10, numpy.intc)
+    ploidy4 = numpy.zeros(10, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+    ploidy3[ploidyflag3] = 1
+    ploidy4[ploidyflag4] = 1
+
+    # pack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+    sel3 = ploidyflag3.pack_sel_params(sel_dict3)
+    sel4 = ploidyflag4.pack_sel_params(sel_dict4)
+
+    nu1_f, nu2_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2)
+    nu3_f, nu4_f = Misc.ensure_1arg_func(nu3), Misc.ensure_1arg_func(nu4)
+    m12_f, m13_f, m14_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13), Misc.ensure_1arg_func(m14)
+    m21_f, m23_f, m24_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23), Misc.ensure_1arg_func(m24)
+    m31_f, m32_f, m34_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32), Misc.ensure_1arg_func(m34)
+    m41_f, m42_f, m43_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    sel1_f, sel2_f = ensure_1arg_func_vectorized(sel1), ensure_1arg_func_vectorized(sel2)
+    sel3_f, sel4_f = ensure_1arg_func_vectorized(sel3), ensure_1arg_func_vectorized(sel4)
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):  
+        if m12_f(T/2) != m21_f(T/2):
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) != nu2_f(T/2):
+            logger.warning('Population 1 and 2 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
+            raise ValueError('Population 1 or 2 is polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag3 in allo_types) or (ploidyflag4 in allo_types) or (ploidyflag3 in hex_4_2_types) or (ploidyflag4 in hex_4_2_types):
+        if m34_f(T/2) != m43_f(T/2):
+            raise ValueError('Population 3 or 4 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu3_f(T/2) != nu4_f(T/2):
+            logger.warning('Population 3 and 4 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel3_f(T/2) != sel4_f(T/2)):
+            raise ValueError('Population 3 or 4 is a polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag2 in hex_2_2_2_types) and (ploidyflag3 in hex_2_2_2_types) and (ploidyflag4 in hex_2_2_2_types):
+        if m23_f(T/2) != m32_f(T/2) or m24_f(T/2) != m42_f(T/2) or m34_f(T/2) != m43_f(T/2):
+            raise ValueError('Population 2, 3, or 4 is a polyploid subgenome. All pairs of subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu2_f(T/2) !=  nu3_f(T/2) or nu2_f(T/2) != nu4_f(T/2) or nu3_f(T/2) != nu4_f(T/2):
+            logger.warning('Population 2, 3, or 4 is a polyploid subgenome, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel2_f(T/2) != sel3_f(T/2)) or numpy.any(sel2_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel4_f(T/2)):
+            raise ValueError('Population 2, 3, or 4 is a polyploid subgenome. All three populations must have the same selection parameters.')
+
+
+    if cuda_enabled:
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._four_pops_temporal_params(phi, xx, T, initial_t,
+                nu1_f, nu2_f, nu3_f, nu4_f, m12_f, m13_f, m14_f, m21_f, m23_f, m24_f, m31_f, m32_f, m34_f,
+                m41_f, m42_f, m43_f, sel1_f, sel2_f, sel3_f, sel4_f, 
+                theta0_f, frozen1, frozen2, frozen3, frozen4, deme_ids,
+                ploidy1, ploidy2, ploidy3, ploidy4)
+        return phi
+
+    current_t = initial_t
+    nu1, nu2, nu3, nu4 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t)
+    m12, m13, m14 = m12_f(current_t), m13_f(current_t), m14_f(current_t)
+    m21, m23, m24 = m21_f(current_t), m23_f(current_t), m24_f(current_t)
+    m31, m32, m34 = m31_f(current_t), m32_f(current_t), m34_f(current_t)
+    m41, m42, m43 = m41_f(current_t), m42_f(current_t), m43_f(current_t)
+    sel1, sel2, sel3, sel4 = sel1_f(current_t), sel2_f(current_t), sel3_f(current_t), sel4_f(current_t)
+    
+    dx,dy,dz,da = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa)
+    demes_hist = [[0, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13,m14],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21,m23,m24],sel2,ploidy2),
+                 _compute_dt(dz,nu3,[m31,m32,m34],sel3,ploidy3),
+                 _compute_dt(da,nu4,[m41,m42,m43],sel4,ploidy4))         
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1, nu2, nu3, nu4 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t)
+        m12, m13, m14 = m12_f(next_t), m13_f(next_t), m14_f(next_t)
+        m21, m23, m24 = m21_f(next_t), m23_f(next_t), m24_f(next_t)
+        m31, m32, m34 = m31_f(next_t), m32_f(next_t), m34_f(next_t)
+        m41, m42, m43 = m41_f(next_t), m42_f(next_t), m43_f(next_t)
+        sel1, sel2, sel3, sel4 = sel1_f(next_t), sel2_f(next_t), sel3_f(next_t), sel4_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4], [m12,m13,m14,m21,m23,m24,m31,m32,m34,m41,m42,m43]])
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,m12,m13,m14,m21,
+                                 m23, m24, m31, m32, m34, m41, m42, m43, theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3,nu4], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_4D(phi, this_dt, xx, yy, zz, aa, theta0,
+                             frozen1, frozen2, frozen3, frozen4)
+        if not frozen1:
+            PolyInt.implicit_4Dx(phi, xx, yy, zz, aa, nu1, m12, m13, m14,
+                                     sel1, this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            PolyInt.implicit_4Dy(phi, xx, yy, zz, aa, nu2, m21, m23, m24,
+                                     sel2, this_dt, use_delj_trick, ploidy2)
+        if not frozen3:
+            PolyInt.implicit_4Dz(phi, xx, yy, zz, aa, nu3, m31, m32, m34,
+                                     sel3, this_dt, use_delj_trick, ploidy3)
+        if not frozen4:
+            PolyInt.implicit_4Da(phi, xx, yy, zz, aa, nu4, m41, m42, m43,
+                                     sel4, this_dt, use_delj_trick, ploidy4)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+def five_pops(phi, xx, T, nu1=1, nu2=1, nu3=1, nu4=1, nu5=1,
+              m12=0, m13=0, m14=0, m15=0, m21=0, m23=0, m24=0, m25=0,   
+              m31=0, m32=0, m34=0, m35=0, m41=0, m42=0, m43=0, m45=0,
+              m51=0, m52=0, m53=0, m54=0,
+              sel_dict1 = {'gamma':0}, sel_dict2 = {'gamma':0}, sel_dict3 = {'gamma':0}, 
+              sel_dict4 = {'gamma':0}, sel_dict5 = {'gamma':0},
+              ploidyflag1=PloidyType.DIPLOID, ploidyflag2=PloidyType.DIPLOID, ploidyflag3=PloidyType.DIPLOID, 
+              ploidyflag4=PloidyType.DIPLOID, ploidyflag5=PloidyType.DIPLOID,
+              theta0=1, initial_t=0, 
+              frozen1=False, frozen2=False, frozen3=False, frozen4=False, frozen5=False, deme_ids=None):
+    """
+    Integrate a 5-dimensional phi with polyploids foward.
+
+    Note:
+        - nu's, gamma's, m's, and theta0 may be functions of time.
+
+        - Generalizing to different grids in different phi directions is
+            straightforward. The tricky part will be later doing the extrapolation
+            correctly.
+
+    Args:
+        phi (array-like): Initial 5-dimensional phi
+        xx (array-like): 1-dimensional grid upon (0,1) overwhich phi is defined. It is assumed
+            that this grid is used in all dimensions.
+        T (float): Time at which to halt integration
+        nu1 (float): Population sizes
+        nu2 (float): Population sizes
+        nu3 (float): Population sizes
+        nu4 (float): Population sizes
+        nu5 (float): Population sizes
+        m12 (float): Migration rates. Note that m12 is the rate 
+             *into 1 from 2*.
+        m13 (float): Migration rates. Note that m13 is the rate 
+             *into 1 from 3*.
+        m14 (float): Migration rates. Note that m14 is the rate
+             *into 1 from 4*.
+        m15 (float): Migration rates. Note that m15 is the rate
+             *into 1 from 5*.
+        m21 (float): Migration rates. Note that m21 is the rate 
+             *into 2 from 1*.
+        m23 (float): Migration rates. Note that m23 is the rate 
+             *into 2 from 3*.
+        m24 (float): Migration rates. Note that m24 is the rate
+             *into 2 from 4*.
+        m25 (float): Migration rates. Note that m25 is the rate
+             *into 2 from 5*.
+        m31 (float): Migration rates. Note that m31 is the rate 
+             *into 3 from 1*.
+        m32 (float): Migration rates. Note that m32 is the rate 
+             *into 3 from 2*.
+        m34 (float): Migration rates. Note that m34 is the rate
+             *into 3 from 4*.
+        m35 (float): Migration rates. Note that m35 is the rate
+             *into 3 from 5*.
+        m41 (float): Migration rates. Note that m41 is the rate
+             *into 4 from 1*.
+        m42 (float): Migration rates. Note that m42 is the rate
+             *into 4 from 2*.
+        m43 (float): Migration rates. Note that m43 is the rate
+             *into 4 from 3*.
+        m45 (float): Migration rates. Note that m45 is the rate
+             *into 4 from 5*.
+        m51 (float): Migration rates. Note that m51 is the rate
+             *into 5 from 1*.
+        m52 (float): Migration rates. Note that m52 is the rate
+             *into 5 from 2*.
+        m53 (float): Migration rates. Note that m53 is the rate
+             *into 5 from 3*.
+        m54 (float): Migration rates. Note that m54 is the rate
+             *into 5 from 4*.
+        sel_dict1 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict2 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict3 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict4 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        sel_dict5 (dictionary): Selection parameters (i.e. gammas and dominance coefficients) 
+                for *all* segregating alleles.
+        ploidyflag1 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag2 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag3 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag4 (PloidyType): Specifies the ploidy type of the population.
+        ploidyflag5 (PloidyType): Specifies the ploidy type of the population.
+        theta0 (float): Propotional to ancestral size. Typically constant.
+        initial_t (float): Time at which to start integration. (Note that this only matters
+                if one of the demographic parameters is a function of time.)
+        frozen1 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen2 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen3 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen4 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        frozen5 (bool): If True, the corresponding population is "frozen" in time
+                        (no new mutations and no drift), so the resulting spectrum
+                        will correspond to an ancient DNA sample from that
+                        population.
+        deme_ids (list[str])): sequence of strings representing the names of demes
+    """
+    if T - initial_t == 0:
+        return phi
+    elif T - initial_t < 0:
+        raise ValueError('Final integration time T (%f) is less than '
+                         'intial_time (%f). Integration cannot be run '
+                         'backwards.' % (T, initial_t))
+
+    if (frozen1 and (m12 != 0 or m21 != 0 or m13 !=0 or m31 != 0 or m41 != 0 or m14 != 0))\
+       or (frozen2 and (m12 != 0 or m21 != 0 or m23 != 0 or m32 != 0 or m24 != 0 or m42 != 0))\
+       or (frozen3 and (m13 != 0 or m31 != 0 or m23 !=0 or m32 != 0 or m34 != 0 or m43 != 0))\
+       or (frozen4 and (m14 != 0 or m41 != 0 or m24 !=0 or m42 != 0 or m34 != 0 or m43 != 0)):
+        raise ValueError('Population cannot be frozen and have non-zero '
+                         'migration to or from it.')
+    
+    # here, we allow for the two allotetraploid populations (so two pairs of subgenomes) to be modeled
+    # to do so, we have to enforce that the first two populations form a pair of subgenomes AND 
+    # that the last two populations form a pair of subgenomes
+    # this also means that the middle population cannot be allotetraploid
+    allo_types = {PloidyType.ALLOa, PloidyType.ALLOb}
+    if ({ploidyflag1, ploidyflag2} & allo_types) and ({ploidyflag1, ploidyflag2} != allo_types):
+        raise ValueError('Either population 1 or 2 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag1 in allo_types or ploidyflag2 in allo_types):
+        if ploidyflag1 != PloidyType.ALLOa or ploidyflag2 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
+    if ({ploidyflag4, ploidyflag5} & allo_types) and ({ploidyflag4, ploidyflag5} != allo_types):
+        raise ValueError('Either population 4 or 5 is specified as an allotetraploid subgenome. \n' 
+                         'But the other is not or both are specified as a or b subgenomes. \n'
+                         'To model allotetraploids, the first two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag4 in allo_types or ploidyflag5 in allo_types):
+        if ploidyflag4 != PloidyType.ALLOa or ploidyflag5 != PloidyType.ALLOb:
+            raise ValueError('CUDA integration for allotetraploids requires'
+                             'the subgenomes to be passed in the a, b order.')
+
+    if ploidyflag3 in allo_types:
+        raise ValueError('Population 3 is an allotetraploid subgenome. \n'  
+                         'To model allotetraploids in a 5D model, only the first two or last two populations can be specified as allotetraploid.')
+
+    hex_4_2_types = {PloidyType.HEX_tetra, PloidyType.HEX_dip}
+    if ({ploidyflag1, ploidyflag2} & hex_4_2_types) and ({ploidyflag1, ploidyflag2} != hex_4_2_types):
+        raise ValueError('Either population 1 and 2 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag1 in hex_4_2_types or ploidyflag2 in hex_4_2_types):
+        if ploidyflag1 != PloidyType.HEX_tetra or ploidyflag2 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
+    if ({ploidyflag4, ploidyflag5} & hex_4_2_types) and ({ploidyflag4, ploidyflag5} != hex_4_2_types):
+        raise ValueError('Either population 4 and 5 is specified as a HEX (4+2) subgenome. \n'
+                         'But the other is not or both are specified as tetra or dip subgenomes. \n'
+                         'To model hexaploids (4+2), the last two populations specified must be a pair of subgenomes.')
+    if cuda_enabled and (ploidyflag4 in hex_4_2_types or ploidyflag5 in hex_4_2_types):
+        if ploidyflag4 != PloidyType.HEX_tetra or ploidyflag5 != PloidyType.HEX_dip:
+            raise ValueError('CUDA integration for alloautohexaploids requires'
+                             'the subgenomes to be passed in the tetraploid, diploid order.')
+
+    if ploidyflag3 in hex_4_2_types:
+        raise ValueError('Population 3 is a HEX (4+2) subgenome. \n'  
+                         'To model hexaploids in a 5D model, only the first two or last two populations can be specified as a HEX (4+2) subgenome.')
+
+    hex_2_2_2_types = {PloidyType.HEXa, PloidyType.HEXb, PloidyType.HEXc}
+    if ({ploidyflag3, ploidyflag4, ploidyflag5} & hex_2_2_2_types) and (ploidyflag3 != PloidyType.HEXa or ploidyflag4 != PloidyType.HEXb or ploidyflag5 != PloidyType.HEXc):    
+        raise ValueError('Either population 3, 4, or 5 is specified as a HEX (2+2+2) subgenome. \n'
+                         'But the other two are not or are specified in an incorrect order. \n'
+                         'To model hexaploids (2+2+2), the last three populations specified must be a triplet of subgenomes. \n' \
+                         'Specficially, for a 5D model, pop 3 must be HEXa, pop 4 must be HEXb, and pop 5 must be HEXc.')
+    
+    if ploidyflag1 in hex_2_2_2_types or ploidyflag2 in hex_2_2_2_types:
+        raise ValueError('Population 1 or 2 is a HEX (2+2+2) subgenome. \n'  
+                         'To model hexaploids in a 5D model, only the last three populations can be specified as a HEX (2+2+2) subgenome.')
+
+    bb = aa = zz = yy = xx
+
+    # create ploidy vectors with C integers
+    ploidy1 = numpy.zeros(10, numpy.intc)
+    ploidy2 = numpy.zeros(10, numpy.intc)
+    ploidy3 = numpy.zeros(10, numpy.intc)
+    ploidy4 = numpy.zeros(10, numpy.intc)
+    ploidy5 = numpy.zeros(10, numpy.intc)
+    ploidy1[ploidyflag1] = 1
+    ploidy2[ploidyflag2] = 1
+    ploidy3[ploidyflag3] = 1
+    ploidy4[ploidyflag4] = 1
+    ploidy5[ploidyflag5] = 1
+
+    # pack selection params from dict to list
+    sel1 = ploidyflag1.pack_sel_params(sel_dict1)
+    sel2 = ploidyflag2.pack_sel_params(sel_dict2)
+    sel3 = ploidyflag3.pack_sel_params(sel_dict3)
+    sel4 = ploidyflag4.pack_sel_params(sel_dict4)
+    sel5 = ploidyflag5.pack_sel_params(sel_dict5)
+
+    nu1_f, nu2_f = Misc.ensure_1arg_func(nu1), Misc.ensure_1arg_func(nu2)
+    nu3_f, nu4_f = Misc.ensure_1arg_func(nu3), Misc.ensure_1arg_func(nu4)
+    nu5_f = Misc.ensure_1arg_func(nu5)
+    m12_f, m13_f, m14_f, m15_f = Misc.ensure_1arg_func(m12), Misc.ensure_1arg_func(m13), Misc.ensure_1arg_func(m14), Misc.ensure_1arg_func(m15)
+    m21_f, m23_f, m24_f, m25_f = Misc.ensure_1arg_func(m21), Misc.ensure_1arg_func(m23), Misc.ensure_1arg_func(m24), Misc.ensure_1arg_func(m25)
+    m31_f, m32_f, m34_f, m35_f = Misc.ensure_1arg_func(m31), Misc.ensure_1arg_func(m32), Misc.ensure_1arg_func(m34), Misc.ensure_1arg_func(m35)
+    m41_f, m42_f, m43_f, m45_f = Misc.ensure_1arg_func(m41), Misc.ensure_1arg_func(m42), Misc.ensure_1arg_func(m43), Misc.ensure_1arg_func(m45)
+    m51_f, m52_f, m53_f, m54_f = Misc.ensure_1arg_func(m51), Misc.ensure_1arg_func(m52), Misc.ensure_1arg_func(m53), Misc.ensure_1arg_func(m54)
+    theta0_f = Misc.ensure_1arg_func(theta0)
+
+    sel1_f, sel2_f = ensure_1arg_func_vectorized(sel1), ensure_1arg_func_vectorized(sel2)
+    sel3_f, sel4_f = ensure_1arg_func_vectorized(sel3), ensure_1arg_func_vectorized(sel4)
+    sel5_f = ensure_1arg_func_vectorized(sel5)
+
+    if (ploidyflag1 in allo_types) or (ploidyflag2 in allo_types) or (ploidyflag1 in hex_4_2_types) or (ploidyflag2 in hex_4_2_types):
+        if m12_f(T/2) != m21_f(T/2):
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu1_f(T/2) != nu2_f(T/2):
+            logger.warning('Population 1 and 2 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel1_f(T/2) != sel2_f(T/2)):
+            raise ValueError('Population 1 or 2 is a polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag4 in allo_types) or (ploidyflag5 in allo_types) or (ploidyflag4 in hex_4_2_types) or (ploidyflag5 in hex_4_2_types):
+        if m45_f(T/2) != m54_f(T/2):
+            raise ValueError('Population 4 or 5 is a polyploid subgenome. Both subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu4_f(T/2) != nu5_f(T/2):
+            logger.warning('Population 4 and 5 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel4_f(T/2) != sel5_f(T/2)):
+            raise ValueError('Population 4 or 5 is a polyploid subgenome. Both populations must have the same selection parameters.')
+
+    if (ploidyflag3 in hex_2_2_2_types) and (ploidyflag4 in hex_2_2_2_types) and (ploidyflag5 in hex_2_2_2_types):
+        if m34_f(T/2) != m43_f(T/2) or m35_f(T/2) != m53_f(T/2) or m45_f(T/2) != m54_f(T/2):
+            raise ValueError('Population 3, 4, or 5 is a polyploid subgenome. All pairs of subgenomes must have the same migration rate. \n' 
+                                 'Here, the migration rates jointly specify a single exchange parameter and, therefore, must be equal. \n'
+                                 'See Blischak et al. (2023) for details.')
+        if nu3_f(T/2) !=  nu4_f(T/2) or nu3_f(T/2) != nu5_f(T/2) or nu4_f(T/2) != nu5_f(T/2):
+            logger.warning('Population 3, 4, and 5 are polyploid subgenomes, but do not have the same effective population size. \n'
+                             'Generally, polyploid subgenomes would have the same population size. \n'
+                             'Could the model be misspecified?')
+        if numpy.any(sel3_f(T/2) != sel4_f(T/2)) or numpy.any(sel3_f(T/2) != sel5_f(T/2)) or numpy.any(sel4_f(T/2) != sel5_f(T/2)):
+            raise ValueError('Population 3, 4, or 5 is a polyploid subgenome. All three populations must have the same selection parameters.')
+
+    
+    if cuda_enabled:
+        import dadi.Polyploidy.cuda
+        phi = dadi.Polyploidy.cuda.Integration._five_pops_temporal_params(phi, xx, T, initial_t, 
+            nu1_f, nu2_f, nu3_f, nu4_f, nu5_f,
+            m12_f, m13_f, m14_f, m15_f, m21_f, m23_f, m24_f, m25_f, m31_f, m32_f, m34_f, m35_f,
+            m41_f, m42_f, m43_f, m45_f, m51_f, m52_f, m53_f, m54_f, 
+            sel1_f, sel2_f, sel3_f, sel4_f, sel5_f,
+            theta0_f, frozen1, frozen2, frozen3, frozen4, frozen5, deme_ids,
+            ploidy1, ploidy2, ploidy3, ploidy4, ploidy5)
+        return phi
+
+    current_t = initial_t
+    nu1, nu2, nu3, nu4, nu5 = nu1_f(current_t), nu2_f(current_t), nu3_f(current_t), nu4_f(current_t), nu5_f(current_t)
+    m12, m13, m14, m15 = m12_f(current_t), m13_f(current_t), m14_f(current_t), m15_f(current_t)
+    m21, m23, m24, m25 = m21_f(current_t), m23_f(current_t), m24_f(current_t), m25_f(current_t)
+    m31, m32, m34, m35 = m31_f(current_t), m32_f(current_t), m34_f(current_t), m35_f(current_t)
+    m41, m42, m43, m45 = m41_f(current_t), m42_f(current_t), m43_f(current_t), m45_f(current_t)
+    m51, m52, m53, m54 = m51_f(current_t), m52_f(current_t), m53_f(current_t), m54_f(current_t)
+    sel1, sel2, sel3, sel4, sel5 = sel1_f(current_t), sel2_f(current_t), sel3_f(current_t), sel4_f(current_t), sel5_f(current_t)
+    
+    dx,dy,dz,da,db = numpy.diff(xx),numpy.diff(yy),numpy.diff(zz),numpy.diff(aa),numpy.diff(bb)
+    demes_hist = [[0, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]]]
+    while current_t < T:
+        dt = min(_compute_dt(dx,nu1,[m12,m13,m14,m15],sel1,ploidy1),
+                 _compute_dt(dy,nu2,[m21,m23,m24,m25],sel2,ploidy2),
+                 _compute_dt(dz,nu3,[m31,m32,m34,m35],sel3,ploidy3),
+                 _compute_dt(da,nu4,[m41,m42,m43,m45],sel4,ploidy4),
+                 _compute_dt(db,nu5,[m51,m52,m53,m54],sel5,ploidy5))
+        this_dt = min(dt, T - current_t)
+
+        next_t = current_t + this_dt
+
+        nu1, nu2, nu3, nu4, nu5 = nu1_f(next_t), nu2_f(next_t), nu3_f(next_t), nu4_f(next_t), nu5_f(next_t)
+        m12, m13, m14, m15 = m12_f(next_t), m13_f(next_t), m14_f(next_t), m15_f(next_t)
+        m21, m23, m24, m25 = m21_f(next_t), m23_f(next_t), m24_f(next_t), m25_f(next_t)
+        m31, m32, m34, m35 = m31_f(next_t), m32_f(next_t), m34_f(next_t), m35_f(next_t)
+        m41, m42, m43, m45 = m41_f(next_t), m42_f(next_t), m43_f(next_t), m45_f(next_t)
+        m51, m52, m53, m54 = m51_f(next_t), m52_f(next_t), m53_f(next_t), m54_f(next_t)
+        sel1, sel2, sel3, sel4, sel5 = sel1_f(next_t), sel2_f(next_t), sel3_f(next_t), sel4_f(next_t), sel5_f(next_t)
+        theta0 = theta0_f(next_t)
+
+        demes_hist.append([next_t, [nu1,nu2,nu3,nu4,nu5], [m12,m13,m14,m15,m21,m23,m24,m25,m31,m32,m34,m35,m41,m42,m43,m45,m51,m52,m53,m54]])
+        if numpy.any(numpy.less([T,nu1,nu2,nu3,nu4,nu5,m12,m13,m14,m15,m21,
+                                 m23,m24,m25, m31,m32,m34,m35, m41,m42,m43,m45,
+                                 m51,m52,m53,m54, theta0],
+                                0)):
+            raise ValueError('A time, population size, migration rate, or '
+                             'theta0 is < 0. Has the model been mis-specified?')
+        if numpy.any(numpy.equal([nu1,nu2,nu3,nu4,nu5], 0)):
+            raise ValueError('A population size is 0. Has the model been '
+                             'mis-specified?')
+
+        _inject_mutations_5D(phi, this_dt, xx, yy, zz, aa, bb, theta0,
+                             frozen1, frozen2, frozen3, frozen4, frozen5)
+        if not frozen1:
+            PolyInt.implicit_5Dx(phi, xx, yy, zz, aa, bb, nu1, m12, m13, m14, m15,
+                                     sel1, this_dt, use_delj_trick, ploidy1)
+        if not frozen2:
+            PolyInt.implicit_5Dy(phi, xx, yy, zz, aa, bb, nu2, m21, m23, m24, m25,
+                                     sel2, this_dt, use_delj_trick, ploidy2)
+        if not frozen3:
+            PolyInt.implicit_5Dz(phi, xx, yy, zz, aa, bb, nu3, m31, m32, m34, m35,
+                                     sel3, this_dt, use_delj_trick, ploidy3)
+        if not frozen4:
+            PolyInt.implicit_5Da(phi, xx, yy, zz, aa, bb, nu4, m41, m42, m43, m45,
+                                     sel4, this_dt, use_delj_trick, ploidy4)
+        if not frozen5:
+            PolyInt.implicit_5Db(phi, xx, yy, zz, aa, bb, nu5, m51, m52, m53, m54,
+                                     sel5, this_dt, use_delj_trick, ploidy5)
+
+        current_t = next_t
+    Demes.cache.append(Demes.IntegrationNonConst(history = demes_hist, deme_ids=deme_ids))
+    return phi
+
+# ============================================================================
+# PYTHON FUNCTIONS AND CONST_PARAMS INTEGRATION
+# ============================================================================
+# Python versions of the popgen functions
+# diploid
+def _Vfunc(x, nu):
+    return 1./nu * x*(1-x) 
+def _Mfunc1D(x, gamma, h):
+    return gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+def _Mfunc2D(x,y, mxy, gamma, h):
+    return mxy * (y-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+def _Mfunc3D(x,y,z, mxy,mxz, gamma, h):
+    return mxy * (y-x) + mxz * (z-x) + gamma * 2*(h + (1-2*h)*x) * x*(1-x)
+# autotetraploid
+def _Vfunc_tetra(x, nu):
+    return 1./nu * x*(1-x) / 2.
+def _Mfunc1D_auto(x, gam1, gam2, gam3, gam4):
+    poly =  (((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+              (9*gam1 - 9*gam2 + 3*gam3)) * x +
+              (-6*gam1 + 3*gam2)) * x + gam1
+    return x * (1 - x) * 2 * poly
+def _Mfunc2D_auto(x, y, mxy, gam1, gam2, gam3, gam4):
+    poly =  (((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+              (9*gam1 - 9*gam2 + 3*gam3)) * x +
+              (-6*gam1 + 3*gam2)) * x + gam1
+    return mxy * (y-x) + x*(1-x) * 2 * poly
+def _Mfunc3D_auto(x, y, z, mxy, mxz, gam1, gam2, gam3, gam4):
+    poly =  (((-4*gam1 + 6*gam2 - 4*gam3 + gam4)*x +
+              (9*gam1 - 9*gam2 + 3*gam3)) * x +
+              (-6*gam1 + 3*gam2)) * x + gam1
+    return mxy * (y-x) + mxz * (z-x) + x*(1-x) * 2 * poly 
+# allotetraploid
+# here, g_ij refers to gamma_ij (not a gamete frequency!)
+def _Mfunc2D_allo_a( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
+    # x is x_a, y is x_b
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g10 + (-2*g10 + g20)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g01 - g02 + g10 -2*g11 + g12)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
+    return mxy * (y-x) + x * (1. - x) * 2. * poly
+def _Mfunc2D_allo_b( x,  y,  mxy,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
+    # x is x_b, y is x_a
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g01 + (-2*g01 + g02)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g10 - g20 + g01 -2*g11 + g21)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
+    return mxy * (y-x) + x * (1. - x) * 2. * poly
+def _Mfunc3D_allo_a( x,  y, z,  mxy,  mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
+    # x is x_a, y is x_b, z is a separate population
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g10 + (-2*g10 + g20)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g01 - g02 + g10 -2*g11 + g12)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g01 + 4*g10 -4*g11 -2*g20 +2*g21)*xy
+    return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
+def _Mfunc3D_allo_b( x,  y, z, mxy, mxz,  g01,  g02,  g10,  g11,  g12,  g20,  g21,  g22):
+    # x is x_b, y is x_a, z is a separate population
+    xy = x*y
+    yy = y*y
+    xyy = xy*y
+    poly = g01 + (-2*g01 + g02)*x + \
+                  (-2*g01 - 2*g10 + 2*g11)*y + \
+                  (2*g10 - g20 + g01 -2*g11 + g21)*yy + \
+                  (-2*g01 + g02 - 2*g10 + 4*g11 -2*g12 + g20 -2*g21 + g22)*xyy + \
+                  (2*g10 + 4*g01 -4*g11 -2*g02 +2*g12)*xy
+    return mxy * (y-x) + mxz * (z-x) + x * (1. - x) * 2. * poly
+# autohexaploid
+def _Vfunc_hex(x, nu):
+    return 1./nu * x*(1-x) / 3.
+def _Mfunc1D_autohex(x, g1, g2, g3, g4, g5, g6):
+    poly = (((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * x +
+               (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * x +
+               (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * x +
+               (30*g1 - 30*g2 + 10*g3)) * x +
+               (-10*g1 + 5*g2)) * x + g1
+    return x * (1 - x) * 2 * poly
+def _Mfunc2D_autohex(x, y, mxy, g1, g2, g3, g4, g5, g6):
+    poly = (((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * x +
+               (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * x +
+               (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * x +
+               (30*g1 - 30*g2 + 10*g3)) * x +
+               (-10*g1 + 5*g2)) * x + g1
+    return mxy * (y-x) + x * (1 - x) * 2 * poly
+def _Mfunc3D_autohex(x, y, z, mxy, mxz, g1, g2, g3, g4, g5, g6):
+    poly = (((((-6*g1 + 15*g2 - 20*g3 + 15*g4 - 6*g5 + g6) * x +
+               (25*g1 - 50*g2 + 50*g3 - 25*g4 + 5*g5)) * x +
+               (-40*g1 + 60*g2 - 40*g3 + 10*g4)) * x +
+               (30*g1 - 30*g2 + 10*g3)) * x +
+               (-10*g1 + 5*g2)) * x + g1
+    return mxy * (y-x) + mxz * (z-x) + x * (1 - x) * 2 * poly
+# 4+2 hexaploids
+def _Mfunc2D_hex_tetra(x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_4, y is x_2 where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+    xy = x*y # qa*qb
+    xx = x*x # qa^2
+    xxx = xx*x # qa^3
+    yy = y*y # qb^2
+    xyy = xy*y # qa*qb^2
+    xxy = xx*y # qa^2*qb
+    xxxy = xxx*y # qa^3*qb
+    xxyy = xxy*y # qa^2*qb^2
+    xxxyy = xxxy*y # qa^3*qb^2
+    poly = g10 + (-6*g10 + 3*g20) * x + \
+                  (-2*g01 - 2*g10 + 2*g11) * y + \
+                  (9*g10 -9*g20 + 3*g30) * xx + \
+                  (-4*g10 + 6*g20 - 4*g30 + g40) * xxx + \
+                  (2*g01 - g02 + g10 - 2*g11 + g12) * yy + \
+                  (-6*g01 + 3*g02 - 6*g10 + 12*g11 - 6*g12 + 3*g20 - 6*g21 + 3*g22) * xyy + \
+                  (-6*g01 - 18*g10 + 18*g11 + 18*g20 -18*g21 -6*g30 +6*g31) * xxy + \
+                  (2*g01 + 8*g10 - 8*g11 - 12*g20 + 12*g21 + 8*g30 - 8*g31 - 2*g40 + 2*g41) * xxxy + \
+                  (6*g01 - 3*g02 + 9*g10 - 18*g11 + 9*g12 - 9*g20 + 18*g21 - 9*g22 + 3*g30 - 6*g31 + 3*g32) * xxyy + \
+                  (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xxxyy + \
+                  (6*g01 + 12*g10 - 12*g11 - 6*g20 + 6*g21) * xy
+    # note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
+    return exy * (y-x) / 2 + x * (1 - x) * 2 * poly
+def _Mfunc2D_hex_dip( x, y, exy, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_2, y is x_4 
+    # where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+
+    xy = x*y # qa*qb
+    yy = y*y # qa^2
+    yyy = yy*y # qa^3
+    yyyy = yyy*y # qa^4
+    xyy = xy*y # qa^2*qb
+    xyyy = xyy*y # qa^3*qb
+    xyyyy = xyyy*y # qa^4*qb
+    poly = g01 + (-4*g01 - 4*g10 + 4*g11) * y + \
+                  (-2*g01 + g02) * x + \
+                  (6*g01 + 12*g10 - 12*g11 -6*g20 + 6*g21) * yy + \
+                  (-4*g01 -12*g10 + 12*g11 + 12*g20 - 12*g21 - 4*g30 + 4*g31) * yyy + \
+                  (g01 + 4*g10 - 4*g11 - 6*g20 + 6*g21 + 4*g30 - 4*g31 - g40 + g41) * yyyy + \
+                  (-12*g01 + 6*g02 - 12*g10 + 24*g11 - 12*g12 + 6*g20 - 12*g21 + 6*g22) * xyy + \
+                  (8*g01 - 4*g02 + 12*g10 - 24*g11 + 12*g12 - 12*g20 + 24*g21 - 12*g22 + 4*g30 - 8*g31 + 4*g32) * xyyy + \
+                  (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xyyyy + \
+                  (8*g01 - 4*g02 + 4*g10 - 8*g11 + 4*g12) * xy
+    return exy * (y-x) + x * (1 - x) * 2 * poly       
+def _Mfunc3D_hex_tetra(x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_4, y is x_2 where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+    # z is a separate population
+    xy = x*y # qa*qb
+    xx = x*x # qa^2
+    xxx = xx*x # qa^3
+    yy = y*y # qb^2
+    xyy = xy*y # qa*qb^2
+    xxy = xx*y # qa^2*qb
+    xxxy = xxx*y # qa^3*qb
+    xxyy = xxy*y # qa^2*qb^2
+    xxxyy = xxxy*y # qa^3*qb^2
+    poly = g10 + (-6*g10 + 3*g20) * x + \
+                  (-2*g01 - 2*g10 + 2*g11) * y + \
+                  (9*g10 -9*g20 + 3*g30) * xx + \
+                  (-4*g10 + 6*g20 - 4*g30 + g40) * xxx + \
+                  (2*g01 - g02 + g10 - 2*g11 + g12) * yy + \
+                  (-6*g01 + 3*g02 - 6*g10 + 12*g11 - 6*g12 + 3*g20 - 6*g21 + 3*g22) * xyy + \
+                  (-6*g01 - 18*g10 + 18*g11 + 18*g20 -18*g21 -6*g30 +6*g31) * xxy + \
+                  (2*g01 + 8*g10 - 8*g11 - 12*g20 + 12*g21 + 8*g30 - 8*g31 - 2*g40 + 2*g41) * xxxy + \
+                  (6*g01 - 3*g02 + 9*g10 - 18*g11 + 9*g12 - 9*g20 + 18*g21 - 9*g22 + 3*g30 - 6*g31 + 3*g32) * xxyy + \
+                  (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xxxyy + \
+                  (6*g01 + 12*g10 - 12*g11 - 6*g20 + 6*g21) * xy
+    # note the 1/2 term in the exchange term here to correct for differences in ploidy between subgenomes
+    return exy * (y-x) / 2 + mxz * (z-x) + x * (1 - x) * 2 * poly
+def _Mfunc3D_hex_dip( x, y, z, exy, mxz, g01, g02, g10, g11, g12, g20, g21, g22, g30, g31, g32, g40, g41, g42):
+    # x is x_2, y is x_4 
+    # where x_4 is the allele frequency in the tetraploid subgenome
+    # and x_2 is the allele frequency in the diploid subgenome
+    # in the matlab code, we denote x_4 as qa and x_2 as qb
+    # z is a separate population
+    xy = x*y # qa*qb
+    yy = y*y # qa^2
+    yyy = yy*y # qa^3
+    yyyy = yyy*y # qa^4
+    xyy = xy*y # qa^2*qb
+    xyyy = xyy*y # qa^3*qb
+    xyyyy = xyyy*y # qa^4*qb
+    poly = g01 + (-4*g01 - 4*g10 + 4*g11) * y + \
+                  (-2*g01 + g02) * x + \
+                  (6*g01 + 12*g10 - 12*g11 -6*g20 + 6*g21) * yy + \
+                  (-4*g01 -12*g10 + 12*g11 + 12*g20 - 12*g21 - 4*g30 + 4*g31) * yyy + \
+                  (g01 + 4*g10 - 4*g11 - 6*g20 + 6*g21 + 4*g30 - 4*g31 - g40 + g41) * yyyy + \
+                  (-12*g01 + 6*g02 - 12*g10 + 24*g11 - 12*g12 + 6*g20 - 12*g21 + 6*g22) * xyy + \
+                  (8*g01 - 4*g02 + 12*g10 - 24*g11 + 12*g12 - 12*g20 + 24*g21 - 12*g22 + 4*g30 - 8*g31 + 4*g32) * xyyy + \
+                  (-2*g01 + g02 - 4*g10 + 8*g11 - 4*g12 + 6*g20 - 12*g21 + 6*g22 - 4*g30 + 8*g31 - 4*g32 + g40 - 2*g41 + g42) * xyyyy + \
+                  (8*g01 - 4*g02 + 4*g10 - 8*g11 + 4*g12) * xy
+    return exy * (y-x) + mxz * (z-x) + x * (1 - x) * 2 * poly  
+
+# 2+2+2 hexaploids
+def _Mfunc3D_hex_a(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
+                   g020, g021, g022, g100, g101, g102, g110, g111, g112,
+                   g120, g121, g122, g200, g201, g202, g210, g211, g212,
+                   g220, g221, g222):
+    # x is x_a, y is x_b, z is x_c
+    yy = y*y; # qb^2
+    zz = z*z; # qc^2
+    xyy = x*yy; # qa*qb^2
+    xzz = x*zz; # qa*qc^2
+    yzz = y*zz; # qb*qc^2
+    yyz = yy*z; # qb^2*qc
+    yyzz = yy*zz; # qb^2*qc^2
+    xy = x*y; # qa*qb
+    xz = x*z; # qa*qc
+    yz = y*z; # qb*qc
+    xyz = xy*z; # qa*qb*qc
+    xyzz = xyz*z; # qa*qb*qc^2
+    xyyz = xyy*z; # qa*qb^2*qc
+    xyyzz = xyyz*z; # qa*qb^2*qc^2
+    poly = g100 + (- 2.*g100 + g200) * x + \
+                  (-2.*g010 - 2.*g100 + 2.*g110) * y + \
+                  (-2.*g001 - 2.*g100 + 2.*g101) * z + \
+                  (2.*g010 - g020 + g100 - 2.*g110 + g120) * yy + \
+                  (2.*g001 - g002 + g100 - 2.*g101 + g102) * zz + \
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + \
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xzz + \
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101 - 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz + \
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yyz + \
+                  (2.*g001 - g002 + 2.*g010 - 4.*g011 + 2.*g012  - g020 + 2.*g021 - g022 + g100 - 2.*g101  + g102 - 2.*g110 + 4.*g111 - 2.*g112 + g120 - 2.*g121 + g122) * yyzz + \
+                  (2.*g010 + 4.*g100 - 4.*g110 - 2.*g200 + 2.*g210) * xy + \
+                  (2.*g001 + 4.*g100 - 4.*g101 - 2.*g200 + 2.*g201) * xz + \
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + \
+                  (-4.*g001 - 4.*g010 + 4.*g011 - 8.*g100 + 8.*g101 + 8.*g110 - 8.*g111 + 4.*g200 - 4.*g201 - 4.*g210 + 4.*g211) * xyz + \
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyzz + \
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120 - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly
+def _Mfunc3D_hex_b(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
+                   g020, g021, g022, g100, g101, g102, g110, g111, g112, 
+                   g120, g121, g122, g200, g201, g202, g210, g211, g212,
+                   g220, g221, g222):
+    # x is x_b, y is x_a, z is x_c
+    yy = y*y; # qa^2
+    zz = z*z; # qc^2
+    xyy = x*yy; # qa^2*qb
+    yzz = y*zz; # qa*qc^2
+    yyz = yy*z; # qa^2*qc
+    xzz = x*zz; # qb*qc^2
+    yyzz = yy*zz; # qa^2*qc^2
+    xy = x*y; # qa*qb
+    yz = y*z; # qa*qc
+    xz = x*z; # qb*qc
+    xyz = xy*z; # qa*qb*qc
+    xyzz = xyz*z; # qa*qb*qc^2
+    xyyz = xyy*z; # qa^2*qb*qc
+    xyyzz = xyyz*z; # qa^2*qb*qc^2
+    poly = g010 + (-2.*g010 - 2.*g100 + 2.*g110 ) * y + \
+                  (-2.*g010 + g020) * x + \
+                  (-2.*g001 - 2.*g010 + 2.*g011) * z + \
+                  (g010 + 2.*g100 - 2.*g110 - g200 + g210) * yy + \
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012) * zz + \
+                  (-2.*g010 + g020 - 2.*g100 + 4.*g110 - 2.*g120 + g200 - 2.*g210 + g220) * xyy + \
+                  (-4.*g001 + 2.*g002 - 2.*g010 + 4.*g011 - 2.*g012 - 2.*g100 + 4.*g101- 2.*g102 + 2.*g110 - 4.*g111 + 2.*g112) * yzz + \
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xzz + \
+                  (2.*g001 - g002 + g010 - 2.*g011 + g012 + 2.*g100 - 4.*g101 + 2.*g102 - 2.*g110 + 4.*g111 - 2.*g112 - g200 + 2.*g201 - g202 + g210 - 2.*g211 + g212) * yyzz + \
+                  (4.*g010 - 2.*g020 + 2.*g100 - 4.*g110 + 2.*g120) * xy + \
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + \
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021) * xz + \
+                  (-4.*g001 - 8.*g010 + 8.*g011 + 4.*g020 - 4.*g021 - 4.*g100 + 4.*g101 + 8.*g110 - 8.*g111 - 4.*g120 + 4.*g121) * xyz + \
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110+ 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyzz + \
+                  (2.*g001 + 4.*g010 - 4.*g011 - 2.*g020 + 2.*g021 + 4.*g100 - 4.*g101 - 8.*g110 + 8.*g111 + 4.*g120  - 4.*g121 - 2.*g200 + 2.*g201 + 4.*g210 - 4.*g211 - 2.*g220 + 2.*g221) * xyyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly;    
+def _Mfunc3D_hex_c(x, y, z, exy, exz, g001, g002, g010, g011, g012, 
+                   g020, g021, g022, g100, g101, g102, g110, g111, g112, 
+                   g120, g121, g122, g200, g201, g202, g210, g211, g212,
+                   g220, g221, g222):
+    # x is x_c, y is x_a, z is x_b
+    yy = y*y # qa^2
+    zz = z*z # qb^2
+    yzz = y*zz # qa*qb^2
+    yyz = yy*z # qa^2*qb
+    xyy = x*yy # qa^2*qc
+    xzz = x*zz # qb^2*qc
+    yyzz = yy*zz # qa^2*qb^2
+    yz = y*z # qa*qb
+    xy = x*y # qa*qc
+    xz = x*z # qb*qc
+    xyz = xy*z # qa*qb*qc
+    xyzz = xyz*z # qa*qb^2*qc
+    xyyz = xyy*z # qa^2*qb*qc
+    xyyzz = xyyz*z # qa^2*qb^2*qc
+    poly = g001 + (-2.*g001 - 2.*g100 + 2.*g101) * y + \
+                  (-2.*g001 - 2.*g010 + 2.*g011) * z + \
+                  (-2.*g001 + g002) * x + \
+                  (g001 + 2.*g100 - 2.*g101 - g200 + g201) * yy + \
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021) * zz + \
+                  (-2.*g001 - 4.*g010 + 4.*g011 + 2.*g020 - 2.*g021 - 2.*g100 + 2.*g101 + 4.*g110 - 4.*g111 - 2.*g120 + 2.*g121) * yzz + \
+                  (-2.*g001 - 2.*g010 + 2.*g011 - 4.*g100 + 4.*g101 + 4.*g110 - 4.*g111 + 2.*g200 - 2.*g201 - 2.*g210 + 2.*g211) * yyz + \
+                  (-2.*g001 + g002 - 2.*g100 + 4.*g101 - 2.*g102 + g200 - 2.*g201 + g202) * xyy + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022) * xzz + \
+                  (g001 + 2.*g010 - 2.*g011 - g020 + g021 + 2.*g100 - 2.*g101 - 4.*g110 + 4.*g111 + 2.*g120 - 2.*g121 - g200 + g201 + 2.*g210 - 2.*g211 - g220 + g221) * yyzz + \
+                  (4.*g001 + 4.*g010 - 4.*g011 + 4.*g100 - 4.*g101 - 4.*g110 + 4.*g111) * yz + \
+                  (4.*g001 - 2.*g002 + 2.*g100 - 4.*g101 + 2.*g102) * xy + \
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 ) * xz + \
+                  (-8.*g001 + 4.*g002 - 4.*g010 + 8.*g011 - 4.*g012 - 4.*g100 + 8.*g101 - 4.*g102 + 4.*g110 - 8.*g111 + 4.*g112) * xyz + \
+                  (4.*g001 - 2.*g002 + 4.*g010 - 8.*g011 + 4.*g012 - 2.*g020 + 4.*g021 - 2.*g022 + 2.*g100 - 4.*g101 + 2.*g102 - 4.*g110 + 8.*g111 - 4.*g112 + 2.*g120 - 4.*g121 + 2.*g122) * xyzz + \
+                  (4.*g001 - 2.*g002 + 2.*g010 - 4.*g011 + 2.*g012 + 4.*g100 - 8.*g101 + 4.*g102 - 4.*g110 + 8.*g111 - 4.*g112 - 2.*g200 + 4.*g201 - 2.*g202 + 2.*g210 - 4.*g211 + 2.*g212) * xyyz + \
+                  (-2.*g001 + g002 - 2.*g010 + 4.*g011 - 2.*g012 + g020 - 2.*g021 + g022 - 2.*g100 + 4.*g101 - 2.*g102 + 4.*g110 - 8.*g111 + 4.*g112 - 2.*g120 + 4.*g121 - 2.*g122 + g200 - 2.*g201 + g202 - 2.*g210 + 4.*g211 - 2.*g212 + g220 - 2.*g221 + g222) * xyyzz
+    return exy * (y-x) + exz * (z-x) + x * (1. - x) * 2. * poly           
+
+# Python versions of grid spacing and del_j
+def _compute_dfactor(dx):
+    r"""
+    \Delta_j from the paper.
+    """
+    # Controls how we take the derivative of the flux. The values here depend
+    #  on the fact that we're defining our probability integral using the
+    #  trapezoid rule.
+    dfactor = numpy.zeros(len(dx)+1)
+    dfactor[1:-1] = 2/(dx[:-1] + dx[1:])
+    dfactor[0] = 2/dx[0]
+    dfactor[-1] = 2/dx[-1]
+    return dfactor
+
+def _compute_delj(dx, MInt, VInt, axis=0):
+    r"""
+    Chang an Cooper's \delta_j term. Typically we set this to 0.5.
+    """
+    # Chang and Cooper's fancy delta j trick...
+    if use_delj_trick:
+        # upslice will raise the dimensionality of dx and VInt to be appropriate
+        # for functioning with MInt.
+        upslice = [nuax for ii in range(MInt.ndim)]
+        upslice [axis] = slice(None)
+
+        wj = 2 *MInt*dx[tuple(upslice)]
+        epsj = numpy.exp(wj/VInt[tuple(upslice)])
+        delj = (-epsj*wj + epsj * VInt[tuple(upslice)] - VInt[tuple(upslice)])/(wj - epsj*wj)
+        # These where statements filter out edge case for delj
+        delj = numpy.where(numpy.isnan(delj), 0.5, delj)
+        delj = numpy.where(numpy.isinf(delj), 0.5, delj)
+    else:
+        delj = 0.5
+    return delj
+
+# Constant parameters, 1D integration
+def _one_pop_const_params(phi, xx, T, s, ploidy, nu=1, theta0=1, 
+                          initial_t=0):
+    """
+    Integrate one population with constant parameters.
+
+    In this case, we can precompute our a,b,c matrices for the linear system
+    we need to evolve. This we can efficiently do in Python, rather than 
+    relying on C. The nice thing is that the Python is much faster to debug.
+    """
+    if numpy.any(numpy.less([T,nu,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
+
+    dx = numpy.diff(xx)
+    dfactor = _compute_dfactor(dx)
+
+    if ploidy[0]: # if diploid
+        M = _Mfunc1D(xx, s[0], s[1])
+        MInt = _Mfunc1D((xx[:-1] + xx[1:])/2, s[0], s[1])
+        V = _Vfunc(xx, nu)
+        VInt = _Vfunc((xx[:-1] + xx[1:])/2, nu)
+        bc_factor = 0.5 # term for BCs, = (1-2x)/k eval. at x=0/x=1 for a k-ploid 
+    elif ploidy[1]: # if autotetraploid
+        M = _Mfunc1D_auto(xx, s[0], s[1], s[2], s[3])
+        MInt = _Mfunc1D_auto((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3])
+        V = _Vfunc_tetra(xx, nu)
+        VInt = _Vfunc_tetra((xx[:-1] + xx[1:])/2, nu)
+        bc_factor = 0.25 
+    elif ploidy[4]: # if autohexaploid
+        M = _Mfunc1D_autohex(xx, s[0], s[1], s[2], s[3], s[4], s[5])
+        MInt = _Mfunc1D_autohex((xx[:-1] + xx[1:])/2, s[0], s[1], s[2], s[3], s[4], s[5])
+        V = _Vfunc_hex(xx, nu)
+        VInt = _Vfunc_hex((xx[:-1] + xx[1:])/2, nu)
+        bc_factor = 1/6
+
+    delj = _compute_delj(dx, MInt, VInt)
+
+    a = numpy.zeros(phi.shape)
+    a[1:] += dfactor[1:]*(-MInt * delj - V[:-1]/(2*dx))
+
+    c = numpy.zeros(phi.shape)
+    c[:-1] += -dfactor[:-1]*(-MInt * (1-delj) + V[1:]/(2*dx))
+
+    b = numpy.zeros(phi.shape)
+    b[:-1] += -dfactor[:-1]*(-MInt * delj - V[:-1]/(2*dx))
+    b[1:] += dfactor[1:]*(-MInt * (1-delj) + V[1:]/(2*dx))
+
+    if(M[0] <= 0):
+        b[0] += (bc_factor/nu - M[0])*2/dx[0]
+    if(M[-1] >= 0):
+        b[-1] += -(-bc_factor/nu - M[-1])*2/dx[-1]
+
+    dt = _compute_dt(dx,nu,[0],s,ploidy)
+    current_t = initial_t
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
+
+        _inject_mutations_1D(phi, dt, xx, theta0)
+        r = phi/this_dt
+        phi = tridiag.tridiag(a, b+1/this_dt, c, r)
+        current_t += this_dt
+    return phi
+
+def _two_pops_const_params(phi, xx, T, s1, s2, ploidy1, ploidy2, nu1=1,nu2=1, m12=0, m21=0,
+                           theta0=1, initial_t=0, frozen1=False, frozen2=False,
+                           nomut1=False, nomut2=False):
+    """
+    Integrate two populations with constant parameters.
+    """
+    if numpy.any(numpy.less([T,nu1,nu2,m12,m21,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu1,nu2], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
+    yy = xx
+
+    # The use of nuax (= numpy.newaxis) here is for memory conservation. We
+    # could just create big X and Y arrays which only varied along one axis,
+    # but that would be wasteful.
+    # implicit in the x direction
+    dx = numpy.diff(xx)
+    dfact_x = _compute_dfactor(dx)
+
+    if ploidy1[0]: # if diploid
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D(xx[:,nuax], yy[nuax,:], m12, s1[0], s1[1])
+        MxInt = _Mfunc2D((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0], s1[1])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5 
+    elif ploidy1[1]: # if autotetraploid
+        Vx = _Vfunc_tetra(xx, nu1)
+        VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_auto(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
+        MxInt = _Mfunc2D_auto((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.25 
+    elif ploidy1[2]: # if allotetraploid subgenome a
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_allo_a(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        MxInt = _Mfunc2D_allo_a((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5 
+    elif ploidy1[3]: # if allotetraploid subgenome b
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_allo_b(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        MxInt = _Mfunc2D_allo_b((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5 
+    elif ploidy1[4]: # if autohexaploid
+        Vx = _Vfunc_hex(xx, nu1)
+        VxInt = _Vfunc_hex((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_autohex(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        MxInt = _Mfunc2D_autohex((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 1/6
+    elif ploidy1[5]: # if hexaploid, tetraploid subgenome
+        Vx = _Vfunc_tetra(xx, nu1)
+        VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_hex_tetra(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        MxInt = _Mfunc2D_hex_tetra((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.25
+    elif ploidy1[6]: # if hexaploid, diploid subgenome
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc2D_hex_dip(xx[:,nuax], yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        MxInt = _Mfunc2D_hex_dip((xx[:-1,nuax]+xx[1:,nuax])/2, yy[nuax,:], m12, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5
+        
+    # The nuax's here broadcast the our various arrays to have the proper shape
+    # to fit into ax,bx,cx
+    ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
+    ax[ 1:] += dfact_x[ 1:,nuax]*(-MxInt*deljx    - Vx[:-1,nuax]/(2*dx[:,nuax]))
+    cx[:-1] += dfact_x[:-1,nuax]*( MxInt*(1-deljx)- Vx[ 1:,nuax]/(2*dx[:,nuax]))
+    bx[:-1] += dfact_x[:-1,nuax]*( MxInt*deljx    + Vx[:-1,nuax]/(2*dx[:,nuax]))
+    bx[ 1:] += dfact_x[ 1:,nuax]*(-MxInt*(1-deljx)+ Vx[ 1:,nuax]/(2*dx[:,nuax]))
+
+    if Mx[0,0] <= 0:
+        bx[0,0] += (bc_factorx/nu1 - Mx[0,0])*2/dx[0]
+    if Mx[-1,-1] >= 0:
+        bx[-1,-1] += -(-bc_factorx/nu1 - Mx[-1,-1])*2/dx[-1]
+
+    # implicit in the y direction
+    dy = numpy.diff(yy)
+    dfact_y = _compute_dfactor(dy)
+
+    if ploidy2[0]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1])
+        MyInt = _Mfunc2D((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5 
+    elif ploidy2[1]:
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_auto(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
+        MyInt = _Mfunc2D_auto((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25 
+    elif ploidy2[2]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_allo_a(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc2D_allo_a((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5 
+    elif ploidy2[3]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_allo_b(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc2D_allo_b((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5 
+    elif ploidy2[4]:
+        Vy = _Vfunc_hex(yy, nu2)
+        VyInt = _Vfunc_hex((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_autohex(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        MyInt = _Mfunc2D_autohex((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 1/6
+    elif ploidy2[5]:
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_hex_tetra(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc2D_hex_tetra((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25 
+    elif ploidy2[6]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc2D_hex_dip(yy[nuax,:], xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc2D_hex_dip((yy[nuax,1:] + yy[nuax,:-1])/2, xx[:,nuax], m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5 
+       
+    # The nuax's here broadcast the our various arrays to have the proper shape
+    # to fit into ax,bx,cx
+    ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
+    ay[:, 1:] += dfact_y[ 1:]*(-MyInt*deljy     - Vy[nuax,:-1]/(2*dy))
+    cy[:,:-1] += dfact_y[:-1]*( MyInt*(1-deljy) - Vy[nuax, 1:]/(2*dy))
+    by[:,:-1] += dfact_y[:-1]*( MyInt*deljy     + Vy[nuax,:-1]/(2*dy))
+    by[:, 1:] += dfact_y[ 1:]*(-MyInt*(1-deljy) + Vy[nuax, 1:]/(2*dy))
+
+    if My[0,0] <= 0:
+        by[0,0] += (bc_factory/nu2 - My[0,0])*2/dy[0]
+    if My[-1,-1] >= 0:
+        by[-1,-1] += -(-bc_factory/nu2 - My[-1,-1])*2/dy[-1]
+
+    dt = min(_compute_dt(dx,nu1,[m12],s1,ploidy1),
+             _compute_dt(dy,nu2,[m21],s2,ploidy2))
+    current_t = initial_t
+    
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._two_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, nomut1, nomut2, ax, bx, cx, ay,
+                by, cy, current_t, dt, T)
+        return phi
+
+    while current_t < T:
+        this_dt = min(dt, T - current_t)
+        _inject_mutations_2D(phi, this_dt, xx, yy, theta0, frozen1, frozen2,
+                            nomut1, nomut2)
+        if not frozen1:
+            PolyInt.implicit_precalc_2Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            PolyInt.implicit_precalc_2Dy(phi, ay, by, cy, this_dt)
+        current_t += this_dt
+
+    return phi
+
+def _three_pops_const_params(phi, xx, T, s1, s2, s3, ploidy1, ploidy2, ploidy3, 
+                             nu1=1, nu2=1, nu3=1, 
+                             m12=0, m13=0, m21=0, m23=0, m31=0, m32=0, 
+                             theta0=1, initial_t=0,
+                             frozen1=False, frozen2=False, frozen3=False):
+    """
+    Integrate three population with constant parameters.
+    """
+    if numpy.any(numpy.less([T,nu1,nu2,nu3,m12,m13,m21,m23,m31,m32,theta0], 0)):
+        raise ValueError('A time, population size, migration rate, or theta0 '
+                         'is < 0. Has the model been mis-specified?')
+    if numpy.any(numpy.equal([nu1,nu2,nu3], 0)):
+        raise ValueError('A population size is 0. Has the model been '
+                         'mis-specified?')
+    zz = yy = xx
+
+    dx = numpy.diff(xx)
+    dfact_x = _compute_dfactor(dx)
+
+    # note: we don't support alloa, allob, hex_tetra, or hex_dip as
+    #       being the first dimension of the phi array in 3D
+
+    # also, we only support 2+2+2 hexaploids as being specified in the a, b, c order only
+
+    if ploidy1[0]:
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0], s1[1])
+        MxInt = _Mfunc3D((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0], s1[1])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5
+    elif ploidy1[1]:
+        Vx = _Vfunc_tetra(xx, nu1)
+        VxInt = _Vfunc_tetra((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_auto(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0],s1[1],s1[2],s1[3])
+        MxInt = _Mfunc3D_auto((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.25 
+    elif ploidy1[4]:
+        Vx = _Vfunc_hex(xx, nu1)
+        VxInt = _Vfunc_hex((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_autohex(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], 
+                      m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        MxInt = _Mfunc3D_autohex((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, s1[0],s1[1],s1[2],s1[3],s1[4],s1[5])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 1/6
+    elif ploidy1[7]: # if 2+2+2 hexaploid, subgenome a
+        Vx = _Vfunc(xx, nu1)
+        VxInt = _Vfunc((xx[:-1]+xx[1:])/2, nu1)
+        Mx = _Mfunc3D_hex_a(xx[:,nuax,nuax], yy[nuax,:,nuax], zz[nuax,nuax,:], m12, m13,
+                            s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13],
+                            s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+        MxInt = _Mfunc3D_hex_a((xx[:-1,nuax,nuax]+xx[1:,nuax,nuax])/2, yy[nuax,:,nuax], 
+                          zz[nuax,nuax,:], m12, m13, 
+                          s1[0],s1[1],s1[2],s1[3],s1[4],s1[5],s1[6],s1[7],s1[8],s1[9],s1[10],s1[11],s1[12],s1[13],
+                          s1[14],s1[15],s1[16],s1[17],s1[18],s1[19],s1[20],s1[21],s1[22],s1[23],s1[24],s1[25])
+        deljx = _compute_delj(dx, MxInt, VxInt)
+        bc_factorx = 0.5
+
+    ax, bx, cx = [numpy.zeros(phi.shape) for ii in range(3)]
+    ax[ 1:] += dfact_x[ 1:,nuax,nuax]*(-MxInt*deljx    
+                                        - Vx[:-1,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    cx[:-1] += dfact_x[:-1,nuax,nuax]*( MxInt*(1-deljx)
+                                        - Vx[ 1:,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    bx[:-1] += dfact_x[:-1,nuax,nuax]*( MxInt*deljx    
+                                        + Vx[:-1,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    bx[ 1:] += dfact_x[ 1:,nuax,nuax]*(-MxInt*(1-deljx)
+                                        + Vx[ 1:,nuax,nuax]/(2*dx[:,nuax,nuax]))
+    if Mx[0,0,0] <= 0:
+        bx[0,0,0] += (bc_factorx/nu1 - Mx[0,0,0])*2/dx[0]
+    if Mx[-1,-1,-1] >= 0:
+        bx[-1,-1,-1] += -(-bc_factorx/nu1 - Mx[-1,-1,-1])*2/dx[-1]
+
+    # Memory consumption can be an issue in 3D, so we delete arrays after we're
+    # done with them.
+    del Vx,VxInt,Mx,MxInt,deljx
+
+    dy = numpy.diff(yy)
+    dfact_y = _compute_dfactor(dy)
+    if ploidy2[0]:
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
+                      m21, m23, s2[0], s2[1])
+        MyInt = _Mfunc3D((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, s2[0], s2[1])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    elif ploidy2[1]:
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_auto(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
+                      m21, m23, s2[0],s2[1],s2[2],s2[3])
+        MyInt = _Mfunc3D_auto((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, s2[0],s2[1],s2[2],s2[3])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25
+    elif ploidy2[2]:
+        # note that the order of the params passed to _Mfunc3D for y and z is different from 
+        # Ryan's original code. This is for consistency with the allo cases where
+        # the first two dimensions passed to _Mfunc need to be the allo subgenomes 
+        # and the subgenomes are always passed to the integrator as y and z.
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_allo_a(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc3D_allo_a((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    elif ploidy2[3]:
+        # see note above about the order of the params passed to _Mfuncs here
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_allo_b(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        MyInt = _Mfunc3D_allo_b((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    elif ploidy2[4]:
+        Vy = _Vfunc_hex(yy, nu2)
+        VyInt = _Vfunc_hex((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_autohex(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:],
+                      m21, m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        MyInt = _Mfunc3D_autohex((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 1/6
+    elif ploidy2[5]:
+        # see note above about the order of the params passed to _Mfuncs here
+        Vy = _Vfunc_tetra(yy, nu2)
+        VyInt = _Vfunc_tetra((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_hex_tetra(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc3D_hex_tetra((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.25
+    elif ploidy2[6]:
+        # see note above about the order of the params passed to _Mfuncs here
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_hex_dip(yy[nuax,:,nuax], zz[nuax,nuax,:], xx[:,nuax, nuax],
+                      m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        MyInt = _Mfunc3D_hex_dip((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, zz[nuax,nuax,:], 
+                          xx[:,nuax, nuax], m23, m21, s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+    elif ploidy2[8]: # if 2+2+2 hexaploid, subgenome b
+        Vy = _Vfunc(yy, nu2)
+        VyInt = _Vfunc((yy[1:]+yy[:-1])/2, nu2)
+        My = _Mfunc3D_hex_b(yy[nuax,:,nuax], xx[:,nuax, nuax], zz[nuax,nuax,:], m21, m23, 
+                      s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13],
+                      s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+        MyInt = _Mfunc3D_hex_b((yy[nuax,1:,nuax] + yy[nuax,:-1,nuax])/2, xx[:,nuax, nuax], 
+                         zz[nuax,nuax,:], m21, m23, 
+                         s2[0],s2[1],s2[2],s2[3],s2[4],s2[5],s2[6],s2[7],s2[8],s2[9],s2[10],s2[11],s2[12],s2[13],                         
+                         s2[14],s2[15],s2[16],s2[17],s2[18],s2[19],s2[20],s2[21],s2[22],s2[23],s2[24],s2[25])
+        deljy = _compute_delj(dy, MyInt, VyInt, axis=1)
+        bc_factory = 0.5
+  
+    ay, by, cy = [numpy.zeros(phi.shape) for ii in range(3)]
+    ay[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*deljy     
+                                    - Vy[nuax,:-1,nuax]/(2*dy[nuax,:,nuax]))
+    cy[:,:-1] += dfact_y[nuax,:-1,nuax]*( MyInt*(1-deljy) 
+                                    - Vy[nuax, 1:,nuax]/(2*dy[nuax,:,nuax]))
+    by[:,:-1] += dfact_y[nuax,:-1,nuax]*( MyInt*deljy     
+                                    + Vy[nuax,:-1,nuax]/(2*dy[nuax,:,nuax]))
+    by[:, 1:] += dfact_y[nuax, 1:,nuax]*(-MyInt*(1-deljy) 
+                                    + Vy[nuax, 1:,nuax]/(2*dy[nuax,:,nuax]))
+    if My[0,0,0] <= 0:
+        by[0,0,0] += (bc_factory/nu2 - My[0,0,0])*2/dy[0]
+    if My[-1,-1,-1] >= 0:
+        by[-1,-1,-1] += -(-bc_factory/nu2 - My[-1,-1,-1])*2/dy[-1]
+
+    del Vy,VyInt,My,MyInt,deljy
+
+    dz = numpy.diff(zz)
+    dfact_z = _compute_dfactor(dz)
+    if ploidy3[0]:  
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
+                      m31, m32, s3[0], s3[1])
+        MzInt = _Mfunc3D((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, s3[0], s3[1])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    elif ploidy3[1]:  
+        Vz = _Vfunc_tetra(zz, nu3)
+        VzInt = _Vfunc_tetra((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_auto(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
+                      m31, m32, s3[0],s3[1],s3[2],s3[3])
+        MzInt = _Mfunc3D_auto((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, s3[0],s3[1],s3[2],s3[3])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.25
+    elif ploidy3[2]:  
+        # see note above about the order of the params passed to _Mfuncs here
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_allo_a(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        MzInt = _Mfunc3D_allo_a((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    elif ploidy3[3]:  
+        # see note above about the order of the params passed to _Mfuncs here
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_allo_b(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        MzInt = _Mfunc3D_allo_b((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    elif ploidy3[4]:  
+        Vz = _Vfunc_hex(zz, nu3)
+        VzInt = _Vfunc_hex((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_autohex(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax],
+                      m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+        MzInt = _Mfunc3D_autohex((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 1/6
+    elif ploidy3[5]:  
+        # see note above about the order of the params passed to _Mfuncs here
+        Vz = _Vfunc_tetra(zz, nu3)
+        VzInt = _Vfunc_tetra((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_hex_tetra(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        MzInt = _Mfunc3D_hex_tetra((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.25
+    elif ploidy3[6]:  
+        # see note above about the order of the params passed to _Mfuncs here
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_hex_dip(zz[nuax,nuax,:], yy[nuax,:,nuax], xx[:,nuax, nuax],
+                      m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        MzInt = _Mfunc3D_hex_dip((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, yy[nuax,:,nuax],
+                          xx[:,nuax, nuax], m32, m31, s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+    elif ploidy3[9]: # if 2+2+2 hexaploid, subgenome c
+        Vz = _Vfunc(zz, nu3)
+        VzInt = _Vfunc((zz[1:]+zz[:-1])/2, nu3)
+        Mz = _Mfunc3D_hex_c(zz[nuax,nuax,:], xx[:,nuax, nuax], yy[nuax,:,nuax], m31, m32, 
+                      s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13],
+                      s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s3[22],s3[23],s3[24],s3[25])
+        MzInt = _Mfunc3D_hex_c((zz[nuax,nuax,1:] + zz[nuax,nuax,:-1])/2, xx[:,nuax, nuax],
+                        yy[nuax,:,nuax], m31, m32, 
+                        s3[0],s3[1],s3[2],s3[3],s3[4],s3[5],s3[6],s3[7],s3[8],s3[9],s3[10],s3[11],s3[12],s3[13],
+                        s3[14],s3[15],s3[16],s3[17],s3[18],s3[19],s3[20],s3[21],s2[22],s2[23],s2[24],s2[25])
+        deljz = _compute_delj(dz, MzInt, VzInt, axis=2)
+        bc_factorz = 0.5
+
+    az, bz, cz = [numpy.zeros(phi.shape) for ii in range(3)]
+    az[:,:, 1:] += dfact_z[ 1:]*(-MzInt*deljz     - Vz[nuax,nuax,:-1]/(2*dz))
+    cz[:,:,:-1] += dfact_z[:-1]*( MzInt*(1-deljz) - Vz[nuax,nuax, 1:]/(2*dz))
+    bz[:,:,:-1] += dfact_z[:-1]*( MzInt*deljz     + Vz[nuax,nuax,:-1]/(2*dz))
+    bz[:,:, 1:] += dfact_z[ 1:]*(-MzInt*(1-deljz) + Vz[nuax,nuax, 1:]/(2*dz))
+    if Mz[0,0,0] <= 0:
+        bz[0,0,0] += (bc_factorz/nu3 - Mz[0,0,0])*2/dz[0]
+    if Mz[-1,-1,-1] >= 0:
+        bz[-1,-1,-1] += -(-bc_factorz/nu3 - Mz[-1,-1,-1])*2/dz[-1]
+
+    del Vz,VzInt,Mz,MzInt,deljz
+
+    dt = min(_compute_dt(dx,nu1,[m12,m13],s1,ploidy1),
+             _compute_dt(dy,nu2,[m21,m23],s2,ploidy2),
+             _compute_dt(dz,nu3,[m31,m32],s3,ploidy3))
+    current_t = initial_t
+    
+    if cuda_enabled:
+        import dadi.cuda
+        phi = dadi.cuda.Integration._three_pops_const_params(phi, xx,
+                theta0, frozen1, frozen2, frozen3, 
+                ax, bx, cx, ay, by, cy, az, bz, cz,
+                current_t, dt, T)
+        return phi
+
+    while current_t < T:    
+        this_dt = min(dt, T - current_t)
+        _inject_mutations_3D(phi, this_dt, xx, yy, zz, theta0,
+                             frozen1, frozen2, frozen3)
+        if not frozen1:
+            PolyInt.implicit_precalc_3Dx(phi, ax, bx, cx, this_dt)
+        if not frozen2:
+            PolyInt.implicit_precalc_3Dy(phi, ay, by, cy, this_dt)
+        if not frozen3:
+            PolyInt.implicit_precalc_3Dz(phi, az, bz, cz, this_dt)
+        current_t += this_dt
+    return phi

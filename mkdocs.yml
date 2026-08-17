@@ -54,7 +54,7 @@ nav:
         - 'DFE inference': 'user-guide/dfe-inference.md'
         - 'Inbreeding': 'user-guide/inbreeding.md'
         - 'Low-Pass': 'user-guide/low-pass.md'
-        - 'Polyploid subgenomes': 'user-guide/polyploid-subgenomes.md'
+        - 'Polyploidy': 'user-guide/polyploid-subgenomes.md'
         - 'GPU computing': 'user-guide/GPU-computing.md'
         - 'Demes integration': 'user-guide/demes.md'
         - 'Frequently asked questions': 'user-guide/frequently-asked-questions.md'
@@ -71,5 +71,5 @@ nav:
         - 'Basic Workflow 1D DFE' : 'examples/basic_workflow/basic_workflow_1d_dfe.md'
         - 'Basic Workflow 2D DFE' : 'examples/basic_workflow/basic_workflow_2d_dfe.md'
         - 'Low-Pass Example' : 'examples/LowPass/low-pass.md'
-# - API: dadi/
-# - API: 'api/dadi/index.html'
+        - 'Polyploidy models' : 'examples/Polyploidy/PolyploidyModel.md'
+- API: 'api/dadi/index.html'

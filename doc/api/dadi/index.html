@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>dadi API documentation</title>
+<meta name="description" content="For examples of dadi&#39;s usage, see the examples directory in the source
+distribution …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>dadi</code></h1>
+</header>
+<section id="section-intro">
+<p>For examples of dadi's usage, see the examples directory in the source
+distribution.</p>
+<p>Documentation of all methods can be found in doc/api/index.html of the source
+distribution.</p>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="dadi.DFE" href="DFE/index.html">dadi.DFE</a></code></dt>
+<dd>
+<div class="desc"><p>Fitting Distributions of Fitness Effects to population genomic data, both single-population and joint.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Demes" href="Demes/index.html">dadi.Demes</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="dadi.Demographics1D" href="Demographics1D.html">dadi.Demographics1D</a></code></dt>
+<dd>
+<div class="desc"><p>Single population demographic models.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Demographics2D" href="Demographics2D.html">dadi.Demographics2D</a></code></dt>
+<dd>
+<div class="desc"><p>Two population demographic models.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Demographics3D" href="Demographics3D.html">dadi.Demographics3D</a></code></dt>
+<dd>
+<div class="desc"><p>Three population demographic models.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Godambe" href="Godambe.html">dadi.Godambe</a></code></dt>
+<dd>
+<div class="desc"><p>Parameter uncertainties and likelihood ratio tests using Godambe information.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Inference" href="Inference.html">dadi.Inference</a></code></dt>
+<dd>
+<div class="desc"><p>Comparison and optimization of model spectra to data.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Integration" href="Integration.html">dadi.Integration</a></code></dt>
+<dd>
+<div class="desc"><p>Functions for integrating population frequency spectra.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.LowPass" href="LowPass/index.html">dadi.LowPass</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="dadi.Misc" href="Misc.html">dadi.Misc</a></code></dt>
+<dd>
+<div class="desc"><p>Miscellaneous utility functions. Including ms simulation.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.NLopt_mod" href="NLopt_mod.html">dadi.NLopt_mod</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="dadi.Numerics" href="Numerics.html">dadi.Numerics</a></code></dt>
+<dd>
+<div class="desc"><p>Numerically useful functions, including extrapolation and default grid.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.PhiManip" href="PhiManip.html">dadi.PhiManip</a></code></dt>
+<dd>
+<div class="desc"><p>Manipulating population frequency spectra phi. e.g. population splittings and
+admixture</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Plotting" href="Plotting.html">dadi.Plotting</a></code></dt>
+<dd>
+<div class="desc"><p>Routines for Plotting comparisons between model and data …</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Polyploidy" href="Polyploidy/index.html">dadi.Polyploidy</a></code></dt>
+<dd>
+<div class="desc"><p>Modeling polyploid populations.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.PortikModels" href="PortikModels/index.html">dadi.PortikModels</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="dadi.Spectrum_mod" href="Spectrum_mod.html">dadi.Spectrum_mod</a></code></dt>
+<dd>
+<div class="desc"><p>Contains Spectrum object, which represents frequency spectra.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.Triallele" href="Triallele/index.html">dadi.Triallele</a></code></dt>
+<dd>
+<div class="desc"><p>Modeling triallelic data.</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.TwoLocus" href="TwoLocus/index.html">dadi.TwoLocus</a></code></dt>
+<dd>
+<div class="desc"><p>Fitting models to data summarized by pairs of loci, incorporating both allele frequencies and linkage disequilibrium</p></div>
+</dd>
+<dt><code class="name"><a title="dadi.integration_c" href="integration_c.html">dadi.integration_c</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="dadi.tridiag_cython" href="tridiag_cython.html">dadi.tridiag_cython</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.RAM_to_pts"><code class="name flex">
+<span>def <span class="ident">RAM_to_pts</span></span>(<span>RAM, P)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def RAM_to_pts(RAM, P):
+    &#34;&#34;&#34;
+    Approximate maximum grid points given the number of populations and available RAM
+
+    pts: Grid points setting
+    P: Number of populations
+    &#34;&#34;&#34;
+    return int((RAM*1024**3/(8*4))**(1./P))</code></pre>
+</details>
+<div class="desc"><p>Approximate maximum grid points given the number of populations and available RAM</p>
+<p>pts: Grid points setting
+P: Number of populations</p></div>
+</dd>
+<dt id="dadi.citation"><code class="name flex">
+<span>def <span class="ident">citation</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def citation():
+    &#34;&#34;&#34;
+    Print citation information for dadi codebase.
+    &#34;&#34;&#34;
+    print(&#34;&#34;&#34;
+If you find dadi useful in your research, please cite:
+RN Gutenkunst, RD Hernandez, SH Williamson, CD Bustamante &#34;Inferring the joint demographic history of multiple populations from multidimensional SNP data&#34; PLoS Genetics 5:e1000695 (2009)
+
+If you find the Godambe Information Matrix methods useful, please cite:
+AJ Coffman, P Hsieh, S Gravel, RN Gutenkunst &#34;Computationally efficient composite likelihood statistics for demographic inference&#34; Molecular Biology and Evolution 33:591 (2016)
+
+If you find the DFE inference methods useful, please cite:
+BY Kim, CD Huber, KE Lohmueller &#34;Inference of the Distribution of Selection Coefficients for New Nonsynonymous Mutations Using Large Samples&#34; Genetics 206:345 (2017)
+
+If you find the triallelic methods useful, please cite:
+AP Ragsdale, AJ Coffman, P Hsieh, TJ Struck, RN Gutenkunst &#34;Triallelic population genomics for inferring correlated fitness effects of same site nonsynonymous mutations&#34; Genetics 203:513 (2016)
+
+If you find the two-locus methods useful, please cite:
+AP Ragsdale, RN Gutenkunst &#34;Inferring demographic history using two-locus statistics&#34; Genetics 206:1037 (2017)
+
+If you use a Portik model from PortikModels, please cite:
+Portik, DM, Leaché, AD, Rivera, D, et al. Evaluating mechanisms of diversification in a Guineo-Congolian tropical forest frog using demographic model selection. Mol Ecol. 2017; 26: 5245–5263. https://doi.org/10.1111/mec.14266 
+&#34;&#34;&#34;)</code></pre>
+</details>
+<div class="desc"><p>Print citation information for dadi codebase.</p></div>
+</dd>
+<dt id="dadi.cuda_enabled"><code class="name flex">
+<span>def <span class="ident">cuda_enabled</span></span>(<span>toggle=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cuda_enabled(toggle=None):
+    &#34;&#34;&#34;
+    Enable or disable cuda execution
+    &#34;&#34;&#34;
+    if toggle is None:
+        return Integration.cuda_enabled
+    elif toggle == True:
+        try:
+            from . import cuda
+            Integration.cuda_enabled = True
+            return True
+        except:
+            print(&#34;Failed to import dadi.cuda&#34;)
+            return False
+    elif toggle == False:
+        Integration.cuda_enabled = False
+        return False
+    else:
+        raise ValueError(&#34;toggle must be True, False, or None&#34;)</code></pre>
+</details>
+<div class="desc"><p>Enable or disable cuda execution</p></div>
+</dd>
+<dt id="dadi.pts_to_RAM"><code class="name flex">
+<span>def <span class="ident">pts_to_RAM</span></span>(<span>pts, P)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pts_to_RAM(pts, P):
+    &#34;&#34;&#34;
+    Approximate RAM usage for a given grid points and number of populations 
+
+    pts: Grid points setting
+    P: Number of populations
+    &#34;&#34;&#34;
+    return 8*4*pts**P / 1024**3</code></pre>
+</details>
+<div class="desc"><p>Approximate RAM usage for a given grid points and number of populations </p>
+<p>pts: Grid points setting
+P: Number of populations</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="dadi.DFE" href="DFE/index.html">dadi.DFE</a></code></li>
+<li><code><a title="dadi.Demes" href="Demes/index.html">dadi.Demes</a></code></li>
+<li><code><a title="dadi.Demographics1D" href="Demographics1D.html">dadi.Demographics1D</a></code></li>
+<li><code><a title="dadi.Demographics2D" href="Demographics2D.html">dadi.Demographics2D</a></code></li>
+<li><code><a title="dadi.Demographics3D" href="Demographics3D.html">dadi.Demographics3D</a></code></li>
+<li><code><a title="dadi.Godambe" href="Godambe.html">dadi.Godambe</a></code></li>
+<li><code><a title="dadi.Inference" href="Inference.html">dadi.Inference</a></code></li>
+<li><code><a title="dadi.Integration" href="Integration.html">dadi.Integration</a></code></li>
+<li><code><a title="dadi.LowPass" href="LowPass/index.html">dadi.LowPass</a></code></li>
+<li><code><a title="dadi.Misc" href="Misc.html">dadi.Misc</a></code></li>
+<li><code><a title="dadi.NLopt_mod" href="NLopt_mod.html">dadi.NLopt_mod</a></code></li>
+<li><code><a title="dadi.Numerics" href="Numerics.html">dadi.Numerics</a></code></li>
+<li><code><a title="dadi.PhiManip" href="PhiManip.html">dadi.PhiManip</a></code></li>
+<li><code><a title="dadi.Plotting" href="Plotting.html">dadi.Plotting</a></code></li>
+<li><code><a title="dadi.Polyploidy" href="Polyploidy/index.html">dadi.Polyploidy</a></code></li>
+<li><code><a title="dadi.PortikModels" href="PortikModels/index.html">dadi.PortikModels</a></code></li>
+<li><code><a title="dadi.Spectrum_mod" href="Spectrum_mod.html">dadi.Spectrum_mod</a></code></li>
+<li><code><a title="dadi.Triallele" href="Triallele/index.html">dadi.Triallele</a></code></li>
+<li><code><a title="dadi.TwoLocus" href="TwoLocus/index.html">dadi.TwoLocus</a></code></li>
+<li><code><a title="dadi.integration_c" href="integration_c.html">dadi.integration_c</a></code></li>
+<li><code><a title="dadi.tridiag_cython" href="tridiag_cython.html">dadi.tridiag_cython</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.RAM_to_pts" href="#dadi.RAM_to_pts">RAM_to_pts</a></code></li>
+<li><code><a title="dadi.citation" href="#dadi.citation">citation</a></code></li>
+<li><code><a title="dadi.cuda_enabled" href="#dadi.cuda_enabled">cuda_enabled</a></code></li>
+<li><code><a title="dadi.pts_to_RAM" href="#dadi.pts_to_RAM">pts_to_RAM</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

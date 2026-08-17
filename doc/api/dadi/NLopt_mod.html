@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>dadi.NLopt_mod API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.NLopt_mod</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.NLopt_mod.opt"><code class="name flex">
+<span>def <span class="ident">opt</span></span>(<span>p0,<br>data,<br>model_func,<br>pts,<br>multinom=True,<br>lower_bound=None,<br>upper_bound=None,<br>fixed_params=None,<br>ineq_constraints=[],<br>eq_constraints=[],<br>algorithm=33,<br>ftol_abs=1e-06,<br>xtol_abs=1e-06,<br>maxeval=1000000000,<br>maxtime=inf,<br>stopval=0,<br>log_opt=False,<br>local_optimizer=33,<br>verbose=0,<br>func_args=[],<br>func_kwargs={})</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def opt(p0, data, model_func, pts, multinom=True,
+        lower_bound=None, upper_bound=None, fixed_params=None,
+        ineq_constraints=[], eq_constraints=[], 
+        algorithm=nlopt.LN_BOBYQA,
+        ftol_abs=1e-6, xtol_abs=1e-6,
+        maxeval=int(1e9), maxtime=np.inf,
+        stopval=0, log_opt = False,
+        local_optimizer=nlopt.LN_BOBYQA,
+        verbose=0, func_args=[], func_kwargs={},
+        ):
+    &#34;&#34;&#34;
+    p0: Initial parameters.
+    data: Spectrum with data.
+    model_func: Function to evaluate model spectrum. Should take arguments
+                (params, (n1,n2...), pts)
+    pts: Grid points list for evaluating likelihoods
+    multinom: If True, do a multinomial fit where model is optimially scaled to
+              data at each step. If False, assume theta is a parameter and do
+              no scaling.
+    lower_bound: Lower bound on parameter values. 
+                 If not None, must be of same length as p0.
+    upper_bound: Upper bound on parameter values.
+                 If not None, must be of same length as p0.
+    fixed_params: If not None, should be a list used to fix model parameters at
+                  particular values. For example, if the model parameters
+                  are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+                  will hold nu1=0.5 and m=2. The optimizer will only change 
+                  T and m. Note that the bounds lists must include all
+                  parameters. Optimization will fail if the fixed values
+                  lie outside their bounds. A full-length p0 should be passed
+                  in; values corresponding to fixed parameters are ignored.
+    ineq_constraints: List of functions defining inequality constraints, specifying quantities 
+                      that should be less than zero, along with tolerances.
+                      Each function should take arguments func(params, grad), where params is
+                      the current vector of parameter values. grad is not typically used in dadi.
+                      For example, def func1(p, grad): (p[0]+p[1])-1 specifies that the total of
+                      p[0]+[1] should be less than 1.
+                      This would be passed into opt as ineq_constraints = [(func1, 1e-6)].
+                      Here the 1e-6 is the tolerance on the constraint, which is &gt; 0 to deal with numerical
+                      rounding issues.
+                      Only some algorithms support constraints. We suggest using nlopt.LN_COBYLA.
+    eq_constraints: List of functions defining equality constraints, specifying quantities 
+                      that should be equal to zero, along with tolerances.
+                      Each function should take arguments func(params, grad), where params is
+                      the current vector of parameter values. grad is not typically used in dadi.
+                      For example, def func1(p, grad): 1 - (p[0]+p[1]) specifies that the total of
+                      p[0]+[1] should be equal to 1.
+                      This would be passed into opt as ineq_constraints = [(func1, 1e-6)].
+                      Here the 1e-6 is the tolerance on the constraint, which is &gt; 0 to deal with numerical
+                      rounding issues.
+                      Only some algorithms support constraints. We suggest using nlopt.LN_COBYLA.
+    algorithm: Optimization algorithm to employ. See
+               https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/
+               for possibilities.
+    ftol_abs: Absolute tolerance on log-likelihood
+    xtol_abs: Absolute tolerance in parameter values
+              Both these tolerances should be set more stringently than your actual
+              desire, because algorithms cannot generally guarantee convergence.
+    maxeval: Maximum number of function evaluations
+    maxtime: Maximum optimization time, in seconds
+    log_opt: If True, optimization algorithm will run in terms of logs of parameters.
+    stopval: Algorithm will stop when a log-likelihood of at least stopval
+             is found. This is primarily useful for testing.
+    local_optimizer: If using a global algorithm, this specifies the local algorithm
+                     to be used for refinement.
+    verbose: If &gt; 0, print optimization status every &lt;verbose&gt; model evaluations.
+    func_args: Additional arguments to model_func. It is assumed that 
+               model_func&#39;s first argument is an array of parameters to
+               optimize, that its second argument is an array of sample sizes
+               for the sfs, and that its last argument is the list of grid
+               points to use in evaluation.
+    func_kwargs: Additional keyword arguments to model_func.
+    (See help(dadi.Inference.optimize_log for examples of func_args and 
+     fixed_params usage.)
+    &#34;&#34;&#34;
+    if lower_bound is None:
+            lower_bound = [-np.inf] * len(p0)
+    lower_bound = _project_params_down(lower_bound, fixed_params)
+    # Replace None in bounds with infinity
+    if upper_bound is None:
+            upper_bound = [np.inf] * len(p0)
+    upper_bound = _project_params_down(upper_bound, fixed_params)
+    # Replace None in bounds with infinities
+    lower_bound = [_ if _ is not None else -np.inf for _ in lower_bound]
+    upper_bound = [_ if _ is not None else np.inf for _ in upper_bound]
+
+    if log_opt:
+        lower_bound, upper_bound = np.log(lower_bound), np.log(upper_bound)
+
+    p0 = _project_params_down(p0, fixed_params)
+
+    opt = nlopt.opt(algorithm, len(p0))
+
+    opt.set_lower_bounds(lower_bound)
+    opt.set_upper_bounds(upper_bound)
+
+    for cons, tol in ineq_constraints:
+        opt.add_inequality_constraint(cons, tol)
+    for cons, tol in eq_constraints:
+        opt.add_equality_constraint(cons, tol)
+
+    opt.set_stopval(stopval)
+    opt.set_ftol_abs(ftol_abs)
+    opt.set_xtol_abs(xtol_abs)
+    opt.set_maxeval(maxeval)
+    opt.set_maxtime(maxtime)
+
+    # For some global optimizers, need to set local optimizer parameters.
+    local_opt = nlopt.opt(local_optimizer, len(p0))
+    local_opt.set_stopval(stopval)
+    local_opt.set_ftol_abs(ftol_abs)
+    local_opt.set_xtol_abs(xtol_abs)
+    local_opt.set_maxeval(maxeval)
+    local_opt.set_maxtime(maxtime)
+    opt.set_local_optimizer(local_opt)
+
+    def f(x, grad):
+        if grad.size:
+            raise ValueError(&#34;Cannot use optimization algorithms that require a derivative function.&#34;)
+        if log_opt: # Convert back from log parameters
+            x = np.exp(x)
+        return -_object_func(x, data, model_func, pts, 
+                             verbose=verbose, multinom=multinom,
+                             func_args=func_args, func_kwargs=func_kwargs, fixed_params=fixed_params)
+
+    # NLopt can run into a roundoff error on rare occassion.
+    # To account for this we put in an exception for nlopt.RoundoffLimited
+    # and return -inf log-likelihood and nan parameter values.
+    try:
+        opt.set_max_objective(f)
+
+        if log_opt:
+            p0 = np.log(p0)
+        xopt = opt.optimize(p0)
+        if log_opt:
+            xopt = np.exp(p0)
+
+        opt_val = opt.last_optimum_value()
+        result = opt.last_optimize_result()
+
+        xopt = _project_params_up(xopt, fixed_params)
+
+    except nlopt.RoundoffLimited:
+        print(&#39;nlopt.RoundoffLimited occured, other jobs still running. Users might want to adjust their boundaries or starting parameters if this message occures many times.&#39;)
+        opt_val = -np.inf
+        xopt = [np.nan] * len(p0)
+
+    return xopt, opt_val</code></pre>
+</details>
+<div class="desc"><p>p0: Initial parameters.
+data: Spectrum with data.
+model_func: Function to evaluate model spectrum. Should take arguments
+(params, (n1,n2&hellip;), pts)
+pts: Grid points list for evaluating likelihoods
+multinom: If True, do a multinomial fit where model is optimially scaled to
+data at each step. If False, assume theta is a parameter and do
+no scaling.
+lower_bound: Lower bound on parameter values.
+If not None, must be of same length as p0.
+upper_bound: Upper bound on parameter values.
+If not None, must be of same length as p0.
+fixed_params: If not None, should be a list used to fix model parameters at
+particular values. For example, if the model parameters
+are (nu1,nu2,T,m), then fixed_params = [0.5,None,None,2]
+will hold nu1=0.5 and m=2. The optimizer will only change
+T and m. Note that the bounds lists must include all
+parameters. Optimization will fail if the fixed values
+lie outside their bounds. A full-length p0 should be passed
+in; values corresponding to fixed parameters are ignored.
+ineq_constraints: List of functions defining inequality constraints, specifying quantities
+that should be less than zero, along with tolerances.
+Each function should take arguments func(params, grad), where params is
+the current vector of parameter values. grad is not typically used in dadi.
+For example, def func1(p, grad): (p[0]+p[1])-1 specifies that the total of
+p[0]+[1] should be less than 1.
+This would be passed into opt as ineq_constraints = [(func1, 1e-6)].
+Here the 1e-6 is the tolerance on the constraint, which is &gt; 0 to deal with numerical
+rounding issues.
+Only some algorithms support constraints. We suggest using nlopt.LN_COBYLA.
+eq_constraints: List of functions defining equality constraints, specifying quantities
+that should be equal to zero, along with tolerances.
+Each function should take arguments func(params, grad), where params is
+the current vector of parameter values. grad is not typically used in dadi.
+For example, def func1(p, grad): 1 - (p[0]+p[1]) specifies that the total of
+p[0]+[1] should be equal to 1.
+This would be passed into opt as ineq_constraints = [(func1, 1e-6)].
+Here the 1e-6 is the tolerance on the constraint, which is &gt; 0 to deal with numerical
+rounding issues.
+Only some algorithms support constraints. We suggest using nlopt.LN_COBYLA.
+algorithm: Optimization algorithm to employ. See
+<a href="https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/">https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/</a>
+for possibilities.
+ftol_abs: Absolute tolerance on log-likelihood
+xtol_abs: Absolute tolerance in parameter values
+Both these tolerances should be set more stringently than your actual
+desire, because algorithms cannot generally guarantee convergence.
+maxeval: Maximum number of function evaluations
+maxtime: Maximum optimization time, in seconds
+log_opt: If True, optimization algorithm will run in terms of logs of parameters.
+stopval: Algorithm will stop when a log-likelihood of at least stopval
+is found. This is primarily useful for testing.
+local_optimizer: If using a global algorithm, this specifies the local algorithm
+to be used for refinement.
+verbose: If &gt; 0, print optimization status every <verbose> model evaluations.
+func_args: Additional arguments to model_func. It is assumed that
+model_func's first argument is an array of parameters to
+optimize, that its second argument is an array of sample sizes
+for the sfs, and that its last argument is the list of grid
+points to use in evaluation.
+func_kwargs: Additional keyword arguments to model_func.
+(See help(dadi.Inference.optimize_log for examples of func_args and
+fixed_params usage.)</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi" href="index.html">dadi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.NLopt_mod.opt" href="#dadi.NLopt_mod.opt">opt</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
