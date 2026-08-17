@@ -252,3 +252,27 @@ def test_export_mapping():
     g = dadi.Demes.output(deme_mapping={'YRI':['d1_1', 'd1_2', 'd1_3'], 'Bottle':['d2_2'],
                                                 'CEU':['d2_3'], 'CHB':['d3_3']})
     # The correctness test here is visual. Here just testing whether method crashes.
+
+@pytest.mark.skipif(skip, reason="Could not load Demes")
+def test_simultaneous_split():
+    def three_pop_simultaneous_split(T_div, ns, pts):
+        xx = dadi.Numerics.default_grid(pts)
+        phi = dadi.PhiManip.phi_1D(xx)
+        phi = dadi.PhiManip.phi_1D_to_2D(xx, phi)
+        # No integration between these two splits so that they are simultaneous
+        phi = dadi.PhiManip.phi_2D_to_3D(phi, 1, xx, xx, xx)
+        phi = dadi.Integration.three_pops(phi, xx, T_div)
+        return dadi.Spectrum.from_phi(phi, ns, (xx,xx,xx))
+
+    T_div = 1.0
+    fs = three_pop_simultaneous_split(T_div, (4,4,4), 20)
+    g = dadi.Demes.output() # ensure the graph builds properly
+
+    # All 3 post-split demes should be direct children of the root deme
+    # and start_time == T_div for all 3. So, we check those things here.
+    root, children = g.demes[0], g.demes[1:]
+    assert len(g.demes) == 4 # 3 post-split demes + root
+    for d in children:
+        assert list(d.ancestors) == [root.name] 
+        assert d.start_time == T_div 
+        assert d.end_time == 0 
