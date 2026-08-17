@@ -24,7 +24,7 @@ nav:
         - 'DFE inference': 'user-guide/dfe-inference.md'
         - 'Inbreeding': 'user-guide/inbreeding.md'
         - 'Low-Pass': 'user-guide/low-pass.md'
-        - 'Polyploidy': 'user-guide/polyploidy.md'
+        - 'Polyploidy': 'user-guide/polyploid-subgenomes.md'
         - 'GPU computing': 'user-guide/GPU-computing.md'
         - 'Demes integration': 'user-guide/demes.md'
         - 'Frequently asked questions': 'user-guide/frequently-asked-questions.md'
