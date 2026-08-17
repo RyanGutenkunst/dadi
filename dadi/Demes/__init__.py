@@ -109,17 +109,28 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
     for older, younger in zip(cache[:-1], cache[1:]):
         if younger.deme_ids is None:
             if isinstance(younger, Split):
-                # In dadi, a Split only creates one new deme, always in the
-                # last position; every other deme is numerically unchanged
-                # by the split, so it keeps its existing identity. Renaming
-                # them here would spuriously break their epoch history into
-                # a separate, zero-duration deme whenever two or more Splits
-                # happen back-to-back with no integration in between (e.g.
-                # simultaneous allopolyploid subgenome formation) -- and
-                # demes has no way to represent a zero-duration deme.
-                era += 1
-                new_id = 'd{0}_{1}'.format(era, len(older.deme_ids)+1)
-                younger.deme_ids = list(older.deme_ids) + [new_id]
+                if older.duration == 0:
+                    # older was itself a zero-duration structural event (most
+                    # often another Split), so this Split is simultaneous with
+                    # it -- no integration has occurred to give any continuing
+                    # deme an epoch yet. In dadi, a Split only creates one new
+                    # deme, always in the last position, so here we keep the
+                    # existing identity of every other deme and only assign a
+                    # fresh id to the new one. (Renaming all of them, as below,
+                    # would orphan the continuing demes with zero total
+                    # duration, which demes cannot represent: every epoch must
+                    # have start_time > end_time.) This is what allows e.g.
+                    # simultaneous allopolyploid subgenome formation, via two
+                    # Splits in a row, to be output correctly.
+                    era += 1
+                    new_id = 'd{0}_{1}'.format(era, len(older.deme_ids)+1)
+                    younger.deme_ids = list(older.deme_ids) + [new_id]
+                else:
+                    # older had nonzero duration, so every deme already has a
+                    # valid epoch from it. Start a fresh era for all of them,
+                    # as dadi has always done.
+                    era += 1
+                    younger.deme_ids = ['d{0}_{1}'.format(era, ii+1) for ii in range(len(older.deme_ids)+1)]
             elif isinstance(younger, Remove):
                 younger.deme_ids = list(older.deme_ids)
                 del younger.deme_ids[younger.removed-1]
@@ -157,6 +168,7 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
             b = demes.Builder(time_units='years', generation_time=generation_time)
 
     # Build up info for each deme
+    deme_info = {}
     for deme in all_demes:
         epochs = []
         start_time, ancestors, proportions = None, None, None
@@ -208,7 +220,39 @@ def output(Nref=None, deme_mapping=None, generation_time=None):
                         proportions = [e.proportions[_] for _ in range(len(prev_e.deme_ids))
                                      if e.proportions[_] != 0]
 
-        b.add_deme(deme, epochs=epochs, start_time=start_time, ancestors=ancestors, proportions=proportions)
+        deme_info[deme] = {'epochs':epochs, 'start_time':start_time,
+                            'ancestors':ancestors, 'proportions':proportions}
+
+    # A chain of two or more simultaneous Splits (zero duration between them,
+    # see above) can leave a deme's resolved ancestor with the exact same
+    # start_time as the deme itself -- e.g. a new deme created by the second
+    # Split in the chain, whose ancestor is a deme that was itself just
+    # (re)created by the first Split. demes requires an ancestor to already
+    # exist when a deme branches off (a strictly earlier start_time), so we
+    # walk back through any such same-instant ancestors to whichever earlier
+    # deme(s) they themselves descend from, combining proportions along the
+    # way.
+    for deme in all_demes:
+        info = deme_info[deme]
+        if not info['ancestors']:
+            continue
+        resolved = {}
+        pending = list(zip(info['ancestors'], info['proportions']))
+        while pending:
+            anc, prop = pending.pop()
+            anc_info = deme_info[anc]
+            if anc_info['start_time'] == info['start_time']:
+                pending.extend((a, prop*p) for a, p in
+                                zip(anc_info['ancestors'], anc_info['proportions']))
+            else:
+                resolved[anc] = resolved.get(anc, 0) + prop
+        info['ancestors'] = list(resolved.keys())
+        info['proportions'] = list(resolved.values())
+
+    for deme in all_demes:
+        info = deme_info[deme]
+        b.add_deme(deme, epochs=info['epochs'], start_time=info['start_time'],
+                   ancestors=info['ancestors'], proportions=info['proportions'])
 
     all_migs = []
     for e in cache:
