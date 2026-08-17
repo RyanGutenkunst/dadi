@@ -45,15 +45,14 @@ el.replaceWith(d);
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="dadi.Polyploidy.PhiManip_supp.phi_1D_autohex"><code class="name flex">
-<span>def <span class="ident">phi_1D_autohex</span></span>(<span>xx,<br>nu=1.0,<br>theta0=1.0,<br>gamma1=0,<br>gamma2=0,<br>gamma3=0,<br>gamma4=0,<br>gamma5=0,<br>gamma6=0,<br>deme_ids=None)</span>
+<span>def <span class="ident">phi_1D_autohex</span></span>(<span>xx, nu=1.0, theta0=1.0, sel_dict={'gamma': 0}, deme_ids=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def phi_1D_autohex(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=0,
-                   gamma5=0, gamma6=0, deme_ids=None):
+<pre><code class="python">def phi_1D_autohex(xx, nu=1.0, theta0=1.0, sel_dict={&#39;gamma&#39;:0}, deme_ids=None):
     &#34;&#34;&#34;
     Compute a one-dimensional phi for a constant-sized autohexaploid population 
     with arbitrary selection.
@@ -64,24 +63,17 @@ el.replaceWith(d);
         theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus in a diploid population
             and Nref is the reference population size. 
-        gamma1 (float): Scaled selection coefficient, equal to 2*Nref * s1, where s1 is the
-            selective advantage for the heterozygote with one derived allele.
-        gamma2 (float): Scaled selection coefficient, equal to 2*Nref * s2, where s2 is the
-            selective advantage for the heterozygote with two derived alleles.
-        gamma3 (float): Scaled selection coefficient, equal to 2*Nref * s3, where s3 is the
-            selective advantage for the heterozygote with three derived alleles.
-        gamma4 (float): Scaled selection coefficient, equal to 2*Nref * s4, where s4 is the
-            selective advantage for the heterozygote with four derived alleles.
-        gamma5 (float): Scaled selection coefficient, equal to 2*Nref * s5, where s5 is the
-            selective advantage for the heterozygote with fiver derived alleles.
-        gamma6 (float): Scaled selection coefficient, equal to 2*Nref * s6, where s6 is the
-            selective advantage for the derived homozygote (six derived alleles).
+        sel_dict (dictionary): Dictionary of selection parameters 
+            (see PloidyType class for details).
         deme_ids (list, optional): Sequence of strings representing the names of demes.
 
     Returns:
         phi (array): A new phi array.
     &#34;&#34;&#34;
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
+
+    # convert selection dictionary to gamma values
+    [gamma1, gamma2, gamma3, gamma4, gamma5, gamma6] = PloidyType.AUTOHEX.pack_sel_params(sel_dict)[:6]
 
     ### Here, we choose not to develop a separate function for the genic selection case.
     ### Technically, genic selection for autohexaploids ia s special rescaling (by 3) of 
@@ -183,24 +175,9 @@ with arbitrary selection.</p>
 <dd>Scaled mutation rate, equal to 4*Nref * u, where u is the mutation
 event rate per generation for the simulated locus in a diploid population
 and Nref is the reference population size. </dd>
-<dt><strong><code>gamma1</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s1, where s1 is the
-selective advantage for the heterozygote with one derived allele.</dd>
-<dt><strong><code>gamma2</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s2, where s2 is the
-selective advantage for the heterozygote with two derived alleles.</dd>
-<dt><strong><code>gamma3</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s3, where s3 is the
-selective advantage for the heterozygote with three derived alleles.</dd>
-<dt><strong><code>gamma4</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s4, where s4 is the
-selective advantage for the heterozygote with four derived alleles.</dd>
-<dt><strong><code>gamma5</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s5, where s5 is the
-selective advantage for the heterozygote with fiver derived alleles.</dd>
-<dt><strong><code>gamma6</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s6, where s6 is the
-selective advantage for the derived homozygote (six derived alleles).</dd>
+<dt><strong><code>sel_dict</code></strong> :&ensp;<code>dictionary</code></dt>
+<dd>Dictionary of selection parameters
+(see PloidyType class for details).</dd>
 <dt><strong><code>deme_ids</code></strong> :&ensp;<code>list</code>, optional</dt>
 <dd>Sequence of strings representing the names of demes.</dd>
 </dl>
@@ -208,14 +185,14 @@ selective advantage for the derived homozygote (six derived alleles).</dd>
 <p>phi (array): A new phi array.</p></div>
 </dd>
 <dt id="dadi.Polyploidy.PhiManip_supp.phi_1D_autotet"><code class="name flex">
-<span>def <span class="ident">phi_1D_autotet</span></span>(<span>xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=0, deme_ids=None)</span>
+<span>def <span class="ident">phi_1D_autotet</span></span>(<span>xx, nu=1.0, theta0=1.0, sel_dict={'gamma': 0}, deme_ids=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def phi_1D_autotet(xx, nu=1.0, theta0=1.0, gamma1=0, gamma2=0, gamma3=0, gamma4=0, deme_ids=None):
+<pre><code class="python">def phi_1D_autotet(xx, nu=1.0, theta0=1.0, sel_dict={&#39;gamma&#39;:0}, deme_ids=None):
     &#34;&#34;&#34;
     Compute a one-dimensional phi for a constant-sized autotetraploid population 
     with arbitrary selection.
@@ -226,20 +203,17 @@ selective advantage for the derived homozygote (six derived alleles).</dd>
         theta0 (float): Scaled mutation rate, equal to 4*Nref * u, where u is the mutation 
             event rate per generation for the simulated locus in a diploid population
             and Nref is the reference population size. 
-        gamma1 (float): Scaled selection coefficient, equal to 2*Nref * s1, where s1 is the
-            selective advantage for the simplex heterozygote (one derived allele).
-        gamma2 (float): Scaled selection coefficient, equal to 2*Nref * s2, where s2 is the
-            selective advantage for the duplex heterozygote (two derived alleles).
-        gamma3 (float): Scaled selection coefficient, equal to 2*Nref * s3, where s3 is the
-            selective advantage for the triplex heterozygote (three derived alleles).
-        gamma4 (float): Scaled selection coefficient, equal to 2*Nref * s4, where s4 is the
-            selective advantage for the derived homozygote (four derived alleles).
+        sel_dict (dictionary): Dictionary of selection parameters 
+            (see PloidyType class for details).
         deme_ids (list, optional): Sequence of strings representing the names of demes.
 
     Returns:
         phi (array): A new phi array.
     &#34;&#34;&#34;
     Demes.cache = [Demes.Initiation(nu, deme_ids=deme_ids)]
+
+    # convert selection dictionary to gamma values
+    [gamma1, gamma2, gamma3, gamma4] = PloidyType.AUTO.pack_sel_params(sel_dict)[:4]
 
     ### Here, we choose not to develop a separate function for the genic selection case
     ### Technically, genic selection for autotetraploids ia s special rescaling (by 2) of 
@@ -333,18 +307,9 @@ with arbitrary selection.</p>
 <dd>Scaled mutation rate, equal to 4*Nref * u, where u is the mutation
 event rate per generation for the simulated locus in a diploid population
 and Nref is the reference population size. </dd>
-<dt><strong><code>gamma1</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s1, where s1 is the
-selective advantage for the simplex heterozygote (one derived allele).</dd>
-<dt><strong><code>gamma2</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s2, where s2 is the
-selective advantage for the duplex heterozygote (two derived alleles).</dd>
-<dt><strong><code>gamma3</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s3, where s3 is the
-selective advantage for the triplex heterozygote (three derived alleles).</dd>
-<dt><strong><code>gamma4</code></strong> :&ensp;<code>float</code></dt>
-<dd>Scaled selection coefficient, equal to 2*Nref * s4, where s4 is the
-selective advantage for the derived homozygote (four derived alleles).</dd>
+<dt><strong><code>sel_dict</code></strong> :&ensp;<code>dictionary</code></dt>
+<dd>Dictionary of selection parameters
+(see PloidyType class for details).</dd>
 <dt><strong><code>deme_ids</code></strong> :&ensp;<code>list</code>, optional</dt>
 <dd>Sequence of strings representing the names of demes.</dd>
 </dl>
