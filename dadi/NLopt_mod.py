@@ -139,7 +139,7 @@ def opt(p0, data, model_func, pts, multinom=True,
             p0 = np.log(p0)
         xopt = opt.optimize(p0)
         if log_opt:
-            xopt = np.exp(p0)
+            xopt = np.exp(xopt)
 
         opt_val = opt.last_optimum_value()
         result = opt.last_optimize_result()
