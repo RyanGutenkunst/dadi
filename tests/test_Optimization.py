@@ -67,3 +67,61 @@ def test_ineq_constraint():
                                      ineq_constraints=[(ineq_cons,1e-6)],
                                      maxtime=10)
     assert(popt[0]+popt[1] < 0.5+1e-6)
+
+def test_optimize_log_no_lower_bound():
+    # Bounds of -inf (which is what an unspecified lower bound becomes) must
+    # map to -inf in log space, not nan.
+    ns = (20,)
+    func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.two_epoch)
+    params = [0.5, 0.1]
+    pts_l = [40,50,60]
+
+    data = (1000*func_ex(params, ns, pts_l)).sample()
+
+    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l,
+                                     upper_bound=[1.0, 0.3],
+                                     log_opt=True, maxtime=3)
+
+    model = func_ex(popt, ns, pts_l)
+    assert(numpy.allclose(llopt, dadi.Inference.ll_multinom(model, data)))
+
+def test_optimize_log_eq_constraint():
+    # Constraints are defined in terms of the parameters, not their logs.
+    ns = (20,)
+    func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.two_epoch)
+    params = [0.5, 0.1]
+    pts_l = [40,50,60]
+
+    data = (1000*func_ex(params, ns, pts_l)).sample()
+    def eq_cons(p,grad):
+        return 0.5 - (p[0] + p[1])
+
+    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l,
+                                     lower_bound=[0.1, 1e-3], upper_bound=[1.0, 0.3],
+                                     algorithm=nlopt.LN_COBYLA,
+                                     eq_constraints=[(eq_cons,1e-6)],
+                                     log_opt=True, maxtime=10)
+    assert(abs(0.5-(popt[0]+popt[1])) < 1e-4)
+
+def test_roundoff_fallback_fixed_params():
+    # On a roundoff error the returned parameters must still be a full-length
+    # vector, with fixed parameters in place.
+    ns = (20,)
+    func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.two_epoch)
+    params = [0.5, 0.1]
+    pts_l = [40,50,60]
+
+    data = (1000*func_ex(params, ns, pts_l)).sample()
+
+    def raise_roundoff(self, p):
+        raise nlopt.RoundoffLimited()
+    orig = nlopt.opt.optimize
+    nlopt.opt.optimize = raise_roundoff
+    try:
+        popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l,
+                                         lower_bound=[0.1, 0], upper_bound=[1.0, 0.3],
+                                         fixed_params=[0.35, None])
+    finally:
+        nlopt.opt.optimize = orig
+    assert(len(popt) == len(params))
+    assert(popt[0] == 0.35)

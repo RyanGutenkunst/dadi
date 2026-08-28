@@ -76,8 +76,8 @@ def opt(p0, data, model_func, pts, multinom=True,
         func_kwargs (dict, optional): Additional keyword arguments to model_func. Defaults to an empty dictionary.
 
     Returns:
-        xopt (float): Optimized log-likelihood value.
-        opt_val (list): Optimized parameters.
+        xopt (list): Optimized parameters.
+        opt_val (float): Optimized log-likelihood value.
     """
     if lower_bound is None:
             lower_bound = [-np.inf] * len(p0)
@@ -91,7 +91,12 @@ def opt(p0, data, model_func, pts, multinom=True,
     upper_bound = [_ if _ is not None else np.inf for _ in upper_bound]
 
     if log_opt:
-        lower_bound, upper_bound = np.log(lower_bound), np.log(upper_bound)
+        # Both -inf and 0 in linear space correspond to -inf in log space.
+        # np.log would map -inf to nan, which nlopt accepts silently and which
+        # causes the optimization to fail without any error being raised.
+        lower_bound = [-np.inf if _ <= 0 else np.log(_) for _ in lower_bound]
+        upper_bound = [np.inf if _ == np.inf else
+                       (-np.inf if _ <= 0 else np.log(_)) for _ in upper_bound]
 
     p0 = _project_params_down(p0, fixed_params)
 
@@ -100,10 +105,15 @@ def opt(p0, data, model_func, pts, multinom=True,
     opt.set_lower_bounds(lower_bound)
     opt.set_upper_bounds(upper_bound)
 
+    def _linear_cons(cons):
+        # Constraints are defined in terms of the parameters themselves, so
+        # convert back from log parameters before evaluating them.
+        return lambda x, grad: cons(np.exp(x), grad)
+
     for cons, tol in ineq_constraints:
-        opt.add_inequality_constraint(cons, tol)
+        opt.add_inequality_constraint(_linear_cons(cons) if log_opt else cons, tol)
     for cons, tol in eq_constraints:
-        opt.add_equality_constraint(cons, tol)
+        opt.add_equality_constraint(_linear_cons(cons) if log_opt else cons, tol)
 
     opt.set_stopval(stopval)
     opt.set_ftol_abs(ftol_abs)
@@ -149,6 +159,6 @@ def opt(p0, data, model_func, pts, multinom=True,
     except nlopt.RoundoffLimited:
         print('nlopt.RoundoffLimited occured, other jobs still running. Users might want to adjust their boundaries or starting parameters if this message occures many times.')
         opt_val = -np.inf
-        xopt = [np.nan] * len(p0)
+        xopt = _project_params_up([np.nan] * len(p0), fixed_params)
 
     return xopt, opt_val
