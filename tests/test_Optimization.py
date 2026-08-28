@@ -17,6 +17,10 @@ def test_optimize_log():
                                      upper_bound=[1.0, 0.3],
                                      log_opt=True, maxtime=3)
 
+    # The returned parameters must correspond to the returned likelihood.
+    model = func_ex(popt, ns, pts_l)
+    assert(numpy.allclose(llopt, dadi.Inference.ll_multinom(model, data)))
+
 def test_optimize():
     ns = (20,)
     func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.two_epoch)
