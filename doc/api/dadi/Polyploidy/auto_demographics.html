@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>dadi.Polyploidy.auto_demographics API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dadi.Polyploidy.auto_demographics</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth"><code class="name flex">
+<span>def <span class="ident">bottlegrowth</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth(params, ns, pts):
+    &#34;&#34;&#34;
+    Bottlegrowth model of autotetraploid formation where the 
+    autotetraploid population starts with size nuWGD and 
+    grows exponentially to a size of nuF
+    
+    Parameters:
+        params (tuple): (T_WGD, nuWGD, nuF)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nuWGD: Ratio of autotetraploid population immediately after WGD
+                to ancestral diploid population size (ratio of *census* sizes).
+
+            - nuF: Ratio of contemporary autotetraploid population
+                to ancestral diploid population size (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1,).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    &#34;&#34;&#34;
+    T_WGD, nuWGD, nuF = params
+    nu_f = lambda t: nuWGD*numpy.exp(numpy.log(nuF/nuWGD) * t/T_WGD)
+    autoflag = PolyInt.PloidyType.AUTO
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu_f, ploidyflag=autoflag)
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Bottlegrowth model of autotetraploid formation where the
+autotetraploid population starts with size nuWGD and
+grows exponentially to a size of nuF</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nuWGD, nuF)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nuWGD: Ratio of autotetraploid population immediately after WGD
+    to ancestral diploid population size (ratio of *census* sizes).
+
+- nuF: Ratio of contemporary autotetraploid population
+    to ancestral diploid population size (ratio of *census* sizes).
+</code></pre>
+<p>ns (tuple): Sample sizes (n1,).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth_asym_mig_w_dips"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_asym_mig_w_dips</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_asym_mig_w_dips(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, nuB, nuF, m12, m21)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+            - m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, nuB, nuF, m12, m21 = params
+
+    autoflag = PolyInt.PloidyType.AUTO
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    
+    # set up the nu_func for only the auotetraploid population
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB)* t/T_WGD)
+    
+    # Note: here, we set pop1 = dips and pop2 = autos
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_func, m12=m12, m21=m21, ploidyflag2=autoflag)
+    
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nuB, nuF, m12, m21)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+   (ratio of *census* sizes).
+
+- nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+- m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_dip_size_change</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_dip_size_change(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip)
+
+            - T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+            - T_dip: Time in the past at which the diploid population changes size
+                (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, T_dip, nuB, nuF, nu_dip = params
+
+    return bottlegrowth_dip_size_change_asym_mig((T_WGD, T_dip, nuB, nuF, nu_dip, 0, 0), ns, pts)</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip)</p>
+<pre><code>- T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+- T_dip: Time in the past at which the diploid population changes size
+    (in units of 2*Na generations).
+
+- nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+   (ratio of *census* sizes).
+
+- nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change_asym_mig"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_dip_size_change_asym_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_dip_size_change_asym_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip, m12, m21)
+
+            - T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+            - T_dip: Time in the past at which the diploid population changes size
+                (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+            - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+            - m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, T_dip, nuB, nuF, nu_dip, m12, m21 = params
+
+    autoflag = PolyInt.PloidyType.AUTO
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+    
+    T_total = T_WGD + T_dip
+    # set up the nu_func for only the auotetraploid population
+    nu_func = lambda t: nuB*numpy.exp(numpy.log(nuF/nuB)* t/T_total)
+    
+    # Note: here, we set pop1 = dips and pop2 = autos
+    # integrate from the WGD to dip size change
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_func, m12=m12, m21=m21, ploidyflag2=autoflag)
+    # integrate from dip size change to the present
+    phi = PolyInt.two_pops(phi, xx, T_total, nu1=nu_dip, nu2=nu_func, m12=m12, m21=m21, ploidyflag2=autoflag, initial_t = T_WGD)
+
+    fs = Spectrum.from_phi(phi, ns, (xx,xx))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip, m12, m21)</p>
+<pre><code>- T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+- T_dip: Time in the past at which the diploid population changes size
+    (in units of 2*Na generations).
+
+- nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+   (ratio of *census* sizes).
+
+- nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+- m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+- m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change_mig"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_dip_size_change_mig</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_dip_size_change_mig(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip, m)
+
+            - T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+            - T_dip: Time in the past at which the diploid population changes size
+                (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+            - m: symmetric migration rate between the two populations (2*Na*m)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, T_dip, nuB, nuF, nu_dip, m = params
+
+    return bottlegrowth_dip_size_change_asym_mig((T_WGD, T_dip, nuB, nuF, nu_dip, m, m), ns, pts)</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, T_dip, nuB, nuF, nu_dip, m)</p>
+<pre><code>- T_WGD: Time between the WGD and diploid size change (in units of 2*Na generations).
+
+- T_dip: Time in the past at which the diploid population changes size
+    (in units of 2*Na generations).
+
+- nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+   (ratio of *census* sizes).
+
+- nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- nu_dip: Ratio of contemporary diploid population to ancestral diploid population size
+
+- m: symmetric migration rate between the two populations (2*Na*m)
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth_mig_w_dips"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_mig_w_dips</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_mig_w_dips(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, nuB, nuF, m)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - m: symmetric migration rate between the two populations (2*Na*m)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, nuB, nuF, m = params
+
+    return bottlegrowth_asym_mig_w_dips((T_WGD, nuB, nuF, m, m), ns, pts)</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nuB, nuF, m)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+   (ratio of *census* sizes).
+
+- nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- m: symmetric migration rate between the two populations (2*Na*m)
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottlegrowth_w_dips"><code class="name flex">
+<span>def <span class="ident">bottlegrowth_w_dips</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottlegrowth_w_dips(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu_auto.
+
+    Parameters:
+        params (tuple): (T_WGD, nuB, nuF)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+               (ratio of *census* sizes).
+
+            - nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, nuB, nuF = params
+
+    return bottlegrowth_asym_mig_w_dips((T_WGD, nuB, nuF, 0, 0), ns, pts)</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nuB, nuF)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nuB: Ratio of bottlenecked autotetraploid to ancestral diploid population size s
+   (ratio of *census* sizes).
+
+- nuF: Ratio of final or contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottleneck_asym_mig_w_dips"><code class="name flex">
+<span>def <span class="ident">bottleneck_asym_mig_w_dips</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottleneck_asym_mig_w_dips(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation with subsequent migration where the 
+    autotetraploid population splits and maintains a bottlenecked size of nu_auto.
+    
+    Parameters:
+        params (tuple): (T_WGD, nu_auto, m12, m21)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+            - m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, nu_auto, m12, m21 = params
+
+    autoflag = PolyInt.PloidyType.AUTO
+
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PhiManip.phi_1D_to_2D(xx, phi)
+
+    # Note: here, we set pop1 = dips and pop2 = autos
+    # integrate from the WGD to the present
+    phi = PolyInt.two_pops(phi, xx, T_WGD, nu2=nu_auto, m12=m12, m21=m21,
+                           ploidyflag2=autoflag)
+    
+    fs = Spectrum.from_phi(phi, ns, (xx,xx)) 
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation with subsequent migration where the
+autotetraploid population splits and maintains a bottlenecked size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nu_auto, m12, m21)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- m12: migration rate from pop 2 (auotetraploids) into pop 1 (diploids) (2*Na*m12)
+
+- m21: migration rate from pop 1 (diploids) into pop 2 (auotetraploids) (2*Na*m21)
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottleneck_mig_w_dips"><code class="name flex">
+<span>def <span class="ident">bottleneck_mig_w_dips</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottleneck_mig_w_dips(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation with subsequent migration where the 
+    autotetraploid population splits and maintains a bottlenecked size of nu_auto.
+    
+    Parameters:
+        params (tuple): (T_WGD, nu_auto, m)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+
+            - m: symmetric migration rate between the two populations (2*Na*m)
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, nu_auto, m = params
+
+    return bottleneck_asym_mig_w_dips((T_WGD, nu_auto, m, m), ns, pts)</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation with subsequent migration where the
+autotetraploid population splits and maintains a bottlenecked size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nu_auto, m)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+
+- m: symmetric migration rate between the two populations (2*Na*m)
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.bottleneck_w_dips"><code class="name flex">
+<span>def <span class="ident">bottleneck_w_dips</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bottleneck_w_dips(params, ns, pts):
+    &#34;&#34;&#34;
+    Two population model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a bottlenecked size of nu_auto.
+    
+    Parameters:
+        params (tuple): (T_WGD, nu_auto)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    &#34;&#34;&#34;
+    T_WGD, nu_auto = params
+    return bottleneck_asym_mig_w_dips((T_WGD, nu_auto, 0, 0), ns, pts)</code></pre>
+</details>
+<div class="desc"><p>Two population model of autotetraploid formation where the
+autotetraploid population splits and maintains a bottlenecked size of nu_auto.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nu_auto)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nu_auto: Ratio of contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+</code></pre>
+<p>ns (tuple): Sample sizes (n1, n2).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If <code>params</code> does not contain the expected number of elements.</dd>
+</dl></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.snm"><code class="name flex">
+<span>def <span class="ident">snm</span></span>(<span>notused, ns, pts, theta0=1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def snm(notused, ns, pts, theta0=1):
+    &#34;&#34;&#34;
+    ns = (n1,)
+
+    Standard neutral model for a single autotetraploid population.
+    &#34;&#34;&#34;
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip_supp.phi_1D_autotet(xx, theta0=theta0)
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>ns = (n1,)</p>
+<p>Standard neutral model for a single autotetraploid population.</p></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.three_epoch"><code class="name flex">
+<span>def <span class="ident">three_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def three_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Three epoch model of autotetraploid formation where the 
+    autotetraploid population splits, maintains a size of nuWGD for T_WGD, 
+    and then changes size again to nu_c for a period of TF.
+    This is similar to having a bottleneck for some period and then recover after the bottleneck.
+    
+    Parameters:
+        params (tuple): (T_WGD, TF, nuWGD, nuF)
+
+            - T_WGD: Time length between the WGD event and second size change, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - TF: Time in the past at which the second epoch begins.
+
+            - nuWGD: Ratio of initial autotetraploid population (during first epoch)
+                 to ancestral diploid population size (ratio of *census* sizes).
+
+            - nuF: Ratio of contemporary autotetraploid population (during second epoch)
+                 to ancestral diploid population size (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1,).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    &#34;&#34;&#34;
+    T_WGD, TF, nuWGD, nuF  = params
+    autoflag = PolyInt.PloidyType.AUTO
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nuWGD, ploidyflag=autoflag)
+    phi = PolyInt.one_pop(phi, xx, TF, nu=nuF, ploidyflag=autoflag)
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Three epoch model of autotetraploid formation where the
+autotetraploid population splits, maintains a size of nuWGD for T_WGD,
+and then changes size again to nu_c for a period of TF.
+This is similar to having a bottleneck for some period and then recover after the bottleneck.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, TF, nuWGD, nuF)</p>
+<pre><code>- T_WGD: Time length between the WGD event and second size change, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- TF: Time in the past at which the second epoch begins.
+
+- nuWGD: Ratio of initial autotetraploid population (during first epoch)
+     to ancestral diploid population size (ratio of *census* sizes).
+
+- nuF: Ratio of contemporary autotetraploid population (during second epoch)
+     to ancestral diploid population size (ratio of *census* sizes).
+</code></pre>
+<p>ns (tuple): Sample sizes (n1,).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p></div>
+</dd>
+<dt id="dadi.Polyploidy.auto_demographics.two_epoch"><code class="name flex">
+<span>def <span class="ident">two_epoch</span></span>(<span>params, ns, pts)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def two_epoch(params, ns, pts):
+    &#34;&#34;&#34;
+    Two epoch model of autotetraploid formation where the 
+    autotetraploid population splits and maintains a size of nu.
+    
+    Parameters:
+        params (tuple): (T_WGD, nu)
+
+            - T_WGD: Time in the past at which the WGD occurred, creating the  
+               autotetraploid population (in units of 2*Na generations).
+
+            - nu: Ratio of contemporary autotetraploid to ancestral diploid population size 
+               (ratio of *census* sizes).
+        ns (tuple): Sample sizes (n1,).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+    &#34;&#34;&#34;
+    T_WGD, nu = params
+    autoflag = PolyInt.PloidyType.AUTO
+    xx = Numerics.default_grid(pts)
+    phi = PhiManip.phi_1D(xx)
+    phi = PolyInt.one_pop(phi, xx, T_WGD, nu=nu, ploidyflag=autoflag)
+    fs = Spectrum.from_phi(phi, ns, (xx,))
+    return fs</code></pre>
+</details>
+<div class="desc"><p>Two epoch model of autotetraploid formation where the
+autotetraploid population splits and maintains a size of nu.</p>
+<h2 id="parameters">Parameters</h2>
+<p>params (tuple): (T_WGD, nu)</p>
+<pre><code>- T_WGD: Time in the past at which the WGD occurred, creating the  
+   autotetraploid population (in units of 2*Na generations).
+
+- nu: Ratio of contemporary autotetraploid to ancestral diploid population size 
+   (ratio of *census* sizes).
+</code></pre>
+<p>ns (tuple): Sample sizes (n1,).
+pts (int): Number of grid points to use in integration.</p>
+<h2 id="returns">Returns</h2>
+<p>fs (Spectrum): The resulting frequency spectrum.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="dadi.Polyploidy" href="index.html">dadi.Polyploidy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth" href="#dadi.Polyploidy.auto_demographics.bottlegrowth">bottlegrowth</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth_asym_mig_w_dips" href="#dadi.Polyploidy.auto_demographics.bottlegrowth_asym_mig_w_dips">bottlegrowth_asym_mig_w_dips</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change" href="#dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change">bottlegrowth_dip_size_change</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change_asym_mig" href="#dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change_asym_mig">bottlegrowth_dip_size_change_asym_mig</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change_mig" href="#dadi.Polyploidy.auto_demographics.bottlegrowth_dip_size_change_mig">bottlegrowth_dip_size_change_mig</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth_mig_w_dips" href="#dadi.Polyploidy.auto_demographics.bottlegrowth_mig_w_dips">bottlegrowth_mig_w_dips</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottlegrowth_w_dips" href="#dadi.Polyploidy.auto_demographics.bottlegrowth_w_dips">bottlegrowth_w_dips</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottleneck_asym_mig_w_dips" href="#dadi.Polyploidy.auto_demographics.bottleneck_asym_mig_w_dips">bottleneck_asym_mig_w_dips</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottleneck_mig_w_dips" href="#dadi.Polyploidy.auto_demographics.bottleneck_mig_w_dips">bottleneck_mig_w_dips</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.bottleneck_w_dips" href="#dadi.Polyploidy.auto_demographics.bottleneck_w_dips">bottleneck_w_dips</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.snm" href="#dadi.Polyploidy.auto_demographics.snm">snm</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.three_epoch" href="#dadi.Polyploidy.auto_demographics.three_epoch">three_epoch</a></code></li>
+<li><code><a title="dadi.Polyploidy.auto_demographics.two_epoch" href="#dadi.Polyploidy.auto_demographics.two_epoch">two_epoch</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

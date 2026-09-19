@@ -71,14 +71,15 @@ def ms_command(theta, ns, core, iter, recomb=0, rsites=None, seeds=None):
     """
     Generate ms command for simulation from core.
 
-    theta: Assumed theta
-    ns: Sample sizes
-    core: Core of ms command that specifies demography.
-    iter: Iterations to run ms
-    recomb: Assumed recombination rate
-    rsites: Sites for recombination. If None, default is 10*theta.
-    seeds: Seeds for random number generator. If None, ms default is used.
-           Otherwise, three integers should be passed. Example: (132, 435, 123)
+    Args:
+        theta (float): Assumed theta
+        ns (int): Sample sizes
+        core (str): Core of ms command that specifies demography.
+        iter (int): Iterations to run ms
+        recomb (float): Assumed recombination rate
+        rsites (int): Sites for recombination. If None, default is 10*theta.
+        seeds (int): Seeds for random number generator. If None, ms default is used.
+            Otherwise, three integers should be passed. Example: (132, 435, 123)
     """
     if len(ns) > 1:
         ms_command = "ms %(total_chrom)i %(iter)i -t %(theta)f -I %(numpops)i "\
@@ -107,11 +108,14 @@ def perturb_params(params, fold=1, lower_bound=None, upper_bound=None):
     Generate a perturbed set of parameters.
 
     Each element of params is radomly perturbed <fold> factors of 2 up or down.
-    fold: Number of factors of 2 to perturb by
-    lower_bound: If not None, the resulting parameter set is adjusted to have
-                 all value greater than lower_bound.
-    upper_bound: If not None, the resulting parameter set is adjusted to have
-                 all value less than upper_bound.
+
+    Args:
+        params (list[float]): Original parameters
+        fold (int): Number of factors of 2 to perturb by
+        lower_bound (list[float]): If not None, the resulting parameter set is adjusted to have
+                    all value greater than lower_bound.
+        upper_bound (list[float]): If not None, the resulting parameter set is adjusted to have
+                    all value less than upper_bound.
     """
     pnew = params * 2**(fold * (2*numpy.random.uniform(size=len(params))-1))
     if lower_bound is not None:
@@ -130,16 +134,17 @@ def make_fux_table(fid, ts, Q, tri_freq):
     """
     Make file of 1-fux for use in ancestral misidentification correction.
 
-    fid: Filename to output to.
-    ts: Expected number of substitutions per site between ingroup and outgroup.
-    Q: Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
-       which entries are ordered using the code CGTA -> 0,1,2,3. For example,
-       ACT -> 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then
-       entry 50,54.
-    tri_freq: Dictionary in which each entry maps a trinucleotide to its
-              ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
-              Note that should be the frequency in the entire region scanned
-              for variation, not just sites where there are SNPs.
+    Args:
+        fid (str): Filename to output to.
+        ts (float): Expected number of substitutions per site between ingroup and outgroup.
+        Q (array-like): Trinucleotide transition rate matrix. This should be a 64x64 matrix, in
+            which entries are ordered using the code CGTA -> 0,1,2,3. For example,
+            ACT -> 3*16+0*4+2*1=50. The transition rate from ACT to AGT is then
+            entry 50,54.
+        tri_freq (dict): Dictionary in which each entry maps a trinucleotide to its
+                ancestral frequency. e.g. {'AAA': 0.01, 'AAC':0.012...}
+                Note that should be the frequency in the entire region scanned
+                for variation, not just sites where there are SNPs.
     """
     # Ensure that the *columns* of Q sum to zero.
     # That is the correct condition when Q_{i,j} is the rate from i to j.
@@ -235,7 +240,8 @@ def make_data_dict(filename):
     """
     Parse SNP file and store info in a properly formatted dictionary.
 
-    filename: Name of file to work with.
+    Args:
+        filename (str): Name of file to work with.
 
     This is specific to the particular data format described on the wiki.
     Modification for other formats should be straightforward.
@@ -305,8 +311,9 @@ def count_data_dict(data_dict, pop_ids):
     """
     Summarize data in data_dict by mapping SNP configurations to counts.
 
-    data_dict: data_dict formatted as in Misc.make_data_dict
-    pop_ids: IDs of populations to collect data for.
+    Args:
+        data_dict (dict): data_dict formatted as in Misc.make_data_dict
+        pop_ids (list[str]): IDs of populations to collect data for.
 
     Returns a dictionary with keys (successful_calls, derived_calls,
     polarized) mapping to counts of SNPs. Here successful_calls is a tuple
@@ -361,13 +368,14 @@ def dd_from_SLiM_files(fnames, mut_types=None, chr='SLIM_'):
     The populations will be named 0,1,2,... corresponding
     to their order in fnames.
 
-    fnames: Filenames to parse
-    mut_types: Sequence of mutation types to include. If None, all mutations
-               will be included.
-    chr: Prefix to be used for indicating mutation locations.
+    Args:
+        fnames (list[str]): Filenames to parse
+        mut_types (list[str]): Sequence of mutation types to include. If None, all mutations
+                will be included.
+        chr (str): Prefix to be used for indicating mutation locations.
 
-    The keys in the resulting dictionary are of the form
-    <chr>_<position>.<globalid>
+    The keys in the resulting dictionary are of the form:
+        `<chr>_<position>.<globalid>`
     """
     # Open all the files
     try:
@@ -443,41 +451,46 @@ def make_data_dict_vcf_cyvcf2(vcf_filename, popinfo_filename, subsample=None, fi
     Each file may be zipped (.zip) or gzipped (.gz). If a file is zipped,
     it must be the only file in the archive, and the two files cannot be zipped
     together. Both files must be present for the function to work.
-    
-    vcf_filename : Name of VCF file to work with. The function currently works
-                   for biallelic SNPs only, so if REF or ALT is anything other
-                   than a single base pair (A, C, T, or G), the allele will be
-                   skipped. Additionally, genotype information must be present
-                   in the FORMAT field GT, and genotype info must be known for
-                   every sample, else the SNP will be skipped. If the ancestral
-                   allele is known it should be specified in INFO field 'AA'.
-                   Otherwise, it will be set to '-'.
-    
-    popinfo_filename : Name of file containing the population assignments for
-                       each sample in the VCF. If a sample in the VCF file does
-                       not have a corresponding entry in this file, it will be
-                       skipped. See _get_popinfo for information on how this
-                       file must be formatted.
-    
-    subsample : Dictionary with population names used in the popinfo_filename
-                as keys and the desired sample size (in number of individuals)
-                for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
-                two populations.
-    
-    filter : If set to True, alleles will be skipped if they have not passed
-             all filters (i.e. either 'PASS' or '.' must be present in FILTER
-             column.
-    
-    flanking_info : Flanking information for the reference and/or ancestral
-                    allele can be provided as field(s) in the INFO column. To
-                    add this information to the dict, flanking_info should
-                    specify the names of the fields that contain this info as a
-                    list (e.g. ['RFL', 'AFL'].) If context info is given for
-                    only one allele, set the other item in the list to None,
-                    (e.g. ['RFL', None]). Information can be provided as a 3
-                    base-pair sequence or 2 base-pair sequence, where the first
-                    base-pair is the one immediately preceding the SNP, and the
-                    last base-pair is the one immediately following the Snumpy.
+
+    Args:
+        vcf_filename (str): Name of VCF file to work with. The function currently works
+                    for biallelic SNPs only, so if REF or ALT is anything other
+                    than a single base pair (A, C, T, or G), the allele will be
+                    skipped. Additionally, genotype information must be present
+                    in the FORMAT field GT, and genotype info must be known for
+                    every sample, else the SNP will be skipped. If the ancestral
+                    allele is known it should be specified in INFO field 'AA'.
+                    Otherwise, it will be set to '-'.
+        popinfo_filename (str): Name of file containing the population assignments for
+                        each sample in the VCF. If a sample in the VCF file does
+                        not have a corresponding entry in this file, it will be
+                        skipped. See _get_popinfo for information on how this
+                        file must be formatted.
+        subsample (dict): Dictionary with population names used in the popinfo_filename
+                    as keys and the desired sample size (in number of individuals)
+                    for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
+                    two populations.
+        filter (bool): If set to True, alleles will be skipped if they have not passed
+                all filters (i.e. either 'PASS' or '.' must be present in FILTER
+                column.
+        calc_coverage (bool): If set to True, the function will include the coverage 
+                        information in the data dictionary.
+                        Coverage information will be stored in the 'coverage' field
+                        of the SNP dictionary, as a dictionary with population names
+                        as keys and tuples of (total_coverage, num_individuals) as values.
+        flanking_info (list): Flanking information for the reference and/or ancestral
+                        allele can be provided as field(s) in the INFO column. To
+                        add this information to the dict, flanking_info should
+                        specify the names of the fields that contain this info as a
+                        list (e.g. ['RFL', 'AFL'].) If context info is given for
+                        only one allele, set the other item in the list to None,
+                        (e.g. ['RFL', None]). Information can be provided as a 3
+                        base-pair sequence or 2 base-pair sequence, where the first
+                        base-pair is the one immediately preceding the SNP, and the
+                        last base-pair is the one immediately following the Snumpy.
+        extract_ploidy (bool): If set to True, the function will attempt to return ploidy information.
+        ancestral_allele_entry (str): The name used in INFO field in the VCF file that contains
+                        the ancestral allele. Default is 'AA'.
     """
     from cyvcf2 import VCF
     do_subsampling = False
@@ -686,47 +699,51 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
     it must be the only file in the archive, and the two files cannot be zipped
     together. Both files must be present for the function to work.
     
-    vcf_filename : Name of VCF file to work with. The function currently works
-                   for biallelic SNPs only, so if REF or ALT is anything other
-                   than a single base pair (A, C, T, or G), the allele will be
-                   skipped. Additionally, genotype information must be present
-                   in the FORMAT field GT, and genotype info must be known for
-                   every sample, else the SNP will be skipped. If the ancestral
-                   allele is known it should be specified in INFO field 'AA'.
-                   Otherwise, it will be set to '-'.
-    
-    popinfo_filename : Name of file containing the population assignments for
-                       each sample in the VCF. If a sample in the VCF file does
-                       not have a corresponding entry in this file, it will be
-                       skipped. See _get_popinfo for information on how this
-                       file must be formatted.
-    
-    subsample : Dictionary with population names used in the popinfo_filename
-                as keys and the desired sample size (in number of individuals)
-                for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
-                two populations.
-    
-    filter : If set to True, alleles will be skipped if they have not passed
-             all filters (i.e. either 'PASS' or '.' must be present in FILTER
-             column.
-    
-    flanking_info : Flanking information for the reference and/or ancestral
-                    allele can be provided as field(s) in the INFO column. To
-                    add this information to the dict, flanking_info should
-                    specify the names of the fields that contain this info as a
-                    list (e.g. ['RFL', 'AFL'].) If context info is given for
-                    only one allele, set the other item in the list to None,
-                    (e.g. ['RFL', None]). Information can be provided as a 3
-                    base-pair sequence or 2 base-pair sequence, where the first
-                    base-pair is the one immediately preceding the SNP, and the
-                    last base-pair is the one immediately following the Snumpy.
+    Args:
+        vcf_filename (str): Name of VCF file to work with. The function currently works
+                    for biallelic SNPs only, so if REF or ALT is anything other
+                    than a single base pair (A, C, T, or G), the allele will be
+                    skipped. Additionally, genotype information must be present
+                    in the FORMAT field GT, and genotype info must be known for
+                    every sample, else the SNP will be skipped. If the ancestral
+                    allele is known it should be specified in INFO field 'AA'.
+                    Otherwise, it will be set to '-'.
+        popinfo_filename (str): Name of file containing the population assignments for
+                        each sample in the VCF. If a sample in the VCF file does
+                        not have a corresponding entry in this file, it will be
+                        skipped. See _get_popinfo for information on how this
+                        file must be formatted.
+        subsample (dict, optional): Dictionary with population names used in the popinfo_filename
+                    as keys and the desired sample size (in number of individuals)
+                    for subsampling as values. E.g., {"pop1": n1, "pop2": n2} for
+                    two populations.
+        filter (bool, optional): If set to True, alleles will be skipped if they have not passed
+                all filters (i.e. either 'PASS' or '.' must be present in FILTER
+                column.
+        calc_coverage (bool, optional): If set to True, the function will include the coverage 
+                        information in the data dictionary.
+                        Coverage information will be stored in the 'coverage' field
+                        of the SNP dictionary, as a dictionary with population names
+                        as keys and tuples of (total_coverage, num_individuals) as values.
+        flanking_info (list, optional): Flanking information for the reference and/or ancestral
+                        allele can be provided as field(s) in the INFO column. To
+                        add this information to the dict, flanking_info should
+                        specify the names of the fields that contain this info as a
+                        list (e.g. ['RFL', 'AFL'].) If context info is given for
+                        only one allele, set the other item in the list to None,
+                        (e.g. ['RFL', None]). Information can be provided as a 3
+                        base-pair sequence or 2 base-pair sequence, where the first
+                        base-pair is the one immediately preceding the SNP, and the
+                        last base-pair is the one immediately following the Snumpy.
+        extract_ploidy (bool, optional): If set to True, the function will attempt to return ploidy information.
+        seed (int, optional): Random seed for subsampling.
     """
     do_subsampling = False
     if subsample is not None:
         do_subsampling = True
         warnings.warn('Note on subsampling: If you will be including inbreeding in your model, '
-                      'do not project your data to smaller sample sizes in later steps of your analysis.')
-    
+                        'do not project your data to smaller sample sizes in later steps of your analysis.')
+
     if os.path.splitext(popinfo_filename)[1] == '.gz':
         import gzip
         popinfo_file = gzip.open(popinfo_filename)
@@ -736,7 +753,7 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         namelist = archive.namelist()
         if len(namelist) != 1:
             raise ValueError("Must be only a single popinfo file in zip "
-                             "archive: {}".format(popinfo_filename))
+                                "archive: {}".format(popinfo_filename))
         popinfo_file = archive.open(namelist[0])
     else:
         popinfo_file = open(popinfo_filename)
@@ -763,13 +780,25 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
         namelist = archive.namelist()
         if len(namelist) != 1:
             raise ValueError("Must be only a single vcf file in zip "
-                             "archive: {}".format(vcf_filename))
+                                "archive: {}".format(vcf_filename))
         vcf_file = archive.open(namelist[0])
     else:
         vcf_file = open(vcf_filename)
-    
+
     data_dict = {}
-    ploidy = ''
+    ploidy = {}
+    if extract_ploidy:
+        import collections
+        pop_2_sample = collections.defaultdict(list)
+        for key, value in popinfo_dict.items():
+            pop_2_sample[value].append(key)
+        pop_ind = {}
+        for pop in list(pop_2_sample.keys()):
+            ploidy[pop] = ''
+            pop_ind[pop] = None
+
+
+
     for line in vcf_file:
         # decoding lines for Python 3 - probably a better way to handle this
         try:
@@ -787,9 +816,15 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
                 raise ValueError("No samples in VCF file")
             # Use popinfo_dict to get the order of populations present in VCF
             poplist = [popinfo_dict[sample] if sample in popinfo_dict else None
-                       for sample in header_cols[9:]]
+                        for sample in header_cols[9:]]
+            if extract_ploidy:
+                for sample_id in header_cols[9:]:
+                    for pop in pop_2_sample:
+                        if sample_id in pop_2_sample[pop]:
+                            pop_ind[pop] = header_cols[9:].index(sample_id)
+                            continue
             continue
-        
+
         # Read SNP data
         # Data lines in VCF file are tab-delimited
         # See https://samtools.github.io/hts-specs/VCFv4.2.pdf
@@ -872,8 +907,9 @@ def make_data_dict_vcf(vcf_filename, popinfo_filename, subsample=None, filter=Tr
             except:
                 covindex = None
 
-        if extract_ploidy and ploidy == '':
-            ploidy = len(cols[9].split(':')[gtindex][::2])
+        if extract_ploidy and ploidy != {}:
+            for pop in ploidy:
+                ploidy[pop] = len(cols[pop_ind[pop]].split(':')[gtindex][::2])
 
         if do_subsampling:
             # Collect data for all genotyped samples
@@ -1018,7 +1054,7 @@ def _get_popinfo(popinfo_file):
     "POP" (ignoring case) in this header will be used to determine proper
     positions of the SAMPLE_NAME and POP_NAME columns in the table.
 
-    popinfo_file : An open text file of the format described above.
+    popinfo_file: An open text file of the format described above.
     """
     popinfo_dict = {}
     sample_col = 0
@@ -1058,9 +1094,10 @@ def annotate_from_annovar(dd, annovar_file, variant_type):
     """
     Return a data dictionary with only the sites of a requested type of variation based on an ANNOVAR '.exonic_variant_function' output file.
 
-    dd: Data dictionary of sites of a requested type of annotation
-    annovar_file: Output file from ANNOVAR with the '.exonic_variant_function' extension
-    variant_type: The type of variant you want to make a data dictionary sites to contain
+    Args:
+        dd (dict): Data dictionary of sites of a requested type of annotation
+        annovar_file (str): Output file from ANNOVAR with the '.exonic_variant_function' extension
+        variant_type (str): The type of variant you want to make a data dictionary sites to contain
     """
     anno_list = []
     var_fid = open(annovar_file)
@@ -1081,8 +1118,10 @@ def annotate_from_annovar(dd, annovar_file, variant_type):
 def combine_pops(fs, idx=[0,1]):
     """
     Combine the frequency spectra of two populations.
-        fs:  Spectrum object (2D or 3D).
-        idx: Indices for populations being collapsed. (defaul=[0,1])
+
+    Args:
+        fs (Spectrum):  Spectrum object (2D or 3D).
+        idx (list[int]): Indices for populations being collapsed. (defaul=[0,1])
 
     The function will always return the combined populations along the
     first axis of the sfs. The resulting spectrum is also returned
@@ -1139,10 +1178,12 @@ def fragment_data_dict(dd, chunk_size):
     The [.additional_info] is optional, and can be used to distinguish 
     recurrent mutations at the same site.
 
-    dd: Data dictionary to split
-    chunk_size: Size of genomic chunks in basepairs
+    Args:
+        dd (dict): Data dictionary to split
+        chunk_size (int): Size of genomic chunks in basepairs
 
-    Return: List of dictionaries corresponding to each chunk.
+    Return:
+        new_dds (list[dict]): List of dictionaries corresponding to each chunk.
     """
     # split dictionary by chromosome name
     ndd = collections.defaultdict(list)
@@ -1194,8 +1235,10 @@ def bootstraps_from_dd_chunks(fragments, Nboot, pop_ids, projections, mask_corne
     """
     Bootstrap frequency spectra from data dictionary fragments
 
-    fragments: Fragmented data dictionary
-    Nboot: Number of bootstrap spectra to generate
+    Args:
+        fragments (list[dict]): Fragmented data dictionary
+        Nboot (int): Number of bootstrap spectra to generate
+
     Remaining arguments are as in Spectrum.from_data_dict
     """
     spectra = [Spectrum.from_data_dict(dd, pop_ids, projections, mask_corners, polarized)
@@ -1219,8 +1262,10 @@ def bootstraps_subsample_vcf(vcf_filename, popinfo_filename, subsample, Nboot, c
     because you're modeling inbreeding, or because you want to avoid composite likelihood
     complications (if your data is unlinked).
 
-    Nboot: Number of boostrap spectra to generate
-    chunk_size: Size of regions to divide genome into (in basepairs)
+    Args:
+        Nboot (int): Number of boostrap spectra to generate
+        chunk_size (int): Size of regions to divide genome into (in basepairs)
+
     Other arguments are as in make_data_dict_vcf and Spectrum.from_data_dict.
     """
     bootstraps = []

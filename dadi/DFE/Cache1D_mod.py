@@ -1,9 +1,9 @@
 """
-Initially developed by Bernard Kim and published as fitdadi
+Initially developed by Bernard Kim and published as fitdadi.
 Kim, Huber, Lohmueller (2017) Genetics.
-Modified version of the script found at: https://doi.org/10.1534/genetics.116.197145 .
+Modified version of the script found at: https://doi.org/10.1534/genetics.116.197145.
 Based on scripts from:
-https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc .
+https://groups.google.com/forum/#!topic/dadi-user/4xspqlITcvc.
 """
 
 import operator
@@ -24,22 +24,33 @@ class Cache1D:
                  additional_gammas=[],
                  cpus=None, gpus=0, verbose=False):
         """
-        params: Optimized demographic parameters
-        ns: Sample size(s) for cached spectra
-        demo_sel_func: DaDi demographic function with selection. 
-                       gamma must be the last argument.
-        pts: Integration/extrapolation grid points settings for demo_sel_func
-        gamma_bounds: Range of gammas to cache spectra for.
-        gamma_pts: Number of gamma grid points over which to integrate
-        additional_gammas: Additional positive values of gamma to cache for
-        cpus: For multiprocessing, number of CPU jobs to launch.
-              If None (default), then all CPUs available will be used.
-        gpus: For multiprocessing, number of GPU jobs to launch.
-        verbose: If True, print messages to track progress of cache generation.
+        Initialize the Cache1D object.
+
+        Args:
+            params (tuple): Optimized demographic parameters.
+
+            ns (tuple): Sample size(s) for cached spectra.
+
+            demo_sel_func (function): dadi demographic function with selection. 
+                                      Gamma must be the last argument.
+
+            pts (tuple): Integration/extrapolation grid points settings for demo_sel_func.
+
+            gamma_bounds (tuple, optional): Range of gammas to cache spectra for. Defaults to (1e-4, 2000).
+
+            gamma_pts (int, optional): Number of gamma grid points over which to integrate. Defaults to 500.
+
+            additional_gammas (list, optional): Additional positive values of gamma to cache for. Defaults to [].
+
+            cpus (int, optional): Number of CPU jobs to launch for multiprocessing. Defaults to None.
+
+            gpus (int, optional): Number of GPU jobs to launch for multiprocessing. Defaults to 0.
+
+            verbose (bool, optional): If True, print messages to track progress of cache generation. Defaults to False.
         """
         self.params, self.ns, self.pts = tuple(params), tuple(ns), tuple(pts)
 
-        #Create a vector of gammas that are log-spaced over an interval
+        # Create a vector of gammas that are log-spaced over an interval
         self.gammas = -np.logspace(np.log10(gamma_bounds[1]),
                                    np.log10(gamma_bounds[0]), gamma_pts)
 
@@ -57,9 +68,9 @@ class Cache1D:
             import multiprocessing
             cpus = multiprocessing.cpu_count()
 
-        if not cpus > 1 or gpus > 0: #for running with a single thread
+        if not cpus > 1 or gpus > 0:  # For running with a single thread
             self._single_process(verbose, demo_sel_func)
-        else: #for running with with multiple cores
+        else:  # For running with multiple cores
             self._multiple_processes(cpus, gpus, verbose, demo_sel_func)
 
         demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
@@ -67,6 +78,14 @@ class Cache1D:
         self.spectra = np.array(self.spectra)
 
     def _single_process(self, verbose, demo_sel_func):
+        """
+        Generate spectra using a single process.
+
+        Args:
+            verbose (bool): If True, print progress messages.
+
+            demo_sel_func (function): dadi demographic function with selection.
+        """
         demo_sel_extrap_func = Numerics.make_extrap_func(demo_sel_func)
         for ii, gamma in enumerate(self.gammas):
             self.spectra[ii] = demo_sel_extrap_func(tuple(self.params)+(gamma,), self.ns,
@@ -75,6 +94,18 @@ class Cache1D:
                print('{0}: {1}'.format(ii, gamma))
 
     def _multiple_processes(self, cpus, gpus, verbose, demo_sel_func):
+        """
+        Generate spectra using multiple processes.
+
+        Args:
+            cpus (int): Number of CPU jobs to launch.
+
+            gpus (int): Number of GPU jobs to launch.
+
+            verbose (bool): If True, print progress messages.
+
+            demo_sel_func (function): DaDi demographic function with selection.
+        """
         from multiprocessing import Manager, Process, cpu_count
 
         with Manager() as manager:
@@ -109,8 +140,24 @@ class Cache1D:
 
     def _worker_sfs(self, in_queue, outlist, popn_func, params, ns, pts, verbose, usegpu):
         """
-        Worker function -- used to generate SFSes for
-        single values of gamma.
+        Worker function to generate SFSes for single values of gamma.
+
+        Args:
+            in_queue (Queue): Input queue for tasks.
+
+            outlist (list): List to store results.
+
+            popn_func (function): Population function.
+
+            params (tuple): Parameters for the population function.
+
+            ns (tuple): Sample size(s).
+
+            pts (tuple): Grid points for extrapolation.
+
+            verbose (bool): If True, print progress messages.
+
+            usegpu (bool): If True, use GPU for computation.
         """
         popn_func_ex = Numerics.make_extrap_func(popn_func)
         dadi.cuda_enabled(usegpu)
@@ -133,19 +180,23 @@ class Cache1D:
 
     def integrate(self, params, ns, sel_dist, theta, pts=None, exterior_int=True):
         """
-        Integrate spectra over a univariate prob. dist. for negative gammas.
+        Integrate spectra over a univariate probability distribution for negative gammas.
 
-        params: Parameters for sel_dist
-        ns: Ignored
-        sel_dist: Univariate probability distribution,
-                  taking in arguments (xx, params)
-        theta: Population-scaled mutation rate
-        pts: Ignored
-        exterior_int: If False, do not integrate outside sampled domain.
+        Args:
+            params (tuple): Parameters for sel_dist.
 
-        Note also that the ns and pts arguments are ignored. They are only
-        present for compatibility with other dadi functions that apply to
-        demographic models.
+            ns (tuple): Ignored. Will be retrieved from original caching.
+
+            sel_dist (function): Univariate probability distribution, taking in arguments (xx, params).
+
+            theta (float): Population-scaled mutation rate.
+
+            pts (tuple, optional): Ignored. Defaults to None, will use pts from original caching.
+
+            exterior_int (bool, optional): If False, do not integrate outside sampled domain. Defaults to True.
+
+        Returns:
+            fs (Spectrum): Integrated spectrum.
         """
         # Restrict ourselves to negative gammas
         Nneg = len(self.neg_gammas)
@@ -181,27 +232,31 @@ class Cache1D:
     def integrate_point_pos(self, params, ns, sel_dist, theta, demo_sel_func=None, 
                             Npos=1, pts=None, exterior_int=True):
         """
-        Integrate spectra over a univariate prob. dist. for negative gammas,
+        Integrate spectra over a univariate probability distribution for negative gammas,
         plus one or more point masses of positive selection.
 
-        params: Parameters. The last Npos*2 are assumed to be the proportion of
-                positive selection and the gamma for each point mass, in the order
-                (ppos1, gammapos1, ppos2, gammapos2, ...).
-                The remaining parameters are for the continuous point mass.
-        ns: Ignored
-        sel_dist: Univariate probability distribution,
-                  taking in arguments (xx, params)
-        theta: Population-scaled mutation rate
-        demo_sel_func: DaDi demographic function with selection. 
-                       gamma must be the last argument.
-        Npos: Number of positive point masses to model.
-        pts: Ignored, evaluation of demo_self_func will use pts from orignal
-               caching.
-        exterior_int: If False, do not integrate outside sampled domain.
+        Args:
+            params (tuple): Parameters. The last Npos*2 are assumed to be the proportion of
+                            positive selection and the gamma for each point mass, in the order
+                            (ppos1, gammapos1, ppos2, gammapos2, ...).
+                            The remaining parameters are for the continuous point mass.
 
-        Note also that the ns and pts arguments are ignored. They are only
-        present for compatibility with other dadi functions that apply to
-        demographic models.
+            ns (tuple): Ignored. Will be retrieved from original caching.
+
+            sel_dist (function): Univariate probability distribution, taking in arguments (xx, params).
+
+            theta (float): Population-scaled mutation rate.
+
+            demo_sel_func (function, optional): DaDi demographic function with selection. Defaults to None.
+
+            Npos (int, optional): Number of positive point masses to model. Defaults to 1.
+
+            pts (tuple, optional): Ignored. Defaults to None and will use pts from original caching.
+
+            exterior_int (bool, optional): If False, do not integrate outside sampled domain. Defaults to True.
+
+        Returns:
+            fs (Spectrum): Integrated spectrum.
         """
         pdf_params, ppos, gammapos = params[:-2*Npos], params[-2], params[-1]
         ppos_l, gammapos_l = params[-2*Npos::2], params[-2*Npos+1::2]

@@ -1,5 +1,5 @@
 """
-methods for numerics of two locus diffusion - grids, transition matrices, etc
+Methods for numerics of two-locus diffusion: grids, transition matrices, etc.
 """
 import numpy as np
 import dadi
@@ -13,12 +13,14 @@ tol = 1e-12
 
 def LD_per_bin(ns):
     """
-    LD statistics per bin for a TLSpectrum.
+    Calculate LD statistics per bin for a TLSpectrum.
 
-    ns: Number of samples
+    Args:
+        ns (int): Number of samples.
 
-    Returns (D, r2). Both are TLSpectrum objects in which each entry is the
-    value of D or r^2 for that combination of haplotypes.
+    Returns:
+        D (TLSpectrum object): TLSpectrum object in which each entry is the value of D for that combination of haplotypes.
+        r2 (TLSpectrum object): TLSpectrum object in which each entry is the value of r^2 for that combination of haplotypes.
     """
     temp = np.arange(ns+1, dtype=float)/ns
     # Fancy array arithmetic, to avoid explicity for loops.
@@ -34,23 +36,37 @@ def LD_per_bin(ns):
 
 def grid(numpts):
     """
-    Default grid is uniform, so that grid points lie directly on the boundaries
-    Here, delta_x = 1./numpts
-    numpts - number of grid points (less one) 
+    Generate a default uniform grid where grid points lie directly on the boundaries.
+
+    Args:
+        numpts (int): Number of grid points (less one).
+
+    Returns:
+        ndarray (ndarray): Uniform grid points.
     """
     return np.linspace(0,1,numpts+1)
 
 def grid_dx(x):
     """
-    Given 1D grid x, this returns the 1D grid spacing for x
+    Compute the 1D grid spacing for a given grid.
+
+    Args:
+        x (array-like): 1D grid.
+
+    Returns:
+        ndarray (ndarray): 1D grid spacing.
     """
     return (np.concatenate((np.diff(x),np.array([0]))) + np.concatenate((np.array([0]),np.diff(x))))/2
 
 def domain(x):
     """
-    Array of same dimension as density function discretization
-    Has a 1 if grid point lies in domain, 0 if outside domain
-    x - 1D grid
+    Create an array indicating whether grid points lie inside the domain.
+
+    Args:
+        x (array-like): 1D grid.
+
+    Returns:
+        U01 (ndarray): Array with 1 for points inside the domain and 0 for points outside.
     """
     tol = 1e-12
     U01 = np.ones((len(x),len(x),len(x)))
@@ -60,9 +76,14 @@ def domain(x):
 
 def grid_dx3(x,dx):
     """
-    For integrating over the 3D domain (see int3)
-    x - 1D grid
-    dx - 1D grid spacing
+    Compute 3D grid spacing for integration weights.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+
+    Returns:
+        DX (ndarray): 3D grid spacing.
     """
     DX = dx[:,nuax,nuax]*dx[nuax,:,nuax]*dx[nuax,nuax,:]
     for ii in range(len(x)):
@@ -72,9 +93,14 @@ def grid_dx3(x,dx):
 
 def int3(DX,U):
     """
-    Numerically integrate the density function phi
-    phi - density function
-    DX - 3D grid spacing for integration weights
+    Numerically integrate the density function over a 3D domain.
+
+    Args:
+        DX (array-like): 3D grid spacing for integration weights.
+        U (array-like): Density function.
+
+    Returns:
+        float (float): Result of the integration.
     """
     return np.sum(DX*U)
 
@@ -84,13 +110,18 @@ Injection of new mutations along axes
 
 def injectA(x,dx,dt,yB,phi,thetaA):
     """
-    Injection new derived mutations A onto background of B/b
-    x - 1D grid
-    dx - 1D grid spacing
-    dt - integration time step
-    yA - biallelic frequency spectrum integrated by dadi
-    phi - density function
-    thetaA - scaled mutation rate
+    Inject new derived mutations A onto the background of B/b.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        dt (float): Integration time step.
+        yB (Spectrum): Biallelic frequency spectrum integrated by dadi.
+        phi (array-like): Density function.
+        thetaA (float): Scaled mutation rate.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     phi[0,1,1:-1] += dt/dx[1] / x[1]**2 * yB[1:-1] * (1-x[1:-1]) * thetaA/2.
     phi[1,0,1:-1] += dt/dx[1] / x[1]**2 * yB[1:-1] * x[1:-1] * thetaA/2.
@@ -99,13 +130,18 @@ def injectA(x,dx,dt,yB,phi,thetaA):
 
 def injectB(x,dx,dt,yA,phi,thetaB):
     """
-    Injection new derived mutations B onto background of A/a
-    x - 1D grid
-    dx - 1D grid spacing
-    dt - integration time step
-    yB - biallelic frequency spectrum integrated by dadi
-    phi - density function
-    thetaB - scaled mutation rate
+    Inject new derived mutations B onto the background of A/a.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        dt (float): Integration time step.
+        yA (Spectrum): Biallelic frequency spectrum integrated by dadi.
+        phi (array-like): Density function.
+        thetaB (float): Scaled mutation rate.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     phi[0,1:-1,1] += dt/dx[1] / x[1]**2 * yA[1:-1] * (1-x[1:-1]) * thetaB/2.
     phi[1,1:-1,0] += dt/dx[1] / x[1]**2 * yA[1:-1] * x[1:-1] * thetaB/2.
@@ -223,7 +259,7 @@ def transition2(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
                 
                 x1 = x[ii]
                 x3 = x[kk]
-                M = 2*gammaA * x*(1-x1-x)*(hA+(x1+x)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
+                M = 2*gammaA * x*(1-x1-x)*(hA+(x+x1)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
                 for jj in np.where(U01[ii,:,kk] == 1)[0][:-1]:
                     if jj == 0:
                         A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
@@ -253,7 +289,7 @@ def transition2(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
                 
                 x1 = x[ii]
                 x3 = x[kk]
-                M = 2*gammaA * x*(1-x1-x)*(hA+(x1+x)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
+                M = 2*gammaA * x*(1-x1-x)*(hA+(x+x1)*(1-2*hA)) - 2*gammaB * x*(x1+x3)*(hB+(x1+x3)*(1-2*hB)) + rho/2. * (x1*(1-x1-x-x3) - x*x3)
                 for jj in range(len(x)):
                     if jj == 0:
                         A[jj,jj] += 1/dx[jj] * ( M[jj] ) / 2
@@ -502,11 +538,19 @@ the domain boundaries are not necessarily absorbing!
 
 def phi_to_surf(phi,x):
     """
-    non-square  mapped to triallelic domain
-    note that many of the surface interaction methods could be cythonized for increase in speed
-    if x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either A or B have fixed, and that state is absorbing (no recombination can send you back to the interior
-    thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don't have to worry about that density anymore
-    here, we have x3 lost
+    Map non-square to triallelic domain.
+
+    Note that many of the surface interaction methods could be cythonized for increase in speed.
+    If x2 or x3 is lost, then only types AB and Ab or AB and aB are left, so either A or B have fixed, and that state is absorbing (no recombination can send you back to the interior).
+    Thus, make sure that x2 lost or x3 lost is the diagonal boundary of the surface domain, so we don't have to worry about that density anymore.
+    Here, we have x3 lost.
+
+    Args:
+        phi (array-like): Density function.
+        x (array-like): 1D grid.
+
+    Returns:
+        surf (ndarray): Surface density function.
     """
     surf = np.zeros((len(x),len(x)))
     for ii in range(len(x)): # loop through x1 indices
@@ -517,7 +561,15 @@ def phi_to_surf(phi,x):
 
 def surf_to_phi(surf,phi,x):
     """
-    move the surf density back to the full phi density function
+    Move the surface density back to the full phi density function.
+
+    Args:
+        surf (array-like): Surface density function.
+        phi (array-like): Full density function.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated full density function.
     """
     for ii in range(len(x)): # loop through x1 indices
         for jj in range(len(x)): # loop through x2 indices
@@ -527,11 +579,20 @@ def surf_to_phi(surf,phi,x):
 
 def move_density_to_surface(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
     """
-    for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
-    x - grid
-    dx - grid spacing
-    dt - timestep of integration
-    nu - relative population size
+    For each point in the full domain, compute how much should be lost to the nonsquare surface boundary due to diffusion/selection.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        dt (float): Timestep of integration.
+        gammaA (float): Scaled selection coefficient for A.
+        gammaB (float): Scaled selection coefficient for B.
+        nu (float): Relative population size.
+        hA (float, optional): Dominance coefficient for A. Defaults to 1./2.
+        hB (float, optional): Dominance coefficient for B. Defaults to 1./2.
+
+    Returns:
+        Psurf (ndarray): Amount of density to be moved to the surface.
     """
     Psurf = np.zeros((len(x),len(x),len(x)))
     if gammaA == 0 and gammaB == 0:
@@ -567,6 +628,17 @@ def move_density_to_surface(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
     return Psurf
 
 def surface_interaction_b(phi,x,Psurf):
+    """
+    Handle surface interaction for boundary conditions.
+
+    Args:
+        phi (array-like): Density function.
+        x (array-like): 1D grid.
+        Psurf (array-like): Amount of density to be moved to the surface.
+
+    Returns:
+        phi (ndarray): Updated density function.
+    """
     for ii in range(len(x))[:len(x)-1]:
         for jj in range(len(x))[:len(x)-1-ii]:
             for kk in range(len(x))[:len(x)-1-ii-jj]:
@@ -631,7 +703,15 @@ def surface_interaction_b(phi,x,Psurf):
 
 def surface_interaction(phi,x,Psurf):
     """
-    density that should be moved to surface
+    Handle surface interaction for density that should be moved to the surface.
+
+    Args:
+        phi (array-like): Density function.
+        x (array-like): 1D grid.
+        Psurf (array-like): Amount of density to be moved to the surface.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
     #        this version and the cython version together.
@@ -700,7 +780,16 @@ def surface_interaction(phi,x,Psurf):
 
 def surface_recombination(phi,x,rho,dt):
     """
-    recombination pushes density from surface back into interior of domain
+    Handle recombination that pushes density from surface back into interior of domain.
+
+    Args:
+        phi (array-like): Density function.
+        x (array-like): 1D grid.
+        rho (float): Recombination rate.
+        dt (float): Timestep of integration.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     if rho == 0:
         return phi
@@ -734,11 +823,16 @@ forward integration
 
 def advance_adi1(phi,U01,P1,x):
     """
-    ADI integration along axis 1 of phi
-    phi - density function
-    U01 - domain markers
-    P1 - ADI transition matrices
-    x - grid
+    ADI integration along axis 1 of phi.
+
+    Args:
+        phi (array-like): Density function.
+        U01 (array-like): Domain markers.
+        P1 (array-like): ADI transition matrices.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
     #        this version and the cython version together.
@@ -750,11 +844,16 @@ def advance_adi1(phi,U01,P1,x):
 
 def advance_adi2(phi,U01,P2,x):
     """
-    ADI integration along axis 2 of phi
-    phi - density function
-    U01 - domain markers
-    P2 - ADI transition matrices
-    x - grid
+    ADI integration along axis 2 of phi.
+
+    Args:
+        phi (array-like): Density function.
+        U01 (array-like): Domain markers.
+        P2 (array-like): ADI transition matrices.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
     #        this version and the cython version together.
@@ -766,11 +865,16 @@ def advance_adi2(phi,U01,P2,x):
 
 def advance_adi3(phi,U01,P3,x):
     """
-    ADI integration along axis 3 of phi
-    phi - density function
-    U01 - domain markers
-    P3 - ADI transition matrices
-    x - grid
+    ADI integration along axis 3 of phi.
+
+    Args:
+        phi (array-like): Density function.
+        U01 (array-like): Domain markers.
+        P3 (array-like): ADI transition matrices.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     ### XXX: We attempt to import cythonized versions of these methods below. Note: changes should be made to 
     #        this version and the cython version together.
@@ -782,11 +886,19 @@ def advance_adi3(phi,U01,P3,x):
 
 def advance_adi(phi,U01,P1,P2,P3,x,ii):
     """
-    Combined ADI integration of phi
-    phi - density function
-    U01 - domain markers
-    P1/P2/P3 - ADI transition matrices
-    x - grid
+    Combined ADI integration of phi.
+
+    Args:
+        phi (array-like): Density function.
+        U01 (array-like): Domain markers.
+        P1 (array-like): ADI transition matrices for axis 1.
+        P2 (array-like): ADI transition matrices for axis 2.
+        P3 (array-like): ADI transition matrices for axis 3.
+        x (array-like): 1D grid.
+        ii (int): Current iteration.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     if np.mod(ii,3) == 0:
         order = [1,2,3]
@@ -806,10 +918,15 @@ def advance_adi(phi,U01,P1,P2,P3,x,ii):
 
 def advance_cov12(phi,C12,x):
     """
-    Explicit integration of covariance term in the 1/2 axes planes
-    phi - density function
-    C12 - transition matrices
-    x - grid
+    Explicit integration of covariance term in the 1/2 axes planes.
+
+    Args:
+        phi (array-like): Density function.
+        C12 (array-like): Transition matrices.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     for kk in range(len(x)):
         C = C12[kk]
@@ -818,10 +935,15 @@ def advance_cov12(phi,C12,x):
 
 def advance_cov13(phi,C13,x):
     """
-    Explicit integration of covariance term in the 1/3 axes planes
-    phi - density function
-    C13 - transition matrices
-    x - grid
+    Explicit integration of covariance term in the 1/3 axes planes.
+
+    Args:
+        phi (array-like): Density function.
+        C13 (array-like): Transition matrices.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     for jj in range(len(x)):
         C = C13[jj]
@@ -831,10 +953,15 @@ def advance_cov13(phi,C13,x):
 
 def advance_cov23(phi,C23,x):
     """
-    Explicit integration of covariance term in the 2/3 axes planes
-    phi - density function
-    C23 - transition matrices
-    x - grid
+    Explicit integration of covariance term in the 2/3 axes planes.
+
+    Args:
+        phi (array-like): Density function.
+        C23 (array-like): Transition matrices.
+        x (array-like): 1D grid.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     for ii in range(len(x)):
         C = C23[ii]
@@ -843,10 +970,18 @@ def advance_cov23(phi,C23,x):
 
 def advance_cov(phi,C12,C13,C23,x,ii):
     """
-    Combined integration for the covariance terms
-    phi - density function
-    C12/C13/C23 - transition matrices
-    x - grid
+    Combined integration for the covariance terms.
+
+    Args:
+        phi (array-like): Density function.
+        C12 (array-like): Transition matrices for axes 1 and 2.
+        C13 (array-like): Transition matrices for axes 1 and 3.
+        C23 (array-like): Transition matrices for axes 2 and 3.
+        x (array-like): 1D grid.
+        ii (int): Current iteration.
+
+    Returns:
+        phi (ndarray): Updated density function.
     """
     if np.mod(ii,3) == 0:
         order = [1,2,3]
@@ -867,7 +1002,13 @@ def advance_cov(phi,C12,C13,C23,x,ii):
 
 def domain_surf(x):
     """
-    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain
+    Constructs a matrix with the same dimension as the density function discretization, a 1 indicates that the corresponding point is inside the triangular domain or on the boundary, while a 0 indicates that point falls outside the domain.
+
+    Args:
+        x (array-like): 1D grid.
+
+    Returns:
+        U01 (ndarray): Domain markers for the surface.
     """
     tol = 1e-12
     U01 = np.ones((len(x),len(x)))
@@ -878,7 +1019,14 @@ def domain_surf(x):
 def grid_dx_2d(x,dx):
     """
     The two dimensional grid spacing over the domain.
-    Grid points lie along the diagonal boundary, and Delta for those points is halved
+    Grid points lie along the diagonal boundary, and Delta for those points is halved.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+
+    Returns:
+        DXX (ndarray): 2D grid spacing.
     """
     DXX = dx[:,nuax]*dx[nuax,:]
     for ii in range(len(x)):
@@ -887,21 +1035,36 @@ def grid_dx_2d(x,dx):
 
 def int2(DXX,U):
     """
-    Integrate the density function over the domain
-    DXX - two dimensional grid
-    U - density function
+    Integrate the density function over the domain.
+
+    Args:
+        DXX (array-like): Two dimensional grid.
+        U (array-like): Density function.
+
+    Returns:
+        float (float): Result of the integration.
     """
     return np.sum(DXX*U)
 
 def transition1_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
     """
-    adi transition matrix for x1 on surface
-    See cythonized versions of these in the dadi/Triallele code
-    x - grid
-    dx - grid spacing
-    U01 - surface domain marker
-    gammaA/B - scaled selection coefficients
-    nu - relative population size
+    ADI transition matrix for x1 on surface.
+
+    See cythonized versions of these in the dadi/Triallele code.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        U01 (array-like): Surface domain marker.
+        gammaA (float): Scaled selection coefficient for A.
+        gammaB (float): Scaled selection coefficient for B.
+        rho (float): Recombination rate.
+        nu (float): Relative population size.
+        hA (float, optional): Dominance coefficient for A. Defaults to .5.
+        hB (float, optional): Dominance coefficient for B. Defaults to .5.
+
+    Returns:
+        P (ndarray): ADI transition matrix for x1 on surface.
     """
     P = np.zeros((len(x),3,len(x)))
     for jj in range(len(x)):
@@ -957,12 +1120,21 @@ def transition1_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
 
 def transition2_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
     """
-    adi transition matrix for x2 on surface
-    x - grid
-    dx - grid spacing
-    U01 - surface domain marker
-    gammaA/B - scaled selection coefficients
-    nu - relative population size
+    ADI transition matrix for x2 on surface.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        U01 (array-like): Surface domain marker.
+        gammaA (float): Scaled selection coefficient for A.
+        gammaB (float): Scaled selection coefficient for B.
+        rho (float): Recombination rate.
+        nu (float): Relative population size.
+        hA (float, optional): Dominance coefficient for A. Defaults to .5.
+        hB (float, optional): Dominance coefficient for B. Defaults to .5.
+
+    Returns:
+        P (ndarray): ADI transition matrix for x2 on surface.
     """
     P = np.zeros((len(x),3,len(x)))
     for ii in range(len(x)):
@@ -1017,7 +1189,15 @@ def transition2_surf(x,dx,U01,gammaA,gammaB,rho,nu,hA=.5,hB=.5):
 
 def transition12_surf(x,dx,U01):
     """
-    transition matrix for explicit integration of mixed derivative term along surface
+    Transition matrix for explicit integration of mixed derivative term along surface.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        U01 (array-like): Surface domain marker.
+
+    Returns:
+        C (ndarray): Transition matrix for mixed derivative term along surface.
     """
     C = lil_matrix((len(x)**2,len(x)**2))
     for ii in range(len(x)-1)[:-1]:
@@ -1054,12 +1234,17 @@ def transition12_surf(x,dx,U01):
 
 def transition1D(x, dx, dt, gamma, nu):
     """
-    transition matrix for one dimenional density function
-    x - grid
-    dx - grid spacing
-    dt - timestep of integration
-    gamma - scaled selection coefficients
-    nu - relative size of population
+    Transition matrix for one-dimensional density function.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        dt (float): Timestep of integration.
+        gamma (float): Scaled selection coefficient.
+        nu (float): Relative size of population.
+
+    Returns:
+        P (ndarray): Transition matrix for one-dimensional density function.
     """
     P = np.zeros((len(x),len(x)))
     for ii in range(len(x)):
@@ -1077,11 +1262,16 @@ def transition1D(x, dx, dt, gamma, nu):
 
 def advance_surf_adi1(surf,U01surf,P1surf,x):
     """
-    Advance the adi method along first axis one of surface domain
-    surf - density function along that surface
-    U01surf - domain markers along grid
-    P1surf - adi transition matrix
-    x - uniform grid
+    Advance the ADI method along first axis one of surface domain.
+
+    Args:
+        surf (array-like): Density function along that surface.
+        U01surf (array-like): Domain markers along grid.
+        P1surf (array-like): ADI transition matrix.
+        x (array-like): 1D grid.
+
+    Returns:
+        surf (ndarray): Updated surface density function.
     """
     for jj in range(len(x)):
         if np.sum(U01surf[:,jj]) > 1:
@@ -1090,11 +1280,16 @@ def advance_surf_adi1(surf,U01surf,P1surf,x):
 
 def advance_surf_adi2(surf,U01surf,P2surf,x):
     """
-    Advance the adi method along second axis one of surface domain
-    surf - density function along that surface
-    U01surf - domain markers along grid
-    P2surf - adi transition matrix
-    x - uniform grid
+    Advance the ADI method along second axis one of surface domain.
+
+    Args:
+        surf (array-like): Density function along that surface.
+        U01surf (array-like): Domain markers along grid.
+        P2surf (array-like): ADI transition matrix.
+        x (array-like): 1D grid.
+
+    Returns:
+        surf (ndarray): Updated surface density function.
     """
     for ii in range(len(x)):
         if np.sum(U01surf[ii,:]) > 1:
@@ -1103,17 +1298,30 @@ def advance_surf_adi2(surf,U01surf,P2surf,x):
 
 def advance_surf_cov(surf,Csurf,x):
     """
-    Explicit integration of the covariance term, using scipy's sparse matrix for Csurf
-    surf - density function along the surface
-    Csurf - transition matrix
-    x - grid
+    Explicit integration of the covariance term, using scipy's sparse matrix for Csurf.
+
+    Args:
+        surf (array-like): Density function along the surface.
+        Csurf (lil_matrix): Transition matrix.
+        x (array-like): 1D grid.
+
+    Returns:
+        surf (ndarray): Updated surface density function.
     """
     surf = ( Csurf * surf.reshape(len(x)**2)).reshape(len(x),len(x))
     return surf
 
 def move_surf_density_to_bdry(x,surf,P):
     """
-    This is an absorbing boundary, so we'll just remove that density and not worry about integrating along that diagonal
+    This is an absorbing boundary, so we'll just remove that density and not worry about integrating along that diagonal.
+
+    Args:
+        x (array-like): 1D grid.
+        surf (array-like): Surface density function.
+        P (array-like): Amount of density to be moved to the boundary.
+
+    Returns:
+        surf (ndarray): Updated surface density function.
     """
     for ii in range(len(x))[1:]:
         for jj in range(len(x))[1:]:
@@ -1123,9 +1331,14 @@ def move_surf_density_to_bdry(x,surf,P):
 
 def advance1D(u,P):
     """
-    Given transition matrix P, use dadi's triagonal solver to integrate in 1D
-    u - 1D density function
-    P - transition matrix
+    Given transition matrix P, use dadi's triagonal solver to integrate in 1D.
+
+    Args:
+        u (array-like): 1D density function.
+        P (array-like): Transition matrix.
+
+    Returns:
+        u (ndarray): Updated 1D density function.
     """
     a = np.concatenate((np.array([0]),np.diag(P,-1)))
     b = np.diag(P)
@@ -1135,12 +1348,20 @@ def advance1D(u,P):
 
 def move_surf_to_line(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
     """
-    for each point in the full domain, how much should be lost to the nonsquare surface boundary due to diffusion/selection
-    x - grid
-    dx - grid spacing
-    dt - timestep of integration
-    gammaA/gammaB - scaled selection coefficients
-    nu - relative population size
+    For each point in the full domain, compute how much should be lost to the nonsquare surface boundary due to diffusion/selection.
+
+    Args:
+        x (array-like): 1D grid.
+        dx (array-like): 1D grid spacing.
+        dt (float): Timestep of integration.
+        gammaA (float): Scaled selection coefficient for A.
+        gammaB (float): Scaled selection coefficient for B.
+        nu (float): Relative population size.
+        hA (float, optional): Dominance coefficient for A. Defaults to 1./2.
+        hB (float, optional): Dominance coefficient for B. Defaults to 1./2.
+
+    Returns:
+        Psurf (ndarray): Amount of density to be moved to the surface.
     """
     #### XXXX: 11/8/16: assuming that gammaB = 0
     Psurf = np.zeros((len(x),len(x)))
@@ -1158,12 +1379,20 @@ def move_surf_to_line(x,dx,dt,gammaA,gammaB,nu,hA=1./2,hB=1./2):
 
 def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
     """
-    phi - full density function
-    x - grid
-    P1surf,P2surf - ADI transition matrices for triallele density function
-    Csurf - covarance transition matrix
-    Pline - transition matrix for diagonal boundary of triallele surface
-    P - stores the ammount of density that should be moved from triallele domain (surf) to diagonal line boundary
+    Advance the surface density function.
+
+    Args:
+        phi (array-like): Full density function.
+        x (array-like): 1D grid.
+        P1surf (array-like): ADI transition matrices for triallele density function along axis 1.
+        P2surf (array-like): ADI transition matrices for triallele density function along axis 2.
+        Csurf (lil_matrix): Covariance transition matrix.
+        Pline (array-like): Transition matrix for diagonal boundary of triallele surface.
+        P (array-like): Amount of density to be moved from triallele domain (surf) to diagonal line boundary.
+        U01surf (array-like): Domain markers for the surface.
+
+    Returns:
+        phi (ndarray): Updated full density function.
     """
     # create the triallele domain of the nonsquare surface of the full density function
     surf = phi_to_surf(phi,x) # done
@@ -1182,6 +1411,17 @@ def advance_surface(phi,x,P1surf,P2surf,Csurf,Pline,P,U01surf):
 
 sample_cache = {}
 def sample_cached(phi, ns, x):
+    """
+    Sample from the cached density function.
+
+    Args:
+        phi (array-like): Density function.
+        ns (int or tuple): Number of samples.
+        x (array-like): 1D grid.
+
+    Returns:
+        F (TLSpectrum): Sampled spectrum.
+    """
     dx = grid_dx(x)
     dx3 = grid_dx3(x,dx)
 
@@ -1221,16 +1461,41 @@ def sample_cached(phi, ns, x):
 
 def quadrinomial(ns,ii,jj,kk):
     """
-    returns ns! / (ii! * jj! * kk! * (ns-ii-jj-kk)!)
+    Compute the quadrinomial coefficient.
+
+    Args:
+        ns (int): Number of samples.
+        ii (int): Number of derived alleles for the first locus.
+        jj (int): Number of derived alleles for the second locus.
+        kk (int): Number of derived alleles for the third locus.
+
+    Returns:
+        float (float): Quadrinomial coefficient.
     """
     return np.exp(math.lgamma(ns+1) - math.lgamma(ii+1) - math.lgamma(jj+1) - math.lgamma(kk+1) - math.lgamma(ns-ii-jj-kk+1))
 
 def ln_binomial(n,k):
+    """
+    Compute the natural logarithm of the binomial coefficient.
+
+    Args:
+        n (int): Number of trials.
+        k (int): Number of successes.
+
+    Returns:
+        float (float): Natural logarithm of the binomial coefficient.
+    """
     return math.lgamma(n+1) - math.lgamma(k+1) - math.lgamma(n-k+1)
 
 def fold_ancestral(F):
     """
-    Takes an unfolded two locus frequency spectrum and folds it (assume don't konw ancestral state)
+    Fold an unfolded two-locus frequency spectrum (assume don't know ancestral state).
+
+    Args:
+        F (TLSpectrum): Unfolded two-locus frequency spectrum.
+
+    Returns:
+        F (TLSpectrum): Folded two-locus frequency spectrum.
     """
     ns = len(F[:,0,0]) - 1
     for ii in range(ns+1):
@@ -1257,7 +1522,13 @@ def fold_ancestral(F):
 
 def fold_lr(F):
     """
-    Takes an unfolded two locus spectrum and folds based on left/right allele
+    Fold an unfolded two-locus spectrum based on left/right allele.
+
+    Args:
+        F (TLSpectrum): Unfolded two-locus frequency spectrum.
+
+    Returns:
+        F (TLSpectrum): Folded two-locus frequency spectrum.
     """
     ns = len(F[:,0,0]) - 1
     for ii in range(ns+1):
@@ -1272,6 +1543,15 @@ def fold_lr(F):
     return F
                     
 def extrap_dt_pts(temps):
+    """
+    Extrapolate data points for different time steps and grid points.
+
+    Args:
+        temps (dict): Dictionary of data points for different time steps and grid points.
+
+    Returns:
+        ndarray (ndarray): Extrapolated data points.
+    """
     # in form of temps[dt][numpts]
     dts = sorted(temps.keys())[::-1]
     gridpts = sorted(temps[dts[0]].keys())
@@ -1284,7 +1564,13 @@ def extrap_dt_pts(temps):
 
 def array_to_spectrum(phi):
     """
-    now handled by TLSpectrum_mod.TLSpectrum
+    Convert an array to a TLSpectrum.
+
+    Args:
+        phi (array-like): Array to be converted.
+
+    Returns:
+        phi (TLSpectrum): Converted TLSpectrum.
     """
     ns = len(phi)-1
     phi = dadi.Spectrum(phi)
@@ -1305,6 +1591,16 @@ def array_to_spectrum(phi):
     return phi
 
 def to_single_locus(phi):
+    """
+    Convert a two-locus spectrum to single-locus spectra.
+
+    Args:
+        phi (TLSpectrum): Two-locus spectrum.
+
+    Returns:
+        fsA (Spectrum): Single-locus spectra.
+        fsB (Spectrum): Single-locus spectra.
+    """
     ns = len(phi)-1
     fsA = dadi.Spectrum(np.zeros(ns+1))
     fsB = dadi.Spectrum(np.zeros(ns+1))
@@ -1320,6 +1616,15 @@ def to_single_locus(phi):
     return fsA,fsB
 
 def mean_r2(F):
+    """
+    Compute the mean r^2 value for a two-locus spectrum.
+
+    Args:
+        F (TLSpectrum): Two-locus spectrum.
+
+    Returns:
+        float (float): Mean r^2 value.
+    """
     ns = len(F)-1
     tot = np.sum(F)
     r2s = []
@@ -1342,10 +1647,15 @@ def mean_r2(F):
 #projection_cache = {}
 def cached_projection(proj_to, proj_from, hits):
     """
-    Coefficients for projection from a larger size to smaller
-    proj_to: Number of samples to project down to
-    proj_from: Number of samples to project from
-    hits: Number of derived alleles projecting from - tuple of (n1,n2,n3)
+    Coefficients for projection from a larger size to smaller.
+
+    Args:
+        proj_to (int): Number of samples to project down to.
+        proj_from (int): Number of samples to project from.
+        hits (tuple): Number of derived alleles projecting from - tuple of (n1,n2,n3).
+
+    Returns:
+        proj_weights (ndarray): Projection coefficients.
     """
 #    key = (proj_to, proj_from, hits)
 #    try:
@@ -1370,6 +1680,16 @@ def cached_projection(proj_to, proj_from, hits):
     return proj_weights
     
 def project(F_from, proj_to):
+    """
+    Project a two-locus spectrum to a smaller sample size.
+
+    Args:
+        F_from (TLSpectrum): Two-locus spectrum to project from.
+        proj_to (int): Number of samples to project down to.
+
+    Returns:
+        TLSpectrum (TLSpectrum): Projected two-locus spectrum.
+    """
     proj_from = len(F_from)-1
     if proj_to == proj_from:
         return F_from
@@ -1390,23 +1710,75 @@ def project(F_from, proj_to):
 
 ## for projection to genotype spectrum
 def pairings(n):
+    """
+    Compute the number of pairings for n individuals.
+
+    Args:
+        n (int): Number of individuals.
+
+    Returns:
+        int (int): Number of pairings.
+    """
     return math.factorial(n)/(math.factorial(n/2)*2**(n/2))
 
 def binom(n,k):
+    """
+    Compute the binomial coefficient.
+
+    Args:
+        n (int): Number of trials.
+        k (int): Number of successes.
+
+    Returns:
+        int (int): Binomial coefficient.
+    """
     return math.factorial(n)/math.factorial(k)/math.factorial(n-k)
 
 def multinomial(n,i,j,k):
+    """
+    Compute the multinomial coefficient.
+
+    Args:
+        n (int): Number of trials.
+        i (int): Number of successes for the first category.
+        j (int): Number of successes for the second category.
+        k (int): Number of successes for the third category.
+
+    Returns:
+        int (int): Multinomial coefficient.
+    """
     if i+j+k != n:
         return "nein"
     return math.factorial(n)/math.factorial(i)/math.factorial(j)/math.factorial(k)
 
 def genotypes_prob_4(n,colors,hits):
+    """
+    Compute the probability of observing a specific set of genotypes.
+
+    Args:
+        n (int): Number of individuals.
+        colors (tuple): Number of individuals with each haplotype.
+        hits (tuple): Number of individuals with each genotype.
+
+    Returns:
+        float (float): Probability of observing the specific set of genotypes.
+    """
     (nR,nG,nB,nY) = colors
     (nRR,nGG,nBB,nYY,nRG,nRB,nRY,nGB,nGY,nBY) = hits
     if sum(hits) != n/2 or sum(colors) != n: return "nuh uh"
     return pairings(nR-nRG-nRB-nRY)*pairings(nG-nRG-nGB-nGY)*pairings(nB-nRB-nGB-nBY)*pairings(nY-nRY-nGY-nBY)*binom(nR,nRG+nRB+nRY)*multinomial(nRG+nRB+nRY,nRG,nRB,nRY)*binom(nG,nRG+nGB+nGY)*multinomial(nRG+nGB+nGY,nRG,nGB,nGY)*binom(nB,nRB+nGB+nBY)*multinomial(nRB+nGB+nBY,nRB,nGB,nBY)*binom(nY,nRY+nGY+nBY)*multinomial(nRY+nGY+nBY,nRY,nGY,nBY)*math.factorial(nRG)*math.factorial(nRB)*math.factorial(nRY)*math.factorial(nGB)*math.factorial(nGY)*math.factorial(nBY)
 
 def possible_genotypes_4(n,colors):
+    """
+    Generate all possible sets of genotypes for a given set of haplotype counts.
+
+    Args:
+        n (int): Number of individuals.
+        colors (tuple): Number of individuals with each haplotype.
+
+    Returns:
+        gl (list): List of all possible sets of genotypes.
+    """
     nR,nG,nB,nY = colors
     gl = []
     for pure_red in range(nR/2+1):
@@ -1430,6 +1802,16 @@ def possible_genotypes_4(n,colors):
 
 prob_cache = {} # store possible genotypes and their relative probabilities among all possible genotype sets
 def cached_genotype_exact_projection(n,haplotype_counts):
+    """
+    Cache the probabilities of observing specific sets of genotypes for a given set of haplotype counts.
+
+    Args:
+        n (int): Number of individuals.
+        haplotype_counts (tuple): Number of individuals with each haplotype.
+
+    Returns:
+        prob_cache (dict): Dictionary of probabilities for each set of genotypes.
+    """
     key = (n,haplotype_counts)
     try:
         return prob_cache[key]
@@ -1445,6 +1827,15 @@ def cached_genotype_exact_projection(n,haplotype_counts):
     return prob_cache[key]
 
 def genotype_spectrum_from_F(F):
+    """
+    Convert a two-locus spectrum to a genotype spectrum.
+
+    Args:
+        F (TLSpectrum): Two-locus spectrum.
+
+    Returns:
+        G (ndarray): Genotype spectrum.
+    """
     n = len(F)-1
     ng = n/2
     tot = pairings(n)
@@ -1462,6 +1853,15 @@ def genotype_spectrum_from_F(F):
     return G
 
 def observed_genotype_spectrum_from_F(F):
+    """
+    Convert a two-locus spectrum to an observed genotype spectrum.
+
+    Args:
+        F (TLSpectrum): Two-locus spectrum.
+
+    Returns:
+        G (ndarray): Observed genotype spectrum.
+    """
     n = len(F)-1
     ng = n/2
     G = np.zeros((ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1,ng+1))
@@ -1480,6 +1880,14 @@ def observed_genotype_spectrum_from_F(F):
 
 def observed_genotype_spectrum_dict_from_F(F):
     """
+    Convert a two-locus spectrum to a dictionary of observed genotype spectra.
+
+    Args:
+        F (TLSpectrum): Two-locus spectrum.
+
+    Returns:
+        Gdict (dict): Dictionary of observed genotype spectra.
+
     Gdict has keys n (num individuals in sample), observed genotypes
     """
     n = len(F)-1
@@ -1506,6 +1914,17 @@ from . import projection_genotypes
 
 genotype_projection_cache = {} # this cache can get very large for n_from large (>~100)
 def projection_cache_Gdict(n_from,n_to,hits):
+    """
+    Cache the projection weights for genotype spectra.
+
+    Args:
+        n_from (int): Number of individuals in the original sample.
+        n_to (int): Number of individuals in the projected sample.
+        hits (tuple): Number of individuals with each genotype in the original sample.
+
+    Returns:
+        weights_to (dict): Dictionary of projection weights for each set of genotypes.
+    """
     key = (n_from,n_to,hits)
     try:
         return genotype_projection_cache[key]
@@ -1536,7 +1955,19 @@ def projection_cache_Gdict(n_from,n_to,hits):
     return weights_to
 
 def project_Gdict(G,n_from,n_to):
-    """ n_from and n_to are the individual counts, not haplotype counts (so ns/2) """
+    """
+    Project a dictionary of genotype spectra to a smaller sample size.
+
+    Args:
+        G (dict): Dictionary of genotype spectra.
+        n_from (int): Number of individuals in the original sample.
+        n_to (int): Number of individuals in the projected sample.
+
+    Returns:
+        G_to (dict): Dictionary of projected genotype spectra.
+    
+    n_from and n_to are the individual counts, not haplotype counts (so ns/2)
+    """
     G_to = {}
     G_to.setdefault(n_to,{})
     for genotypes in G[n_from].keys():
@@ -1550,6 +1981,15 @@ def project_Gdict(G,n_from,n_to):
 
 def misidentification(F,p):
     """
+    Handle misidentification of ancestral state in a two-locus spectrum.
+
+    Args:
+        F (TLSpectrum): Two-locus spectrum.
+        p (float): Probability of misidentification.
+
+    Returns:
+        TLSpectrum (TLSpectrum): Updated two-locus spectrum with misidentification.
+
     with probability p, ancestral state is misidentified
     with prob p(1-p) A -> a but B correct
     with prob p(1-p) B -> b but A correct
@@ -1572,6 +2012,15 @@ def misidentification(F,p):
 
 def misidentification_genotype_dict(G,p):
     """
+    Handle misidentification of ancestral state in a dictionary of genotype spectra.
+
+    Args:
+        G (dict): Dictionary of genotype spectra.
+        p (float): Probability of misidentification.
+
+    Returns:
+        G_new (dict): Updated dictionary of genotype spectra with misidentification.
+
     same misidentification probabilities as misidentification(F,p)
     with prob p(1-p), AA -> aa, aa -> AA, Aa stays the same, B/b stay same
     with prob p(1-p), 
@@ -1593,6 +2042,16 @@ def misidentification_genotype_dict(G,p):
 
 def genotype_exp_data_to_arrays(G_exp,G_data):
     """
+    Convert dictionaries of expected and observed genotype spectra to arrays.
+
+    Args:
+        G_exp (dict): Dictionary of expected genotype spectra.
+        G_data (dict): Dictionary of observed genotype spectra.
+
+    Returns:
+        e (array): Array of expected and observed genotype spectra.
+        d (array): Array of expected and observed genotype spectra.
+
     return 1D spectra, to perform likelihood calcs
     so given two dicts, one for genotype freq expectations, one for data, returns spectrum arrays of data that can be passed to inference methods
     """
@@ -1617,6 +2076,15 @@ def genotype_exp_data_to_arrays(G_exp,G_data):
 
 def condition(F,i):
     """
+    Condition on seeing nA = i in a two-locus spectrum.
+
+    Args:
+        F (TLSpectrum): Two-locus spectrum.
+        i (int): Number of derived alleles for the first locus.
+
+    Returns:
+        Fcond (ndarray): Conditioned two-locus spectrum.
+
     condition on seeing nA = i
     Fcond[i,j]: i - number AB, j - number of aB
     i ranges from 0 to i, j ranges from 0 to n-i

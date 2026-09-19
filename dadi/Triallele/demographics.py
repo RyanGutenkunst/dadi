@@ -12,12 +12,15 @@ from dadi.Triallele.TriSpectrum_mod import TriSpectrum
 def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Integrate the density function to equilibrium
-    params = unused
-    sig1, sig2 - population scaled selection coefficients for the two derived alleles
-    theta1, theta2 - population scaled mutation rates
-    misid - ancestral misidentification parameter
-    dt - time step to use for integration
-    folded = True - fold the frequency spectrum (if we assume we don't know the order that derived alleles appeared)
+    Args:
+        params (list): unused
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
+        theta1 (float): population scaled mutation rates for the first derived allele.
+        theta2 (float): population scaled mutation rates for the second derived allele.
+        misid(float): ancestral misidentification parameter
+        dt (float): time step to use for integration
+        folded (bool): If True, fold the frequency spectrum (if we assume we don't know the order that derived alleles appeared).
     """
     x = np.linspace(0,1,pts+1)
     sig1,sig2 = np.float(sig1),np.float(sig2)
@@ -52,13 +55,18 @@ def equilibrium(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
 def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Two epoch demography - a single population size change at some point in the past
-    params = [nu,T,sig1,sig2,theta1,theta2,misid,dt]
-    nu - relative poplulation size change to ancestral population size
-    T - time in past that size change occured (scaled by 2N generations)
-    sig1, sig2 - population scaled selection coefficients for the two derived alleles
-    theta1, theta2 - population scaled mutation rates
-    misid - ancestral misidentification parameter
-    dt - time step to use for integration
+    Args:
+        params (list[float]): [nu,T,sig1,sig2,theta1,theta2,misid,dt]
+            - nu - relative poplulation size change to ancestral population size
+
+            - T - time in past that size change occured (scaled by 2N generations)
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
+        theta1 (float): population scaled mutation rates for the first derived allele.
+        theta2 (float): population scaled mutation rates for the second derived allele.
+        misid(float): ancestral misidentification parameter
+        dt (float): time step to use for integration
+        folded (bool): If True, fold the frequency spectrum (if we assume we don't know the order that derived alleles appeared).
     """
     nu,T = params
 
@@ -100,13 +108,18 @@ def two_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.
 def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Three epoch demography - two instantaneous population size changes in the past
-    params = [nu1,nu2,T1,T2]
-    nu1,nu2 - relative poplulation size changes to ancestral population size (nu1 occurs before nu2, historically)
-    T1,T2 - time for which population had relative sizes nu1, nu2 (scaled by 2N generations)
-    sig1, sig2 - population scaled selection coefficients for the two derived alleles
-    theta1, theta2 - population scaled mutation rates
-    misid - ancestral misidentification parameter
-    dt - time step to use for integration
+    Args:
+        params (list[float]): [nu1,nu2,T1,T2]
+            - nu1,nu2 - relative poplulation size changes to ancestral population size (nu1 occurs before nu2, historically)
+
+            - T1,T2 - time for which population had relative sizes nu1, nu2 (scaled by 2N generations)
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
+        theta1 (float): population scaled mutation rates for the first derived allele.
+        theta2 (float): population scaled mutation rates for the second derived allele.
+        misid(float): ancestral misidentification parameter
+        dt (float): time step to use for integration
+        folded (bool): If True, fold the frequency spectrum (if we assume we don't know the order that derived alleles appeared).
     """
     nu1,nu2,T1,T2 = params
     x = np.linspace(0,1,pts+1)
@@ -147,13 +160,18 @@ def three_epoch(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 
 def bottlegrowth(params, ns, pts, sig1 = 0.0, sig2 = 0.0, theta1 = 1.0, theta2 = 1.0, misid = 0.0, dt = 0.005, folded = False):
     """
     Three epoch demography - two instantaneous population size changes in the past
-    params = [nu1,nu2,T1,T2]
-    nu1,nu2 - relative poplulation size changes to ancestral population size (nu1 occurs before nu2, historically)
-    T1,T2 - time for which population had relative sizes nu1, nu2 (scaled by 2N generations)
-    sig1, sig2 - population scaled selection coefficients for the two derived alleles
-    theta1, theta2 - population scaled mutation rates
-    misid - ancestral misidentification parameter
-    dt - time step to use for integration
+    Args:
+        params (list[float]): [nu1,nu2,T1,T2]
+            - nuB,nuF - relative poplulation size changes to ancestral population size (nu1 occurs before nu2, historically)
+
+            - T - time for which population had relative sizes nuB, nuF (scaled by 2N generations)
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
+        theta1 (float): population scaled mutation rates for the first derived allele.
+        theta2 (float): population scaled mutation rates for the second derived allele.
+        misid(float): ancestral misidentification parameter
+        dt (float): time step to use for integration
+        folded (bool): If True, fold the frequency spectrum (if we assume we don't know the order that derived alleles appeared).
     """
     nuB,nuF,T = params
     if nuB == nuF:

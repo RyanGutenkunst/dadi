@@ -1,5 +1,6 @@
 '''
 Models for testing two population scenarios.
+
 Adapted from https://github.com/dportik
 '''
 from dadi import Numerics, PhiManip, Integration
@@ -7,10 +8,24 @@ from dadi.Spectrum_mod import Spectrum
 
 def no_mig(params, ns, pts):
     """
-    Split into two populations, no migration.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations)
+    Split into two populations with no migration.
+
+    Parameters:
+        params (tuple): (nu1, nu2, T)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, T = params
     xx = Numerics.default_grid(pts)
@@ -24,11 +39,26 @@ no_mig.__param_names__ = ['nu1', 'nu2', 'T']
 
 def sym_mig(params, ns, pts):
     """
-    Split into two populations, with symmetric migration.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations)
-    m: Migration rate between populations (2*Na*m)
+    Split into two populations with symmetric migration.
+
+    Parameters:
+        params (tuple): (nu1, nu2, m, T)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m: Migration rate between populations (2*Na*m).
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m, T = params
     xx = Numerics.default_grid(pts)
@@ -42,12 +72,28 @@ sym_mig.__param_names__ = ['nu1', 'nu2', 'm', 'T']
 
 def asym_mig(params, ns, pts):
     """
-    Split into two populations, with different migration rates.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations)
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
+    Split into two populations with different migration rates.
+
+    Parameters:
+        params (tuple): (nu1, nu2, m12, m21, T)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m12, m21, T = params
     xx = Numerics.default_grid(pts)
@@ -62,11 +108,27 @@ asym_mig.__param_names__ = ['nu1', 'nu2', 'm12', 'm21', 'T']
 def anc_sym_mig(params, ns, pts):
     """
     Split with symmetric migration followed by isolation.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    m: Migration between pop 2 and pop 1.
-    T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
-    T2: The scaled time between the ancient migration and present.
+
+    Parameters:
+        params (tuple): (nu1, nu2, m, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m: Migration between population 2 and population 1.
+            
+            - T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+            
+            - T2: The scaled time between the ancient migration and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -82,12 +144,29 @@ anc_sym_mig.__param_names__ = ['nu1', 'nu2', 'm', 'T1', 'T2']
 def anc_asym_mig(params, ns, pts):
     """
     Split with asymmetric migration followed by isolation.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
-    T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
-    T2: The scaled time between the ancient migration and present.
+
+    Parameters:
+        params (tuple): (nu1, nu2, m12, m21, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+            
+            - T2: The scaled time between the ancient migration and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m12, m21, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -104,11 +183,27 @@ anc_asym_mig.__param_names__ = ['nu1', 'nu2', 'm12', 'm21', 'T1', 'T2']
 def sec_contact_sym_mig(params, ns, pts):
     """
     Split with no gene flow, followed by period of symmetrical gene flow.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    m: Migration between pop 2 and pop 1.
-    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
-    T2: The scaled time between the secondary contact and present.
+
+    Parameters:
+        params (tuple): (nu1, nu2, m, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m: Migration between population 2 and population 1.
+            
+            - T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+            
+            - T2: The scaled time between the secondary contact and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -124,12 +219,29 @@ sec_contact_sym_mig.__param_names__ = ['nu1', 'nu2', 'm', 'T1', 'T2']
 def sec_contact_asym_mig(params, ns, pts):
     """
     Split with no gene flow, followed by period of asymmetrical gene flow.
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
-    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
-    T2: The scaled time between the secondary contact and present.
+
+    Parameters:
+        params (tuple): (nu1, nu2, m12, m21, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+            
+            - T2: The scaled time between the secondary contact and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m12, m21, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -148,12 +260,29 @@ sec_contact_asym_mig.__param_names__ = ['nu1', 'nu2', 'm12', 'm21', 'T1', 'T2']
 def no_mig_size(params, ns, pts):
     """
     Split with no migration, then size change with no migration.
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: Time in the past of split (in units of 2*Na generations)
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: Time of population size change.
+
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: Time of population size change.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -170,13 +299,30 @@ def sym_mig_size(params, ns, pts):
     """
     Split with symmetric migration, then size change with symmetric migration.
 
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: Time in the past of split (in units of 2*Na generations)
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: Time of population size change.
-    m: Migration rate between populations (2*Na*m)
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m: Migration rate between populations (2*Na*m).
+            
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: Time of population size change.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -191,17 +337,35 @@ sym_mig_size.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm', 'T1', 'T2']
 
 def asym_mig_size(params, ns, pts):
     """
-    Split with different migration rates, then size change
-    with different migration rates.
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: Time in the past of split (in units of 2*Na generations)
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: Time of population size change.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
-        """
+    Split with different migration rates, then size change with different migration rates.
+
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: Time of population size change.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    """
     nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2 = params
     xx = Numerics.default_grid(pts)
     phi = PhiManip.phi_1D(xx)
@@ -215,15 +379,32 @@ asym_mig_size.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm12', 'm21', '
 
 def anc_sym_mig_size(params, ns, pts):
     """
-    Split with symmetrical gene flow, followed by size change
-    with no geneflow.
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: Time in the past of split (in units of 2*Na generations)
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: The scale time between the ancient migration and present.
-    m: Migration between pop 2 and pop 1.
+    Split with symmetrical gene flow, followed by size change with no gene flow.
+
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m: Migration between population 2 and population 1.
+            
+            - T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+            
+            - T2: The scale time between the ancient migration and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -238,16 +419,34 @@ anc_sym_mig_size.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm', 'T1', '
 
 def anc_asym_mig_size(params, ns, pts):
     """
-    Split with asymmetrical gene flow, followed by size change
-    with no gene flow.
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: Time in the past of split (in units of 2*Na generations)
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: The scale time between the ancient migration and present.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
+    Split with asymmetrical gene flow, followed by size change with no gene flow.
+
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: The scale time between the ancient migration and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -263,13 +462,31 @@ anc_asym_mig_size.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm12', 'm21
 def sec_contact_sym_mig_size(params, ns, pts):
     """
     Split with no gene flow, followed by size change with symmetrical gene flow.
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: The scale time between the secondary contact and present.
-    m: Migration between pop 2 and pop 1.
+
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m: Migration between population 2 and population 1.
+            
+            - T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+            
+            - T2: The scale time between the secondary contact and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -285,14 +502,33 @@ sec_contact_sym_mig_size.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm',
 def sec_contact_asym_mig_size(params, ns, pts):
     """
     Split with no gene flow, followed by size change with asymmetrical gene flow.
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: The scale time between the secondary contact and present.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
+
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+            
+            - T2: The scale time between the secondary contact and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -310,13 +546,31 @@ sec_contact_asym_mig_size.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm1
 
 def sym_mig_twoepoch(params, ns, pts):
     """
-    Split into two populations, with symmetric migration. A second period of symmetric
-    migration occurs, but can be a different rate. Pop size is same.
+    Split into two populations with symmetric migration. A second period of symmetric
+    migration occurs, but can be a different rate. Population size is the same.
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations)
-    m: Migration rate between populations (2*Na*m)
+    Parameters:
+        params (tuple): (nu1, nu2, m1, m2, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m1: Migration rate between populations during first epoch (2*Na*m).
+            
+            - m2: Migration rate between populations during second epoch (2*Na*m).
+            
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: Time in the past of second epoch (in units of 2*Na generations).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m1, m2, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -331,15 +585,36 @@ sym_mig_twoepoch.__param_names__ = ['nu1', 'nu2', 'm1', 'm2', 'T1', 'T2']
 
 def asym_mig_twoepoch(params, ns, pts):
     """
-    Split into two populations, with different migration rates. A second period of asymmetric
-    migration occurs, but can be at different rates. Pop size is same.
+    Split into two populations with different migration rates. A second period of asymmetric
+    migration occurs, but can be at different rates. Population size is the same.
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    T: Time in the past of split (in units of 2*Na generations)
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
-        """
+    Parameters:
+        params (tuple): (nu1, nu2, m12a, m21a, m12b, m21b, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m12a: Migration from population 2 to population 1 during first epoch (2*Na*m12).
+            
+            - m21a: Migration from population 1 to population 2 during first epoch.
+            
+            - m12b: Migration from population 2 to population 1 during second epoch (2*Na*m12).
+            
+            - m21b: Migration from population 1 to population 2 during second epoch.
+            
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: Time in the past of second epoch (in units of 2*Na generations).
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
+    """
     nu1, nu2, m12a, m21a, m12b, m21b, T1, T2 = params
     xx = Numerics.default_grid(pts)
 
@@ -363,13 +638,29 @@ def sec_contact_sym_mig_three_epoch(params, ns, pts):
     """
     Split with no gene flow, followed by period of symmetrical gene flow, then isolation.
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    m: Migration between pop 2 and pop 1.
-    T1: The scaled time between the split and the secondary contact
-    (in units of 2*Na generations).
-    T2: The scaled time between the secondary contact and third epoch.
-    T3: The scaled time between the isolation and present.
+    Parameters:
+        params (tuple): (nu1, nu2, m, T1, T2, T3)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m: Migration between population 2 and population 1.
+            
+            - T1: The scaled time between the split and the secondary contact
+            (in units of 2*Na generations).
+            
+            - T2: The scaled time between the secondary contact and third epoch.
+            
+            - T3: The scaled time between the isolation and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m, T1, T2, T3 = params
 
@@ -391,14 +682,31 @@ def sec_contact_asym_mig_three_epoch(params, ns, pts):
     Split with no gene flow, followed by period of asymmetrical gene flow,
     then isolation.
 
-    nu1: Size of population 1 after split.
-    nu2: Size of population 2 after split.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
-    T1: The scaled time between the split and the secondary contact
-    (in units of 2*Na generations).
-    T2: The scaled time between the secondary contact and third epoch.
-    T3 (not used): The scaled time between the isolation and present.
+    Parameters:
+        params (tuple): (nu1, nu2, m12, m21, T1, T2)
+            
+            - nu1: Size of population 1 after split.
+            
+            - nu2: Size of population 2 after split.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the secondary contact
+            (in units of 2*Na generations).
+            
+            - T2: The scaled time between the secondary contact and third epoch.
+            
+            - T3 (not used): The scaled time between the isolation and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1, nu2, m12, m21, T1, T2 = params
     xx = Numerics.default_grid(pts)
@@ -417,15 +725,33 @@ def sec_contact_sym_mig_size_three_epoch(params, ns, pts):
     Split with no gene flow, followed by size change with
     symmetrical gene flow, then isolation.
 
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: The scaled time between the split and the secondary contact
-    (in units of 2*Na generations).
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: The scale time between the secondary contact and isolation.
-    T3: The scaled time between the isolation and present.
-    m: Migration between pop 2 and pop 1.
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m, T1, T2, T3)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m: Migration between population 2 and population 1.
+            
+            - T1: The scaled time between the split and the secondary contact
+            (in units of 2*Na generations).
+            
+            - T2: The scale time between the secondary contact and isolation.
+            
+            - T3: The scaled time between the isolation and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m, T1, T2, T3 = params
 
@@ -441,21 +767,39 @@ def sec_contact_sym_mig_size_three_epoch(params, ns, pts):
     return fs
 sec_contact_sym_mig_size_three_epoch.__param_names__ = ['nu1a', 'nu2a', 'nu1b', 'nu2b', 'm', 'T1', 'T2', 'T3']
 
-
 def sec_contact_asym_mig_size_three_epoch(params, ns, pts):
     """
     Split with no gene flow, followed by size change with asymmetrical gene flow, then isolation.
 
-    nu1a: Size of population 1 after split.
-    nu2a: Size of population 2 after split.
-    T1: The scaled time between the split and the secondary contact
-    (in units of 2*Na generations).
-    nu1b: Size of population 1 after time interval.
-    nu2b: Size of population 2 after time interval.
-    T2: The scale time between the secondary contact and isolation.
-    T3: The scaled time between the isolation and present.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
+    Parameters:
+        params (tuple): (nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2, T3)
+            
+            - nu1a: Size of population 1 after split.
+            
+            - nu2a: Size of population 2 after split.
+            
+            - nu1b: Size of population 1 after time interval.
+            
+            - nu2b: Size of population 2 after time interval.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the secondary contact
+            (in units of 2*Na generations).
+            
+            - T2: The scale time between the secondary contact and isolation.
+            
+            - T3: The scaled time between the isolation and present.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu1a, nu2a, nu1b, nu2b, m12, m21, T1, T2, T3 = params
 
@@ -487,18 +831,25 @@ sec_contact_asym_mig_size_three_epoch.__param_names__ = ['nu1a', 'nu2a', 'nu1b',
 
 def vic_no_mig(params, ns, pts):
     """
-    Split into two populations, no migration.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
+    Split into two populations with no migration.
 
-    params = 2
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2.
-    Pop2 size = s.
-    Pop 1 size = 1-s.
-    T: Time in the past of split (in units of 2*Na generations)
+    Parameters:
+        params (tuple): (T, s)
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     T, s = params
 
@@ -515,18 +866,28 @@ vic_no_mig.__param_names__ = ['T', 's']
 def vic_anc_sym_mig(params, ns, pts):
     """
     Split with symmetric migration followed by isolation.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented  by Nref*(1-s).
-    Nref implicitly has size = 1.
 
-    params = 4
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    m: Migration between pop 2 and pop 1 (2*Na*m).
-    T1: The scaled time between the split and the ancient migration
-    (in units of 2*Na generations).
-    T2: The scaled time between the ancient migration and present.
+    Parameters:
+        params (tuple): (m, T1, T2, s)
+            
+            - m: Migration between population 2 and population 1 (2*Na*m).
+            
+            - T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+            
+            - T2: The scaled time between the ancient migration and present.
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     m, T1, T2, s = params
 
@@ -545,19 +906,30 @@ vic_anc_sym_mig.__param_names__ = ['m', 'T1', 'T2', 's']
 def vic_anc_asym_mig(params, ns, pts):
     """
     Split with asymmetric migration followed by isolation.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
 
-    params = 5
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
-    T1: The scaled time between the split and the ancient migration
-    (in units of 2*Na generations).
-    T2: The scaled time between the ancient migration and present.
+    Parameters:
+        params (tuple): (m12, m21, T1, T2, s)
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the ancient migration (in units of 2*Na generations).
+            
+            - T2: The scaled time between the ancient migration and present.
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     m12, m21, T1, T2, s = params
 
@@ -576,18 +948,28 @@ vic_anc_asym_mig.__param_names__ = ['m12', 'm21', 'T1', 'T2', 's']
 def vic_sec_contact_sym_mig(params, ns, pts):
     """
     Split with no gene flow, followed by period of symmetrical gene flow.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
 
-    params = 4
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    m: Migration between pop 2 and pop 1 (2*Na*m).
-    T1: The scaled time between the split and the secondary contact
-    (in units of 2*Na generations).
-    T2: The scaled time between the secondary contact and present.
+    Parameters:
+        params (tuple): (m, T1, T2, s)
+            
+            - m: Migration between population 2 and population 1 (2*Na*m).
+            
+            - T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+            
+            - T2: The scaled time between the secondary contact and present.
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     m, T1, T2, s = params
 
@@ -609,19 +991,30 @@ vic_sec_contact_sym_mig.__param_names__ = ['m', 'T1', 'T2', 's']
 def vic_sec_contact_asym_mig(params, ns, pts):
     """
     Split with no gene flow, followed by period of asymmetrical gene flow.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
 
-    params = 5
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    m12: Migration from pop 2 to pop 1 (2*Na*m12).
-    m21: Migration from pop 1 to pop 2.
-    T1: The scaled time between the split and the secondary contact
-    (in units of 2*Na generations).
-    T2: The scaled time between the secondary contact and present.
+    Parameters:
+        params (tuple): (m12, m21, T1, T2, s)
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T1: The scaled time between the split and the secondary contact (in units of 2*Na generations).
+            
+            - T2: The scaled time between the secondary contact and present.
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     m12, m21, T1, T2, s = params
 
@@ -642,18 +1035,28 @@ vic_sec_contact_asym_mig.__param_names__ = ['m12', 'm21', 'T1', 'T2', 's']
 
 def founder_nomig(params, ns, pts):
     """
-    Split into two populations, with no migration.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Population two undergoes an exponential growth event to obtain size nu2,
-    while population one is constant. Nref implicitly has size = 1.
+    Split into two populations with no migration.
 
-    params = 3
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Population 2 undergoes an exponential growth event to obtain size nu2,
+    while population 1 is constant. Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    nu2: Final size of pop 2, after exponential growth.
-    T: Time in the past of split (in units of 2*Na generations)
+    Parameters:
+        params (tuple): (nu2, T, s)
+            
+            - nu2: Final size of population 2, after exponential growth.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu2, T, s = params
 
@@ -675,19 +1078,30 @@ founder_nomig.__param_names__ = ['nu2', 'T', 's']
 
 def founder_sym(params, ns, pts):
     """
-    Split into two populations, with one migration rate.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Population two undergoes an exponential growth event to obtain size nu2,
-    while population one is constant. Nref implicitly has size = 1.
+    Split into two populations with one migration rate.
 
-    params = 4
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Population 2 undergoes an exponential growth event to obtain size nu2,
+    while population 1 is constant. Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    nu2: Final size of pop 2, after exponential growth.
-    T: Time in the past of split (in units of 2*Na generations)
-    m: Migration (2*Na*m12)
+    Parameters:
+        params (tuple): (nu2, m, T, s)
+            
+            - nu2: Final size of population 2, after exponential growth.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - m: Migration (2*Na*m12).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu2, m, T, s = params
 
@@ -709,20 +1123,32 @@ founder_sym.__param_names__ = ['nu2', 'm', 'T', 's']
 
 def founder_asym(params, ns, pts):
     """
-    Split into two populations, with two migration rates.
-    Populations are fractions of the reference population,
-    where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Population two undergoes an exponential growth event to obtain size nu2,
-    while population one is constant. Nref implicitly has size = 1.
+    Split into two populations with two migration rates.
 
-    params = 5
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Population 2 undergoes an exponential growth event to obtain size nu2,
+    while population 1 is constant. Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    nu2: Final size of pop 2, after exponential growth.
-    T: Time in the past of split (in units of 2*Na generations)
-    m12: Migration from pop 2 to pop 1 (2*Na*m12)
-    m21: Migration from pop 1 to pop 2
+    Parameters:
+        params (tuple): (nu2, m12, m21, T, s)
+            
+            - nu2: Final size of population 2, after exponential growth.
+            
+            - m12: Migration from population 2 to population 1 (2*Na*m12).
+            
+            - m21: Migration from population 1 to population 2.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu2, m12, m21, T, s = params
 
@@ -759,17 +1185,28 @@ founder_asym.__param_names__ = ['nu2', 'm12', 'm21', 'T', 's']
 
 def vic_no_mig_admix_early(params, ns, pts):
     """
-    Split into two populations, no migration but a discrete admixture event
-    from pop 1 into pop 2 occurs (before drift). Populations are fractions of
-    the reference population, where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
+    Split into two populations with no migration but a discrete admixture event
+    from population 1 into population 2 occurs (before drift).
 
-    params = 3
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    T: Time in the past of split (in units of 2*Na generations)
-    f: Fraction of updated population 2 to be derived from population 1.
+    Parameters:
+        params (tuple): (T, s, f)
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+            
+            - f: Fraction of updated population 2 to be derived from population 1.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     T, s, f = params
 
@@ -790,17 +1227,28 @@ vic_no_mig_admix_early.__param_names__ = ['T', 's', 'f']
 
 def vic_no_mig_admix_late(params, ns, pts):
     """
-    Split into two populations, no migration but a discrete admixture event
-    from pop 1 into pop 2 occurs (after drift). Populations are fractions of
-    the reference population, where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
+    Split into two populations with no migration but a discrete admixture event
+    from population 1 into population 2 occurs (after drift).
 
-    params = 3
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    T: Time in the past of split (in units of 2*Na generations)
-    f: Fraction of updated population 2 to be derived from population 1.
+    Parameters:
+        params (tuple): (T, s, f)
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+            
+            - f: Fraction of updated population 2 to be derived from population 1.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     T, s, f = params
 
@@ -821,19 +1269,30 @@ vic_no_mig_admix_late.__param_names__ = ['T', 's', 'f']
 
 def vic_two_epoch_admix(params, ns, pts):
     """
-    Split into two populations, no migration but a discrete admixture event
-    from pop 1 into pop 2 occurs (between two drift events). Populations are
-    fractions of the reference population, where population 2 is represented by
-    Nref*(s), and population 1 is represented by Nref*(1-s).
-    Nref implicitly has size = 1.
+    Split into two populations with no migration but a discrete admixture event
+    from population 1 into population 2 occurs (between two drift events).
 
-    params = 4
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    T1: The scaled time between the split and admixture event
-    (in units of 2*Na generations).
-    T2: The scaled time between the admixture event and present.
-    f: Fraction of updated population 2 to be derived from population 1.
+    Parameters:
+        params (tuple): (T1, T2, s, f)
+            
+            - T1: The scaled time between the split and admixture event (in units of 2*Na generations).
+            
+            - T2: The scaled time between the admixture event and present.
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+            
+            - f: Fraction of updated population 2 to be derived from population 1.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     T1, T2, s, f = params
 
@@ -856,19 +1315,31 @@ vic_two_epoch_admix.__param_names__ = ['T1', 'T2', 's', 'f']
 
 def founder_nomig_admix_early(params, ns, pts):
     """
-    Split into two populations, no migration but a discrete admixture event
-    from pop 1 into pop 2 occurs (before drift). Populations are fractions of
-    the reference population, where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Population two undergoes an exponential growth event to obtain size
-    nu2, while population one is constant. Nref implicitly has size = 1.
+    Split into two populations with no migration but a discrete admixture event
+    from population 1 into population 2 occurs (before drift).
 
-    params = 4
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Population 2 undergoes an exponential growth event to obtain size
+    nu2, while population 1 is constant. Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    nu2: Final size of pop 2, after exponential growth.
-    T: Time in the past of split (in units of 2*Na generations)
-    f: Fraction of updated population 2 to be derived from population 1.
+    Parameters:
+        params (tuple): (nu2, T, s, f)
+            
+            - nu2: Final size of population 2, after exponential growth.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+            
+            - f: Fraction of updated population 2 to be derived from population 1.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu2, T, s, f = params
 
@@ -892,20 +1363,31 @@ founder_nomig_admix_early.__param_names__ = ['nu2', 'T', 's', 'f']
 
 def founder_nomig_admix_late(params, ns, pts):
     """
-    Split into two populations, no migration but a discrete admixture event
-    from pop 1 into pop 2 occurs (after drift). Populations are fractions of
-    the reference population, where population 2 is represented by Nref*(s),
-    and population 1 is represented by Nref*(1-s).
-    Population two undergoes an exponential growth event to obtain size nu2,
-    while population one is constant. Admixture occurs when size nu2 is
-    achieved. Nref implicitly has size = 1.
+    Split into two populations with no migration but a discrete admixture event
+    from population 1 into population 2 occurs (after drift).
 
-    params = 4
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Population 2 undergoes an exponential growth event to obtain size nu2,
+    while population 1 is constant. Admixture occurs when size nu2 is achieved. Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    nu2: Final size of pop 2, after exponential growth.
-    T: Time in the past of split (in units of 2*Na generations)
-    f: Fraction of updated population 2 to be derived from population 1.
+    Parameters:
+        params (tuple): (nu2, T, s, f)
+            
+            - nu2: Final size of population 2, after exponential growth.
+            
+            - T: Time in the past of split (in units of 2*Na generations).
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+            
+            - f: Fraction of updated population 2 to be derived from population 1.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu2, T, s, f = params
 
@@ -929,21 +1411,33 @@ founder_nomig_admix_late.__param_names__ = ['nu2', 'T', 's', 'f']
 
 def founder_nomig_admix_two_epoch(params, ns, pts):
     """
-    Split into two populations, no migration but a discrete admixture event
-    from pop 1 into pop 2 occurs (between two drift events). Populations are
-    fractions of the reference population, where population 2 is represented by
-    Nref*(s), and population 1 is represented by Nref*(1-s).
-    Population two undergoes an exponential growth event to obtain size nu2,
-    while population one is constant. Admixture occurs after size nu2 is
-    achieved. Nref implicitly has size = 1.
+    Split into two populations with no migration but a discrete admixture event
+    from population 1 into population 2 occurs (between two drift events).
 
-    params = 5
+    Populations are fractions of the reference population, where population 2 is represented by Nref*(s),
+    and population 1 is represented by Nref*(1-s). Population 2 undergoes an exponential growth event to obtain size nu2,
+    while population 1 is constant. Admixture occurs after size nu2 is achieved. Nref implicitly has size = 1.
 
-    s: Fraction of Nref that goes to pop2. Pop2 size = s. Pop 1 size = 1-s.
-    nu2: Final size of pop 2, after exponential growth.
-    T1: Time in the past of split (in units of 2*Na generations)
-    T2: The scaled time between the admixture event and present.
-    f: Fraction of updated population 2 to be derived from population 1.
+    Parameters:
+        params (tuple): (nu2, T1, T2, s, f)
+            
+            - nu2: Final size of population 2, after exponential growth.
+            
+            - T1: Time in the past of split (in units of 2*Na generations).
+            
+            - T2: The scaled time between the admixture event and present.
+            
+            - s: Fraction of Nref that goes to population 2. Population 2 size = s. Population 1 size = 1-s.
+            
+            - f: Fraction of updated population 2 to be derived from population 1.
+        ns (tuple): Sample sizes (n1, n2).
+        pts (int): Number of grid points to use in integration.
+
+    Returns:
+        fs (Spectrum): The resulting frequency spectrum.
+
+    Raises:
+        ValueError: If `params` does not contain the expected number of elements.
     """
     nu2, T1, T2, s, f = params
 

@@ -1,0 +1,16 @@
+name: dadi
+channels:
+  - conda-forge
+dependencies:
+  - demes
+  - matplotlib
+  - nlopt
+  - numpy
+  - pip
+  - pytest
+  - python
+  - cython
+  - gcc
+  - scipy
+  - pip:
+      - -e .

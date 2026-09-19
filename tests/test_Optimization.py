@@ -12,10 +12,14 @@ def test_optimize_log():
 
     data = (1000*func_ex(params, ns, pts_l)).sample()
 
-    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l, 
+    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l,
                                      lower_bound=[0.1, 0],
                                      upper_bound=[1.0, 0.3],
                                      log_opt=True, maxtime=3)
+
+    # The returned parameters must correspond to the returned likelihood.
+    model = func_ex(popt, ns, pts_l)
+    assert(numpy.allclose(llopt, dadi.Inference.ll_multinom(model, data)))
 
 def test_optimize():
     ns = (20,)
@@ -25,7 +29,7 @@ def test_optimize():
 
     data = (1000*func_ex(params, ns, pts_l)).sample()
 
-    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l, 
+    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l,
                                      lower_bound=[0.1, 0],
                                      upper_bound=[1.0, 0.3],
                                      maxtime=3)
@@ -40,7 +44,7 @@ def test_eq_constraint():
     def eq_cons(p,grad):
         return 0.5 - (p[0] + p[1])
 
-    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l, 
+    popt, llopt = dadi.Inference.opt([0.35,0.15], data, func_ex, pts_l,
                                      lower_bound=[0.1, 0], upper_bound=[1.0, 0.3],
                                      algorithm=nlopt.LN_COBYLA,
                                      eq_constraints=[(eq_cons,1e-6)],
@@ -57,7 +61,7 @@ def test_ineq_constraint():
     def ineq_cons(p,grad):
         return (p[0] + p[1]) - 0.5
 
-    popt, llopt = dadi.Inference.opt([0.15,0.20], data, func_ex, pts_l, 
+    popt, llopt = dadi.Inference.opt([0.15,0.20], data, func_ex, pts_l,
                                      lower_bound=[1e-3, 0], upper_bound=[1.0, 0.7],
                                      algorithm=nlopt.LN_COBYLA,
                                      ineq_constraints=[(ineq_cons,1e-6)],

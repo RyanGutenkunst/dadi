@@ -21,22 +21,29 @@ class TriSpectrum(numpy.ma.masked_array):
                                         data_folded_major,
                                         data_folded_ancestral, extrap_x, 
                                         extrap_t)
-        
+
         data: The triallelic frequency spectrum data
+
         mask: An optional array of the same size as data, similar to dadi.Spectrum
+
         data_folded_major: If True, it is assumed that the input data is folded 
-                           for the major and minor derived alleles
+                            for the major and minor derived alleles
+
         data_folded_ancestral: If True, it is assumed that the input data is folded
-                               to account for uncertainty in the ancestral state. Note
-                               that if True, data_folded_major must also be True.
+                                to account for uncertainty in the ancestral state. Note
+                                that if True, data_folded_major must also be True.
+
         check_folding_major: If True and data_folded_ancestral=True, the data and
-                             mask will be checked to ensure they are consistent
+                                mask will be checked to ensure they are consistent
+
         check_folding_ancestral: If True and data_folded_ancestral=True, the data and
-                                 mask will be checked to ensure they are consistent
+                                    mask will be checked to ensure they are consistent
+
         extrap_x: Optional floating point value specifying x value to use in
-                  extrapolation.
+                    extrapolation.
+
         extrap_t: Optional floating point value specifying t value to use in
-                  extrapolation.
+                    extrapolation.
     """
     def __new__(subtype, data, mask=numpy.ma.nomask, mask_infeasible=True, 
                 data_folded_major=None, check_folding_major=True,
@@ -167,11 +174,12 @@ class TriSpectrum(numpy.ma.masked_array):
         """
         Read frequency spectrum from file.
 
-        fid: string with file name to read from or an open file object.
-        mask_infeasible: If True, mask the infeasible entries in the triallelic spectrum.
-        return_comments: If true, the return value is (fs, comments), where
-                         comments is a list of strings containing the comments
-                         from the file (without #'s).
+        Args:
+            fid (str): string with file name to read from or an open file object.
+            mask_infeasible (bool): If True, mask the infeasible entries in the triallelic spectrum.
+            return_comments (bool): If true, the return value is (fs, comments), where
+                            comments is a list of strings containing the comments
+                            from the file (without #'s).
 
         See to_file method for details on the file format.
         """
@@ -236,29 +244,36 @@ class TriSpectrum(numpy.ma.masked_array):
     def to_file(self, fid, precision=16, comment_lines=[], foldmaskinfo=True, extrapinfo=True):
         """
         Write frequency spectrum to file.
-    
-        fid: string with file name to write to or an open file object.
-        precision: precision with which to write out entries of the SFS. (They 
-                   are formated via %.<p>g, where <p> is the precision.)
-        comment lines: list of strings to be used as comment lines in the header
-                       of the output file.
-        foldmaskinfo: If False, folding and mask and population label
-                      information will not be saved. This conforms to the file
-                      format for dadi versions prior to 1.3.0.
+
+        Args:
+            fid (str): string with file name to write to or an open file object.
+            precision (): precision with which to write out entries of the SFS. (They 
+                    are formated via %.<p>g, where <p> is the precision.)
+            comment_lines (list[str]): list of strings to be used as comment lines in the header
+                        of the output file.
+            foldmaskinfo (bool): If False, folding and mask and population label
+                        information will not be saved. This conforms to the file
+                        format for dadi versions prior to 1.3.0.
+            extrapinfo (bool): If False, extrapolation information will not be saved.
 
         The file format is:
-            # Any number of comment lines beginning with a '#'
+            Any number of comment lines beginning with a '#'
+
             A single line containing N integers giving the dimensions of the fs
-              array. So this line would be '5 5 3' for an SFS that was 5x5x3.
-              (That would be 4x4x2 *samples*.)
+                array. So this line would be '5 5 3' for an SFS that was 5x5x3.
+                (That would be 4x4x2 *samples*.)
+
             On the *same line*, the string 'folded_major' or 'unfolded_major' 
-              denoting the folding status of the array
+                denoting the folding status of the array
+
             On the *same line*, the string 'folded_ancestral' or 'unfolded_ancestral' 
-              denoting the folding status of the array
+                denoting the folding status of the array
+
             A single line giving the array elements. The order of elements is 
-              e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+                e.g.: fs[0,0,0] fs[0,0,1] fs[0,0,2] ... fs[0,1,0] fs[0,1,1] ...
+
             A single line giving the elements of the mask in the same order as
-              the data line. '1' indicates masked, '0' indicates unmasked.
+                the data line. '1' indicates masked, '0' indicates unmasked.
         """
         # Open the file object.
         newfile = False

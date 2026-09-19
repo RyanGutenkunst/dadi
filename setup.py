@@ -1,24 +1,34 @@
 from setuptools import Extension, setup
 import numpy
-
 from Cython.Build import cythonize
 
 extensions = [Extension(name='dadi.tridiag_cython', sources=['dadi/tridiag_cython.pyx', 'dadi/tridiag.c'])]
+
 extensions.append(Extension(name = 'dadi.integration_c',
                             sources=['dadi/integration_c.pyx', 'dadi/integration1D.c',
                                      'dadi/integration2D.c', 'dadi/integration3D.c', 'dadi/integration4D.c',
                                      'dadi/integration5D.c', 'dadi/integration_shared.c',
                                      'dadi/tridiag.c']))
+
 extensions.append(Extension(name='dadi.DFE.PDFs_cython', sources=['dadi/DFE/PDFs_cython.pyx']))
+
+extensions.append(Extension(name='dadi.Polyploidy.PolyIntegration',
+                            sources=['dadi/Polyploidy/PolyIntegration.pyx',
+                                     'dadi/Polyploidy/integration_shared_poly.c',
+                                     'dadi/integration_shared.c',
+                                     'dadi/tridiag.c'],
+                             include_dirs=['dadi', 'dadi/Polyploidy']))
 
 tri_modules = ['transition1', 'transition2', 'transition12', 'transition1D']
 two_locus_modules = ['projection_genotypes', 'surface_interaction', 'transition1', 'transition2', 'transition3', 'transition12', 'transition13', 'transition23', 'transition1D']
+
 extensions.extend([Extension(name='dadi.Triallele.{0}'.format(_), sources=['dadi/Triallele/{0}.pyx'.format(_)]) for _ in tri_modules])
 extensions.extend([Extension(name='dadi.TwoLocus.{0}'.format(_), sources=['dadi/TwoLocus/{0}.pyx'.format(_)]) for _ in two_locus_modules])
 
 setup(ext_modules=cythonize(extensions),
       include_dirs=[numpy.get_include()],
-      package_data = {'dadi.cuda':['kernels.cu']})
+      package_data = {'dadi.cuda':['kernels.cu'],
+                      'dadi.Polyploidy.cuda':['kernels_poly.cu']})
 
 #with open("README.md", "r") as fh:
 #    long_description = fh.read()

@@ -14,11 +14,13 @@ import math
 def inject_mutations_1(phi, dt, x, dx, y2, theta1):
     """
     new mutations injected along phi[1,:] against a background given by y2
-    phi - numerical density function
-    dt - given time step 
-    x, dx - one dimensional grid and grid spacing
-    y2 - the biallelic density function
-    theta1 - population scaled mutation rate for mutation 1
+    Args:
+        phi (array-like): numerical density function
+        dt (float): given time step 
+        x (array-like): one dimensional grid
+        dx (array-like): grid spacing
+        y2 (array-like): the biallelic density function
+        theta1 (float): population scaled mutation rate for mutation 1
     """
     phi[1,1:-1] += y2[1:-1] / dx[1] * 1./x[1] * dt * theta1/2
     return phi
@@ -26,11 +28,13 @@ def inject_mutations_1(phi, dt, x, dx, y2, theta1):
 def inject_mutations_2(phi, dt, x, dx, y1, theta2):
     """
     new mutations injected along phi[:,1] against a background given by y1
-    phi - numerical density function
-    dt - given time step 
-    x, dx - one dimensional grid and grid spacing
-    y1 - the biallelic density function
-    theta2 - population scaled mutation rate for mutation 2
+    Args:
+        phi (array-like): numerical density function
+        dt (float): given time step
+        x (array-like): one dimensional grid
+        dx (array-like): grid spacing
+        y1 (array-like): the biallelic density function
+        theta2 (float): population scaled mutation rate for mutation 2
     """
     phi[1:-1,1] += y1[1:-1] / dx[1] * 1./x[1] * dt * theta2/2
     return phi
@@ -56,14 +60,20 @@ def equilibrium_neutral_exact(x):
 def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt=0.001):
     """
     Integrate phi, y1, and y2 forward in time
-    phi - density function for triallelic sites
-    y1,y2 - density of biallelic background sites, integrated forward alongside phi
-    T - amount of time to integrate, scaled by 2N generations
-    nu - relative size of population to ancestral size
-    sig1,sig2 - selection coefficients for two derived alleles
-    theta1,theta2 - population scaled mutation rates
-    dt - time step for integration
+
     lam - proportion of mutations that occur from simulateous mutation model (Hodgkinson/Eyre-Walker 2010)
+    Args:
+        phi (array-like): density function for triallelic sites
+        x (array-like): grid
+        T (float): amount of time to integrate, scaled by 2N generations
+        y1 (array-like): density of biallelic background sites, integrated forward alongside phi
+        y2 (array-like): density of biallelic background sites, integrated forward alongside phi
+        nu (float): relative size of population to ancestral size
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
+        theta1 (float): population scaled mutation rates for the first derived allele.
+        theta2 (float): population scaled mutation rates for the second derived allele.
+        dt (float): time step for integration
     """
     dx = numerics.grid_dx(x)
     U01 = numerics.domain(x)
@@ -181,14 +191,20 @@ def advance(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt
 def advance_old(phi, x, T, y1, y2, nu=1., sig1=0., sig2=0., theta1=1., theta2=1., dt=0.001):
     """
     Integrate phi, y1, and y2 forward in time
-    phi - density function for triallelic sites
-    y1,y2 - density of biallelic background sites, integrated forward alongside phi
-    T - amount of time to integrate, scaled by 2N generations
-    nu - relative size of population to ancestral size
-    sig1,sig2 - selection coefficients for two derived alleles
-    theta1,theta2 - population scaled mutation rates
-    dt - time step for integration
+
     lam - proportion of mutations that occur from simulateous mutation model (Hodgkinson/Eyre-Walker 2010)
+    Args:
+        phi (array-like): density function for triallelic sites
+        x (array-like): grid
+        T (float): amount of time to integrate, scaled by 2N generations
+        y1 (array-like): density of biallelic background sites, integrated forward alongside phi
+        y2 (array-like): density of biallelic background sites, integrated forward alongside phi
+        nu (float): relative size of population to ancestral size
+        sig1 (float): population scaled selection coefficient for the first derived allele.
+        sig2 (float): population scaled selection coefficients for the second derived allele.
+        theta1 (float): population scaled mutation rates for the first derived allele.
+        theta2 (float): population scaled mutation rates for the second derived allele.
+        dt (float): time step for integration
     """
     dx = numerics.grid_dx(x)
     U01 = numerics.domain(x)
