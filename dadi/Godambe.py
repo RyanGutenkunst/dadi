@@ -563,7 +563,7 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return score_adj, score_org
     return score_adj
 
-def effective_dimension(func_ex, grid_pts, all_boot, p0, data,
+def effective_dimension(func_ex, grid_pts, all_boot, p0, data, log=False,
                multinom=True, eps=0.01, boot_theta_adjusts=None):
     """
     Computes the effective number of parameters for calculating CLAIC and CLBIC
