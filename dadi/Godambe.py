@@ -99,7 +99,7 @@ def get_hess(func, p0, eps, args=()):
         func (func): Model function
         p0 (list[float]): Parameter values to take derivative around
         eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         args (list or tuple): Additional arguments to func
@@ -111,7 +111,7 @@ def get_hess(func, p0, eps, args=()):
     for i, pval in enumerate(p0):
         if pval != 0:
             # Account for floating point arithmetic issues
-            if pval*eps_in < 1e-6:
+            if abs(pval*eps_in) < 1e-6:
                 eps[i] = eps_in
                 one_sided[i] = True
             else:
@@ -136,7 +136,7 @@ def get_grad(func, p0, eps, args=()):
         func (func): Model function
         p0 (list[float]): Parameters for func
         eps (list[float]): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         args (list or tuple): Additional arguments to func
@@ -148,7 +148,7 @@ def get_grad(func, p0, eps, args=()):
     for i, pval in enumerate(p0):
         if pval != 0:
             # Account for floating point arithmetic issues
-            if pval*eps_in < 1e-6:
+            if abs(pval*eps_in) < 1e-6:
                 eps[i] = eps_in
                 one_sided[i] = True
             else:
@@ -197,7 +197,7 @@ def get_godambe(func_ex, grid_pts, all_boot, p0, data, eps, log=False,
         p0 (list[float]): Best-fit parameters for func_ex.
         data (Spectrum): Original data frequency spectrum
         eps (float): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         log (bool): If True, calculate derivatives in terms of log-parameters
@@ -277,7 +277,7 @@ def GIM_uncert(func_ex, grid_pts, all_boot, p0, data, log=False,
                 final entry of the returned uncertainties will correspond to
                 theta.
         eps (float): Fractional stepsize to use when taking finite-difference derivatives.
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         return_GIM (bool): If true, also return the full GIM.
@@ -323,7 +323,7 @@ def FIM_uncert(func_ex, grid_pts, p0, data, log=False, multinom=True, eps=0.01, 
                 final entry of the returned uncertainties will correspond to
                 theta.
         eps (float): Fractional stepsize to use when taking finite-difference derivatives.
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         return_FIM (bool): If true, also return the full FIM.
@@ -362,7 +362,7 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True.
         eps (float): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         boot_theta_adjusts (list[float]): Optionally, a sequence of *relative* values of theta
@@ -397,11 +397,15 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
 def sum_chi2_ppf(x, weights=(0,1)):
     """
-    Percent point function (inverse of cdf) of weighted sum of chi^2
-    distributions.
+    Upper tail probability of a weighted sum of chi^2 distributions.
+
+    Note that despite the name this returns a survival function, 1 - cdf,
+    not a percent point function. That is what the documented usage
+    depends on: pval = sum_chi2_ppf(D, weights) reads the returned value
+    as a p-value. The name is kept for backward compatibility.
 
     Args:
-        x (array-like): Value(s) at which to evaluate ppf
+        x (array-like): Value(s) at which to evaluate
         weights (array-like): Weights of chi^2 distributions, beginning with zero d.o.f.
                 For example, weights=(0,1) is the normal chi^2 distribution with 1
                 d.o.f. For single parameters on the boundary, the correct
@@ -415,8 +419,7 @@ def sum_chi2_ppf(x, weights=(0,1)):
     # A little clunky, but we want to handle x = 0.5, and x = [2, 3, 4]
     # correctly. So if x is a scalar, we record that fact so we can return a
     # scalar on output.
-    if numpy.isscalar(x):
-        scalar_input = True
+    scalar_input = numpy.isscalar(x)
     # Convert x into an array, so we can index it easily.
     x = numpy.atleast_1d(x)
     # Calculate total cdf of all chi^2 dists with dof > 1.
@@ -460,7 +463,7 @@ def Wald_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                 final entry of the returned uncertainties will correspond to
                 theta.
         eps (float): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         adj_and_org (bool): If False, return only adjusted Wald statistic. If True, also
@@ -527,7 +530,7 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
                 correct uncertainties for other parameters, this function will
                 automatically consider theta if multinom=True.
         eps (float): Fractional stepsize to use when taking finite-difference derivatives
-            Note that if eps*param is < 1e-6, then the step size for that parameter
+            Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
             will simply be eps, to avoid numerical issues with small parameter
             perturbations.
         adj_and_org (bool): If False, return only adjusted score statistic. If True, also
@@ -563,7 +566,7 @@ def score_stat(func_ex, grid_pts, all_boot, p0, data, nested_indices,
         return score_adj, score_org
     return score_adj
 
-def effective_dimension(func_ex, grid_pts, all_boot, p0, data,
+def effective_dimension(func_ex, grid_pts, all_boot, p0, data, log=False,
                multinom=True, eps=0.01, boot_theta_adjusts=None):
     """
     Computes the effective number of parameters for calculating CLAIC and CLBIC
@@ -578,7 +581,7 @@ def effective_dimension(func_ex, grid_pts, all_boot, p0, data,
               correct uncertainties for other parameters, this function will
               automatically consider theta if multinom=True.
     eps: Fractional stepsize to use when taking finite-difference derivatives
-         Note that if eps*param is < 1e-6, then the step size for that parameter
+         Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
     boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
@@ -622,7 +625,7 @@ def CLAIC(log_likelihood, func_ex, grid_pts, all_boot, p0, data, log=False,
               correct uncertainties for other parameters, this function will
               automatically consider theta if multinom=True.
     eps: Fractional stepsize to use when taking finite-difference derivatives
-         Note that if eps*param is < 1e-6, then the step size for that parameter
+         Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
     boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
@@ -657,7 +660,7 @@ def CLBIC(log_likelihood, func_ex, grid_pts, all_boot, p0, data, log=False,
               correct uncertainties for other parameters, this function will
               automatically consider theta if multinom=True.
     eps: Fractional stepsize to use when taking finite-difference derivatives
-         Note that if eps*param is < 1e-6, then the step size for that parameter
+         Note that if abs(eps*param) is < 1e-6, then the step size for that parameter
          will simply be eps, to avoid numerical issues with small parameter
          perturbations.
     boot_theta_adjusts: Optionally, a sequence of *relative* values of theta
