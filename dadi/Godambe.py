@@ -397,11 +397,15 @@ def LRT_adjust(func_ex, grid_pts, all_boot, p0, data, nested_indices,
 
 def sum_chi2_ppf(x, weights=(0,1)):
     """
-    Percent point function (inverse of cdf) of weighted sum of chi^2
-    distributions.
+    Upper tail probability of a weighted sum of chi^2 distributions.
+
+    Note that despite the name this returns a survival function, 1 - cdf,
+    not a percent point function. That is what the documented usage
+    depends on: pval = sum_chi2_ppf(D, weights) reads the returned value
+    as a p-value. The name is kept for backward compatibility.
 
     Args:
-        x (array-like): Value(s) at which to evaluate ppf
+        x (array-like): Value(s) at which to evaluate
         weights (array-like): Weights of chi^2 distributions, beginning with zero d.o.f.
                 For example, weights=(0,1) is the normal chi^2 distribution with 1
                 d.o.f. For single parameters on the boundary, the correct
@@ -415,8 +419,7 @@ def sum_chi2_ppf(x, weights=(0,1)):
     # A little clunky, but we want to handle x = 0.5, and x = [2, 3, 4]
     # correctly. So if x is a scalar, we record that fact so we can return a
     # scalar on output.
-    if numpy.isscalar(x):
-        scalar_input = True
+    scalar_input = numpy.isscalar(x)
     # Convert x into an array, so we can index it easily.
     x = numpy.atleast_1d(x)
     # Calculate total cdf of all chi^2 dists with dof > 1.
