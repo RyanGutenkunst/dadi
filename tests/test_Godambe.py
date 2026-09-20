@@ -11,12 +11,11 @@ before they are replaced by scipy.differentiate. Anything asserted here is
 behavior the replacement must reproduce.
 
 A note on eps: get_grad and get_hess take a *fractional* stepsize. The step
-for parameter i is eps*p[i], except that when eps*p[i] < 1e-6 (including
+for parameter i is eps*p[i], except that when abs(eps*p[i]) < 1e-6 (including
 p[i] == 0) the step falls back to the absolute value eps and that parameter
 switches to a one-sided difference.
 """
 import numpy
-import pytest
 
 from dadi.Godambe import get_grad, get_hess
 
@@ -150,64 +149,53 @@ def test_tiny_parameter_triggers_absolute_step():
     assert numpy.isclose(grad[0], exact[0] + 0.5*QUAD_A[0, 0]*eps, rtol=1e-4)
 
 
-def test_negative_parameters_currently_forced_one_sided():
+def test_negative_parameters_are_centered():
     """
-    Characterizes a bug. The step-size guard in get_grad and get_hess reads
+    Regression test for the step-size guard. It once read
 
         if pval*eps_in < 1e-6:
 
-    which is a *signed* comparison where a magnitude comparison was
-    plainly intended. Any negative parameter therefore satisfies it and is
-    silently demoted to a first-order one-sided difference with an
-    absolute step, instead of the centered fractional step it should get.
-
-    This matters well beyond negative parameters: with log=True the values
-    passed here are numpy.log(p0), so every parameter below 1 goes
-    negative and trips the branch. See
-    test_log_space_parameters_below_one_are_degraded.
-    """
-    eps = 0.01
-    p0 = [-1.0, -2.5, 0.5]
-    grad = get_grad(quad, p0, eps).ravel()
-    exact = quad_grad(p0)
-
-    # Negative entries carry the one-sided forward-difference bias.
-    assert numpy.isclose(grad[0], exact[0] + 0.5*QUAD_A[0, 0]*eps, rtol=1e-6)
-    assert numpy.isclose(grad[1], exact[1] + 0.5*QUAD_A[1, 1]*eps, rtol=1e-6)
-    # The lone positive entry is still centered, and so still exact.
-    assert numpy.isclose(grad[2], exact[2], rtol=1e-8)
-
-
-@pytest.mark.xfail(strict=True, reason='Signed comparison in the step-size '
-                                       'guard; needs abs(). Fix in the '
-                                       'scipy.differentiate rewrite.')
-def test_negative_parameters_should_be_centered():
-    """
-    What the code should do: a negative parameter is not a small
-    parameter, and deserves the same centered fractional step as a
-    positive one. Flips to passing once the guard uses abs().
+    a *signed* comparison where magnitude was intended, so every negative
+    parameter satisfied it and was silently demoted to a first-order
+    one-sided difference with an absolute step. A negative parameter is
+    not a small parameter; it gets the same centered fractional step as a
+    positive one, and so a quadratic comes back exact.
     """
     p0 = [-1.0, -2.5, 0.5]
     assert numpy.allclose(get_grad(quad, p0, 0.01).ravel(), quad_grad(p0),
                           rtol=1e-8)
+    assert numpy.allclose(get_hess(quad, p0, 0.01), QUAD_A, rtol=1e-6)
 
 
-def test_log_space_parameters_below_one_are_degraded():
+def test_log_space_parameters_below_one_are_centered():
     """
-    The practical reach of the guard bug. get_godambe calls these routines
-    on numpy.log(p0) when log=True, and parameters below 1 are entirely
-    routine in dadi -- nu=0.5, T=0.1. Each one lands on the degraded path.
+    The reach of that guard bug, and the reason it was worth fixing.
+    get_godambe calls these routines on numpy.log(p0) when log=True, so
+    every parameter below 1 arrives here negative -- and nu=0.5, T=0.1 are
+    entirely routine in dadi. Each one used to land on the degraded path.
 
-    Asserted on the step-size logic itself rather than on a likelihood, so
-    the test stays fast and states the cause directly.
+    Exercised through the same values log=True would produce.
     """
-    eps_in = 0.01
-    for p in (0.5, 0.1, 0.01):
-        logp = numpy.log(p)
-        assert logp*eps_in < 1e-6, (
-            f'p={p} has log(p)={logp}, which trips the signed guard')
-        # The magnitude is nowhere near the 1e-6 the guard was protecting.
-        assert abs(logp*eps_in) > 1e-6
+    p0 = list(numpy.log([0.5, 0.1, 2.0]))
+    assert all(v < 0 for v in p0[:2]), 'setup: first two must be negative'
+    assert numpy.allclose(get_grad(quad, p0, 0.01).ravel(), quad_grad(p0),
+                          rtol=1e-8)
+
+
+def test_small_magnitude_guard_still_fires_for_negatives():
+    """
+    Fixing the sign must not disarm the guard it was protecting. A
+    genuinely tiny negative parameter should still fall back to an
+    absolute step, exactly as its positive counterpart does.
+    """
+    eps = 1e-3
+    for sign in (+1, -1):
+        p0 = [sign*1e-9, 2.0, 0.5]
+        grad = get_grad(quad, p0, eps).ravel()
+        exact = quad_grad(p0)
+        # One-sided forward difference, hence the O(eps) bias.
+        assert numpy.isclose(grad[0], exact[0] + 0.5*QUAD_A[0, 0]*eps,
+                             rtol=1e-4), f'sign={sign}'
 
 
 def test_gradient_of_linear_function_is_constant():
@@ -220,6 +208,39 @@ def test_gradient_of_linear_function_is_constant():
                           rtol=1e-9)
     assert numpy.allclose(get_hess(lin, p0, 0.01), numpy.zeros((2, 2)),
                           atol=1e-6)
+
+
+def test_log_uncerts_consistent_with_linear_uncerts():
+    """
+    End-to-end guard on the step-size bug, at the level users see it.
+
+    For a log-parametrized model the delta method gives
+    sigma_log = sigma_linear / p, exactly at the MLE. This asserts that
+    FIM_uncert agrees with itself across log=True and log=False.
+
+    The bug inflated the log=True uncertainties by 50-75%, so the
+    tolerance below does not need to be tight to catch it. It is loose on
+    purpose: the spectrum is evaluated at the generating parameters rather
+    than at a fitted optimum, so the gradient is not exactly zero and the
+    delta-method identity holds only approximately.
+    """
+    import dadi
+
+    numpy.random.seed(42)
+    func_ex = dadi.Numerics.make_extrap_log_func(dadi.Demographics1D.two_epoch)
+    ns, pts_l = (20,), [40, 50, 60]
+    p_true = [0.5, 0.1]          # both below 1, so both were affected
+    data = (10000*func_ex(p_true, ns, pts_l)).sample()
+
+    lin = dadi.Godambe.FIM_uncert(func_ex, pts_l, p_true, data, log=False)
+    log = dadi.Godambe.FIM_uncert(func_ex, pts_l, p_true, data, log=True)
+
+    # Compare only the model parameters; theta is appended by multinom=True
+    # and is not on the same footing.
+    predicted = lin[:len(p_true)]/numpy.asarray(p_true)
+    assert numpy.allclose(log[:len(p_true)], predicted, rtol=0.15), (
+        f'log-space uncerts {log[:len(p_true)]} disagree with the delta-method '
+        f'prediction {predicted} from the linear-space uncerts')
 
 
 def test_single_parameter():
